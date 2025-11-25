@@ -46,3 +46,12 @@ app.*.map.json
 
 #config
 .vscode/
+
+# Docs build artifacts (Astro)
+docs/.astro/
+docs/dist/
+docs/node_modules/
+
+# Backup files
+*_backup_*/
+GIT_RECOVERY_PLAN.md
