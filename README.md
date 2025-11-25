@@ -153,7 +153,7 @@ However, this project is licensed under **AGPL-3.0** to ensure it remains non-co
 - ✅ **Share your changes**: Contribute back to the community
 - ❌ **No commercial use**: You cannot sell this app or use it in paid services without releasing your code under AGPL-3.0
 
-**Why AGPL?**  
+**Why AGPL?**
 We want to prevent companies from taking this code, adding proprietary features, and charging for health data management. Your health data should always be free and under your control.
 
 See [LICENSE](LICENSE) for full details.
@@ -164,9 +164,9 @@ See [LICENSE](LICENSE) for full details.
 
 OrionHealth is designed with a future vision:
 
-**Phase 1 (Today)**: Individual users collect and own their health data  
-**Phase 2 (Near Future)**: Optional anonymized data donation for research  
-**Phase 3 (Long-Term)**: Federated learning across user datasets to train medical AI  
+**Phase 1 (Today)**: Individual users collect and own their health data
+**Phase 2 (Near Future)**: Optional anonymized data donation for research
+**Phase 3 (Long-Term)**: Federated learning across user datasets to train medical AI
 **Phase 4 (Ultimate Goal)**: Personalized drug discovery and treatment optimization powered by advanced LLMs
 
 By structuring your health data in OrionHealth's format today, you're preparing for a future where AI can:
