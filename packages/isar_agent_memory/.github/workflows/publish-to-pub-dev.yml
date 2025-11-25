@@ -1,0 +1,69 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    branches:
+      - ci/fix-publish-workflow-conditions
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Choose 'dry-run' or 'publish'"
+        required: true
+        default: "dry-run"
+
+permissions:
+  contents: read
+
+jobs:
+  sanity:
+    name: Sanity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo "sanity ok"
+
+  dry_run:
+    name: Dry-run
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'dry-run') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Dry-run publish
+        run: flutter pub publish --dry-run
+
+  publish:
+    name: Publish
+    if: ${{ github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'publish') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Configure pub.dev credentials
+        env:
+          PUB_CREDENTIALS_JSON: ${{ secrets.PUB_CREDENTIALS_JSON }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${PUB_CREDENTIALS_JSON}" ]; then
+            echo "PUB_CREDENTIALS_JSON no está configurado como secret del repositorio."
+            echo "Añádelo desde Settings → Secrets and variables → Actions con el contenido de ~/.pub-cache/credentials.json."
+            exit 1
+          fi
+          mkdir -p ~/.pub-cache
+          printf "%s" "${PUB_CREDENTIALS_JSON}" > ~/.pub-cache/credentials.json
+          chmod 600 ~/.pub-cache/credentials.json
+      - name: Dry-run publish
+        run: flutter pub publish --dry-run
+      - name: Publish to pub.dev
+        run: flutter pub publish -f

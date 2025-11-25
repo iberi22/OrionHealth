@@ -1,0 +1,34 @@
+# Directories
+build/
+.dart_tool/
+
+# Databases
+*db/
+*.isar
+*.isar.lock
+*.isar-lck
+
+# Binaries
+*.dll
+example/isar.dll
+isar.dll
+
+# IDE files
+.idea/
+
+# Lockfile
+pubspec.lock
+
+# Env files (do not publish)
+.env
+.env.*
+!.env.example
+
+# Nested test app (not part of published package)
+isar_agent_memory_tests/
+
+# Test resources (models downloaded on-demand)
+test_resources/
+
+# Development tools
+tool/

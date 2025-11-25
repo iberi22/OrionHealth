@@ -1,0 +1,43 @@
+# Dart & Flutter
+.dart_tool/
+.packages
+build/
+
+# IDE-specific
+.idea/
+.vscode/
+*.iml
+*.ipr
+
+# Logs and databases
+*.log
+*.db
+# Isar database files
+*.isar
+*.isar.lock
+*.isar-lck
+# Local db directories (exampledb/, testdb/, etc.)
+*db/
+
+# Native Binaries
+*.dll
+*.so
+*.dylib
+
+# Test resources (models are downloaded on demand)
+test_resources/
+
+# Other
+.DS_Store
+.dart_tool/
+.dart_tool/package_graph.json
+.dart_tool/package_config.json
+
+# Env files (keep example tracked)
+.env
+.env.*
+!.env.example
+
+# Lockfiles (do not version in library packages)
+pubspec.lock
+isar_agent_memory_tests/pubspec.lock
