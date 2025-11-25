@@ -34,6 +34,26 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  file_picker: ^10.3.7
+  image_picker: ^1.2.1
+  uuid: ^4.5.2
+  intl: ^0.20.2
+  flutter_bloc: ^9.1.1
+  get_it: ^9.1.0
+  injectable: ^2.6.0
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.5
+  flutter_markdown: ^0.7.7+1
+  equatable: ^2.0.7
+  isar_agent_memory:
+    git:
+      url: https://github.com/iberi22/isar_agent_memory.git
+      ref: main
+  onnxruntime: ^1.4.1
+  permission_handler: ^12.0.1
+  health: ^13.2.1
+  google_fonts: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +65,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  build_runner: ^2.4.13
+  isar_generator: ^3.1.0+1
+  injectable_generator: ^2.4.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -58,9 +81,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
+    - assets/models/
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
