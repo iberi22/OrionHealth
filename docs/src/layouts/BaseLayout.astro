@@ -1,0 +1,245 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  lang?: string;
+}
+
+const { title, description = "Privacy-first health assistant powered by local AI", lang = "en" } = Astro.props;
+const isRTL = lang === 'ar';
+---
+
+<!DOCTYPE html>
+<html lang={lang} dir={isRTL ? 'rtl' : 'ltr'} class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title} | OrionHealth</title>
+  <meta name="description" content={description}>
+  
+  <!-- SEO -->
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- Fira Code Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CDN (for rapid development) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // OrionHealth Professional Palette
+            primary: {
+              DEFAULT: '#1E88E5', // Medical Blue
+              dark: '#1565C0',
+              light: '#42A5F5'
+            },
+            secondary: {
+              DEFAULT: '#43A047', // Health Green
+              dark: '#2E7D32',
+              light: '#66BB6A'
+            },
+            accent: {
+              DEFAULT: '#00BCD4', // Cyan (AI/Tech)
+              dark: '#0097A7',
+              light: '#26C6DA'
+            },
+            surface: {
+              DEFAULT: '#1A1A1A',
+              light: '#2A2A2A',
+              dark: '#0D0D0D'
+            },
+            text: {
+              DEFAULT: '#E8E8E8',
+              muted: '#A0A0A0',
+              dark: '#707070'
+            }
+          },
+          fontFamily: {
+            mono: ['Fira Code', 'monospace']
+          },
+          animation: {
+            'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards',
+            'border-beam': 'borderBeam 3s linear infinite',
+            'slide-down': 'slideDown 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards',
+            'blob': 'blob 7s infinite'
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { 
+                opacity: '0', 
+                transform: 'translateY(20px)',
+                filter: 'blur(10px)' 
+              },
+              '100%': { 
+                opacity: '1', 
+                transform: 'translateY(0)',
+                filter: 'blur(0)' 
+              }
+            },
+            borderBeam: {
+              '0%': { 
+                transform: 'rotate(0deg)' 
+              },
+              '100%': { 
+                transform: 'rotate(360deg)' 
+              }
+            },
+            slideDown: {
+              '0%': { 
+                transform: 'translateY(-100%)' 
+              },
+              '100%': { 
+                transform: 'translateY(0)' 
+              }
+            },
+            blob: {
+              '0%, 100%': { 
+                transform: 'translate(0, 0) scale(1)' 
+              },
+              '33%': { 
+                transform: 'translate(30px, -50px) scale(1.1)' 
+              },
+              '66%': { 
+                transform: 'translate(-20px, 20px) scale(0.9)' 
+              }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style is:global>
+    * {
+      font-family: 'Fira Code', monospace;
+    }
+    
+    body {
+      background-color: #0D0D0D;
+      color: #E8E8E8;
+    }
+    
+    /* Noise Overlay */
+    .bg-noise {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      z-index: -1;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    
+    /* Medical Grid Pattern (subtle) */
+    .bg-grid {
+      background-image: 
+        linear-gradient(rgba(30, 136, 229, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30, 136, 229, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    
+    /* Blob Animation Background */
+    .animate-blob {
+      filter: blur(100px);
+      opacity: 0.08;
+    }
+    
+    /* Professional Glassmorphism */
+    .glass {
+      background: rgba(26, 26, 26, 0.6);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(30, 136, 229, 0.1);
+    }
+    
+    /* Flashlight Effect - Medical Theme */
+    .flashlight-card {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .flashlight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(30, 136, 229, 0.4),
+        rgba(0, 188, 212, 0.2) 30%,
+        transparent 60%
+      );
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    
+    .flashlight-card:hover::before {
+      opacity: 1;
+    }
+    
+    /* Smooth Transitions */
+    * {
+      transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    
+    /* Stagger Animation Delays */
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    .stagger-5 { animation-delay: 0.5s; }
+    .stagger-6 { animation-delay: 0.6s; }
+  </style>
+</head>
+
+<body class="min-h-screen bg-[#0D0D0D] text-text antialiased">
+  <!-- Noise Overlay -->
+  <div class="bg-noise"></div>
+  
+  <!-- Medical Grid Pattern -->
+  <div class="fixed inset-0 -z-10 bg-grid opacity-50"></div>
+  
+  <!-- Animated Blobs - Medical Colors -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full animate-blob"></div>
+    <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-accent rounded-full animate-blob" style="animation-delay: 2s;"></div>
+    <div class="absolute bottom-1/4 left-1/3 w-96 h-96 bg-secondary rounded-full animate-blob" style="animation-delay: 4s;"></div>
+  </div>
+  
+  <slot />
+  
+  <script>
+    // Flashlight Effect
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.flashlight-card');
+      
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          
+          card.style.setProperty('--mouse-x', `${x}%`);
+          card.style.setProperty('--mouse-y', `${y}%`);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

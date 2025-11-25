@@ -156,10 +156,10 @@ lib/features/local_agent/
 abstract class LlmAdapter {
   /// Genera texto usando el LLM
   Future<String> generate(String prompt);
-  
+
   /// Nombre del modelo
   String get modelName;
-  
+
   /// Verifica disponibilidad
   Future<bool> isAvailable();
 }
@@ -171,19 +171,19 @@ abstract class LlmAdapter {
 ```dart
 class GeminiLlmAdapter implements LlmAdapter {
   final GenerativeModel _model;
-  
+
   GeminiLlmAdapter({required String apiKey})
       : _model = GenerativeModel(
           model: 'gemini-pro',
           apiKey: apiKey,
         );
-  
+
   @override
   Future<String> generate(String prompt) async {
     final response = await _model.generateContent([Content.text(prompt)]);
     return response.text ?? '';
   }
-  
+
   @override
   String get modelName => 'gemini-pro';
 }
@@ -197,10 +197,10 @@ class MockLlmAdapter implements LlmAdapter {
     // Implementación local sin API
     return 'Resumen generado localmente: ...';
   }
-  
+
   @override
   String get modelName => 'mock-local';
-  
+
   @override
   Future<bool> isAvailable() async => true; // Siempre disponible
 }
@@ -222,21 +222,21 @@ class SmartSearchUseCase {
   Future<SmartSearchResult> execute(String query) async {
     // Selección automática de estrategia
     final strategy = _selectStrategy(query);
-    
+
     // Búsqueda con re-ranking
     final results = await _vectorStore.searchWithReRanking(
       query,
       strategy: strategy,
       topK: 10,
     );
-    
+
     return SmartSearchResult(
       results: results,
       strategyUsed: strategy,
       explanation: _explainStrategy(strategy),
     );
   }
-  
+
   String _selectStrategy(String query) {
     if (query.contains('reciente') || query.contains('último')) {
       return 'recency';
@@ -269,20 +269,20 @@ class GenerateHealthSummaryUseCase {
   }) async {
     // 1. Buscar registros en el período
     final records = await _searchHealthRecords(startDate, endDate);
-    
+
     // 2. Agrupar por categoría
     final grouped = _groupByCategory(records);
-    
+
     // 3. Crear nodos resumen para cada categoría
     final summaryNodes = await _createCategorySummaries(grouped);
-    
+
     // 4. Crear resumen de alto nivel
     final topLevelSummary = await _vectorStore.createSummaryNode(
       childNodeIds: summaryNodes.map((n) => n.id).toList(),
       llmAdapter: _llmAdapter,
       layerNumber: 2,
     );
-    
+
     return HealthSummary(
       period: '${startDate.toIso8601String()} - ${endDate.toIso8601String()}',
       type: summaryType,
@@ -314,10 +314,10 @@ Cubre:
 testWidgets('should select recency strategy for temporal queries', (tester) async {
   // Arrange
   final useCase = SmartSearchUseCase(mockVectorStore);
-  
+
   // Act
   final result = await useCase.execute('exámenes recientes');
-  
+
   // Assert
   expect(result.strategyUsed, equals('recency'));
   expect(result.results, isNotEmpty);
@@ -369,7 +369,7 @@ Todas las nuevas features respetan la filosofía **local-first** de OrionHealth:
 
 ---
 
-**Fecha de integración**: 25/11/2025  
-**Versión**: v0.4.0  
-**Estado**: ✅ Completada  
+**Fecha de integración**: 25/11/2025
+**Versión**: v0.4.0
+**Estado**: ✅ Completada
 **Backward Compatibility**: ✅ Sin breaking changes

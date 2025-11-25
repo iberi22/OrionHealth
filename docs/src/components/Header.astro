@@ -1,0 +1,59 @@
+---
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5">
+  <div class="container mx-auto px-6 py-4">
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <a href={lang === 'en' ? '/' : `/${lang}`} class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </div>
+        <span class="text-xl font-bold tracking-tight group-hover:text-primary transition-colors duration-500">
+          ORION<span class="text-primary">HEALTH</span>
+        </span>
+      </a>
+      
+      <!-- Navigation -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#features" class="text-sm uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity duration-500">
+          {t.features}
+        </a>
+        <a href="#privacy" class="text-sm uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity duration-500">
+          {t.privacy}
+        </a>
+        <a href="#donate" class="text-sm uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity duration-500">
+          {t.support}
+        </a>
+      </nav>
+      
+      <!-- CTA Buttons -->
+      <div class="flex items-center gap-4">
+        <!-- Language Selector -->
+        <div class="relative group">
+          <button class="text-xs uppercase tracking-wider px-3 py-2 rounded-full border border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-500">
+            {lang.toUpperCase()}
+          </button>
+        </div>
+        
+        <!-- Get Started -->
+        <a 
+          href="#download" 
+          class="px-6 py-2 rounded-full bg-gradient-to-r from-primary to-accent text-white text-xs uppercase font-bold tracking-wider hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30 transition-all duration-500"
+        >
+          {t.getStarted}
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
