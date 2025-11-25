@@ -6,6 +6,7 @@ import 'features/health_record/presentation/pages/health_record_staging_page.dar
 import 'features/local_agent/infrastructure/llm_service.dart';
 import 'features/local_agent/presentation/chat_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
+import 'features/health_report/presentation/pages/reports_page.dart';
 
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 
@@ -49,6 +50,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     // but the current implementation takes it in constructor.
     // We'll use GetIt to resolve it.
     ChatPage(llmService: getIt<LlmService>()),
+    const ReportsPage(),
   ];
 
   @override
@@ -80,6 +82,11 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             icon: Icon(Icons.chat_bubble_outline),
             selectedIcon: Icon(Icons.chat_bubble),
             label: 'Asistente IA',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.assessment_outlined),
+            selectedIcon: Icon(Icons.assessment),
+            label: 'Reportes',
           ),
         ],
       ),
