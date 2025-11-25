@@ -15,6 +15,21 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
+subprojects {
+    if (project.name == "isar_flutter_libs") {
+        afterEvaluate {
+            try {
+                val android = project.extensions.getByName("android")
+                val setNamespace = android.javaClass.getMethod("setNamespace", String::class.java)
+                setNamespace.invoke(android, "dev.isar.isar_flutter_libs")
+            } catch (e: Exception) {
+                println("Failed to set namespace for isar_flutter_libs: ${e.message}")
+            }
+        }
+    }
+}
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
