@@ -156,73 +156,25 @@ Crear una landing page profesional para OrionHealth que comunique la visión del
 
 #### **Fase 1: Setup & Estructura (1-2 horas)**
 
-- [ ] **GP-01**: Crear rama `gh-pages` en el repositorio
-  - Configurar GitHub Pages en Settings → Pages
-  - Seleccionar branch `gh-pages` y carpeta `/` o `/docs`
-
-- [ ] **GP-02**: Inicializar proyecto Jekyll
-  ```bash
-  # En la raíz del repo
-  jekyll new docs --blank
-  cd docs
-  bundle install
-  ```
-
-- [ ] **GP-03**: Configurar `_config.yml`
-  - Título: OrionHealth
-  - Descripción: Privacy-first health assistant for personalized medicine
-  - URL base: https://iberi22.github.io/local-llm.OrionHealth
-  - Theme: Elegir tema (ej: `minima`, `cayman`, o custom)
+- [x] **GP-01**: Crear rama `gh-pages` en el repositorio (Usando carpeta `/docs` en main).
+- [x] **GP-02**: Inicializar proyecto Jekyll (Estructura manual creada).
+- [x] **GP-03**: Configurar `_config.yml`.
 
 #### **Fase 2: Contenido & Páginas (3-5 horas)**
 
-- [ ] **GP-04**: Crear `index.md` (Home)
-  - Hero section con tagline
-  - Features grid (4-6 cards)
-  - CTA buttons (Download, GitHub)
-  - Embed shields.io badges (License, Build Status, etc.)
+- [x] **GP-04**: Crear `index.md` (Home).
+- [x] **GP-05**: Crear `vision.md`.
+- [x] **GP-06**: Crear `features.md`.
+- [x] **GP-07**: Crear `privacy.md`.
 
-- [ ] **GP-05**: Crear `vision.md`
-  - Sección "The Long-Term Goal"
-  - Fases de impacto (1-5) con iconografía
-  - Testimonial o case study (futuro)
-
-- [ ] **GP-06**: Crear `features.md`
-  - Tabla comparativa: OrionHealth vs comerciales
-  - Screenshots (placeholders por ahora)
-  - Demos interactivos (opcional, futuro)
-
-- [ ] **GP-07**: Crear `privacy.md`
-  - Diagrama: Local-first architecture
-  - FAQ sobre privacidad
-  - Comparación con apps en la nube
-
-- [ ] **GP-08**: Crear `get-started.md`
-  - Installation guide (Android APK)
-  - Prerequisites (Flutter SDK para devs)
-  - Troubleshooting común
-
-- [ ] **GP-09**: Crear `contribute.md`
-  - Link a CONTRIBUTING.md del repo
-  - Roadmap embebido
-  - Explicación de AGPL-3.0
-
-- [ ] **GP-10**: Crear `about.md`
-  - Historia del proyecto
-  - Contributors (GitHub API integration?)
-  - Contact form o email
+- [x] **GP-08**: Crear `get-started.md`.
+- [x] **GP-09**: Crear `contribute.md`.
+- [x] **GP-10**: Crear `about.md`.
 
 #### **Fase 3: Diseño & Estilos (2-3 horas)**
 
-- [ ] **GP-11**: Crear layout personalizado (`_layouts/default.html`)
-  - Header con navegación sticky
-  - Footer con links sociales
-  - Responsividad mobile-first
-
-- [ ] **GP-12**: Crear estilos custom (`assets/css/style.scss`)
-  - Color palette: Azul médico (#1E88E5), Verde salud (#43A047)
-  - Typography: Roboto/Inter para body, Montserrat para headings
-  - Animaciones sutiles (fade-in, slide-up)
+- [x] **GP-11**: Crear layout personalizado (`_layouts/default.html`).
+- [x] **GP-12**: Crear estilos custom (`assets/css/style.scss`).
 
 - [ ] **GP-13**: Añadir iconografía
   - Material Icons para features
