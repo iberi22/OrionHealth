@@ -9,27 +9,27 @@ interface Props {
 const { icon, title, description, delay = 0 } = Astro.props;
 ---
 
-<div 
-  class="flashlight-card glass rounded-2xl p-8 hover:scale-[1.01] transition-transform duration-500 animate-fade-in-up"
+<div
+  class="flashlight-card glass rounded-xl md:rounded-2xl p-5 md:p-8 hover:scale-[1.01] transition-transform duration-500 animate-fade-in-up"
   style={`animation-delay: ${delay}s; opacity: 0;`}
 >
-  <!-- Icon with Medical Gradient -->
-  <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-6 shadow-lg shadow-primary/20">
-    <span class="text-3xl">{icon}</span>
+  <!-- Icon with Cyber Gradient -->
+  <div class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-accent/20">
+    <span class="text-xl md:text-3xl">{icon}</span>
   </div>
-  
+
   <!-- Title -->
-  <h3 class="text-xl font-bold tracking-tight mb-3 text-text">
+  <h3 class="text-base md:text-xl font-bold tracking-tight mb-2 md:mb-3 text-bone">
     {title}
   </h3>
-  
+
   <!-- Description -->
-  <p class="text-sm font-light leading-relaxed text-text-muted">
+  <p class="text-xs md:text-sm font-light leading-relaxed text-bone-dark opacity-70">
     {description}
   </p>
-  
+
   <!-- Decorative Line -->
-  <div class="mt-6 h-1 w-12 bg-gradient-to-r from-primary to-accent rounded-full"></div>
+  <div class="mt-4 md:mt-6 h-0.5 md:h-1 w-10 md:w-12 bg-gradient-to-r from-accent to-secondary rounded-full"></div>
 </div>
 
 <style>
