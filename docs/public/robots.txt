@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://iberi22.github.io/local-llm.OrionHealth/sitemap.xml
+Sitemap: https://iberi22.github.io/OrionHealth/sitemap.xml

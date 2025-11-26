@@ -31,7 +31,7 @@ The OrionHealth app APK has been successfully compiled for release.
 - **Error**: `this and base files have different roots`
 - **Solution**: Set `PUB_CACHE` to same drive as project + use `--no-daemon`
 
-**Issue 3**: integration_test plugin in release builds  
+**Issue 3**: integration_test plugin in release builds
 - **Root Cause**: integration_test in dev_dependencies still registered in GeneratedPluginRegistrant
 - **Error**: `package dev.flutter.plugins.integration_test does not exist`
 - **Solution**: Skip lint analysis task in release builds

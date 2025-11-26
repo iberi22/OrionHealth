@@ -68,7 +68,7 @@ docs/
 
 Automatically deployed to GitHub Pages on every push to `main` branch via GitHub Actions.
 
-**Live URL**: https://iberi22.github.io/local-llm.OrionHealth
+**Live URL**: https://iberi22.github.io/OrionHealth
 
 ## ✨ Features
 

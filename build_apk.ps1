@@ -25,7 +25,7 @@ Start-Sleep -Seconds 2
 Write-Host "Step 3: Getting dependencies..." -ForegroundColor Green
 & flutter pub get
 
-# Step 4: Build runner (code generation)  
+# Step 4: Build runner (code generation)
 Write-Host "Step 4: Running build_runner for DI code generation..." -ForegroundColor Green
 & dart run build_runner build --delete-conflicting-outputs
 
