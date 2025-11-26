@@ -62,6 +62,15 @@ Para evitar conflictos de merge, el trabajo se divide en 3 pistas independientes
 - [x] **D-02**: Servicio de Generación de Reportes (Mock/LLM).
 - [x] **D-03**: UI: Pantalla de Visualización de Reportes.
 
+### 🛤️ Pista E: Support Automation (Agente 5)
+
+**Directorios Permitidos:** `functions/telegram-bot/`
+
+- [ ] **E-01**: Configurar Edge Function (esqueleto y manejo de webhook).
+- [ ] **E-02**: Integración con Telegram Bot API (recepción de mensajes).
+- [ ] **E-03**: Integración con GitHub API (creación de issues).
+- [ ] **E-04**: Lógica de clasificación de tickets (Bug/Feature/Feedback).
+
 ---
 
 ## 🌐 GitHub Pages - Landing Page (Nueva Pista)
@@ -69,6 +78,9 @@ Para evitar conflictos de merge, el trabajo se divide en 3 pistas independientes
 ### 📋 Objetivo
 
 Crear una landing page profesional para OrionHealth que comunique la visión del proyecto, sus características principales, y la filosofía de privacidad y open source. La página debe ser estática, responsiva, y optimizada para conversión (descargas, contribuciones).
+
+**Design System:** "Cyber-Minimalism" (BestOf OpenSource). Dark mode, high contrast, monospaced typography, glassmorphism.
+**Responsive Strategy:** Mobile-first approach, adaptive layouts for Tablet/Desktop.
 
 ### 🎨 Estructura del Sitio
 
@@ -175,6 +187,8 @@ Crear una landing page profesional para OrionHealth que comunique la visión del
 
 - [x] **GP-11**: Crear layout personalizado (`_layouts/default.html`).
 - [x] **GP-12**: Crear estilos custom (`assets/css/style.scss`).
+- [ ] **GP-12b**: Implementar Design System "Cyber-Minimalism" (Tailwind/CSS Variables).
+- [ ] **GP-12c**: Optimización Responsiva (Mobile/Tablet/Desktop breakpoints).
 
 - [ ] **GP-13**: Añadir iconografía
   - Material Icons para features

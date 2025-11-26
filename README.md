@@ -141,6 +141,13 @@ flutter run
 - **[TASK.md](TASK.md)**: Project roadmap & task tracking
 - **[CONTRIBUTING.md](docs/CONTRIBUTING.md)**: How to contribute
 
+## 🛠️ Support & Feedback
+
+We use an automated system to handle community feedback efficiently:
+
+- **Telegram Bot**: Send messages to our bot to report bugs or request features.
+- **GitHub Issues**: All reports are automatically converted into GitHub Issues for transparency.
+
 ---
 
 ## 🤝 Contributing

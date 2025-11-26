@@ -31,14 +31,12 @@ class MemoryNode {
     this.modifiedAt,
     this.layer = 0,
     this.uuid,
-  }) : createdAt = DateTime.now() {
+    this.accessCount = 0,
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now() {
     this.degree = degree ?? Degree();
-    if (modifiedAt == null) {
-      modifiedAt = DateTime.now();
-    }
-    if (uuid == null) {
-      uuid = const Uuid().v4();
-    }
+    modifiedAt ??= DateTime.now();
+    uuid ??= const Uuid().v4();
   }
 
   /// Unique identifier for this node, managed by Isar.
@@ -70,6 +68,9 @@ class MemoryNode {
   ///
   /// Can be used to track recency and relevance.
   DateTime? updatedAt;
+
+  /// The number of times this node has been accessed.
+  int accessCount;
 
   /// The timestamp when this record was last modified (system-level sync).
   ///
@@ -110,6 +111,7 @@ class MemoryNode {
   Map<String, dynamic>? metadata;
 
   // JSON serialization helpers
-  factory MemoryNode.fromJson(Map<String, dynamic> json) => _$MemoryNodeFromJson(json);
+  factory MemoryNode.fromJson(Map<String, dynamic> json) =>
+      _$MemoryNodeFromJson(json);
   Map<String, dynamic> toJson() => _$MemoryNodeToJson(this);
 }
