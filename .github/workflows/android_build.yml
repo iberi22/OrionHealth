@@ -1,8 +1,10 @@
-name: Android Build
+name: Android Build & Release
 
 on:
   push:
     branches: [ "main", "master" ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
@@ -29,11 +31,26 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build APK (Debug)
-        run: flutter build apk --debug
+      - name: Run build_runner
+        run: dart run build_runner build --delete-conflicting-outputs
 
-      - name: Upload APK
+      - name: Build Release APK
+        run: |
+          cd android
+          ./gradlew :app:assembleRelease -x verifyReleaseResources -x lintVitalAnalyzeRelease
+          cd ..
+
+      - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          name: orionhealth-release
+          path: build/app/outputs/apk/release/app-release.apk
+
+      - name: Create Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/app/outputs/apk/release/app-release.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
