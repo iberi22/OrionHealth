@@ -16,7 +16,7 @@ abstract class MemoryModule {
     // Get application documents directory for ObjectBox storage
     final appDir = await getApplicationDocumentsDirectory();
     final objectBoxDir = Directory('${appDir.path}/objectbox');
-    
+
     return MemoryGraph(
       isar,
       embeddingsAdapter: adapter,
