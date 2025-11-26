@@ -26,6 +26,9 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
       <!-- Desktop Navigation -->
       <nav class="hidden md:flex items-center gap-6 lg:gap-8">
+        <a href="/vision" class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
+          Vision
+        </a>
         <a href="#features" class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
           {t.features}
         </a>
@@ -76,6 +79,9 @@ const t = ui[lang as keyof typeof ui] || ui.en;
   <!-- Mobile Menu -->
   <div id="mobile-menu" class="md:hidden hidden glass-dark border-t border-white/5">
     <nav class="container-custom py-4 flex flex-col gap-4">
+      <a href="/vision" class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
+        Vision
+      </a>
       <a href="#features" class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
         {t.features}
       </a>
