@@ -21,7 +21,8 @@ class MockLlmAdapter implements LlmAdapter {
   Future<String> generate(String prompt) async {
     // Simple rule-based summarization
     await Future.delayed(
-        const Duration(milliseconds: 100)); // Simulate processing
+      const Duration(milliseconds: 100),
+    ); // Simulate processing
 
     // Extract key information from prompt
     if (prompt.contains('Summarize')) {
@@ -56,7 +57,7 @@ class MockLlmAdapter implements LlmAdapter {
       'diagnosis',
       'treatment',
       'medication',
-      'symptom'
+      'symptom',
     ];
     final relevantSentences = content
         .split(RegExp(r'[.!?]+'))

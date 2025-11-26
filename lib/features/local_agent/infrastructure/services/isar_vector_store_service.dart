@@ -12,13 +12,13 @@ class IsarVectorStoreService implements VectorStoreService {
 
   @override
   Future<void> addDocument(
-      String id, String content, Map<String, dynamic> metadata) async {
+    String id,
+    String content,
+    Map<String, dynamic> metadata,
+  ) async {
     await _memoryGraph.storeNodeWithEmbedding(
       content: content,
-      metadata: {
-        'externalId': id,
-        ...metadata,
-      },
+      metadata: {'externalId': id, ...metadata},
       deduplicate: true,
     );
   }
@@ -56,7 +56,7 @@ class IsarVectorStoreService implements VectorStoreService {
   }) async {
     // Convert String IDs to int IDs by querying nodes with matching externalId
     final childNodeIntIds = <int>[];
-    
+
     final count = await _memoryGraph.isar.memoryNodes.count();
     for (var i = 0; i < count; i++) {
       final node = await _memoryGraph.isar.memoryNodes.get(i + 1);
@@ -90,14 +90,16 @@ class IsarVectorStoreService implements VectorStoreService {
     final nodes = await _memoryGraph.getNodesByLayer(layer);
 
     return nodes
-        .map((node) => {
-              'id': node.id.toString(),
-              'content': node.content,
-              'layer': node.layer,
-              'type': node.type,
-              'metadata': node.metadata,
-              'createdAt': node.createdAt.toIso8601String(),
-            })
+        .map(
+          (node) => {
+            'id': node.id.toString(),
+            'content': node.content,
+            'layer': node.layer,
+            'type': node.type,
+            'metadata': node.metadata,
+            'createdAt': node.createdAt.toIso8601String(),
+          },
+        )
         .toList();
   }
 
@@ -111,15 +113,14 @@ class IsarVectorStoreService implements VectorStoreService {
     // For now, fall back to basic search and return in expected format
     // TODO: Implement when hierarchical layers are configured
     final results = await search(query, limit: topK);
-    
+
     return results
-        .map((content) => {
-              'node': {
-                'content': content,
-                'layer': 0,
-              },
-              'context': <Map<String, dynamic>>[],
-            })
+        .map(
+          (content) => {
+            'node': {'content': content, 'layer': 0},
+            'context': <Map<String, dynamic>>[],
+          },
+        )
         .toList();
   }
 }

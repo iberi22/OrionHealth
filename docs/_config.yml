@@ -1,7 +1,0 @@
-title: OrionHealth
-description: Privacy-first health assistant for personalized medicine
-baseurl: "/local-llm.OrionHealth"
-url: "https://iberi22.github.io"
-theme: jekyll-theme-cayman
-plugins:
-  - jekyll-seo-tag

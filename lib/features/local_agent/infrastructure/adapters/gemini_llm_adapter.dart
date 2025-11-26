@@ -12,9 +12,9 @@ class GeminiLlmAdapter implements LlmAdapter {
   final GenerativeModel? _model;
 
   GeminiLlmAdapter({String? apiKey})
-      : _model = apiKey != null && apiKey.isNotEmpty
-            ? GenerativeModel(model: 'gemini-pro', apiKey: apiKey)
-            : null;
+    : _model = apiKey != null && apiKey.isNotEmpty
+          ? GenerativeModel(model: 'gemini-pro', apiKey: apiKey)
+          : null;
 
   @override
   String get modelName => 'gemini-pro';
@@ -28,7 +28,8 @@ class GeminiLlmAdapter implements LlmAdapter {
   Future<String> generate(String prompt) async {
     if (_model == null) {
       throw StateError(
-          'Gemini API key not configured. Cannot generate summaries.');
+        'Gemini API key not configured. Cannot generate summaries.',
+      );
     }
 
     try {

@@ -23,9 +23,9 @@ subprojects {
                 val android = project.extensions.getByName("android")
                 val setNamespace = android.javaClass.getMethod("setNamespace", String::class.java)
                 setNamespace.invoke(android, "dev.isar.isar_flutter_libs")
-                
+
                 // Disable resource verification task for isar_flutter_libs
-                tasks.matching { 
+                tasks.matching {
                     it.name.contains("VerifyReleaseResources") || it.name.contains("VerifyLibraryResources")
                 }.forEach {
                     it.enabled = false

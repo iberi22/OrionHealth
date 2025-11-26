@@ -9,7 +9,7 @@ android {
     namespace = "com.orionhealth.orionhealth_health"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -24,7 +24,7 @@ android {
         applicationId = "com.orionhealth.orionhealth_health"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 35
+        minSdk = 28
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -37,14 +37,14 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-    
+
     packaging {
         resources {
             excludes.add("assets")
             excludes.add("res")
         }
     }
-    
+
     lint {
         disable.add("MissingDimensionActivityCreator")
     }
@@ -54,7 +54,7 @@ android {
 gradle.projectsEvaluated {
     rootProject.subprojects.forEach { subproject ->
         if (subproject.name == "isar_flutter_libs") {
-            subproject.tasks.matching { 
+            subproject.tasks.matching {
                 it.name.contains("VerifyReleaseResources") || it.name.contains("VerifyLibraryResources") || it.name.contains("CheckAarMetadata")
             }.forEach {
                 it.enabled = false
