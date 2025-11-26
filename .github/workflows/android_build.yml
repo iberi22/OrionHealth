@@ -40,6 +40,14 @@ jobs:
       - name: Run build_runner
         run: dart run build_runner build --delete-conflicting-outputs
 
+      - name: Remove integration_test from plugin registrant
+        run: |
+          REGISTRANT_FILE="android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java"
+          if [ -f "$REGISTRANT_FILE" ]; then
+            sed -i '/integration_test/d' "$REGISTRANT_FILE"
+            echo "Removed integration_test references from GeneratedPluginRegistrant.java"
+          fi
+
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
