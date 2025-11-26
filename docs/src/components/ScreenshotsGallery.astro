@@ -1,0 +1,81 @@
+---
+// Screenshots Gallery Component for OrionHealth Landing Page
+const base = import.meta.env.BASE_URL || '/local-llm.OrionHealth';
+
+const screenshots = [
+  { src: `${base}/screenshots/01_main_navigation.png`, title: 'Main Navigation', description: 'Intuitive bottom navigation with 4 main sections' },
+  { src: `${base}/screenshots/02_profile_page.png`, title: 'Profile Page', description: 'Personal health profile management' },
+  { src: `${base}/screenshots/03_records_page.png`, title: 'Health Records', description: 'Track and view your health data' },
+  { src: `${base}/screenshots/08_chat_interface.png`, title: 'AI Assistant', description: 'Private AI-powered health conversations' },
+  { src: `${base}/screenshots/09_reports_list.png`, title: 'Reports', description: 'View AI-generated health insights' },
+  { src: `${base}/screenshots/07_profile_form.png`, title: 'Profile Form', description: 'Easy health data input' },
+];
+---
+
+<section id="screenshots" class="relative py-16 md:py-24 px-4 bg-gradient-to-b from-transparent to-charcoal/30">
+  <div class="container-custom">
+    <div class="max-w-4xl mx-auto mb-12 text-center">
+      <h2 class="section-title font-bold tracking-tighter uppercase mb-4 md:mb-6" data-animate>
+        APP <span class="text-accent">PREVIEW</span>
+      </h2>
+      <p class="text-sm md:text-base text-bone-dark max-w-2xl mx-auto leading-relaxed opacity-80">
+        Take a look at OrionHealth's clean, privacy-focused interface designed for your health journey.
+      </p>
+    </div>
+
+    <!-- Screenshot Gallery Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+      {screenshots.map((screenshot, index) => (
+        <div 
+          class="flashlight-card glass rounded-xl overflow-hidden group cursor-pointer" 
+          data-animate
+          style={`animation-delay: ${index * 100}ms`}
+        >
+          <div class="relative aspect-[9/16] overflow-hidden bg-charcoal">
+            <img 
+              src={screenshot.src} 
+              alt={screenshot.title}
+              class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+            />
+            <!-- Overlay on hover -->
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <div class="text-white">
+                <h3 class="font-bold text-sm md:text-base">{screenshot.title}</h3>
+                <p class="text-xs text-bone-dark opacity-80">{screenshot.description}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Feature badges under gallery -->
+    <div class="flex flex-wrap justify-center gap-3 mt-8" data-animate>
+      <span class="text-xs px-3 py-1.5 rounded-full border border-accent/30 text-accent bg-accent/10">
+        🔒 100% Private
+      </span>
+      <span class="text-xs px-3 py-1.5 rounded-full border border-secondary/30 text-secondary bg-secondary/10">
+        🤖 Local AI
+      </span>
+      <span class="text-xs px-3 py-1.5 rounded-full border border-bone/20 text-bone-dark bg-bone/5">
+        📊 Health Insights
+      </span>
+      <span class="text-xs px-3 py-1.5 rounded-full border border-accent/30 text-accent bg-accent/10">
+        ✨ Material 3 Design
+      </span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .flashlight-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .flashlight-card:hover {
+    border-color: rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);
+  }
+</style>
