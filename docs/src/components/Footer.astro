@@ -9,78 +9,92 @@ const { lang = 'en' } = Astro.props;
 const t = ui[lang as keyof typeof ui] || ui.en;
 ---
 
-<footer class="relative mt-32 border-t border-primary/10">
+<footer class="relative mt-16 md:mt-32 border-t border-accent/10 safe-area-bottom">
   <!-- Background Glow -->
-  <div class="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none"></div>
-  
-  <div class="relative container mx-auto px-6 py-16">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+  <div class="absolute inset-0 bg-gradient-to-t from-accent/5 to-transparent pointer-events-none"></div>
+
+  <div class="relative container-custom py-10 md:py-16">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
       <!-- Brand Column -->
-      <div class="md:col-span-2">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="col-span-2">
+        <div class="flex items-center gap-2 md:gap-3 mb-3 md:mb-4" style="display: flex; align-items: center; gap: 0.5rem;">
+          <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-br from-accent to-secondary flex items-center justify-center" style="width: 2rem; height: 2rem; min-width: 2rem; border-radius: 0.5rem; background: linear-gradient(to bottom right, #10B981, #06B6D4); display: flex; align-items: center; justify-content: center;">
+            <svg class="w-4 h-4 md:w-6 md:h-6 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1rem; height: 1rem; max-width: 1.5rem; max-height: 1.5rem; color: #121212;">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </div>
-          <span class="text-xl font-bold">
-            ORION<span class="text-primary">HEALTH</span>
+          <span class="text-base md:text-xl font-bold">
+            ORION<span class="text-accent">HEALTH</span>
           </span>
         </div>
-        <p class="text-sm text-text-muted leading-relaxed max-w-md">
+        <p class="text-xs md:text-sm text-bone-dark leading-relaxed max-w-md opacity-60">
           Privacy-first health assistant powered by local AI. Your data never leaves your device.
         </p>
-        
+
         <!-- Social Links -->
-        <div class="flex gap-4 mt-6">
-          <a 
-            href="https://github.com/iberi22/local-llm.OrionHealth" 
-            class="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center hover:bg-primary/10 hover:border-primary transition-all duration-500"
+        <div class="flex gap-3 mt-4 md:mt-6" style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+          <a
+            href="https://github.com/iberi22/local-llm.OrionHealth"
+            class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-accent/30 flex items-center justify-center hover:bg-accent/10 hover:border-accent transition-all duration-500"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="GitHub"
+            style="width: 2rem; height: 2rem; border-radius: 9999px; border: 1px solid rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center;"
           >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 md:w-5 md:h-5 text-bone-dark" fill="currentColor" viewBox="0 0 24 24" style="width: 1rem; height: 1rem; max-width: 1.25rem; max-height: 1.25rem; color: #E8E8C0;">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+          <a
+            href="https://t.me/OrionHealthBot"
+            class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-accent/30 flex items-center justify-center hover:bg-accent/10 hover:border-accent transition-all duration-500"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Telegram"
+            style="width: 2rem; height: 2rem; border-radius: 9999px; border: 1px solid rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center;"
+          >
+            <svg class="w-4 h-4 md:w-5 md:h-5 text-bone-dark" fill="currentColor" viewBox="0 0 24 24" style="width: 1rem; height: 1rem; max-width: 1.25rem; max-height: 1.25rem; color: #E8E8C0;">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
             </svg>
           </a>
         </div>
       </div>
-      
+
       <!-- Quick Links -->
       <div>
-        <h4 class="text-xs font-bold uppercase tracking-[0.3em] opacity-40 mb-4">Links</h4>
-        <ul class="space-y-3">
-          <li><a href="#features" class="text-sm text-text-muted hover:text-primary transition-colors duration-500">Features</a></li>
-          <li><a href="#privacy" class="text-sm text-text-muted hover:text-primary transition-colors duration-500">Privacy</a></li>
-          <li><a href="#download" class="text-sm text-text-muted hover:text-primary transition-colors duration-500">Download</a></li>
-          <li><a href="https://github.com/iberi22/local-llm.OrionHealth" class="text-sm text-text-muted hover:text-primary transition-colors duration-500" target="_blank">GitHub</a></li>
+        <h4 class="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-bone-dark opacity-40 mb-3 md:mb-4">Links</h4>
+        <ul class="space-y-2 md:space-y-3">
+          <li><a href="#features" class="text-xs md:text-sm text-bone-dark opacity-60 hover:text-accent hover:opacity-100 transition-all duration-500">Features</a></li>
+          <li><a href="#privacy" class="text-xs md:text-sm text-bone-dark opacity-60 hover:text-accent hover:opacity-100 transition-all duration-500">Privacy</a></li>
+          <li><a href="#support" class="text-xs md:text-sm text-bone-dark opacity-60 hover:text-accent hover:opacity-100 transition-all duration-500">Support</a></li>
+          <li><a href="#download" class="text-xs md:text-sm text-bone-dark opacity-60 hover:text-accent hover:opacity-100 transition-all duration-500">Download</a></li>
         </ul>
       </div>
-      
+
       <!-- Legal -->
       <div>
-        <h4 class="text-xs font-bold uppercase tracking-[0.3em] opacity-40 mb-4">Legal</h4>
-        <ul class="space-y-3">
-          <li><a href="/privacy" class="text-sm text-text-muted hover:text-primary transition-colors duration-500">Privacy Policy</a></li>
-          <li><a href="/contribute" class="text-sm text-text-muted hover:text-primary transition-colors duration-500">Contribute</a></li>
+        <h4 class="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-bone-dark opacity-40 mb-3 md:mb-4">Legal</h4>
+        <ul class="space-y-2 md:space-y-3">
+          <li><a href="/privacy" class="text-xs md:text-sm text-bone-dark opacity-60 hover:text-accent hover:opacity-100 transition-all duration-500">Privacy Policy</a></li>
+          <li><a href="/contribute" class="text-xs md:text-sm text-bone-dark opacity-60 hover:text-accent hover:opacity-100 transition-all duration-500">Contribute</a></li>
           <li>
-            <a href="https://www.gnu.org/licenses/agpl-3.0" class="text-sm text-text-muted hover:text-primary transition-colors duration-500" target="_blank">
+            <a href="https://www.gnu.org/licenses/agpl-3.0" class="text-xs md:text-sm text-bone-dark opacity-60 hover:text-accent hover:opacity-100 transition-all duration-500" target="_blank">
               AGPL-3.0 License
             </a>
           </li>
         </ul>
       </div>
     </div>
-    
+
     <!-- Bottom Bar -->
-    <div class="mt-16 pt-8 border-t border-primary/10">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-xs text-text-dark uppercase tracking-wider">
+    <div class="mt-10 md:mt-16 pt-6 md:pt-8 border-t border-accent/10">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
+        <p class="text-[10px] md:text-xs text-bone-dark opacity-40 uppercase tracking-wider text-center md:text-left">
           © 2025 OrionHealth. Open Source Health Platform.
         </p>
-        <div class="flex items-center gap-2 text-xs text-text-dark">
+        <div class="flex items-center gap-2 text-[10px] md:text-xs text-bone-dark opacity-40">
           <span class="uppercase tracking-wider">Built with</span>
-          <span class="text-primary">♥</span>
+          <span class="text-accent">♥</span>
           <span class="uppercase tracking-wider">for Privacy</span>
         </div>
       </div>

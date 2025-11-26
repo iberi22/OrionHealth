@@ -9,51 +9,106 @@ const { lang = 'en' } = Astro.props;
 const t = ui[lang as keyof typeof ui] || ui.en;
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5">
-  <div class="container mx-auto px-6 py-4">
+<header class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5 safe-area-top">
+  <div class="container-custom py-3 md:py-4">
     <div class="flex items-center justify-between">
       <!-- Logo -->
-      <a href={lang === 'en' ? '/' : `/${lang}`} class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <a href={lang === 'en' ? '/' : `/${lang}`} class="flex items-center gap-2 md:gap-3 group" style="display: flex; align-items: center; gap: 0.5rem;">
+        <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-br from-accent to-secondary flex items-center justify-center shadow-lg shadow-accent/20" style="width: 2rem; height: 2rem; min-width: 2rem; min-height: 2rem; border-radius: 0.5rem; background: linear-gradient(to bottom right, #10B981, #06B6D4); display: flex; align-items: center; justify-content: center;">
+          <svg class="w-4 h-4 md:w-6 md:h-6 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1rem; height: 1rem; max-width: 1.5rem; max-height: 1.5rem; color: #121212;">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </div>
-        <span class="text-xl font-bold tracking-tight group-hover:text-primary transition-colors duration-500">
-          ORION<span class="text-primary">HEALTH</span>
+        <span class="text-base md:text-xl font-bold tracking-tight group-hover:text-accent transition-colors duration-500">
+          ORION<span class="text-accent">HEALTH</span>
         </span>
       </a>
-      
-      <!-- Navigation -->
-      <nav class="hidden md:flex items-center gap-8">
-        <a href="#features" class="text-sm uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity duration-500">
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-6 lg:gap-8">
+        <a href="#features" class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
           {t.features}
         </a>
-        <a href="#privacy" class="text-sm uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity duration-500">
+        <a href="#privacy" class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
           {t.privacy}
         </a>
-        <a href="#donate" class="text-sm uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity duration-500">
+        <a href="#support" class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
+          Support
+        </a>
+        <a href="#donate" class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
           {t.support}
         </a>
       </nav>
-      
+
       <!-- CTA Buttons -->
-      <div class="flex items-center gap-4">
-        <!-- Language Selector -->
-        <div class="relative group">
-          <button class="text-xs uppercase tracking-wider px-3 py-2 rounded-full border border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-500">
+      <div class="flex items-center gap-2 md:gap-4">
+        <!-- Language Selector - Hidden on small mobile -->
+        <div class="hidden sm:block relative group">
+          <button class="text-[10px] md:text-xs uppercase tracking-wider px-2 md:px-3 py-1.5 md:py-2 rounded-full border border-accent/30 hover:bg-accent/10 hover:border-accent/50 transition-all duration-500 text-bone-dark">
             {lang.toUpperCase()}
           </button>
         </div>
-        
-        <!-- Get Started -->
-        <a 
-          href="#download" 
-          class="px-6 py-2 rounded-full bg-gradient-to-r from-primary to-accent text-white text-xs uppercase font-bold tracking-wider hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30 transition-all duration-500"
+
+        <!-- Get Started Button -->
+        <a
+          href="#download"
+          class="btn-primary px-4 md:px-6 py-2 text-[10px] md:text-xs"
         >
-          {t.getStarted}
+          <span class="hidden sm:inline">{t.getStarted}</span>
+          <span class="sm:hidden">Start</span>
         </a>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          class="md:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 transition-colors"
+          aria-label="Open menu"
+          style="width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem;"
+        >
+          <svg class="w-5 h-5 text-bone" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 1.25rem; height: 1.25rem; max-width: 1.25rem; max-height: 1.25rem; color: #F5F5DC;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden hidden glass-dark border-t border-white/5">
+    <nav class="container-custom py-4 flex flex-col gap-4">
+      <a href="#features" class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
+        {t.features}
+      </a>
+      <a href="#privacy" class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
+        {t.privacy}
+      </a>
+      <a href="#support" class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
+        Support
+      </a>
+      <a href="#donate" class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
+        {t.support}
+      </a>
+      <div class="pt-2 border-t border-white/5">
+        <button class="text-xs uppercase tracking-wider px-3 py-2 rounded-full border border-accent/30 text-bone-dark">
+          {lang.toUpperCase()} Language
+        </button>
+      </div>
+    </nav>
+  </div>
 </header>
+
+<script>
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+
+  // Close menu when clicking a link
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.add('hidden');
+    });
+  });
+</script>
