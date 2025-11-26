@@ -3,6 +3,7 @@ import Header from './Header.astro';
 import Footer from './Footer.astro';
 import FeatureCard from './FeatureCard.astro';
 import DonationSection from './DonationSection.astro';
+import ScreenshotsGallery from './ScreenshotsGallery.astro';
 import { ui } from '../i18n/ui';
 
 interface Props {
@@ -136,6 +137,9 @@ const t = ui[lang as keyof typeof ui] || ui.en;
       </div>
     </div>
   </section>
+
+  <!-- Screenshots Gallery -->
+  <ScreenshotsGallery />
 
   <!-- Privacy Section - Responsive -->
   <section id="privacy" class="relative py-16 md:py-32 px-4">

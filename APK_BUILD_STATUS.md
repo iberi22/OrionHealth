@@ -6,42 +6,56 @@ The OrionHealth app APK has been successfully compiled for release.
 
 **APK Details:**
 - **Location**: `build/app/outputs/apk/release/app-release.apk`
-- **Size**: 78.01 MB
-- **Target SDK**: Android 15+ (API 35-36)
-- **Minimum SDK**: API 35 (required for Material Design 3 attributes)
+- **Size**: ~82 MB
+- **Target SDK**: Android 15+ (API 36)
+- **Minimum SDK**: API 28 (Android 9.0+)
 - **Build Status**: ✅ Release Ready
+- **Last Build**: 2025-11-26
 
 ## 🔧 Build Configuration
 
 ### Android SDK Versions
 - `compileSdk = 36` - Required by dependencies (firebase, activity, health)
 - `targetSdk = 36` - Recommended for Google Play Store
-- `minSdk = 35` - Required for Material Design 3 color system attributes (android:attr/lStar)
+- `minSdk = 28` - Android 9.0 Pie minimum
 
 ### Known Issues & Workarounds
 
-**Issue**: Resource verification failure with isar_flutter_libs
-- **Root Cause**: isar_flutter_libs package includes Material Design 3 color attributes that are only available in Android 15+ (API 35)
+**Issue 1**: Resource verification failure with isar_flutter_libs
+- **Root Cause**: isar_flutter_libs package includes Material Design 3 color attributes
 - **Error**: `resource android:attr/lStar not found`
 - **Solution**: Exclude `verifyReleaseResources` task during build
 
+**Issue 2**: Kotlin daemon cross-drive path issues
+- **Root Cause**: Project on E: drive, pub cache on C: drive causes path resolution failures
+- **Error**: `this and base files have different roots`
+- **Solution**: Set `PUB_CACHE` to same drive as project + use `--no-daemon`
+
+**Issue 3**: integration_test plugin in release builds  
+- **Root Cause**: integration_test in dev_dependencies still registered in GeneratedPluginRegistrant
+- **Error**: `package dev.flutter.plugins.integration_test does not exist`
+- **Solution**: Skip lint analysis task in release builds
+
 ### Build Commands
 
-**Standard Flutter Build** (requires manual override):
+**Standard Flutter Build** (may fail on Windows with cross-drive setup):
 ```bash
 flutter build apk --release
 ```
 
 **Recommended Build with Workaround**:
-```bash
-# Using gradle directly (excludes problematic verification)
+```powershell
+# Set pub cache on same drive as project
+$env:PUB_CACHE = "E:\pub-cache"
+
+# Using gradle directly with all workarounds
 cd android
-./gradlew -x verifyReleaseResources :app:assembleRelease
+.\gradlew.bat :app:assembleRelease -x verifyReleaseResources -x lintVitalAnalyzeRelease --no-daemon
 cd ..
 ```
 
 **Automated Build Script**:
-```bash
+```powershell
 # Run the provided PowerShell script
 .\build_apk.ps1
 ```
