@@ -7,6 +7,7 @@ import '../../domain/services/llm_adapter.dart';
 /// This adapter allows isar_agent_memory to use Gemini for automatic
 /// summarization of memory layers in the hierarchical RAG system.
 @LazySingleton(as: LlmAdapter)
+@Named('gemini')
 class GeminiLlmAdapter implements LlmAdapter {
   final GenerativeModel? _model;
 

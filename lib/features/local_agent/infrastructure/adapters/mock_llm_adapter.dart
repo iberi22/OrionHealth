@@ -9,6 +9,7 @@ import '../../domain/services/llm_adapter.dart';
 /// - Testing
 /// - Privacy-first local-only mode
 @Injectable(as: LlmAdapter)
+@Named('mock')
 class MockLlmAdapter implements LlmAdapter {
   @override
   String get modelName => 'mock-local';

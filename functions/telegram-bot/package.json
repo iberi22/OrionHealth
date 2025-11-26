@@ -1,0 +1,29 @@
+{
+  "name": "@orionhealth/telegram-bot",
+  "version": "1.0.0",
+  "description": "Telegram support bot for OrionHealth - creates GitHub issues from user feedback",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "tsx watch index.ts",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "test": "vitest"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "support",
+    "github",
+    "issues",
+    "edge-function"
+  ],
+  "author": "OrionHealth Team",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.6.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  }
+}

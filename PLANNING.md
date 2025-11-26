@@ -62,6 +62,16 @@ OrionHealth's ultimate goal extends beyond personal health management. By enabli
 
 We follow **Hexagonal Architecture (Ports & Adapters)** to decouple the core domain logic from external tools (UI, Database, AI Models).
 
+### Support Ecosystem (New)
+
+To maintain a high-quality open-source project with limited resources, we automate user feedback and issue tracking:
+
+**Flow:**
+1. **User** sends message to **Telegram Bot** (Feedback, Bug, Feature Request).
+2. **Edge Function** (Vercel/Supabase) receives webhook.
+3. **Logic** parses message, categorizes it (using simple keywords or LLM).
+4. **GitHub API** creates a structured Issue in the repository with appropriate labels (`bug`, `enhancement`, `triage`).
+
 ### Directory Structure
 
 ```text
@@ -83,6 +93,8 @@ lib/
 │   ├── user_profile/       # Feature: User Settings & Preferences
 │   └── health_report/      # Feature: Analytics & Export
 └── main.dart
+functions/                  # Serverless/Edge Functions
+    └── telegram-bot/       # Support bot logic
 ```
 
 ## Tech Stack
@@ -142,6 +154,7 @@ To accelerate development and minimize git conflicts, we have divided the work i
 3. **Local Intelligence (Chat & RAG):** LLM Inference Service, Model Management, Embeddings generation, Vector Search, Chat UI.
 4. **Insights & Reporting:** Statistical Dashboards, Weekly AI Summaries, Health Plans, Report Export.
 5. **Interoperability:** App Intents (Siri/Gemini), Notifications, FHIR Export.
+6. **Community Support Automation:** Telegram Bot for automated issue creation, Edge Functions for ticket management.
 
 ## Licensing Philosophy
 
