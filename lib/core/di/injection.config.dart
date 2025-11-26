@@ -87,10 +87,13 @@ extension GetItInjectableX on _i1.GetIt {
       () => _i9.MockLlmAdapter(),
       instanceName: 'mock',
     );
-    gh.lazySingleton<_i3.MemoryGraph>(() => memoryModule.memoryGraph(
-          gh<_i6.Isar>(),
-          gh<_i3.EmbeddingsAdapter>(),
-        ));
+    await gh.lazySingletonAsync<_i3.MemoryGraph>(
+      () => memoryModule.memoryGraph(
+        gh<_i6.Isar>(),
+        gh<_i3.EmbeddingsAdapter>(),
+      ),
+      preResolve: true,
+    );
     gh.lazySingleton<_i10.OcrService>(() => _i10.OcrServiceStub());
     gh.lazySingleton<_i11.ReportGenerationService>(
         () => _i12.MockReportGenerationService());

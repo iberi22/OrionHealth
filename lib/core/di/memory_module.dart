@@ -1,7 +1,9 @@
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:math';
+import 'dart:io';
 
 @module
 abstract class MemoryModule {
@@ -9,8 +11,20 @@ abstract class MemoryModule {
   EmbeddingsAdapter get embeddingsAdapter => SimpleEmbeddingsAdapter();
 
   @lazySingleton
-  MemoryGraph memoryGraph(Isar isar, EmbeddingsAdapter adapter) {
-    return MemoryGraph(isar, embeddingsAdapter: adapter);
+  @preResolve
+  Future<MemoryGraph> memoryGraph(Isar isar, EmbeddingsAdapter adapter) async {
+    // Get application documents directory for ObjectBox storage
+    final appDir = await getApplicationDocumentsDirectory();
+    final objectBoxDir = Directory('${appDir.path}/objectbox');
+    
+    return MemoryGraph(
+      isar,
+      embeddingsAdapter: adapter,
+      index: ObjectBoxVectorIndex.open(
+        directory: objectBoxDir.path,
+        namespace: 'default',
+      ),
+    );
   }
 }
 
