@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/di/injection.dart';
-import 'core/theme/app_theme.dart';
+import 'core/theme/cyber_theme.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
-import 'features/local_agent/infrastructure/llm_service.dart';
-import 'features/local_agent/presentation/chat_page.dart';
-import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'features/health_report/presentation/pages/reports_page.dart';
-
+import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
+
+// Placeholder pages
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Home Page')));
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,9 +29,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'OrionHealth',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      theme: CyberTheme.darkTheme,
+      darkTheme: CyberTheme.darkTheme,
+      themeMode: ThemeMode.dark,
       home: const MainNavigationPage(),
     );
   }
@@ -43,14 +48,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const UserProfilePage(),
-    const HealthRecordStagingPage(),
-    // We need to inject LlmService here.
-    // Ideally ChatPage should use a Cubit/Bloc and get LlmService from GetIt internally,
-    // but the current implementation takes it in constructor.
-    // We'll use GetIt to resolve it.
-    ChatPage(llmService: getIt<LlmService>()),
+    const HomePage(),
     const ReportsPage(),
+    const HealthRecordStagingPage(),
+    const UserProfilePage(),
   ];
 
   @override
@@ -60,33 +61,33 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         index: _currentIndex,
         children: _pages,
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        destinations: const [
-          NavigationDestination(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month_outlined),
+            activeIcon: Icon(Icons.calendar_month),
+            label: 'Citas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.folder_shared_outlined),
+            activeIcon: Icon(Icons.folder_shared),
+            label: 'Archivos',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+            activeIcon: Icon(Icons.person),
             label: 'Perfil',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.folder_open),
-            selectedIcon: Icon(Icons.folder),
-            label: 'Registros',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.chat_bubble_outline),
-            selectedIcon: Icon(Icons.chat_bubble),
-            label: 'Asistente IA',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.assessment_outlined),
-            selectedIcon: Icon(Icons.assessment),
-            label: 'Reportes',
           ),
         ],
       ),
