@@ -1,0 +1,618 @@
+# CI/CD - Continuous Integration and Deployment
+# Runs tests, detects errors, creates issues, and assigns to AI agents
+
+name: 🚀 CI/CD - Build & Test
+
+on:
+  push:
+    branches: [main, develop, 'feat/**', 'fix/**']
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  checks: write
+
+env:
+  RUST_BACKTRACE: 1
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Job 1: Rust Backend Tests
+  rust-tests:
+    name: 🦀 Rust Backend Tests
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.test.outcome }}
+      error_log: ${{ steps.capture-errors.outputs.errors }}
+
+    steps:
+      - name: 📋 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🦀 Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: 📦 Cache dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+
+      - name: 🔍 Rust format check
+        id: fmt
+        continue-on-error: true
+        working-directory: rust
+        run: |
+          cargo fmt --all -- --check 2>&1 | tee fmt-errors.log
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: 🔬 Clippy lints
+        id: clippy
+        continue-on-error: true
+        working-directory: rust
+        run: |
+          cargo clippy --all-targets --all-features -- -D warnings 2>&1 | tee clippy-errors.log
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: 🧪 Run tests
+        id: test
+        continue-on-error: true
+        working-directory: rust
+        run: |
+          cargo test --all-features --verbose 2>&1 | tee test-errors.log
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: 📊 Capture error details
+        id: capture-errors
+        if: steps.test.outcome == 'failure' || steps.clippy.outcome == 'failure' || steps.fmt.outcome == 'failure'
+        working-directory: rust
+        run: |
+          {
+            echo "errors<<EOF"
+            echo "## 🦀 Rust Backend Errors"
+            echo ""
+
+            if [ -f "fmt-errors.log" ] && [ "${{ steps.fmt.outcome }}" == "failure" ]; then
+              echo "### Format Issues"
+              echo '```'
+              tail -n 50 fmt-errors.log
+              echo '```'
+              echo ""
+            fi
+
+            if [ -f "clippy-errors.log" ] && [ "${{ steps.clippy.outcome }}" == "failure" ]; then
+              echo "### Clippy Warnings"
+              echo '```'
+              tail -n 50 clippy-errors.log
+              echo '```'
+              echo ""
+            fi
+
+            if [ -f "test-errors.log" ] && [ "${{ steps.test.outcome }}" == "failure" ]; then
+              echo "### Test Failures"
+              echo '```'
+              tail -n 100 test-errors.log
+              echo '```'
+            fi
+
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: 📤 Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-test-results
+          path: rust/*.log
+          retention-days: 7
+
+  # Job 2: Flutter Tests
+  flutter-tests:
+    name: 📱 Flutter Tests
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.test.outcome }}
+      error_log: ${{ steps.capture-errors.outputs.errors }}
+
+    steps:
+      - name: 📋 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📱 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.x'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      - name: 🌉 Verify flutter_rust_bridge sync
+        id: bridge-check
+        continue-on-error: true
+        run: |
+          # Install flutter_rust_bridge_codegen if not available
+          if ! command -v flutter_rust_bridge_codegen &> /dev/null; then
+            cargo install flutter_rust_bridge_codegen --version 2.11.1
+          fi
+
+          # Regenerate bridge code
+          flutter_rust_bridge_codegen generate
+
+          # Check if bridge is out of sync
+          if git diff --quiet lib/src/rust/; then
+            echo "✅ Bridge is in sync"
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Bridge is out of sync!"
+            git diff lib/src/rust/ | tee bridge-diff.log
+            echo "status=failure" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔍 Analyze code
+        id: analyze
+        continue-on-error: true
+        run: |
+          flutter analyze 2>&1 | tee analyze-errors.log
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: 🧪 Run tests
+        id: test
+        continue-on-error: true
+        run: |
+          flutter test --coverage 2>&1 | tee test-errors.log
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: 📊 Capture error details
+        id: capture-errors
+        if: steps.test.outcome == 'failure' || steps.analyze.outcome == 'failure' || steps.bridge-check.outcome == 'failure'
+        run: |
+          {
+            echo "errors<<EOF"
+            echo "## 📱 Flutter Errors"
+            echo ""
+
+            if [ -f "bridge-diff.log" ] && [ "${{ steps.bridge-check.outcome }}" == "failure" ]; then
+              echo "### Flutter-Rust Bridge Out of Sync"
+              echo ""
+              echo "⚠️ The bridge code is out of sync with Rust API changes."
+              echo ""
+              echo '```diff'
+              tail -n 100 bridge-diff.log
+              echo '```'
+              echo ""
+              echo "**Fix:** Run locally:"
+              echo '```bash'
+              echo "flutter_rust_bridge_codegen generate"
+              echo '```'
+              echo ""
+            fi
+
+            if [ -f "analyze-errors.log" ] && [ "${{ steps.analyze.outcome }}" == "failure" ]; then
+              echo "### Analysis Issues"
+              echo '```'
+              tail -n 50 analyze-errors.log
+              echo '```'
+              echo ""
+            fi
+
+            if [ -f "test-errors.log" ] && [ "${{ steps.test.outcome }}" == "failure" ]; then
+              echo "### Test Failures"
+              echo '```'
+              tail -n 100 test-errors.log
+              echo '```'
+            fi
+
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: 📤 Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-test-results
+          path: |
+            analyze-errors.log
+            test-errors.log
+            bridge-diff.log
+            coverage/lcov.info
+          retention-days: 7
+
+  # Job 3: Integration Tests (Rust + Flutter E2E)
+  integration-tests:
+    name: 🔗 Integration Tests
+    runs-on: ubuntu-latest
+    needs: [rust-tests, flutter-tests]
+    if: needs.rust-tests.outputs.status == 'success' && needs.flutter-tests.outputs.status == 'success'
+    outputs:
+      status: ${{ steps.test.outcome }}
+      error_log: ${{ steps.capture-errors.outputs.errors }}
+
+    steps:
+      - name: 📋 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🦀 Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: 📱 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.x'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+
+      - name: 📦 Install Flutter dependencies
+        run: flutter pub get
+
+      - name: 🔨 Build Rust library for tests
+        working-directory: rust
+        run: cargo build --release
+
+      - name: 🧪 Run integration tests
+        id: test
+        continue-on-error: true
+        run: |
+          flutter test integration_test/ --verbose 2>&1 | tee integration-errors.log
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: 🗄️ Test SurrealDB integration
+        id: db-test
+        continue-on-error: true
+        working-directory: rust
+        run: |
+          # Run database-specific tests
+          cargo test --test database_integration -- --test-threads=1 --nocapture 2>&1 | tee ../db-test-errors.log
+          echo "status=$?" >> $GITHUB_OUTPUT
+
+      - name: 📊 Capture error details
+        id: capture-errors
+        if: steps.test.outcome == 'failure' || steps.db-test.outcome == 'failure'
+        run: |
+          {
+            echo "errors<<EOF"
+            echo "## 🔗 Integration Test Errors"
+            echo ""
+
+            if [ -f "integration-errors.log" ] && [ "${{ steps.test.outcome }}" == "failure" ]; then
+              echo "### Flutter Integration Test Failures"
+              echo '```'
+              tail -n 100 integration-errors.log
+              echo '```'
+              echo ""
+            fi
+
+            if [ -f "db-test-errors.log" ] && [ "${{ steps.db-test.outcome }}" == "failure" ]; then
+              echo "### SurrealDB Integration Test Failures"
+              echo '```'
+              tail -n 100 db-test-errors.log
+              echo '```'
+              echo ""
+            fi
+
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: 📤 Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: |
+            integration-errors.log
+            db-test-errors.log
+          retention-days: 7
+
+  # Job 4: Build Status & Issue Creation
+  status-report:
+    name: 📊 Status Report & Issue Creation
+    runs-on: ubuntu-latest
+    needs: [rust-tests, flutter-tests, integration-tests]
+    if: always()
+
+    steps:
+      - name: 📋 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔍 Analyze build status
+        id: analyze
+        env:
+          RUST_STATUS: ${{ needs.rust-tests.outputs.status }}
+          FLUTTER_STATUS: ${{ needs.flutter-tests.outputs.status }}
+          INTEGRATION_STATUS: ${{ needs.integration-tests.outputs.status }}
+          RUST_ERRORS: ${{ needs.rust-tests.outputs.error_log }}
+          FLUTTER_ERRORS: ${{ needs.flutter-tests.outputs.error_log }}
+          INTEGRATION_ERRORS: ${{ needs.integration-tests.outputs.error_log }}
+        run: |
+          echo "## 🚀 CI/CD Build Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$RUST_STATUS" == "success" ]; then
+            echo "| 🦀 Rust Backend | ✅ PASS |" >> $GITHUB_STEP_SUMMARY
+            echo "rust_failed=false" >> $GITHUB_OUTPUT
+          else
+            echo "| 🦀 Rust Backend | ❌ FAIL |" >> $GITHUB_STEP_SUMMARY
+            echo "rust_failed=true" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "$FLUTTER_STATUS" == "success" ]; then
+            echo "| 📱 Flutter App | ✅ PASS |" >> $GITHUB_STEP_SUMMARY
+            echo "flutter_failed=false" >> $GITHUB_OUTPUT
+          else
+            echo "| 📱 Flutter App | ❌ FAIL |" >> $GITHUB_STEP_SUMMARY
+            echo "flutter_failed=true" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "$INTEGRATION_STATUS" == "success" ]; then
+            echo "| 🔗 Integration | ✅ PASS |" >> $GITHUB_STEP_SUMMARY
+            echo "integration_failed=false" >> $GITHUB_OUTPUT
+          elif [ "$INTEGRATION_STATUS" == "skipped" ]; then
+            echo "| 🔗 Integration | ⏭️ SKIPPED |" >> $GITHUB_STEP_SUMMARY
+            echo "integration_failed=false" >> $GITHUB_OUTPUT
+          else
+            echo "| 🔗 Integration | ❌ FAIL |" >> $GITHUB_STEP_SUMMARY
+            echo "integration_failed=true" >> $GITHUB_OUTPUT
+          fi
+
+          # Determine if we need to create issues
+          if [ "$RUST_STATUS" != "success" ] || [ "$FLUTTER_STATUS" != "success" ] || [ "$INTEGRATION_STATUS" == "failure" ]; then
+            echo "needs_issue=true" >> $GITHUB_OUTPUT
+            echo "❌ Build failures detected - Will create issues" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "needs_issue=false" >> $GITHUB_OUTPUT
+            echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: 🚨 Create issue for Rust failures
+        if: steps.analyze.outputs.rust_failed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ERRORS: ${{ needs.rust-tests.outputs.error_log }}
+        run: |
+          ISSUE_TITLE="🦀 CI/CD: Rust Backend Test Failures - $(date +%Y-%m-%d)"
+
+          ISSUE_BODY=$(cat <<EOF
+          ## 🚨 Automated Issue: Rust Backend Failures
+
+          **Detected by:** CI/CD Workflow
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+          **Triggered by:** ${{ github.event_name }}
+          **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          ---
+
+          ### Error Details
+
+          $ERRORS
+
+          ---
+
+          ### 🤖 Agent Assignment
+
+          This issue has been automatically labeled for AI agent assignment.
+
+          **Recommended Agent:** Jules (for complex debugging)
+
+          ### 📋 Tasks
+
+          - [ ] Analyze error logs
+          - [ ] Identify root cause
+          - [ ] Fix failing tests or code
+          - [ ] Verify fix with \`cargo test\`
+          - [ ] Commit with proper message
+
+          ### 🔧 Quick Commands
+
+          \`\`\`bash
+          # Run tests locally
+          cd rust
+          cargo test --all-features --verbose
+
+          # Check format
+          cargo fmt --all -- --check
+
+          # Run clippy
+          cargo clippy --all-targets --all-features
+          \`\`\`
+
+          ---
+
+          **Auto-generated by:** CI/CD Workflow
+          **Priority:** 🔴 HIGH (blocks main branch)
+          EOF
+          )
+
+          # Create issue and capture number
+          ISSUE_NUMBER=$(gh issue create \
+            --title "$ISSUE_TITLE" \
+            --body "$ISSUE_BODY" \
+            --label "ai-agent,bug,rust,ci-cd,priority-high" \
+            --assignee "" \
+            | grep -oP '#\K\d+')
+
+          echo "✅ Created issue #$ISSUE_NUMBER"
+          echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: 🚨 Create issue for Flutter failures
+        if: steps.analyze.outputs.flutter_failed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ERRORS: ${{ needs.flutter-tests.outputs.error_log }}
+        run: |
+          ISSUE_TITLE="📱 CI/CD: Flutter Test Failures - $(date +%Y-%m-%d)"
+
+          ISSUE_BODY=$(cat <<EOF
+          ## 🚨 Automated Issue: Flutter Test Failures
+
+          **Detected by:** CI/CD Workflow
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+          **Triggered by:** ${{ github.event_name }}
+          **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          ---
+
+          ### Error Details
+
+          $ERRORS
+
+          ---
+
+          ### 🤖 Agent Assignment
+
+          This issue has been automatically labeled for AI agent assignment.
+
+          **Recommended Agent:** Copilot (for Flutter/Dart code)
+
+          ### 📋 Tasks
+
+          - [ ] Analyze error logs
+          - [ ] Identify root cause
+          - [ ] Fix failing tests or code
+          - [ ] Verify fix with \`flutter test\`
+          - [ ] Commit with proper message
+
+          ### 🔧 Quick Commands
+
+          \`\`\`bash
+          # Run tests locally
+          flutter test --coverage
+
+          # Analyze code
+          flutter analyze
+
+          # Fix format
+          dart format .
+          \`\`\`
+
+          ---
+
+          **Auto-generated by:** CI/CD Workflow
+          **Priority:** 🔴 HIGH (blocks main branch)
+          EOF
+          )
+
+          # Create issue
+          ISSUE_NUMBER=$(gh issue create \
+            --title "$ISSUE_TITLE" \
+            --body "$ISSUE_BODY" \
+            --label "ai-agent,bug,flutter,ci-cd,priority-high" \
+            --assignee "" \
+            | grep -oP '#\K\d+')
+
+          echo "✅ Created issue #$ISSUE_NUMBER"
+
+      - name: 🚨 Create issue for Integration failures
+        if: steps.analyze.outputs.integration_failed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ERRORS: ${{ needs.integration-tests.outputs.error_log }}
+        run: |
+          ISSUE_TITLE="🔗 CI/CD: Integration Test Failures - $(date +%Y-%m-%d)"
+
+          ISSUE_BODY=$(cat <<EOF
+          ## 🚨 Automated Issue: Integration Test Failures
+
+          **Detected by:** CI/CD Workflow
+          **Branch:** ${{ github.ref_name }}
+          **Commit:** ${{ github.sha }}
+          **Triggered by:** ${{ github.event_name }}
+          **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          ---
+
+          ### Error Details
+
+          $ERRORS
+
+          ---
+
+          ### 🤖 Agent Assignment
+
+          This issue has been automatically labeled for AI agent assignment.
+
+          **Recommended Agent:** Jules (for complex E2E debugging)
+
+          ### 📋 Tasks
+
+          - [ ] Analyze error logs (Flutter ↔ Rust communication)
+          - [ ] Check flutter_rust_bridge sync
+          - [ ] Verify SurrealDB integration
+          - [ ] Fix failing integration tests
+          - [ ] Commit with proper message
+
+          ### 🔧 Quick Commands
+
+          \`\`\`bash
+          # Run integration tests locally
+          flutter test integration_test/
+
+          # Test SurrealDB
+          cd rust && cargo test --test database_integration -- --test-threads=1
+
+          # Regenerate bridge if needed
+          flutter_rust_bridge_codegen generate
+          \`\`\`
+
+          ---
+
+          **Auto-generated by:** CI/CD Workflow
+          **Priority:** 🔴 HIGH (blocks main branch)
+          EOF
+          )
+
+          # Create issue
+          ISSUE_NUMBER=$(gh issue create \
+            --title "$ISSUE_TITLE" \
+            --body "$ISSUE_BODY" \
+            --label "ai-agent,bug,integration,ci-cd,priority-high" \
+            --assignee "" \
+            | grep -oP '#\K\d+')
+
+          echo "✅ Created issue #$ISSUE_NUMBER"
+
+      - name: 🎯 Trigger agent dispatcher
+        if: steps.analyze.outputs.needs_issue == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🤖 Triggering agent dispatcher for auto-assignment..."
+
+          # Wait a moment for issues to be fully created
+          sleep 3
+
+          # Trigger dispatcher workflow
+          gh workflow run agent-dispatcher.yml \
+            --field strategy="round-robin" \
+            --field max_issues="10" \
+            --field label_filter="ai-agent"
+
+          echo "✅ Agent dispatcher triggered"
+
+      - name: 📊 Final summary
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 Links" >> $GITHUB_STEP_SUMMARY
+          echo "- [View Workflow Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [View Issues](https://github.com/${{ github.repository }}/issues?q=is%3Aissue+is%3Aopen+label%3Aci-cd)" >> $GITHUB_STEP_SUMMARY
+          echo "- [View Agent Dashboard](https://github.com/${{ github.repository }}/issues?q=is%3Aissue+is%3Aopen+label%3Aai-agent)" >> $GITHUB_STEP_SUMMARY

@@ -42,6 +42,13 @@ By using OrionHealth today, you're not just organizing your health data—**you'
 
 ## ✨ Key Features
 
+### 🎨 Modern Cyberpunk UI (v1.1.0)
+- **Medical Dashboard**: Comprehensive health summary with real-time metrics
+- **Glassmorphic Design**: Beautiful blur effects and neon accents
+- **6 Health Metrics**: Blood type, weight, height, pulse, temperature, blood pressure
+- **Critical Alerts**: Instant visibility of allergies and important warnings
+- **Activity Timeline**: Track recent consultations, appointments, and medications
+
 ### 🔒 Privacy & Security
 - **100% Local-First**: All data stored on-device using Isar database
 - **Zero Cloud Dependencies**: Works completely offline
@@ -57,7 +64,7 @@ By using OrionHealth today, you're not just organizing your health data—**you'
 ### 🤖 On-Device AI Intelligence
 - **Local LLM**: Phi-3 Mini / Gemma 2B via ONNX Runtime
 - **RAG (Retrieval Augmented Generation)**: Contextual health insights
-- **Private Chat**: Ask questions about your health history
+- **Private Chat**: Ask questions about your health history with redesigned cyberpunk interface
 - **Trend Analysis**: AI-powered pattern recognition
 
 ### 📊 Insights & Reporting
@@ -126,6 +133,31 @@ flutter pub get
 # Run on your device
 flutter run
 ```
+
+### Development Workflow 🆕
+
+**Before pushing code**, validate everything locally:
+
+```powershell
+# Windows
+.\scripts\pre-push-check.ps1
+
+# Linux/macOS
+./scripts/pre-push-check.sh
+```
+
+This validates:
+- ✅ Flutter analyze
+- ✅ Rust tests & format
+- ✅ flutter_rust_bridge sync
+- ✅ Integration tests
+
+**Automated CI/CD:**
+- Every push triggers comprehensive testing
+- Failed tests auto-create GitHub issues
+- AI agents (Jules/Copilot) auto-fix and create PRs
+
+See [DEPLOY_CICD_README.md](DEPLOY_CICD_README.md) for complete CI/CD documentation.
 
 ### First-Time Setup
 1. **Create Your Profile**: Enter basic health information

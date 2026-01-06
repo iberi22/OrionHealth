@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OrionHealth - Perfil del Usuario</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00FF85",
+            "secondary": "#00E0FF",
+            "background-dark": "#0A0A0A",
+            "surface-dark": "#1A1A1A",
+            "text-dark": "#E0E0E0",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "0.75rem",
+            "xl": "1rem",
+            "full": "9999px",
+          },
+          boxShadow: {
+            'glow-primary': '0 0 15px rgba(0, 255, 133, 0.3)',
+            'glow-secondary': '0 0 15px rgba(0, 224, 255, 0.2)',
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+    }
+
+    .glassmorphic {
+      background-color: rgba(26, 26, 26, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 255, 133, 0.1);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display text-text-dark">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-10 flex items-center justify-between bg-background-dark/80 p-4 backdrop-blur-sm">
+<div class="flex size-10 items-center justify-center text-text-dark">
+<span class="material-symbols-outlined text-3xl">arrow_back_ios_new</span>
+</div>
+<h1 class="flex-1 text-center text-xl font-bold tracking-wide">Perfil del Usuario</h1>
+<div class="w-10"></div>
+</header>
+<main class="flex flex-col gap-8 px-4 pb-32">
+<!-- Profile Header -->
+<section class="flex flex-col items-center gap-4 pt-6 text-center">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-32 w-32 ring-2 ring-primary shadow-glow-primary" data-alt="User avatar with a holographic pattern" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAIpUPoUs4Oykl6RpdGHalhqjetooQ-sZ9LobLpgbAVOnhYpaq8N5vqWkwgyY-cwthjBPnowELtGGRPqp12k_sBKhk9r7bW6YJUQtkoABO21_fgw5CmQOHkZHg4bwR4J3Ib9VVx_cMtcEqRsl2k7jkw26FOnsrjgs9XHtK8O9g-VGixxrv0pXd_frqH_xsPyWS6rXzsNUlO_BSRmHdplSNegvbJxMUdDddekMquxJ3gn2_oK2Z4ToEq_mHl-FAK5E-ejgnRZzRJt7_M");'></div>
+</div>
+<div class="flex flex-col items-center">
+<p class="text-[22px] font-bold tracking-wide text-text-dark">Alex Damon</p>
+<p class="text-base font-normal text-secondary">alex.damon@orion.health</p>
+</div>
+</section>
+<!-- Personal Information Card -->
+<section class="flex flex-col gap-2">
+<h2 class="px-2 text-lg font-bold tracking-wide">Información Personal</h2>
+<div class="flex flex-col divide-y divide-white/10 overflow-hidden rounded-xl glassmorphic">
+<!-- Full Name -->
+<div class="flex min-h-[72px] items-center justify-between gap-4 px-4 py-3">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">person</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-base font-medium text-text-dark">Nombre Completo</p>
+<p class="text-sm font-normal text-white/70">Alex Damon</p>
+</div>
+</div>
+<div class="shrink-0 text-white/50">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+<!-- Date of Birth -->
+<div class="flex min-h-[72px] items-center justify-between gap-4 px-4 py-3">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">cake</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-base font-medium text-text-dark">Fecha de Nacimiento</p>
+<p class="text-sm font-normal text-white/70">15 de Agosto, 1988</p>
+</div>
+</div>
+<div class="shrink-0 text-white/50">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+<!-- Contact Number -->
+<div class="flex min-h-[72px] items-center justify-between gap-4 px-4 py-3">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">call</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-base font-medium text-text-dark">Número de Contacto</p>
+<p class="text-sm font-normal text-white/70">+1 (555) 123-4567</p>
+</div>
+</div>
+<div class="shrink-0 text-white/50">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- App Preferences Card -->
+<section class="flex flex-col gap-2">
+<h2 class="px-2 text-lg font-bold tracking-wide">Preferencias de la App</h2>
+<div class="flex flex-col divide-y divide-white/10 overflow-hidden rounded-xl glassmorphic">
+<!-- Push Notifications -->
+<div class="flex min-h-[72px] items-center justify-between gap-4 px-4 py-3">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+</div>
+<p class="text-base font-medium text-text-dark">Notificaciones Push</p>
+</div>
+<div class="shrink-0">
+<label class="relative inline-flex cursor-pointer items-center">
+<input checked="" class="peer sr-only" type="checkbox" value=""/>
+<div class="peer h-6 w-11 rounded-full bg-surface-dark after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-600 after:bg-white after:transition-all peer-checked:bg-primary/50 peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full"></div>
+</label>
+</div>
+</div>
+<!-- Theme -->
+<div class="flex min-h-[72px] items-center justify-between gap-4 px-4 py-3">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">dark_mode</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-base font-medium text-text-dark">Tema</p>
+<p class="text-sm font-normal text-white/70">Modo Oscuro</p>
+</div>
+</div>
+<div class="shrink-0 text-white/50">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Privacy & Security Card -->
+<section class="flex flex-col gap-2">
+<h2 class="px-2 text-lg font-bold tracking-wide">Privacidad y Seguridad</h2>
+<div class="flex flex-col divide-y divide-white/10 overflow-hidden rounded-xl glassmorphic">
+<!-- Biometric Auth -->
+<div class="flex min-h-[72px] items-center justify-between gap-4 px-4 py-3">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">fingerprint</span>
+</div>
+<p class="text-base font-medium text-text-dark">Autenticación Biométrica</p>
+</div>
+<div class="shrink-0">
+<label class="relative inline-flex cursor-pointer items-center">
+<input class="peer sr-only" type="checkbox" value=""/>
+<div class="peer h-6 w-11 rounded-full bg-surface-dark after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-600 after:bg-white after:transition-all peer-checked:bg-primary/50 peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full"></div>
+</label>
+</div>
+</div>
+<!-- Change Password -->
+<div class="flex min-h-[72px] items-center justify-between gap-4 px-4 py-3">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">password</span>
+</div>
+<p class="text-base font-medium text-text-dark">Cambiar Contraseña</p>
+</div>
+<div class="shrink-0 text-white/50">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Actions -->
+<section class="flex flex-col gap-4 pt-4">
+<button class="flex h-14 w-full items-center justify-center rounded-lg bg-primary text-center text-lg font-bold text-background-dark shadow-glow-primary transition-transform active:scale-95">Guardar Cambios</button>
+<button class="w-full text-center font-medium text-secondary/80">Cerrar Sesión</button>
+</section>
+</main>
+</div>
+</body></html>

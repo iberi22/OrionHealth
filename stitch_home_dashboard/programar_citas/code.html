@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OrionHealth - Programar Citas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+      }
+      .glassmorphism {
+        background: rgba(28, 28, 30, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0df280",
+              "background-light": "#f5f8f7",
+              "background-dark": "#102219",
+              // Custom colors from user prompt
+              "cyber-bg": "#0A0A0A",
+              "cyber-surface": "#1C1C1E",
+              "cyber-primary": "#00FF85",
+              "cyber-secondary": "#00E0FF",
+              "cyber-text": "#E0E0E0",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            boxShadow: {
+              'glow-primary': '0 0 15px 0 rgba(0, 255, 133, 0.3)',
+              'glow-secondary': '0 0 15px 0 rgba(0, 224, 255, 0.2)'
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-cyber-bg font-display text-cyber-text">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<!-- Top App Bar -->
+<header class="flex items-center p-4 justify-between sticky top-0 bg-cyber-bg/80 backdrop-blur-sm z-10">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full">
+<span class="material-symbols-outlined text-cyber-text">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Programar Citas</h1>
+<div class="size-10"></div> <!-- Spacer -->
+</header>
+<main class="flex-1 px-4 pt-4 pb-24">
+<!-- Primary Action Card -->
+<section class="mb-8">
+<div class="flex flex-col items-stretch justify-start rounded-xl border border-cyber-primary/30 glassmorphism shadow-glow-primary">
+<div class="flex flex-col items-center justify-center gap-4 p-6 text-center">
+<div class="flex size-16 items-center justify-center rounded-full bg-cyber-primary/10 text-cyber-primary">
+<span class="material-symbols-outlined" style="font-size: 32px;">add_circle</span>
+</div>
+<p class="text-cyber-text text-lg font-bold leading-tight">Agendar Nueva Cita</p>
+<p class="text-cyber-text/70 text-base font-normal leading-normal">Inicia el proceso para reservar una nueva consulta con un proveedor de salud.</p>
+<button class="mt-2 flex w-full max-w-xs cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-cyber-primary text-cyber-bg text-base font-bold leading-normal transition-shadow hover:shadow-glow-primary">
+<span class="truncate">Agendar Ahora</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Section Header -->
+<header class="mb-4">
+<h2 class="text-cyber-text text-xl font-bold leading-tight tracking-[-0.015em]">Próximas Citas</h2>
+</header>
+<!-- Appointments List -->
+<div class="flex flex-col gap-4">
+<!-- Appointment Item 1 -->
+<div class="flex flex-col gap-4 rounded-xl border border-white/10 p-4 glassmorphism">
+<div class="flex items-start gap-4">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-cyber-surface">
+<span class="material-symbols-outlined text-cyber-secondary" style="font-size: 28px;">cardiology</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-cyber-text text-base font-medium leading-normal">Dr. Aris Thorne</p>
+<p class="text-cyber-text/70 text-sm font-normal leading-normal">Cardiología</p>
+</div>
+<p class="shrink-0 text-sm font-medium leading-normal text-cyber-secondary">15 DIC, 10:30 AM</p>
+</div>
+<div class="flex items-center justify-between border-t border-white/10 pt-3 mt-2">
+<p class="text-cyber-text/70 text-sm">Status: <span class="text-cyber-primary">Confirmada</span></p>
+<button class="flex items-center gap-1 text-cyber-secondary text-sm font-medium leading-normal">
+                            Ver Detalles
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Appointment Item 2 -->
+<div class="flex flex-col gap-4 rounded-xl border border-white/10 p-4 glassmorphism">
+<div class="flex items-start gap-4">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-cyber-surface">
+<span class="material-symbols-outlined text-cyber-secondary" style="font-size: 28px;">neurology</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-cyber-text text-base font-medium leading-normal">Dra. Elara Vance</p>
+<p class="text-cyber-text/70 text-sm font-normal leading-normal">Neurología</p>
+</div>
+<p class="shrink-0 text-sm font-medium leading-normal text-cyber-secondary">22 DIC, 02:00 PM</p>
+</div>
+<div class="flex items-center justify-between border-t border-white/10 pt-3 mt-2">
+<p class="text-cyber-text/70 text-sm">Status: <span class="text-cyber-primary">Confirmada</span></p>
+<button class="flex items-center gap-1 text-cyber-secondary text-sm font-medium leading-normal">
+                            Ver Detalles
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Empty State Example -->
+<!--
+                 <div class="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-white/20 p-8 my-8 text-center glassmorphism">
+                     <span class="material-symbols-outlined text-cyber-text/50" style="font-size: 48px;">event_busy</span>
+                     <p class="text-cyber-text text-base font-medium">No tienes citas programadas.</p>
+                     <p class="text-cyber-text/70 text-sm">¡Agenda tu primera consulta para empezar!</p>
+                 </div>
+                 -->
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 border-t border-white/10 bg-cyber-bg/80 backdrop-blur-sm z-10">
+<div class="flex h-20 items-center justify-around px-4">
+<a class="flex flex-col items-center justify-center gap-1 text-cyber-text/60 hover:text-cyber-text" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-xs font-medium">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-cyber-primary hover:text-cyber-primary" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-xs font-bold">Citas</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-cyber-text/60 hover:text-cyber-text" href="#">
+<span class="material-symbols-outlined">folder_shared</span>
+<span class="text-xs font-medium">Archivos</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-cyber-text/60 hover:text-cyber-text" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-xs font-medium">Perfil</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

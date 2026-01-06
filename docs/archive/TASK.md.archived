@@ -7,18 +7,21 @@ _Última actualización: 2025-11-26_
 
 ## 🎯 Resumen Ejecutivo y Estado Actual
 
-**Estado General:** [100% - v1.0.0-beta Production Ready]
-✅ Aplicación Flutter completa con APK Release generado
+**Estado General:** [100% - v1.1.0-beta New Design System]
+✅ Aplicación Flutter completa con nuevo sistema de diseño cyberpunk
+✅ Dashboard médico con métricas de salud en tiempo real
 ✅ Landing page profesional desplegada en GitHub Pages
 ✅ CI/CD configurado (Android Build + GitHub Pages Deploy)
+✅ Rama develop creada para desarrollo continuo
 
 **Progreso por Componente:**
 
-- [x] 🏗️ Infraestructura Base: 100% (DI, Isar, Theme)
-- [x] 👤 Perfil y Datos: 100% (Entidad, Repo, UI)
-- [x] 📥 Ingesta y Curación: 100% (Entidad, Servicios, UI)
-- [x] 🧠 IA Local (Chat/RAG): 100% (Chat UI, Mock LLM, Vector Interface, isar_agent_memory)
+- [x] 🏗️ Infraestructura Base: 100% (DI, Isar, Theme Cyberpunk)
+- [x] 👤 Perfil y Datos: 100% (Entidad, Repo, UI con glassmorphism)
+- [x] 📥 Ingesta y Curación: 100% (Entidad, Servicios, UI actualizada)
+- [x] 🧠 IA Local (Chat/RAG): 100% (Chat UI mejorada, Mock LLM, Vector Interface, isar_agent_memory)
 - [x] 📊 Reportes y Planes: 100% (Entidad, Servicio Mock, UI)
+- [x] 🎨 Dashboard Médico: 100% (Home Dashboard, Métricas, Alertas Críticas, Timeline)
 - [x] 🌐 GitHub Pages & Landing: 100% (Astro, Cyber-Minimalism Design, SEO)
 - [x] 📦 Release: 100% (APK Release v1.0.0-beta, 82MB)
 
@@ -217,6 +220,24 @@ _Tareas que se realizan una vez las 3 pistas convergen._
 
 ## ✅ Hitos Principales Completados
 
+### Release v1.1.0-beta (2025-11-27)
+
+- **Hito UI1**: New Design System Implementation
+  - ✅ HomeDashboardPage with medical summary
+  - ✅ Profile header with circular avatar and user info
+  - ✅ Critical alert card (allergies, warnings)
+  - ✅ Health metrics grid (6 metrics: blood type, weight, height, pulse, temperature, BP)
+  - ✅ Recent activity timeline
+  - ✅ Glassmorphic UI components with backdrop blur
+  - ✅ Chat interface redesigned with cyberpunk theme
+  - ✅ Navigation improvements (FAB for AI Assistant)
+
+- **Hito DEV1**: Development Workflow Improvements
+  - ✅ Rama develop creada para desarrollo continuo
+  - ✅ GitHub Actions configurado para ejecutarse solo en main
+  - ✅ Tests actualizados para nuevo dashboard
+  - ✅ Documentación actualizada (TASK.md, README.md)
+
 ### Release v1.0.0-beta (2025-11-26)
 
 - **Hito 0**: Configuración inicial y CI/CD
@@ -286,6 +307,13 @@ _Tareas que se realizan una vez las 3 pistas convergen._
 | GP-17 | CI/CD GitHub Actions (deploy)                | MEDIA     | ✅ Completado | 2025-11-26 | Copilot     |
 | GP-18 | Fix Rollup bug (npm ci → npm install)        | ALTA      | ✅ Completado | 2025-11-26 | Copilot     |
 | GP-19 | URL update (repo rename)                     | ALTA      | ✅ Completado | 2025-11-26 | Copilot     |
+| TUI-01 | Nuevo Dashboard con métricas médicas        | ALTA      | ✅ Completado | 2025-11-27 | Copilot     |
+| TUI-02 | Profile header con glassmorphism            | ALTA      | ✅ Completado | 2025-11-27 | Copilot     |
+| TUI-03 | Health metrics grid (6 métricas)            | ALTA      | ✅ Completado | 2025-11-27 | Copilot     |
+| TUI-04 | Critical alert card para alergias           | ALTA      | ✅ Completado | 2025-11-27 | Copilot     |
+| TUI-05 | Chat UI mejorado con tema cyberpunk         | ALTA      | ✅ Completado | 2025-11-27 | Copilot     |
+| TDEV-01 | Crear rama develop para CI/CD              | ALTA      | ✅ Completado | 2025-11-27 | Copilot     |
+| TDEV-02 | Actualizar tests para nuevo dashboard      | ALTA      | ✅ Completado | 2025-11-27 | Copilot     |
 
 ---
 

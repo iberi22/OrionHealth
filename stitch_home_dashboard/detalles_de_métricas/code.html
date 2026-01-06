@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OrionHealth - Detalles de Métricas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+    }
+    .glassmorphism {
+        background: rgba(18, 27, 22, 0.6);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(22, 51, 36, 0.5);
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0df280",
+            "background-light": "#f5f8f7",
+            "background-dark": "#102219",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-[#0A0A0A]">
+<div class="relative flex h-auto min-h-screen w-full flex-col dark group/design-root overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="flex items-center p-4 pb-2 justify-between sticky top-0 z-10 bg-[#0A0A0A]/80 backdrop-blur-sm">
+<div class="flex size-12 shrink-0 items-center">
+<span class="material-symbols-outlined text-white text-2xl">chevron_left</span>
+</div>
+<h1 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Detalles de Métricas</h1>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined text-primary">favorite</span>
+</button>
+</div>
+</header>
+<main class="flex flex-col gap-6 px-4 py-4">
+<!-- Metric Overview Card -->
+<section class="flex flex-col gap-2 rounded-xl p-6 bg-[#121B16] border border-[#163324]">
+<p class="text-[#90cbad] text-base font-medium leading-normal">Ritmo Cardíaco</p>
+<p class="text-white tracking-light text-5xl font-bold leading-tight">72 <span class="text-3xl text-[#90cbad] font-medium">BPM</span></p>
+<p class="text-[#00FFFF] text-sm font-normal leading-normal pt-1">Ahora</p>
+</section>
+<!-- Interactive Chart Card -->
+<section class="flex flex-col gap-4 p-4 rounded-xl glassmorphism shadow-lg shadow-primary/10 border border-primary/20 ring-1 ring-inset ring-primary/20">
+<!-- Timeframe Selector -->
+<div class="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#0A0A0A] p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-primary/20 has-[:checked]:text-primary has-[:checked]:shadow-[0_0_10px_rgba(13,242,128,0.3)] text-[#90cbad] text-sm font-medium leading-normal transition-all">
+<span class="truncate">Día</span>
+<input class="invisible w-0" name="timeframe" type="radio" value="Día"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-primary/20 has-[:checked]:text-primary has-[:checked]:shadow-[0_0_10px_rgba(13,242,128,0.3)] text-[#90cbad] text-sm font-medium leading-normal transition-all">
+<span class="truncate">Semana</span>
+<input checked="" class="invisible w-0" name="timeframe" type="radio" value="Semana"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-primary/20 has-[:checked]:text-primary has-[:checked]:shadow-[0_0_10px_rgba(13,242,128,0.3)] text-[#90cbad] text-sm font-medium leading-normal transition-all">
+<span class="truncate">Mes</span>
+<input class="invisible w-0" name="timeframe" type="radio" value="Mes"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-primary/20 has-[:checked]:text-primary has-[:checked]:shadow-[0_0_10px_rgba(13,242,128,0.3)] text-[#90cbad] text-sm font-medium leading-normal transition-all">
+<span class="truncate">Año</span>
+<input class="invisible w-0" name="timeframe" type="radio" value="Año"/>
+</label>
+</div>
+<!-- Chart -->
+<div class="flex min-h-[180px] flex-1 flex-col gap-4">
+<svg fill="none" height="148" preserveaspectratio="none" viewbox="-3 0 478 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="chartGradient" x1="236" x2="236" y1="1" y2="149">
+<stop stop-color="#00FFFF" stop-opacity="0.3"></stop>
+<stop offset="1" stop-color="#00FFFF" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V149H0V109Z" fill="url(#chartGradient)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#00FFFF" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="flex justify-around">
+<p class="text-[#90cbad] text-[13px] font-bold leading-normal tracking-[0.015em]">Lun</p>
+<p class="text-[#90cbad] text-[13px] font-bold leading-normal tracking-[0.015em]">Mar</p>
+<p class="text-[#90cbad] text-[13px] font-bold leading-normal tracking-[0.015em]">Mié</p>
+<p class="text-[#90cbad] text-[13px] font-bold leading-normal tracking-[0.015em]">Jue</p>
+<p class="text-[#90cbad] text-[13px] font-bold leading-normal tracking-[0.015em]">Vie</p>
+<p class="text-[#90cbad] text-[13px] font-bold leading-normal tracking-[0.015em]">Sáb</p>
+<p class="text-[#90cbad] text-[13px] font-bold leading-normal tracking-[0.015em]">Dom</p>
+</div>
+</div>
+</section>
+<!-- Key Statistics Cards -->
+<section class="grid grid-cols-3 gap-3">
+<div class="flex flex-col gap-1.5 rounded-lg p-4 bg-[#121B16]">
+<p class="text-white text-base font-medium leading-normal">Promedio</p>
+<p class="text-[#00FFFF] tracking-light text-2xl font-bold leading-tight">74</p>
+</div>
+<div class="flex flex-col gap-1.5 rounded-lg p-4 bg-[#121B16]">
+<p class="text-white text-base font-medium leading-normal">Alto</p>
+<p class="text-[#00FFFF] tracking-light text-2xl font-bold leading-tight">112</p>
+</div>
+<div class="flex flex-col gap-1.5 rounded-lg p-4 bg-[#121B16]">
+<p class="text-white text-base font-medium leading-normal">Bajo</p>
+<p class="text-[#00FFFF] tracking-light text-2xl font-bold leading-tight">65</p>
+</div>
+</section>
+<!-- Historical Data List -->
+<section class="flex flex-col gap-3">
+<h3 class="text-white text-lg font-bold">Historial de Datos</h3>
+<ul class="flex flex-col gap-2">
+<li class="flex items-center justify-between p-4 rounded-lg bg-[#121B16]">
+<span class="text-white text-base">82 BPM</span>
+<span class="text-[#90cbad] text-sm">Hace 15 minutos</span>
+</li>
+<li class="flex items-center justify-between p-4 rounded-lg bg-[#121B16]">
+<span class="text-white text-base">75 BPM</span>
+<span class="text-[#90cbad] text-sm">Hace 1 hora</span>
+</li>
+<li class="flex items-center justify-between p-4 rounded-lg bg-[#121B16]">
+<span class="text-white text-base">90 BPM</span>
+<span class="text-[#90cbad] text-sm">Hace 3 horas</span>
+</li>
+</ul>
+</section>
+</main>
+<!-- Floating Action Button -->
+<div class="sticky bottom-6 px-4 flex justify-end">
+<button class="flex items-center justify-center size-14 bg-primary rounded-full shadow-lg shadow-primary/40">
+<span class="material-symbols-outlined text-background-dark text-3xl">add</span>
+</button>
+</div>
+</div>
+</body></html>

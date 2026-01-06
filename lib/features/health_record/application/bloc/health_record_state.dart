@@ -7,15 +7,34 @@ abstract class HealthRecordState extends Equatable {
   List<Object?> get props => [];
 }
 
-class HealthRecordInitial extends HealthRecordState {}
+class HealthRecordInitial extends HealthRecordState {
+  final List<MedicalRecord> records;
+
+  const HealthRecordInitial({this.records = const []});
+
+  @override
+  List<Object?> get props => [records];
+}
 
 class HealthRecordLoading extends HealthRecordState {}
+
+class HealthRecordLoadedState extends HealthRecordState {
+  final List<MedicalRecord> records;
+
+  const HealthRecordLoadedState({required this.records});
+
+  @override
+  List<Object?> get props => [records];
+}
 
 class HealthRecordFilePicked extends HealthRecordState {
   final String filePath;
   final String extractedText;
 
-  const HealthRecordFilePicked({required this.filePath, required this.extractedText});
+  const HealthRecordFilePicked({
+    required this.filePath,
+    required this.extractedText,
+  });
 
   @override
   List<Object?> get props => [filePath, extractedText];

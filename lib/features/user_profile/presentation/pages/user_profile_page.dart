@@ -46,7 +46,9 @@ class _UserProfileView extends StatelessWidget {
           leading: const Icon(Icons.arrow_back_ios_new),
           title: Text(
             'Perfil del Usuario',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           centerTitle: true,
           pinned: true,
@@ -54,90 +56,95 @@ class _UserProfileView extends StatelessWidget {
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const SizedBox(height: 24),
-                _ProfileHeader(userProfile: userProfile),
-                const SizedBox(height: 32),
-                _Section(
-                  title: 'Información Personal',
-                  children: [
-                    _InfoTile(
-                      icon: Icons.person,
-                      title: 'Nombre Completo',
-                      subtitle: userProfile.name,
-                    ),
-                    const _InfoTile(
-                      icon: Icons.cake,
-                      title: 'Fecha de Nacimiento',
-                      subtitle: '15 de Agosto, 1988',
-                    ),
-                    const _InfoTile(
-                      icon: Icons.call,
-                      title: 'Número de Contacto',
-                      subtitle: '+1 (555) 123-4567',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                _Section(
-                  title: 'Preferencias de la App',
-                  children: [
-                    _InfoTile(
-                      icon: Icons.notifications,
-                      title: 'Notificaciones Push',
-                      trailing: Switch(value: true, onChanged: (v) {}),
-                    ),
-                    const _InfoTile(
-                      icon: Icons.dark_mode,
-                      title: 'Tema',
-                      subtitle: 'Modo Oscuro',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                _Section(
-                  title: 'Privacidad y Seguridad',
-                  children: [
-                    _InfoTile(
-                      icon: Icons.fingerprint,
-                      title: 'Autenticación Biométrica',
-                      trailing: Switch(value: false, onChanged: (v) {}),
-                    ),
-                    const _InfoTile(
-                      icon: Icons.password,
-                      title: 'Cambiar Contraseña',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: CyberTheme.primary,
-                    foregroundColor: CyberTheme.backgroundDark,
-                    minimumSize: const Size(double.infinity, 56),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            delegate: SliverChildListDelegate([
+              const SizedBox(height: 24),
+              _ProfileHeader(userProfile: userProfile),
+              const SizedBox(height: 32),
+              _Section(
+                title: 'Información Personal',
+                children: [
+                  _InfoTile(
+                    icon: Icons.person,
+                    title: 'Nombre Completo',
+                    subtitle: userProfile.name,
                   ),
-                  onPressed: () {
-                    // In a real app, you would collect data from editing screens
-                    // For now, just save the existing profile to show functionality
-                    context.read<UserProfileCubit>().saveUserProfile(userProfile);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Perfil guardado')),
-                    );
-                  },
-                  child: const Text('Guardar Cambios', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Cerrar Sesión',
-                    style: TextStyle(color: CyberTheme.secondary.withOpacity(0.8)),
+                  const _InfoTile(
+                    icon: Icons.cake,
+                    title: 'Fecha de Nacimiento',
+                    subtitle: '15 de Agosto, 1988',
+                  ),
+                  const _InfoTile(
+                    icon: Icons.call,
+                    title: 'Número de Contacto',
+                    subtitle: '+1 (555) 123-4567',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              _Section(
+                title: 'Preferencias de la App',
+                children: [
+                  _InfoTile(
+                    icon: Icons.notifications,
+                    title: 'Notificaciones Push',
+                    trailing: Switch(value: true, onChanged: (v) {}),
+                  ),
+                  const _InfoTile(
+                    icon: Icons.dark_mode,
+                    title: 'Tema',
+                    subtitle: 'Modo Oscuro',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              _Section(
+                title: 'Privacidad y Seguridad',
+                children: [
+                  _InfoTile(
+                    icon: Icons.fingerprint,
+                    title: 'Autenticación Biométrica',
+                    trailing: Switch(value: false, onChanged: (v) {}),
+                  ),
+                  const _InfoTile(
+                    icon: Icons.password,
+                    title: 'Cambiar Contraseña',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CyberTheme.primary,
+                  foregroundColor: CyberTheme.backgroundDark,
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                const SizedBox(height: 32),
-              ],
-            ),
+                onPressed: () {
+                  // In a real app, you would collect data from editing screens
+                  // For now, just save the existing profile to show functionality
+                  context.read<UserProfileCubit>().saveUserProfile(userProfile);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Perfil guardado')),
+                  );
+                },
+                child: const Text(
+                  'Guardar Cambios',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'Cerrar Sesión',
+                  style: TextStyle(
+                    color: CyberTheme.secondary.withOpacity(0.8),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+            ]),
           ),
         ),
       ],
@@ -160,7 +167,8 @@ class _ProfileHeader extends StatelessWidget {
             shape: BoxShape.circle,
             image: const DecorationImage(
               image: NetworkImage(
-                  "https://lh3.googleusercontent.com/aida-public/AB6AXuAIpUPoUs4Oykl6RpdGHalhqjetooQ-sZ9LobLpgbAVOnhYpaq8N5vqWkwgyY-cwthjBPnowELtGGRPqp12k_sBKhk9r7bW6YJUQtkoABO21_fgw5CmQOHkZHg4bwR4J3Ib9VVx_cMtcEqRsl2k7jkw26FOnsrjgs9XHtK8O9g-VGixxrv0pXd_frqH_xsPyWS6rXzsNUlO_BSRmHdplSNegvbJxMUdDddekMquxJ3gn2_oK2Z4ToEq_mHl-FAK5E-ejgnRZzRJt7_M"),
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuAIpUPoUs4Oykl6RpdGHalhqjetooQ-sZ9LobLpgbAVOnhYpaq8N5vqWkwgyY-cwthjBPnowELtGGRPqp12k_sBKhk9r7bW6YJUQtkoABO21_fgw5CmQOHkZHg4bwR4J3Ib9VVx_cMtcEqRsl2k7jkw26FOnsrjgs9XHtK8O9g-VGixxrv0pXd_frqH_xsPyWS6rXzsNUlO_BSRmHdplSNegvbJxMUdDddekMquxJ3gn2_oK2Z4ToEq_mHl-FAK5E-ejgnRZzRJt7_M",
+              ),
               fit: BoxFit.cover,
             ),
             border: Border.all(color: CyberTheme.primary, width: 2),
@@ -175,7 +183,7 @@ class _ProfileHeader extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          userProfile.name,
+          userProfile.name ?? 'Usuario',
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
@@ -239,9 +247,13 @@ class _InfoTile extends StatelessWidget {
       leading: Icon(icon, color: CyberTheme.secondary),
       title: Text(title),
       subtitle: subtitle != null
-          ? Text(subtitle!, style: TextStyle(color: Colors.white.withOpacity(0.7)))
+          ? Text(
+              subtitle!,
+              style: TextStyle(color: Colors.white.withOpacity(0.7)),
+            )
           : null,
-      trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.white54),
+      trailing:
+          trailing ?? const Icon(Icons.chevron_right, color: Colors.white54),
     );
   }
 }

@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.10.0
+  sdk: '>=3.7.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -53,6 +53,15 @@ dependencies:
   permission_handler: ^12.0.1
   health: ^13.2.1
   google_fonts: ^6.3.2
+
+  # Authentication & Security
+  local_auth: ^2.3.0
+  flutter_secure_storage: ^9.2.4
+  cryptography: ^2.7.0
+
+  # Bluetooth Low Energy for medical data sharing
+  flutter_blue_plus: ^1.35.2
+  flutter_rust_bridge: 2.11.1
 
 dev_dependencies:
   flutter_test:

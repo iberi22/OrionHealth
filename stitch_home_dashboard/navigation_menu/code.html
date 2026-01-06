@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OrionHealth Navigation Menu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;family=Fira+Code:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.cells.min.js"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#10b77f",
+              "background-light": "#f6f8f7",
+              "background-dark": "#121212",
+              "surface-dark": "#1E1E1E",
+              "accent-cyan": "#06b6d4",
+            },
+            fontFamily: {
+              "display": ["Fira Code", "monospace"],
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+            boxShadow: {
+              'glow-primary': '0 0 8px rgba(16, 183, 127, 0.5), 0 0 12px rgba(16, 183, 127, 0.3)',
+              'glow-cyan': '0 0 8px rgba(6, 182, 212, 0.4)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 300,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col dark group/design-root overflow-hidden">
+<div class="absolute inset-0 z-40 bg-black/50 backdrop-blur-sm"></div>
+<div class="absolute left-0 top-0 z-50 flex h-full min-h-screen w-[85%] max-w-sm flex-col overflow-hidden border-r border-primary/20 shadow-2xl shadow-primary/10" id="vanta-bg">
+<div class="relative z-10 flex h-full flex-col bg-surface-dark/80 p-4 backdrop-blur-lg">
+<div class="flex items-center justify-between pb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">
+                        query_stats
+                    </span>
+<h2 class="text-primary text-xl font-bold tracking-[-0.015em]">OrionHealth</h2>
+</div>
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-primary/20 hover:text-primary">
+<span class="material-symbols-outlined">
+                        close
+                    </span>
+</button>
+</div>
+<div class="mb-6 mt-4 flex items-center gap-4 rounded-xl border border-accent-cyan/20 bg-black/30 p-4 shadow-glow-cyan">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-cyan/10 ring-2 ring-accent-cyan/50">
+<span class="text-xl font-medium text-accent-cyan">JS</span>
+</div>
+<div>
+<p class="text-[17px] font-bold leading-tight text-slate-100">J. Smith</p>
+<p class="text-xs font-normal leading-tight text-accent-cyan/80">ID: OH-7B3D9C</p>
+</div>
+</div>
+<ul class="flex flex-col gap-2">
+<li class="flex h-12 cursor-pointer items-center gap-4 rounded-lg px-4 bg-primary/20 border border-primary/50 shadow-glow-primary">
+<span class="material-symbols-outlined text-primary pr-2">
+                        home
+                    </span>
+<p class="text-base font-bold text-primary">Home</p>
+</li>
+<li class="flex h-12 cursor-pointer items-center gap-4 rounded-lg px-4 text-slate-300 transition-colors hover:bg-white/5 hover:text-white">
+<span class="material-symbols-outlined text-accent-cyan pr-2">
+                        analytics
+                    </span>
+<p class="text-base font-medium">Metrics</p>
+</li>
+<li class="flex h-12 cursor-pointer items-center gap-4 rounded-lg px-4 text-slate-300 transition-colors hover:bg-white/5 hover:text-white">
+<span class="material-symbols-outlined text-accent-cyan pr-2">
+                        calendar_month
+                    </span>
+<p class="text-base font-medium">Appointments</p>
+</li>
+<li class="flex h-12 cursor-pointer items-center gap-4 rounded-lg px-4 text-slate-300 transition-colors hover:bg-white/5 hover:text-white">
+<span class="material-symbols-outlined text-accent-cyan pr-2">
+                        person
+                    </span>
+<p class="text-base font-medium">Profile</p>
+</li>
+</ul>
+<hr class="my-6 border-t border-slate-700/50 shadow-glow-primary"/>
+<div class="flex flex-col gap-2">
+<div class="flex h-12 cursor-pointer items-center gap-4 rounded-lg px-4 text-slate-300 transition-colors hover:bg-white/5 hover:text-white">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-accent-cyan pr-2">
+                            settings
+                        </span>
+<p class="flex-1 truncate text-base font-medium">Settings</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-8">
+<button class="flex h-12 w-full cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-lg bg-primary px-5 text-background-dark shadow-glow-primary transition-opacity hover:opacity-90">
+<span class="material-symbols-outlined">
+                        logout
+                    </span>
+<span class="truncate text-base font-bold tracking-wide">Log Out</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+    VANTA.CELLS({
+      el: "#vanta-bg",
+      mouseControls: false,
+      touchControls: false,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 3.00,
+      backgroundColor: 0xd8098f,
+      color1: 0x1947b5,
+      color2: 0x1d1d19,
+      size: 1.80,
+      speed: 1.80
+    })
+    </script>
+
+</body></html>

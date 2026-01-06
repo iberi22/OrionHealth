@@ -1,27 +1,26 @@
 name: Android Build & Release
 
-# TEMPORARILY DISABLED - Re-enable after new UI integration is complete
-# To re-enable: uncomment push/pull_request triggers and remove the 'if' condition on the build job
+# Only runs on main branch for production releases
+# Develop branch is protected from automatic builds
 on:
-  # Disabled triggers while integrating new design system
-  # push:
-  #   branches: [ "main", "master" ]
-  #   tags:
-  #     - 'v*'
-  # pull_request:
-  #   branches: [ "main", "master" ]
+  push:
+    branches: [ "main", "master" ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ "main", "master" ]
   workflow_dispatch:
     inputs:
       force_run:
-        description: 'Force run the workflow (bypass pause)'
+        description: 'Force run the workflow (bypass branch check)'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 jobs:
   build:
-    # PAUSED: Remove this condition when ready to resume automated builds
-    if: ${{ github.event.inputs.force_run == 'true' }}
+    # Only run on main/master branch or when manually forced
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') || github.event.inputs.force_run == 'true' }}
     runs-on: ubuntu-latest
 
     steps:

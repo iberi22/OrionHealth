@@ -23,9 +23,9 @@ class HealthRecordStagingPage extends StatelessWidget {
             );
             context.read<HealthRecordCubit>().resetAndLoad();
           } else if (state is HealthRecordError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error: ${state.message}')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Error: ${state.message}')));
           }
         },
         builder: (context, state) {
@@ -53,7 +53,7 @@ class _RecordHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.shield_person, color: CyberTheme.secondary),
+        leading: Icon(Icons.shield, color: CyberTheme.secondary),
         title: const Text('Historial Médico'),
         actions: [
           IconButton(
@@ -77,11 +77,14 @@ class _RecordHistoryView extends StatelessWidget {
             ),
           ),
           if (state is HealthRecordLoading)
-            const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
-          if (state is HealthRecordLoaded)
-            _Timeline(records: state.records),
-          if (state is HealthRecordInitial && state.records.isNotEmpty)
-             _Timeline(records: state.records),
+            const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          if (state is HealthRecordLoadedState)
+            _Timeline(records: (state as HealthRecordLoadedState).records),
+          if (state is HealthRecordInitial &&
+              (state as HealthRecordInitial).records.isNotEmpty)
+            _Timeline(records: (state as HealthRecordInitial).records),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -128,7 +131,10 @@ class _FilterChips extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Chip(label: const Text('Todos'), backgroundColor: CyberTheme.primary.withOpacity(0.3)),
+        Chip(
+          label: const Text('Todos'),
+          backgroundColor: CyberTheme.primary.withOpacity(0.3),
+        ),
         Chip(label: const Text('Diagnóstico'), backgroundColor: Colors.white10),
         Chip(label: const Text('Medicación'), backgroundColor: Colors.white10),
         Chip(label: const Text('Documentos'), backgroundColor: Colors.white10),
@@ -144,16 +150,15 @@ class _Timeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (records.isEmpty) {
-      return const SliverFillRemaining(child: Center(child: Text('No hay registros.')));
+      return const SliverFillRemaining(
+        child: Center(child: Text('No hay registros.')),
+      );
     }
     return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final record = records[index];
-          return _TimelineItem(record: record);
-        },
-        childCount: records.length,
-      ),
+      delegate: SliverChildBuilderDelegate((context, index) {
+        final record = records[index];
+        return _TimelineItem(record: record);
+      }, childCount: records.length),
     );
   }
 }
@@ -173,9 +178,12 @@ class _TimelineItem extends StatelessWidget {
             child: Column(
               children: [
                 GlassmorphicCard(
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.stethoscope, color: CyberTheme.secondary),
+                    child: Icon(
+                      Icons.medical_services,
+                      color: CyberTheme.secondary,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -194,19 +202,32 @@ class _TimelineItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    DateFormat('dd MMMM, yyyy').format(record.date),
+                    DateFormat(
+                      'dd MMMM, yyyy',
+                    ).format(record.date ?? DateTime.now()),
                     style: const TextStyle(color: CyberTheme.secondary),
                   ),
                   const SizedBox(height: 8),
-                  _GlassmorphicCard(
+                  GlassmorphicCard(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(record.summary, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(
+                            record.summary ?? 'Sin resumen',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text(record.type.name, style: TextStyle(color: Colors.white.withOpacity(0.7))),
+                          Text(
+                            record.type.name,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.7),
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           TextButton(
                             onPressed: () {},
@@ -236,7 +257,10 @@ class _SelectionView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.picture_as_pdf, color: CyberTheme.secondary),
+              leading: const Icon(
+                Icons.picture_as_pdf,
+                color: CyberTheme.secondary,
+              ),
               title: const Text('Subir PDF'),
               onTap: () {
                 Navigator.pop(context);
@@ -244,7 +268,10 @@ class _SelectionView extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.camera_alt, color: CyberTheme.secondary),
+              leading: const Icon(
+                Icons.camera_alt,
+                color: CyberTheme.secondary,
+              ),
               title: const Text('Tomar Foto'),
               onTap: () {
                 Navigator.pop(context);
@@ -312,15 +339,25 @@ class _RecordFormState extends State<_RecordForm> {
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: DropdownButtonFormField<RecordType>(
                   value: _selectedType,
-                  decoration: const InputDecoration(labelText: 'Tipo de Documento', border: InputBorder.none),
-                  items: RecordType.values.map((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Tipo de Documento',
+                    border: InputBorder.none,
+                  ),
+                  items: RecordType.values
+                      .map(
+                        (type) => DropdownMenuItem(
+                          value: type,
+                          child: Text(type.name),
+                        ),
+                      )
+                      .toList(),
                   onChanged: (val) => setState(() => _selectedType = val!),
                 ),
               ),
             ),
             const SizedBox(height: 16),
-             GlassmorphicCard(
-               child: InkWell(
+            GlassmorphicCard(
+              child: InkWell(
                 onTap: () async {
                   final date = await showDatePicker(
                     context: context,
@@ -331,39 +368,60 @@ class _RecordFormState extends State<_RecordForm> {
                   if (date != null) setState(() => _selectedDate = date);
                 },
                 child: InputDecorator(
-                  decoration: const InputDecoration(labelText: 'Fecha del Documento', border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
+                  decoration: const InputDecoration(
+                    labelText: 'Fecha del Documento',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(12),
+                  ),
                   child: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
                 ),
-                         ),
-             ),
+              ),
+            ),
             const SizedBox(height: 16),
-             GlassmorphicCard(child: TextFormField(
-              controller: _summaryController,
-              decoration: const InputDecoration(labelText: 'Resumen Breve', border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
-              validator: (v) => v?.isEmpty == true ? 'Requerido' : null,
-            )),
+            GlassmorphicCard(
+              child: TextFormField(
+                controller: _summaryController,
+                decoration: const InputDecoration(
+                  labelText: 'Resumen Breve',
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(12),
+                ),
+                validator: (v) => v?.isEmpty == true ? 'Requerido' : null,
+              ),
+            ),
             const SizedBox(height: 16),
-            GlassmorphicCard(child: TextFormField(
-              controller: _textController,
-              decoration: const InputDecoration(labelText: 'Texto Extraído (Editable)', border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
-              maxLines: 10,
-            )),
+            GlassmorphicCard(
+              child: TextFormField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  labelText: 'Texto Extraído (Editable)',
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(12),
+                ),
+                maxLines: 10,
+              ),
+            ),
             const SizedBox(height: 24),
             Row(
               children: [
-                Expanded(child: OutlinedButton(onPressed: () => context.read<HealthRecordCubit>().reset(), child: const Text('Cancelar'))),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => context.read<HealthRecordCubit>().reset(),
+                    child: const Text('Cancelar'),
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         context.read<HealthRecordCubit>().saveRecord(
-                              filePath: widget.filePath,
-                              extractedText: _textController.text,
-                              summary: _summaryController.text,
-                              type: _selectedType,
-                              date: _selectedDate,
-                            );
+                          filePath: widget.filePath,
+                          extractedText: _textController.text,
+                          summary: _summaryController.text,
+                          type: _selectedType,
+                          date: _selectedDate,
+                        );
                       }
                     },
                     child: const Text('Guardar'),

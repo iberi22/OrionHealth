@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OrionHealth - Historial Médico</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#00FF85",
+              "secondary": "#00FFFF",
+              "background-light": "#EAEAEA",
+              "background-dark": "#0A0A0A",
+              "surface-dark": "rgba(34, 34, 34, 0.5)",
+              "text-light": "#EAEAEA"
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            boxShadow: {
+              'glow-primary': '0 0 15px rgba(0, 255, 133, 0.4)',
+              'glow-secondary': '0 0 8px rgba(0, 255, 255, 0.3)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 300,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .glass-card {
+            background: rgba(34, 34, 34, 0.5); /* surface-dark */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display text-text-light">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-dark dark group/design-root overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-10 bg-background-dark/80 backdrop-blur-sm">
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="flex size-12 shrink-0 items-center">
+<span class="material-symbols-outlined text-secondary text-2xl">
+                        shield_person
+                    </span>
+</div>
+<h1 class="text-text-light text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Historial Médico</h1>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-secondary gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined text-2xl">
+                            ios_share
+                        </span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-grow px-4">
+<!-- Search Bar -->
+<div class="py-3">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full glass-card border-none">
+<div class="text-secondary flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-2xl">
+                                search
+                            </span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden text-text-light focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-secondary/70 px-4 pl-2 text-base font-normal leading-normal" placeholder="Buscar por diagnóstico, medicación..." value=""/>
+</div>
+</label>
+</div>
+<!-- Chips -->
+<div class="flex gap-3 py-3 overflow-x-auto">
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary/20 text-primary pl-4 pr-4 border border-primary/50 shadow-glow-primary">
+<p class="text-sm font-medium leading-normal">Todos</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-surface-dark pl-4 pr-4 border border-secondary/20">
+<p class="text-secondary text-sm font-medium leading-normal">Diagnóstico</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-surface-dark pl-4 pr-4 border border-secondary/20">
+<p class="text-secondary text-sm font-medium leading-normal">Medicación</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-surface-dark pl-4 pr-4 border border-secondary/20">
+<p class="text-secondary text-sm font-medium leading-normal">Documentos</p>
+</button>
+</div>
+<!-- Timeline -->
+<div class="grid grid-cols-[auto_1fr] gap-x-4 py-6">
+<!-- Timeline Item 1 -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-10 rounded-full glass-card shadow-glow-secondary">
+<span class="material-symbols-outlined text-secondary text-2xl">
+                            stethoscope
+                        </span>
+</div>
+<div class="w-[2px] bg-secondary/30 flex-grow"></div>
+</div>
+<div class="pb-8">
+<p class="text-secondary text-sm font-normal">15 de Julio, 2024</p>
+<div class="mt-2 rounded-xl glass-card p-4">
+<h3 class="text-text-light text-base font-medium leading-normal">Revisión Anual</h3>
+<p class="text-text-light/70 text-sm font-normal leading-normal mt-1">Dr. Alana Reyes</p>
+<a class="inline-flex items-center gap-2 text-primary text-sm font-medium mt-3" href="#">Ver Detalles <span class="material-symbols-outlined text-base">arrow_forward</span></a>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-10 rounded-full glass-card shadow-glow-secondary">
+<span class="material-symbols-outlined text-secondary text-2xl">
+                            coronavirus
+                        </span>
+</div>
+<div class="w-[2px] bg-secondary/30 flex-grow"></div>
+</div>
+<div class="pb-8">
+<p class="text-secondary text-sm font-normal">02 de Marzo, 2024</p>
+<div class="mt-2 rounded-xl glass-card p-4">
+<h3 class="text-text-light text-base font-medium leading-normal">Diagnóstico de Gripe</h3>
+<p class="text-text-light/70 text-sm font-normal leading-normal mt-1">Dr. Ben Carter</p>
+<p class="text-text-light/70 text-sm font-normal leading-normal mt-2">Prescrito: Oseltamivir 75mg</p>
+<a class="inline-flex items-center gap-2 text-primary text-sm font-medium mt-3" href="#">Ver Detalles <span class="material-symbols-outlined text-base">arrow_forward</span></a>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-10 rounded-full glass-card shadow-glow-secondary">
+<span class="material-symbols-outlined text-secondary text-2xl">
+                            pill
+                        </span>
+</div>
+<div class="w-[2px] bg-secondary/30 flex-grow"></div>
+</div>
+<div class="pb-8">
+<p class="text-secondary text-sm font-normal">28 de Febrero, 2024</p>
+<div class="mt-2 rounded-xl glass-card p-4">
+<h3 class="text-text-light text-base font-medium leading-normal">Recarga de Receta</h3>
+<p class="text-text-light/70 text-sm font-normal leading-normal mt-1">Orion Pharmacy</p>
+<a class="inline-flex items-center gap-2 text-primary text-sm font-medium mt-3" href="#">Ver Detalles <span class="material-symbols-outlined text-base">arrow_forward</span></a>
+</div>
+</div>
+<!-- Timeline Item 4 -->
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-10 rounded-full glass-card shadow-glow-secondary">
+<span class="material-symbols-outlined text-secondary text-2xl">
+                            description
+                        </span>
+</div>
+</div>
+<div class="pb-8">
+<p class="text-secondary text-sm font-normal">10 de Enero, 2024</p>
+<div class="mt-2 rounded-xl glass-card p-4">
+<h3 class="text-text-light text-base font-medium leading-normal">Resultados de Laboratorio</h3>
+<p class="text-text-light/70 text-sm font-normal leading-normal mt-1">Análisis de sangre completo</p>
+<a class="inline-flex items-center gap-2 text-primary text-sm font-medium mt-3" href="#">Ver Documento <span class="material-symbols-outlined text-base">arrow_forward</span></a>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<div class="sticky bottom-0 right-0 p-5 pt-0 flex justify-end">
+<button class="flex h-14 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary text-background-dark shadow-lg shadow-primary/40 gap-3 px-5">
+<span class="material-symbols-outlined text-2xl">
+                    add
+                </span>
+<span class="truncate text-base font-bold">Añadir Registro</span>
+</button>
+</div>
+</div>
+</body></html>

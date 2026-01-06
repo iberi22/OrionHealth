@@ -86,7 +86,8 @@ class HealthRecordCubit extends Cubit<HealthRecordState> {
 
       // Index the record for RAG
       await _vectorStoreService.addDocument(
-        record.id.toString(), // This might be 0 before saving if auto-increment is not handled by Isar object immediately, but Isar usually updates the object.
+        record.id
+            .toString(), // This might be 0 before saving if auto-increment is not handled by Isar object immediately, but Isar usually updates the object.
         "$summary\n\n$extractedText",
         {
           'type': type.name,
@@ -101,7 +102,21 @@ class HealthRecordCubit extends Cubit<HealthRecordState> {
     }
   }
 
+  Future<void> loadRecords() async {
+    emit(HealthRecordLoading());
+    try {
+      final records = await _repository.getAllRecords();
+      emit(HealthRecordLoadedState(records: records));
+    } catch (e) {
+      emit(HealthRecordError(e.toString()));
+    }
+  }
+
   void reset() {
     emit(HealthRecordInitial());
+  }
+
+  Future<void> resetAndLoad() async {
+    await loadRecords();
   }
 }

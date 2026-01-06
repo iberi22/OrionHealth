@@ -1,0 +1,178 @@
+# 🆘 Plan de Recuperación del Repositorio Git
+
+## 🚨 Problema Detectado
+
+Durante la actualización de `isar_agent_memory` v0.4.0, el repositorio Git de **OrionHealth fue sobrescrito** con el repositorio del paquete.
+
+### Estado Actual:
+- ❌ `.git/` contiene el historial de `isar_agent_memory` (no de OrionHealth)
+- ❌ `README.md` principal es del paquete (no de OrionHealth)
+- ❌ Archivos del paquete mezclados en el directorio raíz
+- ✅ Remoto configurado correctamente: `https://github.com/iberi22/local-llm.OrionHealth.git`
+- ✅ Código de la app OrionHealth sigue intacto en `lib/`, `android/`, `ios/`
+
+### Archivos que NO deberían estar en la raíz:
+```
+CHANGELOG.md          # Del paquete
+CODE_OF_CONDUCT.md    # Del paquete
+CONTRIBUTING.md       # Del paquete
+doc/                  # Del paquete
+example/              # Del paquete
+flutter/              # Del paquete
+tool/                 # Del paquete
+README.md             # Debe ser de OrionHealth, no del paquete
+```
+
+## 🔧 Opciones de Recuperación
+
+### Opción 1: Clonar desde GitHub (Recomendada si existe backup)
+
+Si tienes el repositorio en GitHub con el historial original:
+
+```powershell
+# 1. Hacer backup del trabajo actual
+cd E:\scripts-python\
+Rename-Item orionhealth_health orionhealth_health_backup
+
+# 2. Clonar el repositorio original
+git clone https://github.com/iberi22/local-llm.OrionHealth.git orionhealth_health
+
+# 3. Copiar los archivos nuevos creados
+Copy-Item orionhealth_health_backup\lib\features\local_agent\* orionhealth_health\lib\features\local_agent\ -Recurse -Force
+Copy-Item orionhealth_health_backup\lib\features\health_report\application\use_cases\generate_health_summary_use_case.dart orionhealth_health\lib\features\health_report\application\use_cases\
+Copy-Item orionhealth_health_backup\test\features\local_agent\* orionhealth_health\test\features\local_agent\ -Recurse -Force
+Copy-Item orionhealth_health_backup\docs\*v0.4.0* orionhealth_health\docs\
+
+# 4. Actualizar packages/isar_agent_memory/ si es necesario
+```
+
+### Opción 2: Reinicializar Git (Si NO hay backup en GitHub)
+
+Si el repositorio en GitHub no existe o está vacío:
+
+```powershell
+cd E:\scripts-python\orionhealth_health
+
+# 1. Backup del .git actual (por si acaso)
+Rename-Item .git .git_isar_backup
+
+# 2. Inicializar nuevo repositorio Git
+git init
+git remote add origin https://github.com/iberi22/local-llm.OrionHealth.git
+
+# 3. Limpiar archivos del paquete que no deben estar en raíz
+Remove-Item CHANGELOG.md -ErrorAction SilentlyContinue
+Remove-Item CODE_OF_CONDUCT.md -ErrorAction SilentlyContinue
+Remove-Item CONTRIBUTING.md -ErrorAction SilentlyContinue
+Remove-Item -Recurse doc -ErrorAction SilentlyContinue
+Remove-Item -Recurse example -ErrorAction SilentlyContinue
+Remove-Item -Recurse flutter -ErrorAction SilentlyContinue
+Remove-Item -Recurse tool -ErrorAction SilentlyContinue
+
+# 4. Crear README.md apropiado para OrionHealth
+# (Ver contenido sugerido abajo)
+
+# 5. Hacer commit inicial
+git add .
+git commit -m "feat: OrionHealth initial commit with isar_agent_memory v0.4.0 integration"
+
+# 6. Push (puede requerir --force si hay algo en GitHub)
+git push -u origin main
+```
+
+### Opción 3: Mantener Historial Híbrido (No recomendada)
+
+Mantener el historial actual del paquete y agregar commits de OrionHealth:
+- ⚠️ Confuso: commits del paquete mezclados con commits de la app
+- ⚠️ Difícil de mantener a largo plazo
+- ✅ No pierdes commits recientes
+
+## 📝 README.md Sugerido para OrionHealth
+
+```markdown
+# 🏥 OrionHealth
+
+> Privacy-first health data management powered by local AI
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.x-blue?logo=dart)](https://dart.dev)
+[![Architecture](https://img.shields.io/badge/Architecture-Hexagonal-green)](docs/vision.md)
+
+OrionHealth es una aplicación de salud personal que prioriza la privacidad mediante procesamiento local de datos con IA.
+
+## ✨ Features
+
+- 🔒 **Privacy-First**: Todos los datos se procesan localmente
+- 🧠 **AI-Powered**: Búsquedas semánticas y resúmenes automáticos
+- 📊 **Health Tracking**: Registros médicos, laboratorios, medicamentos
+- 🔍 **Smart Search**: Búsqueda inteligente con re-ranking avanzado
+- 📈 **Auto Summaries**: Resúmenes de salud generados con IA
+
+## 🏗️ Arquitectura
+
+Implementa **Arquitectura Hexagonal** (Ports & Adapters):
+- `domain/`: Lógica de negocio pura
+- `application/`: Casos de uso
+- `infrastructure/`: Implementaciones concretas
+
+## 📦 Tecnologías
+
+- **UI**: Flutter 3.x con Material Design 3
+- **State Management**: flutter_bloc
+- **DI**: get_it + injectable
+- **Database**: Isar + ObjectBox (vector storage)
+- **AI**: isar_agent_memory v0.4.0 (HiRAG, re-ranking)
+- **On-device ML**: ONNX Runtime
+
+## 🚀 Getting Started
+
+\`\`\`bash
+# Instalar dependencias
+flutter pub get
+
+# Generar código (DI, serialización)
+dart run build_runner build --delete-conflicting-outputs
+
+# Ejecutar app
+flutter run
+\`\`\`
+
+## 📚 Documentación
+
+- [Vision & Goals](docs/vision.md)
+- [Features](docs/features.md)
+- [Contributing](docs/CONTRIBUTING.md)
+- [Integration v0.4.0](docs/INTEGRATION_v0.4.0.md)
+- [Usage Guide](docs/USAGE_GUIDE_v0.4.0.md)
+
+## 📄 License
+
+MIT License - Ver [LICENSE](LICENSE)
+```
+
+## 🎯 Próximos Pasos Recomendados
+
+1. **Decidir qué opción usar** (1, 2 o 3)
+2. **Verificar si existe backup en GitHub**: `git clone https://github.com/iberi22/local-llm.OrionHealth.git temp_check`
+3. **Ejecutar el plan elegido**
+4. **Crear `.gitignore` apropiado** para no incluir archivos del paquete
+5. **Configurar `packages/isar_agent_memory/` como submodule** (opcional)
+
+## 📋 Checklist Post-Recuperación
+
+- [ ] `.git/` tiene historial de OrionHealth (no del paquete)
+- [ ] `README.md` describe OrionHealth (no isar_agent_memory)
+- [ ] Archivos del paquete solo en `packages/isar_agent_memory/`
+- [ ] Remoto apunta a `https://github.com/iberi22/local-llm.OrionHealth.git`
+- [ ] Push exitoso a GitHub
+- [ ] Archivos nuevos (use cases, docs) preservados
+
+## ⚠️ Advertencia
+
+**NO hagas push** al remoto actual hasta resolver este problema. El historial de commits del paquete podría sobrescribir el repositorio de OrionHealth en GitHub.
+
+---
+
+**Creado**: 25/11/2025
+**Autor**: Copilot Agent
+**Estado**: ⏳ Pendiente de decisión
