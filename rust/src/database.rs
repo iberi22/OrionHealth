@@ -1,9 +1,9 @@
 /// SurrealDB connection and management
 use crate::error::{OrionError, Result};
+use std::sync::Arc;
 use surrealdb::engine::local::Db;
 use surrealdb::engine::local::Mem;
 use surrealdb::Surreal;
-use std::sync::Arc;
 use tokio::sync::RwLock;
 
 /// Database manager for SurrealDB

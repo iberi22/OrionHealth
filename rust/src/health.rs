@@ -14,10 +14,7 @@ pub struct HealthSummaryGenerator {
 
 impl HealthSummaryGenerator {
     /// Create a new health summary generator
-    pub fn new(
-        vector_store: Arc<VectorStoreService>,
-        llm_adapter: Arc<dyn LlmAdapter>,
-    ) -> Self {
+    pub fn new(vector_store: Arc<VectorStoreService>, llm_adapter: Arc<dyn LlmAdapter>) -> Self {
         Self {
             vector_store,
             llm_adapter,
@@ -92,7 +89,9 @@ impl HealthSummaryGenerator {
         let contents: Vec<_> = nodes.iter().map(|n| n.content.clone()).collect();
 
         if self.llm_adapter.is_available().await {
-            self.llm_adapter.generate_summary(contents, summary_type).await
+            self.llm_adapter
+                .generate_summary(contents, summary_type)
+                .await
         } else {
             // Fallback: Simple concatenation
             Ok(format!(
@@ -116,9 +115,7 @@ impl HealthSummaryGenerator {
         // Count by record type
         let mut type_counts = std::collections::HashMap::new();
         for node in nodes {
-            *type_counts
-                .entry(&node.metadata.record_type)
-                .or_insert(0) += 1;
+            *type_counts.entry(&node.metadata.record_type).or_insert(0) += 1;
         }
 
         for (record_type, count) in type_counts {

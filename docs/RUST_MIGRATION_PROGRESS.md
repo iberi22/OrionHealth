@@ -135,7 +135,55 @@ strip = true         # Strip debug symbols
 
 ---
 
-## Next Steps (Phase 2)
+## Recent Updates (2026-01-06)
+
+### ✅ Phase 2: Model Manager & Smart LLM System - COMPLETED
+
+**Implemented:**
+1. **Gemini Cloud Adapter** (`rust/src/llm/gemini_adapter.rs`)
+   - Full Gemini 1.5 Flash API integration
+   - Usage tracking (tokens, requests count)
+   - Configurable API key and endpoint
+   - Error handling for API failures
+   - Unit tests for adapter functionality
+
+2. **Smart LLM Manager** (`rust/src/llm/smart_manager.rs`)
+   - Auto-switch logic between local and cloud
+   - Three strategies: LocalOnly, CloudOnly, Hybrid
+   - Network availability detection
+   - Token budget management (default: 1M tokens/month)
+   - Complexity-based routing (< 2K tokens → local, > 2K → cloud)
+   - Fallback to local when cloud unavailable
+   - Comprehensive unit tests
+
+3. **Decision Tree Logic:**
+   ```
+   if strategy == LocalOnly:
+       use local_model
+   elif strategy == CloudOnly:
+       use cloud_model (if network + credits)
+   else: # Hybrid
+       if cloud_available && cloud_credits_ok:
+           if prompt < 2048 tokens:
+               use local_model
+           else:
+               use cloud_model
+       elif local_available:
+           use local_model
+       else:
+           error: no_adapter_available
+   ```
+
+**Files Created:**
+- `rust/src/llm/gemini_adapter.rs` (227 lines)
+- `rust/src/llm/smart_manager.rs` (368 lines)
+
+**Files Updated:**
+- `rust/src/llm.rs` - Added exports for new modules
+
+---
+
+## Next Steps (Phase 3)
 
 ### High Priority
 1. **SurrealDB Schema Design**
@@ -148,13 +196,14 @@ strip = true         # Strip debug symbols
    - Generate embeddings for medical records
    - Implement cosine similarity search
 
-3. **LLM Model Integration**
-   - Download quantized model (e.g., TinyLlama 1.1B GGUF)
-   - Load model in CandleLlmAdapter
-   - Implement inference pipeline
+3. **LLM Model Integration (Candle)**
+   - Download quantized model (Phi-3-mini-4k-instruct Q4)
+   - Load GGUF model in CandleLlmAdapter
+   - Implement inference pipeline with candle-transformers
+   - Tokenizer integration
 
 4. **Flutter API Bindings**
-   - Expose Rust functions via flutter_rust_bridge
+   - Expose SmartLlmManager via flutter_rust_bridge
    - Create Dart wrappers for async calls
    - Update UI to call Rust backend
 

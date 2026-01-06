@@ -27,10 +27,7 @@ impl SmartSearch {
             .await?;
 
         // Multi-hop search for comprehensive context
-        let hierarchical_results = self
-            .vector_store
-            .multi_hop_search(query, 2, 3)
-            .await?;
+        let hierarchical_results = self.vector_store.multi_hop_search(query, 2, 3).await?;
 
         Ok(SmartSearchResult {
             query: query.to_string(),
@@ -66,19 +63,23 @@ impl SmartSearch {
         }
 
         // Temporal queries → Recency
-        let temporal_keywords = vec![
-            "reciente", "último", "actual", "hoy", "ayer", "esta semana", "este mes", "nuevo",
+        let temporal_keywords = [
+            "reciente",
+            "último",
+            "actual",
+            "hoy",
+            "ayer",
+            "esta semana",
+            "este mes",
+            "nuevo",
         ];
 
-        if temporal_keywords
-            .iter()
-            .any(|kw| lower_query.contains(kw))
-        {
+        if temporal_keywords.iter().any(|kw| lower_query.contains(kw)) {
             return SearchStrategy::Recency;
         }
 
         // Exploratory queries → Diversity
-        let exploratory_keywords = vec![
+        let exploratory_keywords = [
             "todos",
             "diferentes",
             "variedad",

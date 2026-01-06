@@ -134,6 +134,31 @@ flutter pub get
 flutter run
 ```
 
+### Development Workflow 🆕
+
+**Before pushing code**, validate everything locally:
+
+```powershell
+# Windows
+.\scripts\pre-push-check.ps1
+
+# Linux/macOS
+./scripts/pre-push-check.sh
+```
+
+This validates:
+- ✅ Flutter analyze
+- ✅ Rust tests & format
+- ✅ flutter_rust_bridge sync
+- ✅ Integration tests
+
+**Automated CI/CD:**
+- Every push triggers comprehensive testing
+- Failed tests auto-create GitHub issues
+- AI agents (Jules/Copilot) auto-fix and create PRs
+
+See [DEPLOY_CICD_README.md](DEPLOY_CICD_README.md) for complete CI/CD documentation.
+
 ### First-Time Setup
 1. **Create Your Profile**: Enter basic health information
 2. **Upload First Record**: Add a medical document or lab result

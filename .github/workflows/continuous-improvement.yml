@@ -1,0 +1,360 @@
+# Continuous Improvement Agent
+# Analyzes codebase, suggests improvements, creates optimization issues
+
+name: 🔄 Continuous Improvement
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      focus_area:
+        description: 'Focus area for analysis'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - performance
+          - security
+          - code-quality
+          - documentation
+          - testing
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  analyze-codebase:
+    name: 🔍 Analyze & Suggest Improvements
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📋 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: 📊 Code complexity analysis
+        id: complexity
+        run: |
+          echo "## 📊 Code Complexity Analysis" >> analysis.md
+          echo "" >> analysis.md
+
+          # Find large files (potential refactoring candidates)
+          echo "### Large Files (> 500 lines)" >> analysis.md
+          echo "" >> analysis.md
+          find . -type f \( -name "*.rs" -o -name "*.dart" \) -exec wc -l {} \; \
+            | sort -rn | head -10 | while read lines file; do
+            if [ "$lines" -gt 500 ]; then
+              echo "- \`$file\`: $lines lines (consider splitting)" >> analysis.md
+            fi
+          done
+          echo "" >> analysis.md
+
+          # Find files with many TODOs
+          echo "### Files with TODO/FIXME Comments" >> analysis.md
+          echo "" >> analysis.md
+          grep -r "TODO\|FIXME" --include="*.rs" --include="*.dart" . \
+            | cut -d: -f1 | sort | uniq -c | sort -rn | head -10 | while read count file; do
+            echo "- \`$file\`: $count TODOs/FIXMEs" >> analysis.md
+          done
+          echo "" >> analysis.md
+
+      - name: 🔐 Security scan
+        id: security
+        continue-on-error: true
+        run: |
+          echo "## 🔐 Security Analysis" >> analysis.md
+          echo "" >> analysis.md
+
+          # Check for hardcoded secrets patterns
+          echo "### Potential Security Issues" >> analysis.md
+          echo "" >> analysis.md
+
+          SECRETS_FOUND=false
+          if grep -r "api[_-]key\s*=\|password\s*=\|secret\s*=" --include="*.rs" --include="*.dart" --include="*.toml" . 2>/dev/null; then
+            echo "⚠️ Found potential hardcoded credentials" >> analysis.md
+            SECRETS_FOUND=true
+          fi
+
+          if [ "$SECRETS_FOUND" = false ]; then
+            echo "✅ No obvious security issues found" >> analysis.md
+          fi
+          echo "" >> analysis.md
+
+      - name: 🧪 Test coverage analysis
+        id: coverage
+        run: |
+          echo "## 🧪 Test Coverage Analysis" >> analysis.md
+          echo "" >> analysis.md
+
+          # Count test files vs source files
+          RUST_SRC=$(find rust/src -name "*.rs" | wc -l)
+          RUST_TESTS=$(grep -r "#\[test\]" rust/src --include="*.rs" | wc -l)
+
+          DART_SRC=$(find lib -name "*.dart" 2>/dev/null | wc -l || echo "0")
+          DART_TESTS=$(find test -name "*_test.dart" 2>/dev/null | wc -l || echo "0")
+
+          echo "### Coverage Metrics" >> analysis.md
+          echo "" >> analysis.md
+          echo "| Language | Source Files | Test Functions | Ratio |" >> analysis.md
+          echo "|----------|--------------|----------------|-------|" >> analysis.md
+
+          if [ "$RUST_SRC" -gt 0 ]; then
+            RUST_RATIO=$(echo "scale=2; $RUST_TESTS / $RUST_SRC" | bc)
+            echo "| Rust | $RUST_SRC | $RUST_TESTS | $RUST_RATIO |" >> analysis.md
+          fi
+
+          if [ "$DART_SRC" -gt 0 ]; then
+            DART_RATIO=$(echo "scale=2; $DART_TESTS / $DART_SRC" | bc)
+            echo "| Dart | $DART_SRC | $DART_TESTS | $DART_RATIO |" >> analysis.md
+          fi
+          echo "" >> analysis.md
+
+          echo "test_count=$RUST_TESTS" >> $GITHUB_OUTPUT
+
+      - name: 📚 Documentation analysis
+        id: docs
+        run: |
+          echo "## 📚 Documentation Analysis" >> analysis.md
+          echo "" >> analysis.md
+
+          # Find public functions without doc comments
+          echo "### Undocumented Public Functions" >> analysis.md
+          echo "" >> analysis.md
+
+          UNDOC_COUNT=0
+          for file in $(find rust/src -name "*.rs"); do
+            # Simple heuristic: pub fn without ///
+            UNDOC=$(grep -B1 "pub fn" "$file" | grep -v "///" | grep -c "pub fn" || true)
+            if [ "$UNDOC" -gt 0 ]; then
+              echo "- \`$file\`: ~$UNDOC undocumented public functions" >> analysis.md
+              ((UNDOC_COUNT += UNDOC))
+            fi
+          done
+
+          if [ "$UNDOC_COUNT" -eq 0 ]; then
+            echo "✅ All public functions appear to be documented" >> analysis.md
+          fi
+          echo "" >> analysis.md
+
+          echo "undoc_count=$UNDOC_COUNT" >> $GITHUB_OUTPUT
+
+      - name: ⚡ Performance hotspots
+        id: performance
+        run: |
+          echo "## ⚡ Performance Analysis" >> analysis.md
+          echo "" >> analysis.md
+
+          echo "### Potential Optimization Opportunities" >> analysis.md
+          echo "" >> analysis.md
+
+          # Find nested loops (potential O(n²) issues)
+          NESTED_LOOPS=$(grep -r "for.*{" rust/src --include="*.rs" | \
+            xargs -I {} sh -c 'echo "{}" | grep -c "for"' | \
+            awk '$1 > 1' | wc -l || echo "0")
+
+          echo "- Files with nested loops: $NESTED_LOOPS (review for O(n²) complexity)" >> analysis.md
+
+          # Find clones (could use references instead)
+          CLONE_COUNT=$(grep -r "\.clone()" rust/src --include="*.rs" | wc -l || echo "0")
+          echo "- \`.clone()\` calls: $CLONE_COUNT (consider borrowing instead)" >> analysis.md
+          echo "" >> analysis.md
+
+      - name: 🎯 Generate improvement suggestions
+        id: suggestions
+        run: |
+          echo "## 🎯 Recommended Actions" >> analysis.md
+          echo "" >> analysis.md
+
+          PRIORITY_COUNT=0
+
+          # High priority suggestions
+          if [ "${{ steps.docs.outputs.undoc_count }}" -gt 20 ]; then
+            echo "### 🔴 High Priority" >> analysis.md
+            echo "- **Documentation:** ${{ steps.docs.outputs.undoc_count }} undocumented functions" >> analysis.md
+            ((PRIORITY_COUNT++))
+          fi
+
+          if [ "${{ steps.coverage.outputs.test_count }}" -lt 50 ]; then
+            echo "- **Testing:** Low test coverage (only ${{ steps.coverage.outputs.test_count }} tests)" >> analysis.md
+            ((PRIORITY_COUNT++))
+          fi
+
+          # Medium priority
+          echo "" >> analysis.md
+          echo "### 🟡 Medium Priority" >> analysis.md
+          echo "- **Code Quality:** Review large files and complex functions" >> analysis.md
+          echo "- **Performance:** Analyze clone usage and nested loops" >> analysis.md
+          echo "" >> analysis.md
+
+          echo "priority_count=$PRIORITY_COUNT" >> $GITHUB_OUTPUT
+
+          # Create summary report
+          cat analysis.md >> $GITHUB_STEP_SUMMARY
+
+      - name: 📤 Upload analysis report
+        uses: actions/upload-artifact@v4
+        with:
+          name: improvement-analysis
+          path: analysis.md
+          retention-days: 30
+
+      - name: 🚨 Create improvement issues
+        if: steps.suggestions.outputs.priority_count > 0
+        run: |
+          # Issue 1: Documentation improvements
+          if [ "${{ steps.docs.outputs.undoc_count }}" -gt 20 ]; then
+            ISSUE_TITLE="📚 Improve code documentation coverage"
+
+            ISSUE_BODY=$(cat <<EOF
+          ## 📚 Documentation Improvement Task
+
+          **Detected by:** Continuous Improvement Agent
+          **Priority:** 🟡 Medium
+          **Type:** Code Quality
+
+          ---
+
+          ### 📊 Current State
+
+          - **Undocumented functions:** ~${{ steps.docs.outputs.undoc_count }}
+          - **Focus areas:** Public APIs, exported modules
+
+          ### 🎯 Goal
+
+          Add comprehensive documentation comments (\`///\`) to all public functions and structs.
+
+          ### 📋 Tasks
+
+          - [ ] Document all public functions in \`rust/src/\`
+          - [ ] Add module-level documentation
+          - [ ] Include usage examples where appropriate
+          - [ ] Run \`cargo doc\` to verify
+
+          ### 📚 Guidelines
+
+          \`\`\`rust
+          /// Brief description of what this function does
+          ///
+          /// # Arguments
+          ///
+          /// * \`param\` - Description of parameter
+          ///
+          /// # Returns
+          ///
+          /// Description of return value
+          ///
+          /// # Examples
+          ///
+          /// \`\`\`
+          /// let result = my_function(arg);
+          /// \`\`\`
+          pub fn my_function(param: Type) -> ReturnType {
+              // implementation
+          }
+          \`\`\`
+
+          ---
+
+          **Auto-generated by:** Continuous Improvement Agent
+          **Analysis Report:** See workflow artifacts
+          EOF
+          )
+
+            gh issue create \
+              --title "$ISSUE_TITLE" \
+              --body "$ISSUE_BODY" \
+              --label "ai-agent,documentation,code-quality,improvement" \
+              --assignee ""
+
+            echo "✅ Created documentation improvement issue"
+          fi
+
+          # Issue 2: Test coverage improvements
+          if [ "${{ steps.coverage.outputs.test_count }}" -lt 50 ]; then
+            ISSUE_TITLE="🧪 Increase test coverage"
+
+            ISSUE_BODY=$(cat <<EOF
+          ## 🧪 Test Coverage Improvement Task
+
+          **Detected by:** Continuous Improvement Agent
+          **Priority:** 🔴 High
+          **Type:** Testing
+
+          ---
+
+          ### 📊 Current State
+
+          - **Current test count:** ${{ steps.coverage.outputs.test_count }}
+          - **Target:** Minimum 100 tests
+
+          ### 🎯 Goal
+
+          Increase test coverage to ensure code reliability and catch regressions early.
+
+          ### 📋 Tasks
+
+          - [ ] Identify untested modules
+          - [ ] Write unit tests for core functionality
+          - [ ] Add integration tests for critical paths
+          - [ ] Achieve >70% code coverage
+
+          ### 🔧 Commands
+
+          \`\`\`bash
+          # Run tests with coverage
+          cd rust
+          cargo test --all-features
+          cargo tarpaulin --out Html
+
+          # Flutter tests
+          flutter test --coverage
+          \`\`\`
+
+          ---
+
+          **Auto-generated by:** Continuous Improvement Agent
+          **Recommended Agent:** Jules (for comprehensive test generation)
+          EOF
+          )
+
+            gh issue create \
+              --title "$ISSUE_TITLE" \
+              --body "$ISSUE_BODY" \
+              --label "ai-agent,testing,priority-high,improvement" \
+              --assignee ""
+
+            echo "✅ Created testing improvement issue"
+          fi
+
+      - name: 🎯 Trigger agent dispatcher
+        if: steps.suggestions.outputs.priority_count > 0
+        run: |
+          echo "🤖 Triggering agent dispatcher..."
+          sleep 3
+
+          gh workflow run agent-dispatcher.yml \
+            --field strategy="round-robin" \
+            --field max_issues="5" \
+            --field label_filter="ai-agent"
+
+          echo "✅ Issues created and agents dispatched"
+
+      - name: 📊 Final report
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 Quick Links" >> $GITHUB_STEP_SUMMARY
+          echo "- [View Improvement Issues](https://github.com/${{ github.repository }}/issues?q=is%3Aissue+is%3Aopen+label%3Aimprovement)" >> $GITHUB_STEP_SUMMARY
+          echo "- [View Analysis Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [Agent Dashboard](https://github.com/${{ github.repository }}/issues?q=is%3Aissue+is%3Aopen+label%3Aai-agent)" >> $GITHUB_STEP_SUMMARY

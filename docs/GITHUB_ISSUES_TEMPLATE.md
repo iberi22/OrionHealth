@@ -1,6 +1,6 @@
 # GitHub Issues - OrionHealth Migration Plan
 
-**Repository**: https://github.com/iberi22/OrionHealth  
+**Repository**: https://github.com/iberi22/OrionHealth
 **Created for**: Manual issue creation (gh CLI unavailable)
 
 ---
@@ -499,10 +499,10 @@ Sprint 4.4 - Final testing and production release.
 
 ## Summary
 
-**Total Issues**: 15  
-**Completed**: 1  
-**In Progress**: 0  
-**TODO**: 14  
+**Total Issues**: 15
+**Completed**: 1
+**In Progress**: 0
+**TODO**: 14
 
 **Priority Distribution**:
 - 🔴 High: 7 issues

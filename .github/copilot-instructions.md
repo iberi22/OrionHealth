@@ -1,870 +1,1058 @@
-# 🧠 GitHub Copilot Instructions
+# 🧠 GitHub Copilot Instructions - OrionHealth
 
-> **"⚡ Inteligente, rápida y minimalista - Rust-powered, sub-second execution"**
+> **"Privacy-First Health Data Sanctuary - Flutter + Clean Architecture + On-Device AI"**
+
+## Project Overview
+
+OrionHealth is a **privacy-first, local-first health assistant** built with Flutter 3.x that enables users to own their complete health data history. All data stays on-device with medical-grade encryption, no cloud dependencies.
+
+**Core Technologies:**
+- **Frontend:** Flutter 3.x + Dart 3.x (Material Design 3)
+- **Backend:** Rust + SurrealDB 2.2.0 (local in-memory + WebSocket)
+- **State Management:** flutter_bloc ^9.1.1 (Cubit pattern)
+- **Databases:**
+  - Isar ^3.1.0+1 (Flutter NoSQL, local-only)
+  - SurrealDB 2.2.0 (Rust backend, graph database)
+- **Bridge:** flutter_rust_bridge =2.11.1 (Flutter ↔ Rust communication)
+- **DI:** get_it + injectable
+- **Security:** AES-256-GCM encryption, biometric auth, PIN with Argon2id
+- **AI:**
+  - ONNX Runtime (local LLM - Phi-3/Gemma)
+  - Candle (Rust ML inference)
+  - isar_agent_memory (RAG)
 
 ## Prime Directive
 You are operating under the **Git-Core Protocol**. Your state is GitHub Issues, not internal memory.
 
 ---
 
-## 🚀 Quick Commands (Prompt Files)
+## 🏗️ Architecture Essentials
 
-**Usa estos prompts en el chat de Copilot:**
+### Hybrid Architecture (Flutter + Rust)
 
-| Prompt | Descripción |
-|--------|-------------|
-| `#prompt:context` | 🆕 **Cargar contexto al inicio de sesión** |
-| `#prompt:help` | Guía rápida del protocolo |
-| `#prompt:issue` | Crear un nuevo issue |
-| `#prompt:update` | Actualizar el protocolo |
-| `#prompt:status` | Ver estado del protocolo |
+OrionHealth uses a **hybrid architecture** combining Flutter for UI and Rust for performance-critical backend operations:
+
+```
+┌─────────────────────────────────────────────┐
+│           Flutter Frontend (Dart)           │
+│  ┌─────────────┐         ┌──────────────┐  │
+│  │ UI/Widgets  │ ←──────→│ State (Cubit)│  │
+│  └─────────────┘         └──────────────┘  │
+│         │                        │          │
+│         ▼                        ▼          │
+│  ┌─────────────┐         ┌──────────────┐  │
+│  │   Isar DB   │         │ flutter_rust │  │
+│  │ (NoSQL)     │         │   _bridge    │  │
+│  └─────────────┘         └──────┬───────┘  │
+└──────────────────────────────────┼──────────┘
+                                   │ FFI
+┌──────────────────────────────────┼──────────┐
+│        Rust Backend              ▼          │
+│  ┌─────────────┐         ┌──────────────┐  │
+│  │ SurrealDB   │ ←──────→│  AI/ML Core  │  │
+│  │ (Graph DB)  │         │   (Candle)   │  │
+│  └─────────────┘         └──────────────┘  │
+│         │                        │          │
+│         ▼                        ▼          │
+│  ┌─────────────────────────────────────┐   │
+│  │   Vector Store + Search Engine      │   │
+│  └─────────────────────────────────────┘   │
+└─────────────────────────────────────────────┘
+```
+
+**When to use each layer:**
+- **Flutter/Isar:** UI state, user preferences, cached data
+- **Rust/SurrealDB:** Complex queries, graph relationships, medical records, AI inference
+
+### Clean Architecture (Hexagonal/Ports & Adapters)
+
+**EVERY feature follows this structure:**
+```
+features/<feature_name>/
+├── application/bloc/        # Cubit + State (sealed classes with equatable)
+├── domain/
+│   ├── entities/           # Isar entities (@collection)
+│   └── repositories/       # Abstract repository interfaces
+├── infrastructure/
+│   ├── repositories/       # Repository implementations (Isar)
+│   └── services/          # External services (HealthKit, BLE, encryption)
+└── presentation/
+    ├── pages/             # Full screen pages
+    └── widgets/           # Feature-specific widgets
+```
+
+**Example: Auth Feature Flow**
+```
+AuthGate (presentation)
+  → AuthCubit (application/bloc)
+    → AuthRepository (domain)
+      → AuthRepositoryImpl (infrastructure)
+        → EncryptionService + BiometricService
+```
+
+### Critical Architectural Decisions
+
+| Decision | Choice | Rationale | File |
+|----------|--------|-----------|------|
+| Architecture | Clean Architecture | Separation of concerns, testability | [.✨/ARCHITECTURE.md](../.✨/ARCHITECTURE.md#L17) |
+| Backend | Rust + SurrealDB | Performance, type safety, graph queries | [rust/Cargo.toml](../rust/Cargo.toml) |
+| Frontend DB | Isar | Fast, Flutter-native, schema-based | [pubspec.yaml](../pubspec.yaml#L47-L49) |
+| Backend DB | SurrealDB (in-memory) | Graph relationships, ACID, SQL-like | [rust/src/database.rs](../rust/src/database.rs) |
+| State Management | Cubit (flutter_bloc) | Simpler than BLoC, less boilerplate | [main.dart](../lib/main.dart#L24-L26) |
+| Flutter↔Rust Bridge | flutter_rust_bridge | Type-safe FFI communication | [flutter_rust_bridge.yaml](../flutter_rust_bridge.yaml) |
+| AI Inference | Candle (Rust) | Fast local LLM, ONNX support | [rust/src/llm/](../rust/src/llm/) |
+| Auth Method | PIN + Biometric | Medical data requires strong auth | [.✨/ARCHITECTURE.md](../.✨/ARCHITECTURE.md#L26) |
+| Data Sharing | BLE (flutter_blue_plus) | Direct device-to-device, no internet | [.✨/ARCHITECTURE.md](../.✨/ARCHITECTURE.md#L27) |
+| Encryption | AES-256-GCM + Argon2id | Hospital-grade encryption | [.✨/ARCHITECTURE.md](../.✨/ARCHITECTURE.md#L28) |
+| Theme | CyberTheme (cyberpunk UI) | Glassmorphic, neon accents | [cyber_theme.dart](../lib/core/theme/cyber_theme.dart) |
+
+**⚠️ Architecture First Rule:** Before implementing ANY infrastructure feature, check `.✨/ARCHITECTURE.md` CRITICAL DECISIONS table. Architecture decisions override issue descriptions.
 
 ---
 
-## 🤖 Model-Specific Agents (NEW)
+## 🔐 Security Architecture (Medical-Grade)
 
-**Custom agents optimizados para cada modelo LLM:**
+### Authentication Flow
+```
+App Start → AuthGate → [Has PIN?]
+             ├── No  → SetupPinPage → Create PIN → Argon2id hash + salt
+             └── Yes → LoginPage → [Biometric enabled?]
+                                    ├── Yes → Biometric auth (local_auth)
+                                    └── No  → Enter PIN → Verify hash
+```
 
-| Agent | Modelo | Uso |
-|-------|--------|-----|
-| `@protocol-claude` | Claude Sonnet 4 | Tareas estándar |
-| `@architect` | Claude Opus 4.5 | Decisiones de arquitectura |
-| `@quick` | Claude Haiku 4.5 | Respuestas rápidas |
-| `@protocol-gemini` | Gemini 3 Pro | Contexto grande (1M+) |
-| `@protocol-codex` | GPT-5.1 Codex | Implementación de código |
-| `@protocol-grok` | Grok Code Fast 1 | Contexto masivo (2M) |
-| `@router` | Auto | Selección de agente |
+### Key Security Patterns
 
-**Ubicación:** `.github/agents/`
-**Instrucciones:** `.github/instructions/`
+**1. PIN Storage (NEVER store plaintext):**
+```dart
+// ❌ WRONG: Storing PIN directly
+final pin = "1234";
+
+// ✅ RIGHT: Hash with Argon2id + random salt
+final salt = await _encryptionService.generatePinSalt();
+final pinHash = await _encryptionService.hashPin(pin, salt);
+// Store: pinHash + salt in flutter_secure_storage
+```
+
+**2. Encryption at Rest:**
+- Master key stored in platform secure storage (Keychain/Keystore)
+- All medical data encrypted with AES-256-GCM before Isar storage
+- Session keys rotated on auth
+
+**3. Lockout Protection:**
+```dart
+// Progressive lockout: 1→5→15→30→60 minute delays
+if (credentials.isCurrentlyLocked) {
+  emit(AuthLocked(
+    remainingMinutes: credentials.lockRemainingMinutes,
+    failedAttempts: credentials.failedAttempts,
+  ));
+}
+```
+
+**4. BLE Medical Data Sharing:**
+```
+Patient Device                         Doctor Device
+────────────────────────────────────────────────────
+[Select Data] ─────────────────────────→ [Scan QR]
+     │                                      │
+     │        ← BLE Connection →            │
+     │                                      │
+  Encrypt with                         Receive +
+  session key                          decrypt
+     │                                      │
+  Send chunks ────────────────────────→ Reassemble
+```
+
+**Files:**
+- [auth_cubit.dart](../lib/features/auth/application/bloc/auth_cubit.dart) - Auth logic
+- [encryption_service.dart](../lib/features/auth/infrastructure/services/encryption_service.dart)
+- [biometric_service.dart](../lib/features/auth/infrastructure/services/biometric_service.dart)
 
 ---
 
-## ⛔ FORBIDDEN ACTIONS (HARD RULES)
+## 🎨 UI/UX Patterns
 
-**NEVER create these files under ANY circumstances:**
+### CyberTheme System
 
-### Task/State Management:
-- ❌ `TODO.md`, `TASKS.md`, `BACKLOG.md`
-- ❌ `PLANNING.md`, `ROADMAP.md`, `PROGRESS.md`
-- ❌ `NOTES.md`, `SCRATCH.md`, `IDEAS.md`
-- ❌ `STATUS.md`, `CHECKLIST.md`, `CHANGELOG.md` (for tracking)
+**Colors:**
+```dart
+primary: Color(0xFF00FF85)    // Neon green
+secondary: Color(0xFF00E0FF)  // Cyan
+backgroundDark: Color(0xFF0A0A0A)  // Almost black
+surfaceDark: Color(0xFF1A1A1A)     // Dark gray
+```
 
-### Testing/Implementation Summaries:
-- ❌ `TESTING_CHECKLIST.md`, `TEST_PLAN.md`, `TEST_GUI.md`
-- ❌ `IMPLEMENTATION_SUMMARY.md`, `IMPLEMENTATION.md`
-- ❌ `SUMMARY.md`, `OVERVIEW.md`, `REPORT.md`
+**Typography:** Google Fonts Space Grotesk (consistent cyberpunk aesthetic)
 
-### Guides/Tutorials:
-- ❌ `GETTING_STARTED.md`, `GUIDE.md`, `TUTORIAL.md`
-- ❌ `QUICKSTART.md`, `SETUP.md`, `HOWTO.md`
-- ❌ `INSTRUCTIONS.md`, `MANUAL.md`
+**Glassmorphic Effects:**
+```dart
+// Use for cards/overlays
+Container(
+  decoration: BoxDecoration(
+    color: Colors.black.withOpacity(0.5),
+    borderRadius: BorderRadius.circular(16),
+    border: Border.all(color: CyberTheme.primary.withOpacity(0.3)),
+  ),
+  child: BackdropFilter(
+    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+    child: content,
+  ),
+)
+```
 
-### Catch-all:
-- ❌ **ANY `.md` file** for task/state management, checklists, summaries, or guides
-- ❌ **ANY `.txt` file** for notes or todos
-- ❌ **ANY JSON/YAML** for task tracking
+**Navigation:** Bottom nav with 4 tabs (Dashboard, Reports, Records, Profile)
 
-### ✅ ONLY ALLOWED `.md` FILES:
-- ✅ `README.md` (project overview ONLY)
-- ✅ `AGENTS.md` (agent configuration ONLY)
-- ✅ `.ai-core/ARCHITECTURE.md` (system architecture ONLY)
-- ✅ `.ai-core/AGENT_INDEX.md` (agent routing ONLY)
-- ✅ `CONTRIBUTING.md`, `LICENSE.md` (standard repo files)
-- ✅ `docs/prompts/*.md` (session continuation prompts - SCRIPT GENERATED ONLY)
+---
 
-### 📤 Session Continuation Prompts (NEW)
+## 🦀 Rust Backend (SurrealDB + AI)
 
-When you need to export context for a new chat session:
+### Project Structure
 
-| Rule | Description |
-|------|-------------|
-| **MUST** be generated by script | `./scripts/export-session.ps1` |
-| **MUST** follow naming | `SESSION_{date}_{topic}.md` |
-| **SHOULD** be deleted after use | Not permanent documentation |
-| **CANNOT** be manually created | Script enforces structure |
+```
+rust/
+├── Cargo.toml                   # Dependencies (SurrealDB, Candle, etc.)
+├── src/
+│   ├── lib.rs                   # Public API exports
+│   ├── api/                     # Flutter-exposed API (via flutter_rust_bridge)
+│   ├── database.rs              # SurrealDB connection management
+│   ├── vector_store.rs          # Embedding storage for RAG
+│   ├── llm/                     # AI inference with Candle
+│   ├── search.rs                # Medical record search
+│   ├── health.rs                # Health data processing
+│   ├── models.rs                # Data models
+│   └── error.rs                 # Error types
+└── examples/                    # Usage examples
+```
 
-**Workflow:**
+### SurrealDB Patterns
+
+**1. Initialize Database:**
+```rust
+use crate::database::DatabaseManager;
+
+let db_manager = DatabaseManager::new();
+db_manager.init().await?;  // Creates in-memory DB with namespace "orionhealth"
+let db = db_manager.get_db().await?;
+```
+
+**2. Query Medical Records (SQL-like):**
+```rust
+// SurrealDB supports graph queries for relationships
+let records: Vec<MedicalRecord> = db
+    .query("SELECT * FROM medical_records WHERE patient_id = $id")
+    .bind(("id", patient_id))
+    .await?
+    .take(0)?;
+```
+
+**3. Graph Relationships:**
+```rust
+// Query doctor-patient relationships with graph syntax
+db.query(
+    "SELECT * FROM doctor->treats->patient WHERE patient.id = $pid"
+).bind(("pid", patient_id))
+.await?;
+```
+
+**Files:**
+- [database.rs](../rust/src/database.rs) - Connection management
+- [Cargo.toml](../rust/Cargo.toml) - SurrealDB config
+
+### Flutter ↔ Rust Communication
+
+**1. Define Rust API (auto-generates Dart bindings):**
+```rust
+// In rust/src/api/mod.rs
+#[flutter_rust_bridge::frb(sync)]
+pub fn get_patient_records(patient_id: String) -> Result<Vec<MedicalRecord>> {
+    // Implementation
+}
+```
+
+**2. Regenerate Bridge (after Rust changes):**
 ```bash
-# Generate continuation prompt
-./scripts/export-session.ps1 -Topic "feature-name" -Summary "Current progress..."
-
-# In new chat, reference the file:
-# User types: #file:docs/prompts/SESSION_2025-01-15_feature-name.md
+flutter_rust_bridge_codegen --rust-input rust/src/api --dart-output lib/bridge
 ```
 
----
+**3. Use from Flutter:**
+```dart
+import 'package:orionhealth_health/bridge/api.dart';
 
-**🚨 BEFORE creating ANY document, STOP and ask yourself:**
-> "Can this be a GitHub Issue instead?" → **YES, it can. Create an issue.**
-> "Can this be a comment in an existing issue?" → **YES, it can. Add a comment.**
-> "Is this a summary/checklist/guide?" → **NO. Use GitHub Issues or comments.**
-
----
-
-## 🎯 Intent Detection - Issue Creation Flow
-
-**When user says ANY of these (or similar), trigger the Issue Creation Flow:**
-
-| User Intent | Trigger Phrases | Action |
-|-------------|-----------------|--------|
-| New task | "necesito", "hay que", "deberíamos", "want to", "need to" | → Create issue file |
-| Bug report | "bug", "error", "falla", "no funciona", "broken" | → Create `BUG_*.md` |
-| Feature request | "agregar", "nueva funcionalidad", "add feature" | → Create `FEAT_*.md` |
-| Planning | "planear", "plan", "roadmap", "siguiente paso" | → Create multiple issue files |
-| Task tracking | "tarea", "task", "todo", "pendiente" | → Create `TASK_*.md` |
-
-### Issue Creation Flow (MANDATORY)
-
-When you detect issue-creation intent:
-
-```
-1. ANNOUNCE: "Voy a crear un issue para trackear esto."
-
-2. ASK (if unclear):
-   - "¿Qué título le ponemos al issue?"
-   - "¿Alguna etiqueta específica? (bug, enhancement, ai-plan)"
-
-3. CREATE FILE in `.github/issues/`:
-   - Format: `{TYPE}_{descripcion-corta}.md`
-   - Types: FEAT, BUG, TASK, DOCS, REFACTOR, TEST, CHORE
-
-4. SHOW the user what you created:
-   "✅ Issue creado: `.github/issues/FEAT_nueva-funcionalidad.md`
-    Se sincronizará con GitHub automáticamente en el próximo push,
-    o ejecuta: `./scripts/sync-issues.ps1`"
+final records = await getPatientRecords(patientId: "123");
 ```
 
-### Example Interaction
+### AI/ML with Candle (Rust)
 
-**User:** "Necesito agregar autenticación OAuth"
+**Local LLM Inference:**
+```rust
+// In rust/src/llm/
+use candle_core::{Device, Tensor};
+use candle_transformers::models::llama;
 
-**Agent Response:**
-```
-Voy a crear un issue para trackear esto.
-
-📝 Creando: `.github/issues/FEAT_oauth-authentication.md`
-
----
-title: "Implementar autenticación OAuth"
-labels:
-  - enhancement
-  - auth
-assignees: []
----
-
-## Descripción
-Agregar autenticación OAuth al sistema.
-
-## Tareas
-- [ ] Configurar proveedor OAuth
-- [ ] Implementar flujo de login
-- [ ] Agregar tests
-
----
-
-✅ Issue creado. Se sincronizará automáticamente o ejecuta:
-`./scripts/sync-issues.ps1`
-
-¿Quieres que empiece a trabajar en esto ahora?
+pub async fn run_inference(prompt: String) -> Result<String> {
+    // Load model from HuggingFace Hub
+    // Run inference on device (CPU/GPU)
+    // Return generated text
+}
 ```
 
-### DO NOT Skip This Flow
+**Why Candle over ONNX?**
+- Native Rust (no Python dependency)
+- Better performance for transformers
+- GPU support out of the box
+- HuggingFace Hub integration
 
-❌ **WRONG:** Start coding immediately without creating an issue
-❌ **WRONG:** Create a TODO.md or TASKS.md file
-❌ **WRONG:** Just acknowledge and forget
-
-✅ **RIGHT:** Always create an issue file first, then work on it
-
----
-
-## Key Rules
-
-### 1. Token Economy
-- **NEVER** create documentation files for tracking state
-- **NEVER** use internal memory to track tasks
-- **ALWAYS** use `gh issue` commands for task management
-- **ALWAYS** use `gh issue comment` for progress updates
-
-### 2. Health Check (Anthropic Pattern - OBLIGATORIO)
-
-> ⚠️ **ANTES de cualquier feature nuevo:** Verificar que el proyecto funciona.
+### Testing Rust Code
 
 ```bash
-# 1. Estado del proyecto
-git log --oneline -10            # Ver trabajo reciente
-cat .ai-core/features.json            # Features con passes: true/false
+# Run all tests
+cd rust && cargo test
 
-# 2. Ejecutar tests
-npm test  # o: cargo test, pytest, etc.
-# Si FALLAN → ARREGLAR PRIMERO
-# Si PASAN → Continuar
+# Run with output
+cargo test -- --nocapture
+
+# Run specific test
+cargo test test_database_init
+
+# Format code
+cargo fmt
+
+# Lint
+cargo clippy -- -D warnings
 ```
 
-> **Anthropic:** "If the agent had started implementing a new feature [with existing bugs], it would likely make the problem worse."
+---
 
-### 3. Context Loading
-Before any task:
+## 🗃️ Database Patterns
+
+### Isar (Flutter Local Storage)
+
+**Use for:** UI state, user preferences, cached data, offline-first features
+
+**Defining Entities (ALWAYS use @collection lowercase):**
+```dart
+import 'package:isar/isar.dart';
+
+part 'medical_record.g.dart';  // Required for code generation
+
+@collection
+class MedicalRecord {
+  Id id = Isar.autoIncrement;  // Auto-incrementing ID
+
+  DateTime? date;
+
+  @Enumerated(EnumType.name)  // Store as string, not index
+  RecordType type;
+
+  String? summary;
+
+  List<MedicalAttachment> attachments;  // Embedded objects
+
+  MedicalRecord({
+    this.date,
+    this.type = RecordType.other,
+    this.summary,
+    this.attachments = const [],
+  });
+}
+```
+
+### Repository Pattern
+
+**Domain (interface):**
+```dart
+abstract class HealthRecordRepository {
+  Future<List<MedicalRecord>> getAllRecords();
+  Future<MedicalRecord?> getRecordById(int id);
+  Future<void> saveRecord(MedicalRecord record);
+}
+```
+
+**Infrastructure (implementation):**
+```dart
+@LazySingleton(as: HealthRecordRepository)
+class HealthRecordRepositoryImpl implements HealthRecordRepository {
+  final Isar _isar;
+
+  HealthRecordRepositoryImpl(this._isar);
+
+  @override
+  Future<List<MedicalRecord>> getAllRecords() {
+    return _isar.medicalRecords.where().findAll();
+  }
+}
+```
+
+**Regenerate after entity changes:**
 ```bash
-# 1. Check the Agent Index to see if you need a specific Role
-cat .ai-core/AGENT_INDEX.md
+flutter pub run build_runner build --delete-conflicting-outputs
+```
 
-# 2. Read Living Research Context (CRITICAL for dependencies)
-cat docs/agent-docs/RESEARCH_STACK_CONTEXT.md
+### SurrealDB (Rust Backend)
 
-# 3. If a Role fits the task, EQUIP IT:
-# ./scripts/equip-agent.ps1 -Role "RoleName"
-# cat .ai-core/CURRENT_CONTEXT.md
+**Use for:** Complex queries, graph relationships, medical records with connections, AI/RAG
 
-# 4. Read architecture
-cat .ai-core/ARCHITECTURE.md
+**Query Examples:**
+```rust
+// Simple query
+let records: Vec<Record> = db
+    .select("medical_records")
+    .await?;
 
-# 5. Check your assigned issues + agent state
+// With conditions
+db.query("SELECT * FROM appointments WHERE date > $today")
+    .bind(("today", chrono::Utc::now()))
+    .await?;
+
+// Graph traversal (doctor-patient relationships)
+db.query("SELECT * FROM doctor->treats->patient WHERE patient.age > 65")
+    .await?;
+```
+
+**Benefits over Isar:**
+- Graph relationships (one query for complex connections)
+- ACID transactions
+- SQL-like syntax (easier migrations from SQL)
+- Real-time subscriptions
+
+---
+
+## � State Management (Cubit Pattern)
+
+### Cubit Structure
+
+**State (sealed class with equatable):**
+```dart
+part of 'auth_cubit.dart';
+
+sealed class AuthState extends Equatable {
+  const AuthState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class AuthInitial extends AuthState {}
+class AuthLoading extends AuthState {}
+class AuthRequired extends AuthState {
+  final bool biometricAvailable;
+  const AuthRequired({required this.biometricAvailable});
+
+  @override
+  List<Object?> get props => [biometricAvailable];
+}
+```
+
+**Cubit:**
+```dart
+@injectable
+class AuthCubit extends Cubit<AuthState> {
+  final AuthRepository _authRepository;
+
+  AuthCubit(this._authRepository) : super(AuthInitial());
+
+  Future<void> checkAuthStatus() async {
+    emit(AuthLoading());
+    try {
+      final hasSetup = await _authRepository.hasSetupAuth();
+      if (!hasSetup) {
+        emit(AuthSetupRequired());
+      }
+    } catch (e) {
+      emit(AuthError('Error: $e'));
+    }
+  }
+}
+```
+
+**Usage in Widget:**
+```dart
+BlocBuilder<AuthCubit, AuthState>(
+  builder: (context, state) {
+    return switch (state) {
+      AuthLoading() => CircularProgressIndicator(),
+      AuthRequired() => LoginPage(),
+      AuthSetupRequired() => SetupPinPage(),
+      _ => SizedBox.shrink(),
+    };
+  },
+)
+```
+
+---
+
+## 🧪 Testing & CI/CD
+
+### Running Tests
+
+```bash
+# Flutter unit tests
+flutter test
+
+# Rust tests
+cd rust && cargo test
+
+# Integration tests
+flutter test integration_test/
+
+# All tests (Flutter + Rust)
+flutter test && cd rust && cargo test && cd ..
+
+# Dart analysis
+flutter analyze
+
+# Rust clippy
+cd rust && cargo clippy -- -D warnings
+
+# Format check (both)
+dart format --set-exit-if-changed .
+cd rust && cargo fmt --all -- --check
+```
+
+### CI/CD Workflows
+
+**OrionHealth has 3 automated CI/CD workflows:**
+
+#### 1. Main CI Pipeline ([ci-cd-main.yml](../.github/workflows/ci-cd-main.yml))
+- **Triggers:** Every push/PR to main, develop, feat/*, fix/*
+- **Jobs:**
+  1. **Rust Tests** - Format, Clippy, Unit tests
+  2. **Flutter Tests** - Analyze, Unit tests, Coverage, Bridge sync check
+  3. **Integration Tests** - E2E tests (Rust ↔ Flutter), SurrealDB integration
+  4. **Status Report** - Creates GitHub issues on failure
+- **Auto-creates issues with:**
+  - Complete error logs
+  - Reproduction steps
+  - Labels: `ai-agent`, `bug`, `priority-high`, `rust`/`flutter`/`integration`
+  - Auto-assigns to Jules/Copilot
+
+**Key Features:**
+- ✅ **Bridge Sync Validation** - Detects when flutter_rust_bridge is out of sync
+- ✅ **Integration Tests** - Tests Rust-Flutter communication end-to-end
+- ✅ **SurrealDB Tests** - Dedicated database integration tests
+- ✅ **Smart Issue Creation** - Different templates for Rust/Flutter/Integration failures
+
+#### 2. Continuous Improvement ([continuous-improvement.yml](../.github/workflows/continuous-improvement.yml))
+- **Triggers:** Daily at 6 AM UTC + manual
+- **Analyzes:**
+  - Code complexity (Rust + Dart)
+  - Security (hardcoded secrets)
+  - Test coverage
+  - Missing documentation
+  - Performance issues
+- **Creates improvement issues** with `ai-agent` label
+
+#### 3. Auto Deploy ([auto-deploy.yml](../.github/workflows/auto-deploy.yml))
+- **Triggers:** Push to main with changes in `docs/`
+- **Actions:** Builds and deploys documentation to GitHub Pages
+- **On failure:** Creates issue assigned to Jules
+
+### When Tests Fail in CI
+
+**Automatic workflow:**
+1. CI detects failure (Rust or Flutter)
+2. Captures full error logs
+3. Creates GitHub issue with:
+   - Error details
+   - Reproduction command
+   - Link to workflow run
+   - Labels for routing
+4. Agent dispatcher assigns to best-fit agent
+5. Agent fixes issue → Creates PR
+6. Human reviews and merges
+
+**Manual intervention only needed for:**
+- High-stakes changes (security, data model)
+- Breaking API changes
+- Major architectural decisions
+
+### Local Testing Before Push
+
+**Automated approach (recommended):**
+
+```powershell
+# Windows
+.\scripts\pre-push-check.ps1
+
+# Linux/macOS
+./scripts/pre-push-check.sh
+```
+
+**These scripts run:**
+1. ✅ Flutter analyze
+2. ✅ Rust format check (`cargo fmt --check`)
+3. ✅ Rust clippy (`-D warnings`)
+4. ✅ Rust tests
+5. ✅ Bridge sync validation
+6. ✅ Flutter tests
+7. ✅ Integration tests (if they exist)
+
+**Manual approach:**
+
+```bash
+# Run this before every commit (includes bridge check)
+flutter analyze && \
+flutter test && \
+cd rust && cargo fmt && cargo clippy && cargo test && cd .. && \
+flutter_rust_bridge_codegen --rust-input rust/src/api --dart-output lib/bridge && \
+git diff --exit-code lib/bridge/ && \
+flutter test integration_test/
+```
+
+**Pre-push checklist:**
+- [ ] Flutter tests pass
+- [ ] Rust tests pass
+- [ ] Bridge is in sync (`flutter_rust_bridge_codegen`)
+- [ ] Integration tests pass
+- [ ] Code is formatted (Dart + Rust)
+- [ ] No clippy warnings
+
+**Pro tip:** Set up Git hook:
+```bash
+# .git/hooks/pre-push
+#!/bin/bash
+./scripts/pre-push-check.sh
+```
+
+**Full documentation:** [DEPLOY_CICD_README.md](../DEPLOY_CICD_README.md) | [docs/CICD_SYSTEM_GUIDE.md](../docs/CICD_SYSTEM_GUIDE.md)
+
+---
+
+## 🔧 Development Workflows
+
+### Starting a New Feature
+
+```bash
+# 1. Read architecture
+cat .✨/ARCHITECTURE.md
+
+# 2. Check assigned issues
 gh issue list --assignee "@me"
-gh issue view <id> --comments | grep -A 50 '<agent-state>'
 
-# 6. Check features.json for next priority
-cat .ai-core/features.json | jq '.features[] | select(.passes == false)'
-```
-
-### 4. Dependency Quarantine Rule (NEW)
-When working with dependencies:
-1. **Check quarantine status**: `gh pr list --label "quarantine"`
-2. **Never use bleeding-edge**: Versions < 7 days old are in quarantine
-3. **Check RESEARCH_STACK_CONTEXT.md**: Contains known issues for current versions
-4. **Prefer stable patterns**: Use the "Intelligent Patterns" section, not latest docs
-
-**Workflow Integration:**
-- Dependabot creates PRs → Auto-labeled "quarantine"
-- After 7 days → Auto-promoted to "ready-to-adopt"
-- On merge → Context Research Agent updates documentation
-
-### 4.1 Living Context Protocol (Context7 Replacement)
-
-This protocol replaces external tools like Context7 with a native, self-hosted solution.
-
-**How it works:**
-1. **Context Research Agent** analyzes dependencies and creates `RESEARCH_STACK_CONTEXT.md`
-2. **Living Context PR** is always open at `living-context/main` branch
-3. **AI Agents** (Gemini, CodeRabbit) automatically review the context for accuracy
-4. **Merge** updates the context, which all AI agents should read
-
-**Usage for AI Agents:**
-```bash
-# ALWAYS read this before working with dependencies
-cat docs/agent-docs/RESEARCH_STACK_CONTEXT.md
-
-# Check for the Living Context PR (latest updates)
-gh pr list --head "living-context/main"
-
-# If context seems outdated, trigger refresh
-gh workflow run living-context.yml
-```
-
-**What's in RESEARCH_STACK_CONTEXT.md:**
-- **Current Stack**: All dependencies with exact versions
-- **Known Anomalies**: Bugs, quirks, breaking changes
-- **Intelligent Patterns**: Recommended usage patterns
-- **Quarantine Status**: Dependencies awaiting community feedback
-
-**Why this beats Context7:**
-| Context7 | Living Context Protocol |
-|----------|------------------------|
-| Generic docs | Project-specific context |
-| External API | Self-hosted in repo |
-| Manual trigger | Automated via workflows |
-| No risk analysis | 7-day quarantine + AI review |
-
-### 4. Architecture First Rule
-Before implementing ANY infrastructure feature:
-1. Run: `grep -A 20 'CRITICAL DECISIONS' .ai-core/ARCHITECTURE.md`
-2. Check CRITICAL DECISIONS table
-3. If conflict with issue, ARCHITECTURE wins
-
-**Why this matters:** A critical error occurred when Vercel was implemented despite ARCHITECTURE.md specifying GitHub Pages. Issues may mention multiple options, but architecture decisions are final.
-
-**Related Documentation:**
-- `.ai-core/ARCHITECTURE.md` - CRITICAL DECISIONS table
-- `.ai-core/AGENT_INDEX.md` - Agent roles and routing
-- `AGENTS.md` - Architecture Verification Rule
-
-### 5. Development Flow
-```bash
-# Take a task
+# 3. Take an issue
 gh issue edit <id> --add-assignee "@me"
 
-# Create branch
-git checkout -b feat/issue-<id>
+# 4. Create branch
+git checkout -b feat/issue-<id>-description
 
-# After coding, commit with reference
-git commit -m "feat: description (closes #<id>)"
+# 5. Implement following Clean Architecture
+# For Flutter: lib/features/<feature>/
+# For Rust: rust/src/<module>/
 
-# Create PR
+# 6. Run tests (both languages)
+flutter test && cd rust && cargo test && cd ..
+
+# 7. Commit atomically (ONE logical change per commit)
+git add lib/features/auth/application/bloc/
+git commit -m "feat(auth): add biometric authentication (closes #<id>)"
+
+# 8. Create PR
 gh pr create --fill
-
-# Generate AI Report (NUEVO)
-./scripts/ai-report.ps1  # Windows
-./scripts/ai-report.sh   # Linux/macOS
 ```
 
-### 5.1 Proactive Execution Protocol (NUEVO)
+### Working with Rust + Flutter Together
 
-> **"No sugerir, HACER"**
+**Scenario: Add new medical record search with AI**
 
-El agente debe **EJECUTAR** el ciclo de vida completo, no solo sugerirlo:
-
-```mermaid
-graph LR
-    A[Detectar Intent] --> B[Crear Issue]
-    B --> C[Implementar]
-    C --> D[Test/Verify]
-    D --> E[Commit Atómico]
-    E --> F[PR + AI Report]
-    F --> G[Verificar Cierre]
+1. **Define Rust API:**
+```rust
+// rust/src/api/search.rs
+#[flutter_rust_bridge::frb(sync)]
+pub fn search_records_with_ai(
+    query: String,
+    use_embeddings: bool
+) -> Result<Vec<SearchResult>> {
+    // Implementation with SurrealDB + Candle
+}
 ```
 
-**Reglas de Ejecución Proactiva:**
-
-| Situación | Acción (NO sugerir) |
-|-----------|---------------------|
-| Usuario describe problema | → Crear issue + branch + fix |
-| Usuario pide feature | → Crear issue + implementar + PR |
-| Usuario menciona bug | → Crear BUG issue + hotfix |
-| Test falla | → Analizar + fix + re-run |
-| PR creado | → Ejecutar AI report |
-
-**AI Report al completar tarea:**
-```powershell
-# Generar análisis automático del PR
-./scripts/ai-report.ps1 -PrNumber $prNumber
-
-# Solo Gemini
-./scripts/ai-report.ps1 -ReportType gemini
-
-# Preview sin publicar
-./scripts/ai-report.ps1 -DryRun
-```
-
-### 5.2 Planning Mode
-When asked to plan, generate `gh issue create` commands instead of documents:
+2. **Regenerate bridge:**
 ```bash
-gh issue create --title "TASK: Description" --body "Details..." --label "ai-plan"
+flutter_rust_bridge_codegen \
+  --rust-input rust/src/api \
+  --dart-output lib/bridge
 ```
 
-**❌ WRONG:** Creating a `PLAN.md` or `ROADMAP.md` file
-**✅ RIGHT:** Running multiple `gh issue create` commands
+3. **Use in Flutter:**
+```dart
+// lib/features/search/infrastructure/search_repository_impl.dart
+@override
+Future<List<SearchResult>> searchWithAI(String query) async {
+  return await searchRecordsWithAi(
+    query: query,
+    useEmbeddings: true,
+  );
+}
+```
 
-**ALTERNATIVE (RECOMMENDED):** Create issue files in `.github/issues/`:
+4. **Test both sides:**
 ```bash
-# Create a file instead of running gh issue create
-# File: .github/issues/FEAT_mi-feature.md
+# Rust unit test
+cd rust && cargo test search_records_with_ai
 
----
-title: "My Feature Description"
-labels:
-  - ai-plan
-  - enhancement
----
-
-## Description
-Details here...
+# Flutter integration test
+flutter test integration_test/search_test.dart
 ```
 
-The workflow `sync-issues.yml` will automatically create the GitHub Issue.
+### Dependency Injection Setup
 
-### 6. Progress Updates
-When you need to document progress:
-```bash
-# Add comment to existing issue
-gh issue comment <id> --body "Progress: Completed X, working on Y"
+**Registering a new service:**
+```dart
+// 1. Add @injectable annotation
+@injectable
+class NewService {
+  final SomeDependency _dep;
+  NewService(this._dep);
+}
+
+// 2. Regenerate DI
+flutter pub run build_runner build --delete-conflicting-outputs
+
+# 3. Use in code
+final service = getIt<NewService>();
 ```
 
-**❌ WRONG:** Creating `PROGRESS.md` or updating a tracking file
-**✅ RIGHT:** Adding comments to the relevant GitHub Issue
+**Module for singletons (like Isar):**
+```dart
+@module
+abstract class DatabaseModule {
+  @lazySingleton
+  Future<Isar> get isar => _initIsar();
 
-### 7. User-Requested Documents (agent-docs)
-
-When the user **explicitly requests** a document (prompt, research, strategy, etc.):
-
-```bash
-# Create in docs/agent-docs/ with proper prefix
-# Prefixes: PROMPT_, RESEARCH_, STRATEGY_, SPEC_, GUIDE_, REPORT_, ANALYSIS_
-
-# Example: User says "Create a prompt for Jules"
-docs/agent-docs/PROMPT_JULES_AUTH_SYSTEM.md
-
-# Commit with docs(agent) scope
-git commit -m "docs(agent): add PROMPT for Jules auth implementation"
+  Future<Isar> _initIsar() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return Isar.open([/* schemas */], directory: dir.path);
+  }
+}
 ```
 
-**✅ ONLY create files when user says:**
-- "Save this as a document"
-- "Create a prompt file for..."
-- "Document this strategy"
-- "Write a spec for..."
-- "I need this as a reference"
+### Dependency Injection Setup
 
-**❌ DO NOT create files, just respond in chat:**
-- "Explain how to..."
-- "Summarize this..."
-- "What's the best approach..."
+**Registering a new service:**
+```dart
+// 1. Add @injectable annotation
+@injectable
+class NewService {
+  final SomeDependency _dep;
+  NewService(this._dep);
+}
 
-### 8. YAML Frontmatter Meta Tags (REQUIRED for agent-docs)
+// 2. Regenerate DI
+flutter pub run build_runner build --delete-conflicting-outputs
 
-When creating documents in `docs/agent-docs/`, **ALWAYS** include YAML frontmatter for rapid AI scanning:
-
-```yaml
----
-title: "Authentication System Prompt"
-type: PROMPT
-id: "prompt-jules-auth"
-created: 2025-11-29
-updated: 2025-11-29
-agent: copilot
-model: claude-opus-4
-requested_by: user
-summary: |
-  Prompt for Jules to implement OAuth2 authentication
-  with Google and GitHub providers.
-keywords: [oauth, auth, jules, security]
-tags: ["#auth", "#security", "#jules"]
-topics: [authentication, ai-agents]
-related_issues: ["#42"]
-project: my-project
-module: auth
-language: typescript
-priority: high
-status: approved
-confidence: 0.92
-token_estimate: 800
-complexity: moderate
----
+// 3. Use in code
+final service = getIt<NewService>();
 ```
 
-**Why?** AI agents can read metadata without parsing entire documents. See `docs/agent-docs/README.md` for full spec.
+**Module for singletons (like Isar):**
+```dart
+@module
+abstract class DatabaseModule {
+  @lazySingleton
+  Future<Isar> get isar => _initIsar();
 
-### 9. Non-Blocking Execution (CRITICAL)
-
-**ALWAYS use background execution for long-running commands to avoid blocking chat:**
-
-| Command Type | When | Pattern |
-|--------------|------|---------|
-| **Tests** | `npm test`, `pytest`, `cargo test` | Redirect to file, show summary |
-| **Builds** | `npm build`, `cargo build` | Background + status only |
-| **Git ops** | `git log`, `git diff` (>10 lines) | File + count summary |
-| **CI workflows** | Any validation script | Always background |
-
-**✅ RIGHT - Non-blocking:**
-```powershell
-npm test > test-results.txt 2>&1
-$passed = (Select-String "PASSED" test-results.txt).Count
-Write-Host "✅ Tests: $passed passed. Details: test-results.txt"
+  Future<Isar> _initIsar() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return Isar.open([/* schemas */], directory: dir.path);
+  }
+}
 ```
 
-**❌ WRONG - Blocks chat:**
-```powershell
-$output = npm test
-Write-Host $output  # Shows 200+ lines, blocks user
-```
-
-**Summary format (max 3 lines in chat):**
-```
-✅ [Task] complete: [metric]
-📄 Full output: [filename]
-```
-
-See: `docs/agent-docs/PROTOCOL_NON_BLOCKING_EXECUTION.md`
-
-### 10. Extended Commit Messages
-
-Use AI-Context section for complex changes:
-
-```text
-feat(auth): implement OAuth2 login #42
-
-Adds OAuth2 authentication with Google and GitHub providers.
-Includes refresh token rotation and session management.
-
-AI-Context: Uses passport.js. Config in src/config/auth.ts.
-Test credentials in .env.example.
-
-Closes #42
-```
-
-### 10. Code Standards
-- Follow existing code style
-- Write tests for new features
-- Use Conventional Commits (see docs/COMMIT_STANDARD.md)
-- Keep PRs focused and small
-
-### 11. Communication
-- Be concise in commit messages
-- Reference issues in all commits
-- Use AI-Context for complex changes
-- Update issue comments for significant progress
-
-### 12. Codex CLI Integration
-
-**Installation:**
-```bash
-npm i -g @openai/codex
-export OPENAI_API_KEY=your-api-key
-```
-
-**Usage modes:**
-```bash
-codex                      # Interactive mode
-codex "explain this code"  # Quick query
-codex exec "..."           # Headless automation
-```
-
-**Trigger via GitHub:**
-- Add label `codex-review` to PR for automated review
-- Comment `/codex-review` for on-demand review
-- Comment `/codex-analyze` for codebase analysis
-
-### 13. GitHub Copilot Coding Agent
-
-**⚠️ Copilot is GitHub-only - NO CLI available.**
-
-**Assign issues to Copilot:**
-```bash
-# Method 1: Add label
-gh issue edit <number> --add-label "copilot"
-
-# Method 2: Assign directly
-gh issue edit <number> --add-assignee "Copilot"
-```
-
-**Trigger in PRs:**
-- Mention `@copilot` in PR comments for specific tasks
-- Copilot creates branches named `copilot/*`
-
-**Monitor Copilot work:**
-```bash
-gh pr list --head "copilot/"
-```
-
-### 14. Google Jules Agent (🔥 RECOMMENDED FOR DELEGATION)
-
-**Jules is the best choice for autonomous task delegation.**
-
-#### How Jules Works
-
-1. **Label-based activation**: Add label `jules` to any issue
-2. **Jules auto-responds**: Starts working immediately
-3. **Creates PR**: When done, opens a Pull Request
-4. **Human reviews**: You approve or request changes
-
-#### Delegating to Jules - Best Practices
-
-**Step 1: Create a DETAILED issue**
-
-Jules needs explicit instructions. Include:
-
-```markdown
-## 🎯 Objective
-[Exactly what to accomplish]
-
-## 📁 Files to Modify/Create
-[List specific file paths with code snippets]
-
-### 1. File: `path/to/file.ts`
-```typescript
-// EXACT code to add or modify
-```
-
-## ✅ Acceptance Criteria
-- [ ] Specific testable criteria
-- [ ] Compilation must pass
-- [ ] Tests must pass
-
-## 🧪 Testing Commands
-```bash
-npm test
-cargo check
-```
-
-## ⏱ Estimated Effort
-X-Y hours
-```
-
-**Step 2: Add the `jules` label**
-
-```bash
-# Via CLI
-gh issue edit <number> --add-label "jules"
-
-# Or in GitHub UI: Labels → jules
-```
-
-**Step 3: Monitor Jules**
-
-```bash
-# Check if Jules commented
-gh issue view <number> --comments
-
-# Check for PRs from Jules
-gh pr list --search "author:googlestaging"
-```
-
-**Step 4: Review & Merge**
-
-- Jules creates PR with all changes
-- Review the code
-- Request changes if needed (Jules will respond)
-- Approve and merge
-
-#### Issue Format for Jules (REQUIRED)
-
-For Jules to work effectively, issues MUST have:
-
-| Section | Required | Purpose |
-|---------|----------|---------|
-| 🎯 Objective | ✅ | What to accomplish |
-| 📁 Files to Modify | ✅ | Exact file paths |
-| Code Snippets | ✅ | Sample implementation |
-| ✅ Acceptance Criteria | ✅ | How to verify success |
-| 🧪 Testing | ⭐ | Commands to run |
-
-**❌ DON'T create vague issues like:**
-- "Implement VPN feature"
-- "Fix the auth bug"
-- "Make it work"
-
-**✅ DO create detailed issues like:**
-- "[MVP] VPN WireGuard Real Integration" with file paths, code, and tests
-
-#### Jules CLI (Alternative to Labels)
-
-```bash
-# Install
-npm install -g @google/jules
-jules login
-
-# Create session from current repo
-jules new "implement feature X"
-
-# Create session for specific repo
-jules new --repo owner/repo "write unit tests"
-
-# Parallel sessions (1-5)
-jules new --parallel 3 "optimize queries"
-
-# Create session from GitHub issue
-gh issue view 42 --json title,body | jq -r '.title + "\n\n" + .body' | jules new
-```
-
-**Jules CLI Commands:**
-```bash
-jules                           # Interactive TUI dashboard
-jules new "task"                # Create new session
-jules remote list --session     # List all sessions
-jules remote list --repo        # List connected repos
-jules remote pull --session ID  # Get session results
-jules remote pull --session ID --apply  # Pull and apply patch
-```
-
-### 15. Agent Load Balancing
-
-**Auto-dispatch to available agents:**
-```bash
-# Add ai-agent label for automatic distribution
-gh issue edit <number> --add-label "ai-agent"
-
-# Or trigger workflow manually
-gh workflow run agent-dispatcher.yml
-```
-
-### 16. AI Code Review Bots (CodeRabbit + Gemini)
-
-**Automated AI reviews on every PR using two complementary bots:**
-
-| Bot | Free For | Commands |
-|-----|----------|----------|
-| **CodeRabbit** | OSS (Pro free) | Auto-reviews every PR |
-| **Gemini Code Assist** | Everyone (100%) | `/gemini review`, `/gemini summary` |
-
-**Workflow:**
-1. Create PR → CodeRabbit auto-reviews
-2. Address suggestions → Use `/gemini review` for second opinion
-3. Human approves → Merge ✅
-
-**Configuration files:**
-- `.coderabbit.yaml` - CodeRabbit rules
-- `.gemini/config.yaml` - Gemini style guide
-
-### 17. Commits Atómicos (OBLIGATORIO)
-
-**UN commit = UN cambio lógico. NUNCA mezclar concerns.**
-
-#### Antes de hacer `git add .`, pregúntate:
-1. ¿Todos los archivos son del mismo módulo/scope?
-2. ¿Es un solo tipo de cambio (feat/fix/docs/ci)?
-3. ¿Puedo describirlo en < 72 caracteres?
-4. ¿Revertirlo afectaría solo una funcionalidad?
-
-Si alguna respuesta es "NO" → **SEPARAR EN MÚLTIPLES COMMITS**
-
-#### Flujo correcto:
-```bash
-# ❌ NUNCA
-git add .
-git commit -m "feat: big update with everything"
-
-# ✅ SIEMPRE
-git add src/migrations/
-git commit -m "feat(db): add user sessions table"
-
-git add src/api/auth/
-git commit -m "feat(auth): implement session endpoint"
-
-git add docs/
-git commit -m "docs: add authentication guide"
-```
-
-#### Herramientas:
-```bash
-# Si ya tienes muchos archivos staged
-git-atomize --analyze    # Ver sugerencias de separación
-git-atomize --interactive  # Separar interactivamente
+### Adding Health Metrics (HealthKit/Health Connect)
+
+```dart
+import 'package:health/health.dart';
+
+// 1. Configure permissions in domain
+final types = [
+  HealthDataType.STEPS,
+  HealthDataType.HEART_RATE,
+  HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+];
+
+// 2. Request authorization
+final health = Health();
+await health.requestAuthorization(types);
+
+// 3. Fetch data
+final now = DateTime.now();
+final data = await health.getHealthDataFromTypes(
+  startTime: now.subtract(Duration(days: 7)),
+  endTime: now,
+  types: types,
+);
+
+// 4. Store in Isar (encrypt sensitive data)
 ```
 
 ---
 
-## 🛠️ Git-Core CLI (RECOMMENDED)
+## 🚫 Forbidden Actions (Git-Core Protocol)
 
-### Overview
+**NEVER create these files:**
+- ❌ `TODO.md`, `TASKS.md`, `BACKLOG.md`, `PLANNING.md`, `ROADMAP.md`
+- ❌ `NOTES.md`, `PROGRESS.md`, `STATUS.md`, `CHECKLIST.md`
+- ❌ `TESTING_CHECKLIST.md`, `IMPLEMENTATION_SUMMARY.md`
+- ❌ `GETTING_STARTED.md`, `GUIDE.md`, `TUTORIAL.md`, `QUICKSTART.md`
+- ❌ ANY `.md` for task/state tracking
 
-`git-core` es el CLI oficial para gestionar el Git-Core Protocol. **SIEMPRE usa el CLI** como método principal para instalar, actualizar y verificar el protocolo.
+**✅ ONLY allowed `.md` files:**
+- ✅ `README.md` (project overview ONLY)
+- ✅ `AGENTS.md` (agent configuration ONLY)
+- ✅ `.✨/ARCHITECTURE.md` (system architecture ONLY)
+- ✅ `CONTRIBUTING.md`, `LICENSE.md` (standard repo files)
 
-### Installation
+**Why?** GitHub Issues are the single source of truth for task management. Creating tracking files wastes tokens and creates synchronization issues.
 
-**🔐 Trust & Transparency:** Before installing, read [docs/CLI_TRUST.md](../docs/CLI_TRUST.md) to understand exactly what the CLI does and verify the source code.
-
+**Instead of creating files:**
 ```bash
-# 🚀 OPTION 1: Shell Scripts (código visible, puedes leerlo antes)
-# Linux/macOS
-curl -fsSL https://raw.githubusercontent.com/iberi22/Git-Core-Protocol/main/install.sh | bash
+# Create an issue
+gh issue create --title "TASK: Add OAuth integration" --body "Details..." --label "ai-plan"
 
-# Windows (PowerShell)
-irm https://raw.githubusercontent.com/iberi22/Git-Core-Protocol/main/install.ps1 | iex
-
-# 🦀 OPTION 2: Cargo (compila desde código fuente en TU máquina)
-# Antes de instalar, lee: docs/CLI_TRUST.md
-# Código fuente: https://github.com/iberi22/Git-Core-Protocol/tree/main/tools/git-core-cli
-cargo install git-core-cli
-
-# 🔨 OPTION 3: Build from source (máxima confianza)
-git clone https://github.com/iberi22/Git-Core-Protocol
-cd Git-Core-Protocol/tools/git-core-cli
-cargo build --release
-./target/release/git-core install
+# Add comment for progress
+gh issue comment <id> --body "Completed authentication, working on token refresh"
 ```
 
-### Commands Reference
+---
 
-| Command | Description | When to Use |
-|---------|-------------|-------------|
-| `gc init` | Initialize project (smart detect) | Start/Setup |
-| `gc check` | Validate env & dependencies | Health Check |
-| `gc issue list` | List tasks | Planning |
-| `gh issue create`| Create issue on GitHub | Task Creation |
-| `gemini analyze`| Analyze context/files | Large Context |
-| `gh copilot suggest`| Get code suggestions | Implementation |
-| `jules run` | Delegate autonomous task | Delegation |
+## 📚 Key Files Reference
 
-> **📘 Full Guide:** See [docs/agent-docs/CLI_GUIDE.md](../docs/agent-docs/CLI_GUIDE.md) for detailed usage of all ecosystem tools (`gc`, `gh`, `gemini`, `copilot`, `jules`).
+| File | Purpose | When to Read |
+|------|---------|--------------|
+| [.✨/ARCHITECTURE.md](../.✨/ARCHITECTURE.md) | Critical decisions, stack, security | Before ANY infrastructure change |
+| [AGENTS.md](../AGENTS.md) | Git-Core Protocol, agent workflows | Understanding automation |
+| [pubspec.yaml](../pubspec.yaml) | Dependencies, version constraints | Adding packages |
+| [main.dart](../lib/main.dart) | App entry point, DI initialization | Understanding app startup |
+| [cyber_theme.dart](../lib/core/theme/cyber_theme.dart) | Theme colors, typography | UI development |
+| [injection.dart](../lib/core/di/injection.dart) | DI configuration | Dependency management |
+| [DEPLOY_CICD_README.md](../DEPLOY_CICD_README.md) | CI/CD system guide | Understanding automation |
 
-### 🚀 Simplified AI Agent Workflow (Sofisticación Invisible)
+---
 
-**Agents MUST use the CLI tools directly:**
+## 🎯 Common Tasks Quick Reference
 
-1. **Start a Task:**
-   ```bash
-   gc context equip <role>
-   # e.g., gc context equip security
-   ```
+**Add new feature:**
+1. Create feature folder: `lib/features/<feature>/`
+2. Follow Clean Architecture structure (domain → application → infrastructure → presentation)
+3. Register in DI with `@injectable`
+4. Add route to navigation
+5. Write tests
 
-2. **Validate Work:**
-   ```bash
-   gc validate
-   ```
+**Add new Isar entity:**
+1. Create in `domain/entities/` with `@collection`
+2. Add `part` directive
+3. Run `build_runner`
+4. Add to Isar schemas in `DatabaseModule`
 
-3. **Report & Finish:**
-   ```bash
-   gc report
-   ```
+**Integrate new health sensor:**
+1. Add to `health` package types
+2. Request permissions in `AuthCubit`
+3. Create repository in `features/vitals/`
+4. Display in dashboard
 
-**Legacy Script Mapping (DEPRECATED):**
-| Old Script | New Command |
-|------------|-------------|
-| `./scripts/init_project.ps1` | `gc init` |
-| `./scripts/equip-agent.ps1` | `gc context equip` |
-| `./scripts/ai-report.ps1` | `gc report` |
-| `./scripts/send-telemetry.ps1`| `gc telemetry` |
-| `./scripts/next-task.ps1` | `gc next` |
-| `./scripts/sync-issues.ps1` | `gc issue sync` |
-| `./scripts/install-cli.ps1` | `gc update` |
+**Add BLE feature:**
+1. Use `flutter_blue_plus`
+2. Encrypt data with `EncryptionService`
+3. Handle permissions (Android/iOS)
+4. Test on real devices (BLE requires hardware)
 
-### AI Agent Usage
+---
 
-**When bootstrapping a new project:**
-```bash
-# Step 1: Install protocol
-curl -fsSL https://raw.githubusercontent.com/iberi22/Git-Core-Protocol/main/install.sh | bash
+## 🤖 Agent Delegation
 
-# Or if CLI is available:
-gc init my-project
-
-# Step 2: Verify installation
-gc check
-```
-
-**When upgrading existing project:**
-```bash
-# Safe upgrade
-gc update
-
-# Check what changed
-gc info
-```
-
-**When troubleshooting:**
-```bash
-# Check integrity
-gc check
-
-# Full status report
-gc info
-```
-
-### Legacy Scripts (Alternative)
-
-Los scripts shell son **código visible** que puedes leer antes de ejecutar:
+**For complex tasks, delegate to specialized agents:**
 
 ```bash
-# Ver el código ANTES de ejecutar:
-curl -fsSL https://raw.githubusercontent.com/iberi22/Git-Core-Protocol/main/install.sh
+# Jules (best for autonomous implementation)
+gh issue edit <id> --add-label "jules"
 
-# Si confías, entonces ejecuta:
-curl -fsSL https://raw.githubusercontent.com/iberi22/Git-Core-Protocol/main/install.sh | bash
+# Generic AI agent (auto-dispatch)
+gh issue edit <id> --add-label "ai-agent"
 
-# Windows - ver código primero:
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/iberi22/Git-Core-Protocol/main/install.ps1" | Select-Object -ExpandProperty Content
+# CodeRabbit (auto-reviews PRs)
+# Automatically triggered on PR creation
 
-# Luego ejecutar:
-irm https://raw.githubusercontent.com/iberi22/Git-Core-Protocol/main/install.ps1 | iex
+# Gemini (large context analysis)
+gemini analyze <file>
 ```
 
-**Comparación de métodos:**
-| Método | Confianza | Velocidad | Funcionalidades |
-|--------|-----------|-----------|-----------------|
-| Shell Scripts | ⭐⭐⭐⭐⭐ (código visible) | Rápido | Básico |
-| Cargo install | ⭐⭐⭐⭐ (compila local) | Medio | Completo |
-| Build from source | ⭐⭐⭐⭐⭐ (máximo control) | Lento | Completo |
-| Pre-built binary | ⭐⭐⭐ (verificar checksum) | Muy rápido | Completo |
+**Issue format for Jules (REQUIRED for best results):**
+- 🎯 Objective (clear goal)
+- 📁 Files to Modify (exact paths)
+- Code Snippets (example implementation)
+- ✅ Acceptance Criteria (testable)
+- 🧪 Testing Commands (`flutter test`)
+
+---
+
+## 🚀 Quick Start Checklist
+
+New to this codebase? Read these in order:
+
+1. [ ] [README.md](../README.md) - Project vision, features
+2. [ ] [.✨/ARCHITECTURE.md](../.✨/ARCHITECTURE.md) - Technical decisions
+3. [ ] [AGENTS.md](../AGENTS.md) - Workflow automation
+4. [ ] [lib/main.dart](../lib/main.dart) - App entry point
+5. [ ] [lib/features/auth/](../lib/features/auth/) - Example Clean Architecture
+6. [ ] This file - Copilot instructions
+
+**Then run:**
+```bash
+flutter pub get
+flutter pub run build_runner build
+flutter test
+flutter run
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### Bridge Out of Sync Error
+
+**Symptom:** CI fails with "flutter_rust_bridge generated code is out of sync"
+
+**Cause:** Rust API changed but bridge wasn't regenerated
+
+**Fix:**
+```bash
+# Regenerate bridge
+flutter_rust_bridge_codegen \
+  --rust-input rust/src/api \
+  --dart-output lib/bridge \
+  --dart-format-line-length 80
+
+# Verify no changes needed
+git diff lib/bridge/
+
+# If changes exist, commit them
+git add lib/bridge/
+git commit -m "chore(bridge): regenerate flutter_rust_bridge"
+```
+
+### Integration Tests Failing in CI
+
+**Symptom:** Integration tests pass locally but fail in CI
+
+**Common causes:**
+1. **Database state pollution:** Integration tests must run with `--test-threads=1`
+2. **Missing SurrealDB setup:** Check rust tests initialize DB properly
+3. **Bridge not in sync:** Run bridge check (see above)
+
+**Debug steps:**
+```bash
+# 1. Check bridge sync
+flutter_rust_bridge_codegen --rust-input rust/src/api --dart-output lib/bridge
+git diff lib/bridge/
+
+# 2. Run integration tests with verbose output
+flutter test integration_test/ -v
+
+# 3. Check Rust integration tests
+cd rust && cargo test --test database_integration -- --nocapture
+
+# 4. Verify SurrealDB is accessible
+cd rust && cargo test --test "*_integration" --features test-integration
+```
+
+### Rust Clippy Warnings
+
+**Symptom:** CI fails on `cargo clippy` but code compiles
+
+**Fix:**
+```bash
+# See all warnings
+cd rust && cargo clippy --all-targets --all-features
+
+# Auto-fix common issues
+cd rust && cargo clippy --fix --all-targets --all-features
+
+# If unfixable, add allow attribute (use sparingly)
+#[allow(clippy::too_many_arguments)]
+fn complex_function(...) { }
+```
+
+### SurrealDB Connection Issues
+
+**Symptom:** Tests fail with "Database connection error"
+
+**Common causes:**
+1. In-memory DB not initialized
+2. Namespace/database not set
+3. Test running in parallel (use `--test-threads=1`)
+
+**Fix:**
+```rust
+// Ensure proper initialization
+let db = Surreal::new::<Mem>(()).await?;
+db.use_ns("orionhealth").use_db("medical").await?;
+
+// In tests, use single-threaded execution
+#[cfg(test)]
+mod tests {
+    // Run with: cargo test -- --test-threads=1
+}
+```
+
+---
+
+**Last Updated:** 2026-01-06
+**Protocol Version:** 3.2.1
+
+---
+
+## 📋 Git-Core Protocol Summary
+
+This project follows the **Git-Core Protocol** for AI-assisted development. Key principles:
+
+- **State Management:** GitHub Issues are the single source of truth (not internal memory/files)
+- **Task Tracking:** Use `gh issue` commands, never create TODO.md or similar tracking files
+- **Atomic Commits:** ONE logical change per commit, following Conventional Commits
+- **Architecture First:** Check [.✨/ARCHITECTURE.md](../.✨/ARCHITECTURE.md) before implementing infrastructure features
+
+**For complete protocol details, workflows, and agent delegation patterns:** See [AGENTS.md](../AGENTS.md)
+
+### Quick Workflow
+
+```bash
+# 1. Check architecture + assigned issues
+cat .✨/ARCHITECTURE.md
+gh issue list --assignee "@me"
+
+# 2. Take issue + create branch
+gh issue edit <id> --add-assignee "@me"
+git checkout -b feat/issue-<id>-description
+
+# 3. Implement + test
+flutter test
+
+# 4. Commit atomically
+git commit -m "feat(auth): add biometric auth (closes #<id>)"
+
+# 5. Create PR
+gh pr create --fill
+```
+
+### Health Check Before New Features
+
+```bash
+# Run tests first (if broken, fix before adding features)
+flutter test
+flutter analyze
+```
+
+### Agent Delegation
+
+```bash
+# Delegate to Jules (best for autonomous implementation)
+gh issue edit <id> --add-label "jules"
+
+# Generic AI agent (auto-dispatch)
+gh issue edit <id> --add-label "ai-agent"
+```
+
+**Full protocol documentation:** [AGENTS.md](../AGENTS.md) | **CI/CD details:** [DEPLOY_CICD_README.md](../DEPLOY_CICD_README.md)
 
 
 

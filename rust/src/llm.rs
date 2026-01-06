@@ -2,8 +2,13 @@
 use crate::error::{OrionError, Result};
 use crate::models::SummaryType;
 
+pub mod gemini_adapter;
 pub mod model_manager;
-pub use model_manager::{ModelManager, ModelInfo, DownloadProgress};
+pub mod smart_manager;
+
+pub use gemini_adapter::{GeminiAdapter, GeminiConfig, UsageStats};
+pub use model_manager::{DownloadProgress, ModelInfo, ModelManager};
+pub use smart_manager::{AdapterChoice, LlmStrategy, SmartLlmConfig, SmartLlmManager};
 
 /// LLM adapter trait for AI inference
 #[async_trait::async_trait]
@@ -32,7 +37,9 @@ impl LlmAdapter for MockLlmAdapter {
     }
 
     async fn generate_text(&self, _prompt: &str) -> Result<String> {
-        Err(OrionError::Llm("Mock LLM adapter - not available".to_string()))
+        Err(OrionError::Llm(
+            "Mock LLM adapter - not available".to_string(),
+        ))
     }
 
     async fn generate_summary(
@@ -51,7 +58,7 @@ impl LlmAdapter for MockLlmAdapter {
 pub struct CandleLlmAdapter {
     model_path: std::path::PathBuf,
     tokenizer: Option<tokenizers::Tokenizer>,
-    device: candle_core::Device,
+    _device: candle_core::Device, // Prefixed with _ to suppress unused warning
 }
 
 impl CandleLlmAdapter {
@@ -61,7 +68,7 @@ impl CandleLlmAdapter {
         Self {
             model_path,
             tokenizer: None,
-            device,
+            _device: device,
         }
     }
 
@@ -72,11 +79,11 @@ impl CandleLlmAdapter {
         // let tokenizer_path = self.model_path.parent()
         //     .unwrap_or(&self.model_path)
         //     .join("tokenizer.json");
-        
+
         // TODO: Load actual tokenizer from file
         // self.tokenizer = Some(tokenizers::Tokenizer::from_file(tokenizer_path)
         //     .map_err(|e| OrionError::Llm(format!("Failed to load tokenizer: {}", e)))?);
-        
+
         Ok(())
     }
 
@@ -91,17 +98,17 @@ impl CandleLlmAdapter {
         // TODO: Once tokenizer is loaded, tokenize input
         // let tokenizer = self.tokenizer.as_ref()
         //     .ok_or_else(|| OrionError::Llm("Tokenizer not initialized".to_string()))?;
-        
+
         // let encoding = tokenizer
         //     .encode(prompt, false)
         //     .map_err(|e| OrionError::Llm(format!("Tokenization failed: {}", e)))?;
-        
+
         // let input_ids = encoding.get_ids();
 
         // TODO: Load GGUF model and run inference with Candle
         // This requires implementing the full Phi-3 architecture in Candle
         // For now, return a placeholder indicating the model path
-        
+
         Ok(format!(
             "[Candle Inference Stub] Model: {:?}, Prompt length: {}, Max output: {}",
             self.model_path.file_name().unwrap_or_default(),

@@ -42,31 +42,29 @@ impl ModelManager {
     pub async fn init(&mut self) -> Result<()> {
         fs::create_dir_all(&self.models_dir)
             .await
-            .map_err(|e| OrionError::Io(e))?;
-        
+            .map_err(OrionError::Io)?;
+
         // Scan existing models
         self.refresh_cache().await?;
-        
+
         Ok(())
     }
 
     /// Refresh the cache by scanning the models directory
     async fn refresh_cache(&mut self) -> Result<()> {
         self.cache.clear();
-        
+
         let mut entries = fs::read_dir(&self.models_dir)
             .await
-            .map_err(|e| OrionError::Io(e))?;
-        
-        while let Some(entry) = entries.next_entry().await.map_err(|e| OrionError::Io(e))? {
+            .map_err(OrionError::Io)?;
+
+        while let Some(entry) = entries.next_entry().await.map_err(OrionError::Io)? {
             let path = entry.path();
             if path.is_file() {
                 if let Some(file_name) = path.file_name().and_then(|n| n.to_str()) {
                     if file_name.ends_with(".gguf") {
-                        let metadata = fs::metadata(&path)
-                            .await
-                            .map_err(|e| OrionError::Io(e))?;
-                        
+                        let metadata = fs::metadata(&path).await.map_err(OrionError::Io)?;
+
                         let model_id = file_name.trim_end_matches(".gguf").to_string();
                         let model_info = ModelInfo {
                             id: model_id.clone(),
@@ -76,13 +74,13 @@ impl ModelManager {
                             path: Some(path.clone()),
                             is_downloaded: true,
                         };
-                        
+
                         self.cache.insert(model_id, model_info);
                     }
                 }
             }
         }
-        
+
         Ok(())
     }
 
@@ -128,16 +126,14 @@ impl ModelManager {
 
         let mut file = fs::File::create(&destination)
             .await
-            .map_err(|e| OrionError::Io(e))?;
+            .map_err(OrionError::Io)?;
 
         let mut stream = response.bytes_stream();
         use futures_util::StreamExt;
 
         while let Some(chunk) = stream.next().await {
             let chunk = chunk.map_err(|e| OrionError::Unknown(e.to_string()))?;
-            file.write_all(&chunk)
-                .await
-                .map_err(|e| OrionError::Io(e))?;
+            file.write_all(&chunk).await.map_err(OrionError::Io)?;
 
             downloaded_bytes += chunk.len() as u64;
             let percentage = if total_bytes > 0 {
@@ -153,7 +149,7 @@ impl ModelManager {
             });
         }
 
-        file.flush().await.map_err(|e| OrionError::Io(e))?;
+        file.flush().await.map_err(OrionError::Io)?;
 
         // Update cache
         self.refresh_cache().await?;
@@ -202,16 +198,14 @@ impl ModelManager {
 
         let mut file = fs::File::create(&destination)
             .await
-            .map_err(|e| OrionError::Io(e))?;
+            .map_err(OrionError::Io)?;
 
         let mut stream = response.bytes_stream();
         use futures_util::StreamExt;
 
         while let Some(chunk) = stream.next().await {
             let chunk = chunk.map_err(|e| OrionError::Unknown(e.to_string()))?;
-            file.write_all(&chunk)
-                .await
-                .map_err(|e| OrionError::Io(e))?;
+            file.write_all(&chunk).await.map_err(OrionError::Io)?;
 
             downloaded_bytes += chunk.len() as u64;
             let percentage = if total_bytes > 0 {
@@ -227,7 +221,7 @@ impl ModelManager {
             });
         }
 
-        file.flush().await.map_err(|e| OrionError::Io(e))?;
+        file.flush().await.map_err(OrionError::Io)?;
 
         // Update cache
         self.refresh_cache().await?;
@@ -237,24 +231,19 @@ impl ModelManager {
 
     /// List all downloaded models
     pub fn list_downloaded(&self) -> Vec<&ModelInfo> {
-        self.cache
-            .values()
-            .filter(|m| m.is_downloaded)
-            .collect()
+        self.cache.values().filter(|m| m.is_downloaded).collect()
     }
 
     /// List all available models (including predefined ones)
     pub fn list_available(&self) -> Vec<ModelInfo> {
-        let mut available = vec![
-            ModelInfo {
-                id: "phi3-mini-4k".to_string(),
-                name: "Phi-3-mini-4k-instruct".to_string(),
-                size_bytes: 1_800_000_000, // ~1.8GB
-                version: "q4".to_string(),
-                path: None,
-                is_downloaded: self.cache.contains_key("Phi-3-mini-4k-instruct-q4"),
-            },
-        ];
+        let mut available = vec![ModelInfo {
+            id: "phi3-mini-4k".to_string(),
+            name: "Phi-3-mini-4k-instruct".to_string(),
+            size_bytes: 1_800_000_000, // ~1.8GB
+            version: "q4".to_string(),
+            path: None,
+            is_downloaded: self.cache.contains_key("Phi-3-mini-4k-instruct-q4"),
+        }];
 
         // Add downloaded models not in predefined list
         for model in self.cache.values() {
@@ -277,13 +266,11 @@ impl ModelManager {
     /// Delete a downloaded model
     pub async fn delete_model(&mut self, model_id: &str) -> Result<()> {
         let path = self.get_model_path(model_id)?;
-        
-        fs::remove_file(&path)
-            .await
-            .map_err(|e| OrionError::Io(e))?;
-        
+
+        fs::remove_file(&path).await.map_err(OrionError::Io)?;
+
         self.cache.remove(model_id);
-        
+
         Ok(())
     }
 
@@ -310,7 +297,7 @@ mod tests {
     async fn test_model_manager_init() {
         let temp_dir = TempDir::new().unwrap();
         let mut manager = ModelManager::new(temp_dir.path().to_path_buf());
-        
+
         assert!(manager.init().await.is_ok());
         assert!(temp_dir.path().exists());
     }
@@ -320,7 +307,7 @@ mod tests {
         let temp_dir = TempDir::new().unwrap();
         let mut manager = ModelManager::new(temp_dir.path().to_path_buf());
         manager.init().await.unwrap();
-        
+
         let available = manager.list_available();
         assert!(!available.is_empty());
         assert!(available.iter().any(|m| m.id == "phi3-mini-4k"));
@@ -331,7 +318,7 @@ mod tests {
         let temp_dir = TempDir::new().unwrap();
         let mut manager = ModelManager::new(temp_dir.path().to_path_buf());
         manager.init().await.unwrap();
-        
+
         let result = manager.get_model_path("nonexistent");
         assert!(result.is_err());
     }

@@ -61,6 +61,7 @@ dependencies:
 
   # Bluetooth Low Energy for medical data sharing
   flutter_blue_plus: ^1.35.2
+  flutter_rust_bridge: 2.11.1
 
 dev_dependencies:
   flutter_test:

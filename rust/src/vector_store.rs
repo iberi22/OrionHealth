@@ -44,7 +44,7 @@ impl VectorStoreService {
     pub async fn search_with_reranking(
         &self,
         query: &str,
-        limit: usize,
+        _limit: usize,
         _strategy: crate::models::SearchStrategy,
     ) -> Result<Vec<String>> {
         let _db = self.db_manager.get_db().await?;
