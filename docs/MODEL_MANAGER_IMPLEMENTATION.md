@@ -75,21 +75,21 @@ async fn main() -> Result<()> {
     // Initialize manager
     let mut manager = ModelManager::new(PathBuf::from("./models"));
     manager.init().await?;
-    
+
     // Download Phi-3-mini with progress
     let path = manager.download_phi3_mini(|progress| {
         println!("Progress: {:.1}%", progress.percentage);
     }).await?;
-    
+
     // Use with Candle
     let mut adapter = CandleLlmAdapter::new(path);
     adapter.init().await?;
-    
+
     if adapter.is_available().await {
         let response = adapter.generate_text("Health summary:").await?;
         println!("{}", response);
     }
-    
+
     Ok(())
 }
 ```
