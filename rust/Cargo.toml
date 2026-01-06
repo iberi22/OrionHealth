@@ -43,11 +43,19 @@ uuid = { version = "1.11", features = ["v4"] }
 # Async trait
 async-trait = "0.1"
 
+# HTTP client for model downloads
+reqwest = { version = "0.12", features = ["stream"] }
+futures-util = "0.3"
+
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
 
 [profile.release]
 opt-level = "z"     # Optimize for size
 lto = true          # Link Time Optimization
-codegen-units = 1   # Better optimization
 strip = true        # Strip symbols for smaller binary
+codegen-units = 1   # Better optimization
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = "3.13"

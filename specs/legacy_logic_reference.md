@@ -30,38 +30,38 @@ The `SmartSearchUseCase` implements intelligent search using multiple re-ranking
 // Pseudo-Rust implementation
 fn determine_optimal_strategy(query: &str) -> SearchStrategy {
     let lower_query = query.to_lowercase();
-    
+
     // Medical terminology → BM25 (precise keyword matching)
     let medical_terms = vec![
         "diagnóstico", "síntoma", "medicamento", "tratamiento",
         "prescripción", "dosis", "análisis", "resultado",
         "diabetes", "hipertensión", "alergia", "dolor",
     ];
-    
+
     if medical_terms.iter().any(|term| lower_query.contains(term)) {
         return SearchStrategy::BM25;
     }
-    
+
     // Temporal queries → Recency
     let temporal_keywords = vec![
         "reciente", "último", "actual", "hoy", "ayer",
         "esta semana", "este mes", "nuevo",
     ];
-    
+
     if temporal_keywords.iter().any(|kw| lower_query.contains(kw)) {
         return SearchStrategy::Recency;
     }
-    
+
     // Exploratory queries → Diversity
     let exploratory_keywords = vec![
         "todos", "diferentes", "variedad", "tipos",
         "opciones", "alternativas", "qué más",
     ];
-    
+
     if exploratory_keywords.iter().any(|kw| lower_query.contains(kw)) {
         return SearchStrategy::Diversity;
     }
-    
+
     // Default: MMR (balanced relevance + diversity)
     SearchStrategy::MMR
 }
@@ -85,7 +85,7 @@ enum SearchStrategy {
 
 ### Search Parameters
 - **Default Limit:** 5 results
-- **Multi-hop Search:** 
+- **Multi-hop Search:**
   - Max hops: 2
   - Top K per hop: 3
 - **Strategy Comparison:** Compare all 4 strategies with 3 results each
@@ -106,10 +106,10 @@ async fn generate_health_summary(
     end_date: DateTime,
     summary_type: SummaryType, // Weekly, Monthly, Quarterly
 ) -> Result<HealthSummaryReport, Error> {
-    
+
     // Step 1: Query base layer nodes (layer 0)
     let base_nodes = vector_store.get_nodes_by_layer(0).await?;
-    
+
     // Step 2: Filter by date range
     let relevant_nodes: Vec<_> = base_nodes
         .into_iter()
@@ -121,18 +121,18 @@ async fn generate_health_summary(
             }
         })
         .collect();
-    
+
     // Step 3: Create summary if enough records and LLM available
     let summary_node_id = if relevant_nodes.len() >= 3 && llm.is_available().await {
         let summary_content = generate_summary_content(
             &relevant_nodes,
             &summary_type,
         ).await?;
-        
+
         let node_ids: Vec<_> = relevant_nodes.iter()
             .map(|n| n.id.clone())
             .collect();
-        
+
         Some(vector_store.create_summary_node(
             summary_content,
             node_ids,
@@ -142,13 +142,13 @@ async fn generate_health_summary(
     } else {
         None
     };
-    
+
     // Step 4: Gather insights using multi-hop search
     let insights = gather_insights(&relevant_nodes, &summary_type).await?;
-    
+
     // Step 5: Generate recommendations
     let recommendations = generate_recommendations(&insights);
-    
+
     Ok(HealthSummaryReport {
         period: format!(
             "{:?}: {} - {}",
@@ -288,10 +288,10 @@ struct HealthSummaryReport {
 trait LlmAdapter {
     /// Check if LLM service is available
     async fn is_available(&self) -> bool;
-    
+
     /// Generate text completion
     async fn generate_text(&self, prompt: &str) -> Result<String, Error>;
-    
+
     /// Generate summary with structured output
     async fn generate_summary(
         &self,
@@ -321,7 +321,7 @@ trait VectorStoreService {
         content: &str,
         metadata: NodeMetadata,
     ) -> Result<String, Error>;
-    
+
     /// Semantic search with optional re-ranking
     async fn search_with_reranking(
         &self,
@@ -329,7 +329,7 @@ trait VectorStoreService {
         limit: usize,
         strategy: SearchStrategy,
     ) -> Result<Vec<String>, Error>;
-    
+
     /// Multi-hop hierarchical search
     async fn multi_hop_search(
         &self,
@@ -337,7 +337,7 @@ trait VectorStoreService {
         max_hops: u8,
         top_k: usize,
     ) -> Result<Vec<MultiHopResult>, Error>;
-    
+
     /// Create summary node (HiRAG Phase 2)
     async fn create_summary_node(
         &self,
@@ -346,7 +346,7 @@ trait VectorStoreService {
         layer: u8,
         node_type: &str,
     ) -> Result<String, Error>;
-    
+
     /// Query nodes by hierarchical layer
     async fn get_nodes_by_layer(&self, layer: u8) -> Result<Vec<Node>, Error>;
 }
