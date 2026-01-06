@@ -378,26 +378,6 @@ jobs:
             echo "needs_issue=false" >> $GITHUB_OUTPUT
             echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
           fi
-            echo "| 🦀 Rust Backend | ❌ FAIL |" >> $GITHUB_STEP_SUMMARY
-            echo "rust_failed=true" >> $GITHUB_OUTPUT
-          fi
-
-          if [ "$FLUTTER_STATUS" == "success" ]; then
-            echo "| 📱 Flutter App | ✅ PASS |" >> $GITHUB_STEP_SUMMARY
-            echo "flutter_failed=false" >> $GITHUB_OUTPUT
-          else
-            echo "| 📱 Flutter App | ❌ FAIL |" >> $GITHUB_STEP_SUMMARY
-            echo "flutter_failed=true" >> $GITHUB_OUTPUT
-          fi
-
-          # Determine if we need to create issues
-          if [ "$RUST_STATUS" != "success" ] || [ "$FLUTTER_STATUS" != "success" ]; then
-            echo "needs_issue=true" >> $GITHUB_OUTPUT
-            echo "❌ Build failures detected - Will create issues" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "needs_issue=false" >> $GITHUB_OUTPUT
-            echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
-          fi
 
       - name: 🚨 Create issue for Rust failures
         if: steps.analyze.outputs.rust_failed == 'true'
