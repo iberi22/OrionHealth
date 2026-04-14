@@ -10,6 +10,8 @@ class UserProfile {
 
   int? age;
 
+  DateTime? birthDate;
+
   double? weight; // in kg
 
   double? height; // in cm
@@ -18,6 +20,6 @@ class UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType)';
+    return 'UserProfile(id: $id, name: $name, age: $age, birthDate: $birthDate, weight: $weight, height: $height, bloodType: $bloodType)';
   }
 }

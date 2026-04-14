@@ -22,23 +22,28 @@ const UserProfileSchema = CollectionSchema(
       name: r'age',
       type: IsarType.long,
     ),
-    r'bloodType': PropertySchema(
+    r'birthDate': PropertySchema(
       id: 1,
+      name: r'birthDate',
+      type: IsarType.dateTime,
+    ),
+    r'bloodType': PropertySchema(
+      id: 2,
       name: r'bloodType',
       type: IsarType.string,
     ),
     r'height': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'height',
       type: IsarType.double,
     ),
     r'name': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'name',
       type: IsarType.string,
     ),
     r'weight': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'weight',
       type: IsarType.double,
     )
@@ -85,10 +90,11 @@ void _userProfileSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.age);
-  writer.writeString(offsets[1], object.bloodType);
-  writer.writeDouble(offsets[2], object.height);
-  writer.writeString(offsets[3], object.name);
-  writer.writeDouble(offsets[4], object.weight);
+  writer.writeDateTime(offsets[1], object.birthDate);
+  writer.writeString(offsets[2], object.bloodType);
+  writer.writeDouble(offsets[3], object.height);
+  writer.writeString(offsets[4], object.name);
+  writer.writeDouble(offsets[5], object.weight);
 }
 
 UserProfile _userProfileDeserialize(
@@ -99,11 +105,12 @@ UserProfile _userProfileDeserialize(
 ) {
   final object = UserProfile();
   object.age = reader.readLongOrNull(offsets[0]);
-  object.bloodType = reader.readStringOrNull(offsets[1]);
-  object.height = reader.readDoubleOrNull(offsets[2]);
+  object.birthDate = reader.readDateTimeOrNull(offsets[1]);
+  object.bloodType = reader.readStringOrNull(offsets[2]);
+  object.height = reader.readDoubleOrNull(offsets[3]);
   object.id = id;
-  object.name = reader.readStringOrNull(offsets[3]);
-  object.weight = reader.readDoubleOrNull(offsets[4]);
+  object.name = reader.readStringOrNull(offsets[4]);
+  object.weight = reader.readDoubleOrNull(offsets[5]);
   return object;
 }
 
@@ -117,12 +124,14 @@ P _userProfileDeserializeProp<P>(
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 3:
       return (reader.readStringOrNull(offset)) as P;
+    case 3:
+      return (reader.readDoubleOrNull(offset)) as P;
     case 4:
+      return (reader.readStringOrNull(offset)) as P;
+    case 5:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -283,6 +292,80 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'age',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'birthDate',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'birthDate',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'birthDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'birthDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'birthDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'birthDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -827,6 +910,18 @@ extension UserProfileQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByBirthDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'birthDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByBirthDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'birthDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByBloodType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bloodType', Sort.asc);
@@ -887,6 +982,18 @@ extension UserProfileQuerySortThenBy
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByAgeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'age', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByBirthDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'birthDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByBirthDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'birthDate', Sort.desc);
     });
   }
 
@@ -959,6 +1066,12 @@ extension UserProfileQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByBirthDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'birthDate');
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByBloodType(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -997,6 +1110,12 @@ extension UserProfileQueryProperty
   QueryBuilder<UserProfile, int?, QQueryOperations> ageProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'age');
+    });
+  }
+
+  QueryBuilder<UserProfile, DateTime?, QQueryOperations> birthDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'birthDate');
     });
   }
 

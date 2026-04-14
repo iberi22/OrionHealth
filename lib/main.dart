@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'core/di/injection.dart';
 import 'core/theme/cyber_theme.dart';
-import 'features/health_record/presentation/pages/health_record_staging_page.dart';
+import 'features/auth/presentation/auth_gate.dart';
+import 'features/dashboard/presentation/pages/home_dashboard_page.dart';
+import 'features/health_record/presentation/pages/appointments_page.dart';
 import 'features/health_report/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
-
-// Placeholder pages
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Home Page')));
-  }
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: CyberTheme.darkTheme,
       darkTheme: CyberTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      home: const MainNavigationPage(),
+      home: const AuthGate(),
     );
   }
 }
@@ -48,9 +41,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const HomePage(),
+    const HomeDashboardPage(),
+    const AppointmentsPage(),
     const ReportsPage(),
-    const HealthRecordStagingPage(),
     const UserProfilePage(),
   ];
 
@@ -62,6 +55,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: CyberTheme.surfaceDark.withOpacity(0.8),
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -80,9 +75,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             label: 'Citas',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.folder_shared_outlined),
-            activeIcon: Icon(Icons.folder_shared),
-            label: 'Archivos',
+            icon: Icon(Icons.bar_chart_outlined),
+            activeIcon: Icon(Icons.bar_chart),
+            label: 'Reportes',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
