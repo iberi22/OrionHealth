@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:orionhealth_health/core/theme/cyber_theme.dart';
 import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
@@ -24,6 +25,12 @@ class _ChatPageState extends State<ChatPage> {
       content: "Welcome to OrionHealth. How can I assist you with your health data today?",
       timestamp: DateTime.now(),
     ));
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,6 +94,8 @@ class _ChatPageState extends State<ChatPage> {
     final text = _textController.text.trim();
     if (text.isEmpty) return;
 
+    HapticFeedback.lightImpact();
+
     final userMessage = ChatMessage(role: ChatRole.user, content: text, timestamp: DateTime.now());
     setState(() {
       _messages.add(userMessage);
@@ -120,36 +129,66 @@ class _ChatMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUser = message.role == ChatRole.user;
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: isUser ? Colors.grey[900]?.withOpacity(0.5) : Colors.grey[800]?.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(16).copyWith(
-            bottomRight: isUser ? Radius.zero : const Radius.circular(16),
-            bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
+    return RepaintBoundary(
+      child: Align(
+        alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            color: isUser ? Colors.grey[900]?.withOpacity(0.5) : Colors.grey[800]?.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(16).copyWith(
+              bottomRight: isUser ? Radius.zero : const Radius.circular(16),
+              bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
+            ),
+            border: Border.all(color: isUser ? CyberTheme.primary.withOpacity(0.3) : CyberTheme.secondary.withOpacity(0.3)),
           ),
-          border: Border.all(color: isUser ? CyberTheme.primary.withOpacity(0.3) : CyberTheme.secondary.withOpacity(0.3)),
+          child: Text(message.content),
         ),
-        child: Text(message.content),
       ),
     );
   }
 }
 
-class _TypingIndicator extends StatelessWidget {
+class _TypingIndicator extends StatefulWidget {
   const _TypingIndicator();
+
+  @override
+  State<_TypingIndicator> createState() => _TypingIndicatorState();
+}
+
+class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+    _animation = Tween<double>(begin: 0.3, end: 1.0).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Row(
         children: [
-          Icon(Icons.computer, color: CyberTheme.secondary, size: 24),
-          SizedBox(width: 8),
-          Text('Orion AI is thinking...', style: TextStyle(color: Colors.white54)),
+          const Icon(Icons.computer, color: CyberTheme.secondary, size: 24),
+          const SizedBox(width: 8),
+          FadeTransition(
+            opacity: _animation,
+            child: const Text('Orion AI is thinking...', style: TextStyle(color: Colors.white54)),
+          ),
         ],
       ),
     );
