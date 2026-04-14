@@ -11,6 +11,15 @@ class HealthRecordInitial extends HealthRecordState {}
 
 class HealthRecordLoading extends HealthRecordState {}
 
+class HealthRecordLoaded extends HealthRecordState {
+  final List<MedicalRecord> records;
+
+  const HealthRecordLoaded(this.records);
+
+  @override
+  List<Object?> get props => [records];
+}
+
 class HealthRecordFilePicked extends HealthRecordState {
   final String filePath;
   final String extractedText;
