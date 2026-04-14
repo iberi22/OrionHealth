@@ -13,9 +13,11 @@ class ReportDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(report.title ?? 'Detalle del Informe'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Markdown(data: report.content ?? ''),
+      body: RepaintBoundary(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Markdown(data: report.content ?? ''),
+        ),
       ),
     );
   }

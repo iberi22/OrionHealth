@@ -8,6 +8,7 @@
 
 #include <file_selector_windows/file_selector_windows.h>
 #include <firebase_core/firebase_core_plugin_c_api.h>
+#include <flutter_gemma/flutter_gemma_plugin.h>
 #include <isar_flutter_libs/isar_flutter_libs_plugin.h>
 #include <objectbox_flutter_libs/objectbox_flutter_libs_plugin.h>
 #include <permission_handler_windows/permission_handler_windows_plugin.h>
@@ -17,6 +18,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
   FirebaseCorePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FirebaseCorePluginCApi"));
+  FlutterGemmaPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FlutterGemmaPlugin"));
   IsarFlutterLibsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("IsarFlutterLibsPlugin"));
   ObjectboxFlutterLibsPluginRegisterWithRegistrar(

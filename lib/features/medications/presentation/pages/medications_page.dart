@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
@@ -26,8 +27,10 @@ class _MedicationsPageState extends State<MedicationsPage> {
   }
 
   Future<void> _loadMedications() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
     final medications = await _repository.getAllMedications();
+    if (!mounted) return;
     setState(() {
       _medications = medications;
       _isLoading = false;
@@ -45,18 +48,34 @@ class _MedicationsPageState extends State<MedicationsPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: CyberTheme.primary),
-            onPressed: () => _showMedicationForm(),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              _showMedicationForm();
+            },
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _medications.isEmpty
-              ? _buildEmptyState()
-              : _buildMedicationList(),
+      body: RefreshIndicator(
+        onRefresh: _loadMedications,
+        color: CyberTheme.primary,
+        backgroundColor: CyberTheme.surfaceDark,
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _medications.isEmpty
+                ? Stack(
+                    children: [
+                      ListView(),
+                      _buildEmptyState(),
+                    ],
+                  )
+                : _buildMedicationList(),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: CyberTheme.primary,
-        onPressed: () => _showMedicationForm(),
+        onPressed: () {
+          HapticFeedback.lightImpact();
+          _showMedicationForm();
+        },
         child: const Icon(Icons.add, color: Colors.black),
       ),
     );
@@ -82,111 +101,122 @@ class _MedicationsPageState extends State<MedicationsPage> {
     final activeMedications = _medications.where((m) => m.isActive).toList();
     final inactiveMedications = _medications.where((m) => !m.isActive).toList();
 
-    return ListView(
+    final List<dynamic> items = [];
+    if (activeMedications.isNotEmpty) {
+      items.add('Activos');
+      items.addAll(activeMedications);
+    }
+    if (inactiveMedications.isNotEmpty) {
+      items.add('Archivados');
+      items.addAll(inactiveMedications);
+    }
+
+    return ListView.builder(
       padding: const EdgeInsets.all(16),
-      children: [
-        if (activeMedications.isNotEmpty) ...[
-          const Text(
-            'Activos',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: CyberTheme.primary,
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        if (item is String) {
+          return Padding(
+            padding: EdgeInsets.only(
+              top: item == 'Archivados' && activeMedications.isNotEmpty ? 24.0 : 0,
+              bottom: 16.0,
             ),
-          ),
-          const SizedBox(height: 16),
-          ...activeMedications.map((m) => _buildMedicationCard(m)),
-          const SizedBox(height: 24),
-        ],
-        if (inactiveMedications.isNotEmpty) ...[
-          const Text(
-            'Archivados',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
+            child: Text(
+              item,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: item == 'Activos' ? CyberTheme.primary : Colors.grey,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          ...inactiveMedications.map((m) => _buildMedicationCard(m, isArchived: true)),
-        ],
-      ],
+          );
+        } else if (item is Medication) {
+          return _buildMedicationCard(item, isArchived: !item.isActive);
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 
   Widget _buildMedicationCard(Medication medication, {bool isArchived = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: () => _showMedicationForm(medication: medication),
-        child: GlassmorphicCard(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        medication.name,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isArchived ? Colors.grey : Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${medication.dosage ?? ''} • ${medication.frequency ?? ''}',
-                        style: TextStyle(
-                          color: isArchived ? Colors.grey[600] : Colors.grey[400],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_today,
-                            size: 14,
-                            color: isArchived ? Colors.grey[600] : CyberTheme.secondary,
+    return RepaintBoundary(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: InkWell(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          _showMedicationForm(medication: medication);
+        },
+          child: GlassmorphicCard(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          medication.name,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isArchived ? Colors.grey : Colors.white,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            DateFormat('dd MMM yyyy').format(medication.startDate),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: isArchived ? Colors.grey[600] : Colors.grey[400],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${medication.dosage ?? ''} • ${medication.frequency ?? ''}',
+                          style: TextStyle(
+                            color: isArchived ? Colors.grey[600] : Colors.grey[400],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today,
+                              size: 14,
+                              color: isArchived ? Colors.grey[600] : CyberTheme.secondary,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(width: 4),
+                            Text(
+                              DateFormat('dd MMM yyyy').format(medication.startDate),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isArchived ? Colors.grey[600] : Colors.grey[400],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: isArchived
-                        ? Colors.grey.withOpacity(0.1)
-                        : CyberTheme.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
                       color: isArchived
-                          ? Colors.grey.withOpacity(0.3)
-                          : CyberTheme.primary.withOpacity(0.3),
+                          ? Colors.grey.withOpacity(0.1)
+                          : CyberTheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: isArchived
+                            ? Colors.grey.withOpacity(0.3)
+                            : CyberTheme.primary.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Text(
+                      isArchived ? 'INACTIVO' : 'ACTIVO',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: isArchived ? Colors.grey : CyberTheme.primary,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    isArchived ? 'INACTIVO' : 'ACTIVO',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: isArchived ? Colors.grey : CyberTheme.primary,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -311,7 +341,15 @@ class _MedicationsPageState extends State<MedicationsPage> {
                       ),
                     ),
                     onPressed: () async {
-                      if (nameController.text.isEmpty) return;
+                      if (nameController.text.trim().isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('El nombre es requerido'),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                        return;
+                      }
 
                       final newMedication = Medication(
                         id: medication?.id ?? Isar.autoIncrement,
