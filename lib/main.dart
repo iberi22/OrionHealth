@@ -4,6 +4,7 @@ import 'core/theme/cyber_theme.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/health_report/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
+import 'features/vitals/presentation/pages/vitals_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 
 // Placeholder pages
@@ -49,7 +50,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const ReportsPage(),
+    const VitalsPage(),
     const HealthRecordStagingPage(),
     const UserProfilePage(),
   ];
@@ -77,7 +78,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month_outlined),
             activeIcon: Icon(Icons.calendar_month),
-            label: 'Citas',
+            label: 'Vitals',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.folder_shared_outlined),
