@@ -6,6 +6,9 @@ import '../../features/local_agent/domain/chat_message.dart';
 import '../../features/health_record/domain/entities/medical_record.dart';
 import '../../features/health_report/domain/entities/health_report.dart';
 import '../../features/medications/domain/entities/medication.dart';
+import '../../features/appointments/domain/entities/appointment.dart';
+import '../../features/vitals/domain/entities/vital_sign.dart';
+import '../../features/allergies/domain/entities/allergy.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 
 @module
@@ -22,6 +25,9 @@ abstract class DatabaseModule {
         MemoryEdgeSchema,
         HealthReportSchema,
         MedicationSchema,
+        AppointmentSchema,
+        VitalSignSchema,
+        AllergySchema,
       ],
       directory: dir.path,
     );
