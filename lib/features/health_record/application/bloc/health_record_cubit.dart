@@ -27,6 +27,20 @@ class HealthRecordCubit extends Cubit<HealthRecordState> {
     this._vectorStoreService,
   ) : super(HealthRecordInitial());
 
+  Future<void> loadRecords() async {
+    emit(HealthRecordLoading());
+    try {
+      final records = await _repository.getAllRecords();
+      emit(HealthRecordLoaded(records));
+    } catch (e) {
+      emit(HealthRecordError(e.toString()));
+    }
+  }
+
+  Future<void> resetAndLoad() async {
+    await loadRecords();
+  }
+
   Future<void> pickPdf() async {
     emit(HealthRecordLoading());
     try {

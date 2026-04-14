@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../auth/presentation/receive_medical_data_page.dart';
+import '../../../auth/presentation/share_medical_data_page.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
@@ -76,6 +78,38 @@ class _UserProfileView extends StatelessWidget {
                       icon: Icons.call,
                       title: 'Número de Contacto',
                       subtitle: '+1 (555) 123-4567',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                _Section(
+                  title: 'Intercambio de Datos BLE',
+                  children: [
+                    _InfoTile(
+                      icon: Icons.bluetooth_audio,
+                      title: 'Compartir mis Datos',
+                      subtitle: 'Enviar historial al médico',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ShareMedicalDataPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    _InfoTile(
+                      icon: Icons.download_for_offline,
+                      title: 'Recibir Datos',
+                      subtitle: 'Modo receptor (Médico)',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ReceiveMedicalDataPage(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -175,7 +209,7 @@ class _ProfileHeader extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          userProfile.name,
+          userProfile.name ?? 'Usuario',
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
@@ -225,12 +259,14 @@ class _InfoTile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? trailing;
+  final VoidCallback? onTap;
 
   const _InfoTile({
     required this.icon,
     required this.title,
     this.subtitle,
     this.trailing,
+    this.onTap,
   });
 
   @override
@@ -238,6 +274,7 @@ class _InfoTile extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, color: CyberTheme.secondary),
       title: Text(title),
+      onTap: onTap,
       subtitle: subtitle != null
           ? Text(subtitle!, style: TextStyle(color: Colors.white.withOpacity(0.7)))
           : null,
