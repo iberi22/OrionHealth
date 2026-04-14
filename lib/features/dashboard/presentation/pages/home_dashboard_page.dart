@@ -96,7 +96,7 @@ class HomeDashboardPage extends StatelessWidget {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => const VitalSignsPage(),
+              builder: (_) => const VitalsPage(),
             ),
           ),
         ),
