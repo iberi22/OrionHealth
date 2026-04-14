@@ -53,7 +53,7 @@ class _RecordHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.shield_person, color: CyberTheme.secondary),
+        leading: const Icon(Icons.security, color: CyberTheme.secondary),
         title: const Text('Historial Médico'),
         actions: [
           IconButton(
@@ -175,7 +175,7 @@ class _TimelineItem extends StatelessWidget {
                 GlassmorphicCard(
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.stethoscope, color: CyberTheme.secondary),
+                    child: Icon(Icons.medical_services, color: CyberTheme.secondary),
                   ),
                 ),
                 Expanded(
@@ -194,17 +194,17 @@ class _TimelineItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    DateFormat('dd MMMM, yyyy').format(record.date),
+                    DateFormat('dd MMMM, yyyy').format(record.date ?? DateTime.now()),
                     style: const TextStyle(color: CyberTheme.secondary),
                   ),
                   const SizedBox(height: 8),
-                  _GlassmorphicCard(
+                  GlassmorphicCard(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(record.summary, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(record.summary ?? 'Sin resumen', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 4),
                           Text(record.type.name, style: TextStyle(color: Colors.white.withOpacity(0.7))),
                           const SizedBox(height: 8),
