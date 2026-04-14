@@ -34,6 +34,10 @@ class UserProfile {
 
   String? allergyNotes;
 
+  String? llmProvider;
+
+  String? localModelName;
+
   @override
   String toString() {
     return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType, onboardingCompleted: $onboardingCompleted, birthDate: $birthDate, sex: $sex, systolicBP: $systolicBP, diastolicBP: $diastolicBP, heartRate: $heartRate, allergyName: $allergyName, allergySeverity: $allergySeverity, allergyNotes: $allergyNotes)';
