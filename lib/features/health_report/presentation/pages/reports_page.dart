@@ -19,29 +19,35 @@ class ReportsPage extends StatelessWidget {
           automaticallyImplyLeading: false,
           title: const Text('Programar Citas'),
         ),
-        body: BlocBuilder<HealthReportBloc, HealthReportState>(
-          builder: (context, state) {
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: _PrimaryActionCard(),
-                  ),
-                ),
-                if (state is HealthReportLoading)
-                  const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                if (state is HealthReportLoaded)
-                  ..._buildReportList(context, state),
-                if (state is HealthReportError)
-                  SliverFillRemaining(
-                    child: Center(child: Text('Error: ${state.message}')),
-                  ),
-              ],
-            );
+        body: RefreshIndicator(
+          onRefresh: () async {
+            context.read<HealthReportBloc>().add(LoadReports());
           },
+          color: CyberTheme.primary,
+          child: BlocBuilder<HealthReportBloc, HealthReportState>(
+            builder: (context, state) {
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: _PrimaryActionCard(),
+                    ),
+                  ),
+                  if (state is HealthReportLoading)
+                    const SliverFillRemaining(
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  if (state is HealthReportLoaded)
+                    ..._buildReportList(context, state),
+                  if (state is HealthReportError)
+                    SliverFillRemaining(
+                      child: Center(child: Text('Error: ${state.message}')),
+                    ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -80,19 +86,21 @@ class ReportsPage extends StatelessWidget {
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             final report = state.reports[index];
-            return _AppointmentItem(
-              doctorName: report.title ?? 'Dr. Desconocido',
+            return RepaintBoundary(
+              child: _AppointmentItem(
+                doctorName: report.title ?? 'Dr. Desconocido',
               specialty: 'Cardiología', // Mock data
               dateTime: '15 DIC, 10:30 AM', // Mock data
-              status: 'Confirmada',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ReportDetailPage(report: report),
-                  ),
-                );
-              },
+                status: 'Confirmada',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReportDetailPage(report: report),
+                    ),
+                  );
+                },
+              ),
             );
           },
           childCount: state.reports.length,
