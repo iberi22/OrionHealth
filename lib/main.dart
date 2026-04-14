@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'core/di/injection.dart';
 import 'core/theme/cyber_theme.dart';
+import 'features/appointments/presentation/pages/appointments_page.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/health_report/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
@@ -17,6 +19,7 @@ class HomePage extends StatelessWidget {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('es', null);
   await configureDependencies();
   await getIt<MemoryGraph>().initialize();
   runApp(const MyApp());
@@ -49,7 +52,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const ReportsPage(),
+    const AppointmentsPage(),
     const HealthRecordStagingPage(),
     const UserProfilePage(),
   ];
