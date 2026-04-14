@@ -4,6 +4,9 @@ import 'core/theme/cyber_theme.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/health_report/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
+import 'features/auth/presentation/auth_gate.dart';
+import 'features/auth/application/bloc/auth_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 
 // Placeholder pages
@@ -27,12 +30,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'OrionHealth',
-      theme: CyberTheme.darkTheme,
-      darkTheme: CyberTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      home: const MainNavigationPage(),
+    return BlocProvider(
+      create: (context) => getIt<AuthCubit>(),
+      child: MaterialApp(
+        title: 'OrionHealth',
+        theme: CyberTheme.darkTheme,
+        darkTheme: CyberTheme.darkTheme,
+        themeMode: ThemeMode.dark,
+        home: const AuthGate(
+          child: MainNavigationPage(),
+        ),
+      ),
     );
   }
 }
