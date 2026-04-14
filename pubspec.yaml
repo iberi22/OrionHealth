@@ -54,6 +54,9 @@ dependencies:
   health: ^13.2.1
   google_fonts: ^6.3.2
   flutter_gemma: ^0.13.2
+  local_auth: ^2.3.0
+  cryptography: ^2.7.0
+  argon2: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +73,7 @@ dev_dependencies:
   injectable_generator: ^2.4.2
   integration_test:
     sdk: flutter
+  mockito: ^5.4.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
