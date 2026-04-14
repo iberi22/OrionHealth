@@ -45,6 +45,8 @@ dependencies:
   isar_flutter_libs: ^3.1.0+1
   objectbox_flutter_libs: any
   path_provider: ^2.1.5
+  dio: ^5.7.0
+  flutter_secure_storage: ^9.2.2
   flutter_markdown: ^0.7.7+1
   equatable: ^2.0.7
   isar_agent_memory:

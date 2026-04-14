@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../application/bloc/auth_cubit.dart';
-import '../application/bloc/auth_state.dart';
-import 'login_page.dart';
-import 'setup_pin_page.dart';
+import '../../../core/di/injection.dart';
+import '../../user_profile/domain/repositories/user_profile_repository.dart';
+import '../../onboarding/presentation/pages/onboarding_main_page.dart';
+import '../../../main.dart'; // To access MainNavigationPage
 
 class AuthGate extends StatelessWidget {
-  final Widget child;
-
-  const AuthGate({super.key, required this.child});
+  const AuthGate({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, state) {
-        if (state is AuthInitial) {
-          context.read<AuthCubit>().checkStatus();
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    return FutureBuilder(
+      future: getIt<UserProfileRepository>().getUserProfile(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
 
-        if (state is AuthNotSetup) {
-          return const SetupPinPage();
+        final userProfile = snapshot.data;
+        if (userProfile == null) {
+          return const OnboardingMainPage();
+        } else {
+          return const MainNavigationPage();
         }
-
-        if (state is AuthAuthenticated) {
-          return child;
-        }
-
-        return const LoginPage();
       },
     );
   }

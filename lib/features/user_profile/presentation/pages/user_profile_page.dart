@@ -65,7 +65,7 @@ class _UserProfileView extends StatelessWidget {
                     _InfoTile(
                       icon: Icons.person,
                       title: 'Nombre Completo',
-                      subtitle: userProfile.name,
+                      subtitle: userProfile.name ?? 'Usuario',
                     ),
                     const _InfoTile(
                       icon: Icons.cake,
@@ -175,7 +175,7 @@ class _ProfileHeader extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          userProfile.name,
+          userProfile.name ?? 'Usuario',
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
