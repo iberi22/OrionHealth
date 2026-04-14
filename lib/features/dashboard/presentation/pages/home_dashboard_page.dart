@@ -5,8 +5,8 @@ import 'package:orionhealth_health/core/widgets/glassmorphic_card.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
 import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart';
 import 'package:orionhealth_health/features/health_report/presentation/pages/reports_page.dart';
-import 'package:orionhealth_health/features/health_record/presentation/pages/vital_signs_page.dart';
-import 'package:orionhealth_health/features/health_record/presentation/pages/medications_page.dart';
+import 'package:orionhealth_health/features/vitals/presentation/pages/vitals_page.dart';
+import 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart';
 
 class HomeDashboardPage extends StatelessWidget {
   const HomeDashboardPage({super.key});
