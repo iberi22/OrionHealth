@@ -8,7 +8,9 @@ class UserProfile {
 
   String? name;
 
-  int? age;
+  DateTime? birthDate;
+
+  String? sex; // 'Male', 'Female', 'Other'
 
   double? weight; // in kg
 
@@ -16,8 +18,10 @@ class UserProfile {
 
   String? bloodType;
 
+  bool isOnboardingComplete = false;
+
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType)';
+    return 'UserProfile(id: $id, name: $name, birthDate: $birthDate, sex: $sex, weight: $weight, height: $height, bloodType: $bloodType, isOnboardingComplete: $isOnboardingComplete)';
   }
 }
