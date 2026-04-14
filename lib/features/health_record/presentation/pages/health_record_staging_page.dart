@@ -53,7 +53,7 @@ class _RecordHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.shield_person, color: CyberTheme.secondary),
+        leading: const Icon(Icons.person, color: CyberTheme.secondary),
         title: const Text('Historial Médico'),
         actions: [
           IconButton(
@@ -79,9 +79,9 @@ class _RecordHistoryView extends StatelessWidget {
           if (state is HealthRecordLoading)
             const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
           if (state is HealthRecordLoaded)
-            _Timeline(records: state.records),
-          if (state is HealthRecordInitial && state.records.isNotEmpty)
-             _Timeline(records: state.records),
+            _Timeline(records: (state as HealthRecordLoaded).records),
+          if (state is HealthRecordInitial)
+             const SliverFillRemaining(child: Center(child: Text('Inicia seleccionando un archivo.'))),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -175,7 +175,7 @@ class _TimelineItem extends StatelessWidget {
                 GlassmorphicCard(
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.stethoscope, color: CyberTheme.secondary),
+                    child: Icon(Icons.medical_services, color: CyberTheme.secondary),
                   ),
                 ),
                 Expanded(
@@ -194,17 +194,17 @@ class _TimelineItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    DateFormat('dd MMMM, yyyy').format(record.date),
+                    record.date != null ? DateFormat('dd MMMM, yyyy').format(record.date!) : 'Sin fecha',
                     style: const TextStyle(color: CyberTheme.secondary),
                   ),
                   const SizedBox(height: 8),
-                  _GlassmorphicCard(
+                  GlassmorphicCard(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(record.summary, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(record.summary ?? 'Sin resumen', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 4),
                           Text(record.type.name, style: TextStyle(color: Colors.white.withOpacity(0.7))),
                           const SizedBox(height: 8),
