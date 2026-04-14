@@ -16,6 +16,11 @@ class UserProfile {
 
   String? bloodType;
 
+  @Enumerated(EnumType.name)
+  String? llmProvider; // LlmProvider enum as string
+
+  String? localModelName;
+
   @override
   String toString() {
     return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType)';
