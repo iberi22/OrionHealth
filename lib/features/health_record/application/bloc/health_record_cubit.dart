@@ -101,7 +101,21 @@ class HealthRecordCubit extends Cubit<HealthRecordState> {
     }
   }
 
+  Future<void> loadRecords() async {
+    emit(HealthRecordLoading());
+    try {
+      final records = await _repository.getAllRecords();
+      emit(HealthRecordLoaded(records));
+    } catch (e) {
+      emit(HealthRecordError(e.toString()));
+    }
+  }
+
   void reset() {
     emit(HealthRecordInitial());
+  }
+
+  void resetAndLoad() {
+    loadRecords();
   }
 }
