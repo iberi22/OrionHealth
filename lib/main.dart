@@ -4,7 +4,6 @@ import 'core/di/injection.dart';
 import 'core/theme/cyber_theme.dart';
 import 'features/appointments/presentation/pages/appointments_page.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
-import 'features/health_report/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'features/onboarding/presentation/pages/onboarding_main_page.dart';
 import 'features/user_profile/domain/repositories/user_profile_repository.dart';

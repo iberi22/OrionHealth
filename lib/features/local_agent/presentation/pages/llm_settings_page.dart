@@ -184,35 +184,41 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
     int downloadedMB = 0;
     int totalMB = 0;
 
+    // Capture setDialogState from StatefulBuilder to use in async callback
+    void Function(void Function())? dialogSetState;
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Downloading Gemma 4 E2B'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              LinearProgressIndicator(value: progress),
-              const SizedBox(height: 16),
-              Text('$downloadedMB MB / $totalMB MB'),
-              Text(speed),
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDS) {
+          dialogSetState = setDS;
+          return AlertDialog(
+            title: const Text('Downloading Gemma 4 E2B'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LinearProgressIndicator(value: progress),
+                const SizedBox(height: 16),
+                Text('$downloadedMB MB / $totalMB MB'),
+                Text(speed),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Close'),
+              )
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            )
-          ],
-        ),
+          );
+        },
       ),
     );
 
     _modelDownloadService.downloadModel(
       'https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/google_gemma-4-E2B-it-Q4_K_M.gguf',
       (p, s, d, t) {
-        setDialogState(() {
+        dialogSetState?.call(() {
           progress = p;
           speed = s;
           downloadedMB = d;
@@ -220,7 +226,7 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
         });
       }
     ).then((_) {
-      Navigator.pop(context);
+      if (mounted) Navigator.pop(context);
       _loadSettings();
     });
   }

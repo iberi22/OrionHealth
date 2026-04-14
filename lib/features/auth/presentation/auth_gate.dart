@@ -22,7 +22,13 @@ class AuthGate extends StatelessWidget {
 
         final userProfile = snapshot.data;
         if (userProfile == null) {
-          return const OnboardingMainPage();
+          return OnboardingMainPage(
+            onFinish: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const MainNavigationPage()),
+              );
+            },
+          );
         } else {
           return const MainNavigationPage();
         }
