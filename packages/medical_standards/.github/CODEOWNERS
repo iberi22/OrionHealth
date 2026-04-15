@@ -1,0 +1,18 @@
+# CODEOWNERS - Default reviewers for medical_standards package
+
+# Default reviewers for all files
+* @iberi22/medical-standards-reviewers
+
+# Healthcare standards files
+lib/icd10/ @iberi22/medical-standards-reviewers @iberi22/fhir-team
+lib/loinc/ @iberi22/medical-standards-reviewers @iberi22/fhir-team
+lib/snomed/ @iberi22/medical-standards-reviewers @iberi22/fhir-team
+lib/medications/ @iberi22/medical-standards-reviewers @iberi22/pharmacy-team
+
+# Workflow files
+.github/workflows/ @iberi22/engineering
+.github/CODEOWNERS @iberi22/engineering
+
+# Documentation
+README.md @iberi22/medical-standards-reviewers
+doc/ @iberi22/medical-standards-reviewers
