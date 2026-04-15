@@ -1,0 +1,52 @@
+Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
+
+Copyright 2026 SouthWest AI Labs
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. Definitions.
+
+"License" shall mean the terms and conditions for use, reproduction,
+and distribution as defined by Sections 1 through 9 of this document.
+
+"Licensor" shall mean the copyright owner or entity authorized by
+the copyright owner that is granting the License.
+
+"Medical Standards Data" shall mean the ICD-10, SNOMED CT, LOINC,
+RxNorm, FHIR, and clinical guidelines content contained in the data/
+directory, each subject to their respective organization licenses
+(IHTSDO, WHO, Regenstrief, HL7).
+
+2. Medical Standards Data License.
+
+The Medical Standards Data (data/ directory) includes codes,
+terminology, and references from:
+- ICD-10: World Health Organization (WHO)
+- SNOMED CT: IHTSDO (International Health Terminology Standards
+  Development Organisation)
+- LOINC: Regenstrief Institute, Inc.
+- RxNorm: National Library of Medicine (NLM)
+- FHIR: Health Level Seven International (HL7)
+- Clinical Guidelines: Respective medical organizations (ADA, AHA,
+  WHO, etc.)
+
+Each standard's data is subject to its respective license agreement.
+This repository aggregates public reference data for interoperability
+purposes only.
+
+3. Code and Mappings License.
+
+The Dart code, models, mappings, and extensions in this package
+(Apache 2.0):
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+See the License for the specific language governing permissions and
+limitations under the License.

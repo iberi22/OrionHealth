@@ -53,6 +53,8 @@ dependencies:
   equatable: ^2.0.7
   isar_agent_memory:
     path: packages/isar_agent_memory
+  medical_standards:
+    path: packages/medical_standards
   onnxruntime: ^1.4.1
   permission_handler: ^12.0.1
   health: ^13.2.1
