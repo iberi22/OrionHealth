@@ -1,159 +1,505 @@
-/// Medical context categories for selective sync
+/// Medical context categories that can be selectively downloaded.
 ///
-/// These categories determine which medical standards are
-/// downloaded and kept local based on user profile.
+/// Each category maps to specific ICD-10 codes, LOINC labs, and medication
+/// classes. Only the categories relevant to a user's profile are downloaded,
+/// reducing the data footprint from ~3GB to ~50-200MB per user.
 
-/// Categories of medical context
+import '../icd10/icd10.dart';
+import '../loinc/loinc.dart';
+import '../medications/medications.dart';
+import '../guidelines/guidelines.dart';
+
+/// Medical context categories that can be selectively downloaded
 enum MedicalContextCategory {
-  /// Everyone gets preventive care (vaccines, screenings)
-  preventive,
-  
-  /// Diabetes (Type 1, Type 2, gestational)
+  preventive, // Everyone gets this — vaccines, screenings
   diabetes,
-  
-  /// Cardiovascular diseases (hypertension, heart disease, etc.)
   cardiovascular,
-  
-  /// Respiratory conditions (asthma, COPD, etc.)
   respiratory,
-  
-  /// Thyroid disorders (hypo/hyperthyroidism)
   thyroid,
-  
-  /// Kidney/renal conditions
   renal,
-  
-  /// Liver conditions
   hepatic,
-  
-  /// Blood disorders (anemia, clotting issues)
   hematology,
-  
-  /// Cancer - screening and monitoring
   oncology,
-  
-  /// Mental health (depression, anxiety, etc.)
   mentalHealth,
-  
-  /// Infectious diseases
   infectious,
-  
-  /// Bone and joint conditions
   musculoskeletal,
-  
-  /// Digestive/GI conditions
   gastrointestinal,
-  
-  /// Eye conditions
-  ophthalmology,
-  
-  /// Neurological conditions
   neurology,
-  
-  /// Allergies and immunology
-  immunology,
+  dermatology,
+  pediatrics,
+  womensHealth,
+  mensHealth,
+  geriatrics,
+  emergency,
 }
 
-/// Maps categories to relevant ICD-10 code prefixes
-class CategoryIcd10Mapping {
-  static const Map<MedicalContextCategory, List<String>> icd10Prefixes = {
-    MedicalContextCategory.preventive: ['Z00', 'Z01', 'Z02', 'Z23', 'Z71'],
-    MedicalContextCategory.diabetes: ['E10', 'E11', 'E12', 'E13', 'O24'],
-    MedicalContextCategory.cardiovascular: ['I10', 'I11', 'I20', 'I21', 'I25', 'I48', 'I50', 'I63', 'I64'],
-    MedicalContextCategory.respiratory: ['J40', 'J41', 'J42', 'J43', 'J44', 'J45', 'J46', 'J47'],
-    MedicalContextCategory.thyroid: ['E03', 'E04', 'E05'],
-    MedicalContextCategory.renal: ['N17', 'N18', 'N19', 'N25'],
-    MedicalContextCategory.hepatic: ['K70', 'K71', 'K72', 'K73', 'K74', 'K75', 'K76', 'K77'],
-    MedicalContextCategory.hematology: ['D50', 'D51', 'D52', 'D53', 'D55', 'D56', 'D57', 'D58', 'D59', 'D60', 'D61', 'D62', 'D63', 'D64'],
-    MedicalContextCategory.oncology: ['C00', 'C01', 'C02', 'C03', 'C43', 'C50', 'C53', 'C54', 'C55', 'C56', 'C61', 'C64', 'C65', 'C66', 'C67', 'C68', 'C69', 'D03'],
-    MedicalContextCategory.mentalHealth: ['F31', 'F32', 'F33', 'F34', 'F38', 'F39', 'F40', 'F41', 'F42', 'F43', 'F44', 'F45', 'F48'],
-    MedicalContextCategory.infectious: ['A00', 'A01', 'A02', 'A09', 'B00', 'B01', 'B02', 'B05', 'B06', 'B15', 'B16', 'B17', 'B18', 'B20', 'B34'],
-    MedicalContextCategory.musculoskeletal: ['M05', 'M06', 'M07', 'M10', 'M15', 'M16', 'M17', 'M19', 'M20', 'M21', 'M22', 'M23', 'M25', 'M54'],
-    MedicalContextCategory.gastrointestinal: ['K20', 'K21', 'K25', 'K26', 'K27', 'K28', 'K29', 'K30', 'K50', 'K51', 'K52', 'K58', 'K59', 'K63', 'K70'],
-    MedicalContextCategory.ophthalmology: ['H10', 'H11', 'H25', 'H26', 'H27', 'H30', 'H33', 'H34', 'H35', 'H40', 'H42'],
-    MedicalContextCategory.neurology: ['G20', 'G30', 'G35', 'G40', 'G41', 'G43', 'G44', 'G45', 'G47', 'G50', 'G51', 'G52', 'G53', 'G54', 'G55', 'G56', 'G57', 'G58', 'G59', 'G60', 'G61', 'G62', 'G63', 'G64', 'G65', 'G70', 'G71', 'G72', 'G73', 'G80', 'G81', 'G82', 'G83', 'G89', 'G90', 'G91', 'G92', 'G93', 'G94', 'G95', 'G96', 'G97', 'G98', 'G99'],
-    MedicalContextCategory.immunology: ['J30', 'J31', 'J45', 'J46', 'L20', 'L23', 'L24', 'L25', 'L27', 'L28', 'L30', 'L50', 'L51', 'L52', 'L53'],
-  };
-
-  static List<String> getIcd10Prefixes(Set<MedicalContextCategory> categories) {
-    final prefixes = <String>[];
-    for (final category in categories) {
-      prefixes.addAll(icd10Prefixes[category] ?? []);
-    }
-    return prefixes;
-  }
-}
-
-/// Maps categories to relevant LOINC code prefixes
-class CategoryLoincMapping {
-  static const Map<MedicalContextCategory, List<String>> loincCodes = {
-    MedicalContextCategory.preventive: ['718-7', '2334-0', '4544-3', '6690-2', '777-3', '2951-2', '2823-3', '2160-0', '3094-0'],
-    MedicalContextCategory.diabetes: ['4548-4', '2345-7', '2334-0', '2085-9', '2571-8', '2093-3', '13457-7'],
-    MedicalContextCategory.cardiovascular: ['85354-9', '8480-6', '8462-4', '8459-0', '8453-3', '8478-8', '8867-4', '2710-2', '2085-9', '2093-3', '13457-7'],
-    MedicalContextCategory.respiratory: ['5942-2', '2703-7', '2708-6', '2019-8', '4756-4', '1989-3'],
-    MedicalContextCategory.thyroid: ['3016-3', '3026-2', '3024-7', '3053-6', '3052-8', '3051-0'],
-    MedicalContextCategory.renal: ['2160-0', '3094-0', '59570-2', '48642-3', '48811-4', '48813-0'],
-    MedicalContextCategory.hepatic: ['1920-8', '1921-6', '1922-4', '1923-2', '1924-0', '1925-7', '1972-5', '1973-3', '1974-1', '1975-8', '1976-6'],
-    MedicalContextCategory.hematology: ['718-7', '4544-3', '6690-2', '777-3', '7856-2', '7861-2', '7863-8', '7871-1', '7872-9', '7873-7', '7874-5', '2276-4', '2508-8', '2502-1'],
-    MedicalContextCategory.oncology: ['21914-2', '2744-1', '21915-9', '27043-1', '2756-5', '21913-4'],
-    MedicalContextCategory.mentalHealth: ['LA21926-9', 'LA21927-7', 'LA21928-5'],
-    MedicalContextCategory.musculoskeletal: ['4548-4', '17861-6', '30522-7', '62238-9', '82610-7'],
-    MedicalContextCategory.gastrointestinal: ['2349-9', '2335-7', '2325-8', '2344-0', '2350-7', '2351-5', '2352-3'],
-  };
-
-  static List<String> getLoincCodes(Set<MedicalContextCategory> categories) {
-    final codes = <String>[];
-    for (final category in categories) {
-      codes.addAll(loincCodes[category] ?? []);
-    }
-    return codes;
-  }
-}
-
-/// Maps categories to medication drug classes
-class CategoryMedicationMapping {
-  static const Map<MedicalContextCategory, List<String>> drugClasses = {
-    MedicalContextCategory.diabetes: ['Biguanide', 'Sulfonylurea', 'Meglitinide', 'Thiazolidinedione', 'DPP-4 inhibitor', 'GLP-1 agonist', 'SGLT2 inhibitor', 'Insulin'],
-    MedicalContextCategory.cardiovascular: ['ACE Inhibitor', 'ARB', 'Calcium Channel Blocker', 'Beta Blocker', 'Diuretic', 'Statin', 'Antiplatelet', 'Anticoagulant'],
-    MedicalContextCategory.respiratory: ['Beta-2 Agonist', 'Inhaled Corticosteroid', 'Leukotriene receptor antagonist', 'Methylxanthine', 'Anticholinergic'],
-    MedicalContextCategory.thyroid: ['Thyroid Hormone'],
-    MedicalContextCategory.mentalHealth: ['SSRI', 'SNRI', 'Tricyclic', 'Benzodiazepine', 'Atypical antipsychotic', 'Mood stabilizer'],
-    MedicalContextCategory.pain: ['NSAID', 'Analgesic', 'Opioid', 'Muscle relaxant'],
-    MedicalContextCategory.infectious: ['Antibiotic', 'Antiviral', 'Antifungal', 'Antiparasitic'],
-  };
-
-  static List<String> getDrugClasses(Set<MedicalContextCategory> categories) {
-    final classes = <String>[];
-    for (final category in categories) {
-      classes.addAll(drugClasses[category] ?? []);
-    }
-    return classes;
-  }
-}
-
-/// Relevant standards for a user profile
+/// Holds the result of profile analysis: which categories + priority tiers
 class RelevantStandards {
+  /// Categories that should be downloaded
   final Set<MedicalContextCategory> categories;
-  final List<String> icd10Codes;
-  final List<String> loincCodes;
-  final List<String> medicationClasses;
-  final List<String> guidelineIds;
+
+  /// Tiers for progress reporting: tier1 = immediate, tier2 = background
+  final Set<MedicalContextCategory> tier1; // Download immediately
+  final Set<MedicalContextCategory> tier2; // Download in background
 
   const RelevantStandards({
     required this.categories,
-    required this.icd10Codes,
-    required this.loincCodes,
-    required this.medicationClasses,
-    required this.guidelineIds,
+    required this.tier1,
+    required this.tier2,
   });
 
-  int get estimatedSizeMB {
-    // Rough estimates
-    int size = 10; // Base size for preventive
-    size += categories.length * 5; // 5MB per category
-    size += (icd10Codes.length * 0.1).round(); // 0.1MB per code
-    size += (loincCodes.length * 0.1).round(); // 0.1MB per code
-    size += (medicationClasses.length * 0.5).round(); // 0.5MB per class
-    return size;
-  }
+  /// Empty result with only preventive care
+  factory RelevantStandards.minimal() => RelevantStandards(
+        categories: {MedicalContextCategory.preventive},
+        tier1: {MedicalContextCategory.preventive},
+        tier2: {},
+      );
+
+  bool get isEmpty => categories.isEmpty;
+  int get totalCategories => categories.length;
+}
+
+/// Maps categories to relevant ICD-10 codes (code strings)
+class CategoryIcd10 {
+  static const Map<MedicalContextCategory, Set<String>> codes = {
+    MedicalContextCategory.preventive: {
+      'Z00.00', // General adult medical exam
+      'Z00.01', // Encounter for general adult medical examination with abnormal findings
+      'Z23', // Encounter for immunization
+      'Z71.3', // Dietary counseling
+      'Z79.4', // Long term insulin use
+      'Z87.891', // Personal history of nicotine dependence
+      'Z12.31', // Encounter for screening mammogram
+      'Z12.11', // Encounter for colonoscopy
+      'Z13.220', // Encounter for screening for malignant neoplasm of colon
+    },
+    MedicalContextCategory.diabetes: {
+      'E10', 'E10.1', 'E10.21', 'E10.31', 'E10.4', 'E10.5', 'E10.9',
+      'E11', 'E11.00', 'E11.21', 'E11.31', 'E11.4', 'E11.51', 'E11.9',
+      'E08', 'E09', 'E13', 'E14',
+      'R73.03', // Prediabetes
+      'R73.09', // Other abnormal glucose
+    },
+    MedicalContextCategory.cardiovascular: {
+      'I10', 'I11.9', 'I16.1',
+      'I48.91', 'I48.3', 'I48.4',
+      'I50.9', 'I50.22', 'I50.30',
+      'I21.9', 'I21.3', 'I22.9',
+      'I25.10', 'I25.9', 'I25.00',
+      'I73.9', 'I65.29', 'I71.9', 'I71.00',
+      'I83.90', 'I89.0',
+      'I80.10', // DVT
+      'I26.99', // Pulmonary embolism
+      'I80.20', 'I80.10', 'I82.409',
+    },
+    MedicalContextCategory.respiratory: {
+      'J40', 'J41.0', 'J41.1', 'J41.8', 'J42',
+      'J43.9', 'J43.8', 'J44.0', 'J44.1',
+      'J45.909', 'J45.41', 'J45.20', 'J45.30', 'J45.5',
+      'J47.9',
+      'J18.9', 'J12.89', 'J96.90', 'J80',
+      'J91.8', 'J93.9',
+    },
+    MedicalContextCategory.thyroid: {
+      'E03.9', 'E03.0', 'E03.1', 'E03.2',
+      'E05.90', 'E05.00', 'E05.10', 'E05.20',
+      'E04.9', 'E04.0', 'E04.1', 'E04.2',
+      'C73', // Thyroid cancer
+      'E07.9', // Thyroid disorder NOS
+    },
+    MedicalContextCategory.renal: {
+      'N17.9', 'N17.0', 'N00.9',
+      'N18.9', 'N18.1', 'N18.2', 'N18.3', 'N18.4', 'N18.5', 'N18.6',
+      'N04.9', 'N39.0',
+      'N40.1', 'N23', 'N13.9',
+      'N05.9', 'N20.9',
+      'E87.5', // Hyperkalemia
+      'E87.6', // Hypokalemia
+    },
+    MedicalContextCategory.hepatic: {
+      'K70.30', 'K70.0', 'K70.1', 'K70.2',
+      'K72.90', 'K72.10', 'K72.91',
+      'K76.0', // NAFLD/NASH
+      'K76.6', // Portal hypertension
+      'B18.1', // HBV
+      'B18.2', // HCV
+      'B15.9', // HAV
+      'K74.60', // Cirrhosis
+      'K81.0', 'K80.20',
+      'K76.82', 'K76.89',
+    },
+    MedicalContextCategory.hematology: {
+      'D50.9', 'D50.0',
+      'D51.9', 'D52.9',
+      'D59.9', 'D57.00', 'D56.9',
+      'D61.9', 'D61.818',
+      'D63.1', 'D63.0', // Anemia in CKD / malignancy
+      'D70.9', // Neutropenia
+      'D69.6', // Thrombocytopenia
+      'D68.9', 'D66', 'D68.0', // Coagulation
+      'D45', // Polycythemia vera
+      'D47.3', // Thrombocythemia
+    },
+    MedicalContextCategory.oncology: {
+      'C79.9', // Secondary malignancy
+      'C34.90', // Lung cancer
+      'C50.919', // Breast cancer
+      'C18.9', // Colon cancer
+      'C61', // Prostate cancer
+      'C43.9', // Melanoma
+      'C61', // Prostate
+      'C56.9', // Ovarian
+      'C64.9', // Renal cell
+      'C22.0', // Hepatocellular carcinoma
+      'C25.9', // Pancreatic
+    },
+    MedicalContextCategory.mentalHealth: {
+      'F32.9', 'F33.9', // Depression
+      'F41.1', 'F41.9', // Anxiety
+      'F17.210', // Nicotine dependence
+      'F10.20', // Alcohol use disorder
+      'F11.20', // Opioid use disorder
+      'F20.9', // Schizophrenia
+      'F31.9', // Bipolar
+      'F90.9', // ADHD
+      'F43.10', // PTSD
+      'G47.00', // Insomnia
+    },
+    MedicalContextCategory.infectious: {
+      'A41.9', // Sepsis
+      'J18.9', // Pneumonia
+      'N39.0', // UTI
+      'K81.0', // Cholecystitis
+      'L03.90', // Cellulitis
+      'A09', // Infectious gastroenteritis
+      'B34.9', // Viral infection NOS
+      'J02.9', // Pharyngitis
+      'J03.90', // Tonsillitis
+    },
+    MedicalContextCategory.musculoskeletal: {
+      'M54.5', // Low back pain
+      'M54.2', // Cervical pain
+      'M25.50', // Joint pain
+      'M79.3', // Panniculitis
+      'M06.9', // Rheumatoid arthritis
+      'M15.9', // Osteoarthritis
+      'M81.0', // Osteoporosis
+      'M10.9', // Gout
+      'M75.100', // Shoulder pain
+      'M77.9', // Tendinitis
+    },
+    MedicalContextCategory.gastrointestinal: {
+      'K21.9', // GERD
+      'K29.70', // Gastritis
+      'K58.9', // IBS
+      'K59.00', // Constipation
+      'K63.5', // Polyp
+      'K50.90', // Crohn's
+      'K51.90', // Ulcerative colitis
+      'K57.90', // Diverticulosis
+    },
+    MedicalContextCategory.neurology: {
+      'G43.909', // Migraine
+      'G47.00', // Insomnia
+      'G20', // Parkinson's
+      'G30.9', // Alzheimer's
+      'G35', // MS
+      'G40.909', // Epilepsy
+      'I63.9', // Stroke
+      'G62.9', // Neuropathy
+    },
+    MedicalContextCategory.dermatology: {
+      'L40.9', // Psoriasis
+      'L20.9', // Atopic dermatitis
+      'L50.9', // Urticaria
+      'L70.0', // Acne
+      'B07.9', // Warts
+      'L03.90', // Cellulitis
+      'C43.9', // Melanoma
+      'L02.90', // Abscess
+    },
+    MedicalContextCategory.pediatrics: {
+      'J45.909', // Asthma
+      'E30.0', // Delayed puberty
+      'F90.9', // ADHD
+      'R62.50', // Lack of expected normal physiological development
+    },
+    MedicalContextCategory.womensHealth: {
+      'N92.6', // Irregular menstruation
+      'N80.9', // Endometriosis
+      'N84.1', // Polyps
+      'C56.9', // Ovarian cancer
+      'C50.919', // Breast cancer
+      'O80', // Delivery
+      'Z34.00', // Pregnancy supervision
+    },
+    MedicalContextCategory.mensHealth: {
+      'N40.1', // BPH
+      'C61', // Prostate cancer
+      'E29.1', // Hypogonadism
+      'Z90.79', // Acquired absence of testis
+    },
+    MedicalContextCategory.geriatrics: {
+      'M81.0', // Osteoporosis
+      'G30.9', // Alzheimer's
+      'I50.9', // Heart failure
+      'N18.9', // CKD
+      'J44.9', // COPD
+      'Z87.891', // History of nicotine
+    },
+    MedicalContextCategory.emergency: {
+      'I21.9', // AMI
+      'I63.9', // Stroke
+      'R07.9', // Chest pain
+      'R10.9', // Abdominal pain
+      'R50.9', // Fever
+      'J96.00', // Respiratory failure
+      'R55', // Syncope
+    },
+  };
+
+  /// Get all ICD-10 codes for a category
+  static Set<String> forCategory(MedicalContextCategory cat) =>
+      codes[cat] ?? {};
+}
+
+/// Maps categories to relevant LOINC lab codes
+class CategoryLoinc {
+  static const Map<MedicalContextCategory, Set<String>> codes = {
+    MedicalContextCategory.preventive: {
+      '2345-7', // Glucose
+      '4548-4', // HbA1c
+      '2093-3', // Total cholesterol
+      '13457-7', // LDL
+      '2085-9', // HDL
+      '2571-8', // Triglycerides
+      '718-7', // Hemoglobin
+      '6690-2', // WBC
+      '777-3', // Platelets
+      '2160-0', // Creatinine
+      '3094-0', // BUN
+    },
+    MedicalContextCategory.diabetes: {
+      '2345-7', // Glucose
+      '4548-4', // HbA1c
+      '2339-0', // Glucose [60-90 fasting]
+      '17861-6', // Glucose 2hr post meal
+      '2160-0', // Creatinine
+      '3094-0', // BUN
+      '13457-7', // LDL
+      '2571-8', // Triglycerides
+      '2085-9', // HDL
+      '2823-3', // Potassium
+      '2951-2', // Sodium
+    },
+    MedicalContextCategory.cardiovascular: {
+      '2093-3', // Total cholesterol
+      '13457-7', // LDL
+      '2085-9', // HDL
+      '2571-8', // Triglycerides
+      '718-7', // Hemoglobin
+      '2160-0', // Creatinine
+      '3094-0', // BUN
+      '2951-2', // Sodium
+      '2823-3', // Potassium
+      '30522-7', // Troponin
+      '42757-5', // NT-proBNP
+      '3255-7', // INR
+    },
+    MedicalContextCategory.respiratory: {
+      '1989-3', // ABG pO2
+      '1994-3', // ABG pCO2
+      '2744-1', // pH
+      '6309-6', // O2 saturation
+      '2975-0', // FEV1
+      '19869-1', // FVC
+    },
+    MedicalContextCategory.thyroid: {
+      '3016-3', // TSH
+      '3026-2', // Free T4
+      '3023-9', // Total T3
+      '30522-7', // T3 uptake
+    },
+    MedicalContextCategory.renal: {
+      '2160-0', // Creatinine
+      '3094-0', // BUN
+      '2276-4', // Ferritin
+      '2508-8', // Iron
+      '2502-1', // Iron saturation
+      '2951-2', // Sodium
+      '2823-3', // Potassium
+      '3094-0', // BUN
+      '44784-7', // eGFR
+      '47563-4', // Urine protein
+    },
+    MedicalContextCategory.hepatic: {
+      '1975-2', // Total bilirubin
+      '6768-6', // ALT
+      '1742-6', // ALT
+      '1920-8', // AST
+      '2532-0', // ALP
+      '1979-4', // GGT
+      '2208-8', // Albumin
+      '3094-0', // BUN (for hepatorenal)
+    },
+    MedicalContextCategory.hematology: {
+      '718-7', // Hemoglobin
+      '4544-3', // Hematocrit
+      '6690-2', // WBC
+      '777-3', // Platelets
+      '2276-4', // Ferritin
+      '2508-8', // Iron
+      '2502-1', // Iron saturation
+      '32623-1', // Vitamin B12
+      '2280-6', // Folate
+      '3255-7', // INR
+      '42757-5', // NT-proBNP (for anemia of heart failure)
+    },
+    MedicalContextCategory.oncology: {
+      '718-7', // Hemoglobin
+      '777-3', // Platelets
+      '6690-2', // WBC
+      '4544-3', // Hematocrit
+      '1975-2', // Total bilirubin
+      '6768-6', // ALT
+      '1920-8', // AST
+      '2160-0', // Creatinine
+      // Tumor markers
+      '2857-1', // CEA
+      '10509-5', // CA 125
+      '24110-5', // CA 19-9
+    },
+    MedicalContextCategory.mentalHealth: {
+      '2345-7', // Glucose
+      '4548-4', // HbA1c (screen metabolic causes)
+      '2160-0', // Creatinine (renal causes)
+      '2951-2', // Sodium
+      '2823-3', // Potassium
+      '1946-3', // TSH
+    },
+    MedicalContextCategory.musculoskeletal: {
+      '1989-3', // Vitamin D
+      '1988-5', // Calcium
+      '2838-9', // Phosphorus
+      '6768-6', // ALT (for methotrexate monitoring)
+      '2160-0', // Creatinine (for NSAIDs)
+    },
+  };
+
+  static Set<String> forCategory(MedicalContextCategory cat) =>
+      codes[cat] ?? {};
+}
+
+/// Maps categories to relevant medication drug classes
+class CategoryMedications {
+  static const Map<MedicalContextCategory, Set<String>> drugClasses = {
+    MedicalContextCategory.preventive: {
+      'Vaccine',
+      'Analgesic',
+    },
+    MedicalContextCategory.diabetes: {
+      'Biguanide',
+      'Sulfonylurea',
+      'Meglitinide',
+      'Thiazolidinedione',
+      'DPP-4 Inhibitor',
+      'GLP-1 Receptor Agonist',
+      'SGLT2 Inhibitor',
+      'Long-acting Insulin',
+      'Short-acting Insulin',
+      'Intermediate-acting Insulin',
+      'Alpha-glucosidase Inhibitor',
+    },
+    MedicalContextCategory.cardiovascular: {
+      'ACE Inhibitor',
+      'ARB',
+      'Calcium Channel Blocker',
+      'Beta Blocker',
+      'Diuretic',
+      'Statin',
+      'Anticoagulant',
+      'Antiplatelet',
+      'Nitrate',
+      'Vasodilator',
+      'Antiarrhythmic',
+    },
+    MedicalContextCategory.respiratory: {
+      'Beta-2 Agonist',
+      'Inhaled Corticosteroid',
+      'Anticholinergic',
+      'Leukotriene Inhibitor',
+      'Methylxanthine',
+      'Mucolytic',
+    },
+    MedicalContextCategory.thyroid: {
+      'Thyroid Hormone',
+      'Antithyroid',
+    },
+    MedicalContextCategory.renal: {
+      'Diuretic',
+      'ACE Inhibitor',
+      'ARB',
+      'Phosphate Binder',
+      'Vitamin D Analog',
+      'Erythropoiesis Stimulating Agent',
+    },
+    MedicalContextCategory.hepatic: {
+      'Hepatoprotective',
+      'Antiviral',
+      'Diuretic',
+    },
+    MedicalContextCategory.hematology: {
+      'Iron Supplement',
+      'Vitamin B12',
+      'Folate',
+      'Erythropoiesis Stimulating Agent',
+      'Anticoagulant',
+    },
+    MedicalContextCategory.oncology: {
+      'Chemotherapy',
+      'Targeted Therapy',
+      'Immunotherapy',
+      'Hormone Therapy',
+      'Supportive Care',
+    },
+    MedicalContextCategory.mentalHealth: {
+      'SSRI',
+      'SNRI',
+      'Tricyclic Antidepressant',
+      'Benzodiazepine',
+      'Non-benzodiazepine Hypnotic',
+      'Antipsychotic',
+      'Mood Stabilizer',
+      'ADHD Medication',
+    },
+    MedicalContextCategory.infectious: {
+      'Antibiotic',
+      'Antiviral',
+      'Antifungal',
+      'Antiparasitic',
+    },
+    MedicalContextCategory.musculoskeletal: {
+      'NSAID',
+      'Acetaminophen',
+      'Opioid Analgesic',
+      'Muscle Relaxant',
+      'DMARD',
+      'Biologic',
+      'Bisphosphonate',
+      'Allopurinol',
+      'Colchicine',
+    },
+    MedicalContextCategory.gastrointestinal: {
+      'Proton Pump Inhibitor',
+      'H2 Blocker',
+      'Antacid',
+      'Laxative',
+      'Antidiarrheal',
+      '5-ASA',
+      'Antispasmodic',
+    },
+  };
+
+  static Set<String> forCategory(MedicalContextCategory cat) =>
+      drugClasses[cat] ?? {};
 }

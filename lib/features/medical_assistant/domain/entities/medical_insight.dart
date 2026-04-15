@@ -11,6 +11,7 @@ enum InsightCategory {
   medicationInsight,
   guidelineRecommendation,
   generalGuidance,
+  symptomAnalysis,
 }
 
 /// Represents a medical insight generated from analysis
