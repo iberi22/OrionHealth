@@ -1,0 +1,33 @@
+name: medical_standards
+description: "Open medical standards for OrionHealth network — ICD-10, SNOMED CT, LOINC, FHIR, RxNorm, Clinical Guidelines"
+version: 1.0.0
+publish_to: 'none'
+repository: https://github.com/iberi22/OrionHealth
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  equatable: ^2.0.7
+  json_annotation: ^4.9.0
+  http: ^1.2.0
+  path: ^1.9.0
+  path_provider: ^2.1.0
+
+dev_dependencies:
+  build_runner: ^2.4.13
+  json_serializable: ^6.8.0
+  flutter_lints: ^6.0.0
+
+flutter:
+  assets:
+    - data/full_icd10.json
+    - data/full_loinc.json
+    - data/full_snomed.json
+    - data/full_rxnorm.json
+
+executables:
+  validate_icd10: bin/validate_icd10
+  validate_loinc: bin/validate_loinc
+  validate_snomed: bin/validate_snomed
+  validate_medications: bin/validate_medications
