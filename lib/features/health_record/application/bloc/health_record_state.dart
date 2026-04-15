@@ -3,6 +3,8 @@ part of 'health_record_cubit.dart';
 abstract class HealthRecordState extends Equatable {
   const HealthRecordState();
 
+  List<MedicalRecord> get records => [];
+
   @override
   List<Object?> get props => [];
 }
