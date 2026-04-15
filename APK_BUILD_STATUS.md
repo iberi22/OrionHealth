@@ -5,7 +5,7 @@
 The OrionHealth app APK has been successfully compiled for release.
 
 **APK Details:**
-- **Location**: `build/app/outputs/apk/release/app-release.apk`
+- **Location**: `build/app/outputs/flutter-apk/app-release.apk`
 - **Size**: ~82 MB
 - **Target SDK**: Android 15+ (API 36)
 - **Minimum SDK**: API 28 (Android 9.0+)
@@ -81,7 +81,7 @@ cd ..
 
 ### Install on Device
 ```bash
-adb install -r build/app/outputs/apk/release/app-release.apk
+adb install -r build/app/outputs/flutter-apk/app-release.apk
 ```
 
 ### Verify Installation
