@@ -13,6 +13,10 @@ on:
         default: 'false'
         type: boolean
 
+env:
+  FLUTTER_VERSION: '3.24.0'
+  JAVA_VERSION: '17'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,13 +28,15 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
+          cache-dependency-path: .flutter-plugins
 
       - name: Get dependencies
         run: flutter pub get
@@ -55,23 +61,31 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Build Release APK
-        run: |
-          cd android
-          ./gradlew :app:assembleRelease -x verifyReleaseResources -x lintVitalAnalyzeRelease
-          cd ..
+      - name: Build debug APK
+        run: flutter build apk --debug
 
-      - name: Upload Release APK
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: orionhealth-release
-          path: build/app/outputs/apk/release/app-release.apk
+          name: orionhealth-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 7
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: orionhealth-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
 
       - name: Create Release (on tag)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          files: build/app/outputs/apk/release/app-release.apk
+          files: build/app/outputs/flutter-apk/app-release.apk
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
