@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "description": "Medical Standards Data - OrionHealth Network",
+  "standards": {
+    "icd10": {
+      "description": "International Classification of Diseases, 10th Revision",
+      "source": "World Health Organization (WHO)",
+      "url": "https://www.who.int/standards/classifications/classification-of-diseases"
+    },
+    "snomed": {
+      "description": "Systematized Nomenclature of Medicine Clinical Terms",
+      "source": "IHTSDO (International Health Terminology Standards Development Organisation)",
+      "url": "https://www.snomed.org/",
+      "note": "Full SNOMED CT is proprietary - this package contains a subset for interoperability"
+    },
+    "loinc": {
+      "description": "Logical Observation Identifiers Names and Codes",
+      "source": "Regenstrief Institute, Inc.",
+      "url": "https://loinc.org/"
+    },
+    "rxnorm": {
+      "description": "Normalized names for clinical drugs",
+      "source": "National Library of Medicine (NLM)",
+      "url": "https://www.nlm.nih.gov/research/umls/rxnorm/"
+    },
+    "fhir": {
+      "description": "Fast Healthcare Interoperability Resources",
+      "source": "Health Level Seven International (HL7)",
+      "url": "https://www.hl7.org/fhir/"
+    }
+  },
+  "guidelines": {
+    "ada": "https://professional.diabetes.org/content/clinical-practice-recommendations",
+    "aha": "https://www.heart.org/en/health-topics",
+    "who": "https://www.who.int/publications",
+    "ata": "https://www.thyroid.org/professionals/ata-guidelines/"
+  },
+  "lastUpdated": "2026-04-15",
+  "license": "See LICENSE file for details"
+}
