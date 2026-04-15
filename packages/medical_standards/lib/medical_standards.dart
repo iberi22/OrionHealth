@@ -5,8 +5,20 @@
 
 import 'package:equatable/equatable.dart';
 
+/// Standard export
+export 'icd10/icd10.dart';
+export 'snomed/snomed.dart';
+export 'loinc/loinc.dart';
+export 'fhir/fhir.dart';
+export 'medications/medications.dart';
+export 'guidelines/guidelines.dart';
+export 'services/sync_service.dart';
+export 'services/medical_context_provider.dart';
+
 /// Base interface for all medical concepts
 abstract class MedicalConcept extends Equatable {
+  const MedicalConcept();
+
   /// Unique code in the standard
   String get code;
 
@@ -118,13 +130,3 @@ class ClinicalGuideline extends Equatable {
   @override
   List<Object?> get props => [id, title, organization];
 }
-
-/// Standard export
-export 'icd10/icd10.dart';
-export 'snomed/snomed.dart';
-export 'loinc/loinc.dart';
-export 'fhir/fhir.dart';
-export 'medications/medications.dart';
-export 'guidelines/guidelines.dart';
-export 'services/sync_service.dart';
-export 'services/medical_context_provider.dart';
