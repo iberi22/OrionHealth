@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "version": "2.72",
+    "lastUpdated": "2024-03-01",
+    "source": "LOINC Database",
+    "sourceUrl": "https://loinc.org/downloads/",
+    "license": "LOINC License - https://loinc.org/license/",
+    "totalCount": 19,
+    "format": "loinc_part_file"
+  },
+  "data": [
+    {"code": "718-7", "displayName": "Hemoglobin [Mass/volume] in Blood", "component": "Hemoglobin", "property": "Mass concentration", "unit": "g/dL", "description": "Normal: Male 13.5-17.5 g/dL, Female 12-16 g/dL"},
+    {"code": "4544-3", "displayName": "Hematocrit [Volume fraction] of Blood", "component": "Hematocrit", "property": "Volume fraction", "unit": "%", "description": "Normal: Male 38-50%, Female 34-44%"},
+    {"code": "6690-2", "displayName": "Leukocytes [Count] in Blood by Automated count", "component": "WBC", "property": "Number concentration", "unit": "10*3/uL", "description": "Normal: 4.5-11.0 x10³/uL"},
+    {"code": "777-3", "displayName": "Platelets [Count] in Blood by Automated count", "component": "Platelets", "property": "Number concentration", "unit": "10*3/uL", "description": "Normal: 150-400 x10³/uL"},
+    {"code": "2345-7", "displayName": "Glucose [Mass/volume] in Serum or Plasma", "component": "Glucose", "property": "Mass concentration", "unit": "mg/dL", "description": "Fasting normal: 70-100 mg/dL"},
+    {"code": "4548-4", "displayName": "Hemoglobin A1c/Hemoglobin.total in Blood", "component": "HbA1c", "property": "Mass fraction", "unit": "%", "description": "Normal <5.7%, Prediabetes 5.7-6.4%, Diabetes >=6.5%"},
+    {"code": "2160-0", "displayName": "Creatinine [Mass/volume] in Serum or Plasma", "component": "Creatinine", "property": "Mass concentration", "unit": "mg/dL", "description": "Normal: Male 0.7-1.3, Female 0.6-1.1 mg/dL"},
+    {"code": "3094-0", "displayName": "Urea nitrogen [Mass/volume] in Serum or Plasma", "component": "BUN", "property": "Mass concentration", "unit": "mg/dL", "description": "Normal: 7-20 mg/dL"},
+    {"code": "2951-2", "displayName": "Sodium [Moles/volume] in Serum or Plasma", "component": "Sodium", "property": "Molar concentration", "unit": "mmol/L", "description": "Normal: 136-145 mmol/L"},
+    {"code": "2823-3", "displayName": "Potassium [Moles/volume] in Serum or Plasma", "component": "Potassium", "property": "Molar concentration", "unit": "mmol/L", "description": "Normal: 3.5-5.0 mmol/L"},
+    {"code": "2093-3", "displayName": "Cholesterol [Mass/volume] in Serum or Plasma", "component": "Total Cholesterol", "property": "Mass concentration", "unit": "mg/dL", "description": "Desirable <200 mg/dL"},
+    {"code": "13457-7", "displayName": "Cholesterol.LDL [Mass/volume] in Serum or Plasma by calculation", "component": "LDL Cholesterol", "property": "Mass concentration", "unit": "mg/dL", "description": "Optimal <100 mg/dL"},
+    {"code": "2085-9", "displayName": "Cholesterol in HDL [Mass/volume] in Serum or Plasma", "component": "HDL Cholesterol", "property": "Mass concentration", "unit": "mg/dL", "description": "Male >=40, Female >=50 mg/dL"},
+    {"code": "2571-8", "displayName": "Triglycerides [Mass/volume] in Serum or Plasma", "component": "Triglycerides", "property": "Mass concentration", "unit": "mg/dL", "description": "Normal <150 mg/dL"},
+    {"code": "3016-3", "displayName": "Thyrotropin [Units/volume] in Serum or Plasma", "component": "TSH", "property": "Unit concentration", "unit": "mIU/L", "description": "Normal: 0.4-4.0 mIU/L"},
+    {"code": "3026-2", "displayName": "Thyroxine free T4 [Mass/volume] in Serum or Plasma", "component": "Free T4", "property": "Mass concentration", "unit": "ng/dL", "description": "Normal: 0.8-1.8 ng/dL"},
+    {"code": "2276-4", "displayName": "Ferritin [Mass/volume] in Serum or Plasma", "component": "Ferritin", "property": "Mass concentration", "unit": "ng/mL", "description": "Normal: Male 20-250, Female 10-120 ng/mL"},
+    {"code": "2508-8", "displayName": "Iron [Mass/volume] in Serum or Plasma", "component": "Iron", "property": "Mass concentration", "unit": "ug/dL", "description": "Normal: Male 65-175, Female 50-170 ug/dL"},
+    {"code": "2502-1", "displayName": "Iron saturation [Mass ratio] in Serum or Plasma", "component": "Iron Saturation", "property": "Mass fraction", "unit": "%", "description": "Normal: 20-50%"}
+  ]
+}
