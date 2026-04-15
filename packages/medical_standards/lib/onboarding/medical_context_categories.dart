@@ -90,7 +90,7 @@ class CategoryIcd10 {
       'I83.90', 'I89.0',
       'I80.10', // DVT
       'I26.99', // Pulmonary embolism
-      'I80.20', 'I82.409',
+      'I80.20', 'I80.10', 'I82.409',
     },
     MedicalContextCategory.respiratory: {
       'J40', 'J41.0', 'J41.1', 'J41.8', 'J42',
@@ -147,6 +147,7 @@ class CategoryIcd10 {
       'C18.9', // Colon cancer
       'C61', // Prostate cancer
       'C43.9', // Melanoma
+      'C61', // Prostate
       'C56.9', // Ovarian
       'C64.9', // Renal cell
       'C22.0', // Hepatocellular carcinoma
@@ -327,6 +328,7 @@ class CategoryLoinc {
       '2502-1', // Iron saturation
       '2951-2', // Sodium
       '2823-3', // Potassium
+      '3094-0', // BUN
       '44784-7', // eGFR
       '47563-4', // Urine protein
     },

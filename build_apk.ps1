@@ -37,7 +37,7 @@ $buildSuccess = $?
 Pop-Location
 
 if ($buildSuccess) {
-    $apkPath = "build/app/outputs/apk/release/app-release.apk"
+    $apkPath = "build/app/outputs/flutter-apk/app-release.apk"
     $file = Get-Item $apkPath -ErrorAction SilentlyContinue
     if ($file) {
         $sizeMB = [math]::Round($file.Length/1MB, 2)
@@ -47,7 +47,7 @@ if ($buildSuccess) {
         Write-Host "📊 APK Size: $sizeMB MB" -ForegroundColor Cyan
         Write-Host ""
         Write-Host "Next steps:" -ForegroundColor Yellow
-        Write-Host "1. Test on device: adb install -r build/app/outputs/apk/release/app-release.apk"
+        Write-Host "1. Test on device: adb install -r build/app/outputs/flutter-apk/app-release.apk"
         Write-Host "2. Create release: git tag v1.0.0 && git push --tags"
         Write-Host "3. Upload to Play Store or GitHub Releases"
     } else {

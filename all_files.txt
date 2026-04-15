@@ -44,6 +44,7 @@ gradle
 gradle.properties
 gradlew
 gradlew.bat
+local.properties
 settings.gradle.kts
 
 ./android/app:
@@ -60,8 +61,21 @@ AndroidManifest.xml
 
 ./android/app/src/main:
 AndroidManifest.xml
+java
 kotlin
 res
+
+./android/app/src/main/java:
+io
+
+./android/app/src/main/java/io:
+flutter
+
+./android/app/src/main/java/io/flutter:
+plugins
+
+./android/app/src/main/java/io/flutter/plugins:
+GeneratedPluginRegistrant.java
 
 ./android/app/src/main/kotlin:
 com
@@ -227,12 +241,21 @@ RunnerTests
 ./ios/Flutter:
 AppFrameworkInfo.plist
 Debug.xcconfig
+Generated.xcconfig
 Release.xcconfig
+ephemeral
+flutter_export_environment.sh
+
+./ios/Flutter/ephemeral:
+flutter_lldb_helper.py
+flutter_lldbinit
 
 ./ios/Runner:
 AppDelegate.swift
 Assets.xcassets
 Base.lproj
+GeneratedPluginRegistrant.h
+GeneratedPluginRegistrant.m
 Info.plist
 Runner-Bridging-Header.h
 
@@ -1056,9 +1079,12 @@ runner
 
 ./windows/flutter:
 CMakeLists.txt
+ephemeral
 generated_plugin_registrant.cc
 generated_plugin_registrant.h
 generated_plugins.cmake
+
+./windows/flutter/ephemeral:
 
 ./windows/runner:
 CMakeLists.txt

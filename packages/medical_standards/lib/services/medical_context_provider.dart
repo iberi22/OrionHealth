@@ -311,7 +311,7 @@ class MedicalContextProvider {
   }
 
   /// Load clinical guidelines from the Dart library.
-  Future<void> _loadGuidelines() async {
+  void _loadGuidelines() {
     _guidelines = ClinicalGuidelines.all;
   }
 

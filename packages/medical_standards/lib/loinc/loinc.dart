@@ -17,6 +17,10 @@ class LoincCode extends MedicalConcept {
   final String component;
   final String property;
   final String unit;
+<<<<<<< HEAD
+  final String? normalRange;
+=======
+>>>>>>> origin/main
 
   const LoincCode({
     required this.code,
@@ -25,10 +29,31 @@ class LoincCode extends MedicalConcept {
     required this.component,
     required this.property,
     required this.unit,
+<<<<<<< HEAD
+    this.normalRange,
   });
 
   @override
+  List<Object?> get props => [code, displayName, component, property, normalRange];
+=======
+  });
+
+  /// Extracts the normal range from the description if present.
+  /// Expects format: "Normal: 0.8-1.8 ng/dL"
+  String? get normalRange {
+    if (description == null) return null;
+    if (description!.contains('Normal:')) {
+      final parts = description!.split('Normal:');
+      if (parts.length > 1) {
+        return parts[1].trim();
+      }
+    }
+    return null;
+  }
+
+  @override
   List<Object?> get props => [code, displayName, component, property];
+>>>>>>> origin/main
 }
 
 /// Comprehensive LOINC laboratory codes
@@ -41,6 +66,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'g/dL',
     description: 'Normal: Male 13.5-17.5 g/dL, Female 12-16 g/dL',
+<<<<<<< HEAD
+    normalRange: '12-17.5',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode hematocrit = LoincCode(
@@ -50,6 +79,10 @@ class LoincCommonLabs {
     property: 'Volume fraction',
     unit: '%',
     description: 'Normal: Male 38-50%, Female 34-44%',
+<<<<<<< HEAD
+    normalRange: '34-50',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode whiteBloodCellCount = LoincCode(
@@ -59,6 +92,10 @@ class LoincCommonLabs {
     property: 'Number concentration',
     unit: '10*3/uL',
     description: 'Normal: 4.5-11.0 x10³/uL',
+<<<<<<< HEAD
+    normalRange: '4.5-11.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode plateletCount = LoincCode(
@@ -68,6 +105,10 @@ class LoincCommonLabs {
     property: 'Number concentration',
     unit: '10*3/uL',
     description: 'Normal: 150-400 x10³/uL',
+<<<<<<< HEAD
+    normalRange: '150-400',
+=======
+>>>>>>> origin/main
   );
 
   // RBC indices
@@ -78,6 +119,10 @@ class LoincCommonLabs {
     property: 'Number concentration',
     unit: '10*6/uL',
     description: 'Normal: Male 4.5-5.9, Female 4.0-5.4 x10⁶/uL',
+<<<<<<< HEAD
+    normalRange: '4.0-5.9',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode mcv = LoincCode(
@@ -87,6 +132,10 @@ class LoincCommonLabs {
     property: 'Entitic volume',
     unit: 'fL',
     description: 'Normal: 80-100 fL (microcytic <80, macrocytic >100)',
+<<<<<<< HEAD
+    normalRange: '80-100',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode mch = LoincCode(
@@ -96,6 +145,10 @@ class LoincCommonLabs {
     property: 'Entitic mass',
     unit: 'pg',
     description: 'Normal: 27-33 pg (hypochromic <27)',
+<<<<<<< HEAD
+    normalRange: '27-33',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode mchc = LoincCode(
@@ -105,6 +158,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'g/dL',
     description: 'Normal: 32-36 g/dL',
+<<<<<<< HEAD
+    normalRange: '32-36',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode rdw = LoincCode(
@@ -114,6 +171,10 @@ class LoincCommonLabs {
     property: 'Ratio',
     unit: '%',
     description: 'Normal: 11.5-14.5% (elevated in anisocytosis)',
+<<<<<<< HEAD
+    normalRange: '11.5-14.5',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode neutrophilsAbsolute = LoincCode(
@@ -123,6 +184,10 @@ class LoincCommonLabs {
     property: 'Number fraction',
     unit: '10*3/uL',
     description: 'Normal: 1.5-7.5 x10³/uL',
+<<<<<<< HEAD
+    normalRange: '1.5-7.5',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode lymphocytesAbsolute = LoincCode(
@@ -132,6 +197,10 @@ class LoincCommonLabs {
     property: 'Number fraction',
     unit: '10*3/uL',
     description: 'Normal: 1.0-4.0 x10³/uL',
+<<<<<<< HEAD
+    normalRange: '1.0-4.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode monocytesAbsolute = LoincCode(
@@ -141,6 +210,10 @@ class LoincCommonLabs {
     property: 'Number fraction',
     unit: '10*3/uL',
     description: 'Normal: 0.2-0.9 x10³/uL',
+<<<<<<< HEAD
+    normalRange: '0.2-0.9',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode eosinophilsAbsolute = LoincCode(
@@ -150,6 +223,10 @@ class LoincCommonLabs {
     property: 'Number fraction',
     unit: '10*3/uL',
     description: 'Normal: 0.0-0.4 x10³/uL',
+<<<<<<< HEAD
+    normalRange: '0.0-0.4',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode basophilsAbsolute = LoincCode(
@@ -159,6 +236,10 @@ class LoincCommonLabs {
     property: 'Number fraction',
     unit: '10*3/uL',
     description: 'Normal: 0.0-0.1 x10³/uL',
+<<<<<<< HEAD
+    normalRange: '0.0-0.1',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode mpv = LoincCode(
@@ -168,6 +249,10 @@ class LoincCommonLabs {
     property: 'Entitic volume',
     unit: 'fL',
     description: 'Normal: 7.5-11.5 fL',
+<<<<<<< HEAD
+    normalRange: '7.5-11.5',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== LIVER FUNCTION ====================
@@ -178,6 +263,10 @@ class LoincCommonLabs {
     property: 'Enzymatic activity',
     unit: 'U/L',
     description: 'Normal: 7-56 U/L (hepatocyte injury marker)',
+<<<<<<< HEAD
+    normalRange: '7-56',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ast = LoincCode(
@@ -187,6 +276,10 @@ class LoincCommonLabs {
     property: 'Enzymatic activity',
     unit: 'U/L',
     description: 'Normal: 10-40 U/L (liver/cardiac marker)',
+<<<<<<< HEAD
+    normalRange: '10-40',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode alp = LoincCode(
@@ -196,6 +289,10 @@ class LoincCommonLabs {
     property: 'Enzymatic activity',
     unit: 'U/L',
     description: 'Normal: 44-147 U/L (cholestasis/bone marker)',
+<<<<<<< HEAD
+    normalRange: '44-147',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode totalBilirubin = LoincCode(
@@ -205,6 +302,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 0.2-1.2 mg/dL',
+<<<<<<< HEAD
+    normalRange: '0.2-1.2',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode directBilirubin = LoincCode(
@@ -214,6 +315,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 0.0-0.3 mg/dL (elevated in obstruction)',
+<<<<<<< HEAD
+    normalRange: '0.0-0.3',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode indirectBilirubin = LoincCode(
@@ -223,6 +328,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 0.2-0.8 mg/dL (elevated in hemolysis)',
+<<<<<<< HEAD
+    normalRange: '0.2-0.8',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ggt = LoincCode(
@@ -232,6 +341,10 @@ class LoincCommonLabs {
     property: 'Enzymatic activity',
     unit: 'U/L',
     description: 'Normal: 0-51 U/L (cholestasis/alcohol marker)',
+<<<<<<< HEAD
+    normalRange: '0-51',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ldH = LoincCode(
@@ -241,6 +354,10 @@ class LoincCommonLabs {
     property: 'Enzymatic activity',
     unit: 'U/L',
     description: 'Normal: 140-280 U/L (tissue damage marker)',
+<<<<<<< HEAD
+    normalRange: '140-280',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode totalProtein = LoincCode(
@@ -250,6 +367,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'g/dL',
     description: 'Normal: 6.0-8.3 g/dL',
+<<<<<<< HEAD
+    normalRange: '6.0-8.3',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode albumin = LoincCode(
@@ -259,6 +380,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'g/dL',
     description: 'Normal: 3.5-5.0 g/dL (low in liver disease/malnutrition)',
+<<<<<<< HEAD
+    normalRange: '3.5-5.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode pt = LoincCode(
@@ -268,6 +393,10 @@ class LoincCommonLabs {
     property: 'Time',
     unit: 'sec',
     description: 'Normal: 11-13.5 sec (liver synthetic function)',
+<<<<<<< HEAD
+    normalRange: '11-13.5',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode inr = LoincCode(
@@ -277,6 +406,10 @@ class LoincCommonLabs {
     property: 'Ratio',
     unit: 'INR',
     description: 'Target: 2.0-3.0 on warfarin (liver synthetic function)',
+<<<<<<< HEAD
+    normalRange: '2.0-3.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode aptt = LoincCode(
@@ -286,6 +419,10 @@ class LoincCommonLabs {
     property: 'Time',
     unit: 'sec',
     description: 'Normal: 25-35 sec (intrinsic coagulation pathway)',
+<<<<<<< HEAD
+    normalRange: '25-35',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== KIDNEY FUNCTION ====================
@@ -296,6 +433,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: Male 0.7-1.3, Female 0.6-1.1 mg/dL',
+<<<<<<< HEAD
+    normalRange: '0.6-1.3',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode bun = LoincCode(
@@ -305,6 +446,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 7-20 mg/dL',
+<<<<<<< HEAD
+    normalRange: '7-20',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode egfr = LoincCode(
@@ -314,6 +459,10 @@ class LoincCommonLabs {
     property: 'Volume rate per area',
     unit: 'mL/min/1.73m2',
     description: 'Normal >90 mL/min/1.73m²; CKD stages 3-5 when <60',
+<<<<<<< HEAD
+    normalRange: '90-120',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode egfrNonAfricanAmerican = LoincCode(
@@ -323,6 +472,10 @@ class LoincCommonLabs {
     property: 'Volume rate per area',
     unit: 'mL/min/1.73m2',
     description: 'eGFR using MDRD formula (non-African American)',
+<<<<<<< HEAD
+    normalRange: '90-120',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode egfrAfricanAmerican = LoincCode(
@@ -332,6 +485,10 @@ class LoincCommonLabs {
     property: 'Volume rate per area',
     unit: 'mL/min/1.73m2',
     description: 'eGFR using MDRD formula (African American)',
+<<<<<<< HEAD
+    normalRange: '90-120',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode egfrCkdEpi = LoincCode(
@@ -341,6 +498,10 @@ class LoincCommonLabs {
     property: 'Volume rate per area',
     unit: 'mL/min/1.73m2',
     description: 'eGFR using CKD-EPI formula (preferred over MDRD)',
+<<<<<<< HEAD
+    normalRange: '90-120',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode creatinineUrine = LoincCode(
@@ -350,6 +511,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Spot urine creatinine',
+<<<<<<< HEAD
+    normalRange: '20-370',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode proteinUrine = LoincCode(
@@ -359,6 +524,10 @@ class LoincCommonLabs {
     property: 'Mass rate',
     unit: 'mg/24h',
     description: 'Normal: <150 mg/24h (proteinuria >300 mg/24h)',
+<<<<<<< HEAD
+    normalRange: '0-150',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode proteinUrineSpot = LoincCode(
@@ -368,6 +537,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Dipstick: Negative to Trace',
+<<<<<<< HEAD
+    normalRange: 'less than 30',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode microalbuminUrine = LoincCode(
@@ -377,6 +550,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/L',
     description: 'Normal: <30 mg/L (microalbuminuria 30-300 mg/L)',
+<<<<<<< HEAD
+    normalRange: '0-30',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode albuminCreatinineRatio = LoincCode(
@@ -386,6 +563,10 @@ class LoincCommonLabs {
     property: 'Ratio',
     unit: 'mg/g',
     description: 'Normal: <30 mg/g; A2: 30-300; A3: >300 mg/g',
+<<<<<<< HEAD
+    normalRange: '0-30',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode bunCreatinineRatio = LoincCode(
@@ -395,6 +576,10 @@ class LoincCommonLabs {
     property: 'Mass ratio',
     unit: 'ratio',
     description: 'Normal: 10-20:1 (elevated in prerenal azotemia)',
+<<<<<<< HEAD
+    normalRange: '10-20',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode uricAcid = LoincCode(
@@ -404,6 +589,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: Male 3.4-7.0, Female 2.4-6.0 mg/dL',
+<<<<<<< HEAD
+    normalRange: '2.4-7.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode cystatinC = LoincCode(
@@ -413,6 +602,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/L',
     description: 'Alternative kidney function marker (not affected by muscle mass)',
+<<<<<<< HEAD
+    normalRange: '0.6-1.0',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== METABOLIC PANEL ====================
@@ -423,6 +616,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Fasting normal: 70-100 mg/dL; Diabetes: >=126 mg/dL',
+<<<<<<< HEAD
+    normalRange: '70-100',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode glucoseRandom = LoincCode(
@@ -432,6 +629,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Random glucose: normal <140 mg/dL; Diabetes: >=200 mg/dL',
+<<<<<<< HEAD
+    normalRange: 'less than 140',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode hemoglobinA1c = LoincCode(
@@ -441,6 +642,10 @@ class LoincCommonLabs {
     property: 'Mass fraction',
     unit: '%',
     description: 'Normal <5.7%; Prediabetes 5.7-6.4%; Diabetes >=6.5%',
+<<<<<<< HEAD
+    normalRange: 'less than 5.7',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode glucoseTwoHourPostPrandial = LoincCode(
@@ -450,6 +655,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal <140 mg/dL; Prediabetes 140-199; Diabetes >=200 mg/dL',
+<<<<<<< HEAD
+    normalRange: 'less than 140',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode insulin = LoincCode(
@@ -459,6 +668,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mIU/L',
     description: 'Fasting: 2.6-24.9 mIU/L (insulin resistance marker)',
+<<<<<<< HEAD
+    normalRange: '2.6-24.9',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode cpeptide = LoincCode(
@@ -468,6 +681,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Fasting: 0.8-3.1 ng/mL (endogenous insulin production)',
+<<<<<<< HEAD
+    normalRange: '0.8-3.1',
+=======
+>>>>>>> origin/main
   );
 
   // Electrolytes
@@ -478,6 +695,10 @@ class LoincCommonLabs {
     property: 'Molar concentration',
     unit: 'mmol/L',
     description: 'Normal: 136-145 mmol/L',
+<<<<<<< HEAD
+    normalRange: '136-145',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode potassium = LoincCode(
@@ -487,6 +708,10 @@ class LoincCommonLabs {
     property: 'Molar concentration',
     unit: 'mmol/L',
     description: 'Normal: 3.5-5.0 mmol/L',
+<<<<<<< HEAD
+    normalRange: '3.5-5.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode chloride = LoincCode(
@@ -496,6 +721,10 @@ class LoincCommonLabs {
     property: 'Molar concentration',
     unit: 'mmol/L',
     description: 'Normal: 96-106 mmol/L',
+<<<<<<< HEAD
+    normalRange: '96-106',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode carbonDioxide = LoincCode(
@@ -505,6 +734,10 @@ class LoincCommonLabs {
     property: 'Molar concentration',
     unit: 'mmol/L',
     description: 'Normal: 23-29 mmol/L',
+<<<<<<< HEAD
+    normalRange: '23-29',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode anionGap = LoincCode(
@@ -514,6 +747,10 @@ class LoincCommonLabs {
     property: 'Molar concentration',
     unit: 'mmol/L',
     description: 'Normal: 8-12 mmol/L (elevated in metabolic acidosis)',
+<<<<<<< HEAD
+    normalRange: '8-12',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode calcium = LoincCode(
@@ -523,6 +760,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 8.5-10.5 mg/dL',
+<<<<<<< HEAD
+    normalRange: '8.5-10.5',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode calciumIonized = LoincCode(
@@ -532,6 +773,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 4.5-5.6 mg/dL',
+<<<<<<< HEAD
+    normalRange: '4.5-5.6',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode phosphorus = LoincCode(
@@ -541,6 +786,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 2.5-4.5 mg/dL',
+<<<<<<< HEAD
+    normalRange: '2.5-4.5',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode magnesium = LoincCode(
@@ -550,6 +799,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 1.7-2.2 mg/dL',
+<<<<<<< HEAD
+    normalRange: '1.7-2.2',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode iron = LoincCode(
@@ -559,6 +812,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ug/dL',
     description: 'Normal: Male 65-175, Female 50-170 ug/dL',
+<<<<<<< HEAD
+    normalRange: '50-175',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode tibc = LoincCode(
@@ -568,6 +825,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ug/dL',
     description: 'Normal: 250-370 ug/dL',
+<<<<<<< HEAD
+    normalRange: '250-370',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ferritin = LoincCode(
@@ -577,6 +838,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Normal: Male 20-250, Female 10-120 ng/mL',
+<<<<<<< HEAD
+    normalRange: '10-250',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ironSaturation = LoincCode(
@@ -586,6 +851,10 @@ class LoincCommonLabs {
     property: 'Mass fraction',
     unit: '%',
     description: 'Normal: 20-50%',
+<<<<<<< HEAD
+    normalRange: '20-50',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== LIPID PANEL ====================
@@ -596,6 +865,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Desirable <200 mg/dL; Borderline high 200-239; High >=240',
+<<<<<<< HEAD
+    normalRange: 'less than 200',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ldlCholesterol = LoincCode(
@@ -605,6 +878,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Optimal <100; Near optimal 100-129; Borderline high 130-159; High 160-189; Very high >=190',
+<<<<<<< HEAD
+    normalRange: 'less than 100',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ldlDirect = LoincCode(
@@ -614,6 +891,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Direct measurement when triglycerides >400 mg/dL',
+<<<<<<< HEAD
+    normalRange: 'less than 100',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode hdlCholesterol = LoincCode(
@@ -623,6 +904,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Male >=40, Female >=50 mg/dL (higher is protective)',
+<<<<<<< HEAD
+    normalRange: '40-60',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode triglycerides = LoincCode(
@@ -632,6 +917,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal <150; Borderline high 150-199; High 200-499; Very high >=500',
+<<<<<<< HEAD
+    normalRange: 'less than 150',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode nonHdlCholesterol = LoincCode(
@@ -641,6 +930,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Optimal: <130 mg/dL (total minus HDL)',
+<<<<<<< HEAD
+    normalRange: 'less than 130',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode vldl = LoincCode(
@@ -650,6 +943,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 2-30 mg/dL (calculated as TG/5)',
+<<<<<<< HEAD
+    normalRange: '2-30',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode apolipoproteinA = LoincCode(
@@ -659,6 +956,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 100-180 mg/dL (HDL structural protein)',
+<<<<<<< HEAD
+    normalRange: '100-180',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode apolipoproteinB = LoincCode(
@@ -668,6 +969,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 60-140 mg/dL (LDL structural protein)',
+<<<<<<< HEAD
+    normalRange: '60-140',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode lpA = LoincCode(
@@ -677,6 +982,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: <30 mg/dL (independent ASCVD risk factor)',
+<<<<<<< HEAD
+    normalRange: 'less than 30',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== INFLAMMATORY MARKERS ====================
@@ -687,6 +996,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/L',
     description: 'Low risk <1.0; Intermediate 1.0-3.0; High >3.0 mg/L',
+<<<<<<< HEAD
+    normalRange: 'less than 3.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode crpStandard = LoincCode(
@@ -696,6 +1009,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/L',
     description: 'Normal <10 mg/L (acute inflammation marker)',
+<<<<<<< HEAD
+    normalRange: 'less than 10',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode esr = LoincCode(
@@ -705,6 +1022,10 @@ class LoincCommonLabs {
     property: 'Velocity',
     unit: 'mm/hr',
     description: 'Normal: Male age/2, Female (age+10)/2 (chronic inflammation)',
+<<<<<<< HEAD
+    normalRange: '0-20',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode procalcitonin = LoincCode(
@@ -714,6 +1035,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Normal <0.05; Bacterial infection >0.25; Sepsis >2.0 ng/mL',
+<<<<<<< HEAD
+    normalRange: 'less than 0.05',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ferritinHigh = LoincCode(
@@ -723,6 +1048,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Also an acute phase reactant (elevated in inflammation)',
+<<<<<<< HEAD
+    normalRange: '10-250',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== VITAMINS ====================
@@ -733,6 +1062,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Deficient <20; Insufficient 20-29; Sufficient 30-100; Toxic >150 ng/mL',
+<<<<<<< HEAD
+    normalRange: '30-100',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode vitaminB12 = LoincCode(
@@ -742,6 +1075,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'pg/mL',
     description: 'Normal: 200-900 pg/mL; Deficient <200 pg/mL',
+<<<<<<< HEAD
+    normalRange: '200-900',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode folate = LoincCode(
@@ -751,6 +1088,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Normal: >3 ng/mL; Deficient <3 ng/mL',
+<<<<<<< HEAD
+    normalRange: '3-20',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode folateRbc = LoincCode(
@@ -760,6 +1101,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Normal: 160-700 ng/mL (reflects tissue folate stores)',
+<<<<<<< HEAD
+    normalRange: '160-700',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode homocysteine = LoincCode(
@@ -769,6 +1114,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'umol/L',
     description: 'Normal: 4-15 umol/L (elevated in B12/folate deficiency)',
+<<<<<<< HEAD
+    normalRange: '4-15',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode methylmalonicAcid = LoincCode(
@@ -778,6 +1127,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ug/L',
     description: 'Normal: 0-0.4 umol/L (specific for B12 deficiency)',
+<<<<<<< HEAD
+    normalRange: '0-0.4',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode vitaminE = LoincCode(
@@ -787,6 +1140,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/L',
     description: 'Normal: 5-18 mg/L',
+<<<<<<< HEAD
+    normalRange: '5-18',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode vitaminK = LoincCode(
@@ -796,6 +1153,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/L',
     description: 'Reference: 0.1-3.2 ng/L',
+<<<<<<< HEAD
+    normalRange: '0.1-3.2',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== THYROID ====================
@@ -806,6 +1167,10 @@ class LoincCommonLabs {
     property: 'Unit concentration',
     unit: 'mIU/L',
     description: 'Normal: 0.4-4.0 mIU/L',
+<<<<<<< HEAD
+    normalRange: '0.4-4.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode freeT4 = LoincCode(
@@ -815,6 +1180,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/dL',
     description: 'Normal: 0.8-1.8 ng/dL',
+<<<<<<< HEAD
+    normalRange: '0.8-1.8',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode freeT3 = LoincCode(
@@ -824,6 +1193,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'pg/mL',
     description: 'Normal: 2.3-4.2 pg/mL',
+<<<<<<< HEAD
+    normalRange: '2.3-4.2',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode totalT3 = LoincCode(
@@ -832,8 +1205,13 @@ class LoincCommonLabs {
     component: 'Total T3',
     property: 'Mass concentration',
     unit: 'ng/dL',
+<<<<<<< HEAD
+    description: 'Normal: 80-200 ng/dL',
+    normalRange: '80-200',
+=======
 
     description: 'Normal: 80-200 ng/dL',
+>>>>>>> origin/main
   );
 
   static const LoincCode totalT4 = LoincCode(
@@ -843,6 +1221,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ug/dL',
     description: 'Normal: 4.5-12.5 ug/dL',
+<<<<<<< HEAD
+    normalRange: '4.5-12.5',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode tpoAntibody = LoincCode(
@@ -852,6 +1234,10 @@ class LoincCommonLabs {
     property: 'Titer',
     unit: 'IU/mL',
     description: 'Normal: <35 IU/mL (elevated in Hashimoto/Graves)',
+<<<<<<< HEAD
+    normalRange: 'less than 35',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode tsgAntibody = LoincCode(
@@ -861,6 +1247,10 @@ class LoincCommonLabs {
     property: 'Titer',
     unit: 'IU/L',
     description: 'Elevated in Graves disease',
+<<<<<<< HEAD
+    normalRange: 'less than 1',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== URINALYSIS ====================
@@ -871,6 +1261,10 @@ class LoincCommonLabs {
     property: 'Potential of hydrogen',
     unit: 'pH',
     description: 'Normal: 4.5-8.0 (acidic diet lowers, infection raises)',
+<<<<<<< HEAD
+    normalRange: '4.5-8.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineSpecificGravity = LoincCode(
@@ -880,6 +1274,10 @@ class LoincCommonLabs {
     property: 'Relative density',
     unit: 'g/mL',
     description: 'Normal: 1.005-1.030 (concentrated = hydration status)',
+<<<<<<< HEAD
+    normalRange: '1.005-1.030',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineGlucose = LoincCode(
@@ -889,6 +1287,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: Negative (positive = diabetes/uncontrolled)',
+<<<<<<< HEAD
+    normalRange: 'less than 0.1',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineKetones = LoincCode(
@@ -898,6 +1300,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: Negative (positive = DKA/starvation)',
+<<<<<<< HEAD
+    normalRange: 'less than 0.1',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineBlood = LoincCode(
@@ -907,6 +1313,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: Negative (positive = hematuria/RBCs)',
+<<<<<<< HEAD
+    normalRange: 'less than 0.1',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineLeukocyteEsterase = LoincCode(
@@ -916,6 +1326,10 @@ class LoincCommonLabs {
     property: 'Enzymatic activity',
     unit: 'U/L',
     description: 'Normal: Negative (positive = WBCs/UTI)',
+<<<<<<< HEAD
+    normalRange: 'less than 1',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineNitrite = LoincCode(
@@ -925,6 +1339,10 @@ class LoincCommonLabs {
     property: 'Presence',
     unit: 'Positive/Negative',
     description: 'Normal: Negative (positive = bacterial UTI)',
+<<<<<<< HEAD
+    normalRange: 'negative',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineProteinDipstick = LoincCode(
@@ -934,6 +1352,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: Negative to Trace; Significant proteinuria >=30 mg/dL',
+<<<<<<< HEAD
+    normalRange: 'less than 30',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineBilirubin = LoincCode(
@@ -943,6 +1365,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: Negative (positive = liver disease/obstruction)',
+<<<<<<< HEAD
+    normalRange: 'negative',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineUrobilinogen = LoincCode(
@@ -952,6 +1378,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Normal: 0.1-1.0 mg/dL (elevated in hemolysis/liver disease)',
+<<<<<<< HEAD
+    normalRange: '0.1-1.0',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineColor = LoincCode(
@@ -961,6 +1391,10 @@ class LoincCommonLabs {
     property: 'Visual',
     unit: 'description',
     description: 'Normal: Pale yellow (dark = dehydration/concentrated)',
+<<<<<<< HEAD
+    normalRange: 'yellow',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode urineAppearance = LoincCode(
@@ -970,6 +1404,10 @@ class LoincCommonLabs {
     property: 'Visual',
     unit: 'description',
     description: 'Normal: Clear (cloudy = infection/crystals)',
+<<<<<<< HEAD
+    normalRange: 'clear',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== CARDIAC MARKERS ====================
@@ -980,6 +1418,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Normal: <0.04 ng/mL (acute MI >0.04)',
+<<<<<<< HEAD
+    normalRange: 'less than 0.04',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode troponinTHighSensitivity = LoincCode(
@@ -989,6 +1431,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/L',
     description: 'Normal: <14 ng/L; elevated in MI, heart failure',
+<<<<<<< HEAD
+    normalRange: 'less than 14',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode bnp = LoincCode(
@@ -998,6 +1444,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'pg/mL',
     description: 'Normal <100 pg/mL; Heart failure: >400 pg/mL',
+<<<<<<< HEAD
+    normalRange: 'less than 100',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ntProbnp = LoincCode(
@@ -1007,6 +1457,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'pg/mL',
     description: 'Normal <125 pg/mL (<75y); Heart failure >2000 pg/mL',
+<<<<<<< HEAD
+    normalRange: 'less than 125',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ckTotal = LoincCode(
@@ -1016,6 +1470,10 @@ class LoincCommonLabs {
     property: 'Enzymatic activity',
     unit: 'U/L',
     description: 'Normal: Male 39-308, Female 26-192 U/L (muscle damage)',
+<<<<<<< HEAD
+    normalRange: '26-308',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ckMb = LoincCode(
@@ -1025,6 +1483,10 @@ class LoincCommonLabs {
     property: 'Enzymatic activity',
     unit: 'U/L',
     description: 'Normal: 0-6% of total (cardiac specific when elevated)',
+<<<<<<< HEAD
+    normalRange: '0-6',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode myoglobin = LoincCode(
@@ -1034,6 +1496,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'ng/mL',
     description: 'Normal: Male 25-72, Female 25-58 ng/mL (early MI marker)',
+<<<<<<< HEAD
+    normalRange: '25-72',
+=======
+>>>>>>> origin/main
   );
 
   static const LoincCode ldlCholesterolDirect = LoincCode(
@@ -1043,6 +1509,10 @@ class LoincCommonLabs {
     property: 'Mass concentration',
     unit: 'mg/dL',
     description: 'Direct LDL when TG >400 mg/dL',
+<<<<<<< HEAD
+    normalRange: 'less than 100',
+=======
+>>>>>>> origin/main
   );
 
   // ==================== ALL LABS ====================

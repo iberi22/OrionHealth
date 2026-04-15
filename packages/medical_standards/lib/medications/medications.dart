@@ -822,11 +822,8 @@ class MedicationCatalog {
     drugClass: 'Antibiotic (Tetracycline)',
     description: 'Broad-spectrum for Lyme, chlamydia, acne, malaria prophylaxis',
     routes: ['Oral'],
-    commonDosages: [
-      '100mg 2x/day',
-      '100mg/day',
-      '200mg day 1 then 100mg days 2-5'
-    ],
+    commonDosages: ['100mg 2
+    -x/day', '100mg/day', '200mg day 1 then 100mg days 2-5'],
   );
 
   static const MedicationReference metronidazole = MedicationReference(

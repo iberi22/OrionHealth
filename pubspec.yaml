@@ -38,7 +38,11 @@ dependencies:
   image_picker: ^1.2.1
   uuid: ^4.5.2
   intl: ^0.20.2
-  flutter_bloc: ^9.1.1
+  flutter_bloc: ^8.1.0
+  hex: ^0.2.0
+  path: ^1.8.0
+  google_generative_ai: ^0.4.7
+  dio: ^5.0.0
   get_it: ^9.1.0
   injectable: ^2.6.0
   isar: ^3.1.0+1
@@ -49,6 +53,8 @@ dependencies:
   equatable: ^2.0.7
   isar_agent_memory:
     path: packages/isar_agent_memory
+  medical_standards:
+    path: packages/medical_standards
   onnxruntime: ^1.4.1
   permission_handler: ^12.0.1
   health: ^13.2.1
