@@ -43,7 +43,7 @@ class LabInterpreter {
       comments.add('⚠️ CRITICAL: Value above critical threshold');
     } else if (min != null && value < min) {
       status = LabStatus.low;
-      comments.add('Below normal range (${min}-${max ?? "N/A"} ${loinc.unit})');
+      comments.add('Below normal range ($min-${max ?? "N/A"} ${loinc.unit})');
     } else if (max != null && value > max) {
       status = LabStatus.high;
       comments.add('Above normal range (${min ?? "N/A"}-$max ${loinc.unit})');
@@ -127,7 +127,7 @@ class LabInterpreter {
   List<MedicalInsight> generateInsights(List<LabInterpretation> interpretations) {
     return interpretations.map((i) => MedicalInsight(
       id: 'lab-insight-${i.code}',
-      title: i.displayName,
+      title: i.displayName ?? i.code,
       description: '${i.value} ${i.unit ?? ""} — ${i.message}',
       severity: _severityFromStatus(i.status),
       category: InsightCategory.labInterpretation,

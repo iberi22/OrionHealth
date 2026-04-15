@@ -1,84 +1,100 @@
-import 'package:equatable/equatable.dart';
+import 'package:medical_standards/medical_standards.dart';
+import '../entities/medical_insight.dart';
 
-/// Thresholds for confidence-based medical response generation.
-/// The AI should NEVER diagnose — only explain symptoms and suggest next steps.
-class ConfidenceThreshold {
-  /// Minimum confidence (90%) required before offering any interpretation.
-  /// Below this, we only explain what symptoms COULD mean.
-  static const double diagnosisThreshold = 0.90;
-
-  /// High confidence: ≥90% — interpretation allowed but still no diagnosis.
-  static const double highConfidence = 0.90;
-
-  /// Medium confidence: 70-89% — possible interpretation with caveats.
-  static const double mediumConfidence = 0.70;
-
-  /// Low confidence: 50-69% — explanation of possibilities only.
-  static const double lowConfidence = 0.50;
-
-  /// Returns true only if confidence meets the threshold for any interpretation.
-  static bool canDiagnose(double confidence) => confidence >= diagnosisThreshold;
-
-  /// Returns the confidence level label.
-  static String getLevel(double confidence) {
-    if (confidence >= highConfidence) return 'high';
-    if (confidence >= mediumConfidence) return 'medium';
-    return 'low';
+/// Domain service for medical analysis orchestration
+class MedicalAnalysisService {
+  /// Analyze lab results and generate insights
+  Future<List<MedicalInsight>> analyzeLabs({
+    required Map<String, double> labValues,
+    required List<Icd10Code> chronicConditions,
+  }) async {
+    final insights = <MedicalInsight>[];
+    
+    for (final entry in labValues.entries) {
+      final loinc = LoincCommonLabs.findByCode(entry.key);
+      if (loinc != null) {
+        insights.add(MedicalInsight(
+          id: 'lab-${entry.key}',
+          title: '${loinc.component} Analysis',
+          description: loinc.description ?? 'Lab value: ${entry.value} ${loinc.unit}',
+          severity: InsightSeverity.info,
+          category: InsightCategory.labInterpretation,
+          guidelineReference: ClinicalGuidelines.labReferenceRanges.code,
+          recommendations: ['Review with healthcare provider'],
+          generatedAt: DateTime.now(),
+          evidence: {'loinc': loinc.code, 'value': entry.value},
+        ));
+      }
+    }
+    
+    return insights;
   }
-}
 
-/// Structured response from medical analysis.
-/// All fields are designed to enforce: EXPLAIN symptoms, don't diagnose.
-class AnalysisResponse extends Equatable {
-  /// ALWAYS provided — explains what symptoms could mean.
-  final String explanation;
+  /// Analyze vital signs and generate insights
+  Future<List<MedicalInsight>> analyzeVitals({
+    required Map<String, double> vitals,
+    required List<Icd10Code> chronicConditions,
+  }) async {
+    final insights = <MedicalInsight>[];
+    
+    // Blood pressure analysis
+    if (vitals.containsKey('systolic') && vitals.containsKey('diastolic')) {
+      final systolic = vitals['systolic']!;
+      final diastolic = vitals['diastolic']!;
+      
+      InsightSeverity severity = InsightSeverity.info;
+      if (systolic >= 180 || diastolic >= 120) {
+        severity = InsightSeverity.critical;
+      } else if (systolic >= 140 || diastolic >= 90) {
+        severity = InsightSeverity.alert;
+      } else if (systolic >= 130 || diastolic >= 80) {
+        severity = InsightSeverity.warning;
+      }
+      
+      insights.add(MedicalInsight(
+        id: 'bp-${DateTime.now().millisecondsSinceEpoch}',
+        title: 'Blood Pressure Assessment',
+        description: 'BP: $systolic/$diastolic mmHg',
+        severity: severity,
+        category: InsightCategory.vitalSignAnalysis,
+        guidelineReference: ClinicalGuidelines.ahaHypertension.code,
+        recommendations: ['Monitor blood pressure regularly'],
+        generatedAt: DateTime.now(),
+      ));
+    }
+    
+    return insights;
+  }
 
-  /// Only provided if confidence >= 90%.
-  /// Never phrased as a diagnosis — always as a possible interpretation.
-  final String? possibleInterpretation;
+  /// Calculate health risk scores
+  Future<List<MedicalInsight>> calculateRisks({
+    required Map<String, double> labValues,
+    required Map<String, double> vitals,
+    required List<Icd10Code> conditions,
+  }) async {
+    final insights = <MedicalInsight>[];
+    
+    // ASCVD risk placeholder
+    insights.add(MedicalInsight(
+      id: 'ascvd-${DateTime.now().millisecondsSinceEpoch}',
+      title: 'Cardiovascular Risk',
+      description: 'ASCVD risk assessment based on available data',
+      severity: InsightSeverity.info,
+      category: InsightCategory.riskAssessment,
+      guidelineReference: ClinicalGuidelines.accAhaRiskCalculator.code,
+      recommendations: ['Complete lipid panel for accurate assessment'],
+      generatedAt: DateTime.now(),
+    ));
+    
+    return insights;
+  }
 
-  /// ALWAYS provided — disclaimer that this is not medical advice.
-  final String? disclaimer;
-
-  /// Suggested if confidence < 90%.
-  final List<String> suggestedExams;
-
-  final List<String> lifestyleRecommendations;
-
-  /// ALWAYS — recommendation to see a real doctor.
-  final String doctorRecommendation;
-
-  final double confidence;
-
-  /// "high", "medium", or "low".
-  final String confidenceLevel;
-
-  const AnalysisResponse({
-    required this.explanation,
-    this.possibleInterpretation,
-    this.disclaimer,
-    this.suggestedExams = const [],
-    this.lifestyleRecommendations = const [],
-    required this.doctorRecommendation,
-    required this.confidence,
-    required this.confidenceLevel,
-  });
-
-  @override
-  List<Object?> get props => [
-        explanation,
-        possibleInterpretation,
-        disclaimer,
-        suggestedExams,
-        lifestyleRecommendations,
-        doctorRecommendation,
-        confidence,
-        confidenceLevel,
-      ];
-
-  /// Returns true if confidence is high enough to offer an interpretation.
-  bool get canOfferInterpretation => confidence >= ConfidenceThreshold.diagnosisThreshold;
-
-  /// Returns true if additional data should be requested.
-  bool get needsMoreData => confidence < ConfidenceThreshold.mediumConfidence;
+  /// Get guidelines relevant to patient's conditions
+  List<ClinicalGuidelineReference> getRelevantGuidelines(List<Icd10Code> conditions) {
+    final guidelines = <ClinicalGuidelineReference>[];
+    for (final condition in conditions) {
+      guidelines.addAll(ClinicalGuidelines.findForCondition(condition.code));
+    }
+    return guidelines;
+  }
 }
