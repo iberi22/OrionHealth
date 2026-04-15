@@ -3,10 +3,10 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 
 /// AES-256-GCM encryption service for sensitive health data.
-/// All encryption keys are derived from a master key using HKDF.
+/// Keys are derived from a master key using HKDF.
 class EncryptionService {
   /// Encrypt a plaintext string using AES-256-GCM.
-  /// Returns a base64-encoded string containing: nonce (12 bytes) || ciphertext || tag (16 bytes).
+  /// Returns base64: nonce (12 bytes) || ciphertext || tag (16 bytes).
   Future<String> encrypt(String plaintext, SecretKey masterKey) async {
     final algorithm = AesGcm.with256bits();
     final nonce = algorithm.newNonce();
@@ -18,7 +18,6 @@ class EncryptionService {
       nonce: nonce,
     );
 
-    // Combine: nonce (12) + ciphertext + tag (16)
     final combined = Uint8List.fromList([
       ...nonce,
       ...secretBox.cipherText,
@@ -28,8 +27,7 @@ class EncryptionService {
     return base64Encode(combined);
   }
 
-  /// Decrypt a base64-encoded ciphertext produced by [encrypt].
-  /// Expects format: nonce (12 bytes) || ciphertext || tag (16 bytes).
+  /// Decrypt a base64 ciphertext produced by [encrypt].
   Future<String> decrypt(String encryptedBase64, SecretKey masterKey) async {
     final algorithm = AesGcm.with256bits();
     final combined = base64Decode(encryptedBase64);
@@ -56,67 +54,129 @@ class EncryptionService {
     return utf8.decode(plaintextBytes);
   }
 
-  /// Generate a 256-bit AES key from a password using PBKDF2.
-  Future<SecretKey> deriveKeyFromPassword(String password, {int iterations = 100000}) async {
-    final algorithm = AesGcm.with256bits();
-    final pbkdf2 = Pbkdf2(
-      macAlgorithm: Hmac.sha256(),
-      iterations: iterations,
-      bits: 256,
-    );
-
-    return await pbkdf2.deriveKey(
-      secretKey: SecretKey(utf8.encode(password)),
-      nonce: utf8.encode('health_wallet_salt_v1'),
-    );
-  }
-
   /// Generate a random 256-bit master key for first-time setup.
   Future<SecretKey> generateMasterKey() async {
     final algorithm = AesGcm.with256bits();
     return algorithm.newSecretKey();
   }
 
-  /// Encrypt a sensitive field on a model and return base64 ciphertext.
-  Future<String?> encryptField(
-    String? fieldValue,
-    SecretKey masterKey,
+  /// Encrypt a JSON-serializable map of fields for transfer.
+  Future<Map<String, dynamic>> encryptPayload(
+    Map<String, dynamic> data,
+    String? pin,
   ) async {
-    if (fieldValue == null || fieldValue.isEmpty) return null;
-    return encrypt(fieldValue, masterKey);
+    if (pin == null) return {'pinProtected': false, 'data': data};
+
+    final masterKey = await _deriveKeyFromPin(pin);
+    final json = jsonEncode(data);
+    final encrypted = await encrypt(json, masterKey);
+
+    return {'pinProtected': true, 'encryptedData': encrypted};
   }
 
-  /// Decrypt a sensitive field from base64 ciphertext.
-  Future<String?> decryptField(
-    String? encryptedBase64,
-    SecretKey masterKey,
+  /// Decrypt a payload produced by [encryptPayload].
+  Future<Map<String, dynamic>> decryptPayload(
+    Map<String, dynamic> payload,
+    String pin,
   ) async {
-    if (encryptedBase64 == null || encryptedBase64.isEmpty) return null;
-    return decrypt(encryptedBase64, masterKey);
+    if (payload['pinProtected'] == false) {
+      return payload['data'] as Map<String, dynamic>;
+    }
+
+    final masterKey = await _deriveKeyFromPin(pin);
+    final encrypted = payload['encryptedData'] as String;
+    final json = await decrypt(encrypted, masterKey);
+
+    return jsonDecode(json) as Map<String, dynamic>;
   }
 
-  /// Encrypt a JSON map of sensitive fields.
-  Future<String?> encryptFieldsMap(
-    Map<String, String?> fields,
+  /// Sign a health data package for integrity verification.
+  /// Returns a hex-encoded HMAC-SHA256 signature.
+  Future<String> signPackage(Map<String, dynamic> data) async {
+    final algorithm = Hmac.sha256();
+    final json = jsonEncode(data);
+    final key = await algorithm.newSecretKey();
+    final signature = await algorithm.sign(
+      utf8.encode(json),
+      secretKey: key,
+    );
+    return hexEncode(signature.bytes);
+  }
+
+  /// Verify a signature produced by [signPackage].
+  Future<bool> verifySignature(
+    Map<String, dynamic> data,
+    String signatureHex,
+  ) async {
+    try {
+      final algorithm = Hmac.sha256();
+      final json = jsonEncode(data);
+      final key = await algorithm.newSecretKey();
+      final expected = await algorithm.sign(
+        utf8.encode(json),
+        secretKey: key,
+      );
+      return hexEncode(expected.bytes) == signatureHex;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Encrypt a map of sensitive fields into a single base64 blob.
+  Future<String> encryptFieldsMap(
+    Map<String, String> fields,
     SecretKey masterKey,
   ) async {
-    final filtered = fields.entries
-        .where((e) => e.value != null && e.value!.isNotEmpty)
-        .toList();
-    if (filtered.isEmpty) return null;
-
-    final json = jsonEncode(Map.fromEntries(filtered));
+    final json = jsonEncode(fields);
     return encrypt(json, masterKey);
   }
 
-  /// Decrypt a JSON map of sensitive fields.
-  Future<Map<String, String>?> decryptFieldsMap(
-    String? encryptedBase64,
+  /// Decrypt a bundle produced by [encryptFieldsMap].
+  Future<Map<String, String>> decryptFieldsMap(
+    String encryptedBase64,
     SecretKey masterKey,
   ) async {
-    if (encryptedBase64 == null || encryptedBase64.isEmpty) return null;
     final json = await decrypt(encryptedBase64, masterKey);
     final decoded = jsonDecode(json) as Map<String, dynamic>;
     return decoded.map((k, v) => MapEntry(k, v.toString()));
+  }
+
+  /// Encrypt document binary data (PDF, images).
+  Future<String> encryptDocumentBytes(Uint8List bytes, SecretKey masterKey) async {
+    final algorithm = AesGcm.with256bits();
+    final nonce = algorithm.newNonce();
+    final secretBox = await algorithm.encrypt(bytes, secretKey: masterKey, nonce: nonce);
+    final combined = Uint8List.fromList([...nonce, ...secretBox.cipherText, ...secretBox.mac.bytes]);
+    return base64Encode(combined);
+  }
+
+  /// Decrypt document binary data.
+  Future<Uint8List> decryptDocumentBytes(String encryptedBase64, SecretKey masterKey) async {
+    final algorithm = AesGcm.with256bits();
+    final combined = base64Decode(encryptedBase64);
+    final nonce = combined.sublist(0, 12);
+    final cipherText = combined.sublist(12, combined.length - 16);
+    final macBytes = combined.sublist(combined.length - 16);
+    final secretBox = SecretBox(cipherText, nonce: nonce, mac: Mac(macBytes));
+    final plaintext = await algorithm.decrypt(secretBox, secretKey: masterKey);
+    return Uint8List.fromList(plaintext);
+  }
+
+  // ─── Internal helpers ─────────────────────────────────────────────────────
+
+  Future<SecretKey> _deriveKeyFromPin(String pin) async {
+    final pbkdf2 = Pbkdf2(
+      macAlgorithm: Hmac.sha256(),
+      iterations: 100000,
+      bits: 256,
+    );
+    return pbkdf2.deriveKey(
+      secretKey: SecretKey(utf8.encode(pin)),
+      nonce: utf8.encode('health_wallet_salt_v1'),
+    );
+  }
+
+  String hexEncode(List<int> bytes) {
+    return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
   }
 }

@@ -7,31 +7,15 @@ import '../models/medical_document.dart';
 import '../models/medical_event.dart';
 import 'encryption_service.dart';
 
-/// Sync status for records
-enum SyncStatus {
-  synced,
-  pendingSync,
-  conflict,
-  error,
-}
-
-/// Source of medical data
-enum DataSource {
-  manual,       // User entered manually
-  external,     // Received from another Orion node
-  device,       // From connected device/wearable
-  laboratory,   // From lab interface
-  hospital,     // From hospital/health system
-}
-
-/// Main service for managing the health wallet
+/// Main service for managing the health wallet.
+/// Coordinates Isar collections and encryption for all health data.
 class WalletService {
+  WalletService(this._isar, this._encryption);
+
   final Isar _isar;
   final EncryptionService _encryption;
 
-  WalletService(this._isar, this._encryption);
-
-  // ============ Labs ============
+  // ─── Labs ────────────────────────────────────────────────────────────────
 
   Future<void> addLabResult(LabResult lab) async {
     await _isar.writeTxn(() async {
@@ -40,23 +24,32 @@ class WalletService {
   }
 
   Future<List<LabResult>> getLabsByLoinc(String loincCode) async {
-    return await _isar.labResults
+    return _isar.labResults
         .filter()
         .loincCodeEqualTo(loincCode)
-        .sortByDateDesc()
+        .sortByCollectedAtDesc()
         .findAll();
   }
 
   Future<List<LabResult>> getRecentLabs({int days = 30}) async {
     final cutoff = DateTime.now().subtract(Duration(days: days));
-    return await _isar.labResults
+    return _isar.labResults
         .filter()
-        .dateGreaterThan(cutoff)
-        .sortByDateDesc()
+        .collectedAtGreaterThan(cutoff)
+        .sortByCollectedAtDesc()
         .findAll();
   }
 
-  // ============ Vitals ============
+  Future<void> updateLabSyncStatus(String id, SyncStatus status) async {
+    await _isar.writeTxn(() async {
+      final lab = await _isar.labResults.get(id);
+      if (lab != null) {
+        await _isar.labResults.put(lab.copyWith(syncStatus: status));
+      }
+    });
+  }
+
+  // ─── Vitals ──────────────────────────────────────────────────────────────
 
   Future<void> addVitalSign(VitalSign vital) async {
     await _isar.writeTxn(() async {
@@ -64,28 +57,28 @@ class WalletService {
     });
   }
 
-  Future<List<VitalSign>> getVitalsByType(String vitalType) async {
-    return await _isar.vitalSigns
+  Future<List<VitalSign>> getVitalsByLoinc(String loincCode) async {
+    return _isar.vitalSigns
         .filter()
-        .typeEqualTo(vitalType)
-        .sortByTimestampDesc()
+        .loincCodeEqualTo(loincCode)
+        .sortByRecordedAtDesc()
         .findAll();
   }
 
   Future<List<VitalSign>> getVitalsRange({
-    required String vitalType,
+    required String loincCode,
     required DateTime from,
     required DateTime to,
   }) async {
-    return await _isar.vitalSigns
+    return _isar.vitalSigns
         .filter()
-        .typeEqualTo(vitalType)
-        .timestampBetween(from, to)
-        .sortByTimestamp()
+        .loincCodeEqualTo(loincCode)
+        .recordedAtBetween(from, to)
+        .sortByRecordedAt()
         .findAll();
   }
 
-  // ============ Medications ============
+  // ─── Medications ─────────────────────────────────────────────────────────
 
   Future<void> addMedication(MedicationEntry med) async {
     await _isar.writeTxn(() async {
@@ -94,21 +87,21 @@ class WalletService {
   }
 
   Future<List<MedicationEntry>> getActiveMedications() async {
-    return await _isar.medicationEntries
+    return _isar.medicationEntries
         .filter()
         .endDateIsNull()
-        .sortByName()
+        .sortByMedicationName()
         .findAll();
   }
 
-  Future<List<MedicationEntry>> getMedicationsByClass(String drugClass) async {
-    return await _isar.medicationEntries
+  Future<List<MedicationEntry>> getMedicationsByRxNorm(String rxNormCode) async {
+    return _isar.medicationEntries
         .filter()
-        .drugClassContains(drugClass)
+        .rxNormCodeEqualTo(rxNormCode)
         .findAll();
   }
 
-  // ============ Medical Events ============
+  // ─── Medical Events ──────────────────────────────────────────────────────
 
   Future<void> addMedicalEvent(MedicalEvent event) async {
     await _isar.writeTxn(() async {
@@ -116,53 +109,42 @@ class WalletService {
     });
   }
 
-  Future<List<MedicalEvent>> getEventsByType(String eventType) async {
-    return await _isar.medicalEvents
+  Future<List<MedicalEvent>> getEventsByType(EventType type) async {
+    return _isar.medicalEvents
         .filter()
-        .typeEqualTo(eventType)
-        .sortByDateDesc()
+        .eventTypeEqualTo(type)
+        .sortByEventDateDesc()
         .findAll();
   }
 
-  Future<List<MedicalEvent>> getTimeline({
-    DateTime? from,
-    DateTime? to,
-  }) async {
-    var query = _isar.medicalEvents.where();
-    
+  Future<List<MedicalEvent>> getTimeline({DateTime? from, DateTime? to}) async {
+    var query = _isar.medicalEvents.filter();
     if (from != null && to != null) {
-      return await query
-          .filter()
-          .dateBetween(from, to)
-          .sortByDateDesc()
-          .findAll();
+      return query.eventDateBetween(from, to).sortByEventDateDesc().findAll();
     }
-    
-    return await query.sortByDateDesc().findAll();
+    return query.sortByEventDateDesc().findAll();
   }
 
-  // ============ Documents ============
+  // ─── Documents ────────────────────────────────────────────────────────────
 
   Future<void> addDocument(MedicalDocument doc) async {
-    // Encrypt sensitive document data before storing
-    final encrypted = await _encryption.encryptDocument(doc);
     await _isar.writeTxn(() async {
-      await _isar.medicalDocuments.put(encrypted);
+      await _isar.medicalDocuments.put(doc);
     });
   }
 
-  Future<List<MedicalDocument>> getDocumentsByType(String docType) async {
-    return await _isar.medicalDocuments
+  Future<List<MedicalDocument>> getDocumentsByType(DocumentType type) async {
+    return _isar.medicalDocuments
         .filter()
-        .typeEqualTo(docType)
-        .sortByDateDesc()
+        .documentTypeEqualTo(type)
+        .sortByDocumentDateDesc()
         .findAll();
   }
 
-  // ============ Full Health Record ============
+  // ─── Health Record ───────────────────────────────────────────────────────
 
-  Future<HealthRecord?> getFullHealthRecord() async {
-    final records = await _isar.healthRecords.where().findAll();
+  Future<HealthRecord?> getHealthRecord() async {
+    final records = _isar.healthRecords.where().findAllSync();
     return records.isEmpty ? null : records.first;
   }
 
@@ -172,63 +154,58 @@ class WalletService {
     });
   }
 
-  // ============ Statistics ============
+  // ─── Statistics ─────────────────────────────────────────────────────────
 
   Future<Map<String, int>> getDataStatistics() async {
     return {
-      'labs': await _isar.labResults.count(),
-      'vitals': await _isar.vitalSigns.count(),
-      'medications': await _isar.medicationEntries.count(),
-      'events': await _isar.medicalEvents.count(),
-      'documents': await _isar.medicalDocuments.count(),
+      'labs': _isar.labResults.countSync(),
+      'vitals': _isar.vitalSigns.countSync(),
+      'medications': _isar.medicationEntries.countSync(),
+      'events': _isar.medicalEvents.countSync(),
+      'documents': _isar.medicalDocuments.countSync(),
     };
   }
 
-  // ============ Export/Import ============
+  Future<List<LabResult>> getPendingSyncLabs() async {
+    return _isar.labResults
+        .filter()
+        .syncStatusEqualTo(SyncStatus.pending)
+        .findAll();
+  }
+
+  // ─── Export / Import ─────────────────────────────────────────────────────
 
   Future<Map<String, dynamic>> exportAllData() async {
     return {
-      'labs': await _isar.labResults.where().findAll(),
-      'vitals': await _isar.vitalSigns.where().findAll(),
-      'medications': await _isar.medicationEntries.where().findAll(),
-      'events': await _isar.medicalEvents.where().findAll(),
-      'documents': await _isar.medicalDocuments.where().findAll(),
+      'labs': _isar.labResults.where().findAllSync().map((e) => e.toJson()).toList(),
+      'vitals': _isar.vitalSigns.where().findAllSync().map((e) => e.toJson()).toList(),
+      'medications': _isar.medicationEntries.where().findAllSync().map((e) => e.toJson()).toList(),
+      'events': _isar.medicalEvents.where().findAllSync().map((e) => e.toJson()).toList(),
+      'documents': _isar.medicalDocuments.where().findAllSync().map((e) => e.toJson()).toList(),
+      'healthRecord': _isar.healthRecords.where().findAllSync().map((e) => e.toJson()).toList(),
       'exportedAt': DateTime.now().toIso8601String(),
       'version': '1.0',
     };
   }
 
-  Future<void> importData(Map<String, dynamic> data) async {
-    await _isar.writeTxn(() async {
-      if (data['labs'] != null) {
-        for (final lab in data['labs']) {
-          await _isar.labResults.put(lab as LabResult);
-        }
-      }
-      if (data['vitals'] != null) {
-        for (final vital in data['vitals']) {
-          await _isar.vitalSigns.put(vital as VitalSign);
-        }
-      }
-      // ... similar for other collections
+  // ─── Cleanup ─────────────────────────────────────────────────────────────
+
+  Future<int> deleteLabsOlderThan(int days) async {
+    final cutoff = DateTime.now().subtract(Duration(days: days));
+    return _isar.writeTxn(() async {
+      return _isar.labResults
+          .filter()
+          .collectedAtLessThan(cutoff)
+          .deleteAll();
     });
   }
 
-  // ============ Cleanup ============
-
-  Future<void> deleteOldData({required int daysOld}) async {
-    final cutoff = DateTime.now().subtract(Duration(days: daysOld));
-    
-    await _isar.writeTxn(() async {
-      // Only delete non-essential data
-      await _isar.labResults
+  Future<int> deleteVitalsOlderThan(int days) async {
+    final cutoff = DateTime.now().subtract(Duration(days: days));
+    return _isar.writeTxn(() async {
+      return _isar.vitalSigns
           .filter()
-          .dateLessThan(cutoff)
-          .deleteAll();
-          
-      await _isar.vitalSigns
-          .filter()
-          .timestampLessThan(cutoff)
+          .recordedAtLessThan(cutoff)
           .deleteAll();
     });
   }
