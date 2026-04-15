@@ -459,6 +459,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_markdown:
     dependency: "direct main"
     description:
@@ -974,6 +979,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
+  medical_standards:
+    dependency: "direct main"
+    description:
+      path: "packages/medical_standards"
+      relative: true
+    source: path
+    version: "1.0.0"
   meta:
     dependency: transitive
     description:
