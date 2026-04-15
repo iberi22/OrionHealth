@@ -1,16 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 import '../domain/entities/medical_query.dart';
-import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
 import '../domain/services/medical_analysis_service.dart';
 import '../infrastructure/llm/medical_llm_adapter.dart';
-import '../infrastructure/analysis/lab_interpreter.dart';
-import '../infrastructure/analysis/vital_sign_analyzer.dart';
-import '../infrastructure/analysis/risk_calculator.dart';
 
 // States
 abstract class MedicalAssistantState extends Equatable {
@@ -57,23 +52,14 @@ class MedicalAssistantError extends MedicalAssistantState {
 class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   final MedicalLlmAdapter _llmAdapter;
   final MedicalAnalysisService _analysisService;
-  final LabInterpreter _labInterpreter;
-  final VitalSignAnalyzer _vitalAnalyzer;
-  final RiskCalculator _riskCalculator;
-  final IsarAgentMemory? _memory;
+  final dynamic _memory;
 
   MedicalAssistantCubit({
     MedicalLlmAdapter? llmAdapter,
     MedicalAnalysisService? analysisService,
-    LabInterpreter? labInterpreter,
-    VitalSignAnalyzer? vitalAnalyzer,
-    RiskCalculator? riskCalculator,
-    IsarAgentMemory? memory,
+    dynamic memory,
   })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(),
         _analysisService = analysisService ?? MedicalAnalysisService(),
-        _labInterpreter = labInterpreter ?? LabInterpreter(),
-        _vitalAnalyzer = vitalAnalyzer ?? VitalSignAnalyzer(),
-        _riskCalculator = riskCalculator ?? RiskCalculator(),
         _memory = memory,
         super(const MedicalAssistantIdle());
 

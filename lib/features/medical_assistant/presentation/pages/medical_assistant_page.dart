@@ -179,6 +179,10 @@ class _ResponseContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final labInsights = response.insights
+        .where((i) => i.category == InsightCategory.labInterpretation)
+        .toList();
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -242,9 +246,6 @@ class _ResponseContent extends StatelessWidget {
           ],
 
           // Lab results cards if applicable
-          final labInsights = response.insights
-              .where((i) => i.category == InsightCategory.labInterpretation)
-              .toList();
           if (labInsights.isNotEmpty) ...[
             const SizedBox(height: 16),
             const Text(
