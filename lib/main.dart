@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'core/di/injection.dart';
 import 'core/theme/cyber_theme.dart';
+import 'l10n/app_localizations.dart';
 import 'features/appointments/presentation/pages/appointments_page.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
@@ -64,6 +66,14 @@ class _MyAppState extends State<MyApp> {
       theme: CyberTheme.darkTheme,
       darkTheme: CyberTheme.darkTheme,
       themeMode: ThemeMode.dark,
+      locale: WidgetsBinding.instance.platformDispatcher.locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: _onboardingCompleted!
           ? const MainNavigationPage()
           : OnboardingMainPage(
