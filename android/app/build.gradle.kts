@@ -51,7 +51,7 @@ gradle.projectsEvaluated {
     rootProject.subprojects.forEach { subproject ->
         if (subproject.name == "isar_flutter_libs") {
             listOf("verifyReleaseResources", "verifyDebugResources").forEach { taskName ->
-                subproject.tasks.findByName(taskName)?.isEnabled = false
+                subproject.tasks.findByName(taskName)?.setEnabled(false)
             }
         }
     }
