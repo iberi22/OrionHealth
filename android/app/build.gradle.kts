@@ -31,7 +31,8 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
-            proguardFiles.add(file("proguard-rules.pro"))
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
     packaging {
@@ -49,10 +50,10 @@ android {
 gradle.projectsEvaluated {
     rootProject.subprojects.forEach { subproject ->
         if (subproject.name == "isar_flutter_libs") {
-            subproject.tasks.matching {
-                it.name.contains("VerifyReleaseResources") || it.name.contains("VerifyLibraryResources") || it.name.contains("CheckAarMetadata")
-            }.forEach {
-                it.enabled = false
+            subproject.tasks.all { task ->
+                if (task.name == "verifyReleaseResources" || task.name == "verifyDebugResources") {
+                    task.enabled = false
+                }
             }
         }
     }
