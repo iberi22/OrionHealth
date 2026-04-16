@@ -1,13 +1,8 @@
 import '../../domain/entities/medical_query.dart';
 import '../../domain/entities/medical_insight.dart';
 import '../../domain/entities/ai_response.dart';
-<<<<<<< HEAD
-import '../../domain/services/medical_analysis_service.dart';
-import 'medical_response_generator.dart';
-=======
 import 'medical_response_generator.dart';
 import '../../domain/services/medical_analysis_service.dart';
->>>>>>> origin/main
 
 /// Adapter for medical LLM API integration.
 ///

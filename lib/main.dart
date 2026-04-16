@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/di/injection.dart';
 import 'core/theme/cyber_theme.dart';
+import 'features/auth/application/bloc/auth_cubit.dart';
+import 'features/auth/presentation/auth_gate.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/health_report/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
@@ -27,12 +30,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'OrionHealth',
-      theme: CyberTheme.darkTheme,
-      darkTheme: CyberTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      home: const MainNavigationPage(),
+    return BlocProvider(
+      create: (context) => getIt<AuthCubit>(),
+      child: MaterialApp(
+        title: 'OrionHealth',
+        theme: CyberTheme.darkTheme,
+        darkTheme: CyberTheme.darkTheme,
+        themeMode: ThemeMode.dark,
+        home: const AuthGate(
+          authenticatedChild: MainNavigationPage(),
+        ),
+      ),
     );
   }
 }
@@ -56,10 +64,13 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
+    return Listener(
+      onPointerDown: (_) => context.read<AuthCubit>().resetSessionTimer(),
+      child: Scaffold(
+        body: IndexedStack(
+          index: _currentIndex,
+          children: _pages,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
