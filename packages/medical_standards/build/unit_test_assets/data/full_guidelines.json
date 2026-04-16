@@ -1,0 +1,509 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2024-04-15",
+    "source": "Clinical Guidelines",
+    "totalCount": 40
+  },
+  "data": [
+    {
+      "code": "ADA-2024",
+      "displayName": "Standards of Care in Diabetes",
+      "organization": "American Diabetes Association",
+      "url": "https://professional.diabetes.org/content/clinical-practice-recommendations",
+      "lastUpdated": "2024-01-01",
+      "version": "2024",
+      "applicableConditions": [
+        "E10",
+        "E11"
+      ],
+      "description": "Comprehensive guidelines for diabetes diagnosis and treatment"
+    },
+    {
+      "code": "ADA-A1C",
+      "displayName": "A1C Targets for Glycemic Control",
+      "organization": "American Diabetes Association",
+      "url": "https://diabetes.org/clinical-guidance/quality-metrics",
+      "lastUpdated": "2024-01-01",
+      "applicableConditions": [
+        "E10",
+        "E11"
+      ],
+      "description": "A1C target <7% for most adults with diabetes; <6.5% if achievable without hypoglycemia"
+    },
+    {
+      "code": "ADA-HTN-2024",
+      "displayName": "Diabetes and Hypertension Management",
+      "organization": "American Diabetes Association",
+      "url": "https://professional.diabetes.org/content/clinical-practice-recommendations",
+      "lastUpdated": "2024-01-01",
+      "applicableConditions": [
+        "E10",
+        "E11",
+        "I10"
+      ],
+      "description": "BP target <130/80 mmHg for diabetics with hypertension"
+    },
+    {
+      "code": "ADA-STATIN-2024",
+      "displayName": "Diabetes and Cholesterol Management",
+      "organization": "American Diabetes Association",
+      "url": "https://professional.diabetes.org/content/clinical-practice-recommendations",
+      "lastUpdated": "2024-01-01",
+      "applicableConditions": [
+        "E10",
+        "E11",
+        "E78.0",
+        "E78.5",
+        "I25.9"
+      ],
+      "description": "Statin therapy for diabetics aged 40-75: moderate intensity; high intensity if ASCVD risk >20%"
+    },
+    {
+      "code": "WHO-DM-2016",
+      "displayName": "Global Report on Diabetes",
+      "organization": "World Health Organization",
+      "url": "https://www.who.int/publications/i/item/9789241565257",
+      "lastUpdated": "2016-04-01",
+      "applicableConditions": [
+        "E10",
+        "E11"
+      ],
+      "description": "Global strategy for diabetes prevention and care"
+    },
+    {
+      "code": "AHA-2017",
+      "displayName": "High Blood Pressure Clinical Practice Guideline",
+      "organization": "American Heart Association",
+      "url": "https://www.acc.org/latest-in-cardiology/ten-points-to-remember/2017-11-22/new-acc-aha-hypertension-guideline",
+      "lastUpdated": "2017-11-01",
+      "version": "2017",
+      "applicableConditions": [
+        "I10"
+      ],
+      "description": "BP >=130/80 mmHg = Stage 1 HTN; BP target <130/80 for most adults"
+    },
+    {
+      "code": "AHA-2018",
+      "displayName": "Cholesterol Management Guideline",
+      "organization": "American Heart Association",
+      "url": "https://www.acc.org/latest-in-cardiology/ten-points-to-remember/2018-11-10/2018-guideline-on-management-of-blood-cholesterol",
+      "lastUpdated": "2018-11-01",
+      "applicableConditions": [
+        "E78.0",
+        "E78.5",
+        "I25.9",
+        "I10"
+      ],
+      "description": "Statin therapy recommendations by ASCVD risk category"
+    },
+    {
+      "code": "ACC-AHA-ASCVD",
+      "displayName": "ASCVD Risk Calculator",
+      "organization": "ACC/AHA",
+      "url": "https://tools.acc.org/ascvd-risk-estimator-plus",
+      "lastUpdated": "2023-08-01",
+      "applicableConditions": [
+        "I10",
+        "E78.0",
+        "E78.5",
+        "I25.9"
+      ],
+      "description": "10-year ASCVD risk prediction tool for primary prevention"
+    },
+    {
+      "code": "WHO-2023",
+      "displayName": "Hypertension Diagnosis and Management",
+      "organization": "World Health Organization",
+      "url": "https://www.who.int/publications/i/item/9789240081062",
+      "lastUpdated": "2023-08-01",
+      "applicableConditions": [
+        "I10"
+      ],
+      "description": "WHO guidelines for hypertension management in primary care"
+    },
+    {
+      "code": "ACC-AHA-HF-2022",
+      "displayName": "Guideline for the Management of Heart Failure",
+      "organization": "ACC/AHA",
+      "url": "https://www.jacc.org/doi/10.1016/j.jacc.2022.01.017",
+      "lastUpdated": "2022-04-01",
+      "applicableConditions": [
+        "I50.9",
+        "I50.22",
+        "I50.30"
+      ],
+      "description": "Comprehensive heart failure management: HFrEF (EF<=40%) and HFpEF (EF>=50%)"
+    },
+    {
+      "code": "ESC-HF-2021",
+      "displayName": "ESC Guidelines for Heart Failure",
+      "organization": "European Society of Cardiology",
+      "url": "https://academic.oup.com/eurheartj/article/42/36/3599/6354367",
+      "lastUpdated": "2021-09-01",
+      "applicableConditions": [
+        "I50.9",
+        "I50.22",
+        "I50.30"
+      ],
+      "description": "ESC heart failure guidelines with HFrEF device therapy and pharmacotherapy"
+    },
+    {
+      "code": "AHA-AFIB-2023",
+      "displayName": "Management of Atrial Fibrillation",
+      "organization": "AHA/ACC/HRS",
+      "url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001197",
+      "lastUpdated": "2023-10-01",
+      "applicableConditions": [
+        "I48.91",
+        "I48.3"
+      ],
+      "description": "AFib management: rate/rhythm control, anticoagulation (CHA2DS2-VASc), ablation"
+    },
+    {
+      "code": "ACC-AHA-SIHD-2012",
+      "displayName": "Management of Stable Ischemic Heart Disease",
+      "organization": "ACC/AHA",
+      "url": "https://www.jacc.org/doi/10.1016/j.jacc.2012.11.019",
+      "lastUpdated": "2012-12-01",
+      "applicableConditions": [
+        "I25.10",
+        "I25.9"
+      ],
+      "description": "SIHD management: anti-ischemic therapy, risk stratification, revascularization"
+    },
+    {
+      "code": "KDIGO-CKD-2012",
+      "displayName": "KDIGO Clinical Practice Guideline for CKD Evaluation",
+      "organization": "Kidney Disease: Improving Global Outcomes",
+      "url": "https://kdigo.org/guidelines/ckd-evaluation-and-management/",
+      "lastUpdated": "2012-09-01",
+      "applicableConditions": [
+        "N18.9",
+        "N18.3",
+        "N18.4",
+        "N18.5",
+        "N18.6"
+      ],
+      "description": "CKD definition, staging, and management based on GFR and albuminuria"
+    },
+    {
+      "code": "KDIGO-DM-CKD-2022",
+      "displayName": "KDIGO Clinical Practice Guideline for Diabetes and CKD",
+      "organization": "Kidney Disease: Improving Global Outcomes",
+      "url": "https://kdigo.org/guidelines/diabetes-and-ckd/",
+      "lastUpdated": "2022-11-01",
+      "applicableConditions": [
+        "E10",
+        "E11",
+        "N18.9"
+      ],
+      "description": "Integrated management of diabetes and CKD: glycemic control, BP, lipids"
+    },
+    {
+      "code": "ADA-CKD-2024",
+      "displayName": "Diabetes and CKD Management",
+      "organization": "American Diabetes Association",
+      "url": "https://professional.diabetes.org/content/clinical-practice-recommendations",
+      "lastUpdated": "2024-01-01",
+      "applicableConditions": [
+        "E10",
+        "E11",
+        "N18.9"
+      ],
+      "description": "SGLT2i and GLP-1 RA use in diabetic CKD; eGFR monitoring"
+    },
+    {
+      "code": "AASLD-HBV-2018",
+      "displayName": "Hepatitis B Guidance",
+      "organization": "American Association for the Study of Liver Diseases",
+      "url": "https://aasldpubs.onlinelibrary.wiley.com/doi/10.1002/hep.29800",
+      "lastUpdated": "2018-03-01",
+      "applicableConditions": [
+        "B18.1"
+      ],
+      "description": "HBV screening, treatment, and monitoring recommendations"
+    },
+    {
+      "code": "AASLD-HCV-2020",
+      "displayName": "Hepatitis C Guidance",
+      "organization": "American Association for the Study of Liver Diseases",
+      "url": "https://aasldpubs.onlinelibrary.wiley.com/doi/10.1002/hep.31260",
+      "lastUpdated": "2020-04-01",
+      "applicableConditions": [
+        "B18.2"
+      ],
+      "description": "HCV screening, DAA treatment, and cure monitoring"
+    },
+    {
+      "code": "AASLD-NAFLD-2017",
+      "displayName": "NAFLD Diagnosis and Management",
+      "organization": "American Association for the Study of Liver Diseases",
+      "url": "https://aasldpubs.onlinelibrary.wiley.com/doi/10.1002/hep.29367",
+      "lastUpdated": "2017-06-01",
+      "applicableConditions": [
+        "K76.0"
+      ],
+      "description": "NAFLD/NASH diagnosis, risk stratification, and treatment"
+    },
+    {
+      "code": "EASL-NAFLD-2021",
+      "displayName": "EASL Guidelines for NAFLD/NASH",
+      "organization": "European Association for the Study of the Liver",
+      "url": "https://www.journal-of-hepatology.eu/article/S0168-8278(21)00203-4/",
+      "lastUpdated": "2021-06-01",
+      "applicableConditions": [
+        "K76.0",
+        "K72.90"
+      ],
+      "description": "European guidelines for fatty liver disease and liver failure"
+    },
+    {
+      "code": "ACC-AHA-PRIMARY-2019",
+      "displayName": "Primary Prevention of ASCVD",
+      "organization": "ACC/AHA",
+      "url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000000678",
+      "lastUpdated": "2019-03-01",
+      "applicableConditions": [
+        "I10",
+        "E78.0",
+        "E78.5",
+        "E66.9"
+      ],
+      "description": "Lifestyle and pharmacological primary prevention of ASCVD"
+    },
+    {
+      "code": "GLIM-Malnutrition-2019",
+      "displayName": "GLIM Consensus on Malnutrition",
+      "organization": "GLIM Working Group",
+      "url": "https://academic.oup.com/jn/article/149/12/2073/5578253",
+      "lastUpdated": "2019-08-01",
+      "applicableConditions": [
+        "E43",
+        "E44.1",
+        "E46"
+      ],
+      "description": "Global Leadership Initiative on Malnutrition diagnostic criteria"
+    },
+    {
+      "code": "ATA-2014",
+      "displayName": "Thyroid Disease in Pregnancy",
+      "organization": "American Thyroid Association",
+      "url": "https://www.thyroid.org/professionals/ata-guidelines/",
+      "lastUpdated": "2014-01-01",
+      "applicableConditions": [
+        "E03.9",
+        "E05.90",
+        "E06.3"
+      ],
+      "description": "Guidelines for thyroid disease management in pregnancy"
+    },
+    {
+      "code": "ATA-HYPOTHYROIDISM-2014",
+      "displayName": "Hypothyroidism Guidelines",
+      "organization": "American Thyroid Association",
+      "url": "https://www.thyroid.org/professionals/ata-guidelines/",
+      "lastUpdated": "2014-02-01",
+      "applicableConditions": [
+        "E03.9"
+      ],
+      "description": "Diagnosis and management of hypothyroidism"
+    },
+    {
+      "code": "ATA-HYPERTHYROIDISM-2016",
+      "displayName": "Hyperthyroidism and Other Causes of Thyrotoxicosis",
+      "organization": "American Thyroid Association",
+      "url": "https://www.thyroid.org/professionals/ata-guidelines/",
+      "lastUpdated": "2016-09-01",
+      "applicableConditions": [
+        "E05.90"
+      ],
+      "description": "Management of hyperthyroidism and thyrotoxicosis"
+    },
+    {
+      "code": "APA-DEP-2021",
+      "displayName": "Practice Guideline for Treatment of Depression",
+      "organization": "American Psychiatric Association",
+      "url": "https://psychiatryonline.org/practice-guidelines",
+      "lastUpdated": "2021-10-01",
+      "applicableConditions": [
+        "F32.9",
+        "F33.9",
+        "F34.1"
+      ],
+      "description": "Evidence-based treatment recommendations for major depressive disorder"
+    },
+    {
+      "code": "APA-BIPOLAR-2020",
+      "displayName": "Practice Guideline for Bipolar Disorder",
+      "organization": "American Psychiatric Association",
+      "url": "https://psychiatryonline.org/practice-guidelines",
+      "lastUpdated": "2020-04-01",
+      "applicableConditions": [
+        "F31.9"
+      ],
+      "description": "Bipolar disorder diagnosis and treatment"
+    },
+    {
+      "code": "ADA-MH-2024",
+      "displayName": "Psychosocial Care for People with Diabetes",
+      "organization": "American Diabetes Association",
+      "url": "https://professional.diabetes.org/content/clinical-practice-recommendations",
+      "lastUpdated": "2024-01-01",
+      "applicableConditions": [
+        "E10",
+        "E11",
+        "F32.9",
+        "F41.1"
+      ],
+      "description": "Mental health screening and care for diabetics"
+    },
+    {
+      "code": "NICE-DEP-2009",
+      "displayName": "Depression in Adults",
+      "organization": "National Institute for Health and Care Excellence (UK)",
+      "url": "https://www.nice.org.uk/guidance/cg90",
+      "lastUpdated": "2009-10-01",
+      "applicableConditions": [
+        "F32.9",
+        "F33.9"
+      ],
+      "description": "UK guidelines for depression recognition and treatment"
+    },
+    {
+      "code": "GINA-2024",
+      "displayName": "Global Strategy for Asthma Management",
+      "organization": "GINA",
+      "url": "https://ginasthma.org/",
+      "lastUpdated": "2024-05-01",
+      "applicableConditions": [
+        "J45.909",
+        "J45.41",
+        "J45.5"
+      ],
+      "description": "Stepwise asthma management; emphasizes ICS-containing therapy"
+    },
+    {
+      "code": "GOLD-2024",
+      "displayName": "Global Strategy for COPD Diagnosis and Management",
+      "organization": "GOLD",
+      "url": "https://goldcopd.org/",
+      "lastUpdated": "2024-01-01",
+      "applicableConditions": [
+        "J44.9",
+        "J42",
+        "J43.9",
+        "J44.1"
+      ],
+      "description": "COPD assessment, pharmacological and non-pharmacological treatment"
+    },
+    {
+      "code": "IDSA-ATS-PNA-2019",
+      "displayName": "Community-Acquired Pneumonia Guidelines",
+      "organization": "IDSA/ATS",
+      "url": "https://www.idsociety.org/practice-guideline/pna/",
+      "lastUpdated": "2019-07-01",
+      "applicableConditions": [
+        "J18.9",
+        "J12.89"
+      ],
+      "description": "CAP diagnosis, severity assessment (PSI/PORT, CURB-65), antibiotic therapy"
+    },
+    {
+      "code": "CDC-OPIOID-2022",
+      "displayName": "Clinical Practice Guideline for Opioid Therapy for Chronic Pain",
+      "organization": "CDC",
+      "url": "https://www.cdc.gov/mmwr/volumes/71/rr/rr7103a1.htm",
+      "lastUpdated": "2022-11-01",
+      "applicableConditions": [
+        "G89.29",
+        "M54.5"
+      ],
+      "description": "Opioid prescribing for chronic pain; non-opioid first; risk assessment"
+    },
+    {
+      "code": "WHO-PAIN-1986",
+      "displayName": "WHO Analgesic Ladder for Cancer Pain",
+      "organization": "World Health Organization",
+      "url": "https://www.who.int/publications/i/item/9241541002",
+      "lastUpdated": "1986-01-01",
+      "applicableConditions": [
+        "C79.9",
+        "G89.29"
+      ],
+      "description": "Three-step analgesic ladder: non-opioid -> weak opioid -> strong opioid"
+    },
+    {
+      "code": "ACP-LOWBACK-2017",
+      "displayName": "Noninvasive Treatments for Acute/Chronic Low Back Pain",
+      "organization": "American College of Physicians",
+      "url": "https://www.acpjournals.org/doi/10.7326/M15-2362",
+      "lastUpdated": "2017-04-01",
+      "applicableConditions": [
+        "M54.5"
+      ],
+      "description": "First-line: heat, massage, acupuncture; NSAIDs before opioids for low back pain"
+    },
+    {
+      "code": "ACS-SCREENING-2023",
+      "displayName": "Cancer Screening Guidelines",
+      "organization": "American Cancer Society",
+      "url": "https://www.cancer.org/healthy/find-cancer-early/cancer-screening-guidelines.html",
+      "lastUpdated": "2023-01-01",
+      "applicableConditions": [
+        "C50.919",
+        "C18.9",
+        "C61",
+        "C34.90"
+      ],
+      "description": "Breast, colorectal, lung, prostate cancer screening recommendations"
+    },
+    {
+      "code": "ASH-ANEMIA-2020",
+      "displayName": "Management of Anemia and Iron Deficiency",
+      "organization": "American Society of Hematology",
+      "url": "https://ashpublications.org/blood/article/135/19/1633/455458",
+      "lastUpdated": "2020-05-01",
+      "applicableConditions": [
+        "D50.9",
+        "D51.9",
+        "D52.9",
+        "D59.9",
+        "D63.1"
+      ],
+      "description": "Diagnosis and management of various anemias"
+    },
+    {
+      "code": "KDIGO-ANEMIA-2012",
+      "displayName": "CKD-Anemia Guidelines",
+      "organization": "Kidney Disease: Improving Global Outcomes",
+      "url": "https://kdigo.org/guidelines/ckd-evaluation-and-management/",
+      "lastUpdated": "2012-09-01",
+      "applicableConditions": [
+        "D63.1",
+        "N18.9"
+      ],
+      "description": "Iron and ESA therapy in anemia of CKD"
+    },
+    {
+      "code": "CLSI-2017",
+      "displayName": "Reference intervals for Laboratory Tests",
+      "organization": "Clinical and Laboratory Standards Institute",
+      "url": "https://clsi.org/standards/products/method-evaluation/documents/c28/",
+      "lastUpdated": "2017-01-01",
+      "description": "Reference intervals for common laboratory tests"
+    },
+    {
+      "code": "ADA-MC-2024",
+      "displayName": "Standards of Medical Care in Diabetes",
+      "organization": "American Diabetes Association",
+      "url": "https://diabetesjournals.org/care/issue/47/Supplement_1",
+      "lastUpdated": "2024-01-01",
+      "applicableConditions": [
+        "E10",
+        "E11"
+      ],
+      "description": "Comprehensive diabetes care: screening, diagnosis, monitoring, treatment targets"
+    }
+  ]
+}
