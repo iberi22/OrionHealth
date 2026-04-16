@@ -28,9 +28,11 @@ subprojects {
             }
             // Disable resource verification tasks for isar_flutter_libs
             tasks.all { task ->
-                if (task.name == "verifyReleaseResources" || task.name == "verifyDebugResources") {
-                    println("Disabling task: ${task.name} for isar_flutter_libs")
-                    task.enabled = false
+                when (task.name) {
+                    "verifyReleaseResources", "verifyDebugResources" -> {
+                        println("Disabling task: ${task.name} for isar_flutter_libs")
+                        task.enabled = false
+                    }
                 }
             }
         }
