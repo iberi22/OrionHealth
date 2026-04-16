@@ -5,7 +5,7 @@ import '../../domain/entities/medical_insight.dart';
 class RiskCalculator {
   /// Calculate 10-year ASCVD risk (American College of Cardiology/AHA)
   /// Uses the Pooled Cohort Equations
-  AscvdRisk calculateAscvdRisk({
+  Future<AscvdRisk> calculateAscvdRisk({
     required int age,
     required String gender,
     required double totalCholesterol,
@@ -14,7 +14,7 @@ class RiskCalculator {
     required bool onBpMedication,
     required bool hasDiabetes,
     required bool isSmoker,
-  }) {
+  }) async {
     double risk;
 
     if (gender.toLowerCase() == 'male') {
@@ -39,10 +39,12 @@ class RiskCalculator {
       );
     }
 
+    final guideline = await ClinicalGuidelines.findByCode('ACC-AHA-PRIMARY-2019');
+
     return AscvdRisk(
       score: risk,
       category: _ascvdCategory(risk),
-      guideline: ClinicalGuidelines.accAhaRiskCalculator,
+      guideline: guideline!,
     );
   }
 
@@ -100,7 +102,7 @@ class RiskCalculator {
   }
 
   /// Calculate QDiabetes risk score for Type 2 diabetes
-  QDiabetesRisk calculateQDiabetesRisk({
+  Future<QDiabetesRisk> calculateQDiabetesRisk({
     required int age,
     required String gender,
     required double bmi,
@@ -111,7 +113,7 @@ class RiskCalculator {
     required bool hasSteroidUse,
     required String ethnicity,
     required bool isSmoker,
-  }) {
+  }) async {
     double score = 0;
 
     score += age * 0.05;
@@ -131,20 +133,22 @@ class RiskCalculator {
     }
 
     final riskPercent = (score / 20) * 100;
+    final guideline = await ClinicalGuidelines.findByCode('ADA-MC-2024');
+
     return QDiabetesRisk(
       score: riskPercent,
       category: riskPercent < 5 ? 'Low' : (riskPercent < 15 ? 'Moderate' : 'High'),
-      guideline: ClinicalGuidelines.whoDiabetes,
+      guideline: guideline!,
     );
   }
 
   /// Calculate hypertension risk based on BMI, age, sodium intake estimate
-  HypertensionRisk calculateHypertensionRisk({
+  Future<HypertensionRisk> calculateHypertensionRisk({
     required int age,
     required double bmi,
     required bool hasFamilyHistory,
     required double? sodiumUrineExcretion,
-  }) {
+  }) async {
     double risk = 0;
 
     risk += age > 55 ? 2 : (age > 45 ? 1 : 0);
@@ -154,10 +158,12 @@ class RiskCalculator {
       risk += sodiumUrineExcretion > 5000 ? 2 : (sodiumUrineExcretion > 3000 ? 1 : 0);
     }
 
+    final guideline = await ClinicalGuidelines.findByCode('WHO-2023');
+
     return HypertensionRisk(
       score: risk,
       category: risk < 2 ? 'Low' : (risk < 4 ? 'Moderate' : 'High'),
-      guideline: ClinicalGuidelines.whoHypertension,
+      guideline: guideline!,
     );
   }
 

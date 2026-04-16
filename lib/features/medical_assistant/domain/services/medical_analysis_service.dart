@@ -113,17 +113,13 @@ class MedicalAnalysisService {
   /// - Normal ranges from guidelines
   /// - Suggested additional tests if confidence < 90%
   /// - Doctor recommendation
-  SafeAnalysisResponse analyzeLabWithConfidence({
+  Future<SafeAnalysisResponse> analyzeLabWithConfidence({
     required String labCode,
     required double value,
-<<<<<<< HEAD
     String? unit,
-=======
-    required String unit,
->>>>>>> origin/main
     String? patientCondition,
-  }) {
-    final loinc = LoincCommonLabs.findByCode(labCode);
+  }) async {
+    final loinc = await LoincCommonLabs.findByCode(labCode);
     final insights = <MedicalInsight>[];
 
     String explanation = '';
@@ -159,11 +155,7 @@ class MedicalAnalysisService {
                 'INTERPRETACIÓN (con alta confianza):\n'
                 'Este valor elevado podría estar relacionado con ${_getPossibleCondition(loinc, patientCondition)}.\n\n'
                 'BASADO EN:\n'
-<<<<<<< HEAD
                 '• Tu resultado: $value ${unit ?? loinc.unit}\n'
-=======
-                '• Tu resultado: $value ${unit}\n'
->>>>>>> origin/main
                 '• Guideline de referencia: ${loinc.component}\n'
                 '• Condición conocida: ${patientCondition ?? "no especificada"}\n\n'
                 'NOTA: Esta interpretación se basa en datos objetivos y guías clínicas, '
@@ -171,30 +163,15 @@ class MedicalAnalysisService {
 
             suggestedExams = _getSuggestedExamsForLab(loinc);
             lifestyleRecs = _getLifestyleRecs(loinc);
-<<<<<<< HEAD
-          } else {
-            explanation += 'PODRÍA ESTAR RELACIONADO CON:\n'
-                'Según el valor elevado, podría haber una relación con ${_getPossibleCondition(loinc, patientCondition)}.\n'
-                'Sin embargo, no tengo suficiente certeza para una interpretación definitiva.\n\n'
-=======
           } else if (confidence >= ConfidenceThreshold.mediumConfidence) {
             possibleInterpretation =
                 'PODRÍA ESTAR RELACIONADO CON:\n'
                 'Según el valor elevado, podría haber una relación con ${_getPossibleCondition(loinc, patientCondition)}.\n'
                 'Sin embargo, no tengo certeza suficiente para afirmarlo.\n\n'
->>>>>>> origin/main
                 'INFORMACIÓN ADICIONAL NECESARIA:\n';
 
             suggestedExams = _getSuggestedExamsForLab(loinc);
             lifestyleRecs = ['Lleva un registro de tus síntomas', 'Mantén una dieta equilibrada'];
-<<<<<<< HEAD
-
-            if (confidence < ConfidenceThreshold.mediumConfidence) {
-              explanation += 'Este valor elevado tiene múltiples causas posibles.\n'
-                  'No tengo suficiente información para determinar la causa específica.\n';
-              suggestedExams.insert(0, 'Consulta con tu médico para interpretar este resultado');
-            }
-=======
           } else {
             possibleInterpretation =
                 'Este valor elevado tiene múltiples causas posibles.\n'
@@ -204,14 +181,14 @@ class MedicalAnalysisService {
               'Consulta con tu médico para interpretar este resultado',
               ..._getSuggestedExamsForLab(loinc),
             ];
->>>>>>> origin/main
+            lifestyleRecs = ['Lleva un registro de tus síntomas', 'Mantén una dieta equilibrada'];
           }
         } else {
           explanation += '• Tu valor está dentro del rango normal.\n';
           confidence = 0.85; // High confidence it's normal
           possibleInterpretation =
               'INTERPRETACIÓN:\n'
-              'Tu valor de ${loinc.component} ($value ${unit}) está dentro '
+              'Tu valor de ${loinc.component} ($value ${unit ?? loinc.unit}) está dentro '
               'de los rangos normales de referencia.\n\n'
               'Continúa con tus chequeos regulares.';
         }
@@ -220,13 +197,15 @@ class MedicalAnalysisService {
         suggestedExams = ['Consulta con tu médico para interpretar este resultado'];
       }
 
+      final guideline = await ClinicalGuidelines.findByCode('CLSI-2017');
+
       insights.add(MedicalInsight(
         id: 'lab-$labCode-${DateTime.now().millisecondsSinceEpoch}',
         title: '${loinc.component} Analysis',
         description: 'Value: $value ${unit ?? loinc.unit}',
         severity: _getSeverityForConfidence(confidence),
         category: InsightCategory.labInterpretation,
-        guidelineReference: ClinicalGuidelines.labReferenceRanges.code,
+        guidelineReference: guideline?.code ?? 'CLSI-2017',
         recommendations: suggestedExams.isNotEmpty
             ? suggestedExams
             : ['Revisión con proveedor de salud'],
@@ -260,12 +239,12 @@ class MedicalAnalysisService {
   }
 
   /// Analyze vital signs with confidence-based responses
-  SafeAnalysisResponse analyzeVitalWithConfidence({
+  Future<SafeAnalysisResponse> analyzeVitalWithConfidence({
     required String vitalType,
     required double value,
     String? unit,
     Map<String, double>? relatedVitals,
-  }) {
+  }) async {
     final insights = <MedicalInsight>[];
 
     String explanation = '';
@@ -285,6 +264,8 @@ class MedicalAnalysisService {
       final diastolic = relatedVitals?['diastolic'] ?? (vitalType.toLowerCase() == 'diastolic' ? value : 0);
 
       explanation = 'PRESIÓN ARTERIAL: $systolic/$diastolic mmHg\n\n';
+
+      final bpGuideline = await ClinicalGuidelines.findByCode('AHA-2017');
 
       if (systolic >= 180 || diastolic >= 120) {
         explanation += '⚠️ Esta presión arterial está en rango de HIPERTENSIÓN CRISIS.\n';
@@ -306,7 +287,7 @@ class MedicalAnalysisService {
           description: 'BP: $systolic/$diastolic mmHg',
           severity: InsightSeverity.critical,
           category: InsightCategory.vitalSignAnalysis,
-          guidelineReference: ClinicalGuidelines.ahaHypertension.code,
+          guidelineReference: bpGuideline?.code ?? 'AHA-2017',
           recommendations: ['Atención médica inmediata'],
           generatedAt: DateTime.now(),
         ));
@@ -338,7 +319,7 @@ class MedicalAnalysisService {
           description: 'BP: $systolic/$diastolic mmHg',
           severity: InsightSeverity.alert,
           category: InsightCategory.vitalSignAnalysis,
-          guidelineReference: ClinicalGuidelines.ahaHypertension.code,
+          guidelineReference: bpGuideline?.code ?? 'AHA-2017',
           recommendations: suggestedExams,
           generatedAt: DateTime.now(),
         ));
@@ -364,7 +345,7 @@ class MedicalAnalysisService {
           description: 'BP: $systolic/$diastolic mmHg',
           severity: InsightSeverity.warning,
           category: InsightCategory.vitalSignAnalysis,
-          guidelineReference: ClinicalGuidelines.ahaHypertension.code,
+          guidelineReference: bpGuideline?.code ?? 'AHA-2017',
           recommendations: lifestyleRecs,
           generatedAt: DateTime.now(),
         ));
@@ -403,12 +384,12 @@ class MedicalAnalysisService {
   /// Analyze symptoms with confidence-based responses
   ///
   /// IMPORTANT: This NEVER diagnoses. It explains what symptoms COULD mean.
-  SafeAnalysisResponse analyzeSymptomsWithConfidence({
+  Future<SafeAnalysisResponse> analyzeSymptomsWithConfidence({
     required List<String> symptoms,
     required List<String> currentMedications,
     List<String>? recentLabResults,
     String? knownCondition,
-  }) {
+  }) async {
     String explanation = '';
     String? possibleInterpretation;
     List<String> suggestedExams = [];
@@ -448,14 +429,8 @@ class MedicalAnalysisService {
       }
 
       confidence = 0.40;
-<<<<<<< HEAD
-      explanation +=
-          'El cansancio persistente tiene muchas causas posibles. '
-          'Sin embargo, no tengo certeza suficiente para una interpretación definitiva.\n\n'
-=======
       possibleInterpretation =
           'El cansancio persistente tiene muchas causas posibles.\n\n'
->>>>>>> origin/main
           'MIS RECOMENDACIONES:\n'
           '1. Consulta con tu médico para una evaluación completa\n'
           '2. Considera hacerte los siguientes exámenes:\n'
@@ -484,13 +459,15 @@ class MedicalAnalysisService {
         'Ejercicio moderado regular',
       ];
 
+      final guideline = await ClinicalGuidelines.findByCode('CLSI-2017');
+
       insights.add(MedicalInsight(
         id: 'fatigue-${DateTime.now().millisecondsSinceEpoch}',
         title: 'Análisis de Cansancio/Fatiga',
         description: 'Múltiples causas posibles identificadas',
         severity: InsightSeverity.info,
         category: InsightCategory.symptomAnalysis,
-        guidelineReference: ClinicalGuidelines.labReferenceRanges.code,
+        guidelineReference: guideline?.code ?? 'CLSI-2017',
         recommendations: suggestedExams,
         generatedAt: DateTime.now(),
       ));
@@ -526,9 +503,9 @@ class MedicalAnalysisService {
 
   bool? _isValueAbnormal(LoincCode loinc, double value) {
     // Parse normal range if available
-    if (loinc.normalRange == null) return null;
+    final range = loinc.normalRange;
+    if (range == null) return null;
 
-    final range = loinc.normalRange!;
     // Handle formats like "70-100" or "less than 100"
 
     if (range.toLowerCase().contains('less than')) {
@@ -550,9 +527,8 @@ class MedicalAnalysisService {
 
   double _calculateLabConfidence(LoincCode loinc, double value) {
     // Calculate confidence based on how much the value deviates
-    if (loinc.normalRange == null) return 0.50;
-
-    final range = loinc.normalRange!;
+    final range = loinc.normalRange;
+    if (range == null) return 0.50;
 
     if (range.contains('-')) {
       final parts = range.split('-');
@@ -669,15 +645,16 @@ class MedicalAnalysisService {
     final insights = <MedicalInsight>[];
 
     for (final entry in labValues.entries) {
-      final loinc = LoincCommonLabs.findByCode(entry.key);
+      final loinc = await LoincCommonLabs.findByCode(entry.key);
       if (loinc != null) {
+        final guideline = await ClinicalGuidelines.findByCode('CLSI-2017');
         insights.add(MedicalInsight(
           id: 'lab-${entry.key}',
           title: '${loinc.component} Analysis',
           description: loinc.description ?? 'Lab value: ${entry.value} ${loinc.unit}',
           severity: InsightSeverity.info,
           category: InsightCategory.labInterpretation,
-          guidelineReference: ClinicalGuidelines.labReferenceRanges.code,
+          guidelineReference: guideline?.code ?? 'CLSI-2017',
           recommendations: ['Review with healthcare provider'],
           generatedAt: DateTime.now(),
           evidence: {'loinc': loinc.code, 'value': entry.value},
@@ -708,13 +685,15 @@ class MedicalAnalysisService {
         severity = InsightSeverity.warning;
       }
 
+      final bpGuideline = await ClinicalGuidelines.findByCode('AHA-2017');
+
       insights.add(MedicalInsight(
         id: 'bp-${DateTime.now().millisecondsSinceEpoch}',
         title: 'Blood Pressure Assessment',
         description: 'BP: $systolic/$diastolic mmHg',
         severity: severity,
         category: InsightCategory.vitalSignAnalysis,
-        guidelineReference: ClinicalGuidelines.ahaHypertension.code,
+        guidelineReference: bpGuideline?.code ?? 'AHA-2017',
         recommendations: ['Monitor blood pressure regularly'],
         generatedAt: DateTime.now(),
       ));
@@ -731,13 +710,15 @@ class MedicalAnalysisService {
   }) async {
     final insights = <MedicalInsight>[];
 
+    final riskGuideline = await ClinicalGuidelines.findByCode('ACC-AHA-PRIMARY-2019');
+
     insights.add(MedicalInsight(
       id: 'ascvd-${DateTime.now().millisecondsSinceEpoch}',
       title: 'Cardiovascular Risk',
       description: 'ASCVD risk assessment based on available data',
       severity: InsightSeverity.info,
       category: InsightCategory.riskAssessment,
-      guidelineReference: ClinicalGuidelines.accAhaRiskCalculator.code,
+      guidelineReference: riskGuideline?.code ?? 'ACC-AHA-PRIMARY-2019',
       recommendations: ['Complete lipid panel for accurate assessment'],
       generatedAt: DateTime.now(),
     ));
@@ -746,10 +727,10 @@ class MedicalAnalysisService {
   }
 
   /// Get guidelines relevant to patient's conditions
-  List<ClinicalGuidelineReference> getRelevantGuidelines(List<Icd10Code> conditions) {
+  Future<List<ClinicalGuidelineReference>> getRelevantGuidelines(List<Icd10Code> conditions) async {
     final guidelines = <ClinicalGuidelineReference>[];
     for (final condition in conditions) {
-      guidelines.addAll(ClinicalGuidelines.findForCondition(condition.code));
+      guidelines.addAll(await ClinicalGuidelines.findForCondition(condition.code));
     }
     return guidelines;
   }
