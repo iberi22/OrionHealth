@@ -1,0 +1,147 @@
+{
+  "metadata": {
+    "standard": "LOINC",
+    "version": "2.72",
+    "lastUpdated": "2024-03-01",
+    "source": "LOINC Database",
+    "sourceUrl": "https://loinc.org/downloads/",
+    "license": "LOINC License - https://loinc.org/license/",
+    "wikipediaBase": "https://en.wikipedia.org/wiki/",
+    "totalCount": 19
+  },
+  "data": [
+    {
+      "code": "718-7",
+      "displayName": "Hemoglobin [Mass/volume] in Blood",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hemoglobin_[Mass/volume]_in_Blood",
+      "searchTerms": []
+    },
+    {
+      "code": "4544-3",
+      "displayName": "Hematocrit [Volume fraction] of Blood",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hematocrit_[Volume_fraction]_of_Blood",
+      "searchTerms": []
+    },
+    {
+      "code": "6690-2",
+      "displayName": "Leukocytes [Count] in Blood by Automated count",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Leukocytes_[Count]_in_Blood_by_Automated_count",
+      "searchTerms": []
+    },
+    {
+      "code": "777-3",
+      "displayName": "Platelets [Count] in Blood by Automated count",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Platelets_[Count]_in_Blood_by_Automated_count",
+      "searchTerms": []
+    },
+    {
+      "code": "2345-7",
+      "displayName": "Glucose [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Glucose_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "4548-4",
+      "displayName": "Hemoglobin A1c/Hemoglobin.total in Blood",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hemoglobin_A1c/Hemoglobin.total_in_Blood",
+      "searchTerms": []
+    },
+    {
+      "code": "2160-0",
+      "displayName": "Creatinine [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Creatinine_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "3094-0",
+      "displayName": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Urea_nitrogen_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "2951-2",
+      "displayName": "Sodium [Moles/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Sodium_[Moles/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "2823-3",
+      "displayName": "Potassium [Moles/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Potassium_[Moles/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "2093-3",
+      "displayName": "Cholesterol [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Cholesterol_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "13457-7",
+      "displayName": "Cholesterol.LDL [Mass/volume] in Serum or Plasma by calculation",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Cholesterol.LDL_[Mass/volume]_in_Serum_or_Plasma_by_calculation",
+      "searchTerms": []
+    },
+    {
+      "code": "2085-9",
+      "displayName": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Cholesterol_in_HDL_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "2571-8",
+      "displayName": "Triglycerides [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Triglycerides_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "3016-3",
+      "displayName": "Thyrotropin [Units/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Thyrotropin_[Units/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "3026-2",
+      "displayName": "Thyroxine free T4 [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Thyroxine_free_T4_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "2276-4",
+      "displayName": "Ferritin [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Ferritin_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "2508-8",
+      "displayName": "Iron [Mass/volume] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Iron_[Mass/volume]_in_Serum_or_Plasma",
+      "searchTerms": []
+    },
+    {
+      "code": "2502-1",
+      "displayName": "Iron saturation [Mass ratio] in Serum or Plasma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Iron_saturation_[Mass_ratio]_in_Serum_or_Plasma",
+      "searchTerms": []
+    }
+  ]
+}

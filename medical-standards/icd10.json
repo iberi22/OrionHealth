@@ -1,0 +1,752 @@
+{
+  "metadata": {
+    "standard": "ICD-10",
+    "version": "2024-1",
+    "lastUpdated": "2024-01-01",
+    "source": "WHO ICD-10-CM 2024",
+    "sourceUrl": "https://www.cms.gov/medicare/coding-billing/icd-10-codes/icd-10-cm-codes",
+    "license": "WHO ICD-10 License - Public Domain",
+    "wikipediaBase": "https://en.wikipedia.org/wiki/",
+    "totalCount": 74
+  },
+  "data": [
+    {
+      "code": "E10",
+      "displayName": "Type 1 diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_1_diabetes_mellitus",
+      "searchTerms": [
+        "DM1",
+        "Diabetes tipo 1",
+        "Diabetes mellitus type I"
+      ]
+    },
+    {
+      "code": "E11",
+      "displayName": "Type 2 diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus",
+      "searchTerms": [
+        "DM2",
+        "Diabetes tipo 2",
+        "Diabetes mellitus type II"
+      ]
+    },
+    {
+      "code": "E08",
+      "displayName": "Diabetes mellitus due to underlying condition",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Diabetes_mellitus_due_to_underlying_condition",
+      "searchTerms": [
+        "Secondary diabetes"
+      ]
+    },
+    {
+      "code": "E09",
+      "displayName": "Drug or chemical induced diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Drug_or_chemical_induced_diabetes_mellitus",
+      "searchTerms": [
+        "Steroid diabetes",
+        "Glucocorticoid-induced diabetes"
+      ]
+    },
+    {
+      "code": "E12",
+      "displayName": "Malnutrition-related diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Malnutrition-related_diabetes_mellitus",
+      "searchTerms": [
+        "JR diabetes",
+        "Tropical diabetes"
+      ]
+    },
+    {
+      "code": "E13",
+      "displayName": "Other specified diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Other_specified_diabetes_mellitus",
+      "searchTerms": [
+        "Other diabetes",
+        "Diabetes NOS"
+      ]
+    },
+    {
+      "code": "E14",
+      "displayName": "Unspecified diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_diabetes_mellitus",
+      "searchTerms": [
+        "Diabetes NOS",
+        "Diabetes sin especificar"
+      ]
+    },
+    {
+      "code": "E10.1",
+      "displayName": "Type 1 diabetes mellitus with ketoacidosis",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_1_diabetes_mellitus_with_ketoacidosis",
+      "searchTerms": [
+        "DKA",
+        "Diabetic ketoacidosis"
+      ]
+    },
+    {
+      "code": "E11.21",
+      "displayName": "Type 2 diabetes mellitus with diabetic nephropathy",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus_with_diabetic_nephropathy",
+      "searchTerms": [
+        "Diabetic kidney disease",
+        "DKD"
+      ]
+    },
+    {
+      "code": "E11.31",
+      "displayName": "Type 2 diabetes mellitus with diabetic retinopathy",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus_with_diabetic_retinopathy",
+      "searchTerms": [
+        "Diabetic eye disease"
+      ]
+    },
+    {
+      "code": "E11.4",
+      "displayName": "Type 2 diabetes mellitus with diabetic neuropathy",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus_with_diabetic_neuropathy",
+      "searchTerms": [
+        "Diabetic peripheral neuropathy"
+      ]
+    },
+    {
+      "code": "E11.51",
+      "displayName": "Type 2 diabetes mellitus with diabetic peripheral angiopathy",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus_with_diabetic_peripheral_angiopathy",
+      "searchTerms": [
+        "Diabetic PAD",
+        "Diabetic vascular disease"
+      ]
+    },
+    {
+      "code": "E05.90",
+      "displayName": "Thyrotoxicosis, unspecified without thyrotoxic storm",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Thyrotoxicosis,_unspecified_without_thyrotoxic_storm",
+      "searchTerms": [
+        "Hyperthyroidism",
+        "Tirotoxicosis"
+      ]
+    },
+    {
+      "code": "E03.9",
+      "displayName": "Hypothyroidism, unspecified",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypothyroidism,_unspecified",
+      "searchTerms": [
+        "Underactive thyroid",
+        "Hipotiroidismo"
+      ]
+    },
+    {
+      "code": "E04.9",
+      "displayName": "Thyroid nodule, unspecified",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Thyroid_nodule,_unspecified",
+      "searchTerms": [
+        "Goiter",
+        "Bocio"
+      ]
+    },
+    {
+      "code": "E83.52",
+      "displayName": "Hypercalcemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypercalcemia",
+      "searchTerms": [
+        "High calcium"
+      ]
+    },
+    {
+      "code": "E83.51",
+      "displayName": "Hypocalcemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypocalcemia",
+      "searchTerms": [
+        "Low calcium",
+        "Tetany"
+      ]
+    },
+    {
+      "code": "E87.5",
+      "displayName": "Hyperkalemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hyperkalemia",
+      "searchTerms": [
+        "High potassium"
+      ]
+    },
+    {
+      "code": "E87.6",
+      "displayName": "Hypokalemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypokalemia",
+      "searchTerms": [
+        "Low potassium"
+      ]
+    },
+    {
+      "code": "E87.1",
+      "displayName": "Hyponatremia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hyponatremia",
+      "searchTerms": [
+        "Low sodium"
+      ]
+    },
+    {
+      "code": "E87.0",
+      "displayName": "Hypernatremia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypernatremia",
+      "searchTerms": [
+        "High sodium"
+      ]
+    },
+    {
+      "code": "E88.81",
+      "displayName": "Metabolic syndrome",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Metabolic_syndrome",
+      "searchTerms": [
+        "MetS",
+        "Insulin resistance syndrome"
+      ]
+    },
+    {
+      "code": "E27.40",
+      "displayName": "Unspecified adrenocortical insufficiency",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_adrenocortical_insufficiency",
+      "searchTerms": [
+        "Addison disease",
+        "Adrenal failure"
+      ]
+    },
+    {
+      "code": "E24.9",
+      "displayName": "Cushing's syndrome, unspecified",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Cushing's_syndrome,_unspecified",
+      "searchTerms": [
+        "Hypercortisolism"
+      ]
+    },
+    {
+      "code": "E28.2",
+      "displayName": "Polycystic ovarian syndrome",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Polycystic_ovarian_syndrome",
+      "searchTerms": [
+        "PCOS",
+        "Stein-Leventhal syndrome"
+      ]
+    },
+    {
+      "code": "E55.9",
+      "displayName": "Vitamin D deficiency, unspecified",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Vitamin_D_deficiency,_unspecified",
+      "searchTerms": [
+        "Hypovitaminosis D",
+        "Rickets"
+      ]
+    },
+    {
+      "code": "E79.0",
+      "displayName": "Hyperuricemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hyperuricemia",
+      "searchTerms": [
+        "Gota",
+        "Gout"
+      ]
+    },
+    {
+      "code": "F32.9",
+      "displayName": "Major depressive disorder, single episode, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Major_depressive_disorder,_single_episode,_unspecified",
+      "searchTerms": [
+        "MDD",
+        "Depression",
+        "Depresi\u00f3n mayor"
+      ]
+    },
+    {
+      "code": "F33.9",
+      "displayName": "Major depressive disorder, recurrent, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Major_depressive_disorder,_recurrent,_unspecified",
+      "searchTerms": [
+        "Recurrent depression",
+        "Depression recurrente"
+      ]
+    },
+    {
+      "code": "F34.1",
+      "displayName": "Dysthymic disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Dysthymic_disorder",
+      "searchTerms": [
+        "Persistent depressive disorder",
+        "Distimia"
+      ]
+    },
+    {
+      "code": "F31.9",
+      "displayName": "Bipolar disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Bipolar_disorder,_unspecified",
+      "searchTerms": [
+        "Bipolar",
+        "Manic-depressive illness"
+      ]
+    },
+    {
+      "code": "F41.1",
+      "displayName": "Generalized anxiety disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Generalized_anxiety_disorder",
+      "searchTerms": [
+        "GAD",
+        "Ansiedad generalizada"
+      ]
+    },
+    {
+      "code": "F41.0",
+      "displayName": "Panic disorder without agoraphobia",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Panic_disorder_without_agoraphobia",
+      "searchTerms": [
+        "Panic attacks",
+        "Trastorno de p\u00e1nico"
+      ]
+    },
+    {
+      "code": "F40.10",
+      "displayName": "Social anxiety disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Social_anxiety_disorder,_unspecified",
+      "searchTerms": [
+        "Social phobia",
+        "Fear of social situations"
+      ]
+    },
+    {
+      "code": "F43.10",
+      "displayName": "Post-traumatic stress disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Post-traumatic_stress_disorder,_unspecified",
+      "searchTerms": [
+        "PTSD",
+        "TEPT",
+        "Trauma disorder"
+      ]
+    },
+    {
+      "code": "F43.9",
+      "displayName": "Adjustment disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Adjustment_disorder,_unspecified",
+      "searchTerms": [
+        "Reaction to stress"
+      ]
+    },
+    {
+      "code": "F42.9",
+      "displayName": "Obsessive-compulsive disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Obsessive-compulsive_disorder,_unspecified",
+      "searchTerms": [
+        "OCD",
+        "TOC"
+      ]
+    },
+    {
+      "code": "F50.00",
+      "displayName": "Anorexia nervosa, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Anorexia_nervosa,_unspecified",
+      "searchTerms": [
+        "Eating disorder",
+        "Loss of appetite nervosa"
+      ]
+    },
+    {
+      "code": "F50.2",
+      "displayName": "Bulimia nervosa",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Bulimia_nervosa",
+      "searchTerms": [
+        "Binge eating disorder"
+      ]
+    },
+    {
+      "code": "F20.9",
+      "displayName": "Schizophrenia, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Schizophrenia,_unspecified",
+      "searchTerms": [
+        "Schizophrenia disorder"
+      ]
+    },
+    {
+      "code": "F22",
+      "displayName": "Delusional disorders",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Delusional_disorders",
+      "searchTerms": [
+        "Paranoia",
+        "Delusional disorder"
+      ]
+    },
+    {
+      "code": "F44.9",
+      "displayName": "Dissociative disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Dissociative_disorder,_unspecified",
+      "searchTerms": [
+        "DID",
+        "Multiple personality"
+      ]
+    },
+    {
+      "code": "F45.0",
+      "displayName": "Somatization disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Somatization_disorder",
+      "searchTerms": [
+        "Somatic symptom disorder"
+      ]
+    },
+    {
+      "code": "F60.9",
+      "displayName": "Personality disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Personality_disorder,_unspecified",
+      "searchTerms": [
+        "Personality disorder NOS"
+      ]
+    },
+    {
+      "code": "F10.20",
+      "displayName": "Alcohol dependence, uncomplicated",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Alcohol_dependence,_uncomplicated",
+      "searchTerms": [
+        "Alcoholism",
+        "Alcohol addiction",
+        "AUD"
+      ]
+    },
+    {
+      "code": "F11.20",
+      "displayName": "Opioid dependence, uncomplicated",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Opioid_dependence,_uncomplicated",
+      "searchTerms": [
+        "Opioid addiction",
+        "OUD"
+      ]
+    },
+    {
+      "code": "F12.20",
+      "displayName": "Cannabis dependence, uncomplicated",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Cannabis_dependence,_uncomplicated",
+      "searchTerms": [
+        "Marijuana addiction",
+        "Cannabis addiction"
+      ]
+    },
+    {
+      "code": "F15.20",
+      "displayName": "Other stimulant dependence, uncomplicated",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Other_stimulant_dependence,_uncomplicated",
+      "searchTerms": [
+        "Cocaine dependence",
+        "Methamphetamine use disorder"
+      ]
+    },
+    {
+      "code": "F84.0",
+      "displayName": "Autistic disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Autistic_disorder",
+      "searchTerms": [
+        "ASD",
+        "Autism",
+        "Kanner autism"
+      ]
+    },
+    {
+      "code": "F90.9",
+      "displayName": "Attention-deficit hyperactivity disorder, unspecified type",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Attention-deficit_hyperactivity_disorder,_unspecified_type",
+      "searchTerms": [
+        "ADHD",
+        "ADD",
+        "TDAH"
+      ]
+    },
+    {
+      "code": "F03.90",
+      "displayName": "Unspecified dementia without behavioral disturbance",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_dementia_without_behavioral_disturbance",
+      "searchTerms": [
+        "Cognitive decline",
+        "Demencia",
+        "Alzheimer"
+      ]
+    },
+    {
+      "code": "F06.7",
+      "displayName": "Mild neurocognitive disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Mild_neurocognitive_disorder",
+      "searchTerms": [
+        "Mild cognitive impairment",
+        "MCI"
+      ]
+    },
+    {
+      "code": "J40",
+      "displayName": "Bronchitis, not specified as acute or chronic",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Bronchitis,_not_specified_as_acute_or_chronic",
+      "searchTerms": [
+        "Chest cold",
+        "Acute bronchitis",
+        "Bronquitis aguda"
+      ]
+    },
+    {
+      "code": "J42",
+      "displayName": "Unspecified chronic bronchitis",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_chronic_bronchitis",
+      "searchTerms": [
+        "Chronic bronchitis",
+        "Bronquitis cr\u00f3nica"
+      ]
+    },
+    {
+      "code": "J43.9",
+      "displayName": "Emphysema, unspecified",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Emphysema,_unspecified",
+      "searchTerms": [
+        "Emphysema",
+        "COPD emphysema"
+      ]
+    },
+    {
+      "code": "J47.9",
+      "displayName": "Bronchiectasis, uncomplicated",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Bronchiectasis,_uncomplicated",
+      "searchTerms": [
+        "Bronchiectasis",
+        "Dilated airways"
+      ]
+    },
+    {
+      "code": "J44.1",
+      "displayName": "Chronic obstructive pulmonary disease with acute exacerbation",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_obstructive_pulmonary_disease_with_acute_exacerbation",
+      "searchTerms": [
+        "COPD flare",
+        "Acute COPD exacerbation",
+        "Exacerbaci\u00f3n EPOC"
+      ]
+    },
+    {
+      "code": "J44.0",
+      "displayName": "Chronic obstructive pulmonary disease with acute bronchitis",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_obstructive_pulmonary_disease_with_acute_bronchitis",
+      "searchTerms": [
+        "COPD with acute lower respiratory infection"
+      ]
+    },
+    {
+      "code": "J45.909",
+      "displayName": "Unspecified asthma, uncomplicated",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_asthma,_uncomplicated",
+      "searchTerms": [
+        "Asma",
+        "Asthma"
+      ]
+    },
+    {
+      "code": "J45.41",
+      "displayName": "Chronic obstructive asthma with acute exacerbation",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_obstructive_asthma_with_acute_exacerbation",
+      "searchTerms": [
+        "Asthma attack",
+        "Acute asthma exacerbation"
+      ]
+    },
+    {
+      "code": "J96.90",
+      "displayName": "Respiratory failure, unspecified",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Respiratory_failure,_unspecified",
+      "searchTerms": [
+        "Acute respiratory failure",
+        "Insuficiencia respiratoria"
+      ]
+    },
+    {
+      "code": "J80",
+      "displayName": "Acute respiratory distress syndrome",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acute_respiratory_distress_syndrome",
+      "searchTerms": [
+        "ARDS",
+        "Shock lung"
+      ]
+    },
+    {
+      "code": "J18.9",
+      "displayName": "Pneumonia, unspecified organism",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Pneumonia,_unspecified_organism",
+      "searchTerms": [
+        "Neumon\u00eda",
+        "Lung infection"
+      ]
+    },
+    {
+      "code": "N17.9",
+      "displayName": "Acute kidney failure, unspecified",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acute_kidney_failure,_unspecified",
+      "searchTerms": [
+        "AKI",
+        "Acute renal failure",
+        "Insuficiencia renal aguda"
+      ]
+    },
+    {
+      "code": "N17.0",
+      "displayName": "Acute kidney failure with tubular necrosis",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acute_kidney_failure_with_tubular_necrosis",
+      "searchTerms": [
+        "ATN",
+        "Acute tubular necrosis"
+      ]
+    },
+    {
+      "code": "N00.9",
+      "displayName": "Acute nephritic syndrome, unspecified",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acute_nephritic_syndrome,_unspecified",
+      "searchTerms": [
+        "Acute glomerulonephritis",
+        "AGN"
+      ]
+    },
+    {
+      "code": "N18.9",
+      "displayName": "Chronic kidney disease, unspecified",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_unspecified",
+      "searchTerms": [
+        "CKD",
+        "Chronic renal disease",
+        "IRC"
+      ]
+    },
+    {
+      "code": "N18.1",
+      "displayName": "Chronic kidney disease, stage 1",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_1",
+      "searchTerms": [
+        "CKD stage 1"
+      ]
+    },
+    {
+      "code": "N18.2",
+      "displayName": "Chronic kidney disease, stage 2",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_2",
+      "searchTerms": [
+        "CKD stage 2"
+      ]
+    },
+    {
+      "code": "N18.3",
+      "displayName": "Chronic kidney disease, stage 3",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_3",
+      "searchTerms": [
+        "CKD stage 3",
+        "Moderately decreased kidney function"
+      ]
+    },
+    {
+      "code": "N18.4",
+      "displayName": "Chronic kidney disease, stage 4",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_4",
+      "searchTerms": [
+        "CKD stage 4",
+        "Severely decreased kidney function"
+      ]
+    },
+    {
+      "code": "N18.5",
+      "displayName": "Chronic kidney disease, stage 5",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_5",
+      "searchTerms": [
+        "CKD stage 5",
+        "End-stage renal disease",
+        "ESRD"
+      ]
+    },
+    {
+      "code": "N18.6",
+      "displayName": "End stage renal disease",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/End_stage_renal_disease",
+      "searchTerms": [
+        "ESRD",
+        "Kidney failure",
+        "Renal failure"
+      ]
+    },
+    {
+      "code": "N39.0",
+      "displayName": "Urinary tract infection, site not specified",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Urinary_tract_infection,_site_not_specified",
+      "searchTerms": [
+        "UTI",
+        "cystitis",
+        "Infecci\u00f3n urinaria"
+      ]
+    }
+  ]
+}
