@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
@@ -27,9 +26,8 @@ enum DocumentType {
 
 /// Medical document reference (PDF, image, etc.).
 @collection
-class MedicalDocument extends Equatable {
-  Id isarId = Isar.autoIncrement;
-
+@JsonSerializable()
+class MedicalDocument {
   MedicalDocument({
     required this.id,
     required this.title,
@@ -48,9 +46,7 @@ class MedicalDocument extends Equatable {
     this.syncStatus = SyncStatus.pending,
     this.encryptedMetadata,
   });
-
-  @Index(unique: true)
-  final String id;
+  Id id = Isar.autoIncrement;
 
   final String title;
 
@@ -105,7 +101,7 @@ class MedicalDocument extends Equatable {
   }
 
   MedicalDocument copyWith({
-    String? id,
+    int? id,
     String? title,
     DocumentType? documentType,
     String? filePath,
@@ -146,23 +142,4 @@ class MedicalDocument extends Equatable {
       _$MedicalDocumentFromJson(json);
   Map<String, dynamic> toJson() => _$MedicalDocumentToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        title,
-        documentType,
-        filePath,
-        mimeType,
-        documentDate,
-        createdAt,
-        updatedAt,
-        provider,
-        facility,
-        icd10Codes,
-        loincCodes,
-        notes,
-        source,
-        syncStatus,
-        encryptedMetadata,
-      ];
 }

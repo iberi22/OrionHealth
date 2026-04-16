@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
@@ -8,9 +7,8 @@ part 'vital_sign.g.dart';
 /// Vital sign reading with timestamp.
 /// Sensitive: vital values are encrypted at rest.
 @collection
-class VitalSign extends Equatable {
-  Id isarId = Isar.autoIncrement;
-
+@JsonSerializable()
+class VitalSign {
   VitalSign({
     required this.id,
     required this.loincCode,
@@ -25,9 +23,7 @@ class VitalSign extends Equatable {
     this.encryptedValue,
     this.notes,
   });
-
-  @Index(unique: true)
-  final String id;
+  Id id = Isar.autoIncrement;
 
   /// LOINC code for this vital sign (e.g. "8867-4" for Heart rate).
   @Index()
@@ -92,7 +88,7 @@ class VitalSign extends Equatable {
   }
 
   VitalSign copyWith({
-    String? id,
+    int? id,
     String? loincCode,
     String? componentName,
     String? value,
@@ -124,19 +120,4 @@ class VitalSign extends Equatable {
   factory VitalSign.fromJson(Map<String, dynamic> json) => _$VitalSignFromJson(json);
   Map<String, dynamic> toJson() => _$VitalSignToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        loincCode,
-        componentName,
-        value,
-        unit,
-        recordedAt,
-        createdAt,
-        updatedAt,
-        source,
-        syncStatus,
-        encryptedValue,
-        notes,
-      ];
 }

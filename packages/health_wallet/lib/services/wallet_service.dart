@@ -1,16 +1,10 @@
 import 'package:isar/isar.dart';
 import '../models/health_record.dart';
-import '../models/health_record.g.dart';
 import '../models/lab_result.dart';
-import '../models/lab_result.g.dart';
 import '../models/vital_sign.dart';
-import '../models/vital_sign.g.dart';
 import '../models/medication_entry.dart';
-import '../models/medication_entry.g.dart';
 import '../models/medical_document.dart';
-import '../models/medical_document.g.dart';
 import '../models/medical_event.dart';
-import '../models/medical_event.g.dart';
 import 'encryption_service.dart';
 
 /// Main service for managing the health wallet

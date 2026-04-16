@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
@@ -27,9 +26,8 @@ enum EventType {
 
 /// Generic medical event (appointment, procedure, hospital visit).
 @collection
-class MedicalEvent extends Equatable {
-  Id isarId = Isar.autoIncrement;
-
+@JsonSerializable()
+class MedicalEvent {
   MedicalEvent({
     required this.id,
     required this.eventType,
@@ -48,9 +46,7 @@ class MedicalEvent extends Equatable {
     this.syncStatus = SyncStatus.pending,
     this.encryptedNotes,
   });
-
-  @Index(unique: true)
-  final String id;
+  Id id = Isar.autoIncrement;
 
   @Enumerated(EnumType.name)
   @Index()
@@ -97,7 +93,7 @@ class MedicalEvent extends Equatable {
   }
 
   MedicalEvent copyWith({
-    String? id,
+    int? id,
     EventType? eventType,
     String? description,
     DateTime? eventDate,
@@ -138,23 +134,4 @@ class MedicalEvent extends Equatable {
       _$MedicalEventFromJson(json);
   Map<String, dynamic> toJson() => _$MedicalEventToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        eventType,
-        description,
-        eventDate,
-        endDate,
-        createdAt,
-        updatedAt,
-        provider,
-        facility,
-        icd10Codes,
-        cptCodes,
-        loincCodes,
-        notes,
-        source,
-        syncStatus,
-        encryptedNotes,
-      ];
 }

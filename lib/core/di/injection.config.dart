@@ -94,7 +94,7 @@ extension GetItInjectableX on _i1.GetIt {
     final databaseModule = _$DatabaseModule();
     gh.lazySingleton<_i3.EmbeddingsAdapter>(
         () => memoryModule.embeddingsAdapter);
-    gh.lazySingleton<_i4.EncryptionService>(() => _i4.EncryptionService());
+    gh.lazySingleton<_i4.EncryptionService>(() => _i4.EncryptionServiceImpl());
     gh.lazySingleton<_i5.FilePickerService>(() => _i5.FilePickerServiceImpl());
     gh.lazySingleton<_i6.ImagePickerService>(
         () => _i6.ImagePickerServiceImpl());

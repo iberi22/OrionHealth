@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/ble_sharing_service.dart';
-import 'ble_sharing_cubit.dart';
+import '../../application/ble_sharing_cubit.dart';
 
 class SharePage extends StatelessWidget {
   const SharePage({super.key});

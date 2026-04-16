@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
@@ -12,9 +11,8 @@ part 'health_record.g.dart';
 /// Aggregated patient health record model.
 /// Contains references to all health data sub-collections.
 @collection
-class HealthRecord extends Equatable {
-  Id isarId = Isar.autoIncrement;
-
+@JsonSerializable()
+class HealthRecord {
   HealthRecord({
     required this.id,
     required this.patientId,
@@ -33,9 +31,7 @@ class HealthRecord extends Equatable {
     this.syncStatus = SyncStatus.pending,
     this.encryptedSensitiveFields,
   });
-
-  @Index(unique: true)
-  final String id;
+  Id id = Isar.autoIncrement;
 
   /// External patient identifier.
   @Index()
@@ -95,7 +91,7 @@ class HealthRecord extends Equatable {
   }
 
   HealthRecord copyWith({
-    String? id,
+    int? id,
     String? patientId,
     String? firstName,
     String? lastName,
@@ -136,23 +132,4 @@ class HealthRecord extends Equatable {
       _$HealthRecordFromJson(json);
   Map<String, dynamic> toJson() => _$HealthRecordToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        patientId,
-        firstName,
-        lastName,
-        dateOfBirth,
-        createdAt,
-        updatedAt,
-        allergies,
-        conditions,
-        bloodType,
-        organDonor,
-        emergencyContactName,
-        emergencyContactPhone,
-        primaryPhysician,
-        syncStatus,
-        encryptedSensitiveFields,
-      ];
 }
