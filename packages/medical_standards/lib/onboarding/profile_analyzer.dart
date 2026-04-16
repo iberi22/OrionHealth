@@ -68,12 +68,21 @@ class ProfileAnalyzer {
       categories.addAll(_mapSymptomToCategories(symptom));
     }
 
+    // Priority tiers
+    final tier1 = {
+      MedicalContextCategory.preventive,
+      if (currentConditions.isNotEmpty) ..._mapConditionToCategories(currentConditions.first),
+    };
+    final tier2 = categories.difference(tier1);
+
     // Build the relevant standards
     return RelevantStandards(
       categories: categories,
-      icd10Codes: CategoryIcd10Mapping.getIcd10Prefixes(categories),
-      loincCodes: CategoryLoincMapping.getLoincCodes(categories),
-      medicationClasses: CategoryMedicationMapping.getDrugClasses(categories),
+      tier1: tier1,
+      tier2: tier2,
+      icd10Codes: CategoryIcd10.getIcd10Prefixes(categories),
+      loincCodes: CategoryLoinc.getLoincCodes(categories),
+      medicationClasses: CategoryMedications.getDrugClasses(categories),
       guidelineIds: _getGuidelineIds(categories),
     );
   }
@@ -224,7 +233,7 @@ class ProfileAnalyzer {
       categories.add(MedicalContextCategory.cardiovascular);
       categories.add(MedicalContextCategory.neurology);
     }
-    if (lower.contains('joint pain') || lower.contains('dolor articular')) {
+    if (lower.contains('joint pain') || lower.contains('dol articular')) {
       categories.add(MedicalContextCategory.musculoskeletal);
     }
 

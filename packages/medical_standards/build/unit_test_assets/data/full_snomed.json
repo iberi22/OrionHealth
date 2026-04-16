@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "version": "2024-01-31",
+    "lastUpdated": "2024-01-31",
+    "source": "SNOMED International",
+    "sourceUrl": "https://www.snomed.org/",
+    "license": "SNOMED CT License Required — IHTSDO/SNOMED International. Requires acceptance of the SNOMED CT License Agreement. NOT for direct redistribution.",
+    "totalCount": 18,
+    "format": "snomedct_concepts_snapshot"
+  },
+  "data": [
+    {"code": "76684001", "displayName": "Diabetes mellitus type 1", "fullySpecifiedName": "Diabetes mellitus type 1 (disorder)", "semanticTag": "disorder", "icd10Mappings": ["E10"], "loincMappings": [], "description": "Autoimmune destruction of pancreatic beta cells"},
+    {"code": "44054006", "displayName": "Diabetes mellitus type 2", "fullySpecifiedName": "Diabetes mellitus type 2 (disorder)", "semanticTag": "disorder", "icd10Mappings": ["E11"], "loincMappings": [], "description": "Insulin resistance with relative insulin deficiency"},
+    {"code": "38341003", "displayName": "Hypertensive disorder", "fullySpecifiedName": "Hypertensive disorder, systemic arterial (disorder)", "semanticTag": "disorder", "icd10Mappings": ["I10"], "loincMappings": [], "description": "Sustained elevation of systemic arterial blood pressure"},
+    {"code": "49436004", "displayName": "Atrial fibrillation", "fullySpecifiedName": "Atrial fibrillation (disorder)", "semanticTag": "disorder", "icd10Mappings": ["I48.91"], "loincMappings": [], "description": "Irregular atrial rhythm"},
+    {"code": "84114007", "displayName": "Heart failure", "fullySpecifiedName": "Heart failure (disorder)", "semanticTag": "disorder", "icd10Mappings": ["I50.9"], "loincMappings": [], "description": "Clinical syndrome of cardiac dysfunction"},
+    {"code": "13644009", "displayName": "Hypercholesterolemia", "fullySpecifiedName": "Hypercholesterolemia (disorder)", "semanticTag": "disorder", "icd10Mappings": ["E78.5"], "loincMappings": [], "description": "Elevated LDL cholesterol"},
+    {"code": "414916001", "displayName": "Obesity", "fullySpecifiedName": "Obesity (disorder)", "semanticTag": "disorder", "icd10Mappings": ["E66.9"], "loincMappings": [], "description": "BMI >= 30 kg/m²"},
+    {"code": "195967001", "displayName": "Asthma", "fullySpecifiedName": "Asthma (disorder)", "semanticTag": "disorder", "icd10Mappings": ["J45.909"], "loincMappings": [], "description": "Chronic inflammatory airway disease"},
+    {"code": "8410007", "displayName": "Hypothyroidism", "fullySpecifiedName": "Hypothyroidism (disorder)", "semanticTag": "disorder", "icd10Mappings": ["E03.9"], "loincMappings": ["3016-3"], "description": "Underactive thyroid gland"},
+    {"code": "34486009", "displayName": "Hyperthyroidism", "fullySpecifiedName": "Hyperthyroidism (disorder)", "semanticTag": "disorder", "icd10Mappings": ["E05.90"], "loincMappings": ["3016-3", "3026-2"], "description": "Overactive thyroid gland"},
+    {"code": "398044002", "displayName": "Major depression", "fullySpecifiedName": "Major depression disorder (disorder)", "semanticTag": "disorder", "icd10Mappings": ["F32.9"], "loincMappings": [], "description": "Major depressive episode"},
+    {"code": "48694002", "displayName": "Generalized anxiety disorder", "fullySpecifiedName": "Generalized anxiety disorder (disorder)", "semanticTag": "disorder", "icd10Mappings": ["F41.1"], "loincMappings": [], "description": "Chronic excessive worry"},
+    {"code": "84229001", "displayName": "Fatigue", "fullySpecifiedName": "Fatigue (finding)", "semanticTag": "finding", "icd10Mappings": ["R53.83"], "loincMappings": [], "description": "Persistent tiredness"},
+    {"code": "29857009", "displayName": "Chest pain", "fullySpecifiedName": "Chest pain (finding)", "semanticTag": "finding", "icd10Mappings": ["R07.9"], "loincMappings": [], "description": "Pain in chest region"},
+    {"code": "25064002", "displayName": "Headache", "fullySpecifiedName": "Headache (finding)", "semanticTag": "finding", "icd10Mappings": ["R51.9"], "loincMappings": [], "description": "Pain in head"},
+    {"code": "43396008", "displayName": "Hemoglobin A1c", "fullySpecifiedName": "Hemoglobin A1c (substance)", "semanticTag": "substance", "icd10Mappings": [], "loincMappings": ["4548-4"], "description": "Glycated hemoglobin"},
+    {"code": "33489001", "displayName": "Glucose measurement", "fullySpecifiedName": "Glucose measurement (procedure)", "semanticTag": "procedure", "icd10Mappings": [], "loincMappings": ["2345-7"], "description": "Laboratory glucose test"}
+  ]
+}

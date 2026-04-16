@@ -4,10 +4,7 @@
 /// classes. Only the categories relevant to a user's profile are downloaded,
 /// reducing the data footprint from ~3GB to ~50-200MB per user.
 
-import '../icd10/icd10.dart';
-import '../loinc/loinc.dart';
-import '../medications/medications.dart';
-import '../guidelines/guidelines.dart';
+import '../medical_standards.dart';
 
 /// Medical context categories that can be selectively downloaded
 enum MedicalContextCategory {
@@ -31,6 +28,7 @@ enum MedicalContextCategory {
   mensHealth,
   geriatrics,
   emergency,
+  ophthalmology,
 }
 
 /// Holds the result of profile analysis: which categories + priority tiers
@@ -42,10 +40,19 @@ class RelevantStandards {
   final Set<MedicalContextCategory> tier1; // Download immediately
   final Set<MedicalContextCategory> tier2; // Download in background
 
+  final Set<String> icd10Codes;
+  final Set<String> loincCodes;
+  final Set<String> medicationClasses;
+  final List<String> guidelineIds;
+
   const RelevantStandards({
     required this.categories,
     required this.tier1,
     required this.tier2,
+    this.icd10Codes = const {},
+    this.loincCodes = const {},
+    this.medicationClasses = const {},
+    this.guidelineIds = const [],
   });
 
   /// Empty result with only preventive care
@@ -53,6 +60,9 @@ class RelevantStandards {
         categories: {MedicalContextCategory.preventive},
         tier1: {MedicalContextCategory.preventive},
         tier2: {},
+        icd10Codes: CategoryIcd10.forCategory(MedicalContextCategory.preventive),
+        loincCodes: CategoryLoinc.forCategory(MedicalContextCategory.preventive),
+        medicationClasses: CategoryMedications.forCategory(MedicalContextCategory.preventive),
       );
 
   bool get isEmpty => categories.isEmpty;
@@ -88,7 +98,6 @@ class CategoryIcd10 {
       'I25.10', 'I25.9', 'I25.00',
       'I73.9', 'I65.29', 'I71.9', 'I71.00',
       'I83.90', 'I89.0',
-      'I80.10', // DVT
       'I26.99', // Pulmonary embolism
       'I80.20', 'I80.10', 'I82.409',
     },
@@ -147,7 +156,6 @@ class CategoryIcd10 {
       'C18.9', // Colon cancer
       'C61', // Prostate cancer
       'C43.9', // Melanoma
-      'C61', // Prostate
       'C56.9', // Ovarian
       'C64.9', // Renal cell
       'C22.0', // Hepatocellular carcinoma
@@ -254,13 +262,23 @@ class CategoryIcd10 {
       'R10.9', // Abdominal pain
       'R50.9', // Fever
       'J96.00', // Respiratory failure
-      'R55', // Syncope
+      'R55.9', // Syncope
     },
+    MedicalContextCategory.ophthalmology: {},
   };
 
   /// Get all ICD-10 codes for a category
   static Set<String> forCategory(MedicalContextCategory cat) =>
       codes[cat] ?? {};
+
+  /// Get prefixes for a set of categories
+  static Set<String> getIcd10Prefixes(Set<MedicalContextCategory> cats) {
+    final prefixes = <String>{};
+    for (final cat in cats) {
+      prefixes.addAll(forCategory(cat));
+    }
+    return prefixes;
+  }
 }
 
 /// Maps categories to relevant LOINC lab codes
@@ -328,7 +346,6 @@ class CategoryLoinc {
       '2502-1', // Iron saturation
       '2951-2', // Sodium
       '2823-3', // Potassium
-      '3094-0', // BUN
       '44784-7', // eGFR
       '47563-4', // Urine protein
     },
@@ -388,6 +405,15 @@ class CategoryLoinc {
 
   static Set<String> forCategory(MedicalContextCategory cat) =>
       codes[cat] ?? {};
+
+  /// Get LOINC codes for a set of categories
+  static Set<String> getLoincCodes(Set<MedicalContextCategory> cats) {
+    final results = <String>{};
+    for (final cat in cats) {
+      results.addAll(forCategory(cat));
+    }
+    return results;
+  }
 }
 
 /// Maps categories to relevant medication drug classes
@@ -502,4 +528,13 @@ class CategoryMedications {
 
   static Set<String> forCategory(MedicalContextCategory cat) =>
       drugClasses[cat] ?? {};
+
+  /// Get drug classes for a set of categories
+  static Set<String> getDrugClasses(Set<MedicalContextCategory> cats) {
+    final results = <String>{};
+    for (final cat in cats) {
+      results.addAll(forCategory(cat));
+    }
+    return results;
+  }
 }
