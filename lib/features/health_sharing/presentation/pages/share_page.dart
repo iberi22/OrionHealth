@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../application/sharing_cubit.dart';
-import '../domain/entities/shared_health_package.dart';
+import '../../application/sharing_cubit.dart';
+import '../../domain/entities/shared_health_package.dart';
 
 /// Page to share health data with another OrionHealth node
 class SharePage extends StatelessWidget {
