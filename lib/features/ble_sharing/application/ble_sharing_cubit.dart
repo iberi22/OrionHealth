@@ -141,7 +141,7 @@ class BleSharingCubit extends Cubit<BleSharingState> {
     });
   }
 
-  void _handleBleState(BleSharingState state) {
+  void _handleBleState(BleServiceState state) {
     if (state.status == 'scanning') {
       emit(BleSharingScanning(MedicalTransferMethod.ble));
     } else if (state.status == 'advertising') {
@@ -214,7 +214,7 @@ class BleSharingCubit extends Cubit<BleSharingState> {
     }
   }
 
-  void _handleWifiState(WifiSharingState state) {
+  void _handleWifiState(WifiServiceState state) {
     if (state.status == 'discovering') {
       emit(BleSharingScanning(MedicalTransferMethod.wifi));
     } else if (state.status == 'hosting') {
