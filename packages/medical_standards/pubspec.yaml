@@ -5,7 +5,7 @@ publish_to: 'none'
 repository: https://github.com/iberi22/OrionHealth
 
 environment:
-  sdk: ^3.10.0
+  sdk: ^3.7.0
 
 dependencies:
   flutter:
