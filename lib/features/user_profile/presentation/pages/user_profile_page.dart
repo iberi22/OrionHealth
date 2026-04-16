@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../auth/presentation/receive_medical_data_page.dart';
-import '../../../auth/presentation/share_medical_data_page.dart';
+import '../../../health_sharing/presentation/pages/receive_page.dart';
+import '../../../health_sharing/presentation/pages/share_page.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
@@ -88,12 +88,12 @@ class _UserProfileView extends StatelessWidget {
                     _InfoTile(
                       icon: Icons.bluetooth_audio,
                       title: 'Compartir mis Datos',
-                      subtitle: 'Enviar historial al médico',
+                      subtitle: 'Enviar historial al médico (BLE)',
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ShareMedicalDataPage(),
+                            builder: (context) => const SharePage(),
                           ),
                         );
                       },
@@ -101,12 +101,12 @@ class _UserProfileView extends StatelessWidget {
                     _InfoTile(
                       icon: Icons.download_for_offline,
                       title: 'Recibir Datos',
-                      subtitle: 'Modo receptor (Médico)',
+                      subtitle: 'Modo receptor (Médico) (BLE)',
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ReceiveMedicalDataPage(),
+                            builder: (context) => const ReceivePage(),
                           ),
                         );
                       },

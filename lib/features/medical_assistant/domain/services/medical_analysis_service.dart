@@ -116,11 +116,7 @@ class MedicalAnalysisService {
   SafeAnalysisResponse analyzeLabWithConfidence({
     required String labCode,
     required double value,
-<<<<<<< HEAD
-    String? unit,
-=======
     required String unit,
->>>>>>> origin/main
     String? patientCondition,
   }) {
     final loinc = LoincCommonLabs.findByCode(labCode);
@@ -159,11 +155,7 @@ class MedicalAnalysisService {
                 'INTERPRETACIÓN (con alta confianza):\n'
                 'Este valor elevado podría estar relacionado con ${_getPossibleCondition(loinc, patientCondition)}.\n\n'
                 'BASADO EN:\n'
-<<<<<<< HEAD
-                '• Tu resultado: $value ${unit ?? loinc.unit}\n'
-=======
                 '• Tu resultado: $value ${unit}\n'
->>>>>>> origin/main
                 '• Guideline de referencia: ${loinc.component}\n'
                 '• Condición conocida: ${patientCondition ?? "no especificada"}\n\n'
                 'NOTA: Esta interpretación se basa en datos objetivos y guías clínicas, '
@@ -171,30 +163,15 @@ class MedicalAnalysisService {
 
             suggestedExams = _getSuggestedExamsForLab(loinc);
             lifestyleRecs = _getLifestyleRecs(loinc);
-<<<<<<< HEAD
-          } else {
-            explanation += 'PODRÍA ESTAR RELACIONADO CON:\n'
-                'Según el valor elevado, podría haber una relación con ${_getPossibleCondition(loinc, patientCondition)}.\n'
-                'Sin embargo, no tengo suficiente certeza para una interpretación definitiva.\n\n'
-=======
           } else if (confidence >= ConfidenceThreshold.mediumConfidence) {
             possibleInterpretation =
                 'PODRÍA ESTAR RELACIONADO CON:\n'
                 'Según el valor elevado, podría haber una relación con ${_getPossibleCondition(loinc, patientCondition)}.\n'
                 'Sin embargo, no tengo certeza suficiente para afirmarlo.\n\n'
->>>>>>> origin/main
                 'INFORMACIÓN ADICIONAL NECESARIA:\n';
 
             suggestedExams = _getSuggestedExamsForLab(loinc);
             lifestyleRecs = ['Lleva un registro de tus síntomas', 'Mantén una dieta equilibrada'];
-<<<<<<< HEAD
-
-            if (confidence < ConfidenceThreshold.mediumConfidence) {
-              explanation += 'Este valor elevado tiene múltiples causas posibles.\n'
-                  'No tengo suficiente información para determinar la causa específica.\n';
-              suggestedExams.insert(0, 'Consulta con tu médico para interpretar este resultado');
-            }
-=======
           } else {
             possibleInterpretation =
                 'Este valor elevado tiene múltiples causas posibles.\n'
@@ -204,7 +181,6 @@ class MedicalAnalysisService {
               'Consulta con tu médico para interpretar este resultado',
               ..._getSuggestedExamsForLab(loinc),
             ];
->>>>>>> origin/main
           }
         } else {
           explanation += '• Tu valor está dentro del rango normal.\n';
@@ -448,14 +424,8 @@ class MedicalAnalysisService {
       }
 
       confidence = 0.40;
-<<<<<<< HEAD
-      explanation +=
-          'El cansancio persistente tiene muchas causas posibles. '
-          'Sin embargo, no tengo certeza suficiente para una interpretación definitiva.\n\n'
-=======
       possibleInterpretation =
           'El cansancio persistente tiene muchas causas posibles.\n\n'
->>>>>>> origin/main
           'MIS RECOMENDACIONES:\n'
           '1. Consulta con tu médico para una evaluación completa\n'
           '2. Considera hacerte los siguientes exámenes:\n'
