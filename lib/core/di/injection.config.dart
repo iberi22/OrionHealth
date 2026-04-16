@@ -53,11 +53,11 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i8;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i19;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i10;
-import '../../features/local_agent/infrastructure/adapters/gemma_llm_adapter.dart'
-    as _i11;
-import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
     as _i9;
+import '../../features/local_agent/infrastructure/adapters/gemma_llm_adapter.dart'
+    as _i10;
+import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
+    as _i11;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i32;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart' as _i33;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
@@ -102,17 +102,17 @@ extension GetItInjectableX on _i1.GetIt {
       () => databaseModule.isar,
       preResolve: true,
     );
-    gh.factory<_i8.LlmAdapter>(
-      () => _i9.MockLlmAdapter(),
-      instanceName: 'mock',
-    );
     gh.lazySingleton<_i8.LlmAdapter>(
-      () => _i10.GeminiLlmAdapter(apiKey: gh<String>()),
+      () => _i9.GeminiLlmAdapter(apiKey: gh<String>()),
       instanceName: 'gemini',
     );
     gh.lazySingleton<_i8.LlmAdapter>(
-      () => _i11.GemmaLlmAdapter(),
+      () => _i10.GemmaLlmAdapter(),
       instanceName: 'gemma',
+    );
+    gh.factory<_i8.LlmAdapter>(
+      () => _i11.MockLlmAdapter(),
+      instanceName: 'mock',
     );
     gh.lazySingleton<_i12.MedicationRepository>(
         () => _i13.IsarMedicationRepository(gh<_i7.Isar>()));
