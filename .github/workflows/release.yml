@@ -1,17 +1,9 @@
-name: Android Build & Release
+name: Release APK
 
 on:
   push:
-    branches: [ "main", "develop", "git-core-v2" ]
-  pull_request:
-    branches: [ "main", "develop" ]
-  workflow_dispatch:
-    inputs:
-      force_run:
-        description: 'Force run the workflow'
-        required: false
-        default: 'false'
-        type: boolean
+    tags:
+      - 'v*'
 
 env:
   FLUTTER_VERSION: '3.24.0'
@@ -32,7 +24,7 @@ jobs:
             exit 1
           fi
 
-  analyze:
+  analyze_and_test:
     needs: validate-git-core
     runs-on: ubuntu-latest
 
@@ -50,6 +42,9 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Run build_runner
+        run: dart run build_runner build --delete-conflicting-outputs
+
       - name: Run flutter analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
@@ -57,7 +52,7 @@ jobs:
         run: flutter test --reporter compact
 
   build:
-    needs: analyze
+    needs: analyze_and_test
     runs-on: ubuntu-latest
 
     steps:
@@ -80,22 +75,8 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Clean Flutter build
-        run: flutter clean
-
-      - name: Regenerate plugin registrant
-        run: flutter pub get
-
       - name: Run build_runner
         run: dart run build_runner build --delete-conflicting-outputs
-
-      - name: Remove integration_test from plugin registrant
-        run: |
-          REGISTRANT_FILE="android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java"
-          if [ -f "$REGISTRANT_FILE" ]; then
-            sed -i '/integration_test/d' "$REGISTRANT_FILE"
-            echo "Removed integration_test references from GeneratedPluginRegistrant.java"
-          fi
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
@@ -103,28 +84,58 @@ jobs:
       - name: Build debug APK
         run: flutter build apk --debug
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: Build release AAB
+        run: flutter build appbundle --release
 
-      - name: Upload debug APK
+      - name: Calculate SHA256 for release APK
+        run: |
+          sha256sum build/app/outputs/flutter-apk/app-release.apk > build/app/outputs/flutter-apk/app-release.apk.sha256
+
+      - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: orionhealth-debug-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
-          retention-days: 7
+          name: orionhealth-apks
+          path: |
+            build/app/outputs/flutter-apk/app-debug.apk
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/flutter-apk/app-release.apk.sha256
+          retention-days: 30
 
-      - name: Upload release APK
+      - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
-          name: orionhealth-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 7
+          name: orionhealth-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
 
-      - name: Create Release (on tag)
-        if: startsWith(github.ref, 'refs/tags/v')
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download APK artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: orionhealth-apks
+          path: artifacts/apk
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: orionhealth-aab
+          path: artifacts/aab
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: |
+            artifacts/apk/app-release.apk
+            artifacts/apk/app-release.apk.sha256
+            artifacts/aab/app-release.aab
           generate_release_notes: true
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
