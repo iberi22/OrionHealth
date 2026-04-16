@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
@@ -8,9 +7,8 @@ part 'medication_entry.g.dart';
 /// Medication entry with dosage, frequency, start/end dates.
 /// Sensitive: medication name and dosage are encrypted.
 @collection
-class MedicationEntry extends Equatable {
-  Id isarId = Isar.autoIncrement;
-
+@JsonSerializable()
+class MedicationEntry {
   MedicationEntry({
     required this.id,
     required this.rxNormCode,
@@ -32,9 +30,7 @@ class MedicationEntry extends Equatable {
     this.encryptedName,
     this.encryptedDosage,
   });
-
-  @Index(unique: true)
-  final String id;
+  Id id = Isar.autoIncrement;
 
   /// RxNorm code for the medication (e.g. "311354" for Metformin 500mg).
   @Index()
@@ -104,7 +100,7 @@ class MedicationEntry extends Equatable {
   ];
 
   MedicationEntry copyWith({
-    String? id,
+    int? id,
     String? rxNormCode,
     String? medicationName,
     String? dosage,
@@ -151,26 +147,4 @@ class MedicationEntry extends Equatable {
       _$MedicationEntryFromJson(json);
   Map<String, dynamic> toJson() => _$MedicationEntryToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        rxNormCode,
-        medicationName,
-        dosage,
-        dosageUnit,
-        frequency,
-        route,
-        startDate,
-        endDate,
-        createdAt,
-        updatedAt,
-        prescribedBy,
-        pharmacy,
-        refillsRemaining,
-        notes,
-        source,
-        syncStatus,
-        encryptedName,
-        encryptedDosage,
-      ];
 }

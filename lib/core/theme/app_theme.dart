@@ -19,9 +19,9 @@ class AppTheme {
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
       ),
-      cardTheme: CardTheme(
+      cardTheme: const CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
         clipBehavior: Clip.antiAlias,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -55,9 +55,9 @@ class AppTheme {
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
       ),
-      cardTheme: CardTheme(
+      cardTheme: const CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
         clipBehavior: Clip.antiAlias,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

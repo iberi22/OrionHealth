@@ -10,7 +10,7 @@ import '../../features/vitals/domain/entities/vital_sign.dart';
 import '../../features/appointments/domain/entities/appointment.dart';
 import '../../features/allergies/domain/entities/allergy.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
-import 'package:health_wallet/health_wallet.dart' hide HealthRecord, LabResult, VitalSign, MedicationEntry, MedicalDocument, MedicalEvent;
+import 'package:health_wallet/health_wallet.dart' hide HealthRecord, LabResult, VitalSign, VitalSignSchema, MedicationEntry, MedicalDocument, MedicalEvent;
 
 @module
 abstract class DatabaseModule {

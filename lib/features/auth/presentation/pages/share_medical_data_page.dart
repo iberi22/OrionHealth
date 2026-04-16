@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/ble_sharing_service.dart';
-import '../../application/ble_sharing_cubit.dart';
+import '../../../ble_sharing/application/ble_sharing_cubit.dart';
+import '../../../ble_sharing/domain/ble_sharing_service.dart';
+import '../../../ble_sharing/presentation/pages/share_page.dart';
 
-class SharePage extends StatelessWidget {
-  const SharePage({super.key});
+class ShareMedicalDataPage extends StatelessWidget {
+  const ShareMedicalDataPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => BleSharingCubit()..initialize(),
-      child: const _SharePageContent(),
+      child: const _ShareMedicalDataContent(),
     );
   }
 }
 
-class _SharePageContent extends StatefulWidget {
-  const _SharePageContent();
+class _ShareMedicalDataContent extends StatefulWidget {
+  const _ShareMedicalDataContent();
 
   @override
-  State<_SharePageContent> createState() => _SharePageContentState();
+  State<_ShareMedicalDataContent> createState() => _ShareMedicalDataContentState();
 }
 
-class _SharePageContentState extends State<_SharePageContent> {
+class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
   final Set<MedicalDataCategory> _selectedCategories = {};
   MedicalTransferMethod _selectedMethod = MedicalTransferMethod.nfc;
 
@@ -30,7 +31,7 @@ class _SharePageContentState extends State<_SharePageContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Medical Data Share'),
+        title: const Text('Share Medical Data'),
         actions: [
           IconButton(
             icon: const Icon(Icons.close),
@@ -54,7 +55,8 @@ class _SharePageContentState extends State<_SharePageContent> {
         builder: (context, state) {
           if (state is BleSharingScanning ||
               state is BleSharingConnecting ||
-              state is BleSharingConnected) {
+              state is BleSharingConnected ||
+              state is BleSharingTransferring) {
             return _buildTransferringUI(state);
           }
 
