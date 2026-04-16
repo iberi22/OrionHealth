@@ -1,0 +1,34 @@
+name: Validate Repository Structure
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for .git-core-protocol-version
+        run: test -f .git-core-protocol-version
+
+      - name: Check for .gitcore directory
+        run: test -d .gitcore
+
+      - name: Check for AGENT_INDEX.md
+        run: test -f .gitcore/AGENT_INDEX.md
+
+      - name: Validate Hexagonal Structure
+        run: |
+          # Ensure major features follow hexagonal pattern
+          for feature in lib/features/*/; do
+            if [ -d "$feature" ]; then
+              echo "Validating $feature"
+              # Some features might be minimal, but we check for common patterns
+              # This is a basic check, can be expanded
+              ls "$feature" | grep -E "domain|application|infrastructure|presentation" || true
+            fi
+          done

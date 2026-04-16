@@ -1,0 +1,35 @@
+name: Medical Standards Update
+description: Propose an update to ICD-10, LOINC, SNOMED CT, or RxNorm datasets
+labels: ["medical-standards", "data"]
+body:
+  - type: dropdown
+    id: standard
+    attributes:
+      label: Medical Standard
+      options:
+        - ICD-10
+        - LOINC
+        - SNOMED CT
+        - RxNorm
+        - Guidelines
+    validations:
+      required: true
+  - type: input
+    id: source-url
+    attributes:
+      label: Official Source URL
+      description: Link to the official medical database or documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: changes
+    attributes:
+      label: Proposed Changes
+      description: Describe the codes or entries that need to be added, updated, or corrected.
+    validations:
+      required: true
+  - type: textarea
+    id: clinical-context
+    attributes:
+      label: Clinical Context/Justification
+      description: Why is this update necessary for patient care?

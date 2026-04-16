@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0",
+  "feature": "onboarding",
+  "steps": [
+    {
+      "id": "welcome",
+      "title": "Welcome to OrionHealth",
+      "description": "Introduction to privacy-first health tracking."
+    },
+    {
+      "id": "profile",
+      "title": "Profile Setup",
+      "description": "Basic user information collection."
+    },
+    {
+      "id": "vitals",
+      "title": "Baseline Vitals",
+      "description": "Initial health metrics (BP, HR)."
+    },
+    {
+      "id": "allergies",
+      "title": "Allergy Information",
+      "description": "Critical allergy documentation."
+    },
+    {
+      "id": "complete",
+      "title": "Onboarding Complete",
+      "description": "Final verification and dashboard transition."
+    }
+  ]
+}

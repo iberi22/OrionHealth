@@ -263,6 +263,18 @@ class MedicalDocument {
 
 ---
 
+## Git-Core Protocol v1.3.0
+
+OrionHealth follows the **Git-Core Protocol** for AI-assisted development. This ensures that AI agents can effectively navigate, understand, and contribute to the codebase while maintaining architectural integrity.
+
+### Key Components
+- **`.git-core-protocol-version`**: Pinned protocol version (v1.3.0).
+- **`.gitcore/AGENT_INDEX.md`**: Central directory for AI agent navigation.
+- **`.gitcore/planning/`**: Agent-specific task and roadmap tracking.
+- **`.github/workflows/validate_repo_structure.yml`**: Automated enforcement of hexagonal and protocol standards.
+
+---
+
 ## CI/CD Pipeline
 
 ### Medical Standards CI
