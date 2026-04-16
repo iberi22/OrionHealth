@@ -28,8 +28,11 @@ subprojects {
             }
             // Disable resource verification tasks for isar_flutter_libs
             listOf("verifyReleaseResources", "verifyDebugResources").forEach { taskName ->
-                project.tasks.findByName(taskName)?.isEnabled = false
-                println("Disabled task: $taskName for isar_flutter_libs")
+                val task = project.tasks.findByName(taskName)
+                if (task != null) {
+                    println("Disabling task: $taskName for isar_flutter_libs")
+                    task.setEnabled(false)
+                }
             }
         }
     }
