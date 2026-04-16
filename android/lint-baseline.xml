@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<lint>
-    <issue id="Unknown" severity="ignore">
-        <regex path=".*/isar_flutter_libs/.*" />
-    </issue>
-</lint>
