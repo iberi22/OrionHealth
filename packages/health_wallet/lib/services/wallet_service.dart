@@ -1,10 +1,16 @@
 import 'package:isar/isar.dart';
 import '../models/health_record.dart';
+import '../models/health_record.g.dart';
 import '../models/lab_result.dart';
+import '../models/lab_result.g.dart';
 import '../models/vital_sign.dart';
+import '../models/vital_sign.g.dart';
 import '../models/medication_entry.dart';
+import '../models/medication_entry.g.dart';
 import '../models/medical_document.dart';
+import '../models/medical_document.g.dart';
 import '../models/medical_event.dart';
+import '../models/medical_event.g.dart';
 import 'encryption_service.dart';
 
 /// Main service for managing the health wallet
@@ -23,20 +29,22 @@ class WalletService {
   }
 
   Future<List<LabResult>> getLabsByLoinc(String loincCode) async {
-    return await _isar.labResults
+    final results = await _isar.labResults
         .filter()
         .loincCodeEqualTo(loincCode)
-        .sortByDateDesc()
         .findAll();
+    results.sort((a, b) => b.collectedAt.compareTo(a.collectedAt));
+    return results;
   }
 
   Future<List<LabResult>> getRecentLabs({int days = 30}) async {
     final cutoff = DateTime.now().subtract(Duration(days: days));
-    return await _isar.labResults
+    final results = await _isar.labResults
         .filter()
-        .dateGreaterThan(cutoff)
-        .sortByDateDesc()
+        .collectedAtGreaterThan(cutoff)
         .findAll();
+    results.sort((a, b) => b.collectedAt.compareTo(a.collectedAt));
+    return results;
   }
 
   // ============ Vitals ============
@@ -48,11 +56,12 @@ class WalletService {
   }
 
   Future<List<VitalSign>> getVitalsByType(String vitalType) async {
-    return await _isar.vitalSigns
+    final results = await _isar.vitalSigns
         .filter()
         .loincCodeEqualTo(vitalType)
-        .sortByRecordedAtDesc()
         .findAll();
+    results.sort((a, b) => b.recordedAt.compareTo(a.recordedAt));
+    return results;
   }
 
   Future<List<VitalSign>> getVitalsRange({
@@ -60,34 +69,36 @@ class WalletService {
     required DateTime from,
     required DateTime to,
   }) async {
-    return await _isar.vitalSigns
+    final results = await _isar.vitalSigns
         .filter()
         .loincCodeEqualTo(vitalType)
         .recordedAtBetween(from, to)
-        .sortByRecordedAt()
         .findAll();
+    results.sort((a, b) => a.recordedAt.compareTo(b.recordedAt));
+    return results;
   }
 
   // ============ Medications ============
 
   Future<void> addMedication(MedicationEntry med) async {
     await _isar.writeTxn(() async {
-      await _isar.medicationEntries.put(med);
+      await _isar.medicationEntrys.put(med);
     });
   }
 
   Future<List<MedicationEntry>> getActiveMedications() async {
-    return await _isar.medicationEntries
+    final results = await _isar.medicationEntrys
         .filter()
         .endDateIsNull()
-        .sortByName()
         .findAll();
+    results.sort((a, b) => a.medicationName.compareTo(b.medicationName));
+    return results;
   }
 
-  Future<List<MedicationEntry>> getMedicationsByClass(String drugClass) async {
-    return await _isar.medicationEntries
+  Future<List<MedicationEntry>> getMedicationsByRxNorm(String rxNormCode) async {
+    return _isar.medicationEntrys
         .filter()
-        .drugClassContains(drugClass)
+        .rxNormCodeEqualTo(rxNormCode)
         .findAll();
   }
 
@@ -99,47 +110,48 @@ class WalletService {
     });
   }
 
-  Future<List<MedicalEvent>> getEventsByType(String eventType) async {
-    return await _isar.medicalEvents
+  Future<List<MedicalEvent>> getEventsByType(EventType eventType) async {
+    final results = await _isar.medicalEvents
         .filter()
-        .typeEqualTo(eventType)
-        .sortByDateDesc()
+        .eventTypeEqualTo(eventType)
         .findAll();
+    results.sort((a, b) => b.eventDate.compareTo(a.eventDate));
+    return results;
   }
 
   Future<List<MedicalEvent>> getTimeline({
     DateTime? from,
     DateTime? to,
   }) async {
-    var query = _isar.medicalEvents.where();
-
+    List<MedicalEvent> results;
     if (from != null && to != null) {
-      return await query
+      results = await _isar.medicalEvents
           .filter()
-          .dateBetween(from, to)
-          .sortByDateDesc()
+          .eventDateBetween(from, to)
           .findAll();
+    } else {
+      results = await _isar.medicalEvents.where().findAll();
     }
-
-    return await query.sortByDateDesc().findAll();
+    results.sort((a, b) => b.eventDate.compareTo(a.eventDate));
+    return results;
   }
 
   // ============ Documents ============
 
   Future<void> addDocument(MedicalDocument doc) async {
-    // Encrypt sensitive document data before storing
     final encrypted = await _encryption.encryptDocument(doc);
     await _isar.writeTxn(() async {
       await _isar.medicalDocuments.put(encrypted);
     });
   }
 
-  Future<List<MedicalDocument>> getDocumentsByType(String docType) async {
-    return await _isar.medicalDocuments
+  Future<List<MedicalDocument>> getDocumentsByType(DocumentType docType) async {
+    final results = _isar.medicalDocuments
         .filter()
-        .typeEqualTo(docType)
-        .sortByDateDesc()
+        .documentTypeMatches(docType.name)
+        .sortByDocumentDateDesc()
         .findAll();
+    return results;
   }
 
   // ============ Full Health Record ============
@@ -161,7 +173,7 @@ class WalletService {
     return {
       'labs': await _isar.labResults.count(),
       'vitals': await _isar.vitalSigns.count(),
-      'medications': await _isar.medicationEntries.count(),
+      'medications': await _isar.medicationEntrys.count(),
       'events': await _isar.medicalEvents.count(),
       'documents': await _isar.medicalDocuments.count(),
     };
@@ -173,7 +185,7 @@ class WalletService {
     return {
       'labs': await _isar.labResults.where().findAll(),
       'vitals': await _isar.vitalSigns.where().findAll(),
-      'medications': await _isar.medicationEntries.where().findAll(),
+      'medications': await _isar.medicationEntrys.where().findAll(),
       'events': await _isar.medicalEvents.where().findAll(),
       'documents': await _isar.medicalDocuments.where().findAll(),
       'exportedAt': DateTime.now().toIso8601String(),
@@ -193,7 +205,21 @@ class WalletService {
           await _isar.vitalSigns.put(vital as VitalSign);
         }
       }
-      // ... similar for other collections
+      if (data['medications'] != null) {
+        for (final med in data['medications']) {
+          await _isar.medicationEntrys.put(med as MedicationEntry);
+        }
+      }
+      if (data['events'] != null) {
+        for (final evt in data['events']) {
+          await _isar.medicalEvents.put(evt as MedicalEvent);
+        }
+      }
+      if (data['documents'] != null) {
+        for (final doc in data['documents']) {
+          await _isar.medicalDocuments.put(doc as MedicalDocument);
+        }
+      }
     });
   }
 
@@ -203,7 +229,6 @@ class WalletService {
     final cutoff = DateTime.now().subtract(Duration(days: daysOld));
 
     await _isar.writeTxn(() async {
-      // Only delete non-essential data
       await _isar.labResults
           .filter()
           .collectedAtLessThan(cutoff)
