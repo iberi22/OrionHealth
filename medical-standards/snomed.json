@@ -1,0 +1,133 @@
+{
+  "metadata": {
+    "standard": "SNOMED",
+    "version": "2024-01-31",
+    "lastUpdated": "2024-01-31",
+    "source": "SNOMED International",
+    "sourceUrl": "https://www.snomed.org/",
+    "license": "SNOMED CT License Required \u2014 IHTSDO/SNOMED International. Requires acceptance of the SNOMED CT License Agreement. NOT for direct redistribution.",
+    "wikipediaBase": "https://en.wikipedia.org/wiki/",
+    "totalCount": 17
+  },
+  "data": [
+    {
+      "code": "76684001",
+      "displayName": "Diabetes mellitus type 1",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Diabetes_mellitus_type_1",
+      "searchTerms": []
+    },
+    {
+      "code": "44054006",
+      "displayName": "Diabetes mellitus type 2",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Diabetes_mellitus_type_2",
+      "searchTerms": []
+    },
+    {
+      "code": "38341003",
+      "displayName": "Hypertensive disorder",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypertensive_disorder",
+      "searchTerms": []
+    },
+    {
+      "code": "49436004",
+      "displayName": "Atrial fibrillation",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Atrial_fibrillation",
+      "searchTerms": []
+    },
+    {
+      "code": "84114007",
+      "displayName": "Heart failure",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Heart_failure",
+      "searchTerms": []
+    },
+    {
+      "code": "13644009",
+      "displayName": "Hypercholesterolemia",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypercholesterolemia",
+      "searchTerms": []
+    },
+    {
+      "code": "414916001",
+      "displayName": "Obesity",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Obesity",
+      "searchTerms": []
+    },
+    {
+      "code": "195967001",
+      "displayName": "Asthma",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Asthma",
+      "searchTerms": []
+    },
+    {
+      "code": "8410007",
+      "displayName": "Hypothyroidism",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypothyroidism",
+      "searchTerms": []
+    },
+    {
+      "code": "34486009",
+      "displayName": "Hyperthyroidism",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hyperthyroidism",
+      "searchTerms": []
+    },
+    {
+      "code": "398044002",
+      "displayName": "Major depression",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Major_depression",
+      "searchTerms": []
+    },
+    {
+      "code": "48694002",
+      "displayName": "Generalized anxiety disorder",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Generalized_anxiety_disorder",
+      "searchTerms": []
+    },
+    {
+      "code": "84229001",
+      "displayName": "Fatigue",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Fatigue",
+      "searchTerms": []
+    },
+    {
+      "code": "29857009",
+      "displayName": "Chest pain",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chest_pain",
+      "searchTerms": []
+    },
+    {
+      "code": "25064002",
+      "displayName": "Headache",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Headache",
+      "searchTerms": []
+    },
+    {
+      "code": "43396008",
+      "displayName": "Hemoglobin A1c",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hemoglobin_A1c",
+      "searchTerms": []
+    },
+    {
+      "code": "33489001",
+      "displayName": "Glucose measurement",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Glucose_measurement",
+      "searchTerms": []
+    }
+  ]
+}

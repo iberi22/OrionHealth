@@ -1,0 +1,175 @@
+{
+  "metadata": {
+    "standard": "RxNorm",
+    "version": "2024-03-04",
+    "lastUpdated": "2024-03-04",
+    "source": "NLM RxNorm",
+    "sourceUrl": "https://www.nlm.nih.gov/research/umls/rxnorm/",
+    "license": "UMLS License \u2014 https://www.nlm.nih.gov/research/umls/quickstart.html. RxNorm data is public domain for US government. Commercial use requires UMLS Terminology Services subscription.",
+    "wikipediaBase": "https://en.wikipedia.org/wiki/",
+    "totalCount": 23
+  },
+  "data": [
+    {
+      "code": "6809",
+      "displayName": "Metformin",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Metformin",
+      "searchTerms": []
+    },
+    {
+      "code": "5487",
+      "displayName": "Glipizide",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Glipizide",
+      "searchTerms": []
+    },
+    {
+      "code": "225971",
+      "displayName": "Insulin Glargine",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Insulin_Glargine",
+      "searchTerms": []
+    },
+    {
+      "code": "29046",
+      "displayName": "Lisinopril",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Lisinopril",
+      "searchTerms": []
+    },
+    {
+      "code": "52175",
+      "displayName": "Losartan",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Losartan",
+      "searchTerms": []
+    },
+    {
+      "code": "17767",
+      "displayName": "Amlodipine",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Amlodipine",
+      "searchTerms": []
+    },
+    {
+      "code": "83367",
+      "displayName": "Atorvastatin",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Atorvastatin",
+      "searchTerms": []
+    },
+    {
+      "code": "321167",
+      "displayName": "Rosuvastatin",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Rosuvastatin",
+      "searchTerms": []
+    },
+    {
+      "code": "855332",
+      "displayName": "Warfarin",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Warfarin",
+      "searchTerms": []
+    },
+    {
+      "code": "1191",
+      "displayName": "Aspirin",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Aspirin",
+      "searchTerms": []
+    },
+    {
+      "code": "333965",
+      "displayName": "Clopidogrel",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Clopidogrel",
+      "searchTerms": []
+    },
+    {
+      "code": "8667",
+      "displayName": "Levothyroxine",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Levothyroxine",
+      "searchTerms": []
+    },
+    {
+      "code": "36567",
+      "displayName": "Sertraline",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Sertraline",
+      "searchTerms": []
+    },
+    {
+      "code": "312938",
+      "displayName": "Fluoxetine",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Fluoxetine",
+      "searchTerms": []
+    },
+    {
+      "code": "32937",
+      "displayName": "Alprazolam",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Alprazolam",
+      "searchTerms": []
+    },
+    {
+      "code": "5640",
+      "displayName": "Ibuprofen",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Ibuprofen",
+      "searchTerms": []
+    },
+    {
+      "code": "161",
+      "displayName": "Acetaminophen",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acetaminophen",
+      "searchTerms": []
+    },
+    {
+      "code": "201250",
+      "displayName": "Cetirizine",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Cetirizine",
+      "searchTerms": []
+    },
+    {
+      "code": "26225",
+      "displayName": "Loratadine",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Loratadine",
+      "searchTerms": []
+    },
+    {
+      "code": "435",
+      "displayName": "Albuterol",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Albuterol",
+      "searchTerms": []
+    },
+    {
+      "code": "197530",
+      "displayName": "Fluticasone",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Fluticasone",
+      "searchTerms": []
+    },
+    {
+      "code": "7646",
+      "displayName": "Omeprazole",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Omeprazole",
+      "searchTerms": []
+    },
+    {
+      "code": "40790",
+      "displayName": "Pantoprazole",
+      "category": "General",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Pantoprazole",
+      "searchTerms": []
+    }
+  ]
+}
