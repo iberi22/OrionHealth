@@ -7,8 +7,6 @@ import 'package:equatable/equatable.dart';
 
 /// Base interface for all medical concepts
 abstract class MedicalConcept extends Equatable {
-  const MedicalConcept();
-
   /// Unique code in the standard
   String get code;
 

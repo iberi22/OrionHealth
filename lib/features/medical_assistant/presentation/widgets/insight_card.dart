@@ -202,7 +202,11 @@ class _CategoryChip extends StatelessWidget {
       case InsightCategory.generalGuidance:
         return Colors.grey;
       case InsightCategory.symptomAnalysis:
+<<<<<<< HEAD
         return Colors.cyan;
+=======
+        return Colors.orange;
+>>>>>>> origin/main
     }
   }
 }

@@ -1,0 +1,21 @@
+name: health_wallet
+description: OrionHealth local wallet for secure health data storage and sync.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  equatable: ^2.0.5
+  json_annotation: ^4.9.0
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  cryptography: ^2.7.0
+  path_provider: ^2.1.4
+  uuid: ^4.5.1
+
+dev_dependencies:
+  build_runner: ^2.4.12
+  json_serializable: ^6.8.0
+  isar_generator: ^3.1.0+1

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import '../../domain/entities/medical_insight.dart';
+=======
+import '../entities/medical_insight.dart';
+>>>>>>> origin/main
 
 class MedicalResponseGenerator {
   static MedicalAnalysisResult generate({

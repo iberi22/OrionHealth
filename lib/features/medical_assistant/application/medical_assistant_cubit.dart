@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'package:medical_standards/medical_standards.dart';
 
+<<<<<<< HEAD
 import '../domain/entities/medical_query.dart';
 import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
@@ -11,6 +12,16 @@ import '../infrastructure/llm/medical_llm_adapter.dart';
 import '../infrastructure/analysis/lab_interpreter.dart';
 import '../infrastructure/analysis/vital_sign_analyzer.dart';
 import '../infrastructure/analysis/risk_calculator.dart';
+=======
+import '../../domain/entities/medical_query.dart';
+import '../../domain/entities/medical_insight.dart';
+import '../../domain/entities/ai_response.dart';
+import '../../domain/services/medical_analysis_service.dart';
+import '../../infrastructure/llm/medical_llm_adapter.dart';
+import '../../infrastructure/analysis/lab_interpreter.dart';
+import '../../infrastructure/analysis/vital_sign_analyzer.dart';
+import '../../infrastructure/analysis/risk_calculator.dart';
+>>>>>>> origin/main
 
 // States
 abstract class MedicalAssistantState extends Equatable {
@@ -59,7 +70,11 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   final LabInterpreter _labInterpreter;
   final VitalSignAnalyzer _vitalAnalyzer;
   final RiskCalculator _riskCalculator;
+<<<<<<< HEAD
   final MemoryGraph? _memory;
+=======
+  final IsarAgentMemory? _memory;
+>>>>>>> origin/main
 
   MedicalAssistantCubit({
     MedicalLlmAdapter? llmAdapter,
@@ -67,7 +82,11 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
     LabInterpreter? labInterpreter,
     VitalSignAnalyzer? vitalAnalyzer,
     RiskCalculator? riskCalculator,
+<<<<<<< HEAD
     MemoryGraph? memory,
+=======
+    IsarAgentMemory? memory,
+>>>>>>> origin/main
   })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(),
         _analysisService = analysisService ?? MedicalAnalysisService(),
         _labInterpreter = labInterpreter ?? LabInterpreter(),
@@ -155,8 +174,14 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
       // ---- Enforce confidence rules in metadata ----
       final confidence = response.confidence ?? 0.0;
 
+<<<<<<< HEAD
       // If confidence is very low and no insights, add data request
       if (confidence < ConfidenceThreshold.veryLowConfidence && allInsights.isEmpty) {
+=======
+      // STRICT RULE: If confidence < 90%, we MUST NOT provide a definitive diagnosis
+      // and we MUST request more data or provide a generic response.
+      if (confidence < ConfidenceThreshold.highConfidence) {
+>>>>>>> origin/main
         final enhancedResponse = _addDataRequest(response, question);
         emit(MedicalAssistantResponse(
           response: enhancedResponse,
