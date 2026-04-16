@@ -27,13 +27,9 @@ subprojects {
                 println("Failed to set namespace for isar_flutter_libs: ${e.message}")
             }
             // Disable resource verification tasks for isar_flutter_libs
-            tasks.all { task ->
-                when (task.name) {
-                    "verifyReleaseResources", "verifyDebugResources" -> {
-                        println("Disabling task: ${task.name} for isar_flutter_libs")
-                        task.enabled = false
-                    }
-                }
+            listOf("verifyReleaseResources", "verifyDebugResources").forEach { taskName ->
+                project.tasks.findByName(taskName)?.isEnabled = false
+                println("Disabled task: $taskName for isar_flutter_libs")
             }
         }
     }
