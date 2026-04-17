@@ -10,6 +10,8 @@ enum VitalSignType {
   oxygenSaturation,
   respiratoryRate,
   bloodGlucose,
+  steps,
+  sleep,
 }
 
 @collection
@@ -73,6 +75,10 @@ class VitalSign {
         return 'Frecuencia Respiratoria';
       case VitalSignType.bloodGlucose:
         return 'Glucosa';
+      case VitalSignType.steps:
+        return 'Pasos';
+      case VitalSignType.sleep:
+        return 'Sueño';
     }
   }
 
