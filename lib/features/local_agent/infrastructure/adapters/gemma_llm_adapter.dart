@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:orionhealth/core/services/aicore_service.dart';
+import '../../../../core/services/privacy_anonymizer.dart';
 import '../../domain/services/llm_adapter.dart';
 import 'dart:io';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -12,11 +13,15 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 @Named('gemma')
 class GemmaLlmAdapter implements LlmAdapter {
   final AicoreService _aicoreService;
+  final PromptScrubber _scrubber;
   bool _localFailed = false;
   GenerativeModel? _geminiModel;
 
-  GemmaLlmAdapter({AicoreService? aicoreService})
-    : _aicoreService = aicoreService ?? AicoreService();
+  GemmaLlmAdapter({
+    AicoreService? aicoreService,
+    required PromptScrubber scrubber,
+  })  : _aicoreService = aicoreService ?? AicoreService(),
+        _scrubber = scrubber;
 
   String get _apiKey => Platform.environment['GEMINI_API_KEY'] ?? '';
 
@@ -36,6 +41,7 @@ class GemmaLlmAdapter implements LlmAdapter {
   }
 
   Future<String> _generateLocal(String prompt) async {
+    final scrubbedPrompt = await _scrubber.scrub(prompt, apiName: 'gemma-local');
     try {
       if (!_aicoreService.isInitialized) {
         await _aicoreService.initialize(useFullModel: false);
@@ -45,7 +51,7 @@ class GemmaLlmAdapter implements LlmAdapter {
         }
         await _aicoreService.warmup();
       }
-      return await _aicoreService.generateContent(prompt);
+      return await _aicoreService.generateContent(scrubbedPrompt);
     } catch (e) {
       _localFailed = true;
       throw Exception('AICore/Gemma generation failed: $e');
@@ -53,6 +59,7 @@ class GemmaLlmAdapter implements LlmAdapter {
   }
 
   Future<String> _generateCloud(String prompt) async {
+    final scrubbedPrompt = await _scrubber.scrub(prompt, apiName: 'gemma-cloud');
     if (_geminiModel == null) {
       if (_apiKey.isEmpty) {
         throw Exception(
@@ -66,7 +73,7 @@ class GemmaLlmAdapter implements LlmAdapter {
     }
 
     final response = await _geminiModel!.generateContent([
-      Content.text(prompt),
+      Content.text(scrubbedPrompt),
     ]);
     return response.text ?? '';
   }
