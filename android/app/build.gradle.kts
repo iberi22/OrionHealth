@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.orionhealth.orionhealth_health"
-    compileSdk = 36
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -22,9 +22,23 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        externalNativeBuild {
+            cmake {
+                cppFlags("-std=c++17")
+                arguments("-DANDROID_STL=c++_shared")
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1+"
+        }
     }
     buildTypes {
         release {
