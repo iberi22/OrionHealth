@@ -174,6 +174,8 @@ const _VitalSigntypeEnumValueMap = {
   'oxygenSaturation': 4,
   'respiratoryRate': 5,
   'bloodGlucose': 6,
+  'steps': 7,
+  'sleep': 8,
 };
 const _VitalSigntypeValueEnumMap = {
   0: VitalSignType.heartRate,
@@ -183,6 +185,8 @@ const _VitalSigntypeValueEnumMap = {
   4: VitalSignType.oxygenSaturation,
   5: VitalSignType.respiratoryRate,
   6: VitalSignType.bloodGlucose,
+  7: VitalSignType.steps,
+  8: VitalSignType.sleep,
 };
 
 Id _vitalSignGetId(VitalSign object) {

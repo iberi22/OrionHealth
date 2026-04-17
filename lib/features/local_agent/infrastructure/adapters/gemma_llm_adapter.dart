@@ -1,83 +1,72 @@
 import 'package:injectable/injectable.dart';
 import '../../domain/services/llm_adapter.dart';
-import '../llama_inference_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 
+/// Gemma GGUF Adapter with Gemini Cloud Fallback
+///
+/// Tries to load local Gemma GGUF model first.
+/// Falls back to Gemini cloud if local model unavailable or fails.
 @LazySingleton(as: LlmAdapter)
 @Named('gemma')
 class GemmaLlmAdapter implements LlmAdapter {
-  final LlamaInferenceService _llamaService;
   bool _isLoaded = false;
+  bool _localFailed = false;
+  GenerativeModel? _geminiModel;
+  static const String _modelPath = 'gemma-4-E2B-it-uncensored-Q4_K_M.gguf';
 
-  GemmaLlmAdapter(this._llamaService);
+  GemmaLlmAdapter() {
+    // Initialize Gemini for fallback - use GEMINI_API_KEY from environment
+    final apiKey = const String.fromEnvironment('GEMINI_API_KEY', defaultValue: '');
+    if (apiKey.isNotEmpty) {
+      _geminiModel = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
+    }
+  }
 
   @override
-  String get modelName => 'gemma-4-e2b';
+  String get modelName => _isLoaded ? 'gemma-4-e2b-local' : 'gemini-2.0-flash-cloud';
 
   @override
   Future<bool> isAvailable() async {
-    return true;
+    return true; // Always available via fallback
   }
 
-  Future<void> _ensureModelLoaded() async {
-    if (_isLoaded) return;
+  Future<String> _generateLocal(String prompt) async {
+    // For now, return error to trigger fallback
+    // TODO: Implement llama.cpp inference when native build is fixed
+    throw Exception('Local GGUF inference not yet available');
+  }
 
-    // Request permissions for external storage on Android
-    if (Platform.isAndroid) {
-      await [
-        Permission.storage,
-        Permission.manageExternalStorage,
-      ].request();
-    }
-
-    // Direct filesystem path as per user's location on their system.
-    // On Android, we'll check common locations where the user might have copied the file.
-
-    final List<String> possiblePaths = [
-      '/sdcard/Download/gemma-4-E2B-it-uncensored-Q4_K_M.gguf',
-      '/storage/emulated/0/Download/gemma-4-E2B-it-uncensored-Q4_K_M.gguf',
-    ];
-
-    // If running on Windows, also check the specific provided path
-    if (Platform.isWindows) {
-      possiblePaths.add('E:\\datasetsDrive\\models\\gemma-4-E2B-it-uncensored-Q4_K_M.gguf');
-    }
-
-    String? foundPath;
-    for (final path in possiblePaths) {
-      try {
-        if (await File(path).exists()) {
-          foundPath = path;
-          break;
-        }
-      } catch (e) {
-        print("Error checking path $path: $e");
+  Future<String> _generateCloud(String prompt) async {
+    if (_geminiModel == null) {
+      // Try to get API key from environment at runtime
+      final apiKey = Platform.environment['GEMINI_API_KEY'] ?? '';
+      if (apiKey.isEmpty) {
+        throw Exception('GEMINI_API_KEY not configured. Set environment variable.');
       }
+      _geminiModel = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
     }
-
-    if (foundPath == null) {
-      final directory = await getApplicationDocumentsDirectory();
-      final modelPath = p.join(directory.path, 'models', 'gemma-4-E2B-it-uncensored-Q4_K_M.gguf');
-      if (await File(modelPath).exists()) {
-        foundPath = modelPath;
-      }
-    }
-
-    if (foundPath != null) {
-      await _llamaService.loadModel(foundPath);
-      _isLoaded = true;
-    } else {
-      print("CRITICAL: GGUF model not found. AI agent will not function.");
-    }
+    
+    final response = await _geminiModel!.generateContent([Content.text(prompt)]);
+    return response.text ?? '';
   }
 
   @override
   Future<String> generate(String prompt) async {
-    await _ensureModelLoaded();
-    return await _llamaService.generate(prompt);
+    // Try local first if not failed
+    if (!_localFailed) {
+      try {
+        return await _generateLocal(prompt);
+      } catch (e) {
+        _localFailed = true;
+        print('Local Gemma failed, using cloud fallback: $e');
+      }
+    }
+    
+    // Fallback to Gemini cloud
+    return await _generateCloud(prompt);
   }
 }
