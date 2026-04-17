@@ -1,7 +1,9 @@
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
 
 enum AicoreStatus { available, downloadable, unavailable, downloading }
 
+@lazySingleton
 class AicoreService {
   static const _channel = MethodChannel('com.orionhealth/aicore');
 
@@ -14,7 +16,7 @@ class AicoreService {
     void Function()? onComplete,
     void Function(String error)? onError,
   }) {
-    _channel.setMethodCallHandler((call) {
+    _channel.setMethodCallHandler((call) async {
       switch (call.method) {
         case 'onDownloadProgress':
           onDownloadProgress?.call(call.arguments['progress'] as int);

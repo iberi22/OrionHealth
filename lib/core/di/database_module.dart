@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../features/user_profile/domain/entities/user_profile.dart';
+import '../../features/settings/domain/entities/llm_config.dart';
 import '../../features/local_agent/domain/chat_message.dart';
 import '../../features/health_record/domain/entities/medical_record.dart';
 import '../../features/health_report/domain/entities/health_report.dart';
@@ -20,6 +21,7 @@ abstract class DatabaseModule {
     return Isar.open(
       [
         UserProfileSchema,
+        LlmConfigSchema,
         ChatMessageSchema,
         MedicalRecordSchema,
         MemoryNodeSchema,

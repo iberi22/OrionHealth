@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../features/auth/presentation/pages/receive_medical_data_page.dart';
 import '../../../../features/auth/presentation/pages/share_medical_data_page.dart';
 import '../../../../features/about/presentation/pages/about_page.dart';
+import '../../../../features/settings/presentation/pages/llm_settings_page.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
@@ -126,6 +127,19 @@ class _UserProfileView extends StatelessWidget {
                       icon: Icons.dark_mode,
                       title: 'Tema',
                       subtitle: 'Modo Oscuro',
+                    ),
+                    _InfoTile(
+                      icon: Icons.psychology,
+                      title: 'Configuración de LLM',
+                      subtitle: 'Modelos locales y nube',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LlmSettingsPage(),
+                          ),
+                        );
+                      },
                     ),
                     _InfoTile(
                       icon: Icons.info_outline,

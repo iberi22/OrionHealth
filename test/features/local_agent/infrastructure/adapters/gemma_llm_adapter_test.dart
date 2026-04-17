@@ -1,12 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/adapters/gemma_llm_adapter.dart';
-import 'package:orionhealth_health/features/local_agent/infrastructure/llama_inference_service.dart';
+import 'package:orionhealth_health/core/services/aicore_service.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'dart:io';
 
-class MockLlamaInferenceService extends Mock implements LlamaInferenceService {}
+class MockAicoreService extends Mock implements AicoreService {}
 
 class MockPathProviderPlatform extends Mock
     with MockPlatformInterfaceMixin
@@ -14,28 +13,29 @@ class MockPathProviderPlatform extends Mock
 
 void main() {
   late GemmaLlmAdapter adapter;
-  late MockLlamaInferenceService mockLlamaService;
+  late MockAicoreService mockAicoreService;
   late MockPathProviderPlatform mockPathProvider;
 
   setUp(() {
-    mockLlamaService = MockLlamaInferenceService();
+    mockAicoreService = MockAicoreService();
     mockPathProvider = MockPathProviderPlatform();
     PathProviderPlatform.instance = mockPathProvider;
 
     when(() => mockPathProvider.getApplicationDocumentsPath())
         .thenAnswer((_) async => '/tmp');
 
-    adapter = GemmaLlmAdapter(mockLlamaService);
+    adapter = GemmaLlmAdapter(aicoreService: mockAicoreService);
   });
 
-  test('generate calls llama service', () async {
-    // This test might be tricky because of File(path).exists() and rootBundle.load
-    // But we can at least check if it tries to use the service.
+  test('modelName returns local model name by default', () {
+    expect(adapter.modelName, 'gemma-4-e2b-aicore');
+  });
 
-    // In a real test environment /tmp/models/... won't exist unless we create it
-    // or mock the File class which is hard in Dart.
+  test('isAvailable returns true if AICore is available', () async {
+    when(() => mockAicoreService.checkAvailability())
+        .thenAnswer((_) async => AicoreStatus.available);
 
-    // For now, let's just verify the class can be instantiated and has the right model name.
-    expect(adapter.modelName, 'gemma-4-e2b');
+    final available = await adapter.isAvailable();
+    expect(available, true);
   });
 }
