@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import '../../../../core/device/device_capability.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/repositories/user_profile_repository.dart';
 
@@ -9,8 +10,12 @@ part 'user_profile_state.dart';
 @injectable
 class UserProfileCubit extends Cubit<UserProfileState> {
   final UserProfileRepository _repository;
+  final DeviceCapabilityService _deviceCapabilityService;
 
-  UserProfileCubit(this._repository) : super(UserProfileInitial());
+  UserProfileCubit(
+    this._repository,
+    this._deviceCapabilityService,
+  ) : super(UserProfileInitial());
 
   Future<void> loadUserProfile() async {
     emit(UserProfileLoading());
@@ -35,6 +40,27 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       emit(UserProfileLoaded(profile));
     } catch (e) {
       emit(UserProfileError(e.toString()));
+    }
+  }
+
+  Future<void> detectAndSaveDeviceCapabilities() async {
+    try {
+      final capabilities = await _deviceCapabilityService.getDeviceCapabilities();
+
+      final currentState = state;
+      if (currentState is UserProfileLoaded) {
+        final updatedProfile = currentState.userProfile.copyWith(
+          totalRamGb: capabilities.totalRamGb,
+          deviceProfile: capabilities.profileName,
+          recommendedModel: capabilities.recommendationName,
+          gpuCapability: capabilities.gpu,
+          deviceAbi: capabilities.abi,
+        );
+        await saveUserProfile(updatedProfile);
+      }
+    } catch (e) {
+      // Log error but don't fail profile loading
+      print('Failed to detect device capabilities: $e');
     }
   }
 }

@@ -1,5 +1,8 @@
 package com.orionhealth.orionhealth_health
 
+import android.app.ActivityManager
+import android.content.Context
+import android.os.Build
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -10,12 +13,14 @@ import kotlinx.coroutines.*
 class AicorePlugin : FlutterPlugin, MethodCallHandler {
     
     private lateinit var channel: MethodChannel
+    private lateinit var context: Context
     private val engine = GemmaNativeEngine()
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(binding.binaryMessenger, "com.orionhealth/aicore")
         channel.setMethodCallHandler(this)
+        context = binding.applicationContext
     }
     
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -79,6 +84,22 @@ class AicorePlugin : FlutterPlugin, MethodCallHandler {
                     engine.warmup()
                     result.success(true)
                 }
+            }
+
+            "getHardwareInfo" -> {
+                val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                val memoryInfo = ActivityManager.MemoryInfo()
+                activityManager.getMemoryInfo(memoryInfo)
+
+                val totalRam = memoryInfo.totalMem // in bytes
+                val abis = Build.SUPPORTED_ABIS.joinToString(",")
+
+                result.success(mapOf(
+                    "totalRam" to totalRam,
+                    "supportedAbis" to abis,
+                    "model" to Build.MODEL,
+                    "manufacturer" to Build.MANUFACTURER
+                ))
             }
             
             else -> result.notImplemented()

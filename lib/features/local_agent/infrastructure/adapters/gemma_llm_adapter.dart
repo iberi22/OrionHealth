@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:orionhealth/core/services/aicore_service.dart';
+import 'package:orionhealth_health/core/services/aicore_service.dart';
 import '../../domain/services/llm_adapter.dart';
 import 'dart:io';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -15,8 +15,7 @@ class GemmaLlmAdapter implements LlmAdapter {
   bool _localFailed = false;
   GenerativeModel? _geminiModel;
 
-  GemmaLlmAdapter({AicoreService? aicoreService})
-    : _aicoreService = aicoreService ?? AicoreService();
+  GemmaLlmAdapter(this._aicoreService);
 
   String get _apiKey => Platform.environment['GEMINI_API_KEY'] ?? '';
 

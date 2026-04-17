@@ -24,6 +24,16 @@ class UserProfile {
 
   String? phoneNumber;
 
+  double? totalRamGb;
+
+  String? deviceProfile; // Light, Medium, High-end
+
+  String? recommendedModel; // 2B, 7B, 9B, cloud-only
+
+  String? gpuCapability;
+
+  String? deviceAbi;
+
   UserProfile({
     this.name,
     this.age,
@@ -34,6 +44,11 @@ class UserProfile {
     this.uniqueId,
     this.email,
     this.phoneNumber,
+    this.totalRamGb,
+    this.deviceProfile,
+    this.recommendedModel,
+    this.gpuCapability,
+    this.deviceAbi,
   });
 
   UserProfile copyWith({
@@ -46,6 +61,11 @@ class UserProfile {
     String? uniqueId,
     String? email,
     String? phoneNumber,
+    double? totalRamGb,
+    String? deviceProfile,
+    String? recommendedModel,
+    String? gpuCapability,
+    String? deviceAbi,
   }) {
     return UserProfile(
       name: name ?? this.name,
@@ -57,6 +77,11 @@ class UserProfile {
       uniqueId: uniqueId ?? this.uniqueId,
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      totalRamGb: totalRamGb ?? this.totalRamGb,
+      deviceProfile: deviceProfile ?? this.deviceProfile,
+      recommendedModel: recommendedModel ?? this.recommendedModel,
+      gpuCapability: gpuCapability ?? this.gpuCapability,
+      deviceAbi: deviceAbi ?? this.deviceAbi,
     )..id = this.id;
   }
 
