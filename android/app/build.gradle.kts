@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -44,4 +43,9 @@ gradle.projectsEvaluated {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation("com.google.mlkit:genai-prompt:1.0.0-beta2")
+    implementation("com.google.android.gms:play-services-tasks:18.0.2")
 }
