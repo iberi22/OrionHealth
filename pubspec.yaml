@@ -86,6 +86,7 @@ dev_dependencies:
   injectable_generator: ^2.4.2
   integration_test:
     sdk: flutter
+  mocktail: ^1.0.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
