@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:injectable/injectable.dart';
 
 abstract class EncryptionService {
   Future<Uint8List> encrypt(String plaintext, String key);
   Future<String> decrypt(Uint8List ciphertext, String key);
 }
 
+@LazySingleton(as: EncryptionService)
 class EncryptionServiceImpl implements EncryptionService {
   static const _algorithm = 'AES-256-GCM';
   
