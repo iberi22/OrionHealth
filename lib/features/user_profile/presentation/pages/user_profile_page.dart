@@ -151,6 +151,19 @@ class _UserProfileView extends StatelessWidget {
                       title: 'Autenticación Biométrica',
                       trailing: Switch(value: false, onChanged: (v) {}),
                     ),
+                    _InfoTile(
+                      icon: Icons.cloud_off,
+                      title: 'Permitir llamadas a APIs en la nube',
+                      subtitle: 'Anonimización activa si está ON',
+                      trailing: Switch(
+                        value: userProfile.allowCloudApi,
+                        onChanged: (v) {
+                          context.read<UserProfileCubit>().saveUserProfile(
+                                userProfile.copyWith(allowCloudApi: v),
+                              );
+                        },
+                      ),
+                    ),
                     const _InfoTile(
                       icon: Icons.password,
                       title: 'Cambiar Contraseña',

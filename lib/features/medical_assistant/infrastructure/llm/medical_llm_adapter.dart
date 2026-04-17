@@ -2,6 +2,7 @@ import '../../domain/entities/medical_query.dart';
 import '../../domain/entities/medical_insight.dart';
 import '../../domain/entities/ai_response.dart';
 import '../../domain/services/medical_analysis_service.dart';
+import '../../../../core/services/privacy_anonymizer.dart';
 import 'medical_response_generator.dart';
 
 /// Adapter for medical LLM API integration.
@@ -11,6 +12,10 @@ import 'medical_response_generator.dart';
 /// - AI ALWAYS explains what symptoms COULD mean
 /// - AI ALWAYS recommends consulting a doctor
 class MedicalLlmAdapter {
+  final PromptScrubber? _scrubber;
+
+  MedicalLlmAdapter({PromptScrubber? scrubber}) : _scrubber = scrubber;
+
   /// Generate AI response based on query and medical insights.
   ///
   /// Uses SafeAnalysisResponse to enforce:
@@ -28,12 +33,17 @@ class MedicalLlmAdapter {
     // Calculate confidence based on insights available
     final confidence = _calculateConfidence(insights);
 
+    // Scrub prompt if scrubber is available
+    final scrubbedQuestion = _scrubber != null
+        ? await _scrubber!.scrub(query.question, apiName: 'medical-llm-adapter')
+        : query.question;
+
     // Build lab/vital context for the response generator
     final context = _buildContext(userContext, insights);
 
     // Generate structured response respecting confidence thresholds
     final analysisResponse = MedicalResponseGenerator.generate(
-      question: query.question,
+      question: scrubbedQuestion,
       userContext: context,
       confidence: confidence,
     );
@@ -53,7 +63,7 @@ class MedicalLlmAdapter {
     // Format the response string
     final answer = MedicalResponseGenerator.formatResponse(
       analysisResponse,
-      query.question,
+      scrubbedQuestion,
     );
 
     return AiMedicalResponse(
@@ -83,7 +93,7 @@ class MedicalLlmAdapter {
     final responseId = 'resp-${DateTime.now().millisecondsSinceEpoch}';
 
     final buffer = StringBuffer();
-    buffer.writeln('Respecto a tu pregunta sobre "${query.question}":');
+    buffer.writeln('Respecto a tu pregunta sobre "${_scrubber != null ? "[PROTECTED]" : query.question}":');
     buffer.writeln();
 
     // Build explanation from lab insights
