@@ -1,9 +1,6 @@
 import 'package:injectable/injectable.dart';
 import '../../domain/services/llm_adapter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'package:path/path.dart' as p;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 /// Gemma GGUF Adapter with Gemini Cloud Fallback
@@ -13,25 +10,17 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 @LazySingleton(as: LlmAdapter)
 @Named('gemma')
 class GemmaLlmAdapter implements LlmAdapter {
-  bool _isLoaded = false;
   bool _localFailed = false;
   GenerativeModel? _geminiModel;
-  static const String _modelPath = 'gemma-4-E2B-it-uncensored-Q4_K_M.gguf';
 
-  GemmaLlmAdapter() {
-    // Initialize Gemini for fallback - use GEMINI_API_KEY from environment
-    final apiKey = const String.fromEnvironment('GEMINI_API_KEY', defaultValue: '');
-    if (apiKey.isNotEmpty) {
-      _geminiModel = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
-    }
-  }
+  String get _apiKey => Platform.environment['GEMINI_API_KEY'] ?? '';
 
   @override
-  String get modelName => _isLoaded ? 'gemma-4-e2b-local' : 'gemini-2.0-flash-cloud';
+  String get modelName => 'gemini-2.0-flash-cloud';
 
   @override
   Future<bool> isAvailable() async {
-    return true; // Always available via fallback
+    return _apiKey.isNotEmpty;
   }
 
   Future<String> _generateLocal(String prompt) async {
@@ -42,12 +31,10 @@ class GemmaLlmAdapter implements LlmAdapter {
 
   Future<String> _generateCloud(String prompt) async {
     if (_geminiModel == null) {
-      // Try to get API key from environment at runtime
-      final apiKey = Platform.environment['GEMINI_API_KEY'] ?? '';
-      if (apiKey.isEmpty) {
+      if (_apiKey.isEmpty) {
         throw Exception('GEMINI_API_KEY not configured. Set environment variable.');
       }
-      _geminiModel = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
+      _geminiModel = GenerativeModel(model: 'gemini-2.0-flash', apiKey: _apiKey);
     }
     
     final response = await _geminiModel!.generateContent([Content.text(prompt)]);
