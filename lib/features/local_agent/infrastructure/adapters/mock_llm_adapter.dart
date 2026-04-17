@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import '../../../../core/services/privacy_anonymizer.dart';
 import '../../domain/services/llm_adapter.dart';
 
 /// Mock LLM Adapter for testing and development
@@ -11,6 +12,10 @@ import '../../domain/services/llm_adapter.dart';
 @Injectable(as: LlmAdapter)
 @Named('mock')
 class MockLlmAdapter implements LlmAdapter {
+  final PromptScrubber _scrubber;
+
+  MockLlmAdapter(this._scrubber);
+
   @override
   String get modelName => 'mock-local';
 
@@ -19,18 +24,20 @@ class MockLlmAdapter implements LlmAdapter {
 
   @override
   Future<String> generate(String prompt) async {
+    final scrubbedPrompt = await _scrubber.scrub(prompt, apiName: 'mock');
+
     // Simple rule-based summarization
     await Future.delayed(
       const Duration(milliseconds: 100),
     ); // Simulate processing
 
     // Extract key information from prompt
-    if (prompt.contains('Summarize')) {
-      return _generateSummary(prompt);
-    } else if (prompt.contains('user') || prompt.contains('health')) {
-      return _generateHealthSummary(prompt);
+    if (scrubbedPrompt.contains('Summarize')) {
+      return _generateSummary(scrubbedPrompt);
+    } else if (scrubbedPrompt.contains('user') || scrubbedPrompt.contains('health')) {
+      return _generateHealthSummary(scrubbedPrompt);
     } else {
-      return 'Summary: ${_truncate(prompt, 200)}';
+      return 'Summary: ${_truncate(scrubbedPrompt, 200)}';
     }
   }
 

@@ -8,6 +8,8 @@ import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
 import '../domain/services/medical_analysis_service.dart';
 import '../infrastructure/llm/medical_llm_adapter.dart';
+import '../../../core/services/privacy_anonymizer.dart';
+import '../../../core/di/injection.dart';
 import '../infrastructure/analysis/lab_interpreter.dart';
 import '../infrastructure/analysis/vital_sign_analyzer.dart';
 import '../infrastructure/analysis/risk_calculator.dart';
@@ -68,7 +70,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
     VitalSignAnalyzer? vitalAnalyzer,
     RiskCalculator? riskCalculator,
     MemoryGraph? memory,
-  })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(),
+  })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(scrubber: getIt<PromptScrubber>()),
         _analysisService = analysisService ?? MedicalAnalysisService(),
         _labInterpreter = labInterpreter ?? LabInterpreter(),
         _vitalAnalyzer = vitalAnalyzer ?? VitalSignAnalyzer(),

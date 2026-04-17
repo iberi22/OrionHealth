@@ -24,6 +24,12 @@ class UserProfile {
 
   String? phoneNumber;
 
+  bool allowCloudApi;
+
+  String? llmProvider;
+
+  String? localModelName;
+
   UserProfile({
     this.name,
     this.age,
@@ -34,6 +40,9 @@ class UserProfile {
     this.uniqueId,
     this.email,
     this.phoneNumber,
+    this.allowCloudApi = true,
+    this.llmProvider,
+    this.localModelName,
   });
 
   UserProfile copyWith({
@@ -46,6 +55,9 @@ class UserProfile {
     String? uniqueId,
     String? email,
     String? phoneNumber,
+    bool? allowCloudApi,
+    String? llmProvider,
+    String? localModelName,
   }) {
     return UserProfile(
       name: name ?? this.name,
@@ -57,6 +69,9 @@ class UserProfile {
       uniqueId: uniqueId ?? this.uniqueId,
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      allowCloudApi: allowCloudApi ?? this.allowCloudApi,
+      llmProvider: llmProvider ?? this.llmProvider,
+      localModelName: localModelName ?? this.localModelName,
     )..id = this.id;
   }
 
