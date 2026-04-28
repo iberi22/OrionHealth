@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import '../../auth/infrastructure/services/encryption_service.dart';
 import '../domain/entities/shared_health_package.dart';
 
 /// WiFi Direct sharing service for health data transfer
@@ -10,6 +11,7 @@ class WifiDirectService {
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration transferTimeout = Duration(minutes: 3);
 
+  final EncryptionService _encryptionService;
   HttpServer? _server;
   Socket? _socket;
   bool _isRunning = false;
@@ -20,6 +22,9 @@ class WifiDirectService {
 
   final _dataController = StreamController<SharedHealthPackage>.broadcast();
   Stream<SharedHealthPackage> get incomingData => _dataController.stream;
+
+  WifiDirectService({EncryptionService? encryptionService})
+      : _encryptionService = encryptionService ?? EncryptionServiceImpl();
 
   /// Initialize WiFi P2P
   Future<void> initialize() async {
@@ -32,13 +37,6 @@ class WifiDirectService {
     Duration timeout = const Duration(seconds: 10),
   }) async {
     _stateController.add(WifiSharingState.discovering());
-
-    // In production:
-    // final result = await WifiP2p.discover();
-    // return result.devices.map((d) => WifiDirectDevice(
-    //   name: d.deviceName,
-    //   address: d.deviceAddress,
-    // )).toList();
 
     await Future.delayed(timeout);
 
@@ -95,10 +93,12 @@ class WifiDirectService {
     _stateController.add(WifiSharingState.receiving());
 
     try {
-      // Collect all body bytes and decode
+      // Collect all body bytes
       final bodyBytes = await request.fold<List<int>>([], (acc, chunk) => acc..addAll(chunk));
-      final body = utf8.decode(bodyBytes);
-      final package = SharedHealthPackage.decode(body);
+
+      // Robustly decrypt the received data package
+      final decryptedJson = await _encryptionService.decrypt(Uint8List.fromList(bodyBytes));
+      final package = SharedHealthPackage.fromJson(jsonDecode(decryptedJson));
 
       if (package.isExpired) {
         request.response.statusCode = 410; // Gone
@@ -106,11 +106,6 @@ class WifiDirectService {
         request.response.close();
         _stateController.add(WifiSharingState.error('Package has expired'));
         return;
-      }
-
-      // Verify PIN if provided
-      if (package.metadata.pinHash != null) {
-        // PIN verification would happen here
       }
 
       _dataController.add(package);
@@ -144,10 +139,13 @@ class WifiDirectService {
         timeout: connectionTimeout,
       );
 
-      _stateController.add(WifiSharingState.transferring('Sending...'));
+      _stateController.add(WifiSharingState.transferring('Encrypting and sending...'));
 
-      final data = package.encode();
-      _socket!.add(utf8.encode(data));
+      // Robustly encrypt the data package before sharing
+      final jsonToEncrypt = jsonEncode(package.toJson());
+      final encryptedBytes = await _encryptionService.encrypt(jsonToEncrypt);
+
+      _socket!.add(encryptedBytes);
       await _socket!.flush();
 
       // Wait for response
@@ -159,11 +157,11 @@ class WifiDirectService {
 
       if (responseStr.contains('OK')) {
         final transferTime = DateTime.now().difference(startTime);
-        _stateController.add(WifiSharingState.completed(data.length, transferTime));
+        _stateController.add(WifiSharingState.completed(encryptedBytes.length, transferTime));
 
         return SharingResult(
           success: true,
-          bytesTransferred: data.length,
+          bytesTransferred: encryptedBytes.length,
           transferTime: transferTime,
         );
       } else {

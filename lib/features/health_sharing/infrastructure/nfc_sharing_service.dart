@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import '../../auth/infrastructure/services/encryption_service.dart';
 import '../domain/entities/shared_health_package.dart';
 
 /// NFC sharing service for tap-to-share health data
 class NfcSharingService {
   static const MethodChannel _channel = MethodChannel('orionhealth/nfc');
 
+  final EncryptionService _encryptionService;
   bool _isInitialized = false;
   bool _isEnabled = false;
 
@@ -15,6 +17,9 @@ class NfcSharingService {
 
   final _dataController = StreamController<SharedHealthPackage>.broadcast();
   Stream<SharedHealthPackage> get incomingData => _dataController.stream;
+
+  NfcSharingService({EncryptionService? encryptionService})
+      : _encryptionService = encryptionService ?? EncryptionServiceImpl();
 
   /// Initialize NFC adapter
   Future<void> initialize() async {
@@ -63,7 +68,10 @@ class NfcSharingService {
     final startTime = DateTime.now();
 
     try {
-      final data = package.encode();
+      // Robustly encrypt the data package before sharing
+      final jsonToEncrypt = jsonEncode(package.toJson());
+      final encryptedBytes = await _encryptionService.encrypt(jsonToEncrypt);
+      final data = base64Encode(encryptedBytes);
 
       // In production, use Android Beam or iOS NFC:
       // await _channel.invokeMethod('beamNdefMessage', {'data': data});
@@ -110,9 +118,12 @@ class NfcSharingService {
   }
 
   /// Handle received NFC data (called from native side)
-  void handleReceivedData(String encodedPackage) {
+  void handleReceivedData(String encryptedPackage) async {
     try {
-      final package = SharedHealthPackage.decode(encodedPackage);
+      // Robustly decrypt the received data package
+      final encryptedBytes = base64Decode(encryptedPackage);
+      final decryptedJson = await _encryptionService.decrypt(encryptedBytes);
+      final package = SharedHealthPackage.fromJson(jsonDecode(decryptedJson));
 
       if (package.isExpired) {
         _stateController.add(NfcSharingState.error('Package has expired'));

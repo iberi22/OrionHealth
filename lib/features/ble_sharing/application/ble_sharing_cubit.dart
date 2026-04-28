@@ -97,6 +97,8 @@ class BleSharingError extends BleSharingState {
   List<Object?> get props => [message];
 }
 
+import '../../auth/infrastructure/services/encryption_service.dart';
+
 class BleSharingCubit extends Cubit<BleSharingState> {
   final BleSharingService _bleService;
   final NfcSharingService _nfcService;
@@ -113,9 +115,10 @@ class BleSharingCubit extends Cubit<BleSharingState> {
     BleSharingService? bleService,
     NfcSharingService? nfcService,
     WifiDirectService? wifiService,
-  }) : _bleService = bleService ?? BleSharingService(),
-       _nfcService = nfcService ?? NfcSharingService(),
-       _wifiService = wifiService ?? WifiDirectService(),
+    EncryptionService? encryptionService,
+  }) : _bleService = bleService ?? BleSharingService(encryptionService ?? EncryptionServiceImpl()),
+       _nfcService = nfcService ?? NfcSharingService(encryptionService: encryptionService ?? EncryptionServiceImpl()),
+       _wifiService = wifiService ?? WifiDirectService(encryptionService: encryptionService ?? EncryptionServiceImpl()),
        super(BleSharingInitial());
 
   Future<void> initialize() async {

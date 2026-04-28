@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
+import '../../auth/infrastructure/services/encryption_service.dart';
 import '../domain/ble_sharing_service.dart';
 
 class WifiDirectService {
@@ -12,17 +11,20 @@ class WifiDirectService {
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration transferTimeout = Duration(minutes: 3);
 
+  final EncryptionService _encryptionService;
   HttpServer? _server;
   Socket? _socket;
   bool _isRunning = false;
   String? _deviceIp;
-  Uint8List? _sessionKey;
 
   final _stateController = StreamController<WifiServiceState>.broadcast();
   Stream<WifiServiceState> get stateStream => _stateController.stream;
 
   final _dataController = StreamController<MedicalSharePackage>.broadcast();
   Stream<MedicalSharePackage> get incomingData => _dataController.stream;
+
+  WifiDirectService({EncryptionService? encryptionService})
+      : _encryptionService = encryptionService ?? EncryptionServiceImpl();
 
   Future<void> initialize() async {
     _stateController.add(WifiServiceState.ready());
@@ -57,7 +59,6 @@ class WifiDirectService {
       );
       _deviceIp = '${_server!.address.address}:$port';
       _isRunning = true;
-      _sessionKey = _generateSessionKey();
       _stateController.add(WifiServiceState.hosting(_deviceIp!));
 
       _server!.listen(
@@ -87,8 +88,8 @@ class WifiDirectService {
         [],
         (acc, chunk) => acc..addAll(chunk),
       );
-      final body = utf8.decode(bodyBytes);
-      final package = _decryptPackage(body);
+
+      final package = await _decryptPackageBytes(Uint8List.fromList(bodyBytes));
 
       if (package.isExpired) {
         request.response.statusCode = 410;
@@ -119,17 +120,15 @@ class WifiDirectService {
     final startTime = DateTime.now();
 
     try {
-      _sessionKey = _generateSessionKey();
       _socket = await Socket.connect(
         targetIp,
         kDefaultPort,
         timeout: connectionTimeout,
       );
-      _stateController.add(WifiServiceState.transferring('Sending...'));
+      _stateController.add(WifiServiceState.transferring('Encrypting and sending...'));
 
-      final encrypted = _encryptPackage(package);
-      final data = utf8.encode(encrypted);
-      _socket!.add(data);
+      final encryptedBytes = await _encryptPackageToBytes(package);
+      _socket!.add(encryptedBytes);
       await _socket!.flush();
 
       final response = await _socket!.first.timeout(
@@ -142,11 +141,11 @@ class WifiDirectService {
       if (responseStr.contains('OK')) {
         final transferTime = DateTime.now().difference(startTime);
         _stateController.add(
-          WifiServiceState.completed(data.length, transferTime),
+          WifiServiceState.completed(encryptedBytes.length, transferTime),
         );
         return SharingResult(
           success: true,
-          bytesTransferred: data.length,
+          bytesTransferred: encryptedBytes.length,
           transferTime: transferTime,
         );
       } else {
@@ -165,72 +164,15 @@ class WifiDirectService {
     }
   }
 
-  Uint8List _generateSessionKey() {
-    final random = Random.secure();
-    return Uint8List.fromList(
-      List<int>.generate(32, (_) => random.nextInt(256)),
-    );
+  Future<Uint8List> _encryptPackageToBytes(MedicalSharePackage package) async {
+    final jsonStr = jsonEncode(package.toJson());
+    return await _encryptionService.encrypt(jsonStr);
   }
 
-  String _encryptPackage(MedicalSharePackage package) {
-    final payload = package.toJson();
-    final jsonStr = jsonEncode(payload);
-    final plainBytes = utf8.encode(jsonStr);
-
-    final iv = Uint8List.fromList(
-      List<int>.generate(12, (_) => Random.secure().nextInt(256)),
-    );
-    final encrypted = _aes256GcmEncrypt(plainBytes, _sessionKey!, iv);
-
-    final encryptedPackage = EncryptedMedicalPayload(
-      cipherText: base64Encode(encrypted),
-      iv: base64Encode(iv),
-      authTag: base64Encode(List<int>.filled(16, 0)),
-    );
-
-    return jsonEncode({
-      'v': 1,
-      'enc': encryptedPackage.toJson(),
-      'meta': {
-        'sender': package.senderNodeId,
-        'created': package.createdAt.toIso8601String(),
-        'expires': package.expiresAt.toIso8601String(),
-      },
-    });
-  }
-
-  MedicalSharePackage _decryptPackage(String encoded) {
-    final json = jsonDecode(encoded) as Map<String, dynamic>;
-
-    if (json.containsKey('enc') && _sessionKey != null) {
-      final encJson = json['enc'] as Map<String, dynamic>;
-      final cipherText = encJson['cipherText'] as String;
-      final iv = encJson['iv'] as String;
-      final cipherBytes = base64Decode(cipherText);
-      final ivBytes = base64Decode(iv);
-      final decrypted = Uint8List(cipherBytes.length);
-
-      for (int i = 0; i < cipherBytes.length; i++) {
-        decrypted[i] =
-            cipherBytes[i] ^
-            _sessionKey![i % _sessionKey!.length] ^
-            ivBytes[i % ivBytes.length];
-      }
-
-      final decryptedJson =
-          jsonDecode(utf8.decode(decrypted)) as Map<String, dynamic>;
-      return MedicalSharePackage.fromJson(decryptedJson);
-    }
-
+  Future<MedicalSharePackage> _decryptPackageBytes(Uint8List encryptedBytes) async {
+    final decryptedJson = await _encryptionService.decrypt(encryptedBytes);
+    final json = jsonDecode(decryptedJson) as Map<String, dynamic>;
     return MedicalSharePackage.fromJson(json);
-  }
-
-  Uint8List _aes256GcmEncrypt(Uint8List plain, Uint8List key, Uint8List iv) {
-    final result = Uint8List(plain.length);
-    for (int i = 0; i < plain.length; i++) {
-      result[i] = plain[i] ^ key[i % key.length] ^ iv[i % iv.length];
-    }
-    return result;
   }
 
   Future<void> stop() async {

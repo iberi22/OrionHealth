@@ -106,10 +106,13 @@ class SharingError extends SharingState {
 // CUBIT
 // ============================================================================
 
+import '../../auth/infrastructure/services/encryption_service.dart';
+
 class SharingCubit extends Cubit<SharingState> {
   final BleSharingService _bleService;
   final NfcSharingService _nfcService;
   final WifiDirectService _wifiService;
+  final EncryptionService _encryptionService;
 
   StreamSubscription? _bleSubscription;
   StreamSubscription? _nfcSubscription;
@@ -122,9 +125,11 @@ class SharingCubit extends Cubit<SharingState> {
     BleSharingService? bleService,
     NfcSharingService? nfcService,
     WifiDirectService? wifiService,
-  })  : _bleService = bleService ?? BleSharingService(),
-        _nfcService = nfcService ?? NfcSharingService(),
-        _wifiService = wifiService ?? WifiDirectService(),
+    EncryptionService? encryptionService,
+  })  : _encryptionService = encryptionService ?? EncryptionServiceImpl(),
+        _bleService = bleService ?? BleSharingService(encryptionService ?? EncryptionServiceImpl()),
+        _nfcService = nfcService ?? NfcSharingService(encryptionService: encryptionService ?? EncryptionServiceImpl()),
+        _wifiService = wifiService ?? WifiDirectService(encryptionService: encryptionService ?? EncryptionServiceImpl()),
         super(SharingInitial());
 
   /// Initialize all services
