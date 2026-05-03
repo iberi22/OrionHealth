@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import fs from 'node:fs';
+
+export async function getStaticPaths() {
+  const standards = ['icd-10', 'loinc', 'rxnorm', 'snomed'];
+  return standards.map(s => ({ params: { standard: s } }));
+}
+
+const standardId = Astro.params.standard;
+const standardNames = {
+  'icd-10': { name: 'ICD-10', fullName: 'International Classification of Diseases', file: 'icd10.json', color: 'from-blue-500 to-blue-700' },
+  'loinc': { name: 'LOINC', fullName: 'Logical Observation Identifiers', file: 'loinc.json', color: 'from-emerald-500 to-emerald-700' },
+  'rxnorm': { name: 'RxNorm', fullName: 'Medication Codes', file: 'rxnorm.json', color: 'from-purple-500 to-purple-700' },
+  'snomed': { name: 'SNOMED CT', fullName: 'Systematized Nomenclature of Medicine', file: 'snomed.json', color: 'from-amber-500 to-amber-700' }
+};
+
+const meta = standardNames[standardId];
+if (!meta) {
+  return Astro.redirect('/OrionHealth/medical-standards', 301);
+}
+
+let data = [];
+try {
+  const content = fs.readFileSync(`public/${meta.file}`, 'utf-8');
+  const json = JSON.parse(content);
+  data = json.data || [];
+} catch {}
+
+const categories = [...new Set(data.map(d => d.category))];
+const totalCount = data.length;
+---
+
+<BaseLayout title={`${meta.fullName} - OrionHealth Medical Standards`} description={`Browse ${totalCount} ${meta.name} medical codes. Free healthcare terminology database.`}>
+  
+  <Header lang="en" />
+
+  <main class="pt-20 pb-16 px-4">
+    <div class="container-custom max-w-7xl mx-auto">
+      
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 text-sm text-bone-dark opacity-60 mb-6">
+        <a href="/OrionHealth/medical-standards" class="hover:text-accent transition-colors">Medical Standards</a>
+        <span>/</span>
+        <span class="text-white">{meta.name}</span>
+      </div>
+
+      <!-- Header -->
+      <div class="flex items-center gap-4 mb-8">
+        <div class={`w-14 h-14 rounded-xl bg-gradient-to-br ${meta.color} flex items-center justify-center`}>
+          <span class="text-white font-bold text-xl">{meta.name.slice(0,2)}</span>
+        </div>
+        <div>
+          <h1 class="text-3xl md:text-5xl font-bold tracking-tighter">{meta.fullName}</h1>
+          <p class="text-bone-dark opacity-70">
+            {totalCount.toLocaleString()} códigos · 
+            {categories.length} categorías
+          </p>
+        </div>
+      </div>
+
+      <!-- Search bar -->
+      <div class="glass rounded-xl p-4 mb-6">
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="Buscar por código, nombre o término médico..."
+          class="w-full bg-transparent border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-bone-dark/40 focus:outline-none focus:border-accent transition-colors"
+          oninput="filterTable(this.value)"
+        />
+      </div>
+
+      <!-- Stats bar -->
+      <div class="flex flex-wrap gap-2 mb-6">
+        {categories.map(cat => (
+          <span class="text-xs px-3 py-1 rounded-full bg-white/5 border border-white/10 text-bone-dark hover:border-accent/50 cursor-pointer transition-colors"
+                onclick="filterCategory('{cat.replace(/'/g, "\\'")}')">
+            {cat}
+          </span>
+        ))}
+      </div>
+
+      <!-- Table -->
+      <div class="glass rounded-xl overflow-hidden">
+        <div class="overflow-x-auto max-h-[70vh] overflow-y-auto">
+          <table class="w-full text-sm">
+            <thead class="sticky top-0 bg-charcoal/95 backdrop-blur-sm border-b border-white/10">
+              <tr>
+                <th class="text-left px-4 py-3 font-bold text-accent cursor-pointer" onclick="sortTable(0)">Code</th>
+                <th class="text-left px-4 py-3 font-bold text-accent cursor-pointer" onclick="sortTable(1)">Name</th>
+                <th class="text-left px-4 py-3 font-bold text-accent hidden md:table-cell cursor-pointer" onclick="sortTable(2)">Category</th>
+                <th class="text-left px-4 py-3 font-bold text-accent hidden lg:table-cell">Search Terms</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              {data.map((item, i) => (
+                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <td class="px-4 py-3">
+                    <a href={`/OrionHealth/medical-standards/${standardId}/${item.code}`} class="font-mono text-accent hover:underline">
+                      {item.code}
+                    </a>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="text-white">{item.displayName}</span>
+                  </td>
+                  <td class="px-4 py-3 hidden md:table-cell">
+                    <span class="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10">{item.category}</span>
+                  </td>
+                  <td class="px-4 py-3 hidden lg:table-cell">
+                    <div class="flex flex-wrap gap-1">
+                      {(item.searchTerms || []).slice(0,3).map(term => (
+                        <span class="text-xs text-bone-dark/60">{term}</span>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function filterTable(query) {
+      const q = query.toLowerCase();
+      const rows = document.querySelectorAll('#tableBody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    function filterCategory(category) {
+      const input = document.getElementById('searchInput');
+      input.value = category;
+      filterTable(category);
+    }
+
+    function sortTable(col) {
+      const tbody = document.getElementById('tableBody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const dir = tbody.dataset.sortDir === 'asc' ? 'desc' : 'asc';
+      tbody.dataset.sortDir = dir;
+
+      rows.sort((a, b) => {
+        const aVal = a.cells[col]?.textContent.trim() || '';
+        const bVal = b.cells[col]?.textContent.trim() || '';
+        return dir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      });
+
+      rows.forEach(row => tbody.appendChild(row));
+    }
+  </script>
+
+  <Footer lang="en" />
+</BaseLayout>
