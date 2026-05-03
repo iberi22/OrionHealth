@@ -1,4 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
+﻿// GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -266,6 +266,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i35.VectorStoreService>(),
           gh<_i53.MedicalResearchService>(),
           gh<_i33.UserProfileRepository>(),
+          gh<_i13.LlmAdapter>(instanceName: 'gemma'),
         ));
     return this;
   }
