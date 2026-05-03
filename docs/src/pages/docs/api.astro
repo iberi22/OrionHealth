@@ -1,0 +1,358 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="API Reference - OrionHealth"
+  description="Complete API reference for OrionHealth — services, RAG pipeline, blocs, and native Android plugins"
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="pt-16 md:pt-20 safe-area-top">
+    <!-- Hero -->
+    <section class="relative py-16 md:py-24 px-4 text-center">
+      <div class="container-custom">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-accent mb-4" data-animate>
+          DEVELOPER REFERENCE
+        </p>
+        <h1 class="section-title font-bold tracking-tighter uppercase mb-6" data-animate>
+          API REFER<span class="text-accent">ENCE</span>
+        </h1>
+        <p class="text-sm md:text-base text-bone-dark max-w-3xl mx-auto opacity-80" data-animate>
+          Complete reference for OrionHealth services, state management, and native plugins.
+        </p>
+      </div>
+    </section>
+
+    <!-- Core Services -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 1</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">CORE SERVICES</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-6">
+            Located in <code class="text-accent">lib/core/services/</code>, these are the foundational services that power OrionHealth's privacy-first architecture.
+          </p>
+
+          <!-- AicoreService -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">AicoreService</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              MethodChannel bridge to the native Android AICore plugin. Manages Gemma 4 model lifecycle and inference.
+            </p>
+            <pre is:raw class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs">File: lib/core/services/aicore_service.dart
+Channel: com.orionhealth/aicore
+
+Future&lt;bool&gt; initialize(bool useFullModel)
+Future&lt;AicoreStatus&gt; checkAvailability()
+Future&lt;bool&gt; downloadModel()
+Future&lt;String&gt; generateContent(String prompt)
+Future&lt;void&gt; generateContentStream(String prompt)
+Future&lt;bool&gt; warmup()
+
+enum AicoreStatus {
+  available,     // Model downloaded and ready
+  downloadable,  // Can be downloaded
+  unavailable,   // Device not supported
+  downloading,   // Download in progress
+}</pre>
+          </div>
+
+          <!-- DeviceCapabilityService -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">DeviceCapabilityService</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Runtime detection of device capabilities — AICore support, local LLM availability, Bluetooth, and sensors.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>File: lib/core/services/device_capability_service.dart
+
+Future&lt;bool&gt; hasAICore()
+Future&lt;bool&gt; hasBLE()
+Future&lt;bool&gt; hasHealthConnect()
+Future&lt;DeviceCapabilities&gt; getAllCapabilities()</code></pre>
+          </div>
+
+          <!-- PrivacyAnonymizer -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">PrivacyAnonymizer</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              PII (Personally Identifiable Information) removal before any cloud API calls. Ensures sensitive data is never exposed externally.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>File: lib/core/services/privacy_anonymizer.dart
+
+String anonymize(String text)
+  // Removes: names, IDs, phone numbers, emails, addresses
+  // Replaces with: [REDACTED_NAME], [REDACTED_ID], etc.
+
+String restoreAnonymized(String text)
+  // Only available when local inference is used</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RAG Pipeline -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 2</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">RAG PIPELINE</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-6">
+            The Retrieval-Augmented Generation system is spread across <code class="text-accent">lib/features/local_agent/</code> and the <code class="text-accent">isar_agent_memory</code> package.
+          </p>
+
+          <!-- RagLlmService -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">RagLlmService</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Orchestrates the RAG pipeline. Retrieves context from the vector store, enriches with medical research, and generates AI responses.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>File: lib/features/local_agent/.../rag_llm_service.dart
+
+Stream&lt;String&gt; generate(String prompt) async* &#123;
+  final contextDocs = await _vectorStoreService.search(prompt);
+  if (contextDocs.length &lt; 2 &amp;&amp; allowCloud) &#123;
+    research = await _medicalResearchService.performResearch(prompt);
+  &#125;
+  yield* _llmAdapter.generate(contextPrompt);
+&#125;</code></pre>
+          </div>
+
+          <!-- MockLlmAdapter -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">MockLlmAdapter</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Development/testing adapter that returns preformatted template responses. Used when no LLM is configured.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>Stream&lt;String&gt; generate(String prompt) async* &#123;
+  yield "Entendido. Basado en tu consulta '$prompt'...";
+&#125;</code></pre>
+          </div>
+
+          <!-- GemmaLlmAdapter -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">GemmaLlmAdapter</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Production LLM adapter. Attempts local inference via AICore (Gemma 4 E2B/E4B), falls back to Gemini cloud if unavailable.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>File: lib/features/local_agent/infrastructure/adapters/gemma_llm_adapter.dart
+Channel: com.orionhealth/gemma4
+
+@LazySingleton(as: LlmAdapter)
+@Named('gemma')
+class GemmaLlmAdapter implements LlmAdapter &#123;
+  static const _channel = MethodChannel('com.orionhealth/gemma4');
+&#125;</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blocs / State -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 3</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">BLOCS / STATE MANAGEMENT</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-6">
+            OrionHealth uses <code class="text-accent">flutter_bloc</code> with Cubit for most features. Below is the state management map:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">HealthRecordCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">health_record — Manages medical records CRUD</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">ReportsCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">health_report — Analytics and export state</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">LocalAgentCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">local_agent — AI chat session management</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">BleSharingCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">ble_sharing — BLE connection and data transfer</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">UserProfileCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">user_profile — Profile and preferences state</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">SettingsCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">settings — LLM toggle, theme, model management</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">AuthCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">auth — Biometric authentication state</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">HealthDataImportCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">health_data_import — Upload and OCR progress</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">MedicalAssistantCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">medical_assistant — FAB assistant state</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">MedicalResearchCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">medical_research — RAG search and results</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">VitalsCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">vitals — Vital signs tracking state</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-secondary mb-1">MedicationsCubit</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">medications — Prescription management</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Android Native -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 4</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">ANDROID NATIVE</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-6">
+            Kotlin platform code bridging Dart to Android AICore / ML Kit for on-device AI inference.
+          </p>
+
+          <!-- AicorePlugin.kt -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">AicorePlugin.kt</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Flutter plugin handling both MethodChannels. Routes calls to AicoreServiceKt for ML Kit interaction.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>Path: android/.../AicorePlugin.kt
+
+class AicorePlugin : FlutterPlugin, MethodCallHandler &#123;
+  // Channels: com.orionhealth/aicore, com.orionhealth/gemma4
+  override fun onMethodCall(call: MethodCall, result: Result) &#123;
+    when (call.method) &#123;
+      "initialize"             → // Load Gemma model
+      "checkAvailability"      → // Query AICore
+      "downloadModel"          → // Download with progress
+      "generateContent"        → // Run inference
+      "generateContentStream"  → // Token streaming
+      "warmup"                 → // Pre-load model
+      "isAvailable"            → // Gemma4 check
+      "generate"               → // Gemma4 inference
+    &#125;
+  &#125;
+&#125;</code></pre>
+          </div>
+
+          <!-- AicoreServiceKt -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">AicoreServiceKt.kt</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Helper class interfacing with Google ML Kit's GenerativeModel API for Gemma 4 on-device inference.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>Dependency (build.gradle):
+implementation 'com.google.mlkit:genai-android:0.1.0'
+
+class AicoreServiceKt(private val context: Context) &#123;
+  suspend fun initialize(useFullModel: Boolean): Boolean
+  fun isModelDownloaded(): Boolean
+  fun getDownloadStatus(): String
+  suspend fun generateContent(prompt: String): String
+&#125;</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Packages -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 5</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">INTERNAL PACKAGES</h2>
+
+          <!-- isar_agent_memory -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">isar_agent_memory</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Graph-based agent memory with vector search capabilities. Core of the RAG system.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>Path: packages/isar_agent_memory/
+Version: v0.5.0-beta
+
+Core Classes:
+  MemoryGraph        — Main API: CRUD, semantic/hybrid search
+  MemoryNode         — Graph node with content + embedding
+  MemoryEdge         — Graph edge with relation type
+  HiRAG              — Multi-layer summarization
+  InMemoryVectorIndex— Cosine similarity vector index
+  EmbeddingsAdapter  — Abstract embedding interface
+
+Key Features:
+  - Semantic Search (cosine similarity)
+  - Hybrid Search (vector + text + RRF)
+  - HiRAG Layer Summarization
+  - Multi-Hop Search
+  - Memory Consolidation
+  - Forgetting Mechanism (age/importance/LRU)
+  - Sync Manager (Firebase RTDB + WebSocket)</code></pre>
+          </div>
+
+          <!-- health_wallet -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl mb-4">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">health_wallet</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Offline health record storage with military-grade encryption.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>Path: packages/health_wallet/
+
+Data Types:
+  LabResults      — By LOINC code, by recency
+  VitalSigns      — By type, by date range
+  Medications     — Active by RxNorm code
+  MedicalEvents   — By type, timeline view
+  Documents       — Encrypted file storage
+
+Encryption: AES-256-GCM + PBKDF2 (100K) + HKDF</code></pre>
+          </div>
+
+          <!-- medical_standards -->
+          <div class="glass-dark p-4 md:p-6 rounded-xl">
+            <h3 class="text-sm md:text-base font-bold text-accent mb-2">medical_standards</h3>
+            <p class="text-xs text-bone-dark opacity-70 mb-3">
+              Embedded medical coding standards for professional data interoperability.
+            </p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>Path: packages/medical_standards/
+
+Standards:
+  ICD-10    — Diagnosis codes (300+ codes, all chapters)
+  LOINC     — Lab test codes
+  RxNorm    — Medication codes
+  SNOMED CT — Clinical terminology
+
+Data: Embedded JSON files, indexed on startup</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Back link -->
+    <section class="relative py-12 px-4 text-center">
+      <div class="container-custom">
+        <a href={`${base}/docs`} class="btn-secondary px-6 py-3 text-xs inline-block">
+          ← BACK TO DOCUMENTATION
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang="en" />
+</BaseLayout>

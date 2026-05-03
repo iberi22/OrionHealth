@@ -1,0 +1,458 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Architecture - OrionHealth"
+  description="OrionHealth architecture documentation — local-first, hexagonal design with RAG pipeline and on-device AI"
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="pt-16 md:pt-20 safe-area-top">
+    <!-- Hero -->
+    <section class="relative py-16 md:py-24 px-4 text-center">
+      <div class="container-custom">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-accent mb-4" data-animate>
+          SYSTEM DESIGN
+        </p>
+        <h1 class="section-title font-bold tracking-tighter uppercase mb-6" data-animate>
+          ARCHITEC<span class="text-accent">TURE</span>
+        </h1>
+        <p class="text-sm md:text-base text-bone-dark max-w-3xl mx-auto opacity-80" data-animate>
+          OrionHealth follows a <span class="text-accent">local-first, privacy-centric</span> architecture with
+          hexagonal design, enabling complete health data ownership without compromising security or functionality.
+        </p>
+      </div>
+    </section>
+
+    <!-- Overview -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 1</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">OVERVIEW</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-4">
+            OrionHealth is built on three core architectural pillars, all designed to keep your data <span class="text-accent">private, local, and under your control</span>:
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center mb-3">
+                <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
+              </div>
+              <h3 class="text-sm font-bold text-bone mb-2">LOCAL-FIRST</h3>
+              <p class="text-xs text-bone-dark opacity-60">All data stored on-device using IsarDB. Zero data leaves the device unencrypted. Works fully offline.</p>
+            </div>
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center mb-3">
+                <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3 class="text-sm font-bold text-bone mb-2">HEXAGONAL</h3>
+              <p class="text-xs text-bone-dark opacity-60">Domain, application, infrastructure, and presentation layers with strict dependency rules. Zero external dependencies in domain layer.</p>
+            </div>
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center mb-3">
+                <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 class="text-sm font-bold text-bone mb-2">ON-DEVICE AI</h3>
+              <p class="text-xs text-bone-dark opacity-60">Retrieval-Augmented Generation with Gemma 4 via Android AICore. All inference happens locally — your data never reaches the cloud.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Diagram -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Architecture Diagram</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">SYSTEM LAYERS</h2>
+          <pre class="glass-dark p-4 md:p-6 rounded-lg overflow-x-auto text-xs md:text-sm leading-relaxed"><code>┌─────────────────────────────────────────────────────────┐
+│                    Flutter App                            │
+│  ┌─────────────────────────────────────────────────────┐ │
+│  │            Application Layer (lib/)                   │ │
+│  │  ┌──────────────┐  ┌───────────────────────────┐    │ │
+│  │  │ SmartSearch   │  │  MedicalIndexingService   │    │ │
+│  │  │ UseCase       │  │                           │    │ │
+│  │  └──────┬───────┘  └──────────┬────────────────┘    │ │
+│  │         │                      │                      │ │
+│  │  ┌──────▼──────────────────────▼────────────────┐     │ │
+│  │  │   VectorStoreService (Domain Interface)        │     │ │
+│  │  │   IsarVectorStoreService (Implementation)      │     │ │
+│  │  └──────────────────┬───────────────────────────┘     │ │
+│  │                     │                                  │ │
+│  │  ┌──────────────────▼───────────────────────────┐     │ │
+│  │  │          isar_agent_memory package              │     │ │
+│  │  │  ┌─────────────┐  ┌──────────────────────┐    │     │ │
+│  │  │  │ MemoryGraph  │  │  HiRAG Extension     │    │     │ │
+│  │  │  └──────┬──────┘  └────────┬─────────────┘    │     │ │
+│  │  │         │                   │                  │     │ │
+│  │  │  ┌──────▼───────────────────▼──────────────┐  │     │ │
+│  │  │  │  IsarDB (Embedded Object DB)             │  │     │ │
+│  │  │  └────────────────────────────────────────┘  │     │ │
+│  │  └──────────────────────────────────────────────┘     │ │
+│ └─────────────────────────────────────────────────────┘  │
+│                                                            │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │            health_wallet package                      │  │
+│  │  ┌──────────┐ ┌────────────────┐ ┌──────────────┐   │  │
+│  │  │Wallet    │ │EncryptionService│ │Medical       │   │  │
+│  │  │Service   │ │ AES-256-GCM    │ │Documents     │   │  │
+│  │  └──────────┘ └────────────────┘ └──────────────┘   │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                            │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │  medical_standards package (ICD-10, LOINC, RxNorm)   │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                            │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │  Native Android (AicorePlugin + AicoreServiceKt)     │  │
+│  │  Gemma 4 E2B/E4B via AICore / ML Kit                │  │
+│  └─────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Flow -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 2</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">DATA FLOW</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-4">
+            Data flows through a clear, layered pipeline that ensures privacy at every step:
+          </p>
+          <pre class="glass-dark p-4 md:p-6 rounded-lg overflow-x-auto text-xs md:text-sm leading-relaxed mb-6"><code>User Query (Spanish/English)
+       │
+       ▼
+SmartSearchUseCase ──► Strategy Detection
+       │                  ├── BM25 (medical terms)
+       │                  ├── Recency (temporal keywords)
+       │                  ├── Diversity (exploratory)
+       │                  └── MMR (default)
+       │
+       ▼
+IsarVectorStoreService.search()
+       │
+       ├──► MemoryGraph.hybridSearch()
+       │       ├── 1. Embedding → EmbeddingsAdapter
+       │       ├── 2. Vector Search → cosine similarity
+       │       ├── 3. Text Search → Isar contentContains
+       │       └── 4. Fusion → Weighted RRF scoring
+       │
+       └──► MedicalIndexingService.search()
+               ├── 1. Vector Search (semantic)
+               ├── 2. Text Index → searchByTerm()
+               └── 3. Merge → Deduplicate by code
+       │
+       ▼
+RagLlmService.generate()
+       ├── 1. Retrieve context from vector store
+       ├── 2. Enrich with MedicalResearchService
+       └── 3. Stream response via LLM (Gemma 4)</code></pre>
+          <p class="text-xs text-bone-dark opacity-60">
+            <span class="text-accent">Note:</span> The RAG pipeline currently uses hash-based embeddings via <code class="text-secondary">SimpleEmbeddingsAdapter</code>.
+            Gemini embeddings and AICore native plugin are planned for the next release.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RAG Pipeline -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 3</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">RAG PIPELINE</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-4">
+            The Retrieval-Augmented Generation pipeline combines three powerful techniques for accurate, contextual health insights:
+          </p>
+
+          <div class="space-y-6">
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm md:text-base font-bold text-accent mb-2">MemoryGraph</h3>
+              <p class="text-xs text-bone-dark opacity-70 mb-3">Hybrid vector + knowledge graph built on IsarDB for semantic health queries.</p>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>MemoryNode: &#123; uuid, content, type, embedding, layer, degree &#125;
+MemoryEdge: &#123; source → target, relation type &#125;
+Degree: &#123; recency, frequency, importance &#125;</code></pre>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm md:text-base font-bold text-accent mb-2">Hierarchical RAG (HiRAG)</h3>
+              <p class="text-xs text-bone-dark opacity-70 mb-3">Multi-layer summarization for complex medical reasoning with multi-hop search.</p>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>// Multi-hop search traverses 'summary_of' edges upward
+Future&lt;List&lt;(&#123;MemoryNode node, List&lt;MemoryNode&gt; context&#125;)>>
+  multiHopSearch(queryEmbedding, maxHops: 2, topK: 5)</code></pre>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm md:text-base font-bold text-accent mb-2">Hybrid Search</h3>
+              <p class="text-xs text-bone-dark opacity-70 mb-3">Combines semantic vector search with BM25-style keyword matching via Reciprocal Rank Fusion (RRF).</p>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>Score = alpha * vectorScore + (1 - alpha) * textScore
+alpha = 0.5 (configurable)</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AICore Plugin -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 4</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">AICORE PLUGIN</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-4">
+            The Android native bridge enables on-device AI inference using Google AICore / ML Kit. The Dart-to-Kotlin communication uses two MethodChannels:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm font-bold text-secondary mb-2">com.orionhealth/aicore</h3>
+              <ul class="text-xs text-bone-dark opacity-70 space-y-1">
+                <li><code>initialize</code> — Load Gemma model</li>
+                <li><code>checkAvailability</code> — Model status</li>
+                <li><code>downloadModel</code> — Download progress</li>
+                <li><code>generateContent</code> — Sync inference</li>
+                <li><code>generateContentStream</code> — Token streaming</li>
+                <li><code>warmup</code> — Pre-load model</li>
+              </ul>
+            </div>
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm font-bold text-secondary mb-2">com.orionhealth/gemma4</h3>
+              <ul class="text-xs text-bone-dark opacity-70 space-y-1">
+                <li><code>isAvailable</code> — Check AICore</li>
+                <li><code>generate</code> — Run Gemma 4</li>
+              </ul>
+            </div>
+          </div>
+
+          <pre class="glass-dark p-4 rounded-lg overflow-x-auto text-xs"><code>// Dart: GemmaLlmAdapter
+static const _channel = MethodChannel('com.orionhealth/gemma4');
+
+// Kotlin: AicorePlugin.kt
+class AicorePlugin : FlutterPlugin, MethodCallHandler &#123;
+    // Handles both channels
+    // Routes to AicoreServiceKt for ML Kit APIs
+&#125;</code></pre>
+
+          <p class="text-xs text-bone-dark opacity-60 mt-4">
+            <span class="text-accent">⚠</span> The native <code>AicorePlugin.kt</code> and <code>AicoreServiceKt.kt</code> are placeholders.
+            Full implementation requires Android AICore SDK (Pixel 7+ / Samsung S25+).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Modules -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 5</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">FEATURE MODULES</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-6">
+            Each feature follows the Hexagonal Architecture pattern with <span class="text-accent">domain → application → infrastructure → presentation</span> layers.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">about</h3>
+              <p class="text-xs text-bone-dark opacity-60">Mission, blog, project vision, version info</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">allergies</h3>
+              <p class="text-xs text-bone-dark opacity-60">Allergy tracking and management</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">appointments</h3>
+              <p class="text-xs text-bone-dark opacity-60">Medical appointment scheduling</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">auth</h3>
+              <p class="text-xs text-bone-dark opacity-60">Biometric auth, identity management</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">ble_sharing</h3>
+              <p class="text-xs text-bone-dark opacity-60">Encrypted BLE peer-to-peer health data</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">health_data_import</h3>
+              <p class="text-xs text-bone-dark opacity-60">Document upload, OCR, Health Connect sync</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">health_record</h3>
+              <p class="text-xs text-bone-dark opacity-60">Medical history management, lab results</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">health_report</h3>
+              <p class="text-xs text-bone-dark opacity-60">Analytics, export, doctor summaries</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">health_sharing</h3>
+              <p class="text-xs text-bone-dark opacity-60">Share health data with providers</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">local_agent</h3>
+              <p class="text-xs text-bone-dark opacity-60">AI chat, Gemma LLM adapter, RAG</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">medical_assistant</h3>
+              <p class="text-xs text-bone-dark opacity-60">Floating AI assistant, confidence system</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">medical_research</h3>
+              <p class="text-xs text-bone-dark opacity-60">RAG enrichment, web research integration</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">medications</h3>
+              <p class="text-xs text-bone-dark opacity-60">Prescription tracking, RxNorm codes</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">onboarding</h3>
+              <p class="text-xs text-bone-dark opacity-60">First-time user setup, profile creation</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">settings</h3>
+              <p class="text-xs text-bone-dark opacity-60">LLM toggle, AI model management</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">user_profile</h3>
+              <p class="text-xs text-bone-dark opacity-60">Personal info, preferences, data export</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs md:text-sm font-bold text-accent mb-1">vitals</h3>
+              <p class="text-xs text-bone-dark opacity-60">Vital signs tracking, sensor integration</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Packages -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 6</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">PACKAGES</h2>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm md:text-base font-bold text-accent mb-2">isar_agent_memory</h3>
+              <p class="text-xs text-bone-dark opacity-70 mb-3">Graph-based agent memory with vector search, HiRAG summarization, and hybrid retrieval. Built on IsarDB for local-first operation.</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">MemoryGraph</span>
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">HiRAG</span>
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">HybridSearch</span>
+                <span class="text-[10px] px-2 py-1 rounded bg-secondary/10 text-secondary">v0.5.0-beta</span>
+              </div>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm md:text-base font-bold text-accent mb-2">health_wallet</h3>
+              <p class="text-xs text-bone-dark opacity-70 mb-3">Offline health record storage with AES-256-GCM encryption, PBKDF2 key derivation, and HKDF-structured key management.</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">AES-256-GCM</span>
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">PBKDF2</span>
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">IsarDB</span>
+              </div>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm md:text-base font-bold text-accent mb-2">medical_standards</h3>
+              <p class="text-xs text-bone-dark opacity-70 mb-3">International medical coding standards for interoperability and professional data management.</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">ICD-10</span>
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">LOINC</span>
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">RxNorm</span>
+                <span class="text-[10px] px-2 py-1 rounded bg-accent/10 text-accent">SNOMED CT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Decisions -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Section 7</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">KEY DECISIONS</h2>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30 uppercase">ADR-001</span>
+                <h3 class="text-sm font-bold">LOCAL-FIRST ARCHITECTURE</h3>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70"><span class="text-accent">Decision:</span> All health data stored exclusively on-device using IsarDB. Zero cloud dependencies. <span class="text-accent">Rationale:</span> Maximum privacy, offline operation, no third-party exposure. <span class="text-accent">Trade-off:</span> No cloud backup — users own data redundancy.</p>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30 uppercase">ADR-002</span>
+                <h3 class="text-sm font-bold">ON-DEVICE AI</h3>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70"><span class="text-accent">Decision:</span> All AI inference runs locally via Gemma 4 (Android AICore) with optional cloud fallback. <span class="text-accent">Rationale:</span> Health data never leaves the device for AI processing. <span class="text-accent">Trade-off:</span> Limited to capable devices (Pixel 7+ / Samsung S25+).</p>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30 uppercase">ADR-003</span>
+                <h3 class="text-sm font-bold">AGPL-3.0 LICENSE</h3>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70"><span class="text-accent">Decision:</span> Licensed under AGPL-3.0 to ensure the code remains open source and non-commercializable. <span class="text-accent">Rationale:</span> Prevent companies from charging for health data management while keeping code free. <span class="text-accent">Trade-off:</span> Cannot be used in proprietary or commercial projects.</p>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30 uppercase">ADR-004</span>
+                <h3 class="text-sm font-bold">HEXAGONAL ARCHITECTURE</h3>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70"><span class="text-accent">Decision:</span> Feature modules follow domain → application → infrastructure → presentation layers. <span class="text-accent">Rationale:</span> Clean separation of concerns, testability, replaceability of infrastructure. <span class="text-accent">Trade-off:</span> More boilerplate files per feature.</p>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30 uppercase">ADR-005</span>
+                <h3 class="text-sm font-bold">AES-256-GCM ENCRYPTION</h3>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70"><span class="text-accent">Decision:</span> All sensitive health data encrypted with AES-256-GCM, keys derived via PBKDF2 (100K iterations) and HKDF. <span class="text-accent">Rationale:</span> Military-grade encryption ensures data-at-rest protection. <span class="text-accent">Trade-off:</span> Slightly slower first-time decryption on lower-end devices.</p>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30 uppercase">ADR-006</span>
+                <h3 class="text-sm font-bold">MEDICAL STANDARDS INTEROPERABILITY</h3>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70"><span class="text-accent">Decision:</span> Built-in support for ICD-10, LOINC, RxNorm, and SNOMED CT via embedded JSON data. <span class="text-accent">Rationale:</span> Professional-grade health data management with standard-compliant coding. <span class="text-accent">Trade-off:</span> Larger app size due to embedded standard data.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Back link -->
+    <section class="relative py-12 px-4 text-center">
+      <div class="container-custom">
+        <a href={`${base}/docs`} class="btn-secondary px-6 py-3 text-xs inline-block">
+          ← BACK TO DOCUMENTATION
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang="en" />
+</BaseLayout>

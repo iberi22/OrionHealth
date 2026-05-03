@@ -1,0 +1,424 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Developer Guide - OrionHealth"
+  description="Complete developer onboarding guide for OrionHealth — setup, testing, project structure, and workflow"
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="pt-16 md:pt-20 safe-area-top">
+    <!-- Hero -->
+    <section class="relative py-16 md:py-24 px-4 text-center">
+      <div class="container-custom">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-accent mb-4" data-animate>
+          DEVELOPER ONBOARDING
+        </p>
+        <h1 class="section-title font-bold tracking-tighter uppercase mb-6" data-animate>
+          DEVELOPER <span class="text-accent">GUIDE</span>
+        </h1>
+        <p class="text-sm md:text-base text-bone-dark max-w-3xl mx-auto opacity-80" data-animate>
+          Everything you need to set up your development environment and start contributing to OrionHealth.
+        </p>
+      </div>
+    </section>
+
+    <!-- Prerequisites -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Prerequisites</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">BEFORE YOU START</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-6">
+            Make sure you have the following tools installed before setting up OrionHealth locally:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="glass-dark p-4 rounded-xl flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center shrink-0">
+                <span class="text-xs font-bold text-accent">F</span>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-bone">Flutter SDK</h3>
+                <p class="text-[10px] text-bone-dark opacity-60">Version 3.19+ required</p>
+              </div>
+            </div>
+            <div class="glass-dark p-4 rounded-xl flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center shrink-0">
+                <span class="text-xs font-bold text-accent">D</span>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-bone">Dart SDK</h3>
+                <p class="text-[10px] text-bone-dark opacity-60">Version 3.0+ (included with Flutter)</p>
+              </div>
+            </div>
+            <div class="glass-dark p-4 rounded-xl flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-bone">VS Code / Android Studio</h3>
+                <p class="text-[10px] text-bone-dark opacity-60">With Flutter & Dart plugins</p>
+              </div>
+            </div>
+            <div class="glass-dark p-4 rounded-xl flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-bone">Git</h3>
+                <p class="text-[10px] text-bone-dark opacity-60">Latest version</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- First-time Setup -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Setup</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">FIRST-TIME SETUP</h2>
+
+          <div class="space-y-6">
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm font-bold text-accent mb-2">1. Clone the Repository</h3>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>git clone https://github.com/iberi22/OrionHealth.git
+cd OrionHealth</code></pre>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm font-bold text-accent mb-2">2. Install Dependencies</h3>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>flutter pub get</code></pre>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm font-bold text-accent mb-2">3. Run Build Runner</h3>
+              <p class="text-xs text-bone-dark opacity-70 mb-2">Generates Dart code for dependency injection and serialization:</p>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>dart run build_runner build --delete-conflicting-outputs</code></pre>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm font-bold text-accent mb-2">4. Verify Setup</h3>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>flutter doctor
+flutter analyze   # Should show zero issues</code></pre>
+            </div>
+
+            <div class="glass-dark p-4 md:p-6 rounded-xl">
+              <h3 class="text-sm font-bold text-accent mb-2">5. Run the App</h3>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>flutter run
+
+# For a specific device:
+flutter run -d &lt;device-id&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="mt-6 glass-dark p-4 rounded-xl">
+            <p class="text-xs text-bone-dark opacity-70">
+              <span class="text-accent">⚡ Additional Setup:</span> Some features require extra steps:
+            </p>
+            <ul class="text-xs text-bone-dark opacity-60 mt-2 space-y-1 list-disc list-inside">
+              <li><span class="text-accent">Health data sync</span> — No setup needed (works offline)</li>
+              <li><span class="text-accent">On-device AI</span> — Download Gemma 4 model through app settings</li>
+              <li><span class="text-accent">API keys</span> (optional) — Set <code class="text-secondary">GEMINI_API_KEY</code> env variable for cloud fallback</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Running Tests -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Testing</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">RUNNING TESTS</h2>
+
+          <pre class="glass-dark p-4 rounded-lg overflow-x-auto text-xs mb-6"><code># Run all tests
+flutter test
+
+# Run a specific test file
+flutter test test/features/health_record/repository_test.dart
+
+# Run with coverage
+flutter test --coverage
+genhtml coverage/lcov.info -o coverage/html
+
+# Current status: 41/41 tests passing</code></pre>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-accent mb-2">UNIT TESTS</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">Required for all business logic — use cases, repositories, services. <span class="text-accent">~70% of tests</span></p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-accent mb-2">WIDGET TESTS</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">Required for new UI components. <span class="text-accent">~20% of tests</span></p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-accent mb-2">INTEGRATION TESTS</h3>
+              <p class="text-[10px] text-bone-dark opacity-60">End-to-end flows. <span class="text-accent">~10% of tests</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Structure -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Structure</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">PROJECT STRUCTURE</h2>
+
+          <pre class="glass-dark p-4 rounded-lg overflow-x-auto text-xs leading-relaxed"><code>orionhealth/
+├── android/                    # Android platform code
+│   └── app/src/main/kotlin/
+│       └── com/orionhealth/
+│           ├── MainActivity.kt
+│           ├── AicorePlugin.kt       # Native AI plugin
+│           └── AicoreServiceKt.kt    # ML Kit bridge
+│
+├── assets/
+│   ├── images/                 # Screenshots and graphics
+│   ├── models/                 # AI model files
+│   ├── icons/                  # App icons
+│   └── medical-standards/      # ICD-10, LOINC, etc.
+│
+├── docs/                       # Documentation site (Astro)
+│   └── src/
+│       ├── pages/              # Site pages
+│       ├── components/         # Reusable components
+│       ├── layouts/            # Page layouts
+│       └── i18n/               # Internationalization
+│
+├── lib/
+│   ├── core/
+│   │   ├── di/                 # Dependency injection
+│   │   ├── services/           # Aicore, Privacy, Device
+│   │   ├── theme/              # CyberTheme
+│   │   └── widgets/            # Shared widgets
+│   │
+│   ├── features/               # Feature modules
+│   │   ├── auth/               # Biometric auth
+│   │   ├── health_record/      # Medical history
+│   │   ├── local_agent/        # AI chat + RAG
+│   │   ├── settings/           # App settings
+│   │   ├── ble_sharing/        # BLE data transfer
+│   │   ├── user_profile/       # User preferences
+│   │   ├── health_report/      # Analytics + export
+│   │   ├── vitals/             # Vital signs
+│   │   ├── medications/        # Prescriptions
+│   │   ├── appointments/       # Scheduling
+│   │   ├── about/              # App info
+│   │   ├── ...and 7 more       # See architecture page
+│   │   └── main_preview.dart
+│   │
+│   └── main.dart               # App entry point
+│
+├── packages/
+│   ├── isar_agent_memory/      # Graph + Vector DB
+│   ├── health_wallet/          # Offline records
+│   └── medical_standards/      # ICD-10, LOINC, etc.
+│
+├── scripts/                    # Python data generators
+├── test/                       # Test files
+├── pubspec.yaml                # Project dependencies
+├── CHANGELOG.md                # Release history
+└── CONTRIBUTING.md             # Contribution guide</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Commit Convention -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Commits</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">COMMIT CONVENTION</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-4">
+            We use <span class="text-accent">Conventional Commits</span> for all commit messages:
+          </p>
+
+          <pre class="glass-dark p-4 rounded-lg overflow-x-auto text-xs"><code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;
+
+[optional body]
+[optional footer]</code></pre>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+            <div class="glass-dark p-3 rounded-xl">
+              <span class="text-[10px] font-bold text-accent">feat</span>
+              <p class="text-[9px] text-bone-dark opacity-60">New feature</p>
+            </div>
+            <div class="glass-dark p-3 rounded-xl">
+              <span class="text-[10px] font-bold text-accent">fix</span>
+              <p class="text-[9px] text-bone-dark opacity-60">Bug fix</p>
+            </div>
+            <div class="glass-dark p-3 rounded-xl">
+              <span class="text-[10px] font-bold text-accent">docs</span>
+              <p class="text-[9px] text-bone-dark opacity-60">Documentation</p>
+            </div>
+            <div class="glass-dark p-3 rounded-xl">
+              <span class="text-[10px] font-bold text-accent">refactor</span>
+              <p class="text-[9px] text-bone-dark opacity-60">Code change</p>
+            </div>
+            <div class="glass-dark p-3 rounded-xl">
+              <span class="text-[10px] font-bold text-accent">test</span>
+              <p class="text-[9px] text-bone-dark opacity-60">Tests</p>
+            </div>
+            <div class="glass-dark p-3 rounded-xl">
+              <span class="text-[10px] font-bold text-accent">chore</span>
+              <p class="text-[9px] text-bone-dark opacity-60">Maintenance</p>
+            </div>
+            <div class="glass-dark p-3 rounded-xl">
+              <span class="text-[10px] font-bold text-accent">style</span>
+              <p class="text-[9px] text-bone-dark opacity-60">Formatting</p>
+            </div>
+            <div class="glass-dark p-3 rounded-xl">
+              <span class="text-[10px] font-bold text-accent">perf</span>
+              <p class="text-[9px] text-bone-dark opacity-60">Performance</p>
+            </div>
+          </div>
+
+          <div class="mt-6 glass-dark p-4 rounded-xl">
+            <p class="text-xs font-bold text-bone mb-2">Examples</p>
+            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>feat(auth): add biometric authentication support
+fix(health_record): resolve OCR text extraction crash
+docs(api): update README with new API endpoints
+chore(deps): bump isar to v4.0.1
+refactor(core): extract encryption service to separate module</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workflow -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Workflow</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">WORKFLOW</h2>
+          <p class="text-xs md:text-sm text-bone-dark leading-relaxed opacity-80 mb-4">
+            We follow a simplified Git Flow with feature branches:
+          </p>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-accent mb-2">Branch Strategy</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold">main</span>
+                  <span class="text-[10px] text-bone-dark opacity-60">Production-ready (protected)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-secondary/20 text-secondary font-bold">develop</span>
+                  <span class="text-[10px] text-bone-dark opacity-60">Integration branch</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold">feat/*</span>
+                  <span class="text-[10px] text-bone-dark opacity-60">Feature branches</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold">fix/*</span>
+                  <span class="text-[10px] text-bone-dark opacity-60">Bug fix branches</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-dark p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-accent mb-2">PR Process</h3>
+              <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>1. Create branch from develop:
+   git checkout develop && git pull
+   git checkout -b feat/your-feature
+
+2. Make changes following code style
+
+3. Commit with conventional commits
+
+4. Push and create PR to develop:
+   git push origin feat/your-feature
+
+5. Ensure CI passes (lint + tests)
+
+6. Request review from maintainers
+
+7. Squash merge into develop</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Style -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-secondary mb-3">Guidelines</p>
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-6">CODE STYLE GUIDELINES</h2>
+
+          <div class="space-y-3">
+            <div class="glass-dark p-4 rounded-xl">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent">Lint</span>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70">We follow the <span class="text-accent">Dart style guide</span> with <code class="text-secondary">flutter_lints</code>. Run <code class="text-secondary">flutter analyze</code> before committing — ensure <span class="text-accent">zero issues</span>.</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent">Format</span>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70">Keep code consistently formatted with <code class="text-secondary">dart format .</code></p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent">Const</span>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70">Use <code class="text-secondary">const</code> where possible for better performance.</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent">Docs</span>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70">Prefer <code class="text-secondary">///</code> doc comments, especially on public APIs, entities, and use cases.</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent">Hexagonal</span>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70">Follow the domain → application → infrastructure → presentation layer separation. Domain should have <span class="text-accent">zero external dependencies</span>.</p>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent">Naming</span>
+              </div>
+              <p class="text-xs text-bone-dark opacity-70">Dart files: <code class="text-secondary">snake_case.dart</code> | Tests: <code class="text-secondary">*_test.dart</code> | Generated: <code class="text-secondary">*.g.dart</code></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Back link -->
+    <section class="relative py-12 px-4 text-center">
+      <div class="container-custom">
+        <a href={`${base}/docs`} class="btn-secondary px-6 py-3 text-xs inline-block">
+          ← BACK TO DOCUMENTATION
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang="en" />
+</BaseLayout>
