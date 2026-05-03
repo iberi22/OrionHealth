@@ -1,26 +1,26 @@
-/// Medical context provider for AI inference.
-///
-/// Provides full local context from cached medical standards datasets.
-/// All lookups are local — NO network calls during inference.
-///
-/// This is the key to accurate AI medical inference:
-/// - Full ICD-10 code lookups
-/// - LOINC lab code context
-/// - SNOMED CT concept resolution
-/// - Clinical guideline retrieval
-/// - Medication information
-///
-/// Usage:
-/// ```dart
-/// final provider = MedicalContextProvider();
-/// await provider.initialize();
-///
-/// // AI inference-time lookups (all local)
-/// final icd10 = provider.getIcd10ForCode('E11');
-/// final loinc = provider.getLoincForCode('4548-4');
-/// final guidelines = provider.getGuidelinesForCondition('E11');
-/// final medications = provider.getMedicationsForCondition('E11');
-/// ```
+// Medical context provider for AI inference.
+//
+// Provides full local context from cached medical standards datasets.
+// All lookups are local — NO network calls during inference.
+//
+// This is the key to accurate AI medical inference:
+// - Full ICD-10 code lookups
+// - LOINC lab code context
+// - SNOMED CT concept resolution
+// - Clinical guideline retrieval
+// - Medication information
+//
+// Usage:
+// ```dart
+// final provider = MedicalContextProvider();
+// await provider.initialize();
+//
+// // AI inference-time lookups (all local)
+// final icd10 = provider.getIcd10ForCode('E11');
+// final loinc = provider.getLoincForCode('4548-4');
+// final guidelines = provider.getGuidelinesForCondition('E11');
+// final medications = provider.getMedicationsForCondition('E11');
+// ```
 
 import '../medical_standards.dart';
 

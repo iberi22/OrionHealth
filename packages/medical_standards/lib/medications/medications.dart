@@ -1,7 +1,7 @@
-/// Medication reference data (RxNorm subset).
-///
-/// RxNorm provides normalized names for drugs and doses.
-/// This is a curated subset of common medications.
+// Medication reference models based on ATC classification.
+//
+// ATC (Anatomical Therapeutic Chemical) Classification System is used
+// for classifying drugs.
 
 import 'dart:convert';
 import 'package:flutter/services.dart';

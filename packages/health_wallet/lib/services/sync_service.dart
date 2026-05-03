@@ -51,16 +51,6 @@ class SyncService {
     String? pin,
   }) async {
     try {
-      // Build sync package
-      final package = {
-        'version': _protocolVersion,
-        'senderNodeId': senderNodeId,
-        'targetNodeId': targetNodeId,
-        'timestamp': DateTime.now().toIso8601String(),
-        'encryptedPayload': encryptedData,
-        'pinRequired': pin != null,
-      };
-
       // In real implementation, would connect via NFC/BLE/WiFi directly
       // or through a relay server if both nodes are online
 
