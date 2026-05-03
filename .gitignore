@@ -68,12 +68,20 @@ assets/models/*.bin
 assets/models/*.safetensors
 assets/models/*.pt
 
+# Native binaries (platform-specific, not tracked)
+*.dll
+*.so
+*.dylib
+
 # Medical data generation outputs
 medical-standards/*.json
 medical-standards/*.csv
 
 # Node artifacts
 node_modules/
+
+# Git-Core artifacts
+.gitcore/
 
 # Python venv
 .venv/

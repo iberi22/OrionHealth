@@ -4,7 +4,7 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Flutter](https://img.shields.io/badge/Flutter-3.7+-blue?logo=flutter)](https://flutter.dev)
-[![CI](https://github.com/iberi22/OrionHealth/actions/workflows/build.yml/badge.svg)](https://github.com/iberi22/OrionHealth/actions)
+[![CI](https://github.com/iberi22/OrionHealth/actions/workflows/android_build.yml/badge.svg)](https://github.com/iberi22/OrionHealth/actions/workflows/android_build.yml)
 [![Issues](https://img.shields.io/github/issues/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/issues)
 [![Last Commit](https://img.shields.io/github/last-commit/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/commits/main)
 [![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/OrionHealth)
