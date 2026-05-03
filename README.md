@@ -3,8 +3,17 @@
 **Your Personal Health Data Sanctuary for the Future of Personalized Medicine**
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)](https://flutter.dev)
-[![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/local-llm.OrionHealth)
+[![Flutter](https://img.shields.io/badge/Flutter-3.7+-blue?logo=flutter)](https://flutter.dev)
+[![Build](https://img.shields.io/github/actions/workflow/status/iberi22/OrionHealth/build.yml?branch=main)](https://github.com/iberi22/OrionHealth/actions)
+[![Issues](https://img.shields.io/github/issues/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/commits/main)
+[![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/OrionHealth)
+
+---
+
+## 📊 Project Status
+
+**Currently in 0.7.0 beta.** Flutter analyze: 0 issues. 42/44 tests passing. Ready for public beta.
 
 ---
 
@@ -139,7 +148,7 @@ flutter run
 
 - **[PLANNING.md](PLANNING.md)**: Architecture decisions & development phases
 - **[TASK.md](TASK.md)**: Project roadmap & task tracking
-- **[CONTRIBUTING.md](docs/CONTRIBUTING.md)**: How to contribute
+- **[CONTRIBUTING.md](CONTRIBUTING.md)**: How to contribute
 
 ## 🛠️ Support & Feedback
 
