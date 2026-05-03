@@ -64,6 +64,15 @@ const t = ui[lang as keyof typeof ui] || ui.en;
             </svg>
             {t.heroCtaSecondary}
           </a>
+          <a
+            href="/OrionHealth/medical-standards"
+            class="btn-secondary w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm text-center flex items-center justify-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Explore Medical Knowledge Base
+          </a>
         </div>
       </div>
     </div>
@@ -163,6 +172,66 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
   <!-- Screenshots Gallery -->
   <ScreenshotsGallery />
+
+  <!-- Medical Standards Section -->
+  <section id="standards" class="relative py-16 md:py-32 px-4">
+    <div class="container-custom">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10 md:mb-16" data-animate>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-bone-dark opacity-40 mb-3 sm:mb-4 block">
+            Medical Knowledge Base
+          </span>
+          <h2 class="section-title font-bold tracking-tighter uppercase mb-4 md:mb-8">
+            EXPLORE <span class="text-accent">628</span> MEDICAL CODES
+          </h2>
+          <p class="text-sm md:text-base text-bone-dark leading-relaxed opacity-80 max-w-2xl mx-auto mb-6">
+            OrionHealth ships with a complete offline medical standards database:
+            ICD-10, LOINC, RxNorm, and SNOMED CT for accurate medical reference.
+          </p>
+          <a
+            href="/OrionHealth/medical-standards"
+            class="btn-primary inline-flex items-center gap-2 px-8 py-4 text-sm"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Browse Medical Standards
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          <div class="glass rounded-xl p-6 text-center hover:scale-105 transition-transform" data-animate>
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mx-auto mb-3">
+              <span class="text-white font-bold text-xs">ICD</span>
+            </div>
+            <div class="text-2xl font-bold">278</div>
+            <div class="text-xs text-bone-dark opacity-60">ICD-10 Codes</div>
+          </div>
+          <div class="glass rounded-xl p-6 text-center hover:scale-105 transition-transform" data-animate>
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mx-auto mb-3">
+              <span class="text-white font-bold text-xs">LOINC</span>
+            </div>
+            <div class="text-2xl font-bold">145</div>
+            <div class="text-xs text-bone-dark opacity-60">Lab Tests</div>
+          </div>
+          <div class="glass rounded-xl p-6 text-center hover:scale-105 transition-transform" data-animate>
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center mx-auto mb-3">
+              <span class="text-white font-bold text-xs">RxN</span>
+            </div>
+            <div class="text-2xl font-bold">118</div>
+            <div class="text-xs text-bone-dark opacity-60">Medications</div>
+          </div>
+          <div class="glass rounded-xl p-6 text-center hover:scale-105 transition-transform" data-animate>
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center mx-auto mb-3">
+              <span class="text-white font-bold text-xs">SNM</span>
+            </div>
+            <div class="text-2xl font-bold">87</div>
+            <div class="text-xs text-bone-dark opacity-60">Concepts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Privacy Section -->
   <section id="privacy" class="relative py-16 md:py-32 px-4">

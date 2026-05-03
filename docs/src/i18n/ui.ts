@@ -10,26 +10,27 @@ export const ui = {
     mission: 'Mission',
     blog: 'Blog',
     contribute: 'Contribute',
+    medicalStandards: 'Medical Standards',
 
     // Hero Section
-    heroTitle: 'ORIONHEALTH',
-    heroSubtitle: 'Human Health as the Number One Priority Worldwide',
-    heroDescription: 'Your medical history, secure, private, on your device. Powered by medical AI that helps you understand your health.',
+    heroTitle: 'OrionHealth',
+    heroSubtitle: 'Your Intelligent & Private Medical Assistant',
+    heroDescription: 'Your medical history, secure, private, on your device. Powered by local AI that helps you understand your health.',
     heroCtaPrimary: 'Download for Android',
     heroCtaSecondary: 'View on GitHub',
 
     // Features Section
     featureTitle: 'MEDICAL GRADE SECURITY',
-    feature1Title: '100% Local Privacy',
+    feature1Title: 'Offline-First',
     feature1Desc: 'Your data never leaves your device. Local databases and on-device AI models ensure complete privacy.',
     feature2Title: 'On-Device Medical AI',
     feature2Desc: 'Chat with your health records using integrated local LLMs. Get insights without cloud processing.',
-    feature3Title: 'Global Medical Standards',
-    feature3Desc: 'Support for ICD-10, LOINC, SNOMED CT, and RxNorm to ensure your data is professional and interoperable.',
-    feature4Title: 'Scientific Search',
-    feature4Desc: 'Quickly find scientific information and clinical guidelines relevant to your health status.',
-    feature5Title: 'AES-256 Encryption',
-    feature5Desc: 'All your sensitive data is protected with military-grade encryption stored locally.',
+    feature3Title: 'AES-256 Encryption',
+    feature3Desc: 'All your sensitive data is protected with military-grade encryption stored locally on your device.',
+    feature4Title: 'Cross-Platform',
+    feature4Desc: 'Available on Android, iOS, and web. Your health data travels with you across all your devices.',
+    feature5Title: 'Global Medical Standards',
+    feature5Desc: 'Support for ICD-10, LOINC, SNOMED CT, and RxNorm to ensure your data is professional and interoperable.',
 
     // Mission Section
     missionTitle: 'OUR MISSION',
@@ -64,11 +65,12 @@ export const ui = {
     mission: 'Misión',
     blog: 'Blog',
     contribute: 'Contribuir',
+    medicalStandards: 'Estándares Médicos',
 
     // Hero Section
-    heroTitle: 'ORIONHEALTH',
-    heroSubtitle: 'Salud Humana como Prioridad Número Uno a Nivel Mundial',
-    heroDescription: 'Tu historial médico, seguro, privado, en tu dispositivo. Con IA médica que te ayuda a entender tu salud.',
+    heroTitle: 'OrionHealth',
+    heroSubtitle: 'Tu Asistente Médico Inteligente y Privado',
+    heroDescription: 'Tu historial médico, seguro, privado, en tu dispositivo. Con IA local que te ayuda a entender tu salud.',
     heroCtaPrimary: 'Descargar para Android',
     heroCtaSecondary: 'Ver en GitHub',
 
