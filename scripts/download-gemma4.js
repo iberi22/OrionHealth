@@ -2,66 +2,67 @@
 /**
  * Download Gemma 4 model files for OrionHealth on-device AI.
  *
- * Gemma 4 models are available from Hugging Face:
- *   - E2B (2B params): ~1.2 GB (4-bit quantized)
- *   - E4B (4B params): ~2.4 GB (4-bit quantized)
+ * Gemma 4 models from Hugging Face:
+ *   - E2B (2B params): ~1.2 GB (4-bit GGUF)
+ *   - E4B (4B params): ~2.4 GB (4-bit GGUF)
  *
  * Usage:
  *   node scripts/download-gemma4.js [model]
- *     model: "e2b" (default, 2B params) or "e4b" (4B params)
- *
- * Environment:
- *   ORIONHEALTH_MODELS_DIR = output directory (default: assets/models/)
+ *     model: "e2b" (default) or "e4b"
  *
  * Prerequisites:
- *   - Hugging Face CLI (hf_transfer) or direct download
+ *   - huggingface-cli (pip install huggingface-hub[cli])
+ *   - Hugging Face token (huggingface-cli login)
  *   - 2-5 GB free disk space
- *   - Stable internet connection
+ *
+ * For Android on-device (AICore), the model downloads
+ * via the AICore app — this script is for desktop/CI.
  */
 
 const fs = require('fs');
 const path = require('path');
-const https = require('https');
 const { execSync } = require('child_process');
 
-// ===== Configuration =====
-const HF_BASE = 'https://huggingface.co/google/gemma-4-e2b-gguf/resolve/main';
-const MODELS_DIR = process.env.ORIONHEALTH_MODELS_DIR ||
-  path.join(__dirname, '..', 'assets', 'models');
+const MODELS_DIR = path.join(__dirname, '..', 'assets', 'models');
 
 const MODELS = {
   e2b: {
-    name: 'Gemma 4 E2B',
-    params: '2B',
-    files: [
-      {
-        url: `${HF_BASE}/gemma-4-e2b-Q4_K_M.gguf`,
-        filename: 'gemma-4-e2b-Q4_K_M.gguf',
-        size: '~1.2 GB',
-        sha256: 'abc123...', // Replace with actual SHA after download
-      },
-    ],
+    name: 'Gemma 4 E2B (2B params)',
+    hf: 'google/gemma-4-E2B',
+    ggufSize: '~1.2 GB (Q4_K_M)',
+    use: 'Rápido, tareas cotidianas',
   },
   e4b: {
-    name: 'Gemma 4 E4B',
-    params: '4B',
-    files: [
-      {
-        url: `${HF_BASE}/../gemma-4-e4b-gguf/gemma-4-e4b-Q4_K_M.gguf`,
-        filename: 'gemma-4-e4b-Q4_K_M.gguf',
-        size: '~2.4 GB',
-        sha256: 'def456...',
-      },
-    ],
+    name: 'Gemma 4 E4B (4B params)',
+    hf: 'google/gemma-4-E4B',
+    ggufSize: '~2.4 GB (Q4_K_M)',
+    use: 'Precisión, análisis profundo',
   },
 };
 
-// ===== Helpers =====
-function ensureDir(dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-    console.log(`📁 Created directory: ${dir}`);
+function checkTool(name, cmd) {
+  try {
+    execSync(`${cmd} --version`, { stdio: 'pipe', timeout: 5000 });
+    return true;
+  } catch {
+    return false;
   }
+}
+
+function getDirSize(dir) {
+  if (!fs.existsSync(dir)) return 0;
+  let size = 0;
+  walkDir(dir, f => { size += f.isFile() ? fs.statSync(path.join(dir, f)).size : 0; });
+  return size;
+}
+
+function walkDir(dir, fn) {
+  try {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) walkDir(path.join(dir, entry.name), fn);
+      else fn(entry);
+    }
+  } catch {}
 }
 
 function formatBytes(bytes) {
@@ -69,157 +70,122 @@ function formatBytes(bytes) {
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
 
-function downloadFile(url, destPath) {
-  return new Promise((resolve, reject) => {
-    console.log(`  ⬇️  Downloading: ${url}`);
-    console.log(`  📍 To: ${destPath}`);
-
-    const file = fs.createWriteStream(destPath);
-    let downloadedBytes = 0;
-    let lastLog = Date.now();
-
-    https.get(url, (response) => {
-      if (response.statusCode !== 200) {
-        reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`));
-        return;
-      }
-
-      const totalBytes = parseInt(response.headers['content-length'] || '0', 10);
-
-      response.on('data', (chunk) => {
-        downloadedBytes += chunk.length;
-        const now = Date.now();
-        if (now - lastLog > 5000) { // Log every 5s
-          const pct = totalBytes > 0
-            ? ((downloadedBytes / totalBytes) * 100).toFixed(1)
-            : '?';
-          const speed = formatBytes(downloadedBytes / ((now - lastLog) / 1000));
-          console.log(
-            `     Progress: ${formatBytes(downloadedBytes)} / ${formatBytes(totalBytes)} (${pct}%) — ${speed}/s`
-          );
-          lastLog = now;
-        }
-      });
-
-      response.pipe(file);
-    });
-
-    file.on('finish', () => {
-      file.close();
-      const finalSize = fs.statSync(destPath).size;
-      console.log(`  ✅ Complete: ${formatBytes(finalSize)}`);
-      resolve(destPath);
-    });
-
-    file.on('error', (err) => {
-      fs.unlinkSync(destPath);
-      reject(err);
-    });
-  });
-}
-
-// ===== Main =====
 async function main() {
-  const modelArg = (process.argv[2] || 'e2b').toLowerCase();
-  const modelConfig = MODELS[modelArg];
+  const modelKey = (process.argv[2] || 'e4b').toLowerCase();
+  const model = MODELS[modelKey];
 
-  if (!modelConfig) {
-    console.error(`❌ Unknown model: "${modelArg}"`);
-    console.error(`   Available: ${Object.keys(MODELS).join(', ')}`);
+  if (!model) {
+    console.error(`❌ Modelo desconocido: "${modelKey}"`);
+    console.error(`   Opciones: ${Object.keys(MODELS).join(', ')}`);
     process.exit(1);
   }
 
-  console.log(`\n🧠  ** Gemma 4 Downloader for OrionHealth **\n`);
-  console.log(`Model: ${modelConfig.name} (${modelConfig.params} params)`);
-  console.log(`Output: ${MODELS_DIR}\n`);
+  const modelDir = path.join(MODELS_DIR, `gemma-4-${modelKey}`);
 
-  // Ensure output directory exists
-  ensureDir(MODELS_DIR);
+  console.log('');
+  console.log('🧠  Gemma 4 Downloader — OrionHealth');
+  console.log('══════════════════════════════════════');
+  console.log(`Modelo: ${model.name}`);
+  console.log(`Tamaño: ${model.ggufSize}`);
+  console.log(`Uso:    ${model.use}`);
+  console.log(`Destino: ${modelDir}`);
+  console.log('');
 
-  // Check for existing files first
-  for (const file of modelConfig.files) {
-    const filePath = path.join(MODELS_DIR, file.filename);
-    if (fs.existsSync(filePath)) {
-      const existingSize = fs.statSync(filePath).size;
-      console.log(`  ⏭️  Already exists: ${file.filename} (${formatBytes(existingSize)})`);
+  // Detect tools
+  const hasHfCli = checkTool('huggingface-cli', 'huggingface-cli');
 
-      // Try Hugging Face Hub CLI if available (faster, multi-part download)
-      console.log(`\n📦  Downloading ${modelConfig.name} model files...\n`);
+  if (!hasHfCli) {
+    console.log('⚠️  huggingface-cli no está instalado.');
+    console.log('   Para instalar:');
+    console.log('   pip install huggingface-hub[cli]');
+    console.log('   huggingface-cli login');
+    console.log('');
+    console.log('📋  Descarga manual:');
+    console.log(`   https://huggingface.co/${model.hf}`);
+    console.log('');
+    console.log('   Los archivos GGUF recomendados están en:');
+    console.log(`   https://huggingface.co/unsloth/gemma-4-${modelKey.toUpperCase()}-GGUF`);
+    console.log('');
+    process.exit(1);
+  }
 
-      for (const file of modelConfig.files) {
-        const filePath = path.join(MODELS_DIR, file.filename);
-        const exists = fs.existsSync(filePath);
-
-        if (exists && fs.statSync(filePath).size > 100_000_000) {
-          // Already downloaded (>100MB)
-          console.log(`  ⏭️  ${file.filename} ya existe (${file.size})`);
-          continue;
-        }
-
-        if (!exists) {
-          console.log(`  New file: ${file.filename} (${file.size})`);
-          console.log(`  URL: ${file.url}`);
-
-          // Try Hugging Face CLI first (faster)
-          try {
-            console.log('\n  🔄  Intentando Hugging Face Hub CLI (más rápido)...');
-            execSync(
-              `huggingface-cli download google/gemma-4-e2b-gguf gemma-4-e2b-Q4_K_M.gguf --local-dir "${MODELS_DIR}"`,
-              { stdio: 'inherit', timeout: 600_000 }
-            );
-            console.log('  ✅ Descarga completada via Hugging Face CLI');
-          } catch (hfError) {
-            console.log('  ⚠️  Hugging Face CLI no disponible. Usando descarga directa HTTPS...\n');
-            await downloadFile(file.url, filePath);
-          }
-        }
-      }
+  // Check if already downloaded
+  if (fs.existsSync(modelDir)) {
+    const size = getDirSize(modelDir);
+    if (size > 100_000_000) {
+      console.log(`✅ Ya existe: ${formatBytes(size)} en ${modelDir}`);
+      console.log('   Para redescargar, borra el directorio y ejecuta de nuevo.');
+      showNextSteps();
+      return;
     }
   }
 
-  // Summary
-  console.log(`\n📊  ** Download Summary **`);
-  console.log(`────────────────────────────────`);
+  // Ensure output dir
+  fs.mkdirSync(modelDir, { recursive: true });
 
-  let totalSize = 0;
-  for (const file of modelConfig.files) {
-    const filePath = path.join(MODELS_DIR, file.filename);
-    const exists = fs.existsSync(filePath);
-    const size = exists ? fs.statSync(filePath).size : 0;
-    totalSize += size;
+  console.log('⬇️  Descargando desde Hugging Face...');
+  console.log('   (Esto puede tomar varios minutos)');
+  console.log('');
 
-    console.log(
-      `  ${exists ? '✅' : '❌'} ${file.filename}` +
-      ` (${exists ? formatBytes(size) : 'no descargado'})`
+  try {
+    // Try GGUF first (smaller, quantized)
+    const ggufRepo = `unsloth/gemma-4-${modelKey.toUpperCase()}-GGUF`;
+    console.log(`[1/2] Intentando GGUF desde ${ggufRepo}...`);
+    execSync(
+      `huggingface-cli download ${ggufRepo} --local-dir "${modelDir}" --include "*.gguf" --resume-download`,
+      { stdio: 'inherit', timeout: 900000 }
     );
+
+    const size = getDirSize(modelDir);
+    if (size > 50_000_000) {
+      console.log(`\n✅ Modelo descargado: ${formatBytes(size)}`);
+      showNextSteps();
+      return;
+    }
+
+    // Fallback: full weights
+    console.log('   GGUF no disponible, descargando weights completos...');
+    execSync(
+      `huggingface-cli download ${model.hf} --local-dir "${modelDir}" --resume-download`,
+      { stdio: 'inherit', timeout: 1800000 }
+    );
+
+    const size2 = getDirSize(modelDir);
+    if (size2 > 50_000_000) {
+      console.log(`\n✅ Modelo descargado: ${formatBytes(size2)}`);
+    } else {
+      console.log('\n⚠️  El modelo parece incompleto.');
+    }
+  } catch (err) {
+    console.error(`\n❌ Error: ${err.message}`);
+    console.log('');
+    console.log('📋  Descarga manual:');
+    console.log(`   huggingface-cli download unsloth/gemma-4-${modelKey.toUpperCase()}-GGUF --include "*.gguf" --local-dir "${modelDir}"`);
+    console.log('');
+    console.log('   O desde el navegador:');
+    console.log(`   https://huggingface.co/google/gemma-4-${modelKey.toUpperCase()}`);
+    process.exit(1);
   }
 
-  console.log(`────────────────────────────────`);
-  console.log(`  Total: ${formatBytes(totalSize)} en ${MODELS_DIR}\n`);
-
-  if (totalSize < 100_000_000) {
-    console.log('⚠️  Los modelos no se descargaron completamente.');
-    console.log('   Asegúrate de tener huggingface-cli instalado:');
-    console.log('   $ pip install huggingface-hub');
-    console.log('   $ huggingface-cli login');
-    console.log('');
-    console.log('   O descarga manualmente desde:');
-    console.log('   https://huggingface.co/google/gemma-4-e2b-gguf');
-    console.log('   https://huggingface.co/google/gemma-4-e4b-gguf');
-  } else {
-    console.log('🎉  ** Gemma 4 listo para usar en OrionHealth! **');
-    console.log('');
-    console.log('   Next steps:');
-    console.log('   1. flutter pub get');
-    console.log('   2. flutter run (Android 8+, AICore required)');
-    console.log('   3. Verifica que GemmaLlmAdapter detecte el modelo');
-  }
+  showNextSteps();
 }
 
-main().catch((err) => {
-  console.error(`\n❌ Error: ${err.message}`);
+function showNextSteps() {
+  console.log('');
+  console.log('📱  Siguientes pasos:');
+  console.log('   1. flutter pub get');
+  console.log('   2. Asegura AICore en tu dispositivo Android');
+  console.log('   3. flutter run');
+  console.log('   4. GemmaLlmAdapter detectará automáticamente el modelo local');
+  console.log('');
+  console.log('   Para Android (AICore), el modelo se descarga automáticamente');
+  console.log('   desde la app. Este script es para testing/desktop.');
+}
+
+main().catch(err => {
+  console.error(`\n❌ Fatal: ${err.message}`);
   process.exit(1);
 });
