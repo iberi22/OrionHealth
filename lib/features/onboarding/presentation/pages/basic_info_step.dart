@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../application/onboarding_cubit.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 
 class BasicInfoStep extends StatefulWidget {
@@ -99,7 +99,7 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Colors.white.withAlpha(179)),
-          prefixIcon: Icon(icon, color: CyberTheme.primary),
+          prefixIcon: Icon(icon, color: AppColors.primary),
           border: InputBorder.none,
         ),
       ),
@@ -110,7 +110,7 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
     return GlassmorphicCard(
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-        leading: const Icon(Icons.calendar_today, color: CyberTheme.primary),
+        leading: const Icon(Icons.calendar_today, color: AppColors.primary),
         title: Text(
           _birthDate == null
               ? 'Fecha de nacimiento'
@@ -130,8 +130,8 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
               return Theme(
                 data: Theme.of(context).copyWith(
                   colorScheme: const ColorScheme.dark(
-                    primary: CyberTheme.primary,
-                    surface: CyberTheme.surfaceDark,
+                    primary: AppColors.primary,
+                    surface: AppColors.surface,
                   ),
                 ),
                 child: child!,
@@ -157,7 +157,7 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
           children: [
             Row(
               children: [
-                const Icon(Icons.wc, color: CyberTheme.primary),
+                const Icon(Icons.wc, color: AppColors.primary),
                 const SizedBox(width: 12),
                 Text('Sexo', style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 16)),
               ],
@@ -196,8 +196,8 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
           flex: 2,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: CyberTheme.primary,
-              foregroundColor: CyberTheme.backgroundDark,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.background,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
@@ -226,15 +226,15 @@ class _SexOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? CyberTheme.primary.withAlpha(51) : Colors.white.withAlpha(13),
+          color: isSelected ? AppColors.primary.withAlpha(51) : Colors.white.withAlpha(13),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isSelected ? CyberTheme.primary : Colors.white12, width: isSelected ? 2 : 1),
+          border: Border.all(color: isSelected ? AppColors.primary : Colors.white12, width: isSelected ? 2 : 1),
         ),
         child: Column(
           children: [
-            Icon(icon, color: isSelected ? CyberTheme.primary : Colors.white54),
+            Icon(icon, color: isSelected ? AppColors.primary : Colors.white54),
             const SizedBox(height: 8),
-            Text(label, style: TextStyle(color: isSelected ? CyberTheme.primary : Colors.white70, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+            Text(label, style: TextStyle(color: isSelected ? AppColors.primary : Colors.white70, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
           ],
         ),
       ),

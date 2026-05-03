@@ -5,7 +5,7 @@ import '../../../../features/auth/presentation/pages/share_medical_data_page.dar
 import '../../../../features/about/presentation/pages/about_page.dart';
 import '../../../../features/settings/presentation/pages/llm_settings_page.dart';
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/bloc/user_profile_cubit.dart';
 import '../../domain/entities/user_profile.dart';
@@ -186,12 +186,6 @@ class _UserProfileView extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: CyberTheme.primary,
-                    foregroundColor: CyberTheme.backgroundDark,
-                    minimumSize: const Size(double.infinity, 56),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
                   onPressed: () {
                     // In a real app, you would collect data from editing screens
                     // For now, just save the existing profile to show functionality
@@ -200,13 +194,18 @@ class _UserProfileView extends StatelessWidget {
                       const SnackBar(content: Text('Perfil guardado')),
                     );
                   },
-                  child: const Text('Guardar Cambios', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: const SizedBox(
+                    width: double.infinity,
+                    child: Center(child: Text('Guardar Cambios')),
+                  ),
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Cerrar Sesión',
-                    style: TextStyle(color: CyberTheme.secondary.withValues(alpha: 0.8)),
+                Center(
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Cerrar Sesión',
+                      style: TextStyle(color: AppColors.secondary.withValues(alpha: 0.8)),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -237,10 +236,10 @@ class _ProfileHeader extends StatelessWidget {
                   "https://lh3.googleusercontent.com/aida-public/AB6AXuAIpUPoUs4Oykl6RpdGHalhqjetooQ-sZ9LobLpgbAVOnhYpaq8N5vqWkwgyY-cwthjBPnowELtGGRPqp12k_sBKhk9r7bW6YJUQtkoABO21_fgw5CmQOHkZHg4bwR4J3Ib9VVx_cMtcEqRsl2k7jkw26FOnsrjgs9XHtK8O9g-VGixxrv0pXd_frqH_xsPyWS6rXzsNUlO_BSRmHdplSNegvbJxMUdDddekMquxJ3gn2_oK2Z4ToEq_mHl-FAK5E-ejgnRZzRJt7_M"),
               fit: BoxFit.cover,
             ),
-            border: Border.all(color: CyberTheme.primary, width: 2),
+            border: Border.all(color: AppColors.primary, width: 2),
             boxShadow: [
               BoxShadow(
-                color: CyberTheme.primary.withValues(alpha: 0.3),
+                color: AppColors.primary.withValues(alpha: 0.3),
                 blurRadius: 15,
                 spreadRadius: 2,
               ),
@@ -255,7 +254,7 @@ class _ProfileHeader extends StatelessWidget {
         const SizedBox(height: 4),
         const Text(
           'alex.damon@orion.health',
-          style: TextStyle(fontSize: 16, color: CyberTheme.secondary),
+          style: TextStyle(fontSize: 16, color: AppColors.secondary),
         ),
       ],
     );
@@ -312,7 +311,7 @@ class _InfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: CyberTheme.secondary),
+      leading: Icon(icon, color: AppColors.secondary),
       title: Text(title),
       onTap: onTap,
       subtitle: subtitle != null

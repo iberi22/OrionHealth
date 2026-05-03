@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'core/di/injection.dart';
-import 'core/theme/cyber_theme.dart';
+import 'core/theme/app_theme.dart';
 import 'core/widgets/floating_assistant_button.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/health_report/presentation/pages/reports_page.dart';
@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'OrionHealth',
-      theme: CyberTheme.darkTheme,
-      darkTheme: CyberTheme.darkTheme,
+      theme: AppTheme.darkTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
       home: const MainNavigationPage(),
     );
