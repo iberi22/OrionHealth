@@ -149,7 +149,6 @@ packages/
 git clone https://github.com/iberi22/OrionHealth.git
 cd OrionHealth
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs
 flutter run
 ```
 
@@ -159,20 +158,7 @@ flutter run
 3. **Connect Sensors** (Optional): Sync Apple Health / Google Fit
 4. **Download AI Model** (Optional): Enable on-device chat assistant
 
----
 
-## 📸 Screenshots
-
-> 🖼️ Screenshots coming soon. Run the app to see the UI in action.
-
-<p align="center">
-  <img src="assets/screenshots/auth.png" alt="Authentication" width="200"/>
-  <img src="assets/screenshots/health-wallet.png" alt="Health Wallet" width="200"/>
-  <img src="assets/screenshots/rag-chat.png" alt="RAG Chat" width="200"/>
-  <img src="assets/screenshots/sharing.png" alt="Health Sharing" width="200"/>
-</p>
-
----
 
 ## 📖 Documentation
 
@@ -244,9 +230,9 @@ See [LICENSE](LICENSE) for full terms.
 
 ## 💬 Community & Support
 
-- **Issues**: [GitHub Issues](https://github.com/iberi22/local-llm.OrionHealth/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/iberi22/local-llm.OrionHealth/discussions)
-- **Website**: [Coming Soon - GitHub Pages Landing]
+- **Issues**: [GitHub Issues](https://github.com/iberi22/OrionHealth/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/iberi22/OrionHealth/discussions)
+- **Docs Site**: [GitHub Pages](https://iberi22.github.io/OrionHealth/)
 
 ---
 

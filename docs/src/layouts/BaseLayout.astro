@@ -1,12 +1,16 @@
 ---
 interface Props {
-  title: string;
-  description?: string;
-  lang?: string;
+	title: string;
+	description?: string;
+	lang?: string;
 }
 
-const { title, description = "Privacy-first health assistant powered by local AI", lang = "en" } = Astro.props;
-const isRTL = lang === 'ar';
+const {
+	title,
+	description = "Privacy-first health assistant powered by local AI",
+	lang = "en",
+} = Astro.props;
+const isRTL = lang === "ar";
 ---
 
 <!DOCTYPE html>
