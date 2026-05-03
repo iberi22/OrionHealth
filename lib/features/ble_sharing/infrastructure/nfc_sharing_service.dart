@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import '../domain/ble_sharing_service.dart';

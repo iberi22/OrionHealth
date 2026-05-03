@@ -15,11 +15,11 @@ class CyberTheme {
       colorScheme: const ColorScheme.dark(
         primary: primary,
         secondary: secondary,
-        background: backgroundDark,
+        surfaceContainerHighest: backgroundDark,
         surface: surfaceDark,
         onPrimary: backgroundDark,
         onSecondary: backgroundDark,
-        onBackground: textDark,
+        onSurfaceVariant: textDark,
         onSurface: textDark,
       ),
       scaffoldBackgroundColor: backgroundDark,

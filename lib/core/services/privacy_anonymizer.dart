@@ -69,7 +69,7 @@ class PromptScrubber {
     } catch (e) {
       // In production we want to know if logging fails,
       // but let's not block the primary functionality.
-      print('Audit logging failed: $e');
+      // Audit logging failed, continuing with scrubbed data
     }
 
     return scrubbed;

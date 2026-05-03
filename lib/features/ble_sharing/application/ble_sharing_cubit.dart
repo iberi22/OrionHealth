@@ -107,6 +107,7 @@ class BleSharingCubit extends Cubit<BleSharingState> {
   StreamSubscription? _wifiSubscription;
 
   MedicalTransferMethod? _currentMethod;
+  // ignore: unused_field
   MedicalSharePackage? _pendingPackage;
 
   BleSharingCubit({

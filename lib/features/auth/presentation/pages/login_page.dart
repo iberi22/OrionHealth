@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/auth_cubit.dart';
-import '../../application/auth_event.dart';
 import '../../application/auth_state.dart';
 
 class LoginPage extends StatefulWidget {

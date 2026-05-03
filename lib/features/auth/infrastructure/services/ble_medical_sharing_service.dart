@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'encryption_service.dart';
 
 @lazySingleton
 class BleMedicalSharingService {
+  // ignore: unused_field
   final EncryptionService _encryptionService;
   
   BleMedicalSharingService(this._encryptionService);

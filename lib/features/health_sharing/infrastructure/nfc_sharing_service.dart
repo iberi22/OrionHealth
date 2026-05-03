@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import '../domain/entities/shared_health_package.dart';

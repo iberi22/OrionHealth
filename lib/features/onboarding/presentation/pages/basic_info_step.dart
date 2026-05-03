@@ -140,6 +140,7 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
           );
           if (date != null) {
             setState(() => _birthDate = date);
+            if (!context.mounted) return;
             context.read<OnboardingCubit>().updateBirthDate(date);
           }
         },

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -311,7 +310,7 @@ class _RecordFormState extends State<_RecordForm> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: DropdownButtonFormField<RecordType>(
-                  value: _selectedType,
+                  initialValue: _selectedType,
                   decoration: const InputDecoration(labelText: 'Tipo de Documento', border: InputBorder.none),
                   items: RecordType.values.map((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
                   onChanged: (val) => setState(() => _selectedType = val!),

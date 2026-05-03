@@ -14,6 +14,7 @@ class HealthRecordInitial extends HealthRecordState {}
 class HealthRecordLoading extends HealthRecordState {}
 
 class HealthRecordLoaded extends HealthRecordState {
+  @override
   final List<MedicalRecord> records;
 
   const HealthRecordLoaded(this.records);
