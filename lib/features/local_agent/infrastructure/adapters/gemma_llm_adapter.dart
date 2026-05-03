@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/services/llm_adapter.dart';
+import 'gemini_llm_adapter.dart';
 
 /// Gemma 4 adapter with hybrid local/cloud strategy.
 ///
@@ -28,9 +30,33 @@ import '../../domain/services/llm_adapter.dart';
 @Named('gemma')
 class GemmaLlmAdapter implements LlmAdapter {
   static const _channel = MethodChannel('com.orionhealth/gemma4');
+  final _getIt = GetIt.instance;
   GenerativeModel? _geminiModel;
 
-  String get _apiKey => Platform.environment['GEMINI_API_KEY'] ?? '';
+  String get _apiKey =>
+      Platform.environment['GEMINI_API_KEY'] ??
+      _resolveRegisteredApiKey() ??
+      '';
+
+  String? _resolveRegisteredApiKey() {
+    if (_getIt.isRegistered<String>(instanceName: 'gemini_api_key')) {
+      final apiKey = _getIt<String>(instanceName: 'gemini_api_key');
+      if (apiKey.isNotEmpty) return apiKey;
+    }
+
+    try {
+      if (_getIt.isRegistered<LlmAdapter>(instanceName: 'gemini')) {
+        final adapter = _getIt<LlmAdapter>(instanceName: 'gemini');
+        if (adapter is GeminiLlmAdapter && adapter.apiKey.isNotEmpty) {
+          return adapter.apiKey;
+        }
+      }
+    } catch (_) {
+      // If the named Gemini adapter cannot be resolved, keep falling back.
+    }
+
+    return null;
+  }
 
   @override
   String get modelName => 'gemma-4-e2b-local';
@@ -39,8 +65,7 @@ class GemmaLlmAdapter implements LlmAdapter {
   Future<bool> isAvailable() async {
     // Check if local Gemma 4 is available (AICore + model downloaded)
     try {
-      final localAvailable = await _channel
-          .invokeMethod<bool>('isAvailable');
+      final localAvailable = await _channel.invokeMethod<bool>('isAvailable');
       if (localAvailable == true) return true;
     } catch (_) {
       // MethodChannel not available — device doesn't support AICore

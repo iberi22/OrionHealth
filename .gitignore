@@ -46,6 +46,7 @@ app.*.map.json
 
 #config
 .vscode/
+.env
 
 # Docs build artifacts (Astro)
 docs/.astro/
