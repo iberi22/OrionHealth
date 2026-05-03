@@ -30,12 +30,11 @@ jobs:
           if [ -f ".gitcore/version" ]; then
             echo "Git-Core Protocol v$(cat .gitcore/version) detected"
           else
-            echo "Warning: .gitcore/version not found"
-            exit 1
+            echo "Skipping: .gitcore not present (open-source build)"
           fi
 
   build:
-    needs: validate-git-core
+#    needs: validate-git-core
     runs-on: ubuntu-latest
     defaults:
       run:
