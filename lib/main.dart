@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'core/di/injection.dart';
 import 'core/theme/cyber_theme.dart';
@@ -23,9 +21,7 @@ class HomePage extends StatelessWidget {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await configureDependencies(
-    geminiApiKey: Platform.environment['GEMINI_API_KEY'],
-  );
+  await configureDependencies();
   await getIt<MemoryGraph>().initialize();
   runApp(const MyApp());
 }
@@ -68,7 +64,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     return FloatingAssistantButtonScope(
       notifier: _fabController,
       child: Scaffold(
-        body: IndexedStack(index: _currentIndex, children: _pages),
+        body: IndexedStack(
+          index: _currentIndex,
+          children: _pages,
+        ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
