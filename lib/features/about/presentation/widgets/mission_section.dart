@@ -56,7 +56,7 @@ class MissionSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             height: 1.5,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
           ),
         ),
       ),
@@ -89,7 +89,7 @@ class MissionSection extends StatelessWidget {
                   Expanded(
                     child: Text(
                       value,
-                      style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.8)),
                     ),
                   ),
                 ],
@@ -125,7 +125,7 @@ class MissionSection extends StatelessWidget {
                   Expanded(
                     child: Text(
                       activity,
-                      style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.8)),
                     ),
                   ),
                 ],

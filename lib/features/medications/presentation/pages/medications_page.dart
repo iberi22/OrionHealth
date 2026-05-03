@@ -197,13 +197,13 @@ class _MedicationsPageState extends State<MedicationsPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: isArchived
-                          ? Colors.grey.withOpacity(0.1)
-                          : CyberTheme.primary.withOpacity(0.1),
+                          ? Colors.grey.withValues(alpha: 0.1)
+                          : CyberTheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(
                         color: isArchived
-                            ? Colors.grey.withOpacity(0.3)
-                            : CyberTheme.primary.withOpacity(0.3),
+                            ? Colors.grey.withValues(alpha: 0.3)
+                            : CyberTheme.primary.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -324,7 +324,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                     color: isActive ? CyberTheme.primary : Colors.grey,
                   ),
                   value: isActive,
-                  activeColor: CyberTheme.primary,
+                  activeThumbColor: CyberTheme.primary,
                   onChanged: (val) => setModalState(() => isActive = val),
                 ),
                 _buildTextField(notesController, 'Notas', Icons.notes, maxLines: 3),
@@ -394,18 +394,18 @@ class _MedicationsPageState extends State<MedicationsPage> {
         prefixIcon: Icon(icon, color: CyberTheme.secondary, size: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: CyberTheme.primary),
         ),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.05),
+        fillColor: Colors.white.withValues(alpha: 0.05),
       ),
     );
   }

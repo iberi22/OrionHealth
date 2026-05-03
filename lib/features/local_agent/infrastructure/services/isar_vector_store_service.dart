@@ -1,14 +1,54 @@
+import 'dart:io' show stderr;
+
 import 'package:injectable/injectable.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import '../../domain/services/vector_store_service.dart';
+import '../../domain/repositories/medical_knowledge_repository.dart';
 
 /// Implementation of VectorStoreService using isar_agent_memory package.
 /// Provides semantic search and document storage capabilities.
 @LazySingleton(as: VectorStoreService)
 class IsarVectorStoreService implements VectorStoreService {
   final MemoryGraph _memoryGraph;
+  final MedicalKnowledgeRepository _medicalRepo;
 
-  IsarVectorStoreService(this._memoryGraph);
+  IsarVectorStoreService(this._memoryGraph, this._medicalRepo);
+
+  /// Index all medical standards (ICD-10, LOINC, RxNorm, SNOMED)
+  /// into the vector store at startup. Safe to call multiple times.
+  /// Errors are caught and logged — DI chain will not break.
+  @PostConstruct(preResolve: true)
+  Future<void> indexMedicalStandards() async {
+    try {
+      await _medicalRepo.initialize();
+
+      final allCodes = await _medicalRepo.getAllCodes();
+      if (allCodes.isEmpty) return;
+
+      for (final code in allCodes) {
+        final id = 'med:${code.standard}:${code.code}';
+        final content = code.embeddingText;
+        final metadata = <String, dynamic>{
+          'type': 'medical_standard',
+          'standard': code.standard,
+          'category': code.category,
+          'code': code.code,
+          'displayName': code.displayName,
+        };
+        try {
+          await _memoryGraph.storeNodeWithEmbedding(
+            content: content,
+            metadata: {'externalId': id, ...metadata},
+            deduplicate: true,
+          );
+        } catch (e) {
+          stderr.writeln('[IsarVectorStore] Error indexing ${code.code}: $e');
+        }
+      }
+    } catch (e) {
+      stderr.writeln('[IsarVectorStore] Failed to index medical standards: $e');
+    }
+  }
 
   @override
   Future<void> addDocument(

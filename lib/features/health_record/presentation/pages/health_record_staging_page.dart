@@ -115,7 +115,7 @@ class _SearchBar extends StatelessWidget {
           hintText: 'Buscar por diagnóstico, medicación...',
           prefixIcon: const Icon(Icons.search, color: CyberTheme.secondary),
           border: InputBorder.none,
-          hintStyle: TextStyle(color: CyberTheme.secondary.withOpacity(0.7)),
+          hintStyle: TextStyle(color: CyberTheme.secondary.withValues(alpha: 0.7)),
         ),
       ),
     );
@@ -128,7 +128,7 @@ class _FilterChips extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Chip(label: const Text('Todos'), backgroundColor: CyberTheme.primary.withOpacity(0.3)),
+        Chip(label: const Text('Todos'), backgroundColor: CyberTheme.primary.withValues(alpha: 0.3)),
         Chip(label: const Text('Diagnóstico'), backgroundColor: Colors.white10),
         Chip(label: const Text('Medicación'), backgroundColor: Colors.white10),
         Chip(label: const Text('Documentos'), backgroundColor: Colors.white10),
@@ -181,7 +181,7 @@ class _TimelineItem extends StatelessWidget {
                 Expanded(
                   child: Container(
                     width: 2,
-                    color: CyberTheme.secondary.withOpacity(0.3),
+                    color: CyberTheme.secondary.withValues(alpha: 0.3),
                   ),
                 ),
               ],
@@ -206,7 +206,7 @@ class _TimelineItem extends StatelessWidget {
                         children: [
                           Text(record.summary ?? 'Sin resumen', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 4),
-                          Text(record.type.name, style: TextStyle(color: Colors.white.withOpacity(0.7))),
+                          Text(record.type.name, style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
                           const SizedBox(height: 8),
                           TextButton(
                             onPressed: () {},
