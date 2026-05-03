@@ -42,7 +42,7 @@ class LlmConfig {
       allowCloudApiCalls: allowCloudApiCalls ?? this.allowCloudApiCalls,
       deviceCapabilityTier: deviceCapabilityTier ?? this.deviceCapabilityTier,
       recommendedModel: recommendedModel ?? this.recommendedModel,
-    )..id = this.id;
+    )..id = id;
   }
 
   @override

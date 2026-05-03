@@ -95,9 +95,8 @@ class FdaAdapter implements MedicalSearchAdapter {
 }
 
 class WhoAdapter implements MedicalSearchAdapter {
+  // ignore: unused_field
   final Dio _dio;
-  static const String _baseUrl = 'https://www.who.int/api/news'; // Placeholder if no specific API, might need scraping or dedicated endpoint
-
   WhoAdapter(this._dio);
 
   @override

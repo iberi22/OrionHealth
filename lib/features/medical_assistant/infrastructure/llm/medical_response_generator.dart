@@ -1,4 +1,3 @@
-import '../../domain/entities/medical_insight.dart';
 
 class MedicalResponseGenerator {
   static MedicalAnalysisResult generate({

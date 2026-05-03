@@ -72,7 +72,7 @@ class UserProfile {
       allowCloudApi: allowCloudApi ?? this.allowCloudApi,
       llmProvider: llmProvider ?? this.llmProvider,
       localModelName: localModelName ?? this.localModelName,
-    )..id = this.id;
+    )..id = id;
   }
 
   @override

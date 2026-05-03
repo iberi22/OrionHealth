@@ -54,7 +54,7 @@ class MockLlmAdapter implements LlmAdapter {
 
     // Take first few sentences as summary
     final summaryParts = sentences.take(3).map((s) => s.trim()).toList();
-    return summaryParts.join('. ') + '.';
+    return '${summaryParts.join('. ')}.';
   }
 
   String _generateHealthSummary(String content) {
