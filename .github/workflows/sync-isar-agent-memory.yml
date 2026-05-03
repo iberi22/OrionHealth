@@ -1,0 +1,59 @@
+name: Sync isar_agent_memory package
+
+on:
+  push:
+    paths:
+      - 'packages/isar_agent_memory/**'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes in isar_agent_memory package
+        id: check
+        run: |
+          # Get the list of changed files
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} || true)
+          if echo "$CHANGED" | grep -q "^packages/isar_agent_memory/"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Package has changes, will sync."
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes in package."
+          fi
+
+      - name: Sync to iberi22/isar_agent_memory
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Clone target repo
+          git clone https://github.com/iberi22/isar_agent_memory.git /tmp/isar_sync
+          cd /tmp/isar_sync
+
+          # Remove all files except .git
+          git rm -r --cached . 2>/dev/null || true
+
+          # Copy latest package content
+          rsync -av --delete $GITHUB_WORKSPACE/packages/isar_agent_memory/ ./ \
+            --exclude .git --exclude node_modules --exclude .dart_tool
+
+          # Commit and push if there are changes
+          git add -A
+          if ! git diff --cached --quiet; then
+            git config user.name "SWAL Bot"
+            git config user.email "bot@southwestailabs.com"
+            git commit -m "sync: Update from OrionHealth monorepo
+
+Source: iberi22/OrionHealth@${{ github.sha }}
+Path: packages/isar_agent_memory/"
+            git push origin main
+            echo "✅ Synced to iberi22/isar_agent_memory"
+          else
+            echo "No changes to sync"
+          fi
