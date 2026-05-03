@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../../core/widgets/page_header.dart';
 import '../../application/bloc/health_record_cubit.dart';
 import '../../domain/entities/medical_record.dart';
 
@@ -51,18 +52,22 @@ class _RecordHistoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Icon(Icons.security, color: CyberTheme.secondary),
-        title: const Text('Historial Médico'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.ios_share, color: CyberTheme.secondary),
-            onPressed: () {},
-          ),
-        ],
-      ),
       body: CustomScrollView(
         slivers: [
+          SliverToBoxAdapter(
+            child: SafeArea(
+              bottom: false,
+              child: PageHeader(
+                title: 'Historial Médico',
+                subtitle: 'Tus registros de salud protegidos por cifrado de extremo a extremo',
+                leading: const Icon(Icons.security, color: CyberTheme.secondary),
+                trailing: IconButton(
+                  icon: const Icon(Icons.ios_share, color: CyberTheme.secondary),
+                  onPressed: () {},
+                ),
+              ),
+            ),
+          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

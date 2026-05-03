@@ -7,6 +7,7 @@ import '../../../../features/settings/presentation/pages/llm_settings_page.dart'
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../../core/widgets/page_header.dart';
 import '../../application/bloc/user_profile_cubit.dart';
 import '../../domain/entities/user_profile.dart';
 
@@ -41,18 +42,23 @@ class _UserProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
+        const SliverAppBar(
           backgroundColor: Colors.transparent,
-          leading: const Icon(Icons.arrow_back_ios_new),
-          title: Text(
-            'Perfil del Usuario',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
+          elevation: 0,
+          toolbarHeight: 0,
           pinned: true,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(100),
+            child: SafeArea(
+              bottom: false,
+              child: PageHeader(
+                title: 'Perfil del Usuario',
+                subtitle: 'Configura tu identidad digital y preferencias de privacidad',
+              ),
+            ),
+          ),
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
