@@ -112,15 +112,15 @@ String restoreAnonymized(String text)
             <p class="text-xs text-bone-dark opacity-70 mb-3">
               Orchestrates the RAG pipeline. Retrieves context from the vector store, enriches with medical research, and generates AI responses.
             </p>
-            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>File: lib/features/local_agent/.../rag_llm_service.dart
+            <pre is:raw class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs">File: lib/features/local_agent/.../rag_llm_service.dart
 
-Stream&lt;String&gt; generate(String prompt) async* &#123;
+Stream&lt;String&gt; generate(String prompt) async* {
   final contextDocs = await _vectorStoreService.search(prompt);
-  if (contextDocs.length &lt; 2 &amp;&amp; allowCloud) &#123;
+  if (contextDocs.length &lt; 2 &amp;&amp; allowCloud) {
     research = await _medicalResearchService.performResearch(prompt);
-  &#125;
+  }
   yield* _llmAdapter.generate(contextPrompt);
-&#125;</code></pre>
+}</pre>
           </div>
 
           <!-- MockLlmAdapter -->
@@ -129,9 +129,9 @@ Stream&lt;String&gt; generate(String prompt) async* &#123;
             <p class="text-xs text-bone-dark opacity-70 mb-3">
               Development/testing adapter that returns preformatted template responses. Used when no LLM is configured.
             </p>
-            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>Stream&lt;String&gt; generate(String prompt) async* &#123;
+            <pre is:raw class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs">Stream&lt;String&gt; generate(String prompt) async* {
   yield "Entendido. Basado en tu consulta '$prompt'...";
-&#125;</code></pre>
+}</pre>
           </div>
 
           <!-- GemmaLlmAdapter -->
@@ -140,14 +140,14 @@ Stream&lt;String&gt; generate(String prompt) async* &#123;
             <p class="text-xs text-bone-dark opacity-70 mb-3">
               Production LLM adapter. Attempts local inference via AICore (Gemma 4 E2B/E4B), falls back to Gemini cloud if unavailable.
             </p>
-            <pre class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs"><code>File: lib/features/local_agent/infrastructure/adapters/gemma_llm_adapter.dart
+            <pre is:raw class="bg-background/50 p-3 rounded-lg overflow-x-auto text-xs">File: lib/features/local_agent/infrastructure/adapters/gemma_llm_adapter.dart
 Channel: com.orionhealth/gemma4
 
 @LazySingleton(as: LlmAdapter)
 @Named('gemma')
-class GemmaLlmAdapter implements LlmAdapter &#123;
+class GemmaLlmAdapter implements LlmAdapter {
   static const _channel = MethodChannel('com.orionhealth/gemma4');
-&#125;</code></pre>
+}</pre>
           </div>
         </div>
       </div>
