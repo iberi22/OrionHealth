@@ -77,6 +77,19 @@ By using OrionHealth today, you're not just organizing your health data—**you'
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/auth.png" alt="Authentication" width="200"/>
+  <img src="assets/screenshots/health-wallet.png" alt="Health Wallet" width="200"/>
+  <img src="assets/screenshots/rag-chat.png" alt="RAG Chat" width="200"/>
+  <img src="assets/screenshots/sharing.png" alt="Health Sharing" width="200"/>
+</p>
+
+> 📸 Screenshots coming soon. Run the app to see the UI in action.
+
+---
+
 ## 🏗️ Architecture
 
 OrionHealth follows **Hexagonal Architecture (Ports & Adapters)** for maximum modularity and testability:

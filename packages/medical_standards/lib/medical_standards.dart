@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 // Core interfaces and base models for medical standards.
 //
 // All standards in this package implement these interfaces
