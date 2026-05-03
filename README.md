@@ -4,7 +4,7 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Flutter](https://img.shields.io/badge/Flutter-3.7+-blue?logo=flutter)](https://flutter.dev)
-[![Build](https://img.shields.io/github/actions/workflow/status/iberi22/OrionHealth/build.yml?branch=main)](https://github.com/iberi22/OrionHealth/actions)
+[![CI](https://github.com/iberi22/OrionHealth/actions/workflows/build.yml/badge.svg)](https://github.com/iberi22/OrionHealth/actions)
 [![Issues](https://img.shields.io/github/issues/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/issues)
 [![Last Commit](https://img.shields.io/github/last-commit/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/commits/main)
 [![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/OrionHealth)
@@ -13,7 +13,7 @@
 
 ## 📊 Project Status
 
-**Currently in 0.7.0 beta.** Flutter analyze: 0 issues. 42/44 tests passing. Ready for public beta.
+**0.7.0 beta — Flutter analyze: 0 issues • 41/41 tests passing • Ready for public beta**
 
 ---
 
@@ -92,60 +92,64 @@ By using OrionHealth today, you're not just organizing your health data—**you'
 
 ## 🏗️ Architecture
 
-OrionHealth follows **Hexagonal Architecture (Ports & Adapters)** for maximum modularity and testability:
+OrionHealth follows **local-first, privacy-centric** architecture with three core pillars:
+
+### Local-First
+All data is stored on-device using **IsarDB**. Zero data leaves the device unencrypted. Works fully offline.
+
+### RAG with MemoryGraph
+On-device Retrieval-Augmented Generation using `isar_agent_memory`:
+- **MemoryGraph** — hybrid vector + knowledge graph for semantic health queries
+- **Hierarchical RAG (HiRAG)** — multi-layer summarization for complex medical reasoning
+- **Hybrid Search** — semantic vector + BM25 keyword via Reciprocal Rank Fusion
+
+### Offline Health Wallet
+Secure local health record storage with **AES-256-GCM encryption**, PBKDF2 key derivation, and HKDF-structured key management.
+
+### Medical Standards
+Built-in support for international medical coding standards:
+- **ICD-10** — diagnosis codes
+- **LOINC** — lab test codes
+- **RxNorm** — medication codes
+- **SNOMED CT** — clinical terminology
 
 ```text
 lib/
 ├── core/                   # Shared utilities, DI, theme
 ├── features/
 │   ├── health_record/      # Medical history management
-│   │   ├── domain/         # Entities & Repository interfaces
-│   │   ├── application/    # Use cases (business logic)
-│   │   ├── infrastructure/ # Isar DB, HealthKit adapters
-│   │   └── presentation/   # UI (BLoC + Material 3)
-│   │
 │   ├── local_agent/        # AI chat & RAG
-│   │   ├── domain/         # Message entities
-│   │   ├── application/    # LLM use cases
-│   │   ├── infrastructure/ # ONNX runtime, embeddings
-│   │   └── presentation/   # Chat interface
-│   │
 │   ├── user_profile/       # User settings & preferences
 │   └── health_report/      # Analytics & export
+packages/
+├── isar_agent_memory/      # Graph + Vector DB (RAG)
+├── health_wallet/          # Offline health records
+└── medical_standards/      # ICD-10, LOINC, RxNorm, SNOMED
 └── main.dart
 ```
 
-**Tech Stack:**
-- **Framework**: Flutter 3.x (Material Design 3)
-- **State Management**: `flutter_bloc`
-- **Database**: `isar` (NoSQL + vector embeddings)
-- **AI Inference**: `onnxruntime` (Phi-3/Gemma)
-- **Health Data**: `health` package (cross-platform)
-- **Dependency Injection**: `get_it` + `injectable`
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | Flutter 3.x (Material Design 3) |
+| **State Management** | `flutter_bloc` + Cubit |
+| **Local Database** | IsarDB (NoSQL + vector embeddings) |
+| **AI Inference** | ONNX Runtime / AICore (Gemma 4) |
+| **Health Data** | `health` package (cross-platform) |
+| **DI** | `get_it` + `injectable` |
+| **Encryption** | AES-256-GCM, PBKDF2, HKDF |
+| **Bluetooth Sharing** | `flutter_blue_plus` |
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-### Prerequisites
 ```bash
-# Flutter SDK 3.19+
-flutter --version
-
-# Check device compatibility
-flutter doctor
-```
-
-### Installation
-```bash
-# Clone the repository
-git clone https://github.com/iberi22/local-llm.OrionHealth.git
+git clone https://github.com/iberi22/OrionHealth.git
 cd OrionHealth
-
-# Install dependencies
 flutter pub get
-
-# Run on your device
+dart run build_runner build --delete-conflicting-outputs
 flutter run
 ```
 
@@ -157,11 +161,27 @@ flutter run
 
 ---
 
+## 📸 Screenshots
+
+> 🖼️ Screenshots coming soon. Run the app to see the UI in action.
+
+<p align="center">
+  <img src="assets/screenshots/auth.png" alt="Authentication" width="200"/>
+  <img src="assets/screenshots/health-wallet.png" alt="Health Wallet" width="200"/>
+  <img src="assets/screenshots/rag-chat.png" alt="RAG Chat" width="200"/>
+  <img src="assets/screenshots/sharing.png" alt="Health Sharing" width="200"/>
+</p>
+
+---
+
 ## 📖 Documentation
 
-- **[PLANNING.md](PLANNING.md)**: Architecture decisions & development phases
-- **[TASK.md](TASK.md)**: Project roadmap & task tracking
+- **[docs/rag-architecture-review.md](docs/rag-architecture-review.md)**: RAG pipeline deep-dive
+- **[docs/aicore-status.md](docs/aicore-status.md)**: AICore plugin implementation guide
+- **[docs/api/index.md](docs/api/index.md)**: API documentation index
+- **[docs/dev-guide.md](docs/dev-guide.md)**: Developer onboarding guide
 - **[CONTRIBUTING.md](CONTRIBUTING.md)**: How to contribute
+- **[CHANGELOG.md](CHANGELOG.md)**: Release history
 
 ## 🛠️ Support & Feedback
 
@@ -210,7 +230,7 @@ By structuring your health data in OrionHealth's format today, you're preparing 
 
 ## 📜 License
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+This project is licensed under the **[GNU Affero General Public License v3.0 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0)**.
 
 **TL;DR:**
 - Free to use, modify, and distribute
