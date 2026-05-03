@@ -1,16 +1,16 @@
 ---
-import Header from './Header.astro';
-import Footer from './Footer.astro';
-import FeatureCard from './FeatureCard.astro';
-import DonationSection from './DonationSection.astro';
-import ScreenshotsGallery from './ScreenshotsGallery.astro';
-import { ui } from '../i18n/ui';
+import { ui } from "../i18n/ui";
+import DonationSection from "./DonationSection.astro";
+import FeatureCard from "./FeatureCard.astro";
+import Footer from "./Footer.astro";
+import Header from "./Header.astro";
+import ScreenshotsGallery from "./ScreenshotsGallery.astro";
 
 interface Props {
-  lang?: string;
+	lang?: string;
 }
 
-const { lang = 'en' } = Astro.props;
+const { lang = "en" } = Astro.props;
 const t = ui[lang as keyof typeof ui] || ui.en;
 ---
 

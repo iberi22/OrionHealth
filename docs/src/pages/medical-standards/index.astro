@@ -1,61 +1,61 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import fs from 'node:fs';
+import fs from "node:fs";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 // Load all standards
 function loadJson(file) {
-  try {
-    const content = fs.readFileSync(`public/${file}`, 'utf-8');
-    return JSON.parse(content);
-  } catch {
-    return null;
-  }
+	try {
+		const content = fs.readFileSync(`public/${file}`, "utf-8");
+		return JSON.parse(content);
+	} catch {
+		return null;
+	}
 }
 
-const icd10 = loadJson('icd10.json');
-const loinc = loadJson('loinc.json');
-const rxnorm = loadJson('rxnorm.json');
-const snomed = loadJson('snomed.json');
+const icd10 = loadJson("icd10.json");
+const loinc = loadJson("loinc.json");
+const rxnorm = loadJson("rxnorm.json");
+const snomed = loadJson("snomed.json");
 
 const standards = [
-  { 
-    id: 'icd-10', 
-    name: 'ICD-10', 
-    fullName: 'International Classification of Diseases',
-    count: icd10?.data?.length || 0,
-    description: 'Códigos de enfermedades de la OMS',
-    color: 'from-blue-500 to-blue-700',
-    categories: [...new Set(icd10?.data?.map(d => d.category) || [])]
-  },
-  { 
-    id: 'loinc', 
-    name: 'LOINC', 
-    fullName: 'Logical Observation Identifiers Names and Codes',
-    count: loinc?.data?.length || 0,
-    description: 'Códigos de análisis de laboratorio',
-    color: 'from-emerald-500 to-emerald-700',
-    categories: [...new Set(loinc?.data?.map(d => d.category) || [])]
-  },
-  { 
-    id: 'rxnorm', 
-    name: 'RxNorm', 
-    fullName: 'Medication Codes',
-    count: rxnorm?.data?.length || 0,
-    description: 'Códigos de medicamentos (NLM)',
-    color: 'from-purple-500 to-purple-700',
-    categories: [...new Set(rxnorm?.data?.map(d => d.category) || [])]
-  },
-  { 
-    id: 'snomed', 
-    name: 'SNOMED CT', 
-    fullName: 'Systematized Nomenclature of Medicine',
-    count: snomed?.data?.length || 0,
-    description: 'Conceptos clínicos internacionales',
-    color: 'from-amber-500 to-amber-700',
-    categories: [...new Set(snomed?.data?.map(d => d.category) || [])]
-  }
+	{
+		id: "icd-10",
+		name: "ICD-10",
+		fullName: "International Classification of Diseases",
+		count: icd10?.data?.length || 0,
+		description: "Códigos de enfermedades de la OMS",
+		color: "from-blue-500 to-blue-700",
+		categories: [...new Set(icd10?.data?.map((d) => d.category) || [])],
+	},
+	{
+		id: "loinc",
+		name: "LOINC",
+		fullName: "Logical Observation Identifiers Names and Codes",
+		count: loinc?.data?.length || 0,
+		description: "Códigos de análisis de laboratorio",
+		color: "from-emerald-500 to-emerald-700",
+		categories: [...new Set(loinc?.data?.map((d) => d.category) || [])],
+	},
+	{
+		id: "rxnorm",
+		name: "RxNorm",
+		fullName: "Medication Codes",
+		count: rxnorm?.data?.length || 0,
+		description: "Códigos de medicamentos (NLM)",
+		color: "from-purple-500 to-purple-700",
+		categories: [...new Set(rxnorm?.data?.map((d) => d.category) || [])],
+	},
+	{
+		id: "snomed",
+		name: "SNOMED CT",
+		fullName: "Systematized Nomenclature of Medicine",
+		count: snomed?.data?.length || 0,
+		description: "Conceptos clínicos internacionales",
+		color: "from-amber-500 to-amber-700",
+		categories: [...new Set(snomed?.data?.map((d) => d.category) || [])],
+	},
 ];
 
 const total = standards.reduce((sum, s) => sum + s.count, 0);

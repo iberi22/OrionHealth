@@ -1,11 +1,11 @@
 ---
-import { ui } from '../i18n/ui';
+import { ui } from "../i18n/ui";
 
 interface Props {
-  lang?: string;
+	lang?: string;
 }
 
-const { lang = 'en' } = Astro.props;
+const { lang = "en" } = Astro.props;
 const t = ui[lang as keyof typeof ui] || ui.en;
 ---
 

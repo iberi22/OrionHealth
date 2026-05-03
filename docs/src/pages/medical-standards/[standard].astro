@@ -1,35 +1,55 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import fs from 'node:fs';
+import fs from "node:fs";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-  const standards = ['icd-10', 'loinc', 'rxnorm', 'snomed'];
-  return standards.map(s => ({ params: { standard: s } }));
+	const standards = ["icd-10", "loinc", "rxnorm", "snomed"];
+	return standards.map((s) => ({ params: { standard: s } }));
 }
 
 const standardId = Astro.params.standard;
 const standardNames = {
-  'icd-10': { name: 'ICD-10', fullName: 'International Classification of Diseases', file: 'icd10.json', color: 'from-blue-500 to-blue-700' },
-  'loinc': { name: 'LOINC', fullName: 'Logical Observation Identifiers', file: 'loinc.json', color: 'from-emerald-500 to-emerald-700' },
-  'rxnorm': { name: 'RxNorm', fullName: 'Medication Codes', file: 'rxnorm.json', color: 'from-purple-500 to-purple-700' },
-  'snomed': { name: 'SNOMED CT', fullName: 'Systematized Nomenclature of Medicine', file: 'snomed.json', color: 'from-amber-500 to-amber-700' }
+	"icd-10": {
+		name: "ICD-10",
+		fullName: "International Classification of Diseases",
+		file: "icd10.json",
+		color: "from-blue-500 to-blue-700",
+	},
+	loinc: {
+		name: "LOINC",
+		fullName: "Logical Observation Identifiers",
+		file: "loinc.json",
+		color: "from-emerald-500 to-emerald-700",
+	},
+	rxnorm: {
+		name: "RxNorm",
+		fullName: "Medication Codes",
+		file: "rxnorm.json",
+		color: "from-purple-500 to-purple-700",
+	},
+	snomed: {
+		name: "SNOMED CT",
+		fullName: "Systematized Nomenclature of Medicine",
+		file: "snomed.json",
+		color: "from-amber-500 to-amber-700",
+	},
 };
 
 const meta = standardNames[standardId];
 if (!meta) {
-  return Astro.redirect('/OrionHealth/medical-standards', 301);
+	return Astro.redirect("/OrionHealth/medical-standards", 301);
 }
 
 let data = [];
 try {
-  const content = fs.readFileSync(`public/${meta.file}`, 'utf-8');
-  const json = JSON.parse(content);
-  data = json.data || [];
+	const content = fs.readFileSync(`public/${meta.file}`, "utf-8");
+	const json = JSON.parse(content);
+	data = json.data || [];
 } catch {}
 
-const categories = [...new Set(data.map(d => d.category))];
+const categories = [...new Set(data.map((d) => d.category))];
 const totalCount = data.length;
 ---
 

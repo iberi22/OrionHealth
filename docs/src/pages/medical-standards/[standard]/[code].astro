@@ -1,57 +1,85 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Header from '../../../components/Header.astro';
-import Footer from '../../../components/Footer.astro';
-import fs from 'node:fs';
+import fs from "node:fs";
+import Footer from "../../../components/Footer.astro";
+import Header from "../../../components/Header.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-  const standards = ['icd-10', 'loinc', 'rxnorm', 'snomed'];
-  const files = { 'icd-10': 'icd10.json', 'loinc': 'loinc.json', 'rxnorm': 'rxnorm.json', 'snomed': 'snomed.json' };
-  const paths = [];
-  for (const s of standards) {
-    try {
-      const content = fs.readFileSync(new URL(`../../../../public/${files[s]}`, import.meta.url), 'utf-8');
-      const json = JSON.parse(content);
-      for (const item of (json.data || [])) {
-        paths.push({ params: { standard: s, code: item.code } });
-      }
-    } catch {}
-  }
-  return paths;
+	const standards = ["icd-10", "loinc", "rxnorm", "snomed"];
+	const files = {
+		"icd-10": "icd10.json",
+		loinc: "loinc.json",
+		rxnorm: "rxnorm.json",
+		snomed: "snomed.json",
+	};
+	const paths = [];
+	for (const s of standards) {
+		try {
+			const content = fs.readFileSync(
+				new URL(`../../../../public/${files[s]}`, import.meta.url),
+				"utf-8",
+			);
+			const json = JSON.parse(content);
+			for (const item of json.data || []) {
+				paths.push({ params: { standard: s, code: item.code } });
+			}
+		} catch {}
+	}
+	return paths;
 }
 
 const standardId = Astro.params.standard;
 const code = Astro.params.code;
 
 const standardNames = {
-  'icd-10': { name: 'ICD-10', fullName: 'International Classification of Diseases', file: 'icd10.json', color: 'from-blue-500 to-blue-700' },
-  'loinc': { name: 'LOINC', fullName: 'Logical Observation Identifiers', file: 'loinc.json', color: 'from-emerald-500 to-emerald-700' },
-  'rxnorm': { name: 'RxNorm', fullName: 'Medication Codes', file: 'rxnorm.json', color: 'from-purple-500 to-purple-700' },
-  'snomed': { name: 'SNOMED CT', fullName: 'Systematized Nomenclature of Medicine', file: 'snomed.json', color: 'from-amber-500 to-amber-700' }
+	"icd-10": {
+		name: "ICD-10",
+		fullName: "International Classification of Diseases",
+		file: "icd10.json",
+		color: "from-blue-500 to-blue-700",
+	},
+	loinc: {
+		name: "LOINC",
+		fullName: "Logical Observation Identifiers",
+		file: "loinc.json",
+		color: "from-emerald-500 to-emerald-700",
+	},
+	rxnorm: {
+		name: "RxNorm",
+		fullName: "Medication Codes",
+		file: "rxnorm.json",
+		color: "from-purple-500 to-purple-700",
+	},
+	snomed: {
+		name: "SNOMED CT",
+		fullName: "Systematized Nomenclature of Medicine",
+		file: "snomed.json",
+		color: "from-amber-500 to-amber-700",
+	},
 };
 
 const meta = standardNames[standardId];
 if (!meta) {
-  return Astro.redirect('/OrionHealth/medical-standards', 301);
+	return Astro.redirect("/OrionHealth/medical-standards", 301);
 }
 
 let item = null;
 let prevItem = null;
 let nextItem = null;
 try {
-  const content = fs.readFileSync(`public/${meta.file}`, 'utf-8');
-  const json = JSON.parse(content);
-  const data = json.data || [];
-  const idx = data.findIndex(d => d.code === code);
-  if (idx >= 0) {
-    item = data[idx];
-    if (idx > 0) prevItem = data[idx - 1];
-    if (idx < data.length - 1) nextItem = data[idx + 1];
-  }
+	const content = fs.readFileSync(`public/${meta.file}`, "utf-8");
+	const json = JSON.parse(content);
+	const data = json.data || [];
+	const idx = data.findIndex((d) => d.code === code);
+	if (idx >= 0) {
+		item = data[idx];
+		if (idx > 0) prevItem = data[idx - 1];
+		if (idx < data.length - 1) nextItem = data[idx + 1];
+	}
 } catch {}
 
 if (!item) {
-  return Astro.redirect(`/OrionHealth/medical-standards/${standardId}`, 301);
+	return Astro.redirect(`/OrionHealth/medical-standards/${standardId}`, 301);
 }
 ---
 
