@@ -28,8 +28,8 @@ class EncryptionServiceImpl implements EncryptionService {
     }
 
     // 2. Derive the secret key using PBKDF2
-    final secretKey = await _pbkdf2.deriveKeyFromPassword(
-      password: key,
+    final secretKey = await _pbkdf2.deriveKey(
+      secretKey: SecretKey(utf8.encode(key)),
       nonce: salt,
     );
 
@@ -60,8 +60,8 @@ class EncryptionServiceImpl implements EncryptionService {
     final encryptedPart = ciphertext.sublist(16);
 
     // 2. Derive the same secret key
-    final secretKey = await _pbkdf2.deriveKeyFromPassword(
-      password: key,
+    final secretKey = await _pbkdf2.deriveKey(
+      secretKey: SecretKey(utf8.encode(key)),
       nonce: salt,
     );
 
