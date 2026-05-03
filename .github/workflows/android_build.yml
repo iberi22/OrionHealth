@@ -107,14 +107,14 @@ jobs:
         run: flutter build apk --release
 
       - name: Upload debug APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: orionhealth-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           retention-days: 7
 
       - name: Upload release APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: orionhealth-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
