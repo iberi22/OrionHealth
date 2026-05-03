@@ -12,6 +12,9 @@ class CyberTheme {
     return ThemeData(
       brightness: Brightness.dark,
       primaryColor: primary,
+      focusColor: primary.withAlpha(50),
+      hoverColor: primary.withAlpha(30),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       colorScheme: const ColorScheme.dark(
         primary: primary,
         secondary: secondary,
@@ -38,6 +41,29 @@ class CyberTheme {
         backgroundColor: Colors.transparent,
         selectedItemColor: primary,
         unselectedItemColor: Colors.grey,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primary,
+          foregroundColor: backgroundDark,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ).copyWith(
+          overlayColor: WidgetStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(WidgetState.hovered)) return backgroundDark.withAlpha(20);
+            if (states.contains(WidgetState.focused) || states.contains(WidgetState.pressed)) {
+              return backgroundDark.withAlpha(40);
+            }
+            return null;
+          }),
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          hoverColor: primary.withAlpha(30),
+          focusColor: primary.withAlpha(50),
+        ),
       ),
     );
   }
