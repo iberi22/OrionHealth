@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'health_report.dart';
+part of 'report.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'health_report.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetHealthReportCollection on Isar {
-  IsarCollection<HealthReport> get healthReports => this.collection();
+extension GetReportCollection on Isar {
+  IsarCollection<Report> get reports => this.collection();
 }
 
-const HealthReportSchema = CollectionSchema(
-  name: r'HealthReport',
-  id: -7748707284337288904,
+const ReportSchema = CollectionSchema(
+  name: r'Report',
+  id: 4107730612455750309,
   properties: {
     r'content': PropertySchema(
       id: 0,
@@ -27,28 +27,39 @@ const HealthReportSchema = CollectionSchema(
       name: r'generatedAt',
       type: IsarType.dateTime,
     ),
-    r'title': PropertySchema(
+    r'status': PropertySchema(
       id: 2,
+      name: r'status',
+      type: IsarType.byte,
+      enumMap: _ReportstatusEnumValueMap,
+    ),
+    r'statusLabel': PropertySchema(
+      id: 3,
+      name: r'statusLabel',
+      type: IsarType.string,
+    ),
+    r'title': PropertySchema(
+      id: 4,
       name: r'title',
       type: IsarType.string,
     )
   },
-  estimateSize: _healthReportEstimateSize,
-  serialize: _healthReportSerialize,
-  deserialize: _healthReportDeserialize,
-  deserializeProp: _healthReportDeserializeProp,
+  estimateSize: _reportEstimateSize,
+  serialize: _reportSerialize,
+  deserialize: _reportDeserialize,
+  deserializeProp: _reportDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _healthReportGetId,
-  getLinks: _healthReportGetLinks,
-  attach: _healthReportAttach,
+  getId: _reportGetId,
+  getLinks: _reportGetLinks,
+  attach: _reportAttach,
   version: '3.1.0+1',
 );
 
-int _healthReportEstimateSize(
-  HealthReport object,
+int _reportEstimateSize(
+  Report object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -59,6 +70,7 @@ int _healthReportEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.statusLabel.length * 3;
   {
     final value = object.title;
     if (value != null) {
@@ -68,33 +80,37 @@ int _healthReportEstimateSize(
   return bytesCount;
 }
 
-void _healthReportSerialize(
-  HealthReport object,
+void _reportSerialize(
+  Report object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.content);
   writer.writeDateTime(offsets[1], object.generatedAt);
-  writer.writeString(offsets[2], object.title);
+  writer.writeByte(offsets[2], object.status.index);
+  writer.writeString(offsets[3], object.statusLabel);
+  writer.writeString(offsets[4], object.title);
 }
 
-HealthReport _healthReportDeserialize(
+Report _reportDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = HealthReport(
+  final object = Report(
     content: reader.readStringOrNull(offsets[0]),
     generatedAt: reader.readDateTimeOrNull(offsets[1]),
-    title: reader.readStringOrNull(offsets[2]),
+    status: _ReportstatusValueEnumMap[reader.readByteOrNull(offsets[2])] ??
+        ReportStatus.finalized,
+    title: reader.readStringOrNull(offsets[4]),
   );
   object.id = id;
   return object;
 }
 
-P _healthReportDeserializeProp<P>(
+P _reportDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -106,37 +122,50 @@ P _healthReportDeserializeProp<P>(
     case 1:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
+      return (_ReportstatusValueEnumMap[reader.readByteOrNull(offset)] ??
+          ReportStatus.finalized) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _healthReportGetId(HealthReport object) {
+const _ReportstatusEnumValueMap = {
+  'pending': 0,
+  'finalized': 1,
+  'urgent': 2,
+};
+const _ReportstatusValueEnumMap = {
+  0: ReportStatus.pending,
+  1: ReportStatus.finalized,
+  2: ReportStatus.urgent,
+};
+
+Id _reportGetId(Report object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _healthReportGetLinks(HealthReport object) {
+List<IsarLinkBase<dynamic>> _reportGetLinks(Report object) {
   return [];
 }
 
-void _healthReportAttach(
-    IsarCollection<dynamic> col, Id id, HealthReport object) {
+void _reportAttach(IsarCollection<dynamic> col, Id id, Report object) {
   object.id = id;
 }
 
-extension HealthReportQueryWhereSort
-    on QueryBuilder<HealthReport, HealthReport, QWhere> {
-  QueryBuilder<HealthReport, HealthReport, QAfterWhere> anyId() {
+extension ReportQueryWhereSort on QueryBuilder<Report, Report, QWhere> {
+  QueryBuilder<Report, Report, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension HealthReportQueryWhere
-    on QueryBuilder<HealthReport, HealthReport, QWhereClause> {
-  QueryBuilder<HealthReport, HealthReport, QAfterWhereClause> idEqualTo(Id id) {
+extension ReportQueryWhere on QueryBuilder<Report, Report, QWhereClause> {
+  QueryBuilder<Report, Report, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -145,8 +174,7 @@ extension HealthReportQueryWhere
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterWhereClause> idNotEqualTo(
-      Id id) {
+  QueryBuilder<Report, Report, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -168,8 +196,7 @@ extension HealthReportQueryWhere
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterWhereClause> idGreaterThan(
-      Id id,
+  QueryBuilder<Report, Report, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -178,7 +205,7 @@ extension HealthReportQueryWhere
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<Report, Report, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -187,7 +214,7 @@ extension HealthReportQueryWhere
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterWhereClause> idBetween(
+  QueryBuilder<Report, Report, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -204,10 +231,8 @@ extension HealthReportQueryWhere
   }
 }
 
-extension HealthReportQueryFilter
-    on QueryBuilder<HealthReport, HealthReport, QFilterCondition> {
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentIsNull() {
+extension ReportQueryFilter on QueryBuilder<Report, Report, QFilterCondition> {
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'content',
@@ -215,8 +240,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentIsNotNull() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'content',
@@ -224,8 +248,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentEqualTo(
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -238,8 +261,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentGreaterThan(
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -254,8 +276,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentLessThan(
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -270,8 +291,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentBetween(
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -290,8 +310,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentStartsWith(
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -304,8 +323,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentEndsWith(
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -318,8 +336,9 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'content',
@@ -329,8 +348,9 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'content',
@@ -340,8 +360,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentIsEmpty() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'content',
@@ -350,8 +369,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      contentIsNotEmpty() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> contentIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'content',
@@ -360,8 +378,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      generatedAtIsNull() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> generatedAtIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'generatedAt',
@@ -369,8 +386,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      generatedAtIsNotNull() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> generatedAtIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'generatedAt',
@@ -378,8 +394,8 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      generatedAtEqualTo(DateTime? value) {
+  QueryBuilder<Report, Report, QAfterFilterCondition> generatedAtEqualTo(
+      DateTime? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'generatedAt',
@@ -388,8 +404,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      generatedAtGreaterThan(
+  QueryBuilder<Report, Report, QAfterFilterCondition> generatedAtGreaterThan(
     DateTime? value, {
     bool include = false,
   }) {
@@ -402,8 +417,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      generatedAtLessThan(
+  QueryBuilder<Report, Report, QAfterFilterCondition> generatedAtLessThan(
     DateTime? value, {
     bool include = false,
   }) {
@@ -416,8 +430,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      generatedAtBetween(
+  QueryBuilder<Report, Report, QAfterFilterCondition> generatedAtBetween(
     DateTime? lower,
     DateTime? upper, {
     bool includeLower = true,
@@ -434,8 +447,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> idEqualTo(
-      Id value) {
+  QueryBuilder<Report, Report, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -444,7 +456,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<Report, Report, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -457,7 +469,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> idLessThan(
+  QueryBuilder<Report, Report, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -470,7 +482,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> idBetween(
+  QueryBuilder<Report, Report, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -487,8 +499,190 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      titleIsNull() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusEqualTo(
+      ReportStatus value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'status',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusGreaterThan(
+    ReportStatus value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'status',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLessThan(
+    ReportStatus value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'status',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusBetween(
+    ReportStatus lower,
+    ReportStatus upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'status',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'statusLabel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'statusLabel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'statusLabel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'statusLabel',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'statusLabel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'statusLabel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'statusLabel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'statusLabel',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'statusLabel',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> statusLabelIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'statusLabel',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'title',
@@ -496,8 +690,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      titleIsNotNull() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'title',
@@ -505,7 +698,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> titleEqualTo(
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -518,8 +711,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      titleGreaterThan(
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -534,7 +726,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> titleLessThan(
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -549,7 +741,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> titleBetween(
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -568,8 +760,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      titleStartsWith(
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -582,7 +773,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> titleEndsWith(
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -595,7 +786,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> titleContains(
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -607,7 +798,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition> titleMatches(
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -619,8 +810,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      titleIsEmpty() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'title',
@@ -629,8 +819,7 @@ extension HealthReportQueryFilter
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterFilterCondition>
-      titleIsNotEmpty() {
+  QueryBuilder<Report, Report, QAfterFilterCondition> titleIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'title',
@@ -640,120 +829,174 @@ extension HealthReportQueryFilter
   }
 }
 
-extension HealthReportQueryObject
-    on QueryBuilder<HealthReport, HealthReport, QFilterCondition> {}
+extension ReportQueryObject on QueryBuilder<Report, Report, QFilterCondition> {}
 
-extension HealthReportQueryLinks
-    on QueryBuilder<HealthReport, HealthReport, QFilterCondition> {}
+extension ReportQueryLinks on QueryBuilder<Report, Report, QFilterCondition> {}
 
-extension HealthReportQuerySortBy
-    on QueryBuilder<HealthReport, HealthReport, QSortBy> {
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> sortByContent() {
+extension ReportQuerySortBy on QueryBuilder<Report, Report, QSortBy> {
+  QueryBuilder<Report, Report, QAfterSortBy> sortByContent() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'content', Sort.asc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> sortByContentDesc() {
+  QueryBuilder<Report, Report, QAfterSortBy> sortByContentDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'content', Sort.desc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> sortByGeneratedAt() {
+  QueryBuilder<Report, Report, QAfterSortBy> sortByGeneratedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy>
-      sortByGeneratedAtDesc() {
+  QueryBuilder<Report, Report, QAfterSortBy> sortByGeneratedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.desc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> sortByTitle() {
+  QueryBuilder<Report, Report, QAfterSortBy> sortByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterSortBy> sortByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterSortBy> sortByStatusLabel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'statusLabel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterSortBy> sortByStatusLabelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'statusLabel', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> sortByTitleDesc() {
+  QueryBuilder<Report, Report, QAfterSortBy> sortByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
     });
   }
 }
 
-extension HealthReportQuerySortThenBy
-    on QueryBuilder<HealthReport, HealthReport, QSortThenBy> {
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> thenByContent() {
+extension ReportQuerySortThenBy on QueryBuilder<Report, Report, QSortThenBy> {
+  QueryBuilder<Report, Report, QAfterSortBy> thenByContent() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'content', Sort.asc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> thenByContentDesc() {
+  QueryBuilder<Report, Report, QAfterSortBy> thenByContentDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'content', Sort.desc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> thenByGeneratedAt() {
+  QueryBuilder<Report, Report, QAfterSortBy> thenByGeneratedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy>
-      thenByGeneratedAtDesc() {
+  QueryBuilder<Report, Report, QAfterSortBy> thenByGeneratedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'generatedAt', Sort.desc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> thenById() {
+  QueryBuilder<Report, Report, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<Report, Report, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> thenByTitle() {
+  QueryBuilder<Report, Report, QAfterSortBy> thenByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterSortBy> thenByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterSortBy> thenByStatusLabel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'statusLabel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterSortBy> thenByStatusLabelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'statusLabel', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Report, Report, QAfterSortBy> thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QAfterSortBy> thenByTitleDesc() {
+  QueryBuilder<Report, Report, QAfterSortBy> thenByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
     });
   }
 }
 
-extension HealthReportQueryWhereDistinct
-    on QueryBuilder<HealthReport, HealthReport, QDistinct> {
-  QueryBuilder<HealthReport, HealthReport, QDistinct> distinctByContent(
+extension ReportQueryWhereDistinct on QueryBuilder<Report, Report, QDistinct> {
+  QueryBuilder<Report, Report, QDistinct> distinctByContent(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'content', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QDistinct> distinctByGeneratedAt() {
+  QueryBuilder<Report, Report, QDistinct> distinctByGeneratedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'generatedAt');
     });
   }
 
-  QueryBuilder<HealthReport, HealthReport, QDistinct> distinctByTitle(
+  QueryBuilder<Report, Report, QDistinct> distinctByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'status');
+    });
+  }
+
+  QueryBuilder<Report, Report, QDistinct> distinctByStatusLabel(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'statusLabel', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Report, Report, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
@@ -761,28 +1004,38 @@ extension HealthReportQueryWhereDistinct
   }
 }
 
-extension HealthReportQueryProperty
-    on QueryBuilder<HealthReport, HealthReport, QQueryProperty> {
-  QueryBuilder<HealthReport, int, QQueryOperations> idProperty() {
+extension ReportQueryProperty on QueryBuilder<Report, Report, QQueryProperty> {
+  QueryBuilder<Report, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<HealthReport, String?, QQueryOperations> contentProperty() {
+  QueryBuilder<Report, String?, QQueryOperations> contentProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'content');
     });
   }
 
-  QueryBuilder<HealthReport, DateTime?, QQueryOperations>
-      generatedAtProperty() {
+  QueryBuilder<Report, DateTime?, QQueryOperations> generatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'generatedAt');
     });
   }
 
-  QueryBuilder<HealthReport, String?, QQueryOperations> titleProperty() {
+  QueryBuilder<Report, ReportStatus, QQueryOperations> statusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'status');
+    });
+  }
+
+  QueryBuilder<Report, String, QQueryOperations> statusLabelProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'statusLabel');
+    });
+  }
+
+  QueryBuilder<Report, String?, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
     });

@@ -5,7 +5,7 @@ import '../domain/entities/api_audit_log.dart';
 import '../../features/user_profile/domain/entities/user_profile.dart';
 import '../../features/local_agent/domain/chat_message.dart';
 import '../../features/health_record/domain/entities/medical_record.dart';
-import '../../features/health_report/domain/entities/health_report.dart';
+import '../../features/reports/domain/entities/report.dart';
 import '../../features/medications/domain/entities/medication.dart';
 import '../../features/vitals/domain/entities/vital_sign.dart';
 import '../../features/appointments/domain/entities/appointment.dart';
@@ -26,7 +26,7 @@ abstract class DatabaseModule {
         MedicalRecordSchema,
         MemoryNodeSchema,
         MemoryEdgeSchema,
-        HealthReportSchema,
+        ReportSchema,
         MedicationSchema,
         VitalSignSchema,
         AppointmentSchema,
