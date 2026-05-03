@@ -1,0 +1,22 @@
+{
+  "name": "OrionHealth",
+  "version": "0.7.0",
+  "protocol_version": "2",
+  "metadata": {
+    "last_updated": "2026-05-03",
+    "flutter_analyze": "0 issues",
+    "total_dart_files": 256,
+    "total_loc": 61265,
+    "packages": {
+      "isar_agent_memory": "0.5.0-beta",
+      "health_wallet": "0.1.0",
+      "medical_standards": "0.1.0"
+    }
+  },
+  "features": {
+    "total": 9,
+    "complete": 6,
+    "partial": 2,
+    "scaffold": 1
+  }
+}
