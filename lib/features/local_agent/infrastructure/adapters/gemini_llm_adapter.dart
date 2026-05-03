@@ -12,18 +12,23 @@ import '../../domain/services/llm_adapter.dart';
 @Named('gemini')
 class GeminiLlmAdapter implements LlmAdapter {
   final GenerativeModel? _model;
+  final String _apiKey;
   final PromptScrubber _scrubber;
   final UserProfileRepository _userProfileRepository;
+
+  String get apiKey => _apiKey;
 
   GeminiLlmAdapter({
     String? apiKey,
     required PromptScrubber scrubber,
     required UserProfileRepository userProfileRepository,
-  })  : _model = apiKey != null && apiKey.isNotEmpty
-            ? GenerativeModel(model: 'gemini-pro', apiKey: apiKey)
-            : null,
-        _scrubber = scrubber,
-        _userProfileRepository = userProfileRepository;
+  }) : _apiKey = apiKey ?? '',
+       _model =
+           apiKey != null && apiKey.isNotEmpty
+               ? GenerativeModel(model: 'gemini-pro', apiKey: apiKey)
+               : null,
+       _scrubber = scrubber,
+       _userProfileRepository = userProfileRepository;
 
   @override
   String get modelName => 'gemini-pro';
@@ -48,7 +53,9 @@ class GeminiLlmAdapter implements LlmAdapter {
 
     try {
       final scrubbedPrompt = await _scrubber.scrub(prompt, apiName: 'gemini');
-      final response = await _model.generateContent([Content.text(scrubbedPrompt)]);
+      final response = await _model.generateContent([
+        Content.text(scrubbedPrompt),
+      ]);
       return response.text ?? '';
     } catch (e) {
       throw Exception('Failed to generate summary: $e');
