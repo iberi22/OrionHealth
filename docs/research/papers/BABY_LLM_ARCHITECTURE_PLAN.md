@@ -667,4 +667,4 @@ baby_llm/
 - [Memory Systems in the Brain](https://www.ncbi.nlm.nih.gov/books/NBK482171/)
 - [Continual Learning in Neural Networks](https://arxiv.org/abs/1802.07569)
 - [LoRA: Low-Rank Adaptation](https://arxiv.org/abs/2106.09685)
-- Papers descargados en `/research_papers/`
+- Papers descargados en `docs/research/papers/`
