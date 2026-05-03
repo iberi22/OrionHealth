@@ -55,3 +55,26 @@ docs/node_modules/
 # Backup files
 *_backup_*/
 GIT_RECOVERY_PLAN.md
+
+# Dev/temp scripts (not part of app)
+scripts/dev/
+
+# Local session save scripts
+scripts/_save_*.ps1
+
+# Large model files (not committed)
+assets/models/*.gguf
+assets/models/*.bin
+assets/models/*.safetensors
+assets/models/*.pt
+
+# Medical data generation outputs
+medical-standards/*.json
+medical-standards/*.csv
+
+# Node artifacts
+node_modules/
+
+# Python venv
+.venv/
+venv/
