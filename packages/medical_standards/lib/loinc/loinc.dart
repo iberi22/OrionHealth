@@ -1,8 +1,8 @@
-/// LOINC laboratory observation codes.
-///
-/// LOINC (Logical Observation Identifiers Names and Codes) is the
-/// universal code system for identifying laboratory and clinical
-/// observations.
+// LOINC (Logical Observation Identifiers Names and Codes) models.
+//
+// LOINC is a standard for identifying medical laboratory observations.
+//
+// Used for coding lab tests, clinical observations, and survey instruments.
 
 import 'dart:convert';
 import 'package:flutter/services.dart';

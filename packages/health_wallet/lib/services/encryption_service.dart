@@ -59,7 +59,6 @@ class EncryptionService {
 
   /// Generate a 256-bit AES key from a password using PBKDF2.
   Future<SecretKey> deriveKeyFromPassword(String password, {int iterations = 100000}) async {
-    final algorithm = AesGcm.with256bits();
     final pbkdf2 = Pbkdf2(
       macAlgorithm: Hmac.sha256(),
       iterations: iterations,

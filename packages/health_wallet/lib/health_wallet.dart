@@ -1,10 +1,5 @@
-/// Health Wallet - Private health data management for OrionHealth
-///
-/// This package handles:
-/// - Encrypted local storage of health records
-/// - Selective sync based on user profile
-/// - P2P data transfer between Orion nodes
-library health_wallet;
+// Health Wallet - Private health data management for OrionHealth
+
 
 export 'models/health_record.dart';
 export 'models/lab_result.dart';

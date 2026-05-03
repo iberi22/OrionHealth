@@ -3,7 +3,6 @@ import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/services/privacy_anonymizer.dart';
 import 'package:orionhealth_health/core/domain/entities/api_audit_log.dart';
-import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 
 class MockIsar extends Mock implements Isar {}
 class MockIsarCollection extends Mock implements IsarCollection<ApiAuditLog> {}

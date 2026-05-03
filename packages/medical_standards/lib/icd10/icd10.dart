@@ -1,7 +1,7 @@
-/// ICD-10 disease classification models.
-///
-/// ICD-10 is the International Classification of Diseases, 10th Revision.
-/// Used for diagnosing diseases and conditions.
+// ICD-10 disease classification models.
+//
+// ICD-10 is the International Classification of Diseases, 10th Revision.
+// Used for diagnosing diseases and conditions.
 
 import 'dart:convert';
 import 'package:flutter/services.dart';

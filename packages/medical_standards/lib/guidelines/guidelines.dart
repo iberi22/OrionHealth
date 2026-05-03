@@ -1,7 +1,7 @@
-/// Clinical practice guidelines references.
-///
-/// References to major clinical guidelines from authoritative
-/// medical organizations.
+// Clinical practice guidelines references.
+//
+// References to major clinical guidelines from authoritative
+// medical organizations.
 
 import 'dart:convert';
 import 'package:flutter/services.dart';

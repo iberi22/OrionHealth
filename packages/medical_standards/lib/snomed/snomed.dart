@@ -1,9 +1,7 @@
-/// SNOMED CT (Clinical Terms) mappings.
-///
-/// SNOMED CT is a standardized medical vocabulary used for
-/// clinical documentation. This module maps SNOMED codes to
-/// other standards (ICD-10, LOINC) and provides common clinical
-/// concepts.
+// SNOMED CT (Systematized Nomenclature of Medicine -- Clinical Terms) models.
+//
+// SNOMED CT is a comprehensive clinical terminology for
+// electronic health records.
 
 import 'dart:convert';
 import 'package:flutter/services.dart';

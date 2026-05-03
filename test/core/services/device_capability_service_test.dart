@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -10,7 +8,9 @@ class MockDeviceInfoPlugin extends Mock implements DeviceInfoPlugin {}
 class MockAndroidDeviceInfo extends Mock implements AndroidDeviceInfo {}
 
 void main() {
+  // ignore: unused_local_variable
   late MockDeviceInfoPlugin mockDeviceInfo;
+  // ignore: unused_local_variable
   late DeviceCapabilityService service;
 
   setUp(() {

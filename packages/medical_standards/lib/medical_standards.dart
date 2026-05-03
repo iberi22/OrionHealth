@@ -1,7 +1,7 @@
-/// Core interfaces and base models for medical standards.
-///
-/// All standards in this package implement these interfaces
-/// to ensure interoperability.
+// Core interfaces and base models for medical standards.
+//
+// All standards in this package implement these interfaces
+// to ensure interoperability.
 
 import 'package:equatable/equatable.dart';
 

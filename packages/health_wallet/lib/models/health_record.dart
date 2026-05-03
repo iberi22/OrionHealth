@@ -1,10 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
-import 'vital_sign.dart';
-import 'medication_entry.dart';
-import 'medical_document.dart';
-import 'medical_event.dart';
 
 part 'health_record.g.dart';
 
