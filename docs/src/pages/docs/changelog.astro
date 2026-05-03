@@ -1,0 +1,275 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Changelog - OrionHealth"
+  description="Full release history for OrionHealth — all notable changes, features, and fixes from v0.1.0 to v0.7.0"
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="pt-16 md:pt-20 safe-area-top">
+    <!-- Hero -->
+    <section class="relative py-16 md:py-24 px-4 text-center">
+      <div class="container-custom">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-accent mb-4" data-animate>
+          RELEASE HISTORY
+        </p>
+        <h1 class="section-title font-bold tracking-tighter uppercase mb-6" data-animate>
+          CHANGE<span class="text-accent">LOG</span>
+        </h1>
+        <p class="text-sm md:text-base text-bone-dark max-w-3xl mx-auto opacity-80" data-animate>
+          All notable changes to OrionHealth are documented here. The format is based on
+          <a href="https://keepachangelog.com/en/1.1.0/" class="text-accent hover:underline" target="_blank">Keep a Changelog</a>
+          and follows <a href="https://semver.org/spec/v2.0.0.html" class="text-accent hover:underline" target="_blank">Semantic Versioning</a>.
+        </p>
+        <p class="text-xs text-bone-dark opacity-60 mt-4" data-animate>
+          Current: <span class="text-accent font-bold">v0.7.0</span> — beta
+        </p>
+      </div>
+    </section>
+
+    <!-- v0.7.0 -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <div class="flex items-center gap-3 mb-4">
+            <h2 class="text-xl md:text-3xl font-bold tracking-tight">v0.7.0</h2>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent border border-accent/30">2026-05-03</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent">LATEST</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-accent block mb-2">➕ Added</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">AicorePlugin</span> — Android platform plugin for on-device AI via Google AICore</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">AicoreServiceKt</span> — Kotlin service placeholder for AICore integration</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Gitcore documentation</span> — ARCHITECTURE.md and features.json for gitcore patterns</li>
+              </ul>
+            </div>
+
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-secondary block mb-2">🔄 Changed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-secondary">Cleanup</span> — Moved legacy scripts to <code>scripts/dev/</code>, removed model files and generated JSON data</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-secondary">Dependencies</span> — Updated pubspec.lock, Gemma scripts</li>
+              </ul>
+            </div>
+
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-error block mb-2">🔧 Fixed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-error">Lint cleanup</span> — Resolved all 114 Flutter analyze issues → <span class="text-accent font-bold">zero issues</span></li>
+                <li class="text-[11px] text-bone-dark opacity-70">Unused imports, deprecated APIs, build_context issues across core, auth, and sharing</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Unused imports, string interpolation, non-null assertion in agent, medical, settings</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Library doc comments, analysis_options, deprecated withOpacity in packages/tests</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- v0.6.0 -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">v0.6.0</h2>
+          <p class="text-xs text-bone-dark opacity-40 mb-4 uppercase tracking-wider">2026-04</p>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-accent block mb-2">➕ Added</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">RAG pipeline</span> — Complete RAG integration with web search and Gemma 4</li>
+                <li class="text-[11px] text-bone-dark opacity-70">RAG + Web + Gemma4 full integration</li>
+                <li class="text-[11px] text-bone-dark opacity-70">AicorePlugin + AicoreService placeholders</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Documentation</span> — RAG architecture review and AICore status reports</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Auto-sync workflow for isar_agent_memory package</li>
+              </ul>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-secondary block mb-2">🔄 Changed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-secondary">CI</span> — Added <code>--legacy-peer-deps</code> for Astro 6 compatibility</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-secondary">CI</span> — Upgraded Node to v22 for Astro 6</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-secondary">Website</span> — OrionHealth public website with medical standards reference</li>
+              </ul>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-error block mb-2">🔧 Fixed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70">Updated <code>.gitignore</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- v0.5.0 -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">v0.5.0</h2>
+          <p class="text-xs text-bone-dark opacity-40 mb-4 uppercase tracking-wider">2026-03</p>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-accent block mb-2">➕ Added</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">BLE Medical Data Sharing</span> — Encrypted peer-to-peer health data transfer</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">LLM Settings UI</span> — Local/Cloud AI toggle</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Floating Assistant Button</span> — Animated pulse FAB for AI assistant</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Device Capability Detection</span> — Runtime capability checks</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Prompt Anonymizer</span> — PII removal before cloud API calls</li>
+              </ul>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-error block mb-2">🔧 Fixed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70">Health wallet schemas added to Isar.open</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Android build fixes (R8 keep rules, ProGuard, Gradle)</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Removed broken tests across multiple packages</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- v0.4.0 -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">v0.4.0</h2>
+          <p class="text-xs text-bone-dark opacity-40 mb-4 uppercase tracking-wider">2026-03</p>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-accent block mb-2">➕ Added</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Medical Standards Package</span> — Structured medical data reference</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">AI Medical Research</span> — RAG enrichment and medical research feature</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">About Page</span> — Mission statement, blog, project vision</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">GitHub Pages Landing</span> — i18n support for documentation site</li>
+              </ul>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-error block mb-2">🔧 Fixed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70">Restored medical_assistant feature and confidence system</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Isar models and EncryptionService fixes in health_wallet</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Compilation errors across medical_standards and medical_assistant</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- v0.3.0 -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">v0.3.0</h2>
+          <p class="text-xs text-bone-dark opacity-40 mb-4 uppercase tracking-wider">2026-02</p>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-accent block mb-2">➕ Added</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Health Wallet</span> — Offline storage with Isar database</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Health Report Feature</span> — Entity, service, and UI for health reports</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">Local AI Agent</span> — On-device chat with Phi-3 Mini / Gemma models</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">RAG Memory Module</span> — Isar-based vector memory for AI context</li>
+              </ul>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-secondary block mb-2">🔄 Changed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70">Migrated to <span class="text-secondary">Hexagonal Architecture</span> pattern</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Multi-agent protocol for parallel development</li>
+              </ul>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-error block mb-2">🔧 Fixed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70">Android build: asset folders, plugin registration, ObjectBox support</li>
+                <li class="text-[11px] text-bone-dark opacity-70">DI: Path_provider for ObjectBox directory</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- v0.2.0 -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">v0.2.0</h2>
+          <p class="text-xs text-bone-dark opacity-40 mb-4 uppercase tracking-wider">2025</p>
+
+          <div class="space-y-4">
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-accent block mb-2">➕ Added</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70">Authentication & Identity — User profile and identity management</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">AGPL-3.0 License</span> — Full license text and vision update</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">GitHub Pages documentation</span> — Astro-based documentation site</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Integration tests, Windows support, release workflow</li>
+                <li class="text-[11px] text-bone-dark opacity-70"><span class="text-accent">CI/CD pipelines</span> — Android build, release, docs deployment</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Professional landing page with Cyber-Minimalism design</li>
+              </ul>
+            </div>
+            <div class="glass-dark p-4 rounded-xl">
+              <span class="text-xs font-bold text-secondary block mb-2">🔄 Changed</span>
+              <ul class="space-y-1">
+                <li class="text-[11px] text-bone-dark opacity-70">Design system — <code>AppTheme</code> class for light/dark mode</li>
+                <li class="text-[11px] text-bone-dark opacity-70">Repository renamed from <code>local-llm.OrionHealth</code> to <code>OrionHealth</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- v0.1.0 -->
+    <section class="relative py-12 px-4" data-animate>
+      <div class="container-custom max-w-5xl">
+        <div class="glass p-6 md:p-10 rounded-2xl">
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight mb-4">v0.1.0</h2>
+          <p class="text-xs text-bone-dark opacity-40 mb-4 uppercase tracking-wider">2025</p>
+
+          <div class="glass-dark p-4 rounded-xl">
+            <span class="text-xs font-bold text-accent block mb-2">🎉 Initial Release</span>
+            <ul class="space-y-1">
+              <li class="text-[11px] text-bone-dark opacity-70">Project initialization — Flutter scaffold with all platform-specific files</li>
+              <li class="text-[11px] text-bone-dark opacity-70">Multi-agent setup — Initial project architecture and agent workflow</li>
+              <li class="text-[11px] text-bone-dark opacity-70">Handover documentation for Jules AI agent</li>
+              <li class="text-[11px] text-bone-dark opacity-70">Basic Flutter structure — Platform configs, build system, entry points</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Back link -->
+    <section class="relative py-12 px-4 text-center">
+      <div class="container-custom">
+        <a href={`${base}/docs`} class="btn-secondary px-6 py-3 text-xs inline-block">
+          ← BACK TO DOCUMENTATION
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang="en" />
+</BaseLayout>

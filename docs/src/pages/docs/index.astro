@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Documentation - OrionHealth"
+  description="Comprehensive documentation for the OrionHealth privacy-first health assistant"
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="pt-16 md:pt-20 safe-area-top">
+    <!-- Hero -->
+    <section class="relative py-16 md:py-24 px-4 flex items-center justify-center">
+      <div class="container-custom text-center">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-accent mb-4" data-animate>
+          KNOWLEDGE BASE
+        </p>
+        <h1 class="section-title font-bold tracking-tighter uppercase mb-6" data-animate>
+          DOCUMENT<span class="text-accent">ATION</span>
+        </h1>
+        <p class="text-sm md:text-base text-bone-dark max-w-2xl mx-auto opacity-80" data-animate>
+          Everything you need to understand, build, and contribute to OrionHealth — your privacy-first health assistant powered by local AI.
+        </p>
+      </div>
+    </section>
+
+    <!-- Documentation Cards Grid -->
+    <section class="relative py-12 md:py-20 px-4">
+      <div class="container-custom max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+
+          <!-- Architecture -->
+          <a
+            href={`${base}/docs/architecture`}
+            class="flashlight-card glass rounded-xl md:rounded-2xl p-5 md:p-8 hover:scale-[1.01] transition-transform duration-500 group"
+            data-animate
+          >
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-accent/20">
+              <svg class="w-5 h-5 md:w-7 md:h-7 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h3 class="text-base md:text-xl font-bold tracking-tight mb-2 md:mb-3 text-bone group-hover:text-accent transition-colors duration-500">
+              ARCHITECTURE
+            </h3>
+            <p class="text-xs md:text-sm font-light leading-relaxed text-bone-dark opacity-70">
+              Local-first, hexagonal architecture with IsarDB, RAG pipeline, on-device AI via AICore, and modular feature design.
+            </p>
+            <div class="mt-4 md:mt-6 h-0.5 md:h-1 w-10 md:w-12 bg-gradient-to-r from-accent to-secondary rounded-full"></div>
+          </a>
+
+          <!-- API Reference -->
+          <a
+            href={`${base}/docs/api`}
+            class="flashlight-card glass rounded-xl md:rounded-2xl p-5 md:p-8 hover:scale-[1.01] transition-transform duration-500 group"
+            data-animate
+          >
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-accent/20">
+              <svg class="w-5 h-5 md:w-7 md:h-7 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            </div>
+            <h3 class="text-base md:text-xl font-bold tracking-tight mb-2 md:mb-3 text-bone group-hover:text-accent transition-colors duration-500">
+              API REFERENCE
+            </h3>
+            <p class="text-xs md:text-sm font-light leading-relaxed text-bone-dark opacity-70">
+              Core services, RAG pipeline, state management blocs, Android native plugin API, and internal package references.
+            </p>
+            <div class="mt-4 md:mt-6 h-0.5 md:h-1 w-10 md:w-12 bg-gradient-to-r from-accent to-secondary rounded-full"></div>
+          </a>
+
+          <!-- Developer Guide -->
+          <a
+            href={`${base}/docs/dev-guide`}
+            class="flashlight-card glass rounded-xl md:rounded-2xl p-5 md:p-8 hover:scale-[1.01] transition-transform duration-500 group"
+            data-animate
+          >
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-accent/20">
+              <svg class="w-5 h-5 md:w-7 md:h-7 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h3 class="text-base md:text-xl font-bold tracking-tight mb-2 md:mb-3 text-bone group-hover:text-accent transition-colors duration-500">
+              DEVELOPER GUIDE
+            </h3>
+            <p class="text-xs md:text-sm font-light leading-relaxed text-bone-dark opacity-70">
+              Prerequisites, first-time setup, running tests, project structure, commit conventions, and Git workflow.
+            </p>
+            <div class="mt-4 md:mt-6 h-0.5 md:h-1 w-10 md:w-12 bg-gradient-to-r from-accent to-secondary rounded-full"></div>
+          </a>
+
+          <!-- Contributing -->
+          <a
+            href={`${base}/docs/contributing`}
+            class="flashlight-card glass rounded-xl md:rounded-2xl p-5 md:p-8 hover:scale-[1.01] transition-transform duration-500 group"
+            data-animate
+          >
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-accent/20">
+              <svg class="w-5 h-5 md:w-7 md:h-7 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+              </svg>
+            </div>
+            <h3 class="text-base md:text-xl font-bold tracking-tight mb-2 md:mb-3 text-bone group-hover:text-accent transition-colors duration-500">
+              CONTRIBUTING
+            </h3>
+            <p class="text-xs md:text-sm font-light leading-relaxed text-bone-dark opacity-70">
+              How to contribute, development setup, code style guidelines, testing requirements, and pull request process.
+            </p>
+            <div class="mt-4 md:mt-6 h-0.5 md:h-1 w-10 md:w-12 bg-gradient-to-r from-accent to-secondary rounded-full"></div>
+          </a>
+
+          <!-- Changelog -->
+          <a
+            href={`${base}/docs/changelog`}
+            class="flashlight-card glass rounded-xl md:rounded-2xl p-5 md:p-8 hover:scale-[1.01] transition-transform duration-500 group"
+            data-animate
+          >
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-accent/20">
+              <svg class="w-5 h-5 md:w-7 md:h-7 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+            </div>
+            <h3 class="text-base md:text-xl font-bold tracking-tight mb-2 md:mb-3 text-bone group-hover:text-accent transition-colors duration-500">
+              CHANGELOG
+            </h3>
+            <p class="text-xs md:text-sm font-light leading-relaxed text-bone-dark opacity-70">
+              Full release history from v0.1.0 to v0.7.0. All notable changes, features, fixes, and roadmap milestones.
+            </p>
+            <div class="mt-4 md:mt-6 h-0.5 md:h-1 w-10 md:w-12 bg-gradient-to-r from-accent to-secondary rounded-full"></div>
+          </a>
+
+          <!-- Security -->
+          <a
+            href={`${base}/docs/security`}
+            class="flashlight-card glass rounded-xl md:rounded-2xl p-5 md:p-8 hover:scale-[1.01] transition-transform duration-500 group"
+            data-animate
+          >
+            <div class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-accent/20">
+              <svg class="w-5 h-5 md:w-7 md:h-7 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 class="text-base md:text-xl font-bold tracking-tight mb-2 md:mb-3 text-bone group-hover:text-accent transition-colors duration-500">
+              SECURITY
+            </h3>
+            <p class="text-xs md:text-sm font-light leading-relaxed text-bone-dark opacity-70">
+              Security policy, supported versions, vulnerability reporting, responsible disclosure, and PGP key information.
+            </p>
+            <div class="mt-4 md:mt-6 h-0.5 md:h-1 w-10 md:w-12 bg-gradient-to-r from-accent to-secondary rounded-full"></div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Note -->
+    <section class="relative py-12 px-4">
+      <div class="container-custom text-center">
+        <p class="text-xs text-bone-dark opacity-40 uppercase tracking-wider">
+          OrionHealth is open source under <span class="text-accent">AGPL-3.0</span>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang="en" />
+</BaseLayout>
