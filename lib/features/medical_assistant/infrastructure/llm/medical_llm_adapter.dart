@@ -35,7 +35,7 @@ class MedicalLlmAdapter {
 
     // Scrub prompt if scrubber is available
     final scrubbedQuestion = _scrubber != null
-        ? await _scrubber!.scrub(query.question, apiName: 'medical-llm-adapter')
+        ? await _scrubber.scrub(query.question, apiName: 'medical-llm-adapter')
         : query.question;
 
     // Build lab/vital context for the response generator
@@ -123,7 +123,6 @@ class MedicalLlmAdapter {
 
     // Collect recommendations
     final exams = <String>{};
-    final lifestyle = <String>{};
     for (final insight in labInsights) {
       exams.addAll(insight.recommendations);
     }

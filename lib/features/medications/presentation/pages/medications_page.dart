@@ -269,7 +269,8 @@ class _MedicationsPageState extends State<MedicationsPage> {
                         icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
                         onPressed: () async {
                           await _repository.deleteMedication(medication.id);
-                          if (mounted) Navigator.pop(context);
+                          if (!context.mounted) return;
+                          Navigator.pop(context);
                           _loadMedications();
                         },
                       ),
@@ -362,7 +363,8 @@ class _MedicationsPageState extends State<MedicationsPage> {
                       );
 
                       await _repository.saveMedication(newMedication);
-                      if (mounted) Navigator.pop(context);
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
                       _loadMedications();
                     },
                     child: Text(

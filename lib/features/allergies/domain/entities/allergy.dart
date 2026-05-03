@@ -45,7 +45,7 @@ class Allergy {
       confirmedDate: confirmedDate ?? this.confirmedDate,
       notes: notes ?? this.notes,
       isCritical: isCritical ?? this.isCritical,
-    )..id = this.id;
+    )..id = id;
   }
 
   @override

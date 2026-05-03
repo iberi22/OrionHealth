@@ -58,8 +58,11 @@ class MedicalAssistantError extends MedicalAssistantState {
 class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   final MedicalLlmAdapter _llmAdapter;
   final MedicalAnalysisService _analysisService;
+  // ignore: unused_field
   final LabInterpreter _labInterpreter;
+  // ignore: unused_field
   final VitalSignAnalyzer _vitalAnalyzer;
+  // ignore: unused_field
   final RiskCalculator _riskCalculator;
   final MemoryGraph? _memory;
 

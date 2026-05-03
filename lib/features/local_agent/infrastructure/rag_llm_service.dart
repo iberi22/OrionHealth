@@ -41,8 +41,7 @@ class RagLlmService implements LlmService {
       if (allowCloud) {
         final research = await _medicalResearchService.performResearch(prompt);
         if (research.isNotEmpty) {
-          researchText = "\n\nEnriquecimiento de Investigación Médica:\n" +
-              research.take(2).map((r) => "- ${r.title}: ${r.content} (Fuente: ${r.source})").join("\n");
+          researchText = "\n\nEnriquecimiento de Investigación Médica:\n${research.take(2).map((r) => "- ${r.title}: ${r.content} (Fuente: ${r.source})").join("\n")}";
         }
       } else {
         researchText = "\n\n[AVISO: Búsqueda externa deshabilitada por privacidad]";

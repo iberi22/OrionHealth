@@ -71,7 +71,7 @@ class Appointment {
       notes: notes ?? this.notes,
       durationMinutes: durationMinutes ?? this.durationMinutes,
       reminderSent: reminderSent ?? this.reminderSent,
-    )..id = this.id;
+    )..id = id;
   }
 
   /// Check if the appointment is upcoming (in the future)

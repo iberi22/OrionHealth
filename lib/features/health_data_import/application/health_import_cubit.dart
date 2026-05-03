@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../domain/services/health_data_import_service.dart';
 import '../../vitals/domain/repositories/vital_sign_repository.dart';

@@ -55,7 +55,7 @@ class VitalSign {
       recordedAt: recordedAt ?? this.recordedAt,
       source: source ?? this.source,
       notes: notes ?? this.notes,
-    )..id = this.id;
+    )..id = id;
   }
 
   /// Get display label for the vital sign type
