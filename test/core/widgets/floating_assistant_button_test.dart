@@ -10,12 +10,6 @@ Widget _buildTestApp(Widget fab) {
   );
 }
 
-/// All widget tests use a top-level group so we can add a single tearDown
-/// to clean up any lingering animation-clocks from the FAB's pulse animation.
-Future<void> _pumpAndClean(WidgetTester tester, [Duration d = Duration.zero]) async {
-  await tester.pump(d);
-}
-
 void main() {
   // Run widget-less controller tests in their own group first — no animation leaks.
   group('FloatingAssistantButtonController', () {

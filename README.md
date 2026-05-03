@@ -86,7 +86,7 @@ By using OrionHealth today, you're not just organizing your health data—**you'
   <img src="assets/screenshots/sharing.png" alt="Health Sharing" width="200"/>
 </p>
 
-> 📸 Screenshots coming soon. Run the app to see the UI in action.
+> Placeholder screenshots are in place while updated captures are prepared.
 
 ---
 
