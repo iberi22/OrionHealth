@@ -6,10 +6,7 @@ import '../../features/settings/application/llm_settings_cubit.dart';
 import '../../features/settings/domain/repositories/llm_settings_repository.dart';
 import '../../features/settings/domain/services/device_capability_service.dart';
 import '../../features/settings/infrastructure/repositories/llm_settings_repository_impl.dart';
-import '../../features/local_agent/domain/repositories/medical_knowledge_repository.dart';
-import '../../features/local_agent/domain/services/vector_store_service.dart';
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart';
-import 'in_memory_vector_index.dart';
 
 final getIt = GetIt.instance;
 
@@ -24,26 +21,24 @@ Future<void> configureDependencies() async {
   // Register Settings feature dependencies manually
   final isar = getIt<Isar>();
   
-  getIt.lazySingleton<LlmSettingsRepository>(
+  getIt.registerLazySingleton<LlmSettingsRepository>(
     () => LlmSettingsRepositoryImpl(isar),
   );
   
-  getIt.lazySingleton<DeviceCapabilityService>(
+  getIt.registerLazySingleton<DeviceCapabilityService>(
     () => DeviceCapabilityService(),
   );
   
-  getIt.factory<LlmSettingsCubit>(
+  getIt.registerFactory<LlmSettingsCubit>(
     () => LlmSettingsCubit(
       getIt<LlmSettingsRepository>(),
       getIt<DeviceCapabilityService>(),
     ),
   );
 
-  // Initialize medical knowledge repository and index on startup
-  final medicalRepo = getIt<MedicalKnowledgeRepository>();
-  await medicalRepo.initialize();
-
-  // Index medical codes into vector store
-  final vectorStore = getIt<IsarVectorStoreService>();
-  await vectorStore.indexMedicalStandards();
+  // Initialize vector store indexing on startup (RAG pipeline)
+  if (getIt.isRegistered<IsarVectorStoreService>()) {
+    final vectorStore = getIt<IsarVectorStoreService>();
+    await vectorStore.indexMedicalStandards();
+  }
 }

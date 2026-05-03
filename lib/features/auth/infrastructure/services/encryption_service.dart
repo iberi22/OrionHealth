@@ -9,8 +9,7 @@ abstract class EncryptionService {
 
 @LazySingleton(as: EncryptionService)
 class EncryptionServiceImpl implements EncryptionService {
-  static const _algorithm = 'AES-256-GCM';
-  
+  @override
   Future<Uint8List> encrypt(String plaintext, String key) async {
     final keyBytes = _deriveKey(key);
     final iv = _generateIv();
@@ -21,6 +20,7 @@ class EncryptionServiceImpl implements EncryptionService {
     return combined;
   }
 
+  @override
   Future<String> decrypt(Uint8List ciphertext, String key) async {
     final keyBytes = _deriveKey(key);
     final iv = ciphertext.sublist(0, 12);

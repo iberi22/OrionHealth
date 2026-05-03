@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/cyber_theme.dart';
-import '../../../../core/widgets/glassmorphic_card.dart';
 
 class WelcomeStep extends StatelessWidget {
   const WelcomeStep({super.key});

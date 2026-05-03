@@ -64,8 +64,8 @@ class DeviceCapabilityService {
     if (Platform.isAndroid) {
       try {
         final androidInfo = await _deviceInfo.androidInfo;
-        // androidInfo.totalMemory is the total RAM from ActivityManager.
-        return androidInfo.totalMemory;
+        // androidInfo.physicalRamSize is the total RAM from ActivityManager.
+        return androidInfo.physicalRamSize;
       } catch (_) {
         return _parseMeminfo();
       }

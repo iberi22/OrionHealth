@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/services.dart';
 
 enum AuthMethod { pin, biometric, none }
@@ -23,9 +21,6 @@ abstract class AuthService {
 }
 
 class AuthServiceImpl implements AuthService {
-  static const _pinKey = 'auth_pin_hash';
-  static const _methodKey = 'auth_method';
-  
   String? _cachedPinHash;
   bool _biometricAvailable = false;
 
@@ -125,9 +120,13 @@ class AuthServiceImpl implements AuthService {
   }
 
   String _hashPin(String pin) {
+    // Simple hash for PIN verification
     final bytes = utf8.encode(pin);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
+    var hash = 0;
+    for (final byte in bytes) {
+      hash = ((hash << 5) - hash) + byte;
+    }
+    return hash.toRadixString(16).padLeft(8, '0');
   }
 
   Future<String?> _getStoredPinHash() async {

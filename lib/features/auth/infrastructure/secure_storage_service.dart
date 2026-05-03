@@ -50,12 +50,7 @@ class SecureStorageServiceImpl implements SecureStorageService {
 }
 
 class EncryptionService {
-  static const _algorithm = 'AES-256-GCM';
-  
-  final SecureStorageService _storage;
-  
-  EncryptionService({SecureStorageService? storage})
-      : _storage = storage ?? SecureStorageServiceImpl();
+  EncryptionService();
 
   Future<Uint8List> encrypt(String plaintext, String key) async {
     final keyBytes = _deriveKey(key);

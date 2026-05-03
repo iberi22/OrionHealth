@@ -100,7 +100,7 @@ class BleSharingService {
 
       const chunkSize = 512;
       for (int i = 0; i < bytes.length; i += chunkSize) {
-        final chunk = bytes.sublist(
+        bytes.sublist(
           i,
           i + chunkSize > bytes.length ? bytes.length : i + chunkSize,
         );

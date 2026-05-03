@@ -244,7 +244,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
           Switch(
             value: _biometricEnabled,
             onChanged: (v) => setState(() => _biometricEnabled = v),
-            activeColor: CyberTheme.primary,
+            activeThumbColor: CyberTheme.primary,
             activeTrackColor: CyberTheme.primary.withAlpha(102),
             inactiveThumbColor: Colors.white38,
             inactiveTrackColor: Colors.white12,
