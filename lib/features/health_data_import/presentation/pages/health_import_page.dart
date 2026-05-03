@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_auth/local_auth.dart';
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/health_import_cubit.dart';
 import '../../application/health_import_state.dart';
@@ -73,7 +73,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
               content: Text(
                 'Successfully imported ${state.importedCount} records from ${state.source.displayName}',
               ),
-              backgroundColor: CyberTheme.primary,
+              backgroundColor: AppColors.primary,
             ),
           );
         } else if (state is HealthImportError) {
@@ -91,7 +91,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
           return _buildScaffold(
             context,
             child: const Center(
-              child: CircularProgressIndicator(color: CyberTheme.primary),
+              child: CircularProgressIndicator(color: AppColors.primary),
             ),
           );
         }
@@ -113,7 +113,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const CircularProgressIndicator(color: CyberTheme.primary),
+                      const CircularProgressIndicator(color: AppColors.primary),
                       const SizedBox(height: 16),
                       Text(
                         'Authenticating with ${state.source.displayName}...',
@@ -173,7 +173,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
         title: const Text('Import Health Data'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: CyberTheme.secondary),
+            icon: const Icon(Icons.refresh, color: AppColors.secondary),
             onPressed: () {
               context.read<HealthImportCubit>().checkAvailableSources();
             },
@@ -193,10 +193,10 @@ class _HealthImportViewState extends State<_HealthImportView> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: CyberTheme.secondary.withValues(alpha: 0.2),
+                        color: AppColors.secondary.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.info_outline, color: CyberTheme.secondary),
+                      child: const Icon(Icons.info_outline, color: AppColors.secondary),
                     ),
                     const SizedBox(width: 12),
                     const Expanded(
@@ -309,7 +309,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const CircularProgressIndicator(color: CyberTheme.primary),
+                          const CircularProgressIndicator(color: AppColors.primary),
                           const SizedBox(height: 16),
                           Text(
                             'Requesting permission from ${state.source.displayName}...',
@@ -342,14 +342,14 @@ class _DataTypeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: CyberTheme.primary.withValues(alpha: 0.15),
+        color: AppColors.primary.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: CyberTheme.primary.withValues(alpha: 0.3)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
         style: const TextStyle(
-          color: CyberTheme.primary,
+          color: AppColors.primary,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../widgets/mission_section.dart';
 import '../../data/blog_posts.dart';
@@ -34,7 +34,7 @@ class AboutPage extends StatelessWidget {
   Widget _buildAppBar() {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: CyberTheme.backgroundDark.withValues(alpha: 0.8),
+      backgroundColor: AppColors.background.withValues(alpha: 0.8),
       title: const Text(
         'Sobre OrionHealth',
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -51,7 +51,7 @@ class AboutPage extends StatelessWidget {
         Text(
           'COMUNIDAD Y NOTICIAS',
           style: TextStyle(
-            color: CyberTheme.secondary,
+            color: AppColors.secondary,
             fontWeight: FontWeight.bold,
             letterSpacing: 2,
             fontSize: 14,
@@ -90,15 +90,15 @@ class _BlogTile extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: CyberTheme.secondary.withValues(alpha: 0.1),
-                      border: Border.all(color: CyberTheme.secondary.withValues(alpha: 0.3)),
+                      color: AppColors.secondary.withValues(alpha: 0.1),
+                      border: Border.all(color: AppColors.secondary.withValues(alpha: 0.3)),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       post.category.toUpperCase(),
                       style: const TextStyle(
                         fontSize: 10,
-                        color: CyberTheme.secondary,
+                        color: AppColors.secondary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -118,7 +118,7 @@ class _BlogTile extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: CyberTheme.primary,
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -143,8 +143,8 @@ class _BlogTile extends StatelessWidget {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Leer más', style: TextStyle(color: CyberTheme.secondary)),
-                    Icon(Icons.arrow_right, color: CyberTheme.secondary),
+                    Text('Leer más', style: TextStyle(color: AppColors.secondary)),
+                    Icon(Icons.arrow_right, color: AppColors.secondary),
                   ],
                 ),
               ),

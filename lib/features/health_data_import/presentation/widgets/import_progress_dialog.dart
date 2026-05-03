@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/health_import_state.dart';
 
@@ -21,7 +21,7 @@ class ImportProgressDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.cloud_download, color: CyberTheme.secondary, size: 48),
+              const Icon(Icons.cloud_download, color: AppColors.secondary, size: 48),
               const SizedBox(height: 16),
               Text(
                 'Importing from ${state.source.displayName}',
@@ -45,7 +45,7 @@ class ImportProgressDialog extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: state.progress,
                   backgroundColor: Colors.white.withValues(alpha: 0.1),
-                  valueColor: const AlwaysStoppedAnimation<Color>(CyberTheme.primary),
+                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
                   minHeight: 8,
                 ),
               ),
@@ -63,7 +63,7 @@ class ImportProgressDialog extends StatelessWidget {
                   Text(
                     '${state.importedCount} imported',
                     style: const TextStyle(
-                      color: CyberTheme.primary,
+                      color: AppColors.primary,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),

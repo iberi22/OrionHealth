@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/llm_settings_cubit.dart';
 import '../../domain/services/device_capability_service.dart';
@@ -144,7 +144,7 @@ class _DeviceCapabilityCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: CyberTheme.textDark,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -152,7 +152,7 @@ class _DeviceCapabilityCard extends StatelessWidget {
                       deviceCapability.tierLabel,
                       style: TextStyle(
                         fontSize: 14,
-                        color: CyberTheme.secondary,
+                        color: AppColors.secondary,
                       ),
                     ),
                   ],
@@ -185,19 +185,19 @@ class _DeviceCapabilityCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: CyberTheme.primary.withAlpha(26),
+              color: AppColors.primary.withAlpha(26),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: CyberTheme.primary.withAlpha(51)),
+              border: Border.all(color: AppColors.primary.withAlpha(51)),
             ),
             child: Row(
               children: [
-                Icon(Icons.auto_awesome, color: CyberTheme.primary, size: 20),
+                Icon(Icons.auto_awesome, color: AppColors.primary, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Modelo recomendado: ${deviceCapability.recommendedModel}',
                     style: TextStyle(
-                      color: CyberTheme.primary,
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -227,11 +227,11 @@ class _CapabilityBadge extends StatelessWidget {
         label = 'Baja';
         break;
       case DeviceCapabilityTier.medium:
-        color = CyberTheme.secondary;
+        color = AppColors.secondary;
         label = 'Media';
         break;
       case DeviceCapabilityTier.high:
-        color = CyberTheme.primary;
+        color = AppColors.primary;
         label = 'Alta';
         break;
     }
@@ -335,7 +335,7 @@ class _ModelSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.smart_toy, color: CyberTheme.secondary),
+      leading: Icon(Icons.smart_toy, color: AppColors.secondary),
       title: const Text('Modelo Gemini'),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,10 +344,10 @@ class _ModelSelector extends StatelessWidget {
           DropdownButton<String>(
             value: selectedModel,
             isExpanded: true,
-            dropdownColor: CyberTheme.surfaceDark,
+            dropdownColor: AppColors.surface,
             underline: Container(
               height: 1,
-              color: CyberTheme.primary.withAlpha(77),
+              color: AppColors.primary.withAlpha(77),
             ),
             items: availableGeminiModels.map((model) {
               final isRecommended = model == recommendedModel;
@@ -358,7 +358,7 @@ class _ModelSelector extends StatelessWidget {
                     Text(
                       model,
                       style: TextStyle(
-                        color: isRecommended ? CyberTheme.primary : Colors.white,
+                        color: isRecommended ? AppColors.primary : Colors.white,
                         fontWeight: isRecommended ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
@@ -367,14 +367,14 @@ class _ModelSelector extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: CyberTheme.primary.withAlpha(51),
+                          color: AppColors.primary.withAlpha(51),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
                           'Recomendado',
                           style: TextStyle(
                             fontSize: 10,
-                            color: CyberTheme.primary,
+                            color: AppColors.primary,
                           ),
                         ),
                       ),
@@ -407,7 +407,7 @@ class _ModeToggle extends StatelessWidget {
     return ListTile(
       leading: Icon(
         useCloudApi ? Icons.cloud : Icons.phone_android,
-        color: CyberTheme.secondary,
+        color: AppColors.secondary,
       ),
       title: const Text('Modo de Ejecución'),
       subtitle: Text(
@@ -418,7 +418,7 @@ class _ModeToggle extends StatelessWidget {
       ),
       trailing: Switch(
         value: useCloudApi,
-        activeThumbColor: CyberTheme.primary,
+        activeThumbColor: AppColors.primary,
         onChanged: onChanged,
       ),
     );
@@ -439,7 +439,7 @@ class _PrivacyToggle extends StatelessWidget {
     return ListTile(
       leading: Icon(
         allowCloudApiCalls ? Icons.lock_open : Icons.lock,
-        color: allowCloudApiCalls ? Colors.orange : CyberTheme.primary,
+        color: allowCloudApiCalls ? Colors.orange : AppColors.primary,
       ),
       title: const Text('Permitir llamadas a la nube'),
       subtitle: Text(
@@ -450,7 +450,7 @@ class _PrivacyToggle extends StatelessWidget {
       ),
       trailing: Switch(
         value: allowCloudApiCalls,
-        activeThumbColor: CyberTheme.primary,
+        activeThumbColor: AppColors.primary,
         onChanged: onChanged,
       ),
     );
@@ -466,13 +466,13 @@ class _InfoCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline, color: CyberTheme.secondary, size: 20),
+              Icon(Icons.info_outline, color: AppColors.secondary, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Acerca de los modelos',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: CyberTheme.secondary,
+                  color: AppColors.secondary,
                 ),
               ),
             ],
@@ -520,14 +520,14 @@ class _ModelInfoRow extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: CyberTheme.primary.withAlpha(26),
+            color: AppColors.primary.withAlpha(26),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
             model,
             style: TextStyle(
               fontSize: 12,
-              color: CyberTheme.primary,
+              color: AppColors.primary,
               fontWeight: FontWeight.w500,
             ),
           ),
