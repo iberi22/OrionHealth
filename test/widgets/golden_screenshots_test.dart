@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// ignore: invalid_annotation_target
 @Tags(['golden'])
 void main() {
   final screenshotsDir = Directory('integration_test/screenshots/actual');

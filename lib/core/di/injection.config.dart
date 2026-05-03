@@ -1,4 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
+﻿// GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -123,34 +123,33 @@ import 'network_module.dart' as _i61;
 const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
-  // initializes the registration of main-scope dependencies inside of GetIt
+// initializes the registration of main-scope dependencies inside of GetIt
   Future<_i1.GetIt> init({
     String? environment,
     _i2.EnvironmentFilter? environmentFilter,
   }) async {
-    final gh = _i2.GetItHelper(this, environment, environmentFilter);
+    final gh = _i2.GetItHelper(
+      this,
+      environment,
+      environmentFilter,
+    );
     final networkModule = _$NetworkModule();
     final memoryModule = _$MemoryModule();
     final databaseModule = _$DatabaseModule();
     gh.lazySingleton<_i3.BotBypassHandler>(() => _i3.BotBypassHandler());
     gh.lazySingleton<_i4.DeviceCapabilityService>(
-      () => _i4.DeviceCapabilityService(),
-    );
+        () => _i4.DeviceCapabilityService());
     gh.lazySingleton<_i5.DeviceCapabilityService>(
-      () => _i5.DeviceCapabilityService(),
-    );
+        () => _i5.DeviceCapabilityService());
     gh.lazySingleton<_i6.Dio>(() => networkModule.dio);
     gh.lazySingleton<_i7.EmbeddingsAdapter>(
-      () => memoryModule.embeddingsAdapter,
-    );
+        () => memoryModule.embeddingsAdapter);
     gh.lazySingleton<_i8.EncryptionService>(() => _i8.EncryptionServiceImpl());
     gh.lazySingleton<_i9.FilePickerService>(() => _i9.FilePickerServiceImpl());
     gh.lazySingleton<_i10.HealthDataImportService>(
-      () => _i10.HealthDataImportService(),
-    );
+        () => _i10.HealthDataImportService());
     gh.lazySingleton<_i11.ImagePickerService>(
-      () => _i11.ImagePickerServiceImpl(),
-    );
+        () => _i11.ImagePickerServiceImpl());
     await gh.factoryAsync<_i12.Isar>(
       () => databaseModule.isar,
       preResolve: true,
@@ -160,33 +159,26 @@ extension GetItInjectableX on _i1.GetIt {
       instanceName: 'gemma',
     );
     gh.lazySingleton<_i15.LlmSettingsRepository>(
-      () => _i16.LlmSettingsRepositoryImpl(gh<_i12.Isar>()),
-    );
+        () => _i16.LlmSettingsRepositoryImpl(gh<_i12.Isar>()));
     gh.lazySingleton<_i17.MedicalContextProvider>(
-      () => networkModule.medicalContextProvider,
-    );
+        () => networkModule.medicalContextProvider);
     gh.factory<_i18.MedicalKnowledgeRepository>(
       () => _i19.AssetMedicalKnowledgeRepository(assetBasePath: gh<String>()),
       registerFor: {_mobile},
     );
     gh.lazySingleton<_i18.MedicalKnowledgeRepository>(
-      () => _i20.JsonMedicalKnowledgeRepository(basePath: gh<String>()),
-    );
+        () => _i20.JsonMedicalKnowledgeRepository(basePath: gh<String>()));
     gh.lazySingleton<_i21.MedicalScraperService>(
-      () => _i22.MedicalScraperServiceImpl(
-        gh<_i6.Dio>(),
-        gh<_i3.BotBypassHandler>(),
-      ),
-    );
-    gh.lazySingleton<_i23.MedicalStandardsService>(
-      () => _i24.MedicalStandardsServiceImpl(gh<_i17.MedicalContextProvider>()),
-    );
+        () => _i22.MedicalScraperServiceImpl(
+              gh<_i6.Dio>(),
+              gh<_i3.BotBypassHandler>(),
+            ));
+    gh.lazySingleton<_i23.MedicalStandardsService>(() =>
+        _i24.MedicalStandardsServiceImpl(gh<_i17.MedicalContextProvider>()));
     gh.lazySingleton<_i25.MedicalWebSearchService>(
-      () => _i26.MedicalWebSearchServiceImpl(gh<_i6.Dio>()),
-    );
+        () => _i26.MedicalWebSearchServiceImpl(gh<_i6.Dio>()));
     gh.lazySingleton<_i27.MedicationRepository>(
-      () => _i28.IsarMedicationRepository(gh<_i12.Isar>()),
-    );
+        () => _i28.IsarMedicationRepository(gh<_i12.Isar>()));
     await gh.lazySingletonAsync<_i7.MemoryGraph>(
       () => memoryModule.memoryGraph(
         gh<_i12.Isar>(),
@@ -196,107 +188,86 @@ extension GetItInjectableX on _i1.GetIt {
     );
     gh.lazySingleton<_i29.OcrService>(() => _i29.OcrServiceStub());
     gh.lazySingleton<_i30.PromptScrubber>(
-      () => _i30.PromptScrubber(gh<_i12.Isar>()),
-    );
+        () => _i30.PromptScrubber(gh<_i12.Isar>()));
     gh.lazySingleton<_i31.ReportGenerationService>(
-      () => _i32.MockReportGenerationService(),
-    );
+        () => _i32.MockReportGenerationService());
     gh.lazySingleton<_i33.UserProfileRepository>(
-      () => _i34.UserProfileRepositoryImpl(gh<_i12.Isar>()),
+        () => _i34.UserProfileRepositoryImpl(gh<_i12.Isar>()));
+    await gh.lazySingletonAsync<_i35.VectorStoreService>(
+      () {
+        final i = _i36.IsarVectorStoreService(
+          gh<_i7.MemoryGraph>(),
+          gh<_i18.MedicalKnowledgeRepository>(),
+        );
+        return i.indexMedicalStandards().then((_) => i);
+      },
+      preResolve: true,
     );
-    await gh.lazySingletonAsync<_i35.VectorStoreService>(() {
-      final i = _i36.IsarVectorStoreService(
-        gh<_i7.MemoryGraph>(),
-        gh<_i18.MedicalKnowledgeRepository>(),
-      );
-      return i.indexMedicalStandards().then((_) => i);
-    }, preResolve: true);
     gh.lazySingleton<_i37.VitalSignRepository>(
-      () => _i38.VitalSignRepositoryImpl(gh<_i12.Isar>()),
-    );
+        () => _i38.VitalSignRepositoryImpl(gh<_i12.Isar>()));
     gh.lazySingleton<_i39.AllergyRepository>(
-      () => _i40.AllergyRepositoryImpl(gh<_i12.Isar>()),
-    );
+        () => _i40.AllergyRepositoryImpl(gh<_i12.Isar>()));
     gh.lazySingleton<_i41.AppointmentRepository>(
-      () => _i42.AppointmentRepositoryImpl(gh<_i12.Isar>()),
-    );
+        () => _i42.AppointmentRepositoryImpl(gh<_i12.Isar>()));
     gh.lazySingleton<_i43.BleMedicalSharingService>(
-      () => _i43.BleMedicalSharingService(gh<_i8.EncryptionService>()),
-    );
-    gh.factory<_i44.HealthImportCubit>(
-      () => _i44.HealthImportCubit(
-        gh<_i10.HealthDataImportService>(),
-        gh<_i37.VitalSignRepository>(),
-      ),
-    );
+        () => _i43.BleMedicalSharingService(gh<_i8.EncryptionService>()));
+    gh.factory<_i44.HealthImportCubit>(() => _i44.HealthImportCubit(
+          gh<_i10.HealthDataImportService>(),
+          gh<_i37.VitalSignRepository>(),
+        ));
     gh.lazySingleton<_i45.HealthRecordRepository>(
-      () => _i46.HealthRecordRepositoryImpl(gh<_i12.Isar>()),
-    );
+        () => _i46.HealthRecordRepositoryImpl(gh<_i12.Isar>()));
     gh.lazySingleton<_i47.HealthReportRepository>(
-      () => _i48.IsarHealthReportRepository(gh<_i12.Isar>()),
-    );
+        () => _i48.IsarHealthReportRepository(gh<_i12.Isar>()));
     gh.factory<_i13.LlmAdapter>(
       () => _i49.MockLlmAdapter(gh<_i30.PromptScrubber>()),
       instanceName: 'mock',
     );
     gh.lazySingleton<_i13.LlmAdapter>(
       () => _i50.GeminiLlmAdapter(
-        apiKey: gh<String>(instanceName: 'gemini_api_key'),
+        apiKey: gh<String>(),
         scrubber: gh<_i30.PromptScrubber>(),
         userProfileRepository: gh<_i33.UserProfileRepository>(),
       ),
       instanceName: 'gemini',
     );
-    gh.factory<_i51.LlmSettingsCubit>(
-      () => _i51.LlmSettingsCubit(
-        gh<_i15.LlmSettingsRepository>(),
-        gh<_i4.DeviceCapabilityService>(),
-      ),
-    );
+    gh.factory<_i51.LlmSettingsCubit>(() => _i51.LlmSettingsCubit(
+          gh<_i15.LlmSettingsRepository>(),
+          gh<_i4.DeviceCapabilityService>(),
+        ));
     gh.lazySingleton<_i52.MedicalIndexingService>(
-      () => _i52.MedicalIndexingService(
-        gh<_i18.MedicalKnowledgeRepository>(),
-        gh<_i35.VectorStoreService>(),
-      ),
-    );
+        () => _i52.MedicalIndexingService(
+              gh<_i18.MedicalKnowledgeRepository>(),
+              gh<_i35.VectorStoreService>(),
+            ));
     gh.lazySingleton<_i53.MedicalResearchService>(
-      () => _i53.MedicalResearchService(
-        gh<_i25.MedicalWebSearchService>(),
-        gh<_i21.MedicalScraperService>(),
-      ),
-    );
+        () => _i53.MedicalResearchService(
+              gh<_i25.MedicalWebSearchService>(),
+              gh<_i21.MedicalScraperService>(),
+            ));
     gh.factory<_i54.OnboardingCubit>(
-      () => _i54.OnboardingCubit(gh<_i33.UserProfileRepository>()),
-    );
+        () => _i54.OnboardingCubit(gh<_i33.UserProfileRepository>()));
     gh.lazySingleton<_i55.SmartSearchUseCase>(
-      () => _i55.SmartSearchUseCase(gh<_i35.VectorStoreService>()),
-    );
+        () => _i55.SmartSearchUseCase(gh<_i35.VectorStoreService>()));
     gh.factory<_i56.UserProfileCubit>(
-      () => _i56.UserProfileCubit(gh<_i33.UserProfileRepository>()),
-    );
-    gh.factory<_i57.HealthRecordCubit>(
-      () => _i57.HealthRecordCubit(
-        gh<_i45.HealthRecordRepository>(),
-        gh<_i9.FilePickerService>(),
-        gh<_i11.ImagePickerService>(),
-        gh<_i29.OcrService>(),
-        gh<_i35.VectorStoreService>(),
-      ),
-    );
-    gh.factory<_i58.HealthReportBloc>(
-      () => _i58.HealthReportBloc(
-        gh<_i47.HealthReportRepository>(),
-        gh<_i31.ReportGenerationService>(),
-      ),
-    );
-    gh.lazySingleton<_i59.LlmService>(
-      () => _i60.RagLlmService(
-        gh<_i35.VectorStoreService>(),
-        gh<_i53.MedicalResearchService>(),
-        gh<_i33.UserProfileRepository>(),
-        gh<_i13.LlmAdapter>(instanceName: 'gemma'),
-      ),
-    );
+        () => _i56.UserProfileCubit(gh<_i33.UserProfileRepository>()));
+    gh.factory<_i57.HealthRecordCubit>(() => _i57.HealthRecordCubit(
+          gh<_i45.HealthRecordRepository>(),
+          gh<_i9.FilePickerService>(),
+          gh<_i11.ImagePickerService>(),
+          gh<_i29.OcrService>(),
+          gh<_i35.VectorStoreService>(),
+        ));
+    gh.factory<_i58.HealthReportBloc>(() => _i58.HealthReportBloc(
+          gh<_i47.HealthReportRepository>(),
+          gh<_i31.ReportGenerationService>(),
+        ));
+    gh.lazySingleton<_i59.LlmService>(() => _i60.RagLlmService(
+          gh<_i35.VectorStoreService>(),
+          gh<_i53.MedicalResearchService>(),
+          gh<_i33.UserProfileRepository>(),
+          gh<_i13.LlmAdapter>(instanceName: 'gemma'),
+        ));
     return this;
   }
 }

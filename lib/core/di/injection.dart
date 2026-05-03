@@ -18,27 +18,20 @@ final getIt = GetIt.instance;
   preferRelativeImports: true, // default
   asExtension: true, // default
 )
-Future<void> configureDependencies({String? geminiApiKey}) async {
-  if (geminiApiKey != null && geminiApiKey.isNotEmpty) {
-    getIt.registerLazySingleton<String>(
-      () => geminiApiKey,
-      instanceName: 'gemini_api_key',
-    );
-  }
-
+Future<void> configureDependencies() async {
   await getIt.init();
-
+  
   // Register Settings feature dependencies manually
   final isar = getIt<Isar>();
-
+  
   getIt.registerLazySingleton<LlmSettingsRepository>(
     () => LlmSettingsRepositoryImpl(isar),
   );
-
+  
   getIt.registerLazySingleton<DeviceCapabilityService>(
     () => DeviceCapabilityService(),
   );
-
+  
   getIt.registerFactory<LlmSettingsCubit>(
     () => LlmSettingsCubit(
       getIt<LlmSettingsRepository>(),
