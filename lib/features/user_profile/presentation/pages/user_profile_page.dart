@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../features/auth/presentation/pages/receive_medical_data_page.dart';
 import '../../../../features/auth/presentation/pages/share_medical_data_page.dart';
 import '../../../../features/about/presentation/pages/about_page.dart';
+import '../../../../features/settings/presentation/pages/llm_settings_page.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
@@ -128,6 +129,19 @@ class _UserProfileView extends StatelessWidget {
                       subtitle: 'Modo Oscuro',
                     ),
                     _InfoTile(
+                      icon: Icons.smart_toy,
+                      title: 'Configuración de LLM',
+                      subtitle: 'Modelo de IA y preferencias',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LlmSettingsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    _InfoTile(
                       icon: Icons.info_outline,
                       title: 'Sobre OrionHealth',
                       subtitle: 'Nuestra misión y visión',
@@ -192,7 +206,7 @@ class _UserProfileView extends StatelessWidget {
                   onPressed: () {},
                   child: Text(
                     'Cerrar Sesión',
-                    style: TextStyle(color: CyberTheme.secondary.withOpacity(0.8)),
+                    style: TextStyle(color: CyberTheme.secondary.withValues(alpha: 0.8)),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -226,7 +240,7 @@ class _ProfileHeader extends StatelessWidget {
             border: Border.all(color: CyberTheme.primary, width: 2),
             boxShadow: [
               BoxShadow(
-                color: CyberTheme.primary.withOpacity(0.3),
+                color: CyberTheme.primary.withValues(alpha: 0.3),
                 blurRadius: 15,
                 spreadRadius: 2,
               ),
@@ -271,7 +285,7 @@ class _Section extends StatelessWidget {
             children: ListTile.divideTiles(
               context: context,
               tiles: children,
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
             ).toList(),
           ),
         ),
@@ -302,7 +316,7 @@ class _InfoTile extends StatelessWidget {
       title: Text(title),
       onTap: onTap,
       subtitle: subtitle != null
-          ? Text(subtitle!, style: TextStyle(color: Colors.white.withOpacity(0.7)))
+          ? Text(subtitle!, style: TextStyle(color: Colors.white.withValues(alpha: 0.7)))
           : null,
       trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.white54),
     );

@@ -1,8 +1,8 @@
-include: package:lints/recommended.yaml
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
-    - isar_agent_memory_tests/**
-linter:
-  rules:
-    # Add any specific lint rules here if needed
+    - lib/src/vector_index_objectbox.dart
+    - lib/src/objectbox.g.dart
+    - lib/src/models/backend_operation_log.dart
+    - lib/src/models/patient_package.dart

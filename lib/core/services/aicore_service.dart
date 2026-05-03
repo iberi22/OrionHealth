@@ -8,13 +8,13 @@ class AicoreService {
   bool _initialized = false;
   bool _useFullModel = false;
 
-  static void setupEventListeners({
+  static Future<void> setupEventListeners({
     void Function(int progress)? onDownloadProgress,
     void Function(String token)? onToken,
     void Function()? onComplete,
     void Function(String error)? onError,
-  }) {
-    _channel.setMethodCallHandler((call) {
+  }) async {
+    _channel.setMethodCallHandler((call) async {
       switch (call.method) {
         case 'onDownloadProgress':
           onDownloadProgress?.call(call.arguments['progress'] as int);

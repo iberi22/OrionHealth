@@ -85,7 +85,7 @@ class _ChatPageState extends State<ChatPage> {
           onPressed: () {},
         ),
       ],
-      backgroundColor: Colors.black.withOpacity(0.3),
+      backgroundColor: Colors.black.withValues(alpha: 0.3),
       elevation: 0,
     );
   }
@@ -136,12 +136,12 @@ class _ChatMessageWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 8.0),
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: isUser ? Colors.grey[900]?.withOpacity(0.5) : Colors.grey[800]?.withOpacity(0.5),
+            color: isUser ? Colors.grey[900]?.withValues(alpha: 0.5) : Colors.grey[800]?.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(16).copyWith(
               bottomRight: isUser ? Radius.zero : const Radius.circular(16),
               bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
             ),
-            border: Border.all(color: isUser ? CyberTheme.primary.withOpacity(0.3) : CyberTheme.secondary.withOpacity(0.3)),
+            border: Border.all(color: isUser ? CyberTheme.primary.withValues(alpha: 0.3) : CyberTheme.secondary.withValues(alpha: 0.3)),
           ),
           child: Text(message.content),
         ),
@@ -206,8 +206,8 @@ class _MessageComposer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
-        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.1))),
+        color: Colors.black.withValues(alpha: 0.3),
+        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
       ),
       child: Row(
         children: [
@@ -217,7 +217,7 @@ class _MessageComposer extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Type a message...',
                 filled: true,
-                fillColor: Colors.grey[900]?.withOpacity(0.5),
+                fillColor: Colors.grey[900]?.withValues(alpha: 0.5),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,

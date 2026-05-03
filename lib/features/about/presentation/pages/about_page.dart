@@ -34,7 +34,7 @@ class AboutPage extends StatelessWidget {
   Widget _buildAppBar() {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: CyberTheme.backgroundDark.withOpacity(0.8),
+      backgroundColor: CyberTheme.backgroundDark.withValues(alpha: 0.8),
       title: const Text(
         'Sobre OrionHealth',
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -90,8 +90,8 @@ class _BlogTile extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: CyberTheme.secondary.withOpacity(0.1),
-                      border: Border.all(color: CyberTheme.secondary.withOpacity(0.3)),
+                      color: CyberTheme.secondary.withValues(alpha: 0.1),
+                      border: Border.all(color: CyberTheme.secondary.withValues(alpha: 0.3)),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
@@ -107,7 +107,7 @@ class _BlogTile extends StatelessWidget {
                     post.date,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -127,7 +127,7 @@ class _BlogTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   height: 1.4,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
               const SizedBox(height: 12),

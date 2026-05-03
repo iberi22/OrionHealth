@@ -51,6 +51,7 @@ dependencies:
   path_provider: ^2.1.5
   flutter_markdown: ^0.7.7+1
   equatable: ^2.0.7
+  device_info_plus: 12.2.0
   isar_agent_memory:
     path: packages/isar_agent_memory
   medical_standards:
@@ -71,8 +72,7 @@ dependencies:
 
   # Bluetooth Low Energy for medical data sharing
   flutter_blue_plus: ^1.35.2
-  flutter_gemma: ^0.12.6
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -106,6 +106,7 @@ flutter:
     - assets/images/
     - assets/models/
     - assets/icons/
+    - assets/medical-standards/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

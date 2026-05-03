@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:orionhealth_health/core/theme/cyber_theme.dart';
 
 class GlassmorphicCard extends StatelessWidget {
   final Widget child;
-  const GlassmorphicCard({super.key, required this.child});
+  final EdgeInsetsGeometry? padding;
+  const GlassmorphicCard({super.key, required this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +13,11 @@ class GlassmorphicCard extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
+          padding: padding ?? const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withAlpha(13),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.white.withAlpha(26)),
           ),
           child: child,
         ),

@@ -126,7 +126,7 @@ class _PrimaryActionCard extends StatelessWidget {
             Text(
               'Inicia el proceso para reservar una nueva consulta con un proveedor de salud.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white.withOpacity(0.7)),
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -187,7 +187,7 @@ class _AppointmentItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(doctorName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                          Text(specialty, style: TextStyle(color: Colors.white.withOpacity(0.7))),
+                          Text(specialty, style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
                         ],
                       ),
                     ),
@@ -200,7 +200,7 @@ class _AppointmentItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Status: $status', style: TextStyle(color: Colors.white.withOpacity(0.7))),
+                    Text('Status: $status', style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
                     const Text('Ver Detalles', style: TextStyle(color: CyberTheme.secondary)),
                   ],
                 ),

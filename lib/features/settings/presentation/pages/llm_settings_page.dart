@@ -312,7 +312,7 @@ class _Section extends StatelessWidget {
             children: ListTile.divideTiles(
               context: context,
               tiles: children,
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
             ).toList(),
           ),
         ),
@@ -414,11 +414,11 @@ class _ModeToggle extends StatelessWidget {
         useCloudApi
             ? 'Usando API en la nube (Gemini Cloud)'
             : 'Ejecutando localmente (Gemma)',
-        style: TextStyle(color: Colors.white.withOpacity(0.7)),
+        style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
       ),
       trailing: Switch(
         value: useCloudApi,
-        activeColor: CyberTheme.primary,
+        activeThumbColor: CyberTheme.primary,
         onChanged: onChanged,
       ),
     );
@@ -446,11 +446,11 @@ class _PrivacyToggle extends StatelessWidget {
         allowCloudApiCalls
             ? 'Se enviarán datos a servidores Gemini'
             : 'Tus datos permanecen en el dispositivo',
-        style: TextStyle(color: Colors.white.withOpacity(0.7)),
+        style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
       ),
       trailing: Switch(
         value: allowCloudApiCalls,
-        activeColor: CyberTheme.primary,
+        activeThumbColor: CyberTheme.primary,
         onChanged: onChanged,
       ),
     );

@@ -1,6 +1,65 @@
 import 'package:isar/isar.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:math' as math;
+
+/// Simple in-memory vector index for example use.
+class SimpleMemoryIndex implements VectorIndex {
+  final _docs = <String, _DocEntry>{};
+  @override
+  final String provider = 'simple_memory';
+  @override
+  final String namespace;
+  @override
+  bool get normalize => false;
+  @override
+  VectorMetric get metric => VectorMetric.cosine;
+
+  SimpleMemoryIndex({this.namespace = 'default'});
+
+  @override
+  Future<void> addDocument(String id, String content, Float32List vector) async {
+    _docs[id] = _DocEntry(content: content, vector: vector);
+  }
+
+  @override
+  Future<void> removeDocument(String id) async { _docs.remove(id); }
+
+  @override
+  Future<List<VectorSearchResult>> search(Float32List query, {int topK = 5}) async {
+    final scores = _docs.entries.map((e) {
+      final score = _cosine(query, e.value.vector);
+      return MapEntry(e.key, score);
+    }).toList();
+    scores.sort((a, b) => a.value.compareTo(b.value));
+    return scores.take(topK)
+        .map((e) => VectorSearchResult(id: e.key, score: e.value))
+        .toList();
+  }
+
+  @override
+  Future<void> clear() async { _docs.clear(); }
+
+  @override
+  Future<void> load() async {}
+
+  double _cosine(Float32List a, Float32List b) {
+    double dot = 0, na = 0, nb = 0;
+    for (int i = 0; i < a.length; i++) {
+      dot += a[i] * b[i];
+      na += a[i] * a[i];
+      nb += b[i] * b[i];
+    }
+    return dot / (math.sqrt(na) * math.sqrt(nb) + 1e-10);
+  }
+}
+
+class _DocEntry {
+  final String content;
+  final Float32List vector;
+  _DocEntry({required this.content, required this.vector});
+}
 
 Future<void> main() async {
   // Set your Gemini API key here or via environment variable
@@ -20,7 +79,7 @@ Future<void> main() async {
     inspector: false,
     directory: './exampledb',
   );
-  final graph = MemoryGraph(isar, embeddingsAdapter: adapter);
+  final graph = MemoryGraph(isar, embeddingsAdapter: adapter, index: SimpleMemoryIndex());
 
   // Store a node with embedding
   final nodeId = await graph.storeNodeWithEmbedding(

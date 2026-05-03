@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      objectbox_generator:
+        enabled: false
+      isar_generator:
+        generate_for:
+          include:
+            - lib/src/models/*.dart
+          exclude:
+            - lib/src/models/backend_operation_log.dart
+            - lib/src/models/patient_package.dart

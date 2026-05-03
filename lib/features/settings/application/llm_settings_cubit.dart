@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
-import '../../domain/entities/llm_config.dart';
-import '../../domain/repositories/llm_settings_repository.dart';
-import '../../domain/services/device_capability_service.dart';
+import '../domain/entities/llm_config.dart';
+import '../domain/repositories/llm_settings_repository.dart';
+import '../domain/services/device_capability_service.dart';
 
 part 'llm_settings_state.dart';
 

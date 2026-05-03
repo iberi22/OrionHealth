@@ -13,7 +13,6 @@ export 'src/gemini_embeddings_adapter.dart';
 export 'src/fallback_embeddings_adapter.dart';
 export 'src/on_device_embeddings_adapter.dart';
 export 'src/vector_index.dart';
-export 'src/vector_index_objectbox.dart';
 export 'src/hierarchical_graph.dart';
 export 'src/llm_adapter.dart';
 export 'src/reranking_strategy.dart';
