@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 // isar_agent_memory
 //
 // Universal, local-first cognitive memory package for LLMs and AI agents.
