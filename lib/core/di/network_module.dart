@@ -9,4 +9,7 @@ abstract class NetworkModule {
 
   @lazySingleton
   MedicalContextProvider get medicalContextProvider => MedicalContextProvider();
+
+  @lazySingleton
+  SyncService get syncService => SyncService();
 }

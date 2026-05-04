@@ -1,6 +1,7 @@
 package com.orionhealth.orionhealth_health
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -13,6 +14,7 @@ class AicorePlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channelAicore: MethodChannel
     private lateinit var channelGemma4: MethodChannel
     private lateinit var context: Context
+    private val TAG = "OrionAicorePlugin"
     private var aicoreService: AicoreServiceKt? = null
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -26,6 +28,7 @@ class AicorePlugin : FlutterPlugin, MethodCallHandler {
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+        Log.d(TAG, "onMethodCall: ${call.method}")
         when (call.method) {
             // AICore channel methods
             "initialize" -> handleInitialize(call, result)
@@ -47,11 +50,14 @@ class AicorePlugin : FlutterPlugin, MethodCallHandler {
         val useFullModel = call.argument<Boolean>("useFullModel") ?: false
         scope.launch {
             try {
+                Log.d(TAG, "Initializing AICore service...")
                 val success = aicoreService?.initialize(useFullModel) ?: false
+                Log.d(TAG, "AICore initialization result: $success")
                 withContext(Dispatchers.Main) {
                     result.success(success)
                 }
             } catch (e: Exception) {
+                Log.e(TAG, "AICore initialization failed", e)
                 withContext(Dispatchers.Main) {
                     result.success(false)
                 }
@@ -69,15 +75,21 @@ class AicorePlugin : FlutterPlugin, MethodCallHandler {
             try {
                 // Emit download progress events via AICore channel
                 for (progress in 0..100 step 10) {
-                    channelAicore.invokeMethod("onDownloadProgress", mapOf("progress" to progress))
+                    withContext(Dispatchers.Main) {
+                        channelAicore.invokeMethod("onDownloadProgress", mapOf("progress" to progress))
+                    }
                     delay(100) // Simulate download time
                 }
-                channelAicore.invokeMethod("onComplete", null)
+                withContext(Dispatchers.Main) {
+                    channelAicore.invokeMethod("onComplete", null)
+                }
                 withContext(Dispatchers.Main) {
                     result.success(true)
                 }
             } catch (e: Exception) {
-                channelAicore.invokeMethod("onError", mapOf("error" to e.message ?: "Download failed"))
+                withContext(Dispatchers.Main) {
+                    channelAicore.invokeMethod("onError", mapOf("error" to (e.message ?: "Download failed")))
+                }
                 withContext(Dispatchers.Main) {
                     result.success(false)
                 }
@@ -112,16 +124,25 @@ class AicorePlugin : FlutterPlugin, MethodCallHandler {
                     // Simulate streaming by sending the full response as tokens
                     val words = response.split(" ")
                     for (word in words) {
-                        channelAicore.invokeMethod("onToken", mapOf("token" to "$word "))
+                        withContext(Dispatchers.Main) {
+                            channelAicore.invokeMethod("onToken", mapOf("token" to "$word "))
+                        }
                         delay(50)
                     }
                 } else {
                     // When no real model, send a placeholder to prevent hang
-                    channelAicore.invokeMethod("onToken", mapOf("token" to ""))
+                    withContext(Dispatchers.Main) {
+                        channelAicore.invokeMethod("onToken", mapOf("token" to ""))
+                    }
                 }
-                channelAicore.invokeMethod("onComplete", null)
+                withContext(Dispatchers.Main) {
+                    channelAicore.invokeMethod("onComplete", null)
+                }
             } catch (e: Exception) {
-                channelAicore.invokeMethod("onError", mapOf("error" to e.message ?: "Stream failed"))
+                Log.e(TAG, "Content stream generation failed", e)
+                withContext(Dispatchers.Main) {
+                    channelAicore.invokeMethod("onError", mapOf("error" to (e.message ?: "Stream failed")))
+                }
             }
         }
     }

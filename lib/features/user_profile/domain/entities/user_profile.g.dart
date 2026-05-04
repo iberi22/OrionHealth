@@ -37,43 +37,88 @@ const UserProfileSchema = CollectionSchema(
       name: r'bloodType',
       type: IsarType.string,
     ),
-    r'email': PropertySchema(
+    r'currentMedications': PropertySchema(
       id: 4,
+      name: r'currentMedications',
+      type: IsarType.stringList,
+    ),
+    r'email': PropertySchema(
+      id: 5,
       name: r'email',
       type: IsarType.string,
     ),
+    r'ethnicity': PropertySchema(
+      id: 6,
+      name: r'ethnicity',
+      type: IsarType.string,
+    ),
+    r'familyHistoryCvd': PropertySchema(
+      id: 7,
+      name: r'familyHistoryCvd',
+      type: IsarType.bool,
+    ),
+    r'familyHistoryDiabetes': PropertySchema(
+      id: 8,
+      name: r'familyHistoryDiabetes',
+      type: IsarType.bool,
+    ),
+    r'hasCardiovascularDisease': PropertySchema(
+      id: 9,
+      name: r'hasCardiovascularDisease',
+      type: IsarType.bool,
+    ),
+    r'hasHypertension': PropertySchema(
+      id: 10,
+      name: r'hasHypertension',
+      type: IsarType.bool,
+    ),
+    r'hasSteroidUse': PropertySchema(
+      id: 11,
+      name: r'hasSteroidUse',
+      type: IsarType.bool,
+    ),
     r'height': PropertySchema(
-      id: 5,
+      id: 12,
       name: r'height',
       type: IsarType.double,
     ),
     r'llmProvider': PropertySchema(
-      id: 6,
+      id: 13,
       name: r'llmProvider',
       type: IsarType.string,
     ),
     r'localModelName': PropertySchema(
-      id: 7,
+      id: 14,
       name: r'localModelName',
       type: IsarType.string,
     ),
+    r'medicalConditions': PropertySchema(
+      id: 15,
+      name: r'medicalConditions',
+      type: IsarType.stringList,
+    ),
     r'name': PropertySchema(
-      id: 8,
+      id: 16,
       name: r'name',
       type: IsarType.string,
     ),
     r'phoneNumber': PropertySchema(
-      id: 9,
+      id: 17,
       name: r'phoneNumber',
       type: IsarType.string,
     ),
+    r'smokingStatus': PropertySchema(
+      id: 18,
+      name: r'smokingStatus',
+      type: IsarType.string,
+    ),
     r'uniqueId': PropertySchema(
-      id: 10,
+      id: 19,
       name: r'uniqueId',
       type: IsarType.string,
     ),
     r'weight': PropertySchema(
-      id: 11,
+      id: 20,
       name: r'weight',
       type: IsarType.double,
     )
@@ -110,8 +155,21 @@ int _userProfileEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.currentMedications.length * 3;
+  {
+    for (var i = 0; i < object.currentMedications.length; i++) {
+      final value = object.currentMedications[i];
+      bytesCount += value.length * 3;
+    }
+  }
   {
     final value = object.email;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.ethnicity;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -128,6 +186,13 @@ int _userProfileEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.medicalConditions.length * 3;
+  {
+    for (var i = 0; i < object.medicalConditions.length; i++) {
+      final value = object.medicalConditions[i];
+      bytesCount += value.length * 3;
+    }
+  }
   {
     final value = object.name;
     if (value != null) {
@@ -136,6 +201,12 @@ int _userProfileEstimateSize(
   }
   {
     final value = object.phoneNumber;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.smokingStatus;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -159,14 +230,23 @@ void _userProfileSerialize(
   writer.writeBool(offsets[1], object.allowCloudApi);
   writer.writeString(offsets[2], object.avatarUrl);
   writer.writeString(offsets[3], object.bloodType);
-  writer.writeString(offsets[4], object.email);
-  writer.writeDouble(offsets[5], object.height);
-  writer.writeString(offsets[6], object.llmProvider);
-  writer.writeString(offsets[7], object.localModelName);
-  writer.writeString(offsets[8], object.name);
-  writer.writeString(offsets[9], object.phoneNumber);
-  writer.writeString(offsets[10], object.uniqueId);
-  writer.writeDouble(offsets[11], object.weight);
+  writer.writeStringList(offsets[4], object.currentMedications);
+  writer.writeString(offsets[5], object.email);
+  writer.writeString(offsets[6], object.ethnicity);
+  writer.writeBool(offsets[7], object.familyHistoryCvd);
+  writer.writeBool(offsets[8], object.familyHistoryDiabetes);
+  writer.writeBool(offsets[9], object.hasCardiovascularDisease);
+  writer.writeBool(offsets[10], object.hasHypertension);
+  writer.writeBool(offsets[11], object.hasSteroidUse);
+  writer.writeDouble(offsets[12], object.height);
+  writer.writeString(offsets[13], object.llmProvider);
+  writer.writeString(offsets[14], object.localModelName);
+  writer.writeStringList(offsets[15], object.medicalConditions);
+  writer.writeString(offsets[16], object.name);
+  writer.writeString(offsets[17], object.phoneNumber);
+  writer.writeString(offsets[18], object.smokingStatus);
+  writer.writeString(offsets[19], object.uniqueId);
+  writer.writeDouble(offsets[20], object.weight);
 }
 
 UserProfile _userProfileDeserialize(
@@ -180,14 +260,23 @@ UserProfile _userProfileDeserialize(
     allowCloudApi: reader.readBoolOrNull(offsets[1]) ?? true,
     avatarUrl: reader.readStringOrNull(offsets[2]),
     bloodType: reader.readStringOrNull(offsets[3]),
-    email: reader.readStringOrNull(offsets[4]),
-    height: reader.readDoubleOrNull(offsets[5]),
-    llmProvider: reader.readStringOrNull(offsets[6]),
-    localModelName: reader.readStringOrNull(offsets[7]),
-    name: reader.readStringOrNull(offsets[8]),
-    phoneNumber: reader.readStringOrNull(offsets[9]),
-    uniqueId: reader.readStringOrNull(offsets[10]),
-    weight: reader.readDoubleOrNull(offsets[11]),
+    currentMedications: reader.readStringList(offsets[4]) ?? const [],
+    email: reader.readStringOrNull(offsets[5]),
+    ethnicity: reader.readStringOrNull(offsets[6]),
+    familyHistoryCvd: reader.readBoolOrNull(offsets[7]),
+    familyHistoryDiabetes: reader.readBoolOrNull(offsets[8]),
+    hasCardiovascularDisease: reader.readBoolOrNull(offsets[9]),
+    hasHypertension: reader.readBoolOrNull(offsets[10]),
+    hasSteroidUse: reader.readBoolOrNull(offsets[11]),
+    height: reader.readDoubleOrNull(offsets[12]),
+    llmProvider: reader.readStringOrNull(offsets[13]),
+    localModelName: reader.readStringOrNull(offsets[14]),
+    medicalConditions: reader.readStringList(offsets[15]) ?? const [],
+    name: reader.readStringOrNull(offsets[16]),
+    phoneNumber: reader.readStringOrNull(offsets[17]),
+    smokingStatus: reader.readStringOrNull(offsets[18]),
+    uniqueId: reader.readStringOrNull(offsets[19]),
+    weight: reader.readDoubleOrNull(offsets[20]),
   );
   object.id = id;
   return object;
@@ -209,20 +298,38 @@ P _userProfileDeserializeProp<P>(
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 5:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 9:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 10:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 11:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 12:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 13:
+      return (reader.readStringOrNull(offset)) as P;
+    case 14:
+      return (reader.readStringOrNull(offset)) as P;
+    case 15:
+      return (reader.readStringList(offset) ?? const []) as P;
+    case 16:
+      return (reader.readStringOrNull(offset)) as P;
+    case 17:
+      return (reader.readStringOrNull(offset)) as P;
+    case 18:
+      return (reader.readStringOrNull(offset)) as P;
+    case 19:
+      return (reader.readStringOrNull(offset)) as P;
+    case 20:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -709,6 +816,233 @@ extension UserProfileQueryFilter
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'currentMedications',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'currentMedications',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'currentMedications',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'currentMedications',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'currentMedications',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'currentMedications',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementContains(String value,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'currentMedications',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementMatches(String pattern,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'currentMedications',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'currentMedications',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'currentMedications',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'currentMedications',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'currentMedications',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'currentMedications',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'currentMedications',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'currentMedications',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      currentMedicationsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'currentMedications',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> emailIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -854,6 +1188,300 @@ extension UserProfileQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'email',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'ethnicity',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'ethnicity',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ethnicity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ethnicity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ethnicity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ethnicity',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'ethnicity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'ethnicity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'ethnicity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'ethnicity',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ethnicity',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      ethnicityIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'ethnicity',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      familyHistoryCvdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'familyHistoryCvd',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      familyHistoryCvdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'familyHistoryCvd',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      familyHistoryCvdEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'familyHistoryCvd',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      familyHistoryDiabetesIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'familyHistoryDiabetes',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      familyHistoryDiabetesIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'familyHistoryDiabetes',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      familyHistoryDiabetesEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'familyHistoryDiabetes',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasCardiovascularDiseaseIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'hasCardiovascularDisease',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasCardiovascularDiseaseIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'hasCardiovascularDisease',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasCardiovascularDiseaseEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hasCardiovascularDisease',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasHypertensionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'hasHypertension',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasHypertensionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'hasHypertension',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasHypertensionEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hasHypertension',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasSteroidUseIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'hasSteroidUse',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasSteroidUseIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'hasSteroidUse',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      hasSteroidUseEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hasSteroidUse',
+        value: value,
       ));
     });
   }
@@ -1299,6 +1927,233 @@ extension UserProfileQueryFilter
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'medicalConditions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'medicalConditions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'medicalConditions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'medicalConditions',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'medicalConditions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'medicalConditions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementContains(String value,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'medicalConditions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementMatches(String pattern,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'medicalConditions',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'medicalConditions',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'medicalConditions',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'medicalConditions',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'medicalConditions',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'medicalConditions',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'medicalConditions',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'medicalConditions',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      medicalConditionsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'medicalConditions',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1596,6 +2451,160 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'phoneNumber',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'smokingStatus',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'smokingStatus',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'smokingStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'smokingStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'smokingStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'smokingStatus',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'smokingStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'smokingStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'smokingStatus',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'smokingStatus',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'smokingStatus',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      smokingStatusIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'smokingStatus',
         value: '',
       ));
     });
@@ -1904,6 +2913,86 @@ extension UserProfileQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByEthnicity() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ethnicity', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByEthnicityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ethnicity', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByFamilyHistoryCvd() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'familyHistoryCvd', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByFamilyHistoryCvdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'familyHistoryCvd', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByFamilyHistoryDiabetes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'familyHistoryDiabetes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByFamilyHistoryDiabetesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'familyHistoryDiabetes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByHasCardiovascularDisease() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasCardiovascularDisease', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByHasCardiovascularDiseaseDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasCardiovascularDisease', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByHasHypertension() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasHypertension', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByHasHypertensionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasHypertension', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByHasSteroidUse() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasSteroidUse', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByHasSteroidUseDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasSteroidUse', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'height', Sort.asc);
@@ -1962,6 +3051,19 @@ extension UserProfileQuerySortBy
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phoneNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortBySmokingStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'smokingStatus', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortBySmokingStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'smokingStatus', Sort.desc);
     });
   }
 
@@ -2053,6 +3155,86 @@ extension UserProfileQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByEthnicity() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ethnicity', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByEthnicityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ethnicity', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByFamilyHistoryCvd() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'familyHistoryCvd', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByFamilyHistoryCvdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'familyHistoryCvd', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByFamilyHistoryDiabetes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'familyHistoryDiabetes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByFamilyHistoryDiabetesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'familyHistoryDiabetes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByHasCardiovascularDisease() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasCardiovascularDisease', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByHasCardiovascularDiseaseDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasCardiovascularDisease', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByHasHypertension() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasHypertension', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByHasHypertensionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasHypertension', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByHasSteroidUse() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasSteroidUse', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByHasSteroidUseDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasSteroidUse', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'height', Sort.asc);
@@ -2126,6 +3308,19 @@ extension UserProfileQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenBySmokingStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'smokingStatus', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenBySmokingStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'smokingStatus', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByUniqueId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uniqueId', Sort.asc);
@@ -2179,10 +3374,58 @@ extension UserProfileQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QDistinct>
+      distinctByCurrentMedications() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'currentMedications');
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByEmail(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'email', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByEthnicity(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ethnicity', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct>
+      distinctByFamilyHistoryCvd() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'familyHistoryCvd');
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct>
+      distinctByFamilyHistoryDiabetes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'familyHistoryDiabetes');
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct>
+      distinctByHasCardiovascularDisease() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hasCardiovascularDisease');
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct>
+      distinctByHasHypertension() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hasHypertension');
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByHasSteroidUse() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hasSteroidUse');
     });
   }
 
@@ -2207,6 +3450,13 @@ extension UserProfileQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QDistinct>
+      distinctByMedicalConditions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'medicalConditions');
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2218,6 +3468,14 @@ extension UserProfileQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'phoneNumber', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctBySmokingStatus(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'smokingStatus',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -2267,9 +3525,55 @@ extension UserProfileQueryProperty
     });
   }
 
+  QueryBuilder<UserProfile, List<String>, QQueryOperations>
+      currentMedicationsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'currentMedications');
+    });
+  }
+
   QueryBuilder<UserProfile, String?, QQueryOperations> emailProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'email');
+    });
+  }
+
+  QueryBuilder<UserProfile, String?, QQueryOperations> ethnicityProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ethnicity');
+    });
+  }
+
+  QueryBuilder<UserProfile, bool?, QQueryOperations>
+      familyHistoryCvdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'familyHistoryCvd');
+    });
+  }
+
+  QueryBuilder<UserProfile, bool?, QQueryOperations>
+      familyHistoryDiabetesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'familyHistoryDiabetes');
+    });
+  }
+
+  QueryBuilder<UserProfile, bool?, QQueryOperations>
+      hasCardiovascularDiseaseProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hasCardiovascularDisease');
+    });
+  }
+
+  QueryBuilder<UserProfile, bool?, QQueryOperations> hasHypertensionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hasHypertension');
+    });
+  }
+
+  QueryBuilder<UserProfile, bool?, QQueryOperations> hasSteroidUseProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hasSteroidUse');
     });
   }
 
@@ -2292,6 +3596,13 @@ extension UserProfileQueryProperty
     });
   }
 
+  QueryBuilder<UserProfile, List<String>, QQueryOperations>
+      medicalConditionsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'medicalConditions');
+    });
+  }
+
   QueryBuilder<UserProfile, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -2301,6 +3612,12 @@ extension UserProfileQueryProperty
   QueryBuilder<UserProfile, String?, QQueryOperations> phoneNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'phoneNumber');
+    });
+  }
+
+  QueryBuilder<UserProfile, String?, QQueryOperations> smokingStatusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'smokingStatus');
     });
   }
 

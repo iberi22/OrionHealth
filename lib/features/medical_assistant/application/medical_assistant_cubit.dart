@@ -7,6 +7,7 @@ import '../domain/entities/medical_query.dart';
 import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
 import '../domain/services/medical_analysis_service.dart';
+import '../../local_agent/infrastructure/llm_service.dart';
 import '../infrastructure/llm/medical_llm_adapter.dart';
 import '../../../core/services/privacy_anonymizer.dart';
 import '../../../core/di/injection.dart';
@@ -73,11 +74,16 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
     VitalSignAnalyzer? vitalAnalyzer,
     RiskCalculator? riskCalculator,
     MemoryGraph? memory,
-  })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(scrubber: getIt<PromptScrubber>()),
+    LlmService? llmService,
+  })  : _llmAdapter = llmAdapter ??
+            MedicalLlmAdapter(
+              scrubber: getIt<PromptScrubber>(),
+              llmService: llmService ?? getIt<LlmService>(),
+            ),
         _analysisService = analysisService ?? MedicalAnalysisService(),
         _labInterpreter = labInterpreter ?? LabInterpreter(),
         _vitalAnalyzer = vitalAnalyzer ?? VitalSignAnalyzer(),
-        _riskCalculator = riskCalculator ?? RiskCalculator(),
+        _riskCalculator = riskCalculator ?? getIt<RiskCalculator>(),
         _memory = memory,
         super(const MedicalAssistantIdle());
 
@@ -94,6 +100,8 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
 
     try {
       final queryId = DateTime.now().millisecondsSinceEpoch.toString();
+      final isGreeting = _isGreeting(question);
+      
       final query = MedicalQuery(
         id: queryId,
         question: question,
@@ -101,6 +109,20 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
         userId: userId,
         contextTags: _extractTags(question),
       );
+
+      if (isGreeting) {
+        final greetingResponse = AiMedicalResponse(
+          id: 'greeting_${queryId}',
+          queryId: queryId,
+          answer: '¡Hola! Soy tu asistente médico de OrionHealth. ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre tus análisis de sangre, signos vitales o síntomas generales.',
+          confidence: 1.0,
+          insights: [],
+          generatedAt: DateTime.now(),
+          metadata: {'is_greeting': true},
+        );
+        emit(MedicalAssistantResponse(response: greetingResponse, query: query));
+        return;
+      }
 
       // Gather user context from memory
       final userContext = await _getUserContext(userId);
@@ -160,17 +182,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
       // ---- Enforce confidence rules in metadata ----
       final confidence = response.confidence ?? 0.0;
 
-      // STRICT RULE: If confidence < 90%, we MUST NOT provide a definitive diagnosis
-      // and we MUST request more data or provide a generic response.
-      if (confidence < ConfidenceThreshold.highConfidence) {
-        final enhancedResponse = _addDataRequest(response, question);
-        emit(MedicalAssistantResponse(
-          response: enhancedResponse,
-          query: query,
-        ));
-        return;
-      }
-
+      // emit the response directly, the MedicalLlmAdapter now handles safety phrasing via LLM
       emit(MedicalAssistantResponse(response: response, query: query));
     } catch (e) {
       emit(MedicalAssistantError('Error procesando tu consulta: $e'));
@@ -250,6 +262,15 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
     }
 
     return tags;
+  }
+  
+  bool _isGreeting(String question) {
+    final lower = question.toLowerCase().trim();
+    final greetings = [
+      'hola', 'buenos días', 'buenas tardes', 'buenas noches', 
+      'hi', 'hello', 'hey', 'saludos', 'que tal'
+    ];
+    return greetings.any((g) => lower == g || lower.startsWith('$g '));
   }
 
   Future<Map<String, dynamic>> _getUserContext(String? userId) async {

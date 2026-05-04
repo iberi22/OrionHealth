@@ -1,0 +1,2466 @@
+{
+  "metadata": {
+    "standard": "ICD-10",
+    "version": "2024-1",
+    "lastUpdated": "2026-05-02",
+    "source": "WHO ICD-10-CM 2024",
+    "sourceUrl": "https://www.who.int/standards/classifications/classification-of-diseases",
+    "totalCount": 278
+  },
+  "data": [
+    {
+      "code": "E10",
+      "displayName": "Type 1 diabetes mellitus",
+      "category": "Endocrine",
+      "definition": "A chronic autoimmune condition where the pancreas produces little or no insulin. Requires lifelong insulin management and monitoring.",
+      "mentalHealthImpact": "High risk of 'Diabetes Distress' and burnout. The burden of constant monitoring can lead to anxiety and clinical depression.",
+      "commonSymptoms": ["Polydipsia (excessive thirst)", "Polyuria (frequent urination)", "Unexplained weight loss", "Fatigue", "Blurred vision"],
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_1_diabetes_mellitus",
+      "searchTerms": [
+        "DM1",
+        "Diabetes tipo 1",
+        "Diabetes mellitus type I"
+      ]
+    },
+    {
+      "code": "E11",
+      "displayName": "Type 2 diabetes mellitus",
+      "category": "Endocrine",
+      "definition": "A long-term metabolic disorder characterized by high blood sugar, insulin resistance, and relative lack of insulin. Primarily managed through diet, exercise, and medications.",
+      "mentalHealthImpact": "Often associated with lifestyle-related guilt. Higher prevalence of depression which can impair self-care and medication adherence.",
+      "commonSymptoms": ["Increased hunger", "Slow-healing sores", "Frequent infections", "Darkened skin (Acanthosis nigricans)", "Fatigue"],
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus",
+      "searchTerms": [
+        "DM2",
+        "Diabetes tipo 2",
+        "Diabetes mellitus type II"
+      ]
+    },
+    {
+      "code": "E08",
+      "displayName": "Diabetes mellitus due to underlying condition",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Diabetes_mellitus_due_to_underlying_condition",
+      "searchTerms": [
+        "Secondary diabetes"
+      ]
+    },
+    {
+      "code": "E09",
+      "displayName": "Drug or chemical induced diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Drug_or_chemical_induced_diabetes_mellitus",
+      "searchTerms": [
+        "Steroid diabetes",
+        "Glucocorticoid-induced diabetes"
+      ]
+    },
+    {
+      "code": "E12",
+      "displayName": "Malnutrition-related diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Malnutrition-related_diabetes_mellitus",
+      "searchTerms": [
+        "JR diabetes",
+        "Tropical diabetes"
+      ]
+    },
+    {
+      "code": "E13",
+      "displayName": "Other specified diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Other_specified_diabetes_mellitus",
+      "searchTerms": [
+        "Other diabetes",
+        "Diabetes NOS"
+      ]
+    },
+    {
+      "code": "E14",
+      "displayName": "Unspecified diabetes mellitus",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_diabetes_mellitus",
+      "searchTerms": [
+        "Diabetes NOS",
+        "Diabetes sin especificar"
+      ]
+    },
+    {
+      "code": "E10.1",
+      "displayName": "Type 1 diabetes mellitus with ketoacidosis",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_1_diabetes_mellitus_with_ketoacidosis",
+      "searchTerms": [
+        "DKA",
+        "Diabetic ketoacidosis"
+      ]
+    },
+    {
+      "code": "E11.21",
+      "displayName": "Type 2 diabetes mellitus with diabetic nephropathy",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus_with_diabetic_nephropathy",
+      "searchTerms": [
+        "Diabetic kidney disease",
+        "DKD"
+      ]
+    },
+    {
+      "code": "E11.31",
+      "displayName": "Type 2 diabetes mellitus with diabetic retinopathy",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus_with_diabetic_retinopathy",
+      "searchTerms": [
+        "Diabetic eye disease"
+      ]
+    },
+    {
+      "code": "E11.4",
+      "displayName": "Type 2 diabetes mellitus with diabetic neuropathy",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus_with_diabetic_neuropathy",
+      "searchTerms": [
+        "Diabetic peripheral neuropathy"
+      ]
+    },
+    {
+      "code": "E11.51",
+      "displayName": "Type 2 diabetes mellitus with diabetic peripheral angiopathy",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus_with_diabetic_peripheral_angiopathy",
+      "searchTerms": [
+        "Diabetic PAD",
+        "Diabetic vascular disease"
+      ]
+    },
+    {
+      "code": "E05.90",
+      "displayName": "Thyrotoxicosis, unspecified without thyrotoxic storm",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Thyrotoxicosis,_unspecified_without_thyrotoxic_storm",
+      "searchTerms": [
+        "Hyperthyroidism",
+        "Tirotoxicosis"
+      ]
+    },
+    {
+      "code": "E03.9",
+      "displayName": "Hypothyroidism, unspecified",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypothyroidism,_unspecified",
+      "searchTerms": [
+        "Underactive thyroid",
+        "Hipotiroidismo"
+      ]
+    },
+    {
+      "code": "E04.9",
+      "displayName": "Thyroid nodule, unspecified",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Thyroid_nodule,_unspecified",
+      "searchTerms": [
+        "Goiter",
+        "Bocio"
+      ]
+    },
+    {
+      "code": "E83.52",
+      "displayName": "Hypercalcemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypercalcemia",
+      "searchTerms": [
+        "High calcium"
+      ]
+    },
+    {
+      "code": "E83.51",
+      "displayName": "Hypocalcemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypocalcemia",
+      "searchTerms": [
+        "Low calcium",
+        "Tetany"
+      ]
+    },
+    {
+      "code": "E87.5",
+      "displayName": "Hyperkalemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hyperkalemia",
+      "searchTerms": [
+        "High potassium"
+      ]
+    },
+    {
+      "code": "E87.6",
+      "displayName": "Hypokalemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypokalemia",
+      "searchTerms": [
+        "Low potassium"
+      ]
+    },
+    {
+      "code": "E87.1",
+      "displayName": "Hyponatremia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hyponatremia",
+      "searchTerms": [
+        "Low sodium"
+      ]
+    },
+    {
+      "code": "E87.0",
+      "displayName": "Hypernatremia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hypernatremia",
+      "searchTerms": [
+        "High sodium"
+      ]
+    },
+    {
+      "code": "E88.81",
+      "displayName": "Metabolic syndrome",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Metabolic_syndrome",
+      "searchTerms": [
+        "MetS",
+        "Insulin resistance syndrome"
+      ]
+    },
+    {
+      "code": "E27.40",
+      "displayName": "Unspecified adrenocortical insufficiency",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_adrenocortical_insufficiency",
+      "searchTerms": [
+        "Addison disease",
+        "Adrenal failure"
+      ]
+    },
+    {
+      "code": "E24.9",
+      "displayName": "Cushing's syndrome, unspecified",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Cushing's_syndrome,_unspecified",
+      "searchTerms": [
+        "Hypercortisolism"
+      ]
+    },
+    {
+      "code": "E28.2",
+      "displayName": "Polycystic ovarian syndrome",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Polycystic_ovarian_syndrome",
+      "searchTerms": [
+        "PCOS",
+        "Stein-Leventhal syndrome"
+      ]
+    },
+    {
+      "code": "E55.9",
+      "displayName": "Vitamin D deficiency, unspecified",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Vitamin_D_deficiency,_unspecified",
+      "searchTerms": [
+        "Hypovitaminosis D",
+        "Rickets"
+      ]
+    },
+    {
+      "code": "E79.0",
+      "displayName": "Hyperuricemia",
+      "category": "Endocrine",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Hyperuricemia",
+      "searchTerms": [
+        "Gota",
+        "Gout"
+      ]
+    },
+    {
+      "code": "F32.9",
+      "displayName": "Major depressive disorder, single episode, unspecified",
+      "category": "Mental",
+      "definition": "A mental health disorder characterized by persistently depressed mood or loss of interest in activities, causing significant impairment in daily life.",
+      "physicalHealthImpact": "Can lead to chronic fatigue, sleep disturbances, appetite changes, and increased sensitivity to physical pain. Higher risk of cardiovascular issues.",
+      "commonSymptoms": ["Persistent sadness", "Loss of interest (anhedonia)", "Changes in sleep/appetite", "Difficulty concentrating", "Feelings of worthlessness"],
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Major_depressive_disorder,_single_episode,_unspecified",
+      "searchTerms": [
+        "MDD",
+        "Depression",
+        "Depresión mayor"
+      ]
+    },
+    {
+      "code": "F33.9",
+      "displayName": "Major depressive disorder, recurrent, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Major_depressive_disorder,_recurrent,_unspecified",
+      "searchTerms": [
+        "Recurrent depression",
+        "Depression recurrente"
+      ]
+    },
+    {
+      "code": "F34.1",
+      "displayName": "Dysthymic disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Dysthymic_disorder",
+      "searchTerms": [
+        "Persistent depressive disorder",
+        "Distimia"
+      ]
+    },
+    {
+      "code": "F31.9",
+      "displayName": "Bipolar disorder, unspecified",
+      "category": "Mental",
+      "definition": "A mental health condition that causes extreme mood swings that include emotional highs (mania or hypomania) and lows (depression).",
+      "physicalHealthImpact": "Extreme mood swings can disrupt sleep cycles, appetite, and energy levels. Higher risk of thyroid issues and metabolic syndrome due to medication and lifestyle.",
+      "commonSymptoms": ["Manic episodes (high energy)", "Depressive episodes (low mood)", "Inflated self-esteem", "Decreased need for sleep", "Racing thoughts"],
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Bipolar_disorder,_unspecified",
+      "searchTerms": [
+        "Bipolar",
+        "Manic-depressive illness"
+      ]
+    },
+    {
+      "code": "F41.1",
+      "displayName": "Generalized anxiety disorder",
+      "category": "Mental",
+      "definition": "A disorder characterized by excessive, uncontrollable, and often irrational worry about events or activities. Lasts for at least six months.",
+      "physicalHealthImpact": "Manifests as muscle tension, headaches, digestive issues (IBS), and chronic fatigue. Can exacerbate cardiovascular conditions through chronic stress.",
+      "commonSymptoms": ["Restlessness", "Easy fatigue", "Muscle tension", "Sleep disturbance", "Irritability", "Palpitations"],
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Generalized_anxiety_disorder",
+      "searchTerms": [
+        "GAD",
+        "Ansiedad generalizada"
+      ]
+    },
+    {
+      "code": "F41.0",
+      "displayName": "Panic disorder without agoraphobia",
+      "category": "Mental",
+      "definition": "A type of anxiety disorder characterized by recurrent unexpected panic attacks, which are sudden periods of intense fear.",
+      "physicalHealthImpact": "Attacks often mimic heart attacks (chest pain, shortness of breath). Chronic panic can lead to cardiovascular strain and respiratory sensitivity.",
+      "commonSymptoms": ["Heart palpitations", "Shortness of breath", "Sweating", "Trembling", "Feelings of impending doom"],
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Panic_disorder_without_agoraphobia",
+      "searchTerms": [
+        "Panic attacks",
+        "Trastorno de pánico"
+      ]
+    },
+    {
+      "code": "F40.10",
+      "displayName": "Social anxiety disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Social_anxiety_disorder,_unspecified",
+      "searchTerms": [
+        "Social phobia",
+        "Fear of social situations"
+      ]
+    },
+    {
+      "code": "F43.10",
+      "displayName": "Post-traumatic stress disorder, unspecified",
+      "category": "Mental",
+      "definition": "A disorder that develops in some people who have experienced a shocking, scary, or dangerous event.",
+      "physicalHealthImpact": "Strong correlation with chronic pain syndromes, fibromyalgia, and autoimmune flare-ups due to constant 'Fight or Flight' nervous system activation.",
+      "commonSymptoms": ["Flashbacks", "Nightmares", "Severe anxiety", "Intrusive thoughts", "Emotional numbness"],
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Post-traumatic_stress_disorder,_unspecified",
+      "searchTerms": [
+        "PTSD",
+        "TEPT",
+        "Trauma disorder"
+      ]
+    },
+    {
+      "code": "F43.9",
+      "displayName": "Adjustment disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Adjustment_disorder,_unspecified",
+      "searchTerms": [
+        "Reaction to stress"
+      ]
+    },
+    {
+      "code": "F42.9",
+      "displayName": "Obsessive-compulsive disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Obsessive-compulsive_disorder,_unspecified",
+      "searchTerms": [
+        "OCD",
+        "TOC"
+      ]
+    },
+    {
+      "code": "F50.00",
+      "displayName": "Anorexia nervosa, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Anorexia_nervosa,_unspecified",
+      "searchTerms": [
+        "Eating disorder",
+        "Loss of appetite nervosa"
+      ]
+    },
+    {
+      "code": "F50.2",
+      "displayName": "Bulimia nervosa",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Bulimia_nervosa",
+      "searchTerms": [
+        "Binge eating disorder"
+      ]
+    },
+    {
+      "code": "F20.9",
+      "displayName": "Schizophrenia, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Schizophrenia,_unspecified",
+      "searchTerms": [
+        "Schizophrenia disorder"
+      ]
+    },
+    {
+      "code": "F22",
+      "displayName": "Delusional disorders",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Delusional_disorders",
+      "searchTerms": [
+        "Paranoia",
+        "Delusional disorder"
+      ]
+    },
+    {
+      "code": "F44.9",
+      "displayName": "Dissociative disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Dissociative_disorder,_unspecified",
+      "searchTerms": [
+        "DID",
+        "Multiple personality"
+      ]
+    },
+    {
+      "code": "F45.0",
+      "displayName": "Somatization disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Somatization_disorder",
+      "searchTerms": [
+        "Somatic symptom disorder"
+      ]
+    },
+    {
+      "code": "F60.9",
+      "displayName": "Personality disorder, unspecified",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Personality_disorder,_unspecified",
+      "searchTerms": [
+        "Personality disorder NOS"
+      ]
+    },
+    {
+      "code": "F10.20",
+      "displayName": "Alcohol dependence, uncomplicated",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Alcohol_dependence,_uncomplicated",
+      "searchTerms": [
+        "Alcoholism",
+        "Alcohol addiction",
+        "AUD"
+      ]
+    },
+    {
+      "code": "F11.20",
+      "displayName": "Opioid dependence, uncomplicated",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Opioid_dependence,_uncomplicated",
+      "searchTerms": [
+        "Opioid addiction",
+        "OUD"
+      ]
+    },
+    {
+      "code": "F12.20",
+      "displayName": "Cannabis dependence, uncomplicated",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Cannabis_dependence,_uncomplicated",
+      "searchTerms": [
+        "Marijuana addiction",
+        "Cannabis addiction"
+      ]
+    },
+    {
+      "code": "F15.20",
+      "displayName": "Other stimulant dependence, uncomplicated",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Other_stimulant_dependence,_uncomplicated",
+      "searchTerms": [
+        "Cocaine dependence",
+        "Methamphetamine use disorder"
+      ]
+    },
+    {
+      "code": "F84.0",
+      "displayName": "Autistic disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Autistic_disorder",
+      "searchTerms": [
+        "ASD",
+        "Autism",
+        "Kanner autism"
+      ]
+    },
+    {
+      "code": "F90.9",
+      "displayName": "Attention-deficit hyperactivity disorder, unspecified type",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Attention-deficit_hyperactivity_disorder,_unspecified_type",
+      "searchTerms": [
+        "ADHD",
+        "ADD",
+        "TDAH"
+      ]
+    },
+    {
+      "code": "F03.90",
+      "displayName": "Unspecified dementia without behavioral disturbance",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_dementia_without_behavioral_disturbance",
+      "searchTerms": [
+        "Cognitive decline",
+        "Demencia",
+        "Alzheimer"
+      ]
+    },
+    {
+      "code": "F06.7",
+      "displayName": "Mild neurocognitive disorder",
+      "category": "Mental",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Mild_neurocognitive_disorder",
+      "searchTerms": [
+        "Mild cognitive impairment",
+        "MCI"
+      ]
+    },
+    {
+      "code": "J40",
+      "displayName": "Bronchitis, not specified as acute or chronic",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Bronchitis,_not_specified_as_acute_or_chronic",
+      "searchTerms": [
+        "Chest cold",
+        "Acute bronchitis",
+        "Bronquitis aguda"
+      ]
+    },
+    {
+      "code": "J42",
+      "displayName": "Unspecified chronic bronchitis",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_chronic_bronchitis",
+      "searchTerms": [
+        "Chronic bronchitis",
+        "Bronquitis crónica"
+      ]
+    },
+    {
+      "code": "J43.9",
+      "displayName": "Emphysema, unspecified",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Emphysema,_unspecified",
+      "searchTerms": [
+        "Emphysema",
+        "COPD emphysema"
+      ]
+    },
+    {
+      "code": "J47.9",
+      "displayName": "Bronchiectasis, uncomplicated",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Bronchiectasis,_uncomplicated",
+      "searchTerms": [
+        "Bronchiectasis",
+        "Dilated airways"
+      ]
+    },
+    {
+      "code": "J44.1",
+      "displayName": "Chronic obstructive pulmonary disease with acute exacerbation",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_obstructive_pulmonary_disease_with_acute_exacerbation",
+      "searchTerms": [
+        "COPD flare",
+        "Acute COPD exacerbation",
+        "Exacerbación EPOC"
+      ]
+    },
+    {
+      "code": "J44.0",
+      "displayName": "Chronic obstructive pulmonary disease with acute bronchitis",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_obstructive_pulmonary_disease_with_acute_bronchitis",
+      "searchTerms": [
+        "COPD with acute lower respiratory infection"
+      ]
+    },
+    {
+      "code": "J45.909",
+      "displayName": "Unspecified asthma, uncomplicated",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Unspecified_asthma,_uncomplicated",
+      "searchTerms": [
+        "Asma",
+        "Asthma"
+      ]
+    },
+    {
+      "code": "J45.41",
+      "displayName": "Chronic obstructive asthma with acute exacerbation",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_obstructive_asthma_with_acute_exacerbation",
+      "searchTerms": [
+        "Asthma attack",
+        "Acute asthma exacerbation"
+      ]
+    },
+    {
+      "code": "J96.90",
+      "displayName": "Respiratory failure, unspecified",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Respiratory_failure,_unspecified",
+      "searchTerms": [
+        "Acute respiratory failure",
+        "Insuficiencia respiratoria"
+      ]
+    },
+    {
+      "code": "J80",
+      "displayName": "Acute respiratory distress syndrome",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acute_respiratory_distress_syndrome",
+      "searchTerms": [
+        "ARDS",
+        "Shock lung"
+      ]
+    },
+    {
+      "code": "J18.9",
+      "displayName": "Pneumonia, unspecified organism",
+      "category": "Respiratory",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Pneumonia,_unspecified_organism",
+      "searchTerms": [
+        "Neumonía",
+        "Lung infection"
+      ]
+    },
+    {
+      "code": "N17.9",
+      "displayName": "Acute kidney failure, unspecified",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acute_kidney_failure,_unspecified",
+      "searchTerms": [
+        "AKI",
+        "Acute renal failure",
+        "Insuficiencia renal aguda"
+      ]
+    },
+    {
+      "code": "N17.0",
+      "displayName": "Acute kidney failure with tubular necrosis",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acute_kidney_failure_with_tubular_necrosis",
+      "searchTerms": [
+        "ATN",
+        "Acute tubular necrosis"
+      ]
+    },
+    {
+      "code": "N00.9",
+      "displayName": "Acute nephritic syndrome, unspecified",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Acute_nephritic_syndrome,_unspecified",
+      "searchTerms": [
+        "Acute glomerulonephritis",
+        "AGN"
+      ]
+    },
+    {
+      "code": "N18.9",
+      "displayName": "Chronic kidney disease, unspecified",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_unspecified",
+      "searchTerms": [
+        "CKD",
+        "Chronic renal disease",
+        "IRC"
+      ]
+    },
+    {
+      "code": "N18.1",
+      "displayName": "Chronic kidney disease, stage 1",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_1",
+      "searchTerms": [
+        "CKD stage 1"
+      ]
+    },
+    {
+      "code": "N18.2",
+      "displayName": "Chronic kidney disease, stage 2",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_2",
+      "searchTerms": [
+        "CKD stage 2"
+      ]
+    },
+    {
+      "code": "N18.3",
+      "displayName": "Chronic kidney disease, stage 3",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_3",
+      "searchTerms": [
+        "CKD stage 3",
+        "Moderately decreased kidney function"
+      ]
+    },
+    {
+      "code": "N18.4",
+      "displayName": "Chronic kidney disease, stage 4",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_4",
+      "searchTerms": [
+        "CKD stage 4",
+        "Severely decreased kidney function"
+      ]
+    },
+    {
+      "code": "N18.5",
+      "displayName": "Chronic kidney disease, stage 5",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Chronic_kidney_disease,_stage_5",
+      "searchTerms": [
+        "CKD stage 5",
+        "End-stage renal disease",
+        "ESRD"
+      ]
+    },
+    {
+      "code": "N18.6",
+      "displayName": "End stage renal disease",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/End_stage_renal_disease",
+      "searchTerms": [
+        "ESRD",
+        "Kidney failure",
+        "Renal failure"
+      ]
+    },
+    {
+      "code": "N39.0",
+      "displayName": "Urinary tract infection, site not specified",
+      "category": "Renal",
+      "wikipediaUrl": "https://en.wikipedia.org/wiki/Urinary_tract_infection,_site_not_specified",
+      "searchTerms": [
+        "UTI",
+        "cystitis",
+        "Infección urinaria"
+      ]
+    },
+    {
+      "code": "C51",
+      "displayName": "Malignant neoplasm of vulva",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de vulva",
+        "carcinoma vulvar"
+      ]
+    },
+    {
+      "code": "C52",
+      "displayName": "Malignant neoplasm of vagina",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de vagina"
+      ]
+    },
+    {
+      "code": "C53",
+      "displayName": "Malignant neoplasm of cervix uteri",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de cuello uterino",
+        "cancer cervical"
+      ]
+    },
+    {
+      "code": "C54",
+      "displayName": "Malignant neoplasm of corpus uteri",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de endometrio",
+        "cancer de utero"
+      ]
+    },
+    {
+      "code": "C55",
+      "displayName": "Malignant neoplasm of uterus NOS",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer uterino"
+      ]
+    },
+    {
+      "code": "C56",
+      "displayName": "Malignant neoplasm of ovary",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de ovario"
+      ]
+    },
+    {
+      "code": "C57",
+      "displayName": "Malignant neoplasm of female genital organs",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer genital femenino"
+      ]
+    },
+    {
+      "code": "C60",
+      "displayName": "Malignant neoplasm of penis",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de pene"
+      ]
+    },
+    {
+      "code": "C61",
+      "displayName": "Malignant neoplasm of prostate",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de prostata"
+      ]
+    },
+    {
+      "code": "C62",
+      "displayName": "Malignant neoplasm of testis",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de testiculo"
+      ]
+    },
+    {
+      "code": "C64",
+      "displayName": "Malignant neoplasm of kidney",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de rinon",
+        "carcinoma renal"
+      ]
+    },
+    {
+      "code": "C65",
+      "displayName": "Malignant neoplasm of renal pelvis",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de pelvis renal"
+      ]
+    },
+    {
+      "code": "C66",
+      "displayName": "Malignant neoplasm of ureter",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de ureter"
+      ]
+    },
+    {
+      "code": "C67",
+      "displayName": "Malignant neoplasm of bladder",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de vejiga"
+      ]
+    },
+    {
+      "code": "C69",
+      "displayName": "Malignant neoplasm of eye",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de ojo",
+        "retinoblastoma"
+      ]
+    },
+    {
+      "code": "C70",
+      "displayName": "Malignant neoplasm of meninges",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "meningioma"
+      ]
+    },
+    {
+      "code": "C71",
+      "displayName": "Malignant neoplasm of brain",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de cerebro",
+        "tumor cerebral",
+        "glioma"
+      ]
+    },
+    {
+      "code": "C72",
+      "displayName": "Malignant neoplasm of spinal cord",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor de medula espinal"
+      ]
+    },
+    {
+      "code": "C73",
+      "displayName": "Malignant neoplasm of thyroid gland",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer de tiroides"
+      ]
+    },
+    {
+      "code": "C74",
+      "displayName": "Malignant neoplasm of adrenal gland",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer suprarrenal",
+        "feocromocitoma"
+      ]
+    },
+    {
+      "code": "C76",
+      "displayName": "Malignant neoplasm other ill-defined",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer sitio impreciso"
+      ]
+    },
+    {
+      "code": "C77",
+      "displayName": "Secondary neoplasm of lymph nodes",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "metastasis ganglionar"
+      ]
+    },
+    {
+      "code": "C78",
+      "displayName": "Secondary neoplasm of respiratory organs",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "metastasis pulmonar"
+      ]
+    },
+    {
+      "code": "C79",
+      "displayName": "Secondary neoplasm of other sites",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "metastasis hepatica",
+        "metastasis osea"
+      ]
+    },
+    {
+      "code": "C80",
+      "displayName": "Malignant neoplasm without specification",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "cancer sin especificar"
+      ]
+    },
+    {
+      "code": "C81",
+      "displayName": "Hodgkin lymphoma",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "linfoma de Hodgkin"
+      ]
+    },
+    {
+      "code": "C82",
+      "displayName": "Follicular lymphoma",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "linfoma folicular"
+      ]
+    },
+    {
+      "code": "C83",
+      "displayName": "Diffuse non-Hodgkin lymphoma",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "linfoma difuso",
+        "linfoma no Hodgkin"
+      ]
+    },
+    {
+      "code": "C84",
+      "displayName": "Mature T/NK-cell lymphomas",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "linfoma T"
+      ]
+    },
+    {
+      "code": "C85",
+      "displayName": "Other non-Hodgkin lymphoma",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "linfoma no Hodgkin"
+      ]
+    },
+    {
+      "code": "C88",
+      "displayName": "Malignant immunoproliferative diseases",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "gammapatia monoclonal"
+      ]
+    },
+    {
+      "code": "C90",
+      "displayName": "Multiple myeloma",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "mieloma multiple"
+      ]
+    },
+    {
+      "code": "C91",
+      "displayName": "Lymphoid leukemia",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "leucemia linfatica",
+        "LLA",
+        "LLC"
+      ]
+    },
+    {
+      "code": "C92",
+      "displayName": "Myeloid leukemia",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "leucemia mieloide",
+        "LMA",
+        "LMC"
+      ]
+    },
+    {
+      "code": "C93",
+      "displayName": "Monocytic leukemia",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "leucemia monocitica"
+      ]
+    },
+    {
+      "code": "C94",
+      "displayName": "Other leukemias",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "leucemia"
+      ]
+    },
+    {
+      "code": "C95",
+      "displayName": "Leukemia unspecified",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "leucemia sin especificar"
+      ]
+    },
+    {
+      "code": "D00",
+      "displayName": "Carcinoma in situ of oral cavity",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "carcinoma in situ oral"
+      ]
+    },
+    {
+      "code": "D01",
+      "displayName": "Carcinoma in situ of digestive organs",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "carcinoma in situ digestivo"
+      ]
+    },
+    {
+      "code": "D05",
+      "displayName": "Carcinoma in situ of breast",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "carcinoma in situ mama",
+        "DCIS"
+      ]
+    },
+    {
+      "code": "D06",
+      "displayName": "Carcinoma in situ of cervix",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "NIC",
+        "neoplasia intraepitelial cervical"
+      ]
+    },
+    {
+      "code": "D10",
+      "displayName": "Benign neoplasm of oral cavity",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno oral"
+      ]
+    },
+    {
+      "code": "D11",
+      "displayName": "Benign neoplasm of salivary glands",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "adenoma parotida"
+      ]
+    },
+    {
+      "code": "D12",
+      "displayName": "Benign neoplasm of intestine",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "polipo intestinal",
+        "polipo colon"
+      ]
+    },
+    {
+      "code": "D13",
+      "displayName": "Benign neoplasm of digestive system",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno digestivo",
+        "leiomioma"
+      ]
+    },
+    {
+      "code": "D14",
+      "displayName": "Benign neoplasm of respiratory tract",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno pulmon"
+      ]
+    },
+    {
+      "code": "D15",
+      "displayName": "Benign neoplasm of thoracic organs",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "mediastino"
+      ]
+    },
+    {
+      "code": "D16",
+      "displayName": "Benign neoplasm of bone",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "osteoma",
+        "tumor oseo benigno"
+      ]
+    },
+    {
+      "code": "D17",
+      "displayName": "Benign lipomatous neoplasm",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "lipoma"
+      ]
+    },
+    {
+      "code": "D18",
+      "displayName": "Hemangioma",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "hemangioma",
+        "angioma"
+      ]
+    },
+    {
+      "code": "D19",
+      "displayName": "Benign neoplasm of mesothelial tissue",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor mesotelial"
+      ]
+    },
+    {
+      "code": "D22",
+      "displayName": "Melanocytic nevi",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "nevus melanocitico",
+        "lunar"
+      ]
+    },
+    {
+      "code": "D23",
+      "displayName": "Benign neoplasm of skin",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno de piel"
+      ]
+    },
+    {
+      "code": "D24",
+      "displayName": "Benign neoplasm of breast",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno de mama",
+        "fibroadenoma"
+      ]
+    },
+    {
+      "code": "D25",
+      "displayName": "Leiomyoma of uterus",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "mioma",
+        "fibroma uterino"
+      ]
+    },
+    {
+      "code": "D26",
+      "displayName": "Benign neoplasm of uterus",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "polipo uterino"
+      ]
+    },
+    {
+      "code": "D27",
+      "displayName": "Benign neoplasm of ovary",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "quiste ovarico"
+      ]
+    },
+    {
+      "code": "D28",
+      "displayName": "Benign neoplasm female genital",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno genital femenino"
+      ]
+    },
+    {
+      "code": "D29",
+      "displayName": "Benign neoplasm male genital",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno genital masculino"
+      ]
+    },
+    {
+      "code": "D30",
+      "displayName": "Benign neoplasm of urinary organs",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno vejiga"
+      ]
+    },
+    {
+      "code": "D31",
+      "displayName": "Benign neoplasm of eye",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno ojo"
+      ]
+    },
+    {
+      "code": "D32",
+      "displayName": "Benign neoplasm of meninges",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "meningioma benigno"
+      ]
+    },
+    {
+      "code": "D33",
+      "displayName": "Benign neoplasm of brain",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor cerebral benigno",
+        "astrocitoma"
+      ]
+    },
+    {
+      "code": "D34",
+      "displayName": "Benign neoplasm of thyroid",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "nodulo tiroideo"
+      ]
+    },
+    {
+      "code": "D35",
+      "displayName": "Benign neoplasm of endocrine glands",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "adenoma hipofisario"
+      ]
+    },
+    {
+      "code": "D36",
+      "displayName": "Benign neoplasm other sites",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor benigno"
+      ]
+    },
+    {
+      "code": "D37",
+      "displayName": "Uncertain behavior oral/digestive",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor borderline"
+      ]
+    },
+    {
+      "code": "D38",
+      "displayName": "Uncertain behavior respiratory",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor borderline pulmonar"
+      ]
+    },
+    {
+      "code": "D39",
+      "displayName": "Uncertain behavior female genital",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor borderline ovarico"
+      ]
+    },
+    {
+      "code": "D40",
+      "displayName": "Uncertain behavior male genital",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor borderline prostata"
+      ]
+    },
+    {
+      "code": "D41",
+      "displayName": "Uncertain behavior urinary",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor borderline vejiga"
+      ]
+    },
+    {
+      "code": "D43",
+      "displayName": "Uncertain behavior brain/CNS",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor cerebral borderline"
+      ]
+    },
+    {
+      "code": "D44",
+      "displayName": "Uncertain behavior endocrine",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor endocrino borderline"
+      ]
+    },
+    {
+      "code": "D48",
+      "displayName": "Uncertain behavior other sites",
+      "category": "Neoplasms",
+      "searchTerms": [
+        "tumor borderline"
+      ]
+    },
+    {
+      "code": "E00",
+      "displayName": "Congenital iodine-deficiency syndrome",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "cretinismo"
+      ]
+    },
+    {
+      "code": "E01",
+      "displayName": "Iodine-deficiency thyroid disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "bocio endemico"
+      ]
+    },
+    {
+      "code": "E02",
+      "displayName": "Subclinical iodine-deficiency hypothyroidism",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipotiroidismo subclinico"
+      ]
+    },
+    {
+      "code": "E03",
+      "displayName": "Other hypothyroidism",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipotiroidismo",
+        "mixedema"
+      ]
+    },
+    {
+      "code": "E04",
+      "displayName": "Other nontoxic goiter",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "bocio nodular",
+        "bocio difuso"
+      ]
+    },
+    {
+      "code": "E05",
+      "displayName": "Hyperthyroidism",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipertiroidismo",
+        "Graves"
+      ]
+    },
+    {
+      "code": "E06",
+      "displayName": "Thyroiditis",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "tiroiditis",
+        "Hashimoto"
+      ]
+    },
+    {
+      "code": "E07",
+      "displayName": "Other thyroid disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "nodulo tiroideo",
+        "bocio"
+      ]
+    },
+    {
+      "code": "E10",
+      "displayName": "Type 1 diabetes mellitus",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "diabetes tipo 1",
+        "DM1"
+      ]
+    },
+    {
+      "code": "E11",
+      "displayName": "Type 2 diabetes mellitus",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "diabetes tipo 2",
+        "DM2"
+      ]
+    },
+    {
+      "code": "E12",
+      "displayName": "Malnutrition-related diabetes",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": []
+    },
+    {
+      "code": "E13",
+      "displayName": "Other specified diabetes",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "diabetes gestacional",
+        "MODY"
+      ]
+    },
+    {
+      "code": "E14",
+      "displayName": "Unspecified diabetes mellitus",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "diabetes"
+      ]
+    },
+    {
+      "code": "E15",
+      "displayName": "Hypoglycemic coma",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "coma hipoglucemico"
+      ]
+    },
+    {
+      "code": "E16",
+      "displayName": "Other pancreatic internal secretion disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipoglicemia",
+        "hiperinsulinismo"
+      ]
+    },
+    {
+      "code": "E20",
+      "displayName": "Hypoparathyroidism",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipoparatiroidismo"
+      ]
+    },
+    {
+      "code": "E21",
+      "displayName": "Hyperparathyroidism",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hiperparatiroidismo"
+      ]
+    },
+    {
+      "code": "E22",
+      "displayName": "Pituitary hyperfunction",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "acromegalia",
+        "prolactinoma"
+      ]
+    },
+    {
+      "code": "E23",
+      "displayName": "Pituitary hypofunction",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipopituitarismo"
+      ]
+    },
+    {
+      "code": "E24",
+      "displayName": "Cushing syndrome",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "sindrome de Cushing"
+      ]
+    },
+    {
+      "code": "E25",
+      "displayName": "Adrenogenital disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hiperplasia suprarrenal congenita"
+      ]
+    },
+    {
+      "code": "E26",
+      "displayName": "Hyperaldosteronism",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hiperaldosteronismo",
+        "Conn"
+      ]
+    },
+    {
+      "code": "E27",
+      "displayName": "Other adrenal disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "insuficiencia suprarrenal",
+        "Addison"
+      ]
+    },
+    {
+      "code": "E28",
+      "displayName": "Ovarian dysfunction",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "SOP",
+        "ovario poliquistico"
+      ]
+    },
+    {
+      "code": "E29",
+      "displayName": "Testicular dysfunction",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipogonadismo"
+      ]
+    },
+    {
+      "code": "E30",
+      "displayName": "Disorders of puberty",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "pubertad precoz"
+      ]
+    },
+    {
+      "code": "E31",
+      "displayName": "Polyglandular dysfunction",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "sindrome poliglandular"
+      ]
+    },
+    {
+      "code": "E34",
+      "displayName": "Other endocrine disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "enanismo",
+        "gigantismo"
+      ]
+    },
+    {
+      "code": "E40",
+      "displayName": "Kwashiorkor",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "Kwashiorkor",
+        "desnutricion"
+      ]
+    },
+    {
+      "code": "E41",
+      "displayName": "Nutritional marasmus",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "marasmo"
+      ]
+    },
+    {
+      "code": "E43",
+      "displayName": "Severe protein-energy malnutrition",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "desnutricion severa"
+      ]
+    },
+    {
+      "code": "E44",
+      "displayName": "Moderate and mild malnutrition",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "desnutricion"
+      ]
+    },
+    {
+      "code": "E46",
+      "displayName": "Unspecified malnutrition",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "malnutricion"
+      ]
+    },
+    {
+      "code": "E50",
+      "displayName": "Vitamin A deficiency",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "deficiencia vitamina A"
+      ]
+    },
+    {
+      "code": "E51",
+      "displayName": "Thiamine deficiency",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "beriberi",
+        "deficiencia B1"
+      ]
+    },
+    {
+      "code": "E52",
+      "displayName": "Niacin deficiency",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "pelagra",
+        "deficiencia B3"
+      ]
+    },
+    {
+      "code": "E53",
+      "displayName": "Other B vitamin deficiencies",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "deficiencia B12",
+        "deficiencia folato"
+      ]
+    },
+    {
+      "code": "E54",
+      "displayName": "Ascorbic acid deficiency",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "escorbuto",
+        "deficiencia C"
+      ]
+    },
+    {
+      "code": "E55",
+      "displayName": "Vitamin D deficiency",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "raquitismo",
+        "osteomalacia",
+        "deficiencia D"
+      ]
+    },
+    {
+      "code": "E56",
+      "displayName": "Other vitamin deficiencies",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": []
+    },
+    {
+      "code": "E58",
+      "displayName": "Dietary calcium deficiency",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "deficiencia calcio"
+      ]
+    },
+    {
+      "code": "E59",
+      "displayName": "Dietary selenium deficiency",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "deficiencia selenio"
+      ]
+    },
+    {
+      "code": "E60",
+      "displayName": "Dietary zinc deficiency",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "deficiencia zinc"
+      ]
+    },
+    {
+      "code": "E61",
+      "displayName": "Other nutrient deficiencies",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "deficiencia magnesio"
+      ]
+    },
+    {
+      "code": "E63",
+      "displayName": "Other nutritional deficiencies",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": []
+    },
+    {
+      "code": "E64",
+      "displayName": "Sequelae of malnutrition",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": []
+    },
+    {
+      "code": "E65",
+      "displayName": "Localized adiposity",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "obesidad localizada"
+      ]
+    },
+    {
+      "code": "E66",
+      "displayName": "Obesity",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "obesidad",
+        "sobrepeso"
+      ]
+    },
+    {
+      "code": "E67",
+      "displayName": "Other hyperalimentation",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipervitaminosis"
+      ]
+    },
+    {
+      "code": "E68",
+      "displayName": "Sequelae of hyperalimentation",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": []
+    },
+    {
+      "code": "E70",
+      "displayName": "Phenylketonuria",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "PKU"
+      ]
+    },
+    {
+      "code": "E71",
+      "displayName": "Amino acid metabolism disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "maple syrup"
+      ]
+    },
+    {
+      "code": "E72",
+      "displayName": "Other amino acid disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "homocistinuria",
+        "tirosinemia"
+      ]
+    },
+    {
+      "code": "E73",
+      "displayName": "Lactose intolerance",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "intolerancia a la lactosa"
+      ]
+    },
+    {
+      "code": "E74",
+      "displayName": "Carbohydrate metabolism disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "glucogenosis",
+        "galactosemia"
+      ]
+    },
+    {
+      "code": "E75",
+      "displayName": "Sphingolipid storage disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "Gaucher",
+        "Niemann-Pick",
+        "Fabry"
+      ]
+    },
+    {
+      "code": "E76",
+      "displayName": "Mucopolysaccharidosis",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "MPS",
+        "Hurler"
+      ]
+    },
+    {
+      "code": "E77",
+      "displayName": "Glycoprotein metabolism disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": []
+    },
+    {
+      "code": "E78",
+      "displayName": "Lipoprotein disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hipercolesterolemia familiar"
+      ]
+    },
+    {
+      "code": "E79",
+      "displayName": "Purine/pyrimidine disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hiperuricemia",
+        "gota"
+      ]
+    },
+    {
+      "code": "E80",
+      "displayName": "Porphyrin/bilirubin disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "porfiria",
+        "Gilbert"
+      ]
+    },
+    {
+      "code": "E83",
+      "displayName": "Mineral metabolism disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "hemocromatosis",
+        "Wilson"
+      ]
+    },
+    {
+      "code": "E84",
+      "displayName": "Cystic fibrosis",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "fibrosis quistica"
+      ]
+    },
+    {
+      "code": "E85",
+      "displayName": "Amyloidosis",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "amiloidosis"
+      ]
+    },
+    {
+      "code": "E86",
+      "displayName": "Volume depletion",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "deshidratacion"
+      ]
+    },
+    {
+      "code": "E87",
+      "displayName": "Fluid/electrolyte/acid-base disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "trastorno electrolitico"
+      ]
+    },
+    {
+      "code": "E88",
+      "displayName": "Other metabolic disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": [
+        "sindrome metabolico"
+      ]
+    },
+    {
+      "code": "E89",
+      "displayName": "Post-procedural endocrine disorders",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": []
+    },
+    {
+      "code": "E90",
+      "displayName": "Nutritional/metabolic disorders in disease",
+      "category": "Endocrine/Metabolic",
+      "searchTerms": []
+    },
+    {
+      "code": "F00",
+      "displayName": "Alzheimer dementia",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "demencia Alzheimer"
+      ]
+    },
+    {
+      "code": "F01",
+      "displayName": "Vascular dementia",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "demencia vascular"
+      ]
+    },
+    {
+      "code": "F02",
+      "displayName": "Dementia in other diseases",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "demencia cuerpos Lewy"
+      ]
+    },
+    {
+      "code": "F03",
+      "displayName": "Unspecified dementia",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "demencia"
+      ]
+    },
+    {
+      "code": "F04",
+      "displayName": "Organic amnesic syndrome",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "Korsakoff"
+      ]
+    },
+    {
+      "code": "F05",
+      "displayName": "Delirium",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "delirio",
+        "sindrome confusional"
+      ]
+    },
+    {
+      "code": "F06",
+      "displayName": "Other organic mental disorders",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F07",
+      "displayName": "Personality/behavioral brain disease",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F10",
+      "displayName": "Alcohol related disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "alcoholismo"
+      ]
+    },
+    {
+      "code": "F11",
+      "displayName": "Opioid related disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "heroina",
+        "opioides"
+      ]
+    },
+    {
+      "code": "F12",
+      "displayName": "Cannabis related disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "marihuana",
+        "cannabis"
+      ]
+    },
+    {
+      "code": "F13",
+      "displayName": "Sedative/hypnotic related disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "benzodiazepinas"
+      ]
+    },
+    {
+      "code": "F14",
+      "displayName": "Cocaine related disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "cocaina"
+      ]
+    },
+    {
+      "code": "F15",
+      "displayName": "Stimulant related disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "anfetaminas"
+      ]
+    },
+    {
+      "code": "F16",
+      "displayName": "Hallucinogen related disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "LSD"
+      ]
+    },
+    {
+      "code": "F17",
+      "displayName": "Nicotine dependence",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "tabaquismo",
+        "nicotina"
+      ]
+    },
+    {
+      "code": "F18",
+      "displayName": "Inhalant related disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "inhalantes"
+      ]
+    },
+    {
+      "code": "F19",
+      "displayName": "Multiple drug use disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "policonsumo"
+      ]
+    },
+    {
+      "code": "F20",
+      "displayName": "Schizophrenia",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "esquizofrenia",
+        "trastorno psicotico"
+      ]
+    },
+    {
+      "code": "F21",
+      "displayName": "Schizotypal disorder",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F22",
+      "displayName": "Persistent delusional disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "trastorno delirante",
+        "paranoia"
+      ]
+    },
+    {
+      "code": "F23",
+      "displayName": "Acute psychotic disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "brote psicotico"
+      ]
+    },
+    {
+      "code": "F24",
+      "displayName": "Induced delusional disorder",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "folie a deux"
+      ]
+    },
+    {
+      "code": "F25",
+      "displayName": "Schizoaffective disorders",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F28",
+      "displayName": "Other psychotic disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "psicosis"
+      ]
+    },
+    {
+      "code": "F29",
+      "displayName": "Unspecified psychosis",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F30",
+      "displayName": "Manic episode",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "mania"
+      ]
+    },
+    {
+      "code": "F31",
+      "displayName": "Bipolar disorder",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "trastorno bipolar"
+      ]
+    },
+    {
+      "code": "F32",
+      "displayName": "Depressive episode",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "depresion mayor"
+      ]
+    },
+    {
+      "code": "F33",
+      "displayName": "Recurrent depressive disorder",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "depresion recurrente"
+      ]
+    },
+    {
+      "code": "F34",
+      "displayName": "Persistent mood disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "distimia",
+        "ciclotimia"
+      ]
+    },
+    {
+      "code": "F38",
+      "displayName": "Other mood disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "trastorno afectivo"
+      ]
+    },
+    {
+      "code": "F39",
+      "displayName": "Unspecified mood disorder",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F40",
+      "displayName": "Phobic anxiety disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "fobia social",
+        "agorafobia"
+      ]
+    },
+    {
+      "code": "F41",
+      "displayName": "Other anxiety disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "ansiedad",
+        "panico",
+        "ansiedad generalizada"
+      ]
+    },
+    {
+      "code": "F42",
+      "displayName": "OCD",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "TOC",
+        "obsesivo compulsivo"
+      ]
+    },
+    {
+      "code": "F43",
+      "displayName": "Reaction to severe stress",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "TEPT",
+        "estres postraumatico"
+      ]
+    },
+    {
+      "code": "F44",
+      "displayName": "Dissociative disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "trastorno disociativo"
+      ]
+    },
+    {
+      "code": "F45",
+      "displayName": "Somatoform disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "somatizacion",
+        "hipocondria"
+      ]
+    },
+    {
+      "code": "F48",
+      "displayName": "Other neurotic disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "neurastenia"
+      ]
+    },
+    {
+      "code": "F50",
+      "displayName": "Eating disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "anorexia",
+        "bulimia"
+      ]
+    },
+    {
+      "code": "F51",
+      "displayName": "Sleep disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "insomnio"
+      ]
+    },
+    {
+      "code": "F52",
+      "displayName": "Sexual dysfunction",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "disfuncion sexual"
+      ]
+    },
+    {
+      "code": "F60",
+      "displayName": "Personality disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "trastorno personalidad",
+        "borderline"
+      ]
+    },
+    {
+      "code": "F70",
+      "displayName": "Intellectual disability mild",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "retraso mental leve"
+      ]
+    },
+    {
+      "code": "F71",
+      "displayName": "Intellectual disability moderate",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F72",
+      "displayName": "Intellectual disability severe",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F80",
+      "displayName": "Developmental speech/language disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "tartamudez"
+      ]
+    },
+    {
+      "code": "F81",
+      "displayName": "Developmental learning disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "dislexia",
+        "discalculia"
+      ]
+    },
+    {
+      "code": "F82",
+      "displayName": "Developmental coordination disorder",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "dispraxia"
+      ]
+    },
+    {
+      "code": "F84",
+      "displayName": "Pervasive developmental disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "autismo",
+        "TEA",
+        "Asperger"
+      ]
+    },
+    {
+      "code": "F88",
+      "displayName": "Other developmental disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "retraso desarrollo"
+      ]
+    },
+    {
+      "code": "F89",
+      "displayName": "Unspecified developmental disorder",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F90",
+      "displayName": "ADHD",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "TDAH",
+        "hiperactividad",
+        "deficit atencion"
+      ]
+    },
+    {
+      "code": "F91",
+      "displayName": "Conduct disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "trastorno de conducta"
+      ]
+    },
+    {
+      "code": "F92",
+      "displayName": "Mixed conduct/emotional disorders",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F93",
+      "displayName": "Emotional disorders of childhood",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "F94",
+      "displayName": "Social functioning disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "mutismo selectivo"
+      ]
+    },
+    {
+      "code": "F95",
+      "displayName": "Tic disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "tourette",
+        "tics"
+      ]
+    },
+    {
+      "code": "F98",
+      "displayName": "Other behavioral/emotional disorders",
+      "category": "Psychiatry",
+      "searchTerms": [
+        "enuresis",
+        "encopresis"
+      ]
+    },
+    {
+      "code": "F99",
+      "displayName": "Mental disorder NOS",
+      "category": "Psychiatry",
+      "searchTerms": []
+    },
+    {
+      "code": "I10",
+      "displayName": "Essential (primary) hypertension",
+      "category": "Cardiovascular",
+      "definition": "High blood pressure that doesn't have a known secondary cause. The most common form of hypertension.",
+      "mentalHealthImpact": "Chronic stress is a major contributor. The diagnosis can lead to 'health anxiety' regarding stroke or heart attack risks.",
+      "commonSymptoms": ["Often asymptomatic", "Headaches", "Shortness of breath", "Nosebleeds"],
+      "searchTerms": ["High blood pressure", "HTN", "Presión alta"]
+    },
+    {
+      "code": "E66.9",
+      "displayName": "Obesity, unspecified",
+      "category": "Endocrine",
+      "definition": "A complex disease involving an excessive amount of body fat. It's a medical problem that increases the risk of other diseases.",
+      "mentalHealthImpact": "Strongly linked to body dysmorphia, low self-esteem, and social anxiety. Weight-related stigma can lead to avoidant behaviors and depression.",
+      "commonSymptoms": ["Breathlessness", "Increased sweating", "Snoring", "Inability to cope with sudden physical activity"],
+      "searchTerms": ["Overweight", "Obesidad", "High BMI"]
+    },
+    {
+      "code": "F10.10",
+      "displayName": "Alcohol abuse, uncomplicated",
+      "category": "Mental",
+      "definition": "A pattern of drinking that results in harm to one's health, interpersonal relationships, or ability to work.",
+      "physicalHealthImpact": "Liver strain (cirrhosis risk), nutritional deficiencies (B1), and increased risk of cardiovascular disease.",
+      "commonSymptoms": ["Craving", "Loss of control", "Physical dependence", "Tolerance"],
+      "searchTerms": ["Alcoholism", "Drinking problem", "Abuso de alcohol"]
+    }
+  ]
+}

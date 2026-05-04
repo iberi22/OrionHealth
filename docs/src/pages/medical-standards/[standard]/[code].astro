@@ -6,84 +6,75 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
 	const standards = ["icd-10", "loinc", "rxnorm", "snomed"];
-	const files = {
-		"icd-10": "icd10.json",
-		loinc: "loinc.json",
-		rxnorm: "rxnorm.json",
-		snomed: "snomed.json",
-	};
 	const paths = [];
+
 	for (const s of standards) {
+		const fileName =
+			s === "icd-10"
+				? "icd10.json"
+				: s === "loinc"
+					? "loinc.json"
+					: s === "rxnorm"
+						? "rxnorm.json"
+						: "snomed.json";
+
 		try {
-			const content = fs.readFileSync(
-				new URL(`../../../../public/${files[s]}`, import.meta.url),
-				"utf-8",
-			);
+			const content = fs.readFileSync(`public/${fileName}`, "utf-8");
 			const json = JSON.parse(content);
-			for (const item of json.data || []) {
-				paths.push({ params: { standard: s, code: item.code } });
+			const data = json.data || [];
+
+			for (const item of data) {
+				paths.push({
+					params: { standard: s, code: item.code },
+					props: { item, standardName: s.toUpperCase() },
+				});
 			}
-		} catch {}
+		} catch (e) {
+			console.error(`Error loading ${fileName}:`, e);
+		}
 	}
+
 	return paths;
 }
 
-const standardId = Astro.params.standard;
-const code = Astro.params.code;
+const { standard, code } = Astro.params;
+const { item, standardName } = Astro.props;
 
-const standardNames = {
-	"icd-10": {
-		name: "ICD-10",
-		fullName: "International Classification of Diseases",
-		file: "icd10.json",
-		color: "from-blue-500 to-blue-700",
-	},
-	loinc: {
-		name: "LOINC",
-		fullName: "Logical Observation Identifiers",
-		file: "loinc.json",
-		color: "from-emerald-500 to-emerald-700",
-	},
-	rxnorm: {
-		name: "RxNorm",
-		fullName: "Medication Codes",
-		file: "rxnorm.json",
-		color: "from-purple-500 to-purple-700",
-	},
-	snomed: {
-		name: "SNOMED CT",
-		fullName: "Systematized Nomenclature of Medicine",
-		file: "snomed.json",
-		color: "from-amber-500 to-amber-700",
-	},
+// Load additional data for holistic reasoning
+let relatedGuidelines = [];
+let potentialDiagnoses = [];
+let symptomOf = [];
+
+try {
+	const guidelinesContent = fs.readFileSync("public/clinical_guidelines.json", "utf-8");
+	const guidelinesJson = JSON.parse(guidelinesContent);
+	relatedGuidelines = guidelinesJson.guidelines.filter((g: any) =>
+		g.relatedCodes.includes(code),
+	);
+
+	const mappingsContent = fs.readFileSync("public/symptoms_mapping.json", "utf-8");
+	const mappingsJson = JSON.parse(mappingsContent);
+	potentialDiagnoses =
+		mappingsJson.mappings.find((m: any) => m.symptomCode === code)
+			?.potentialDiagnoses || [];
+	symptomOf = mappingsJson.mappings.filter((m: any) =>
+		m.potentialDiagnoses.some((d: any) => d.code === code),
+	);
+} catch (e) {
+	console.error("Error loading supplementary data:", e);
+}
+
+const standardColors = {
+	"icd-10": "from-blue-500 to-blue-700",
+	loinc: "from-emerald-500 to-emerald-700",
+	rxnorm: "from-purple-500 to-purple-700",
+	snomed: "from-amber-500 to-amber-700",
 };
 
-const meta = standardNames[standardId];
-if (!meta) {
-	return Astro.redirect("/OrionHealth/medical-standards", 301);
-}
-
-let item = null;
-let prevItem = null;
-let nextItem = null;
-try {
-	const content = fs.readFileSync(`public/${meta.file}`, "utf-8");
-	const json = JSON.parse(content);
-	const data = json.data || [];
-	const idx = data.findIndex((d) => d.code === code);
-	if (idx >= 0) {
-		item = data[idx];
-		if (idx > 0) prevItem = data[idx - 1];
-		if (idx < data.length - 1) nextItem = data[idx + 1];
-	}
-} catch {}
-
-if (!item) {
-	return Astro.redirect(`/OrionHealth/medical-standards/${standardId}`, 301);
-}
+const color = standardColors[standard as keyof typeof standardColors] || "from-gray-500 to-gray-700";
 ---
 
-<BaseLayout title={`${item.code} ${item.displayName} - ${meta.name} Code`} description={`${meta.name} code ${item.code}: ${item.displayName}. Category: ${item.category}.`}>
+<BaseLayout title={`${item.code} - ${item.displayName} - OrionHealth`} description={`Medical code detail for ${item.code} in ${standardName} standard. Part of OrionHealth medical knowledge base.`}>
   
   <Header lang="en" />
 
@@ -91,72 +82,195 @@ if (!item) {
     <div class="container-custom max-w-4xl mx-auto">
       
       <!-- Breadcrumb -->
-      <div class="flex items-center gap-2 text-sm text-bone-dark opacity-60 mb-6">
+      <div class="flex items-center gap-2 text-sm text-bone-dark opacity-60 mb-8">
         <a href="/OrionHealth/medical-standards" class="hover:text-accent transition-colors">Medical Standards</a>
         <span>/</span>
-        <a href={`/OrionHealth/medical-standards/${standardId}`} class="hover:text-accent transition-colors">{meta.name}</a>
+        <a href={`/OrionHealth/medical-standards/${standard}`} class="hover:text-accent transition-colors">{standardName}</a>
         <span>/</span>
         <span class="text-white">{item.code}</span>
       </div>
 
-      <!-- Code header -->
-      <div class="glass rounded-xl p-8 mb-6">
-        <div class="flex items-center gap-4 mb-4">
-          <div class={`w-16 h-16 rounded-xl bg-gradient-to-br ${meta.color} flex items-center justify-center`}>
-            <span class="text-white font-bold text-2xl">{meta.name.slice(0,2)}</span>
-          </div>
-          <div>
-            <h1 class="text-2xl md:text-4xl font-bold tracking-tight mb-1">
-              <span class="font-mono text-accent">{item.code}</span>
-            </h1>
-            <p class="text-lg md:text-xl text-bone-dark opacity-80">{item.displayName}</p>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap gap-2 mb-4">
-          <span class="text-xs px-3 py-1 rounded-full bg-white/5 border border-accent/20 text-accent">
-            {item.category}
-          </span>
-          <span class="text-xs px-3 py-1 rounded-full bg-white/5 border border-white/10 text-bone-dark">
-            {meta.fullName}
-          </span>
-        </div>
-
-        <!-- Search terms -->
-        {item.searchTerms && item.searchTerms.length > 0 && (
-          <div>
-            <h3 class="text-sm font-bold text-bone-dark opacity-60 mb-2">Términos de búsqueda</h3>
-            <div class="flex flex-wrap gap-2">
-              {item.searchTerms.map(term => (
-                <a href={`/OrionHealth/medical-standards/${standardId}?q=${encodeURIComponent(term)}`}
-                   class="text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-accent/10 border border-white/10 text-bone-dark hover:text-accent transition-all">
-                  {term}
-                </a>
-              ))}
+      <!-- Detail Card -->
+      <div class="glass rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
+        <!-- Header -->
+        <div class={`bg-gradient-to-br ${color} p-8 md:p-12 text-white`}>
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-widest opacity-80 mb-2 block">{standardName} Standard</span>
+              <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-4">{item.code}</h1>
+              <p class="text-xl md:text-2xl font-medium opacity-90 leading-tight max-w-2xl">{item.displayName}</p>
+            </div>
+            <div class="flex-shrink-0">
+               <div class="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                 <span class="text-3xl font-bold">{standardName.slice(0,2)}</span>
+               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
 
-      <!-- Navigation -->
-      <div class="flex justify-between gap-4">
-        {prevItem ? (
-          <a href={`/OrionHealth/medical-standards/${standardId}/${prevItem.code}`} 
-             class="glass rounded-xl p-4 flex-1 hover:border-accent/30 transition-all group">
-            <span class="text-xs text-bone-dark opacity-60 mb-1 block">← Anterior</span>
-            <span class="font-mono text-sm text-accent">{prevItem.code}</span>
-            <span class="text-xs text-bone-dark opacity-60 block truncate">{prevItem.displayName}</span>
+        <!-- Content -->
+        <div class="p-8 md:p-12 space-y-12">
+          
+          <!-- Definition -->
+          {item.definition && (
+            <section>
+              <h2 class="text-xs font-bold text-accent uppercase tracking-widest mb-4">Clinical Definition</h2>
+              <p class="text-lg text-white/90 leading-relaxed italic border-l-4 border-accent pl-6 py-2 bg-accent/5 rounded-r-lg">
+                "{item.definition}"
+              </p>
+            </section>
+          )}
+
+          <!-- Reference Values (LOINC specific) -->
+          {item.referenceValues && (
+            <section>
+              <h2 class="text-xs font-bold text-accent uppercase tracking-widest mb-6">Reference Values & Clinical Hints</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Object.entries(item.referenceValues).map(([key, val]) => (
+                  <div class="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
+                    <span class="text-[10px] text-bone-dark uppercase block mb-1">{key.replace('_', ' ')}</span>
+                    <span class="text-sm text-white font-medium">{val}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Symptoms -->
+          {item.commonSymptoms && (
+            <section>
+              <h2 class="text-xs font-bold text-accent uppercase tracking-widest mb-4">Common Symptoms</h2>
+              <div class="flex flex-wrap gap-2">
+                {item.commonSymptoms.map(symptom => (
+                  <span class="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-200 text-sm">
+                    {symptom}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Holistic Impacts (The Bridge) -->
+          {(item.mentalHealthImpact || item.physicalHealthImpact) && (
+            <section class="p-8 rounded-2xl bg-gradient-to-br from-accent/20 to-transparent border border-accent/30 shadow-inner">
+              <h2 class="flex items-center gap-2 text-xs font-bold text-accent uppercase tracking-widest mb-6">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Holistic Health Perspective
+              </h2>
+              <div class="space-y-6">
+                {item.mentalHealthImpact && (
+                  <div>
+                    <span class="text-[10px] text-accent uppercase font-bold block mb-2 opacity-60">Mental Health Impact</span>
+                    <p class="text-white font-medium leading-relaxed">{item.mentalHealthImpact}</p>
+                  </div>
+                )}
+                {item.physicalHealthImpact && (
+                  <div>
+                    <span class="text-[10px] text-blue-400 uppercase font-bold block mb-2 opacity-60">Physical Health Impact</span>
+                    <p class="text-white font-medium leading-relaxed">{item.physicalHealthImpact}</p>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+
+          <!-- Evidence-Based Guidelines -->
+          {relatedGuidelines.length > 0 && (
+            <section>
+              <h2 class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-6">Evidence-Based Guidelines</h2>
+              <div class="space-y-4">
+                {relatedGuidelines.map((g: any) => (
+                  <div class="p-6 rounded-xl border border-emerald-500/20 bg-emerald-500/5">
+                    <h3 class="text-white font-bold mb-2">{g.topic}</h3>
+                    <p class="text-sm text-bone-dark/80 mb-4">{g.summary}</p>
+                    <div class="flex items-start gap-2 p-3 rounded-lg bg-white/5 border border-white/5">
+                      <span class="text-[10px] font-bold text-accent uppercase py-1">Holistic Tip:</span>
+                      <p class="text-xs text-white/70 italic">{g.holisticFocus}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Symptom Mappings (Differential Reasoning) -->
+          {potentialDiagnoses.length > 0 && (
+            <section>
+              <h2 class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-6">Differential Reasoning Support</h2>
+              <p class="text-xs text-bone-dark opacity-60 mb-4 italic">Potential underlying conditions for this symptom:</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {potentialDiagnoses.map((d: any) => (
+                  <a href={`/OrionHealth/medical-standards/icd-10/${d.code}`} class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-all group">
+                    <div class="flex justify-between items-center mb-1">
+                      <span class="text-xs font-bold text-accent">{d.code}</span>
+                      <span class="text-[10px] text-bone-dark uppercase">Match: {Math.round(d.relevance * 100)}%</span>
+                    </div>
+                    <p class="text-sm text-white font-medium group-hover:text-accent transition-colors">{d.note}</p>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Clinical Context (If this code is a symptom of something else) -->
+          {symptomOf.length > 0 && (
+            <section>
+              <h2 class="text-xs font-bold text-bone-dark uppercase tracking-widest mb-4">Clinical Context</h2>
+              <p class="text-xs text-bone-dark opacity-60 mb-3">Often presents as a secondary symptom in:</p>
+              <div class="flex flex-wrap gap-2">
+                {symptomOf.map((m: any) => (
+                  <span class="px-3 py-1 rounded-lg bg-charcoal/50 border border-white/5 text-xs text-white">
+                    {m.symptom}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Search Terms -->
+          <section>
+            <h2 class="text-xs font-bold text-accent uppercase tracking-widest mb-4">Search Terms & Synonyms</h2>
+            <div class="flex flex-wrap gap-2">
+              {item.searchTerms && item.searchTerms.length > 0 ? (
+                item.searchTerms.map(term => (
+                  <span class="px-3 py-1.5 rounded-lg bg-charcoal/50 border border-white/5 text-bone-dark text-xs hover:border-white/20 transition-colors">
+                    {term}
+                  </span>
+                ))
+              ) : (
+                <span class="text-bone-dark opacity-40 italic text-sm">No synonyms available.</span>
+              )}
+            </div>
+          </section>
+
+          <!-- Standard Details -->
+          <section>
+             <h2 class="text-xs font-bold text-accent uppercase tracking-widest mb-6">Technical Identification</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+                   <span class="text-[10px] text-bone-dark uppercase block mb-1">Resource ID</span>
+                   <code class="text-xs text-accent">med:{standard}:{item.code}</code>
+                </div>
+                <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+                   <span class="text-[10px] text-bone-dark uppercase block mb-1">Data Engine</span>
+                   <span class="text-xs text-white">Local Isar Vector Store</span>
+                </div>
+             </div>
+          </section>
+        </div>
+
+        <!-- Footer Action -->
+        <div class="p-8 bg-white/[0.02] border-t border-white/5 text-center">
+          <p class="text-sm text-bone-dark mb-6 opacity-60">Want to contribute more data or fix info?</p>
+          <a href="https://github.com/iberi22/OrionHealth/issues/new" target="_blank" class="btn-secondary inline-flex items-center gap-2 px-6 py-3 text-xs">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            Propose completion / Edit
           </a>
-        ) : <div class="flex-1"></div>}
-        
-        {nextItem ? (
-          <a href={`/OrionHealth/medical-standards/${standardId}/${nextItem.code}`}
-             class="glass rounded-xl p-4 flex-1 text-right hover:border-accent/30 transition-all group">
-            <span class="text-xs text-bone-dark opacity-60 mb-1 block">Siguiente →</span>
-            <span class="font-mono text-sm text-accent">{nextItem.code}</span>
-            <span class="text-xs text-bone-dark opacity-60 block truncate">{nextItem.displayName}</span>
-          </a>
-        ) : <div class="flex-1"></div>}
+        </div>
       </div>
 
     </div>

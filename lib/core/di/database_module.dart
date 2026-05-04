@@ -28,7 +28,6 @@ abstract class DatabaseModule {
         MemoryEdgeSchema,
         HealthReportSchema,
         MedicationSchema,
-        VitalSignSchema,
         AppointmentSchema,
         AllergySchema,
         HealthRecordSchema,

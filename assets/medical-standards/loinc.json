@@ -1,0 +1,1356 @@
+{
+  "metadata": {
+    "standard": "LOINC",
+    "version": "2.77",
+    "lastUpdated": "2026-05-02",
+    "source": "LOINC.org / Regenstrief Institute + CDC",
+    "license": "LOINC is copyright Regenstrief Institute - Free for use",
+    "totalCount": 145
+  },
+  "data": [
+    {
+      "code": "58410-2",
+      "displayName": "Complete Blood Count panel",
+      "category": "Hematology",
+      "searchTerms": [
+        "hemograma completo",
+        "CBC",
+        "biometría hemática",
+        "cuadro hemático"
+      ]
+    },
+    {
+      "code": "718-7",
+      "displayName": "Hemoglobin",
+      "category": "Hematology",
+      "definition": "A protein in your red blood cells that carries oxygen from your lungs to the rest of your body.",
+      "referenceValues": {
+        "male": "13.8 - 17.2 g/dL",
+        "female": "12.1 - 15.1 g/dL",
+        "low_hint": "Anemia",
+        "high_hint": "Polycythemia"
+      },
+      "searchTerms": [
+        "hemoglobina",
+        "Hb"
+      ]
+    },
+    {
+      "code": "4544-3",
+      "displayName": "Hematocrit",
+      "category": "Hematology",
+      "searchTerms": [
+        "hematocrito",
+        "Hct"
+      ]
+    },
+    {
+      "code": "6690-2",
+      "displayName": "Leukocytes",
+      "category": "Hematology",
+      "searchTerms": [
+        "leucocitos",
+        "glóbulos blancos",
+        "WBC"
+      ]
+    },
+    {
+      "code": "789-8",
+      "displayName": "Erythrocytes",
+      "category": "Hematology",
+      "searchTerms": [
+        "eritrocitos",
+        "glóbulos rojos",
+        "RBC"
+      ]
+    },
+    {
+      "code": "777-3",
+      "displayName": "Platelets",
+      "category": "Hematology",
+      "searchTerms": [
+        "plaquetas",
+        "trombocitos",
+        "PLT"
+      ]
+    },
+    {
+      "code": "26464-8",
+      "displayName": "Neutrophils/100 leukocytes",
+      "category": "Hematology",
+      "searchTerms": [
+        "neutrófilos",
+        "segmentados",
+        "PMN"
+      ]
+    },
+    {
+      "code": "26485-3",
+      "displayName": "Lymphocytes/100 leukocytes",
+      "category": "Hematology",
+      "searchTerms": [
+        "linfocitos"
+      ]
+    },
+    {
+      "code": "26449-9",
+      "displayName": "Monocytes/100 leukocytes",
+      "category": "Hematology",
+      "searchTerms": [
+        "monocitos"
+      ]
+    },
+    {
+      "code": "26444-0",
+      "displayName": "Eosinophils/100 leukocytes",
+      "category": "Hematology",
+      "searchTerms": [
+        "eosinófilos"
+      ]
+    },
+    {
+      "code": "30180-4",
+      "displayName": "Basophils/100 leukocytes",
+      "category": "Hematology",
+      "searchTerms": [
+        "basófilos"
+      ]
+    },
+    {
+      "code": "26499-4",
+      "displayName": "Mean corpuscular volume",
+      "category": "Hematology",
+      "searchTerms": [
+        "VCM",
+        "volumen corpuscular medio"
+      ]
+    },
+    {
+      "code": "28539-5",
+      "displayName": "Mean corpuscular hemoglobin",
+      "category": "Hematology",
+      "searchTerms": [
+        "HCM",
+        "hemoglobina corpuscular media"
+      ]
+    },
+    {
+      "code": "28540-3",
+      "displayName": "Mean corpuscular hemoglobin concentration",
+      "category": "Hematology",
+      "searchTerms": [
+        "CHCM",
+        "concentración Hb corpuscular media"
+      ]
+    },
+    {
+      "code": "30451-9",
+      "displayName": "Red cell distribution width",
+      "category": "Hematology",
+      "searchTerms": [
+        "RDW",
+        "ancho distribución eritrocitaria"
+      ]
+    },
+    {
+      "code": "2339-0",
+      "displayName": "Glucose",
+      "category": "Chemistry",
+      "searchTerms": [
+        "glucosa",
+        "glicemia",
+        "azúcar en sangre"
+      ]
+    },
+    {
+      "code": "2345-7",
+      "displayName": "Glucose, fasting",
+      "category": "Chemistry",
+      "searchTerms": [
+        "glucosa en ayunas",
+        "glicemia en ayunas"
+      ]
+    },
+    {
+      "code": "17861-6",
+      "displayName": "Hemoglobin A1c",
+      "category": "Chemistry",
+      "definition": "Measures average blood sugar levels over the past 3 months by measuring the percentage of glycated hemoglobin.",
+      "referenceValues": {
+        "normal": "< 5.7%",
+        "prediabetes": "5.7% - 6.4%",
+        "diabetes": ">= 6.5%",
+        "target_diabetic": "< 7.0% (individualized)"
+      },
+      "searchTerms": [
+        "hemoglobina A1c",
+        "HbA1c",
+        "hemoglobina glicosilada"
+      ]
+    },
+    {
+      "code": "2160-0",
+      "displayName": "Creatinine",
+      "category": "Chemistry",
+      "searchTerms": [
+        "creatinina"
+      ]
+    },
+    {
+      "code": "3094-0",
+      "displayName": "Urea nitrogen",
+      "category": "Chemistry",
+      "searchTerms": [
+        "BUN",
+        "nitrógeno ureico",
+        "urea"
+      ]
+    },
+    {
+      "code": "33914-3",
+      "displayName": "Glomerular filtration rate",
+      "category": "Chemistry",
+      "searchTerms": [
+        "tasa filtración glomerular",
+        "TFG",
+        "eGFR"
+      ]
+    },
+    {
+      "code": "2075-0",
+      "displayName": "Chloride",
+      "category": "Chemistry",
+      "searchTerms": [
+        "cloro",
+        "cloruro"
+      ]
+    },
+    {
+      "code": "2951-2",
+      "displayName": "Sodium",
+      "category": "Chemistry",
+      "searchTerms": [
+        "sodio",
+        "Na",
+        "natremia"
+      ]
+    },
+    {
+      "code": "2823-3",
+      "displayName": "Potassium",
+      "category": "Chemistry",
+      "searchTerms": [
+        "potasio",
+        "K",
+        "kalemia"
+      ]
+    },
+    {
+      "code": "1963-8",
+      "displayName": "Bicarbonate",
+      "category": "Chemistry",
+      "searchTerms": [
+        "bicarbonato",
+        "CO2 total"
+      ]
+    },
+    {
+      "code": "14627-4",
+      "displayName": "Uric acid",
+      "category": "Chemistry",
+      "definition": "A waste product found in blood. High levels can cause gout or kidney stones.",
+      "referenceValues": {
+        "male": "3.4 - 7.0 mg/dL",
+        "female": "2.4 - 6.0 mg/dL",
+        "high_hint": "Gout (Gota) / Hyperuricemia"
+      },
+      "searchTerms": [
+        "ácido úrico",
+        "urato"
+      ]
+    },
+    {
+      "code": "1742-6",
+      "displayName": "Alanine aminotransferase",
+      "category": "Chemistry",
+      "searchTerms": [
+        "ALT",
+        "TGP",
+        "alanina aminotransferasa"
+      ]
+    },
+    {
+      "code": "1920-8",
+      "displayName": "Aspartate aminotransferase",
+      "category": "Chemistry",
+      "searchTerms": [
+        "AST",
+        "TGO",
+        "aspartato aminotransferasa"
+      ]
+    },
+    {
+      "code": "2324-2",
+      "displayName": "Gamma glutamyl transferase",
+      "category": "Chemistry",
+      "searchTerms": [
+        "GGT",
+        "gamma glutamil transpeptidasa"
+      ]
+    },
+    {
+      "code": "6768-6",
+      "displayName": "Alkaline phosphatase",
+      "category": "Chemistry",
+      "searchTerms": [
+        "fosfatasa alcalina",
+        "FA"
+      ]
+    },
+    {
+      "code": "1975-2",
+      "displayName": "Bilirubin total",
+      "category": "Chemistry",
+      "searchTerms": [
+        "bilirrubina total",
+        "BT"
+      ]
+    },
+    {
+      "code": "14631-6",
+      "displayName": "Bilirubin direct",
+      "category": "Chemistry",
+      "searchTerms": [
+        "bilirrubina directa",
+        "BD"
+      ]
+    },
+    {
+      "code": "14630-8",
+      "displayName": "Bilirubin indirect",
+      "category": "Chemistry",
+      "searchTerms": [
+        "bilirrubina indirecta",
+        "BI"
+      ]
+    },
+    {
+      "code": "2276-4",
+      "displayName": "Ferritin",
+      "category": "Chemistry",
+      "searchTerms": [
+        "ferritina"
+      ]
+    },
+    {
+      "code": "2498-4",
+      "displayName": "Iron",
+      "category": "Chemistry",
+      "searchTerms": [
+        "hierro",
+        "ferremia"
+      ]
+    },
+    {
+      "code": "2501-5",
+      "displayName": "Iron binding capacity",
+      "category": "Chemistry",
+      "searchTerms": [
+        "capacidad de fijación de hierro",
+        "TIBC"
+      ]
+    },
+    {
+      "code": "2274-9",
+      "displayName": "Transferrin",
+      "category": "Chemistry",
+      "searchTerms": [
+        "transferrina"
+      ]
+    },
+    {
+      "code": "25361-1",
+      "displayName": "C reactive protein",
+      "category": "Inflammation",
+      "searchTerms": [
+        "proteína C reactiva",
+        "PCR",
+        "CRP"
+      ]
+    },
+    {
+      "code": "30313-1",
+      "displayName": "High sensitivity CRP",
+      "category": "Inflammation",
+      "searchTerms": [
+        "PCR alta sensibilidad",
+        "hs-CRP"
+      ]
+    },
+    {
+      "code": "11039-0",
+      "displayName": "Erythrocyte sedimentation rate",
+      "category": "Inflammation",
+      "searchTerms": [
+        "VSG",
+        "velocidad de sedimentación",
+        "eritrosedimentación"
+      ]
+    },
+    {
+      "code": "42863-8",
+      "displayName": "Procalcitonin",
+      "category": "Inflammation",
+      "searchTerms": [
+        "procalcitonina",
+        "PCT"
+      ]
+    },
+    {
+      "code": "14749-6",
+      "displayName": "Lactate dehydrogenase",
+      "category": "Chemistry",
+      "searchTerms": [
+        "LDH",
+        "lactato deshidrogenasa"
+      ]
+    },
+    {
+      "code": "2157-6",
+      "displayName": "Creatine kinase",
+      "category": "Chemistry",
+      "searchTerms": [
+        "creatina quinasa",
+        "CK",
+        "CPK"
+      ]
+    },
+    {
+      "code": "2158-4",
+      "displayName": "Creatine kinase MB",
+      "category": "Cardiac",
+      "searchTerms": [
+        "CK-MB",
+        "creatina quinasa MB"
+      ]
+    },
+    {
+      "code": "10839-4",
+      "displayName": "Troponin I.cardiac",
+      "category": "Cardiac",
+      "searchTerms": [
+        "troponina I",
+        "TnI",
+        "troponina cardíaca"
+      ]
+    },
+    {
+      "code": "6598-7",
+      "displayName": "Troponin T.cardiac",
+      "category": "Cardiac",
+      "searchTerms": [
+        "troponina T",
+        "TnT"
+      ]
+    },
+    {
+      "code": "2085-9",
+      "displayName": "Cholesterol total",
+      "category": "Lipids",
+      "definition": "The total amount of cholesterol in your blood, including LDL and HDL.",
+      "referenceValues": {
+        "desirable": "< 200 mg/dL",
+        "borderline_high": "200 - 239 mg/dL",
+        "high": ">= 240 mg/dL"
+      },
+      "searchTerms": [
+        "colesterol total"
+      ]
+    },
+    {
+      "code": "35184-1",
+      "displayName": "LDL cholesterol",
+      "category": "Lipids",
+      "searchTerms": [
+        "LDL",
+        "colesterol malo",
+        "lipoproteína baja densidad"
+      ]
+    },
+    {
+      "code": "14646-4",
+      "displayName": "HDL cholesterol",
+      "category": "Lipids",
+      "searchTerms": [
+        "HDL",
+        "colesterol bueno",
+        "lipoproteína alta densidad"
+      ]
+    },
+    {
+      "code": "14927-8",
+      "displayName": "Triglycerides",
+      "category": "Lipids",
+      "searchTerms": [
+        "triglicéridos"
+      ]
+    },
+    {
+      "code": "LP38698-5",
+      "displayName": "Lipoprotein (a)",
+      "category": "Lipids",
+      "searchTerms": [
+        "lipoproteína (a)",
+        "Lp(a)"
+      ]
+    },
+    {
+      "code": "6301-6",
+      "displayName": "INR in Blood",
+      "category": "Coagulation",
+      "searchTerms": [
+        "INR",
+        "tiempo de protrombina",
+        "TP",
+        "PT"
+      ]
+    },
+    {
+      "code": "5964-2",
+      "displayName": "Partial thromboplastin time",
+      "category": "Coagulation",
+      "searchTerms": [
+        "PTT",
+        "TTP",
+        "tiempo parcial de tromboplastina"
+      ]
+    },
+    {
+      "code": "3255-7",
+      "displayName": "Fibrinogen",
+      "category": "Coagulation",
+      "searchTerms": [
+        "fibrinógeno"
+      ]
+    },
+    {
+      "code": "3182-3",
+      "displayName": "D dimer",
+      "category": "Coagulation",
+      "searchTerms": [
+        "dímero D",
+        "D-dímero"
+      ]
+    },
+    {
+      "code": "5792-7",
+      "displayName": "Prostate specific antigen",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "antígeno prostático específico",
+        "PSA",
+        "antígeno prostático"
+      ]
+    },
+    {
+      "code": "6728-0",
+      "displayName": "Alpha fetoprotein",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "alfa fetoproteína",
+        "AFP"
+      ]
+    },
+    {
+      "code": "16798-1",
+      "displayName": "CA-125",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "CA-125",
+        "antígeno canceroso 125"
+      ]
+    },
+    {
+      "code": "2039-6",
+      "displayName": "CA 19-9",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "CA 19-9",
+        "antígeno carbohidrato 19-9"
+      ]
+    },
+    {
+      "code": "10404-2",
+      "displayName": "CEA",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "CEA",
+        "antígeno carcinoembrionario",
+        "ACE"
+      ]
+    },
+    {
+      "code": "LP37857-8",
+      "displayName": "CA 15-3",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "CA 15-3"
+      ]
+    },
+    {
+      "code": "33762-6",
+      "displayName": "Thyroid stimulating hormone",
+      "category": "Hormones",
+      "searchTerms": [
+        "TSH",
+        "tirotropina",
+        "hormona estimulante tiroides"
+      ]
+    },
+    {
+      "code": "34565-0",
+      "displayName": "Free T4",
+      "category": "Hormones",
+      "searchTerms": [
+        "T4 libre",
+        "tiroxina libre",
+        "FT4"
+      ]
+    },
+    {
+      "code": "30552-4",
+      "displayName": "Free T3",
+      "category": "Hormones",
+      "searchTerms": [
+        "T3 libre",
+        "triyodotironina libre",
+        "FT3"
+      ]
+    },
+    {
+      "code": "LP16747-0",
+      "displayName": "Vitamin D total",
+      "category": "Vitamins",
+      "searchTerms": [
+        "vitamina D",
+        "25-hidroxivitamina D",
+        "calcifediol"
+      ]
+    },
+    {
+      "code": "2132-9",
+      "displayName": "Vitamin B12",
+      "category": "Vitamins",
+      "searchTerms": [
+        "vitamina B12",
+        "cobalamina"
+      ]
+    },
+    {
+      "code": "2284-8",
+      "displayName": "Folate",
+      "category": "Vitamins",
+      "searchTerms": [
+        "folato",
+        "ácido fólico",
+        "folato sérico"
+      ]
+    },
+    {
+      "code": "2624-6",
+      "displayName": "Folic acid",
+      "category": "Vitamins",
+      "searchTerms": [
+        "ácido fólico",
+        "folato RBC"
+      ]
+    },
+    {
+      "code": "5802-4",
+      "displayName": "Cortisol",
+      "category": "Hormones",
+      "searchTerms": [
+        "cortisol"
+      ]
+    },
+    {
+      "code": "30063-2",
+      "displayName": "Estradiol",
+      "category": "Hormones",
+      "searchTerms": [
+        "estradiol",
+        "E2"
+      ]
+    },
+    {
+      "code": "2839-9",
+      "displayName": "Progesterone",
+      "category": "Hormones",
+      "searchTerms": [
+        "progesterona"
+      ]
+    },
+    {
+      "code": "2813-4",
+      "displayName": "Testosterone",
+      "category": "Hormones",
+      "searchTerms": [
+        "testosterona"
+      ]
+    },
+    {
+      "code": "LP14531-7",
+      "displayName": "Prolactin",
+      "category": "Hormones",
+      "searchTerms": [
+        "prolactina",
+        "PRL"
+      ]
+    },
+    {
+      "code": "30521-9",
+      "displayName": "Luteinizing hormone",
+      "category": "Hormones",
+      "searchTerms": [
+        "LH",
+        "hormona luteinizante"
+      ]
+    },
+    {
+      "code": "29991-5",
+      "displayName": "Follicle stimulating hormone",
+      "category": "Hormones",
+      "searchTerms": [
+        "FSH",
+        "hormona folículo estimulante"
+      ]
+    },
+    {
+      "code": "27133-2",
+      "displayName": "Parathyroid hormone",
+      "category": "Hormones",
+      "searchTerms": [
+        "PTH",
+        "paratohormona",
+        "hormona paratiroidea"
+      ]
+    },
+    {
+      "code": "LP38535-9",
+      "displayName": "Anti-CCP",
+      "category": "Autoimmunity",
+      "searchTerms": [
+        "anti-CCP",
+        "anticuerpo péptido citrulinado"
+      ]
+    },
+    {
+      "code": "LP38645-6",
+      "displayName": "Rheumatoid factor",
+      "category": "Autoimmunity",
+      "searchTerms": [
+        "factor reumatoide",
+        "FR"
+      ]
+    },
+    {
+      "code": "17721-2",
+      "displayName": "Antinuclear antibodies",
+      "category": "Autoimmunity",
+      "searchTerms": [
+        "ANA",
+        "anticuerpos antinucleares"
+      ]
+    },
+    {
+      "code": "LP32188-0",
+      "displayName": "Anti-dsDNA",
+      "category": "Autoimmunity",
+      "searchTerms": [
+        "anti-DNA",
+        "anti-dsDNA"
+      ]
+    },
+    {
+      "code": "5408-3",
+      "displayName": "Pregnancy test",
+      "category": "Hormones",
+      "searchTerms": [
+        "hCG",
+        "gonadotropina coriónica",
+        "prueba embarazo",
+        "beta hCG"
+      ]
+    },
+    {
+      "code": "33214-9",
+      "displayName": "Interleukin 6",
+      "category": "Inflammation",
+      "searchTerms": [
+        "interleucina 6",
+        "IL-6"
+      ]
+    },
+    {
+      "code": "17429-7",
+      "displayName": "Uric acid, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "ácido úrico en orina"
+      ]
+    },
+    {
+      "code": "5806-5",
+      "displayName": "Microalbumin, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "microalbúmina urinaria"
+      ]
+    },
+    {
+      "code": "20471-8",
+      "displayName": "Albumin, serum",
+      "category": "Chemistry",
+      "searchTerms": [
+        "albúmina sérica"
+      ]
+    },
+    {
+      "code": "1753-3",
+      "displayName": "Albumin, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "albúmina en orina",
+        "proteinuria"
+      ]
+    },
+    {
+      "code": "5778-6",
+      "displayName": "Protein total, serum",
+      "category": "Chemistry",
+      "searchTerms": [
+        "proteínas totales"
+      ]
+    },
+    {
+      "code": "29584-6",
+      "displayName": "C-peptide",
+      "category": "Hormones",
+      "searchTerms": [
+        "péptido C",
+        "C-péptido"
+      ]
+    },
+    {
+      "code": "26960-9",
+      "displayName": "Insulin",
+      "category": "Hormones",
+      "searchTerms": [
+        "insulina",
+        "insulinemia"
+      ]
+    },
+    {
+      "code": "55718-3",
+      "displayName": "Homocysteine",
+      "category": "Chemistry",
+      "searchTerms": [
+        "homocisteína"
+      ]
+    },
+    {
+      "code": "LP38368-4",
+      "displayName": "Lipase",
+      "category": "Chemistry",
+      "searchTerms": [
+        "lipasa"
+      ]
+    },
+    {
+      "code": "1798-8",
+      "displayName": "Amylase",
+      "category": "Chemistry",
+      "searchTerms": [
+        "amilasa"
+      ]
+    },
+    {
+      "code": "LP38573-9",
+      "displayName": "Magnesium",
+      "category": "Chemistry",
+      "searchTerms": [
+        "magnesio",
+        "Mg"
+      ]
+    },
+    {
+      "code": "2777-1",
+      "displayName": "Phosphorus",
+      "category": "Chemistry",
+      "searchTerms": [
+        "fósforo",
+        "fosfato",
+        "P"
+      ]
+    },
+    {
+      "code": "2885-2",
+      "displayName": "Calcium total",
+      "category": "Chemistry",
+      "searchTerms": [
+        "calcio total",
+        "Ca"
+      ]
+    },
+    {
+      "code": "17864-0",
+      "displayName": "Calcium ionized",
+      "category": "Chemistry",
+      "searchTerms": [
+        "calcio iónico",
+        "Ca++"
+      ]
+    },
+    {
+      "code": "LP38599-4",
+      "displayName": "Beta-2 microglobulin",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "beta-2 microglobulina"
+      ]
+    },
+    {
+      "code": "LP38596-0",
+      "displayName": "Free light chains, kappa",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "cadenas ligeras libres kappa"
+      ]
+    },
+    {
+      "code": "LP38597-8",
+      "displayName": "Free light chains, lambda",
+      "category": "Tumor Markers",
+      "searchTerms": [
+        "cadenas ligeras libres lambda"
+      ]
+    },
+    {
+      "code": "LP38402-1",
+      "displayName": "Haptoglobin",
+      "category": "Chemistry",
+      "searchTerms": [
+        "haptoglobina"
+      ]
+    },
+    {
+      "code": "LP19930-3",
+      "displayName": "Lactate",
+      "category": "Chemistry",
+      "searchTerms": [
+        "lactato",
+        "ácido láctico"
+      ]
+    },
+    {
+      "code": "2701-1",
+      "displayName": "Oxygen saturation",
+      "category": "Blood Gas",
+      "searchTerms": [
+        "saturación de oxígeno",
+        "SpO2",
+        "SatO2"
+      ]
+    },
+    {
+      "code": "19222-8",
+      "displayName": "pO2, blood",
+      "category": "Blood Gas",
+      "searchTerms": [
+        "presión parcial oxígeno",
+        "PaO2"
+      ]
+    },
+    {
+      "code": "2019-8",
+      "displayName": "pCO2, blood",
+      "category": "Blood Gas",
+      "searchTerms": [
+        "presión parcial CO2",
+        "PaCO2"
+      ]
+    },
+    {
+      "code": "19213-7",
+      "displayName": "pH, blood",
+      "category": "Blood Gas",
+      "searchTerms": [
+        "pH sanguíneo"
+      ]
+    },
+    {
+      "code": "LP40562-8",
+      "displayName": "H. pylori stool antigen",
+      "category": "Microbiology",
+      "searchTerms": [
+        "antígeno H. pylori en heces"
+      ]
+    },
+    {
+      "code": "LP38264-4",
+      "displayName": "Clostridium difficile toxin A+B",
+      "category": "Microbiology",
+      "searchTerms": [
+        "Clostridium difficile",
+        "C. diff",
+        "toxina A y B"
+      ]
+    },
+    {
+      "code": "LP39252-1",
+      "displayName": "Stool culture",
+      "category": "Microbiology",
+      "searchTerms": [
+        "coprocultivo",
+        "cultivo de heces"
+      ]
+    },
+    {
+      "code": "LP39195-2",
+      "displayName": "Urine culture",
+      "category": "Microbiology",
+      "searchTerms": [
+        "urocultivo",
+        "cultivo de orina"
+      ]
+    },
+    {
+      "code": "LP39052-5",
+      "displayName": "Blood culture",
+      "category": "Microbiology",
+      "searchTerms": [
+        "hemocultivo",
+        "cultivo de sangre"
+      ]
+    },
+    {
+      "code": "LP38986-4",
+      "displayName": "Cytomegalovirus IgG",
+      "category": "Serology",
+      "searchTerms": [
+        "CMV IgG",
+        "citomegalovirus IgG"
+      ]
+    },
+    {
+      "code": "LP38987-2",
+      "displayName": "Cytomegalovirus IgM",
+      "category": "Serology",
+      "searchTerms": [
+        "CMV IgM",
+        "citomegalovirus IgM"
+      ]
+    },
+    {
+      "code": "LP38802-4",
+      "displayName": "Epstein-Barr VCA IgG",
+      "category": "Serology",
+      "searchTerms": [
+        "EBV VCA IgG",
+        "Epstein-Barr IgG"
+      ]
+    },
+    {
+      "code": "LP38803-2",
+      "displayName": "Epstein-Barr VCA IgM",
+      "category": "Serology",
+      "searchTerms": [
+        "EBV VCA IgM",
+        "Epstein-Barr IgM"
+      ]
+    },
+    {
+      "code": "LP38527-6",
+      "displayName": "Hepatitis B surface antigen",
+      "category": "Serology",
+      "searchTerms": [
+        "HBsAg",
+        "antígeno hepatitis B"
+      ]
+    },
+    {
+      "code": "LP38529-2",
+      "displayName": "Hepatitis B core antibody",
+      "category": "Serology",
+      "searchTerms": [
+        "anti-HBc",
+        "anticuerpo core hepatitis B"
+      ]
+    },
+    {
+      "code": "LP38530-0",
+      "displayName": "Hepatitis B surface antibody",
+      "category": "Serology",
+      "searchTerms": [
+        "anti-HBs",
+        "anticuerpo superficie hepatitis B"
+      ]
+    },
+    {
+      "code": "LP38535-9",
+      "displayName": "Hepatitis C antibody",
+      "category": "Serology",
+      "searchTerms": [
+        "anti-HCV",
+        "anticuerpo hepatitis C"
+      ]
+    },
+    {
+      "code": "LP38604-2",
+      "displayName": "HIV 1+2 antibody",
+      "category": "Serology",
+      "searchTerms": [
+        "VIH",
+        "HIV",
+        "ELISA VIH",
+        "anticuerpos VIH"
+      ]
+    },
+    {
+      "code": "LP38605-9",
+      "displayName": "HIV p24 antigen",
+      "category": "Serology",
+      "searchTerms": [
+        "antígeno p24",
+        "VIH p24"
+      ]
+    },
+    {
+      "code": "LP38576-2",
+      "displayName": "Syphilis serology",
+      "category": "Serology",
+      "searchTerms": [
+        "sífilis",
+        "VDRL",
+        "RPR",
+        "FTA-ABS"
+      ]
+    },
+    {
+      "code": "LP39221-6",
+      "displayName": "Toxoplasma IgG",
+      "category": "Serology",
+      "searchTerms": [
+        "Toxoplasma IgG",
+        "toxoplasmosis IgG"
+      ]
+    },
+    {
+      "code": "LP39222-4",
+      "displayName": "Toxoplasma IgM",
+      "category": "Serology",
+      "searchTerms": [
+        "Toxoplasma IgM",
+        "toxoplasmosis IgM"
+      ]
+    },
+    {
+      "code": "LP38809-9",
+      "displayName": "Rubella IgG",
+      "category": "Serology",
+      "searchTerms": [
+        "rubeola IgG",
+        "rubéola IgG"
+      ]
+    },
+    {
+      "code": "LP38810-7",
+      "displayName": "Rubella IgM",
+      "category": "Serology",
+      "searchTerms": [
+        "rubeola IgM",
+        "rubéola IgM"
+      ]
+    },
+    {
+      "code": "LP39928-7",
+      "displayName": "Chagas serology",
+      "category": "Serology",
+      "searchTerms": [
+        "Chagas",
+        "Trypanosoma cruzi",
+        "enfermedad de Chagas"
+      ]
+    },
+    {
+      "code": "LP39541-7",
+      "displayName": "Dengue IgG",
+      "category": "Serology",
+      "searchTerms": [
+        "dengue IgG"
+      ]
+    },
+    {
+      "code": "LP39542-5",
+      "displayName": "Dengue IgM",
+      "category": "Serology",
+      "searchTerms": [
+        "dengue IgM"
+      ]
+    },
+    {
+      "code": "LP39521-9",
+      "displayName": "Dengue NS1 antigen",
+      "category": "Serology",
+      "searchTerms": [
+        "dengue NS1",
+        "antígeno NS1"
+      ]
+    },
+    {
+      "code": "LP38840-4",
+      "displayName": "COVID-19 RNA PCR",
+      "category": "Microbiology",
+      "searchTerms": [
+        "COVID-19",
+        "SARS-CoV-2",
+        "PCR COVID",
+        "coronavirus"
+      ]
+    },
+    {
+      "code": "LP41803-5",
+      "displayName": "COVID-19 IgG antibody",
+      "category": "Serology",
+      "searchTerms": [
+        "COVID IgG",
+        "SARS-CoV-2 IgG"
+      ]
+    },
+    {
+      "code": "LP41804-3",
+      "displayName": "COVID-19 IgM antibody",
+      "category": "Serology",
+      "searchTerms": [
+        "COVID IgM",
+        "SARS-CoV-2 IgM"
+      ]
+    },
+    {
+      "code": "24336-0",
+      "displayName": "Urinalysis complete panel",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "uroanálisis",
+        "examen general de orina",
+        "EGO",
+        "orina completa"
+      ]
+    },
+    {
+      "code": "25428-8",
+      "displayName": "Color, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "color de orina"
+      ]
+    },
+    {
+      "code": "32167-9",
+      "displayName": "Clarity, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "aspecto de orina",
+        "claridad urinaria"
+      ]
+    },
+    {
+      "code": "5802-4",
+      "displayName": "Specific gravity, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "densidad urinaria",
+        "gravedad específica"
+      ]
+    },
+    {
+      "code": "2758-1",
+      "displayName": "pH, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "pH de orina"
+      ]
+    },
+    {
+      "code": "5767-9",
+      "displayName": "Glucose, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "glucosuria",
+        "glucosa en orina"
+      ]
+    },
+    {
+      "code": "5792-7",
+      "displayName": "Protein, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "proteinuria",
+        "proteína en orina"
+      ]
+    },
+    {
+      "code": "5794-3",
+      "displayName": "Ketones, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "cetonuria",
+        "cetonas en orina",
+        "cuerpos cetónicos"
+      ]
+    },
+    {
+      "code": "5770-3",
+      "displayName": "Bilirubin, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "bilirrubinuria",
+        "bilirrubina en orina"
+      ]
+    },
+    {
+      "code": "5801-6",
+      "displayName": "Urobilinogen, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "urobilinógeno"
+      ]
+    },
+    {
+      "code": "5799-2",
+      "displayName": "Nitrite, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "nitritos en orina"
+      ]
+    },
+    {
+      "code": "5788-5",
+      "displayName": "Leukocyte esterase, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "esterasa leucocitaria",
+        "leucocitos en orina"
+      ]
+    },
+    {
+      "code": "13944-2",
+      "displayName": "Blood, urine",
+      "category": "Urinalysis",
+      "searchTerms": [
+        "hematuria",
+        "sangre en orina"
+      ]
+    }
+  ]
+}

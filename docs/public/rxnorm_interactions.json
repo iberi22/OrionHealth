@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "standard": "RxNorm-Interactions",
+    "version": "1.0",
+    "lastUpdated": "2026-05-03",
+    "totalCount": 4
+  },
+  "interactions": [
+    {
+      "drugs": ["314076", "1191"],
+      "names": ["Lisinopril", "Aspirin"],
+      "severity": "Moderate",
+      "description": "Aspirin may reduce the blood pressure lowering effect of Lisinopril. High doses of Aspirin can also increase the risk of kidney damage.",
+      "holisticNote": "Requires monitoring of blood pressure and kidney function markers (Creatinine)."
+    },
+    {
+      "drugs": ["11289", "4917"],
+      "names": ["Warfarin", "Aspirin"],
+      "severity": "High",
+      "description": "Increased risk of severe bleeding. Both drugs have anti-clotting effects.",
+      "holisticNote": "Critical: Avoid combination unless specifically directed by a cardiologist."
+    },
+    {
+      "drugs": ["36437", "7646"],
+      "names": ["Sildenafil", "Nitroglycerin"],
+      "severity": "Critical",
+      "description": "May cause a life-threatening drop in blood pressure.",
+      "holisticNote": "EMERGENCY: Do not take together. Can lead to fainting or heart attack."
+    },
+    {
+      "drugs": ["35827", "2582"],
+      "names": ["Sertraline", "Tramadol"],
+      "severity": "High",
+      "description": "Increased risk of Serotonin Syndrome.",
+      "holisticNote": "Mental health medication interacting with pain medication. Can cause confusion, rapid heart rate, and fever."
+    }
+  ]
+}

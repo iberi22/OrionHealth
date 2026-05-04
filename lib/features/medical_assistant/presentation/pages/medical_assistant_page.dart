@@ -7,6 +7,8 @@ import '../../domain/entities/ai_response.dart';
 import '../widgets/query_input.dart';
 import '../widgets/insight_card.dart';
 import '../widgets/lab_result_card.dart';
+import '../../../onboarding/application/sync_cubit.dart';
+import '../../../../core/di/injection.dart';
 
 /// Main page for the AI Medical Assistant
 class MedicalAssistantPage extends StatelessWidget {
@@ -14,8 +16,11 @@ class MedicalAssistantPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => MedicalAssistantCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => MedicalAssistantCubit()),
+        BlocProvider(create: (_) => getIt<SyncCubit>()),
+      ],
       child: const _MedicalAssistantView(),
     );
   }
@@ -28,13 +33,45 @@ class _MedicalAssistantView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Medical Assistant'),
+        title: const Text('Asistente Médico Orion'),
         centerTitle: true,
         actions: [
+          BlocConsumer<SyncCubit, SyncState>(
+            listener: (context, state) {
+              if (state is SyncSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Sincronización exitosa')),
+                );
+              } else if (state is SyncFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error: ${state.error}')),
+                );
+              }
+            },
+            builder: (context, state) {
+              if (state is SyncInProgress) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                );
+              }
+              return IconButton(
+                icon: const Icon(Icons.sync),
+                onPressed: () => context.read<SyncCubit>().syncMedicalStandards(),
+                tooltip: 'Sincronizar estándares',
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => context.read<MedicalAssistantCubit>().reset(),
-            tooltip: 'New query',
+            tooltip: 'Nueva consulta',
           ),
         ],
       ),
@@ -95,20 +132,20 @@ class _IdleContent extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'How can I help with your health today?',
+            '¿Cómo puedo ayudarte con tu salud hoy?',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 12),
           Text(
-            'I can analyze your lab results, vital signs, and provide '
-            'health insights based on clinical guidelines.',
+            'Puedo analizar tus resultados de laboratorio, signos vitales y proporcionarte '
+            'información de salud basada en guías clínicas.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: Colors.grey[600],
             ),
           ),
           const SizedBox(height: 24),
           const Text(
-            'Try asking about:',
+            'Prueba preguntando sobre:',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
@@ -116,10 +153,10 @@ class _IdleContent extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              _QuickQueryChip('Glucose levels'),
-              _QuickQueryChip('Blood pressure'),
-              _QuickQueryChip('Cholesterol analysis'),
-              _QuickQueryChip('Medication interactions'),
+              _QuickQueryChip('Niveles de glucosa'),
+              _QuickQueryChip('Presión arterial'),
+              _QuickQueryChip('Análisis de colesterol'),
+              _QuickQueryChip('Interacciones de medicamentos'),
             ],
           ),
         ],
@@ -210,7 +247,7 @@ class _ResponseContent extends StatelessWidget {
                       const Spacer(),
                       if (response.confidence != null)
                         Text(
-                          '${(response.confidence! * 100).toInt()}% confidence',
+                          '${(response.confidence! * 100).toInt()}% de confianza',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 12,
@@ -232,7 +269,7 @@ class _ResponseContent extends StatelessWidget {
           // Insights section
           if (response.insights.isNotEmpty) ...[
             const Text(
-              'Medical Insights',
+              'Hallazgos Médicos',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -249,7 +286,7 @@ class _ResponseContent extends StatelessWidget {
           if (labInsights.isNotEmpty) ...[
             const SizedBox(height: 16),
             const Text(
-              'Lab Results',
+              'Resultados de Laboratorio',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,

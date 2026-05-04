@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class OcrService {
@@ -5,11 +8,22 @@ abstract class OcrService {
 }
 
 @LazySingleton(as: OcrService)
-class OcrServiceStub implements OcrService {
+class MlKitOcrService implements OcrService {
   @override
   Future<String> extractText(String filePath) async {
-    // Simulate processing delay
-    await Future.delayed(const Duration(seconds: 2));
-    return "Texto extraído simulado del archivo: $filePath\n\nPacienta presenta niveles normales de glucosa...";
+    final file = File(filePath);
+    if (!await file.exists()) {
+      throw FileSystemException('OCR source file not found', filePath);
+    }
+
+    final inputImage = InputImage.fromFilePath(filePath);
+    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+
+    try {
+      final recognizedText = await textRecognizer.processImage(inputImage);
+      return recognizedText.text.trim();
+    } finally {
+      await textRecognizer.close();
+    }
   }
 }
