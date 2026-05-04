@@ -1,99 +1,73 @@
-# OrionHealth: Comprehensive Development Backlog & Issues
+# TASK_GH_ISSUES.md — OrionHealth Issue Tracker
 
-This document lists all identified gaps and missing features required to reach the "Ultimate Holistic Health Assistant" vision.
+## ✅ CLOSED
 
----
-
-## 🟢 DATA: MEDICAL KNOWLEDGE (The "Brain")
-
-### [ISSUE-01] Massive Expansion of Medical Standards (UMLS Integration)
-**Status:** 🟢 COMPLETED
-- [x] Scripted extraction from NLM Clinical Tables API for 16,500+ codes.
-- [x] Comprehensive coverage of Cardiology, Oncology, and Neurology.
-- [x] Expanded RxNorm (3,000+) and LOINC (1,000+) datasets.
-
-### [ISSUE-02] Hierarchical RAG (HiRAG) Support
-**Status:** 🟢 COMPLETED
-Current JSON is a flat list. The AI needs the hierarchy to summarize.
-- [x] Add `parentCode` and `childCodes` fields to ICD-10 JSON.
-- [x] Scripted building of hierarchy for 12,000+ ICD-10 codes.
-- [x] Goal: Allow the AI to navigate from "Diabetes" (General) to "Type 2 with Neuropathy" (Specific).
-
-### [ISSUE-03] Holistic Mapping (Physical-Mental Bridge)
-**Status:** 🟢 IN PROGRESS
-- **Task:** For all 5,000+ codes, generate `mentalHealthImpact` (for physical diseases) and `physicalManifestation` (for mental disorders).
-- **Goal:** Enable the "Holistic Reasoning" feature requested by the user.
-
-### [ISSUE-04] Global Reference Values for Labs (LOINC)
-**Status:** 🟡 IMPORTANT
-- **Task:** Standardize and add `referenceValues` for all LOINC codes including Age/Gender variations.
-- **Goal:** Enable "Lab Result Interpretation" feature.
+| # | Title | Commit |
+|---|---|---|
+| #01 | Massive Data Expansion — ICD-10 (12,549), RxNorm (3,022), LOINC (967) | `7b2a3e7` |
+| #02 | Data Deduplication & Hierarchy Scripts | `ca3ca39` |
+| #03 | Holistic Health Bridge — 9,588 cross-links | `ca3ca39` |
+| #04 | Agentic Reasoning Loop — SymphonyClinicalReasonerService | `ca3ca39` |
+| #05 | Reasoning Trace UI — Citations section (Referencias y Estándares) | `ca3ca39` |
 
 ---
 
-## 🔵 FEATURES: CORE AGENT
+## 🔴 HIGH PRIORITY — Open
 
-### [ISSUE-05] Drug-Drug Interaction (DDI) Engine
-**Status:** 🔴 MISSING
-The assistant cannot currently warn about dangerous medication combinations.
-- **Task:** Integrate an RxNorm-based interaction dataset (JSON) and a local check in `MedicalKnowledgeRepository`.
-- **Goal:** Patient safety and advanced pharmacy reasoning.
+### #06 · Real User Context Integration
+**Status:** Open — `_getUserContext()` returns empty stubs  
+**Required:** Wire `isar_agent_memory` to return real lab/vital/medication history  
+**Blocked by:** None  
 
-### [ISSUE-06] Evidence-Based Clinical Guidelines (Local RAG)
-**Status:** 🟡 IMPORTANT
-- **Task:** Vectorize PDF/Markdown summaries of WHO and CDC clinical guidelines.
-- **Goal:** The AI should cite guidelines when suggesting wellness steps.
+### #11 · injection.config.dart InvalidType Error
+**Status:** Open — `InvalidType` at line 203 in generated DI config  
+**Required:** Identify which `@injectable` service is causing invalid type generation  
+**Blocked by:** None  
 
-### [ISSUE-07] Symptom-to-Disease Knowledge Graph
-**Status:** 🟡 IMPORTANT
-- **Task:** Create a `symptoms_mapping.json` linking symptoms (SNOMED) to likely diagnoses (ICD-10) with "Relevance Scores".
-- **Goal:** Diagnostic reasoning support.
-
----
-
-## 🟣 UI/UX & INFRASTRUCTURE
-
-### [ISSUE-08] Multi-language Knowledge Base (ES/EN)
-**Status:** 🟡 IMPORTANT
-Currently, definitions are mostly in English.
-- **Task:** Implement a dual-language JSON schema or automatic local translation for `definition` and `searchTerms`.
-- **Goal:** Native support for Spanish-speaking users.
-
-### [ISSUE-09] Real-time Indexing Progress UI
-**Status:** 🟢 IN PROGRESS
-- **Task:** Add a progress bar in the `SyncStep` to show the % of the Vector Store re-indexing process.
-- **Goal:** Improve UX during large data updates.
-
-### [ISSUE-10] Documentation: "Medical Code Deep-Links"
-**Status:** 🟢 COMPLETED
-- [x] Create detail pages for all codes.
-- [ ] Add "Related Codes" (Cross-linking) section in the detail page.
+### #14 · Expand Unit Test Coverage
+**Status:** Open — Only 2 tests (ClinicalReasonerService)  
+**Required:** Tests for MedicalAssistantCubit, MedicalLlmAdapter, InsightCard widget  
+**Blocked by:** None  
 
 ---
 
+## 🟡 MEDIUM PRIORITY — Open
+
+### #07 · Remove Dead Code: _refineWithLabInsights
+**Status:** Open — W-02 in analyzer  
+**Required:** Delete unused method from `medical_llm_adapter.dart`  
+
+### #08 · Logger Service (replace print statements)
+**Status:** Open — 3× `print()` in `isar_vector_store_service.dart`  
+**Required:** Implement `AppLogger` class or use `package:logger`  
+
+### #09 · BLE Scan Subscription Cleanup
+**Status:** Open — `_scanSubscription` unused in `ble_sharing_service.dart`  
+**Required:** Either implement BLE scan lifecycle or remove the field  
+
+### #10 · Holistic Category Validation
+**Status:** Open  
+**Required:** Validate that `category == 'Mental'` correctly identifies all mental health codes in the 16,500+ ICD-10 dataset  
+
+### #13 · PII Anonymizer Integration in Agentic Path
+**Status:** Open  
+**Required:** Ensure `PromptScrubber.scrub()` is called on the symptom text before it reaches the reasoner  
+
 ---
 
-## 🛠️ COMPLETED & STABILIZED (v1.0.0)
+## 🟢 LOW PRIORITY — Open
 
-### [ISSUE-11] 1.0.0 Production Stabilization
-**Status:** 🟢 CLOSED
-- [x] Fix syntax errors in `JsonMedicalKnowledgeRepository`.
-- [x] Fix compilation errors in BLE and Asset repositories.
-- [x] Regenerate DI (Dependency Injection) with `build_runner`.
-- [x] Implement real OCR with ML Kit.
-- [x] Implement real Report Generation service.
-- [x] Full Spanish UI (typing indicators, welcome messages).
-
-### [ISSUE-12] Wikipedia Data Enrichment (Quick Wins)
-**Status:** 🔵 ACTIVE
-- [x] Scrape definitions and Wikipedia URLs for existing ICD-10 codes (partial).
-- [x] Scrape RxNorm definitions for the medication catalog (partial).
-- [ ] Implement local caching for scraped data to avoid re-scraping.
-- [ ] Finalize enrichment for all 600+ existing codes.
+### #12 · analyzeSymptoms Performance Optimization
+**Status:** Open  
+**Required:** O(n×m) full scan over all mappings per query — add BM25 token index for O(1) lookup  
+**Estimate:** 2-3h  
 
 ---
 
-## 🛠️ EXTERNAL REPOS TO EXTRACT FROM:
-1. [NXOntology Data](https://github.com/related-sciences/nxontology-data): For relationships and graph structures.
-2. [Medplum ValueSets](https://github.com/medplum/medplum): For FHIR-compatible terminology lists.
-3. [NLM Clinical Tables API](https://clinicaltables.nlm.nih.gov/): For official 2024 definitions.
+## 📋 Phase 4 Scope (Next Session)
+
+1. Fix #11 (DI InvalidType)
+2. Implement #06 (Real user memory)
+3. Address #07, #08, #09 cleanup
+4. Start #14 (test coverage expansion)
+5. Start #12 (performance indexing)
