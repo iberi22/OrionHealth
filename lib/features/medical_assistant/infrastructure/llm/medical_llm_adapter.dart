@@ -87,6 +87,11 @@ class MedicalLlmAdapter {
         'canDiagnose': ConfidenceThreshold.canDiagnose(confidence),
         'needsMoreData': confidence < 0.7,
         'insightsCount': insights.length,
+        'citations': insights
+            .where((i) => i.evidence?.containsKey('code') ?? false)
+            .map((i) => '${i.evidence!['standard']}: ${i.evidence!['code']}')
+            .toSet()
+            .toList(),
       },
     );
   }
@@ -261,6 +266,11 @@ class MedicalLlmAdapter {
     if (context['vitals'].isNotEmpty) {
       buffer.writeln('• Signos Vitales: ${context['vitals']}');
     }
+    if (context.containsKey('holisticSummary') && context['holisticSummary'].toString().isNotEmpty) {
+      buffer.writeln();
+      buffer.writeln('CONTEXTO DE SALUD HOLÍSTICA (CONEXIÓN FÍSICO-MENTAL):');
+      buffer.writeln(context['holisticSummary']);
+    }
     buffer.writeln();
     if (insights.isNotEmpty) {
       buffer.writeln('HALLAZGOS DETECTADOS POR EL SISTEMA:');
@@ -278,8 +288,9 @@ class MedicalLlmAdapter {
     buffer.writeln('3. SALUD INTEGRAL: Orienta tus respuestas tanto a la salud física como MENTAL. Si es pertinente, menciona el impacto del estrés o el bienestar emocional.');
     buffer.writeln('4. Si la pregunta es general o sobre el sistema, responde directamente de forma útil.');
     buffer.writeln('5. Si la pregunta es médica, usa los hallazgos detectados para explicar posibles causas SIN dar diagnósticos definitivos.');
-    buffer.writeln('6. Siempre recomienda consultar a un profesional de salud.');
-    buffer.writeln('7. Si no tienes suficiente información para una duda médica, solicita más datos amablemente.');
+    buffer.writeln('6. CITACIONES: Menciona explícitamente los códigos de estándares médicos (ICD-10, RxNorm) cuando los uses para sustentar tu razonamiento.');
+    buffer.writeln('7. Siempre recomienda consultar a un profesional de salud.');
+    buffer.writeln('8. Si no tienes suficiente información para una duda médica, solicita más datos amablemente.');
 
     return buffer.toString();
   }

@@ -245,6 +245,17 @@ class BleSharingService {
     return result;
   }
 
+  Future<void> startAdvertising(String nodeId) async {
+    _stateController.add(BleServiceState.advertising(nodeId));
+    // Stub implementation for now
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<void> stopAdvertising() async {
+    _stateController.add(BleServiceState.ready());
+    // Stub implementation for now
+  }
+
   void dispose() {
     stopAdvertising();
     disconnect();

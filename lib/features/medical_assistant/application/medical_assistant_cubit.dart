@@ -7,10 +7,11 @@ import '../domain/entities/medical_query.dart';
 import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
 import '../domain/services/medical_analysis_service.dart';
-import '../../local_agent/infrastructure/llm_service.dart';
 import '../infrastructure/llm/medical_llm_adapter.dart';
+import '../domain/services/clinical_reasoner_service.dart';
 import '../../../core/services/privacy_anonymizer.dart';
 import '../../../core/di/injection.dart';
+import '../../../features/local_agent/infrastructure/llm_service.dart';
 import '../infrastructure/analysis/lab_interpreter.dart';
 import '../infrastructure/analysis/vital_sign_analyzer.dart';
 import '../infrastructure/analysis/risk_calculator.dart';
@@ -59,6 +60,7 @@ class MedicalAssistantError extends MedicalAssistantState {
 class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   final MedicalLlmAdapter _llmAdapter;
   final MedicalAnalysisService _analysisService;
+  final ClinicalReasonerService _reasoner;
   // ignore: unused_field
   final LabInterpreter _labInterpreter;
   // ignore: unused_field
@@ -73,6 +75,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
     LabInterpreter? labInterpreter,
     VitalSignAnalyzer? vitalAnalyzer,
     RiskCalculator? riskCalculator,
+    ClinicalReasonerService? reasoner,
     MemoryGraph? memory,
     LlmService? llmService,
   })  : _llmAdapter = llmAdapter ??
@@ -84,6 +87,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
         _labInterpreter = labInterpreter ?? LabInterpreter(),
         _vitalAnalyzer = vitalAnalyzer ?? VitalSignAnalyzer(),
         _riskCalculator = riskCalculator ?? getIt<RiskCalculator>(),
+        _reasoner = reasoner ?? getIt<ClinicalReasonerService>(),
         _memory = memory,
         super(const MedicalAssistantIdle());
 
@@ -112,7 +116,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
 
       if (isGreeting) {
         final greetingResponse = AiMedicalResponse(
-          id: 'greeting_${queryId}',
+          id: 'greeting_$queryId',
           queryId: queryId,
           answer: '¡Hola! Soy tu asistente médico de OrionHealth. ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre tus análisis de sangre, signos vitales o síntomas generales.',
           confidence: 1.0,
@@ -169,18 +173,47 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
         conditions: chronicConditions,
       );
 
-      final allInsights = [...labInsights, ...vitalInsights, ...riskInsights];
+      // ---- Symptom Analysis (Agentic Reasoner) ----
+      emit(const MedicalAssistantLoading(message: 'Razonando sobre tus síntomas...'));
+      final diagnosticMatches = await _reasoner.analyzeSymptoms(question);
+      final diagnosticInsights = diagnosticMatches.map((m) => MedicalInsight(
+        id: 'diag_${m.code.code}',
+        title: 'Posible asociación: ${m.code.displayName}',
+        description: '${m.reasoning} (Confianza: ${(m.score * 100).toInt()}%)',
+        severity: m.score >= 0.8 ? InsightSeverity.alert : InsightSeverity.warning,
+        category: InsightCategory.symptomAnalysis,
+        generatedAt: DateTime.now(),
+        guidelineReference: m.code.code,
+        evidence: {
+          'code': m.code.code,
+          'standard': m.code.standard,
+          'holistic_mental': m.code.mentalHealthImpact,
+          'holistic_physical': m.code.physicalHealthImpact,
+          'score': m.score,
+        },
+      )).toList();
+
+      // ---- Holistic Synthesis ----
+      final matchedCodes = diagnosticMatches.map((m) => m.code).toList();
+      final holisticSummary = _reasoner.synthesizeHolisticSummary(matchedCodes);
+
+      final allInsights = [
+        ...labInsights, 
+        ...vitalInsights, 
+        ...riskInsights,
+        ...diagnosticInsights
+      ];
 
       // ---- Generate Response with confidence enforcement ----
       emit(const MedicalAssistantLoading(message: 'Generando respuesta...'));
       final response = await _llmAdapter.generateResponse(
         query: query,
         insights: allInsights,
-        userContext: userContext,
+        userContext: {
+          ...userContext,
+          'holisticSummary': holisticSummary,
+        },
       );
-
-      // ---- Enforce confidence rules in metadata ----
-      final confidence = response.confidence ?? 0.0;
 
       // emit the response directly, the MedicalLlmAdapter now handles safety phrasing via LLM
       emit(MedicalAssistantResponse(response: response, query: query));
@@ -190,6 +223,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   }
 
   /// When confidence is very low, always ask for more data.
+  // ignore: unused_element
   AiMedicalResponse _addDataRequest(
     AiMedicalResponse baseResponse,
     String question,

@@ -3,13 +3,7 @@
 
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:isar/isar.dart';
 import 'injection.config.dart';
-import '../../features/settings/application/llm_settings_cubit.dart';
-import '../../features/settings/domain/repositories/llm_settings_repository.dart';
-import '../../features/settings/domain/services/device_capability_service.dart';
-import '../../features/settings/infrastructure/repositories/llm_settings_repository_impl.dart';
-import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart';
 
 final getIt = GetIt.instance;
 

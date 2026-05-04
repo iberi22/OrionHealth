@@ -125,7 +125,7 @@ class SyncService {
       version: '2024-03-04',
     ),
     SyncConfig(
-      datasetName: 'interactions',
+      datasetName: 'rxnorm_interactions',
       localFileName: 'rxnorm_interactions.json',
       githubRepo: 'iberi22/OrionHealth',
       version: '1.0',

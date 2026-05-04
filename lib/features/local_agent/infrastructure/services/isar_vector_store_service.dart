@@ -25,6 +25,7 @@ class IsarVectorStoreService implements VectorStoreService {
   /// Index all medical standards (ICD-10, LOINC, RxNorm, SNOMED)
   /// into the vector store at startup. Safe to call multiple times.
   /// Errors are caught and logged — DI chain will not break.
+  @override
   @PostConstruct(preResolve: true)
   Future<void> indexMedicalStandards({bool force = false}) async {
     try {

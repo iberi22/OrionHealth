@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:injectable/injectable.dart';
@@ -189,6 +190,21 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
       'indexedTerms': _termIndex.length,
       'indexedCategories': _categoryIndex.length,
     };
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> checkInteractions(List<String> drugCodes) async {
+    _ensureInitialized();
+    // For simplicity in the asset repo, we return empty as interactions 
+    // are primarily managed in the Json repository/Sync service.
+    return [];
+  }
+
+  @override
+  List<Map<String, dynamic>> getSymptomMappings() {
+    // Asset repository does not load symptom mappings (file-system only feature).
+    // Returns empty list; the JsonMedicalKnowledgeRepository is used on desktop/server.
+    return const [];
   }
 
   List<MedicalCode> _searchByTokens(String query) {

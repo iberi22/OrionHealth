@@ -5,7 +5,7 @@
     "lastUpdated": "2026-05-02",
     "source": "SNOMED International / NLM UMLS",
     "sourceUrl": "https://www.snomed.org/",
-    "totalCount": 87
+    "totalCount": 85
   },
   "data": [
     {
@@ -458,14 +458,6 @@
       ]
     },
     {
-      "code": "237835009",
-      "displayName": "Metabolic alkalosis",
-      "category": "Metabolic",
-      "searchTerms": [
-        "alcalosis metabólica"
-      ]
-    },
-    {
       "code": "192127007",
       "displayName": "Major depressive disorder",
       "category": "Psychiatry",
@@ -699,15 +691,6 @@
       "category": "Allergy/Immunology",
       "searchTerms": [
         "alergia alimentaria"
-      ]
-    },
-    {
-      "code": "230690007",
-      "displayName": "Atopic dermatitis",
-      "category": "Dermatology",
-      "searchTerms": [
-        "dermatitis atópica",
-        "eczema"
       ]
     },
     {

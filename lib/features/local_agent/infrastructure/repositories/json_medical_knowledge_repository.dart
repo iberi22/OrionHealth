@@ -40,6 +40,8 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
 
   /// Loaded drug-drug interactions.
   List<Map<String, dynamic>> _interactions = [];
+  List<Map<String, dynamic>> _classInteractions = [];
+  List<Map<String, dynamic>> _symptomMappings = [];
 
   bool _initialized = false;
 
@@ -104,6 +106,9 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
         } catch (e) {
           stderr.writeln('Warning: Failed to parse $standard: $e');
         }
+      }
+    }
+
     // Load Interactions
     String? interactionsJson;
     final interactionsFileName = 'rxnorm_interactions.json';
@@ -124,8 +129,34 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
       try {
         final decoded = jsonDecode(interactionsJson) as Map<String, dynamic>;
         _interactions = List<Map<String, dynamic>>.from(decoded['interactions'] ?? []);
+        _classInteractions = List<Map<String, dynamic>>.from(decoded['classInteractions'] ?? []);
       } catch (e) {
         stderr.writeln('Warning: Failed to parse interactions: $e');
+      }
+    }
+
+    // Load Symptoms Mapping
+    String? symptomsJson;
+    final symptomsFileName = 'symptoms_mapping.json';
+    if (supportPath != null) {
+      final syncedFile = File(p.join(supportPath, symptomsFileName));
+      if (await syncedFile.exists()) {
+        symptomsJson = await syncedFile.readAsString();
+      }
+    }
+    if (symptomsJson == null) {
+      final filePath = p.join(_basePath, symptomsFileName);
+      final file = File(filePath);
+      if (await file.exists()) {
+        symptomsJson = await file.readAsString();
+      }
+    }
+    if (symptomsJson != null) {
+      try {
+        final decoded = jsonDecode(symptomsJson) as Map<String, dynamic>;
+        _symptomMappings = List<Map<String, dynamic>>.from(decoded['mappings'] ?? []);
+      } catch (e) {
+        stderr.writeln('Warning: Failed to parse symptoms: $e');
       }
     }
 
@@ -282,20 +313,50 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
 
     final results = <Map<String, dynamic>>[];
     final codes = drugCodes.map((c) => c.toLowerCase()).toSet();
-
+    
+    // 1. Direct drug-drug interactions
     for (final interaction in _interactions) {
       final requiredDrugs = (interaction['drugs'] as List<dynamic>)
           .map((d) => d.toString().toLowerCase())
           .toSet();
 
-      // If all drugs in the interaction are present in the provided list
       if (requiredDrugs.every((d) => codes.contains(d))) {
         results.add(interaction);
       }
     }
 
+    // 2. Class-based interactions
+    if (_classInteractions.isNotEmpty) {
+      // Get classes for each provided drug
+      final drugClasses = <String>{};
+      for (final code in drugCodes) {
+        final med = _codeIndex[code.toLowerCase()];
+        if (med != null && med.category.isNotEmpty) {
+          drugClasses.add(med.category.toLowerCase());
+        }
+      }
+
+      for (final interaction in _classInteractions) {
+        final requiredClasses = (interaction['classes'] as List<dynamic>)
+            .map((c) => c.toString().toLowerCase())
+            .toSet();
+
+        if (requiredClasses.every((c) => drugClasses.contains(c))) {
+          // Avoid duplicate results if a direct interaction was already found
+          results.add(interaction);
+        }
+      }
+    }
+
     return results;
   }
+
+  @override
+  List<Map<String, dynamic>> getSymptomMappings() {
+    return _symptomMappings;
+  }
+
+  List<MedicalCode> _searchByTokens(String query) {
     final tokens = _tokenize(query);
     if (tokens.isEmpty) return [];
 

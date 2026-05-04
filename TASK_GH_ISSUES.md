@@ -7,16 +7,17 @@ This document lists all identified gaps and missing features required to reach t
 ## 🟢 DATA: MEDICAL KNOWLEDGE (The "Brain")
 
 ### [ISSUE-01] Massive Expansion of Medical Standards (UMLS Integration)
-**Status:** 🔴 CRITICAL
-Currently, we only have ~600 codes. We need to reach the "Core Clinical Set":
-- **Task:** Scripted extraction from UMLS Metathesaurus for the top 5,000 most frequent ICD-10-CM, LOINC, and RxNorm codes.
-- **Goal:** Comprehensive coverage of Cardiology, Oncology, and Neurology.
+**Status:** 🟢 COMPLETED
+- [x] Scripted extraction from NLM Clinical Tables API for 16,500+ codes.
+- [x] Comprehensive coverage of Cardiology, Oncology, and Neurology.
+- [x] Expanded RxNorm (3,000+) and LOINC (1,000+) datasets.
 
 ### [ISSUE-02] Hierarchical RAG (HiRAG) Support
-**Status:** 🟡 IMPORTANT
+**Status:** 🟢 COMPLETED
 Current JSON is a flat list. The AI needs the hierarchy to summarize.
-- **Task:** Add `parentCode` and `childCodes` fields to ICD-10 and SNOMED JSONs.
-- **Goal:** Allow the AI to navigate from "Diabetes" (General) to "Type 2 with Neuropathy" (Specific).
+- [x] Add `parentCode` and `childCodes` fields to ICD-10 JSON.
+- [x] Scripted building of hierarchy for 12,000+ ICD-10 codes.
+- [x] Goal: Allow the AI to navigate from "Diabetes" (General) to "Type 2 with Neuropathy" (Specific).
 
 ### [ISSUE-03] Holistic Mapping (Physical-Mental Bridge)
 **Status:** 🟢 IN PROGRESS
@@ -67,6 +68,28 @@ Currently, definitions are mostly in English.
 **Status:** 🟢 COMPLETED
 - [x] Create detail pages for all codes.
 - [ ] Add "Related Codes" (Cross-linking) section in the detail page.
+
+---
+
+---
+
+## 🛠️ COMPLETED & STABILIZED (v1.0.0)
+
+### [ISSUE-11] 1.0.0 Production Stabilization
+**Status:** 🟢 CLOSED
+- [x] Fix syntax errors in `JsonMedicalKnowledgeRepository`.
+- [x] Fix compilation errors in BLE and Asset repositories.
+- [x] Regenerate DI (Dependency Injection) with `build_runner`.
+- [x] Implement real OCR with ML Kit.
+- [x] Implement real Report Generation service.
+- [x] Full Spanish UI (typing indicators, welcome messages).
+
+### [ISSUE-12] Wikipedia Data Enrichment (Quick Wins)
+**Status:** 🔵 ACTIVE
+- [x] Scrape definitions and Wikipedia URLs for existing ICD-10 codes (partial).
+- [x] Scrape RxNorm definitions for the medication catalog (partial).
+- [ ] Implement local caching for scraped data to avoid re-scraping.
+- [ ] Finalize enrichment for all 600+ existing codes.
 
 ---
 
