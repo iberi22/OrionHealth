@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../ble_sharing/domain/ble_sharing_service.dart';
 
@@ -107,12 +108,12 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF38BDF8).withOpacity(0.1),
+            color: const Color(0xFF38BDF8).withValues(alpha: 0.1),
             blurRadius: 40,
             spreadRadius: 5,
           )
@@ -131,7 +132,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
                   Text('Real-time BLE Sync', style: TextStyle(color: Colors.white60, fontSize: 14)),
                 ],
               ),
-              Icon(Icons.favorite, color: Colors.redAccent.withOpacity(0.8), size: 32),
+              Icon(Icons.favorite, color: Colors.redAccent.withValues(alpha: 0.8), size: 32),
             ],
           ),
           const SizedBox(height: 40),
@@ -153,13 +154,17 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
             height: 60,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.03),
+              color: Colors.white.withValues(alpha: 0.03),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Center(
               child: Text(
                 _statusMessage ?? 'Device offline',
-                style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 13, italic: true),
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.4), 
+                  fontSize: 13, 
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
           ),
@@ -175,7 +180,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.sensors, size: 64, color: Colors.white.withOpacity(0.2)),
+            Icon(Icons.sensors, size: 64, color: Colors.white.withValues(alpha: 0.2)),
             const SizedBox(height: 16),
             const Text('Connect a clinical device\nto see live vitals', style: TextStyle(color: Colors.white, fontSize: 16)),
           ],
@@ -193,18 +198,18 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.03),
+            color: Colors.white.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.05)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
           ),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             leading: CircleAvatar(
-              backgroundColor: const Color(0xFF38BDF8).withOpacity(0.1),
+              backgroundColor: const Color(0xFF38BDF8).withValues(alpha: 0.1),
               child: const Icon(Icons.bluetooth, color: Color(0xFF38BDF8)),
             ),
             title: Text(device.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            subtitle: Text(device.type, style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12)),
+            subtitle: Text(device.type, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
             trailing: TextButton(
               onPressed: () => _connectToDevice(device),
               child: const Text('CONNECT'),
@@ -216,9 +221,4 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
   }
 }
 
-class Timer {
-  static void periodic(Duration duration, void Function(Timer timer) callback) {
-    // Stub for simulation
-  }
-  void cancel() {}
-}
+// Removed local Timer stub as we now use dart:async

@@ -11,8 +11,11 @@ abstract class MedicalKnowledgeRepository {
   /// Called once at startup (or on-demand).
   Future<void> initialize({bool force = false});
 
-  /// Checks for interactions between a list of RxNorm drug codes.
+  /// Checks for interactions between the given drug codes.
   Future<List<Map<String, dynamic>>> checkInteractions(List<String> drugCodes);
+
+  /// Gets all symptom-to-disease mappings.
+  List<Map<String, dynamic>> getSymptomMappings();
 
   /// Whether the repository has been initialized.
   bool get isInitialized;

@@ -266,6 +266,33 @@ class _ResponseContent extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
+          // Citations section
+          if (response.metadata != null && response.metadata!.containsKey('citations')) ...[
+            const Text(
+              'Referencias y Estándares',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: (response.metadata!['citations'] as List<dynamic>).map((citation) {
+                return Chip(
+                  avatar: const Icon(Icons.bookmark_outline, size: 16, color: Colors.teal),
+                  label: Text(
+                    citation.toString(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  backgroundColor: Colors.teal.withValues(alpha: 0.05),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+          ],
+
           // Insights section
           if (response.insights.isNotEmpty) ...[
             const Text(
