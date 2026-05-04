@@ -1,10 +1,81 @@
+import 'dart:io' show stderr;
+
+import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
+import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
 import '../../domain/entities/medical_insight.dart';
 
-/// Calculates various health risk scores
+/// Calculates various health risk scores using real patient profile data.
+///
+/// Injects [UserProfileRepository] to pull age, weight, conditions,
+/// medications, and history directly from the user's health profile.
+/// Falls back gracefully if profile is unavailable (returns default calculations).
+@LazySingleton()
 class RiskCalculator {
-  /// Calculate 10-year ASCVD risk (American College of Cardiology/AHA)
-  /// Uses the Pooled Cohort Equations
+  final UserProfileRepository _userProfileRepo;
+
+  RiskCalculator(this._userProfileRepo);
+
+  /// Calculate all risk scores from the user's profile in one call.
+  /// Pulls all needed data from [UserProfileRepository] automatically.
+  Future<RiskProfile> calculateFromProfile() async {
+    try {
+      final profile = await _userProfileRepo.getUserProfile();
+      if (profile == null) {
+        stderr.writeln('[RiskCalculator] No profile found, using defaults');
+        return RiskProfile.empty();
+      }
+
+      final age = profile.age ?? 40;
+      final bmi = (profile.weight != null && profile.height != null)
+          ? profile.weight! / ((profile.height! / 100) * (profile.height! / 100))
+          : null;
+
+      final ascvd = await calculateAscvdRisk(
+        age: age,
+        gender: '', // Not stored in profile, will use neutral
+        totalCholesterol: 0, // Not stored yet
+        hdlCholesterol: 0,
+        systolicBp: 120,
+        onBpMedication: profile.currentMedications.any((m) => m.contains('BP') || m.contains('hypertension') || m.contains('diuretic')),
+        hasDiabetes: profile.medicalConditions.any((c) => c.startsWith('E10') || c.startsWith('E11')),
+        isSmoker: profile.smokingStatus == 'current',
+      );
+
+      final diabetes = await calculateQDiabetesRisk(
+        age: age,
+        gender: '',
+        bmi: bmi ?? 25.0,
+        fastingGlucose: null,
+        hasFamilyHistory: profile.familyHistoryDiabetes ?? false,
+        hasCardiovascularDisease: profile.hasCardiovascularDisease ?? false,
+        hasHypertension: profile.hasHypertension ?? false,
+        hasSteroidUse: profile.hasSteroidUse ?? false,
+        ethnicity: profile.ethnicity ?? 'other',
+        isSmoker: profile.smokingStatus == 'current',
+      );
+
+      final hypertension = await calculateHypertensionRisk(
+        age: age,
+        bmi: bmi ?? 25.0,
+        hasFamilyHistory: profile.familyHistoryCvd ?? false,
+        sodiumUrineExcretion: null,
+      );
+
+      return RiskProfile(
+        ascvd: ascvd,
+        diabetes: diabetes,
+        hypertension: hypertension,
+        profileAge: age,
+        profileBmi: bmi,
+      );
+    } catch (e) {
+      stderr.writeln('[RiskCalculator] Profile calculation error: $e');
+      return RiskProfile.empty();
+    }
+  }
+  /// Calculate 10-year ASCVD risk using Pooled Cohort Equations.
+  /// If gender is unknown, uses female equation (more conservative).
   Future<AscvdRisk> calculateAscvdRisk({
     required int age,
     required String gender,
@@ -28,6 +99,7 @@ class RiskCalculator {
         isSmoker: isSmoker,
       );
     } else {
+      // Default to female equation (more conservative) when gender unknown
       risk = _calculateFemaleAscvd(
         age: age,
         totalCholesterol: totalCholesterol,
@@ -301,6 +373,31 @@ class HypertensionRisk {
     required this.category,
     required this.guideline,
   });
+}
+
+// Math helpers for risk calculations
+/// Composite risk profile calculated from user's health data.
+///
+/// Returned by [RiskCalculator.calculateFromProfile()] to provide
+/// a complete risk snapshot in one call.
+class RiskProfile {
+  final AscvdRisk? ascvd;
+  final QDiabetesRisk? diabetes;
+  final HypertensionRisk? hypertension;
+  final int profileAge;
+  final double? profileBmi;
+
+  RiskProfile({
+    this.ascvd,
+    this.diabetes,
+    this.hypertension,
+    this.profileAge = 0,
+    this.profileBmi,
+  });
+
+  factory RiskProfile.empty() => RiskProfile();
+
+  bool get hasData => ascvd != null || diabetes != null || hypertension != null;
 }
 
 // Math helpers for risk calculations

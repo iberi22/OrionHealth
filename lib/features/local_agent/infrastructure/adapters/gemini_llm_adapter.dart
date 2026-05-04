@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/services/privacy_anonymizer.dart';
@@ -11,19 +12,20 @@ import '../../domain/services/llm_adapter.dart';
 @LazySingleton(as: LlmAdapter)
 @Named('gemini')
 class GeminiLlmAdapter implements LlmAdapter {
-  final GenerativeModel? _model;
   final PromptScrubber _scrubber;
   final UserProfileRepository _userProfileRepository;
 
   GeminiLlmAdapter({
-    String? apiKey,
     required PromptScrubber scrubber,
     required UserProfileRepository userProfileRepository,
-  })  : _model = apiKey != null && apiKey.isNotEmpty
-            ? GenerativeModel(model: 'gemini-pro', apiKey: apiKey)
-            : null,
-        _scrubber = scrubber,
+  })  : _scrubber = scrubber,
         _userProfileRepository = userProfileRepository;
+
+  String get _apiKey => Platform.environment['GEMINI_API_KEY'] ?? '';
+
+  GenerativeModel? get _model => _apiKey.isNotEmpty
+      ? GenerativeModel(model: 'gemini-pro', apiKey: _apiKey)
+      : null;
 
   @override
   String get modelName => 'gemini-pro';
@@ -40,7 +42,8 @@ class GeminiLlmAdapter implements LlmAdapter {
       throw SecurityException('Cloud API calls are disabled for privacy.');
     }
 
-    if (_model == null) {
+    final model = _model;
+    if (model == null) {
       throw StateError(
         'Gemini API key not configured. Cannot generate summaries.',
       );
@@ -48,7 +51,7 @@ class GeminiLlmAdapter implements LlmAdapter {
 
     try {
       final scrubbedPrompt = await _scrubber.scrub(prompt, apiName: 'gemini');
-      final response = await _model.generateContent([Content.text(scrubbedPrompt)]);
+      final response = await model.generateContent([Content.text(scrubbedPrompt)]);
       return response.text ?? '';
     } catch (e) {
       throw Exception('Failed to generate summary: $e');

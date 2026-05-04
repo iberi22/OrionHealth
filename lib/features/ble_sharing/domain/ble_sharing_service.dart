@@ -4,19 +4,23 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class BleSharingService {
+  // Standard GATT Service UUIDs
+  static const String heartRateServiceUuid = '180d';
+  static const String glucoseServiceUuid = '1808';
+  static const String thermometerServiceUuid = '1809';
+  static const String pulseOximeterServiceUuid = '1822';
+
   static const String serviceUuid = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
   static const String txCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
   static const String rxCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a9';
-  static const Duration connectionTimeout = Duration(seconds: 30);
-  static const Duration transferTimeout = Duration(minutes: 3);
 
   bool _isInitialized = false;
-  bool _isAdvertising = false;
-  bool _isScanning = false;
   String? _connectedDeviceId;
   Uint8List? _sessionKey;
+  StreamSubscription<List<ScanResult>>? _scanSubscription;
 
   final _stateController = StreamController<BleServiceState>.broadcast();
   Stream<BleServiceState> get stateStream => _stateController.stream;
@@ -26,36 +30,56 @@ class BleSharingService {
 
   Future<void> initialize() async {
     if (_isInitialized) return;
+    if (await FlutterBluePlus.isSupported == false) {
+      throw Exception('Bluetooth not supported on this device');
+    }
     _isInitialized = true;
-    _stateController.add(BleServiceState.ready());
-  }
-
-  Future<void> startAdvertising(String nodeId) async {
-    if (!_isInitialized) await initialize();
-    if (_isAdvertising) return;
-    _isAdvertising = true;
-    _sessionKey = _generateSessionKey();
-    _stateController.add(BleServiceState.advertising(nodeId));
-  }
-
-  Future<void> stopAdvertising() async {
-    if (!_isAdvertising) return;
-    _isAdvertising = false;
-    _sessionKey = null;
-    _stateController.add(BleServiceState.ready());
   }
 
   Future<List<BleDevice>> scanForDevices({
-    Duration timeout = const Duration(seconds: 10),
+    Duration timeout = const Duration(seconds: 15),
   }) async {
     if (!_isInitialized) await initialize();
-    if (_isScanning) return [];
-    _isScanning = true;
+    
+    final results = <BleDevice>[];
     _stateController.add(BleServiceState.scanning());
-    await Future.delayed(timeout);
-    _isScanning = false;
+
+    // Start scanning
+    await FlutterBluePlus.startScan(
+      timeout: timeout,
+      withServices: [
+        Guid(heartRateServiceUuid),
+        Guid(glucoseServiceUuid),
+        Guid(thermometerServiceUuid),
+        Guid(serviceUuid), // OrionHealth P2P
+      ],
+    );
+
+    // Listen for results
+    await for (final scanResults in FlutterBluePlus.scanResults) {
+      for (final r in scanResults) {
+        final deviceType = _detectDeviceType(r.advertisementData.serviceUuids);
+        results.add(BleDevice(
+          id: r.device.remoteId.str,
+          name: r.device.platformName.isNotEmpty ? r.device.platformName : 'Unknown Device',
+          rssi: r.rssi,
+          type: deviceType,
+        ));
+      }
+      if (results.length > 20) break; // Limit results
+    }
+
     _stateController.add(BleServiceState.ready());
-    return [];
+    return results.toSet().toList(); // Remove duplicates
+  }
+
+  String _detectDeviceType(List<Guid> uuids) {
+    final strUuids = uuids.map((u) => u.str.toLowerCase()).toList();
+    if (strUuids.contains(heartRateServiceUuid)) return 'Heart Rate Monitor';
+    if (strUuids.contains(glucoseServiceUuid)) return 'Glucose Meter';
+    if (strUuids.contains(thermometerServiceUuid)) return 'Health Thermometer';
+    if (strUuids.contains(serviceUuid)) return 'OrionHealth Node';
+    return 'Medical Device';
   }
 
   Future<bool> connect(String deviceId) async {
@@ -128,6 +152,44 @@ class BleSharingService {
     }
   }
 
+  Future<void> startMedicalDataStream(String deviceId) async {
+    final device = BluetoothDevice(remoteId: DeviceIdentifier(deviceId));
+    
+    // Connect if not connected
+    await device.connect();
+    
+    final services = await device.discoverServices();
+    for (final s in services) {
+      if (s.uuid.str.toLowerCase() == heartRateServiceUuid) {
+        for (final c in s.characteristics) {
+          if (c.uuid.str.toLowerCase() == '2a37') { // Heart Rate Measurement
+            await c.setNotifyValue(true);
+            c.lastValueStream.listen((value) {
+              if (value.isNotEmpty) {
+                final hr = _parseHeartRate(value);
+                // In a real app, we would emit this to a vital signs cubit
+                // ignore: avoid_print
+                print('HR Received: $hr bpm');
+              }
+            });
+          }
+        }
+      }
+    }
+  }
+
+  int _parseHeartRate(List<int> data) {
+    if (data.isEmpty) return 0;
+    final flags = data[0];
+    final is16bit = (flags & 0x01) != 0;
+    if (is16bit && data.length >= 3) {
+      return (data[2] << 8) | data[1];
+    } else if (data.length >= 2) {
+      return data[1];
+    }
+    return 0;
+  }
+
   Future<MedicalSharePackage?> receiveData() async {
     if (_connectedDeviceId == null) return null;
     _stateController.add(BleServiceState.transferring('Receiving...'));
@@ -195,8 +257,14 @@ class BleDevice {
   final String id;
   final String name;
   final int? rssi;
+  final String type;
 
-  const BleDevice({required this.id, required this.name, this.rssi});
+  const BleDevice({
+    required this.id,
+    required this.name,
+    this.rssi,
+    this.type = 'Unknown',
+  });
 }
 
 class BleServiceState {

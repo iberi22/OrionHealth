@@ -3,6 +3,7 @@ import 'dart:io' show File, stderr;
 
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../../domain/entities/medical_code.dart';
 import '../../domain/repositories/medical_knowledge_repository.dart';
@@ -17,7 +18,9 @@ import '../../domain/repositories/medical_knowledge_repository.dart';
 /// Once loaded, all codes are indexed in memory for fast lookup.
 @LazySingleton(as: MedicalKnowledgeRepository)
 class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
-  final String basePath;
+  JsonMedicalKnowledgeRepository();
+
+  String get _basePath => 'medical-standards';
 
   /// In-memory flat index of ALL codes across all standards.
   List<MedicalCode> _allCodes = [];
@@ -35,16 +38,18 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
   /// Index by standard → codes.
   Map<String, List<MedicalCode>> _standardIndex = {};
 
-  bool _initialized = false;
+  /// Loaded drug-drug interactions.
+  List<Map<String, dynamic>> _interactions = [];
 
-  JsonMedicalKnowledgeRepository({this.basePath = 'medical-standards'});
+  bool _initialized = false;
 
   @override
   bool get isInitialized => _initialized;
 
   @override
-  Future<void> initialize() async {
-    if (_initialized) return;
+  Future<void> initialize({bool force = false}) async {
+    if (_initialized && !force) return;
+    _initialized = false; // Reset to allow reload
 
     final stopwatch = Stopwatch()..start();
 
@@ -56,17 +61,38 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
     };
 
     final allCodes = <MedicalCode>[];
+    
+    // Get application support directory for synced standards
+    String? supportPath;
+    try {
+      final dir = await getApplicationSupportDirectory();
+      supportPath = p.join(dir.path, 'medical_standards', 'standards_cache');
+    } catch (_) {}
 
     for (final entry in files.entries) {
       final standard = entry.key;
       final fileName = entry.value;
-      final filePath = p.join(basePath, fileName);
+      
+      // 1. Try Synced cache first (from SyncService)
+      String? jsonString;
+      if (supportPath != null) {
+        final syncedFile = File(p.join(supportPath, fileName));
+        if (await syncedFile.exists()) {
+          jsonString = await syncedFile.readAsString();
+        }
+      }
 
-      try {
-        // Try loading from the file system (relative to cwd or bundle)
+      // 2. Try Local file system (dev environment)
+      if (jsonString == null) {
+        final filePath = p.join(_basePath, fileName);
         final file = File(filePath);
         if (await file.exists()) {
-          final jsonString = await file.readAsString();
+          jsonString = await file.readAsString();
+        }
+      }
+
+      if (jsonString != null) {
+        try {
           final decoded = jsonDecode(jsonString) as Map<String, dynamic>;
           final dataList = decoded['data'] as List<dynamic>;
 
@@ -75,13 +101,31 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
               .toList();
 
           allCodes.addAll(codes);
-        } else {
-          // Fallback: try loading from asset root
-          // If not found, just skip (will use empty list)
-          stderr.writeln('Warning: $filePath not found, skipping $standard');
+        } catch (e) {
+          stderr.writeln('Warning: Failed to parse $standard: $e');
         }
+    // Load Interactions
+    String? interactionsJson;
+    final interactionsFileName = 'rxnorm_interactions.json';
+    if (supportPath != null) {
+      final syncedFile = File(p.join(supportPath, interactionsFileName));
+      if (await syncedFile.exists()) {
+        interactionsJson = await syncedFile.readAsString();
+      }
+    }
+    if (interactionsJson == null) {
+      final filePath = p.join(_basePath, interactionsFileName);
+      final file = File(filePath);
+      if (await file.exists()) {
+        interactionsJson = await file.readAsString();
+      }
+    }
+    if (interactionsJson != null) {
+      try {
+        final decoded = jsonDecode(interactionsJson) as Map<String, dynamic>;
+        _interactions = List<Map<String, dynamic>>.from(decoded['interactions'] ?? []);
       } catch (e) {
-        stderr.writeln('Warning: Failed to load $filePath: $e');
+        stderr.writeln('Warning: Failed to parse interactions: $e');
       }
     }
 
@@ -231,9 +275,27 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
     };
   }
 
-  /// Search the term index with multi-word matching.
-  /// Returns results ranked by relevance (most matches first).
-  List<MedicalCode> _searchByTokens(String query) {
+  @override
+  Future<List<Map<String, dynamic>>> checkInteractions(List<String> drugCodes) async {
+    _ensureInitialized();
+    if (drugCodes.length < 2) return [];
+
+    final results = <Map<String, dynamic>>[];
+    final codes = drugCodes.map((c) => c.toLowerCase()).toSet();
+
+    for (final interaction in _interactions) {
+      final requiredDrugs = (interaction['drugs'] as List<dynamic>)
+          .map((d) => d.toString().toLowerCase())
+          .toSet();
+
+      // If all drugs in the interaction are present in the provided list
+      if (requiredDrugs.every((d) => codes.contains(d))) {
+        results.add(interaction);
+      }
+    }
+
+    return results;
+  }
     final tokens = _tokenize(query);
     if (tokens.isEmpty) return [];
 

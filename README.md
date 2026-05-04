@@ -160,10 +160,25 @@ flutter run
 
 
 
+## 🧪 Tests E2E
+
+Tests de integración con **Golden Files** (screenshots de referencia).
+
+- **10 tests E2E**: Navegación principal, perfil, records, asistente IA, reportes, carga de archivos, formulario, chat, flujo completo
+- **Regresión visual**: Detecta cambios no intencionales en la UI automáticamente
+
+```bash
+flutter test integration_test/app_test.dart -d windows
+flutter test integration_test/app_test.dart -d windows --update-goldens  # actualizar referencias
+```
+
+Más detalle en [integration_test/README.md](integration_test/README.md).
+
 ## 📖 Documentation
 
 - **[docs/rag-architecture-review.md](docs/rag-architecture-review.md)**: RAG pipeline deep-dive
 - **[docs/aicore-status.md](docs/aicore-status.md)**: AICore plugin implementation guide
+- **[docs/improvements-extraction.md](docs/improvements-extraction.md)**: UI/UX mejoras detectadas
 - **[docs/api/index.md](docs/api/index.md)**: API documentation index
 - **[docs/dev-guide.md](docs/dev-guide.md)**: Developer onboarding guide
 - **[CONTRIBUTING.md](CONTRIBUTING.md)**: How to contribute

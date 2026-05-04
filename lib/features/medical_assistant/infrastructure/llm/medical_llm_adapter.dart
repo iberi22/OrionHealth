@@ -4,6 +4,7 @@ import '../../domain/entities/ai_response.dart';
 import '../../domain/services/medical_analysis_service.dart';
 import '../../../../core/services/privacy_anonymizer.dart';
 import 'medical_response_generator.dart';
+import '../../../local_agent/infrastructure/llm_service.dart';
 
 /// Adapter for medical LLM API integration.
 ///
@@ -13,8 +14,13 @@ import 'medical_response_generator.dart';
 /// - AI ALWAYS recommends consulting a doctor
 class MedicalLlmAdapter {
   final PromptScrubber? _scrubber;
+  final LlmService _llmService;
 
-  MedicalLlmAdapter({PromptScrubber? scrubber}) : _scrubber = scrubber;
+  MedicalLlmAdapter({
+    PromptScrubber? scrubber,
+    required LlmService llmService,
+  })  : _scrubber = scrubber,
+        _llmService = llmService;
 
   /// Generate AI response based on query and medical insights.
   ///
@@ -38,33 +44,35 @@ class MedicalLlmAdapter {
         ? await _scrubber.scrub(query.question, apiName: 'medical-llm-adapter')
         : query.question;
 
-    // Build lab/vital context for the response generator
+    // Build lab/vital context for the LLM
     final context = _buildContext(userContext, insights);
+    
+    // 3. Build a medical-specific prompt for the LLM
+    final medicalPrompt = _buildMedicalPrompt(scrubbedQuestion, context, insights, confidence);
 
-    // Generate structured response respecting confidence thresholds
-    final analysisResponse = MedicalResponseGenerator.generate(
-      question: scrubbedQuestion,
-      userContext: context,
-      confidence: confidence,
-    );
-
-    // If we have lab-specific insights, override with per-lab analysis
-    final labInsights = insights.where((i) => i.category == InsightCategory.labInterpretation);
-    if (labInsights.isNotEmpty) {
-      final refined = _refineWithLabInsights(
-        query,
-        labInsights.toList(),
-        userContext,
-        confidence,
+    // 4. Generate response using the real LLM (Gemma/Gemini)
+    String answer = "";
+    try {
+      final stream = _llmService.generate(medicalPrompt);
+      await for (final chunk in stream) {
+        answer += chunk;
+      }
+    } catch (e) {
+      // Fallback to template if LLM fails
+      final analysisResponse = MedicalResponseGenerator.generate(
+        question: scrubbedQuestion,
+        userContext: context,
+        confidence: confidence,
       );
-      return refined;
+      answer = MedicalResponseGenerator.formatResponse(
+        analysisResponse,
+        scrubbedQuestion,
+      );
     }
 
-    // Format the response string
-    final answer = MedicalResponseGenerator.formatResponse(
-      analysisResponse,
-      scrubbedQuestion,
-    );
+    if (answer.isEmpty) {
+      answer = "Lo siento, no pude generar una respuesta. Por favor intenta de nuevo.";
+    }
 
     return AiMedicalResponse(
       id: responseId,
@@ -75,9 +83,9 @@ class MedicalLlmAdapter {
       model: 'medical-llm-adapter',
       confidence: confidence,
       metadata: {
-        'confidenceLevel': analysisResponse.confidenceLevel,
+        'confidenceLevel': ConfidenceThreshold.getLevel(confidence),
         'canDiagnose': ConfidenceThreshold.canDiagnose(confidence),
-        'needsMoreData': analysisResponse.needsMoreData,
+        'needsMoreData': confidence < 0.7,
         'insightsCount': insights.length,
       },
     );
@@ -231,6 +239,49 @@ class MedicalLlmAdapter {
     if (!hasAnySignal) confidence -= 0.15;
 
     return confidence.clamp(0.0, 1.0);
+  }
+
+  String _buildMedicalPrompt(
+    String question,
+    Map<String, dynamic> context,
+    List<MedicalInsight> insights,
+    double confidence,
+  ) {
+    final buffer = StringBuffer();
+    buffer.writeln('Eres un Asistente Médico de OrionHealth.');
+    buffer.writeln('Tu objetivo es ayudar al usuario a entender sus datos de salud.');
+    buffer.writeln();
+    buffer.writeln('DATOS DEL USUARIO:');
+    if (context['conditions'].isNotEmpty) {
+      buffer.writeln('• Condiciones: ${context['conditions'].join(", ")}');
+    }
+    if (context['labs'].isNotEmpty) {
+      buffer.writeln('• Laboratorios: ${context['labs']}');
+    }
+    if (context['vitals'].isNotEmpty) {
+      buffer.writeln('• Signos Vitales: ${context['vitals']}');
+    }
+    buffer.writeln();
+    if (insights.isNotEmpty) {
+      buffer.writeln('HALLAZGOS DETECTADOS POR EL SISTEMA:');
+      for (final insight in insights) {
+        buffer.writeln('• ${insight.title}: ${insight.description}');
+      }
+      buffer.writeln();
+    }
+
+    buffer.writeln('PREGUNTA DEL USUARIO: $question');
+    buffer.writeln();
+    buffer.writeln('INSTRUCCIONES:');
+    buffer.writeln('1. Responde en español de forma profesional, detallada y empática.');
+    buffer.writeln('2. RAZONAMIENTO: Explica siempre el "por qué" de tus conclusiones basándote en los datos y hallazgos proporcionados.');
+    buffer.writeln('3. SALUD INTEGRAL: Orienta tus respuestas tanto a la salud física como MENTAL. Si es pertinente, menciona el impacto del estrés o el bienestar emocional.');
+    buffer.writeln('4. Si la pregunta es general o sobre el sistema, responde directamente de forma útil.');
+    buffer.writeln('5. Si la pregunta es médica, usa los hallazgos detectados para explicar posibles causas SIN dar diagnósticos definitivos.');
+    buffer.writeln('6. Siempre recomienda consultar a un profesional de salud.');
+    buffer.writeln('7. Si no tienes suficiente información para una duda médica, solicita más datos amablemente.');
+
+    return buffer.toString();
   }
 
   /// Check if LLM service is available.

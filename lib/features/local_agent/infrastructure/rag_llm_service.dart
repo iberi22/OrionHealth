@@ -5,7 +5,12 @@ import 'package:orionhealth_health/features/local_agent/domain/services/llm_adap
 import 'package:orionhealth_health/features/medical_research/infrastructure/medical_research_service.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
 
+/// RAG-powered LLM service with cloud research enrichment (online mode).
+///
+/// Uses the [GemmaLlmService] for local/offline inference and supplements
+/// with web research when cloud is allowed and local context is insufficient.
 @LazySingleton(as: LlmService)
+@Named('rag')
 class RagLlmService implements LlmService {
   final VectorStoreService _vectorStoreService;
   final MedicalResearchService _medicalResearchService;
@@ -32,7 +37,7 @@ class RagLlmService implements LlmService {
       contextText = "\n\nContexto relevante de mi memoria:\n${contextDocs.map((d) => "- $d").join("\n")}";
     }
 
-    // 2. Medical Research Enrichment (Web Search + Scraping)
+    // 2. Medical Research Enrichment (Web Search + Scraping) — only if cloud allowed
     String researchText = "";
     if (contextDocs.length < 2) {
       if (allowCloud) {

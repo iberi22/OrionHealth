@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "standard": "Symptom-Mapping",
+    "version": "1.0",
+    "lastUpdated": "2026-05-03",
+    "description": "Mapping from symptoms to potential ICD-10 diagnoses with holistic relevance."
+  },
+  "mappings": [
+    {
+      "symptom": "Chest Pain",
+      "symptomCode": "R07.9",
+      "potentialDiagnoses": [
+        { "code": "I20.9", "relevance": 0.9, "note": "Angina (Cardiac)" },
+        { "code": "K21.9", "relevance": 0.6, "note": "GERD (Gastrointestinal)" },
+        { "code": "F41.0", "relevance": 0.5, "note": "Panic Attack (Mental)" }
+      ]
+    },
+    {
+      "symptom": "Fatigue",
+      "symptomCode": "R53.83",
+      "potentialDiagnoses": [
+        { "code": "E03.9", "relevance": 0.8, "note": "Hypothyroidism" },
+        { "code": "F32.9", "relevance": 0.8, "note": "Major Depression" },
+        { "code": "D64.9", "relevance": 0.7, "note": "Anemia" }
+      ]
+    },
+    {
+      "symptom": "Headache",
+      "symptomCode": "R51.9",
+      "potentialDiagnoses": [
+        { "code": "I10", "relevance": 0.4, "note": "Hypertension (if severe)" },
+        { "code": "F41.1", "relevance": 0.6, "note": "Tension Headache (Anxiety related)" },
+        { "code": "G43.9", "relevance": 0.8, "note": "Migraine" }
+      ]
+    }
+  ]
+}

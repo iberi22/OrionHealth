@@ -20,28 +20,4 @@ final getIt = GetIt.instance;
 )
 Future<void> configureDependencies() async {
   await getIt.init();
-  
-  // Register Settings feature dependencies manually
-  final isar = getIt<Isar>();
-  
-  getIt.registerLazySingleton<LlmSettingsRepository>(
-    () => LlmSettingsRepositoryImpl(isar),
-  );
-  
-  getIt.registerLazySingleton<DeviceCapabilityService>(
-    () => DeviceCapabilityService(),
-  );
-  
-  getIt.registerFactory<LlmSettingsCubit>(
-    () => LlmSettingsCubit(
-      getIt<LlmSettingsRepository>(),
-      getIt<DeviceCapabilityService>(),
-    ),
-  );
-
-  // Initialize vector store indexing on startup (RAG pipeline)
-  if (getIt.isRegistered<IsarVectorStoreService>()) {
-    final vectorStore = getIt<IsarVectorStoreService>();
-    await vectorStore.indexMedicalStandards();
-  }
 }

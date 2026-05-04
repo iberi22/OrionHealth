@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -72,6 +74,7 @@ dependencies:
 
   # Bluetooth Low Energy for medical data sharing
   flutter_blue_plus: ^1.35.2
+  google_mlkit_text_recognition: ^0.15.1
   
 dev_dependencies:
   flutter_test:

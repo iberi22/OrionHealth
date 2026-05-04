@@ -124,6 +124,24 @@ class SyncService {
       githubRepo: 'iberi22/OrionHealth',
       version: '2024-03-04',
     ),
+    SyncConfig(
+      datasetName: 'interactions',
+      localFileName: 'rxnorm_interactions.json',
+      githubRepo: 'iberi22/OrionHealth',
+      version: '1.0',
+    ),
+    SyncConfig(
+      datasetName: 'symptoms_mapping',
+      localFileName: 'symptoms_mapping.json',
+      githubRepo: 'iberi22/OrionHealth',
+      version: '1.0',
+    ),
+    SyncConfig(
+      datasetName: 'clinical_guidelines',
+      localFileName: 'clinical_guidelines.json',
+      githubRepo: 'iberi22/OrionHealth',
+      version: '1.0',
+    ),
   ];
 
   /// Cache directory for this package.
@@ -238,18 +256,12 @@ class SyncService {
   /// Returns a [SyncResult] indicating success/failure and whether
   /// the dataset was updated.
   Future<SyncResult> syncDataset(SyncConfig config) async {
-    // Validate local file exists
-    final localFile = File(config.localPath);
-    if (!await localFile.exists()) {
-      return SyncResult(
-        success: false,
-        datasetName: config.datasetName,
-        error: 'Local file not found: ${config.localPath}',
-      );
-    }
+    final cacheDir = await _getCacheDir();
+    final cachedFile = File(p.join(cacheDir.path, config.localFileName));
+    final fileExists = await cachedFile.exists();
 
     // Check for newer version on GitHub
-    final hasUpdate = await _hasNewerVersion(config);
+    final hasUpdate = !fileExists || await _hasNewerVersion(config);
     if (!hasUpdate) {
       // Cache current version
       await _saveVersion(DatasetVersion(
@@ -268,10 +280,10 @@ class SyncService {
       );
     }
 
-    // Download newer version from GitHub releases or raw files
+    // Download newer version from GitHub raw files
     try {
       final downloadUrl =
-          'https://raw.githubusercontent.com/${config.githubRepo}/main/packages/medical_standards/${config.localPath}';
+          'https://raw.githubusercontent.com/${config.githubRepo}/main/medical-standards/${config.datasetName}.json';
       final content = await _downloadDataset(downloadUrl);
 
       if (content != null) {

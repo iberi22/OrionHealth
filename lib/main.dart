@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/theme/cyber_theme.dart';
 import 'core/widgets/floating_assistant_button.dart';
@@ -36,6 +37,16 @@ class MyApp extends StatelessWidget {
       theme: CyberTheme.darkTheme,
       darkTheme: CyberTheme.darkTheme,
       themeMode: ThemeMode.dark,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es', ''),
+        Locale('en', ''),
+      ],
+      locale: const Locale('es', ''), // Force Spanish for now as requested
       home: const MainNavigationPage(),
     );
   }

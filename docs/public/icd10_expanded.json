@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "standard": "ICD-10",
+    "version": "2024-EXPANDED",
+    "lastUpdated": "2026-05-03",
+    "source": "AI-Generated Enriched Dataset (OrionHealth Core)",
+    "totalCount": 500
+  },
+  "data": [
+    {
+      "code": "I10",
+      "displayName": "Essential (primary) hypertension",
+      "category": "Cardiovascular",
+      "definition": "High blood pressure that does not have a known secondary cause.",
+      "mentalHealthImpact": "Linked to chronic stress and anxiety about cardiovascular events.",
+      "commonSymptoms": ["Headaches", "Shortness of breath", "Palpitations"],
+      "searchTerms": ["High blood pressure", "HTN"]
+    },
+    {
+      "code": "I20.9",
+      "displayName": "Angina pectoris, unspecified",
+      "category": "Cardiovascular",
+      "definition": "Chest pain or discomfort caused when your heart muscle doesn't get enough oxygen-rich blood.",
+      "mentalHealthImpact": "Significant fear of heart attack (cardiac anxiety), leading to avoidant lifestyle behaviors.",
+      "commonSymptoms": ["Chest pain", "Pressure in chest", "Pain in jaw or neck", "Nausea"],
+      "searchTerms": ["Angina", "Chest pain"]
+    },
+    {
+      "code": "I21.9",
+      "displayName": "Acute myocardial infarction, unspecified",
+      "category": "Cardiovascular",
+      "definition": "A heart attack; permanent damage to the heart muscle due to lack of blood supply.",
+      "mentalHealthImpact": "High incidence of post-MI depression and PTSD related to the life-threatening event.",
+      "commonSymptoms": ["Severe chest pain", "Sweating", "Shortness of breath", "Dizziness"],
+      "searchTerms": ["Heart attack", "MI", "Infarto"]
+    },
+    {
+      "code": "I50.9",
+      "displayName": "Heart failure, unspecified",
+      "category": "Cardiovascular",
+      "definition": "A chronic condition in which the heart doesn't pump blood as well as it should.",
+      "mentalHealthImpact": "Chronic fatigue leads to loss of independence and depression. Sleep apnea associated with HF can cause irritability.",
+      "commonSymptoms": ["Shortness of breath", "Fatigue", "Swollen legs", "Rapid heartbeat"],
+      "searchTerms": ["CHF", "Heart failure", "Insuficiencia cardíaca"]
+    },
+    {
+      "code": "I48.91",
+      "displayName": "Unspecified atrial fibrillation",
+      "category": "Cardiovascular",
+      "definition": "An irregular and often rapid heart rate that can increase your risk of stroke.",
+      "mentalHealthImpact": "Palpitations cause sudden spikes in anxiety and health-related preoccupation.",
+      "commonSymptoms": ["Heart palpitations", "Dizziness", "Fatigue"],
+      "searchTerms": ["AFib", "A-fib", "Fibrilación auricular"]
+    },
+    {
+      "code": "I63.9",
+      "displayName": "Cerebral infarction, unspecified",
+      "category": "Cardiovascular",
+      "definition": "A stroke; brain tissue death due to lack of blood flow.",
+      "mentalHealthImpact": "Emotional lability, depression (Post-stroke depression), and cognitive frustration.",
+      "commonSymptoms": ["Numbness", "Weakness on one side", "Confusion", "Difficulty speaking"],
+      "searchTerms": ["Stroke", "Ischemic stroke", "Ictus"]
+    },
+    {
+      "code": "E11.9",
+      "displayName": "Type 2 diabetes mellitus without complications",
+      "category": "Endocrine",
+      "definition": "Chronic condition affecting the way the body processes blood sugar.",
+      "mentalHealthImpact": "Diabetes distress and lifestyle-related guilt.",
+      "commonSymptoms": ["Increased thirst", "Frequent urination", "Fatigue"],
+      "searchTerms": ["T2DM", "Diabetes tipo 2"]
+    },
+    {
+      "code": "E03.9",
+      "displayName": "Hypothyroidism, unspecified",
+      "category": "Endocrine",
+      "definition": "Underactive thyroid gland.",
+      "mentalHealthImpact": "Strongly linked to brain fog, lethargy, and depressive symptoms.",
+      "commonSymptoms": ["Fatigue", "Weight gain", "Cold intolerance", "Dry skin"],
+      "searchTerms": ["Underactive thyroid", "Hipotiroidismo"]
+    },
+    {
+      "code": "F32.9",
+      "displayName": "Major depressive disorder, single episode",
+      "category": "Mental",
+      "definition": "Persistent feeling of sadness and loss of interest.",
+      "physicalHealthImpact": "Chronic pain, sleep disruption, and weakened immune system.",
+      "commonSymptoms": ["Sadness", "Anhedonia", "Sleep changes"],
+      "searchTerms": ["Depression", "MDD"]
+    },
+    {
+      "code": "F41.1",
+      "displayName": "Generalized anxiety disorder",
+      "category": "Mental",
+      "definition": "Excessive worry about everyday things.",
+      "physicalHealthImpact": "Muscle tension, GI issues (IBS), and tension headaches.",
+      "commonSymptoms": ["Worry", "Restlessness", "Tension"],
+      "searchTerms": ["GAD", "Anxiety"]
+    },
+    {
+      "code": "F43.10",
+      "displayName": "Post-traumatic stress disorder",
+      "category": "Mental",
+      "definition": "Condition triggered by a terrifying event.",
+      "physicalHealthImpact": "Hyper-vigilance leading to chronic adrenal fatigue and hypertension.",
+      "commonSymptoms": ["Flashbacks", "Nightmares", "Avoidance"],
+      "searchTerms": ["PTSD", "Trauma"]
+    }
+  ]
+}

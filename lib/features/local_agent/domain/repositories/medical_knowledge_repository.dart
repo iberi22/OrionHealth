@@ -9,7 +9,10 @@ import '../entities/medical_code.dart';
 abstract class MedicalKnowledgeRepository {
   /// Load all medical codes from all standards into memory.
   /// Called once at startup (or on-demand).
-  Future<void> initialize();
+  Future<void> initialize({bool force = false});
+
+  /// Checks for interactions between a list of RxNorm drug codes.
+  Future<List<Map<String, dynamic>>> checkInteractions(List<String> drugCodes);
 
   /// Whether the repository has been initialized.
   bool get isInitialized;

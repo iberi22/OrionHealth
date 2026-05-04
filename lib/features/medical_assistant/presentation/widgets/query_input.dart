@@ -66,8 +66,8 @@ class _QueryInputState extends State<QueryInput> {
               onSubmitted: (_) => _handleSubmit(),
               decoration: InputDecoration(
                 hintText: widget.enabled
-                    ? 'Ask about your health...'
-                    : 'Processing...',
+                    ? 'Pregunta sobre tu salud...'
+                    : 'Procesando...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                   borderSide: BorderSide.none,

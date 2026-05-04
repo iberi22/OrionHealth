@@ -22,7 +22,7 @@ class _ChatPageState extends State<ChatPage> {
     // Add initial AI message
     _messages.add(ChatMessage(
       role: ChatRole.assistant,
-      content: "Welcome to OrionHealth. How can I assist you with your health data today?",
+      content: "Bienvenido a OrionHealth. ¿En qué puedo ayudarte con tus datos de salud hoy?",
       timestamp: DateTime.now(),
     ));
   }
@@ -114,7 +114,7 @@ class _ChatPageState extends State<ChatPage> {
       onDone: () => setState(() => _isGenerating = false),
       onError: (error) {
         setState(() {
-          _messages.last.content = 'Error: ${error.toString()}';
+          _messages.last.content = 'Lo siento, hubo un problema al procesar tu consulta. Por favor intenta de nuevo.';
           _isGenerating = false;
         });
       },
@@ -143,7 +143,18 @@ class _ChatMessageWidget extends StatelessWidget {
             ),
             border: Border.all(color: isUser ? CyberTheme.primary.withValues(alpha: 0.3) : CyberTheme.secondary.withValues(alpha: 0.3)),
           ),
-          child: Text(message.content),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(message.content),
+              if (message.citations.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                const Divider(color: Colors.white24),
+                const Text('Fuentes:', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white70)),
+                ...message.citations.map((c) => Text('• $c', style: const TextStyle(fontSize: 10, color: Colors.white54))),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -187,7 +198,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
           const SizedBox(width: 8),
           FadeTransition(
             opacity: _animation,
-            child: const Text('Orion AI is thinking...', style: TextStyle(color: Colors.white54)),
+            child: const Text('Orion AI está pensando...', style: TextStyle(color: Colors.white54)),
           ),
         ],
       ),
@@ -215,7 +226,7 @@ class _MessageComposer extends StatelessWidget {
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: 'Type a message...',
+                hintText: 'Escribe un mensaje...',
                 filled: true,
                 fillColor: Colors.grey[900]?.withValues(alpha: 0.5),
                 border: OutlineInputBorder(

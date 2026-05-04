@@ -3,6 +3,10 @@
 /// This interface abstracts the underlying vector database implementation
 /// (isar_agent_memory) and provides hexagonal architecture compliance.
 abstract class VectorStoreService {
+  /// Index all medical standards (ICD-10, LOINC, RxNorm, SNOMED)
+  /// into the vector store.
+  Future<void> indexMedicalStandards({bool force = false});
+
   /// Add a document to the vector store
   Future<void> addDocument(
     String id,

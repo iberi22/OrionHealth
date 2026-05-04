@@ -21,23 +21,23 @@ import '../../domain/repositories/medical_knowledge_repository.dart';
 /// (e.g., on desktop or during testing).
 @Injectable(as: MedicalKnowledgeRepository, env: ['mobile'])
 class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
-  final String assetBasePath;
-
   List<MedicalCode> _allCodes = [];
   Map<String, MedicalCode> _codeIndex = {};
   Map<String, List<MedicalCode>> _termIndex = {};
   Map<String, List<MedicalCode>> _categoryIndex = {};
   Map<String, List<MedicalCode>> _standardIndex = {};
   bool _initialized = false;
+  AssetMedicalKnowledgeRepository();
 
-  AssetMedicalKnowledgeRepository({this.assetBasePath = 'assets/medical-standards'});
+  String get _assetBasePath => 'assets/medical-standards';
 
   @override
   bool get isInitialized => _initialized;
 
   @override
-  Future<void> initialize() async {
-    if (_initialized) return;
+  Future<void> initialize({bool force = false}) async {
+    if (_initialized && !force) return;
+    _initialized = false; // Reset to allow reload
 
     final stopwatch = Stopwatch()..start();
 
@@ -53,7 +53,7 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
     for (final entry in files.entries) {
       final standard = entry.key;
       final fileName = entry.value;
-      final assetPath = p.join(assetBasePath, fileName);
+      final assetPath = p.join(_assetBasePath, fileName);
 
       try {
         final jsonString = await rootBundle.loadString(assetPath);
