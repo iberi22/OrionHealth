@@ -1,10 +1,10 @@
-import 'dart:io' show stderr;
 import 'dart:math';
 
 import 'package:injectable/injectable.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import '../../domain/services/vector_store_service.dart';
 import '../../domain/repositories/medical_knowledge_repository.dart';
+import '../../../../core/services/app_logger.dart';
 
 /// Alias for the record type returned by MemoryGraph searches.
 typedef SearchRecord = ({MemoryNode node, double score});
@@ -29,11 +29,11 @@ class IsarVectorStoreService implements VectorStoreService {
   @PostConstruct(preResolve: true)
   Future<void> indexMedicalStandards({bool force = false}) async {
     try {
-      print('[IsarVectorStore] Starting indexing medical standards (force: $force)...');
+      AppLogger.i('IsarVectorStore', 'Starting indexing medical standards (force: $force)...');
       await _medicalRepo.initialize(force: force);
 
       final allCodes = await _medicalRepo.getAllCodes();
-      print('[IsarVectorStore] Found ${allCodes.length} codes to index.');
+      AppLogger.i('IsarVectorStore', 'Found ${allCodes.length} codes to index.');
       if (allCodes.isEmpty) return;
 
       int indexedCount = 0;
@@ -55,12 +55,12 @@ class IsarVectorStoreService implements VectorStoreService {
           );
           indexedCount++;
         } catch (e) {
-          stderr.writeln('[IsarVectorStore] Error indexing ${code.code}: $e');
+          AppLogger.e('IsarVectorStore', 'Error indexing ${code.code}', error: e);
         }
       }
-      print('[IsarVectorStore] Indexing complete. Indexed $indexedCount codes.');
+      AppLogger.i('IsarVectorStore', 'Indexing complete. Indexed $indexedCount codes.');
     } catch (e) {
-      stderr.writeln('[IsarVectorStore] Failed to index medical standards: $e');
+      AppLogger.e('IsarVectorStore', 'Failed to index medical standards', error: e);
     }
   }
 
