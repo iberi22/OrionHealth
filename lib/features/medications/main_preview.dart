@@ -3,6 +3,8 @@ import 'package:orionhealth_health/core/di/injection.dart';
 import "package:orionhealth_health/core/theme/app_colors.dart";
 import 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
+import '../../../core/theme/app_theme.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +20,7 @@ class MedicationPreviewApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Medication Preview',
-      theme: AppColors.darkTheme,
+      theme: AppTheme.darkTheme,
       home: const MedicationsPage(),
     );
   }

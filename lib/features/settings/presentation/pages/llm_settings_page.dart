@@ -146,18 +146,18 @@ class _LlmSettingsView extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: CyberTheme.surfaceDark.withAlpha(120),
+                color: AppColors.surfaceVariant.withAlpha(120),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TabBar(
                 indicator: BoxDecoration(
-                  color: CyberTheme.primary.withAlpha(51),
+                  color: AppColors.primary.withAlpha(51),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: CyberTheme.primary.withAlpha(77), width: 1),
+                      color: AppColors.primary.withAlpha(77), width: 1),
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: CyberTheme.primary,
+                labelColor: AppColors.primary,
                 unselectedLabelColor: Colors.white54,
                 labelStyle: const TextStyle(
                     fontWeight: FontWeight.w600, fontSize: 12),
@@ -245,7 +245,7 @@ class _LocalModelsTab extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: CyberTheme.textDark,
+                  color: Colors.black,
                 ),
               ),
               const Spacer(),
@@ -323,11 +323,11 @@ class _ModelListItem extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: CyberTheme.primary.withAlpha(26),
+                  color: AppColors.primary.withAlpha(26),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.smart_toy_outlined,
-                    color: CyberTheme.primary, size: 20),
+                    color: AppColors.primary, size: 20),
               ),
               const SizedBox(width: 12),
               // Name + size
@@ -367,8 +367,8 @@ class _ModelListItem extends StatelessWidget {
                 backgroundColor: Colors.white.withAlpha(26),
                 valueColor: AlwaysStoppedAnimation(
                     progress < 1.0
-                        ? CyberTheme.secondary
-                        : CyberTheme.primary),
+                        ? AppColors.secondary
+                        : AppColors.primary),
                 minHeight: 6,
               ),
             ),
@@ -378,7 +378,7 @@ class _ModelListItem extends StatelessWidget {
                 Text(
                   '${(progress * 100).toInt()}%',
                   style: TextStyle(
-                    color: CyberTheme.secondary,
+                    color: AppColors.secondary,
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                   ),
@@ -426,7 +426,7 @@ class _ModelListItem extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Descargando $modelName...'),
-                        backgroundColor: CyberTheme.surfaceDark,
+                        backgroundColor: AppColors.surfaceVariant,
                         duration: const Duration(seconds: 2),
                       ),
                     );
@@ -460,7 +460,7 @@ class _ModelListItem extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Usando $modelName'),
-                        backgroundColor: CyberTheme.primary.withAlpha(180),
+                        backgroundColor: AppColors.primary.withAlpha(180),
                         duration: const Duration(seconds: 1),
                       ),
                     );
@@ -499,10 +499,10 @@ class _ModelListItem extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
-            color: CyberTheme.secondary.withAlpha(30),
+            color: AppColors.secondary.withAlpha(30),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-                color: CyberTheme.secondary.withAlpha(60), width: 1),
+                color: AppColors.secondary.withAlpha(60), width: 1),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -513,14 +513,14 @@ class _ModelListItem extends StatelessWidget {
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   value: progress,
-                  color: CyberTheme.secondary,
+                  color: AppColors.secondary,
                 ),
               ),
               const SizedBox(width: 4),
               const Text(
                 'Descargando',
                 style: TextStyle(
-                    color: CyberTheme.secondary,
+                    color: AppColors.secondary,
                     fontSize: 10,
                     fontWeight: FontWeight.w500),
               ),
@@ -567,12 +567,12 @@ class _ModelListItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSecondary
               ? Colors.white.withAlpha(15)
-              : CyberTheme.primary.withAlpha(40),
+              : AppColors.primary.withAlpha(40),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isSecondary
                 ? Colors.white.withAlpha(30)
-                : CyberTheme.primary.withAlpha(80),
+                : AppColors.primary.withAlpha(80),
             width: 1,
           ),
         ),
@@ -582,14 +582,14 @@ class _ModelListItem extends StatelessWidget {
             Icon(icon,
                 size: 14,
                 color:
-                    isSecondary ? Colors.white54 : CyberTheme.primary),
+                    isSecondary ? Colors.white54 : AppColors.primary),
             const SizedBox(width: 4),
             Text(
               label,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: isSecondary ? Colors.white54 : CyberTheme.primary,
+                color: isSecondary ? Colors.white54 : AppColors.primary,
               ),
             ),
           ],
@@ -654,11 +654,11 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: CyberTheme.primary.withAlpha(26),
+                        color: AppColors.primary.withAlpha(26),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(Icons.cloud_outlined,
-                          color: CyberTheme.primary, size: 22),
+                          color: AppColors.primary, size: 22),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -697,10 +697,10 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                   child: DropdownButton<String>(
                     value: providerType,
                     isExpanded: true,
-                    dropdownColor: CyberTheme.surfaceDark,
+                    dropdownColor: AppColors.surfaceVariant,
                     underline: Container(
                       height: 1,
-                      color: CyberTheme.primary.withAlpha(51),
+                      color: AppColors.primary.withAlpha(51),
                     ),
                     items: cloudProviders.map((p) {
                       return DropdownMenuItem(
@@ -714,7 +714,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                                       ? Icons.auto_awesome
                                       : Icons.dns,
                               size: 16,
-                              color: CyberTheme.secondary,
+                              color: AppColors.secondary,
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -805,10 +805,10 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                         ? cloudModel
                         : cloudModels.first,
                     isExpanded: true,
-                    dropdownColor: CyberTheme.surfaceDark,
+                    dropdownColor: AppColors.surfaceVariant,
                     underline: Container(
                       height: 1,
-                      color: CyberTheme.primary.withAlpha(51),
+                      color: AppColors.primary.withAlpha(51),
                     ),
                     items: cloudModels.map((m) {
                       return DropdownMenuItem(
@@ -871,7 +871,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
               child: Row(
                 children: [
                   Icon(Icons.info_outline,
-                      color: CyberTheme.secondary, size: 18),
+                      color: AppColors.secondary, size: 18),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -942,7 +942,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide:
-            BorderSide(color: CyberTheme.primary.withAlpha(100), width: 1.5),
+            BorderSide(color: AppColors.primary.withAlpha(100), width: 1.5),
       ),
     );
   }
@@ -977,13 +977,13 @@ class _ConnectionTestWidget extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.dns_outlined,
-                  color: CyberTheme.secondary, size: 20),
+                  color: AppColors.secondary, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Verificar Conexión',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: CyberTheme.textDark,
+                  color: Colors.black,
                   fontSize: 15,
                 ),
               ),
@@ -993,7 +993,7 @@ class _ConnectionTestWidget extends StatelessWidget {
                   width: 18,
                   height: 18,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: CyberTheme.secondary),
+                      strokeWidth: 2, color: AppColors.secondary),
                 ),
             ],
           ),
@@ -1011,10 +1011,10 @@ class _ConnectionTestWidget extends StatelessWidget {
                     : 'Verificar Conexión',
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: CyberTheme.primary.withAlpha(40),
-                foregroundColor: CyberTheme.primary,
+                backgroundColor: AppColors.primary.withAlpha(40),
+                foregroundColor: AppColors.primary,
                 side: BorderSide(
-                    color: CyberTheme.primary.withAlpha(80), width: 1),
+                    color: AppColors.primary.withAlpha(80), width: 1),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1114,7 +1114,7 @@ class _ConnectionTestWidget extends StatelessWidget {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
-                    color: CyberTheme.primary.withAlpha(80), width: 1.5),
+                    color: AppColors.primary.withAlpha(80), width: 1.5),
               ),
             ),
             onChanged: onPromptChanged,
@@ -1134,7 +1134,7 @@ class _ConnectionTestWidget extends StatelessWidget {
                             SnackBar(
                               content: Text(
                                   'Enviando: "$testPrompt"'),
-                              backgroundColor: CyberTheme.surfaceDark,
+                              backgroundColor: AppColors.surfaceVariant,
                               duration: const Duration(seconds: 1),
                             ),
                           );
@@ -1142,7 +1142,7 @@ class _ConnectionTestWidget extends StatelessWidget {
               icon: const Icon(Icons.send, size: 16),
               label: const Text('Probar'),
               style: TextButton.styleFrom(
-                foregroundColor: CyberTheme.primary,
+                foregroundColor: AppColors.primary,
               ),
             ),
           ),
@@ -1191,11 +1191,11 @@ class _ExecutionModeTab extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: CyberTheme.primary.withAlpha(26),
+                        color: AppColors.primary.withAlpha(26),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(Icons.route_outlined,
-                          color: CyberTheme.primary, size: 22),
+                          color: AppColors.primary, size: 22),
                     ),
                     const SizedBox(width: 12),
                     Column(
@@ -1307,7 +1307,7 @@ class _ExecutionModeTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.security,
-                      color: CyberTheme.secondary, size: 18),
+                      color: AppColors.secondary, size: 18),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -1369,11 +1369,11 @@ class _ModeOption extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? CyberTheme.primary : Colors.white38,
+                  color: isSelected ? AppColors.primary : Colors.white38,
                   width: 2,
                 ),
                 color: isSelected
-                    ? CyberTheme.primary.withAlpha(40)
+                    ? AppColors.primary.withAlpha(40)
                     : Colors.transparent,
               ),
               child: isSelected
@@ -1383,7 +1383,7 @@ class _ModeOption extends StatelessWidget {
                         height: 10,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: CyberTheme.primary,
+                          color: AppColors.primary,
                         ),
                       ),
                     )
@@ -1396,14 +1396,14 @@ class _ModeOption extends StatelessWidget {
               height: 38,
               decoration: BoxDecoration(
                 color: isSelected
-                    ? CyberTheme.primary.withAlpha(26)
+                    ? AppColors.primary.withAlpha(26)
                     : Colors.white.withAlpha(10),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
                 size: 20,
-                color: isSelected ? CyberTheme.primary : Colors.white54,
+                color: isSelected ? AppColors.primary : Colors.white54,
               ),
             ),
             const SizedBox(width: 12),
@@ -1418,7 +1418,7 @@ class _ModeOption extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                       color:
-                          isSelected ? CyberTheme.primary : Colors.white,
+                          isSelected ? AppColors.primary : Colors.white,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -1442,7 +1442,7 @@ class _ModeOption extends StatelessWidget {
             // Check icon when selected
             if (isSelected)
               Icon(Icons.check_circle,
-                  color: CyberTheme.primary, size: 20),
+                  color: AppColors.primary, size: 20),
           ],
         ),
       ),
@@ -1887,5 +1887,6 @@ class _ModelInfoRow extends StatelessWidget {
     );
   }
 }
+
 
 

@@ -43,16 +43,6 @@ import '../../features/health_record/infrastructure/services/image_picker_servic
     as _i11;
 import '../../features/health_record/infrastructure/services/ocr_service.dart'
     as _i30;
-import '../../features/health_report/application/bloc/health_report_bloc.dart'
-    as _i67;
-import '../../features/health_report/domain/repositories/health_report_repository.dart'
-    as _i52;
-import '../../features/health_report/domain/services/report_generation_service.dart'
-    as _i32;
-import '../../features/health_report/infrastructure/repositories/isar_health_report_repository.dart'
-    as _i53;
-import '../../features/health_report/infrastructure/services/mock_report_generation_service.dart'
-    as _i33;
 import '../../features/local_agent/application/use_cases/smart_search_use_case.dart'
     as _i63;
 import '../../features/local_agent/domain/repositories/medical_knowledge_repository.dart'
@@ -208,9 +198,6 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i30.OcrService>(() => _i30.MlKitOcrService());
     gh.lazySingleton<_i31.PromptScrubber>(
         () => _i31.PromptScrubber(gh<_i12.Isar>()));
-    gh.lazySingleton<_i32.ReportGenerationService>(() =>
-        _i33.RealReportGenerationService(
-            gh<_i13.LlmAdapter>(instanceName: 'gemma')));
     gh.lazySingleton<_i18.SyncService>(() => networkModule.syncService);
     gh.lazySingleton<_i34.UserProfileRepository>(
         () => _i35.UserProfileRepositoryImpl(gh<_i12.Isar>()));
@@ -247,8 +234,6 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.lazySingleton<_i50.HealthRecordRepository>(
         () => _i51.HealthRecordRepositoryImpl(gh<_i12.Isar>()));
-    gh.lazySingleton<_i52.HealthReportRepository>(
-        () => _i53.IsarHealthReportRepository(gh<_i12.Isar>()));
     gh.lazySingleton<_i13.LlmAdapter>(
       () => _i54.GeminiLlmAdapter(
         scrubber: gh<_i31.PromptScrubber>(),
@@ -297,10 +282,6 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i11.ImagePickerService>(),
           gh<_i30.OcrService>(),
           gh<_i36.VectorStoreService>(),
-        ));
-    gh.factory<_i67.HealthReportBloc>(() => _i67.HealthReportBloc(
-          gh<_i52.HealthReportRepository>(),
-          gh<_i32.ReportGenerationService>(),
         ));
     gh.lazySingleton<_i56.LlmService>(
       () => _i68.RagLlmService(

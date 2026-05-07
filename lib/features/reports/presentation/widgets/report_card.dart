@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../domain/entities/report.dart';
 import 'package:intl/intl.dart';
@@ -61,7 +61,7 @@ class ReportCard extends StatelessWidget {
                     ),
                     const Icon(
                       Icons.chevron_right,
-                      color: CyberTheme.secondary,
+                      color: AppColors.secondary,
                     ),
                   ],
                 ),
@@ -75,7 +75,7 @@ class ReportCard extends StatelessWidget {
                     const Text(
                       'Ver Informe',
                       style: TextStyle(
-                        color: CyberTheme.secondary,
+                        color: AppColors.secondary,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -105,7 +105,7 @@ class ReportCard extends StatelessWidget {
         break;
       case ReportStatus.finalized:
         iconData = Icons.assignment_turned_in_outlined;
-        color = CyberTheme.primary;
+        color = AppColors.primary;
         break;
     }
 
@@ -129,7 +129,7 @@ class ReportCard extends StatelessWidget {
         color = Colors.orangeAccent;
         break;
       case ReportStatus.finalized:
-        color = CyberTheme.primary;
+        color = AppColors.primary;
         break;
     }
 

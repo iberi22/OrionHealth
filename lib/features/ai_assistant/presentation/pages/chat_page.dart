@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/theme/cyber_theme.dart';
+
 import '../../../local_agent/domain/chat_message.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
 import '../widgets/message_composer.dart';
+import '../../../../../core/theme/app_colors.dart';
+
 
 enum AssistantState { idle, thinking, responding }
 
@@ -147,7 +149,7 @@ class _ChatPageState extends State<ChatPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.circle,
-                color: _assistantState == AssistantState.idle ? CyberTheme.primary : Colors.orange,
+                color: _assistantState == AssistantState.idle ? AppColors.primary : Colors.orange,
                 size: 8
               ),
               const SizedBox(width: 4),
@@ -155,7 +157,7 @@ class _ChatPageState extends State<ChatPage> {
                 _assistantState == AssistantState.idle ? 'Online' : 'Processing...',
                 style: TextStyle(
                   fontSize: 12,
-                  color: _assistantState == AssistantState.idle ? CyberTheme.primary : Colors.orange
+                  color: _assistantState == AssistantState.idle ? AppColors.primary : Colors.orange
                 )
               ),
             ],
@@ -192,7 +194,7 @@ class _ChatMessageWidget extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: isUser
-                  ? CyberTheme.primary.withValues(alpha: 0.15)
+                  ? AppColors.primary.withValues(alpha: 0.15)
                   : Colors.grey[850]?.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(20),
@@ -202,7 +204,7 @@ class _ChatMessageWidget extends StatelessWidget {
                 ),
                 border: Border.all(
                   color: isUser
-                    ? CyberTheme.primary.withValues(alpha: 0.3)
+                    ? AppColors.primary.withValues(alpha: 0.3)
                     : Colors.white.withValues(alpha: 0.1),
                 ),
               ),
@@ -279,7 +281,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
             child: CircularProgressIndicator(
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(
-                widget.state == AssistantState.thinking ? CyberTheme.secondary : CyberTheme.primary
+                widget.state == AssistantState.thinking ? AppColors.secondary : AppColors.primary
               ),
             ),
           ),

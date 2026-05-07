@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../../core/theme/app_colors.dart';
+
+
 
 class MessageComposer extends StatelessWidget {
   final TextEditingController controller;
@@ -44,7 +46,7 @@ class MessageComposer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.add_circle_outline, color: CyberTheme.secondary),
+                  icon: const Icon(Icons.add_circle_outline, color: AppColors.secondary),
                   onPressed: isEnabled ? onAttach : null,
                   tooltip: 'Attach file',
                 ),
@@ -79,7 +81,7 @@ class MessageComposer extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 IconButton(
-                  icon: const Icon(Icons.send_rounded, color: CyberTheme.primary),
+                  icon: const Icon(Icons.send_rounded, color: AppColors.primary),
                   onPressed: isEnabled ? onSend : null,
                   tooltip: 'Send message',
                 ),
@@ -107,11 +109,11 @@ class MessageComposer extends StatelessWidget {
                 prompt,
                 style: const TextStyle(
                   fontSize: 12,
-                  color: CyberTheme.primary,
+                  color: AppColors.primary,
                 ),
               ),
-              backgroundColor: CyberTheme.primary.withValues(alpha: 0.1),
-              side: const BorderSide(color: CyberTheme.primary, width: 0.5),
+              backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+              side: const BorderSide(color: AppColors.primary, width: 0.5),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),

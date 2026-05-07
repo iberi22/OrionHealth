@@ -52,10 +52,6 @@ class _HealthImportViewState extends State<_HealthImportView> {
     try {
       return await _localAuth.authenticate(
         localizedReason: 'Authenticate to confirm health data import',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: false,
-        ),
       );
     } catch (_) {
       return false;
