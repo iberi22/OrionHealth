@@ -7,6 +7,7 @@ import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../../../core/widgets/page_header.dart';
 import '../../application/bloc/health_record_cubit.dart';
 import '../../domain/entities/medical_record.dart';
+import 'upload_page.dart';
 
 class HealthRecordStagingPage extends StatelessWidget {
   const HealthRecordStagingPage({super.key});
@@ -29,15 +30,6 @@ class HealthRecordStagingPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is HealthRecordFilePicked) {
-            return Scaffold(
-              appBar: AppBar(title: const Text('Nuevo Registro Médico')),
-              body: _RecordForm(
-                filePath: state.filePath,
-                initialText: state.extractedText,
-              ),
-            );
-          }
           return _RecordHistoryView(state: state);
         },
       ),
@@ -89,22 +81,21 @@ class _RecordHistoryView extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showSelectionModal(context),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (innerContext) => BlocProvider.value(
+                value: context.read<HealthRecordCubit>(),
+                child: const UploadPage(),
+              ),
+            ),
+          );
+        },
         label: const Text('Añadir Registro'),
         icon: const Icon(Icons.add),
         backgroundColor: CyberTheme.primary,
         foregroundColor: Colors.black,
-      ),
-    );
-  }
-
-  void _showSelectionModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => BlocProvider.value(
-        value: BlocProvider.of<HealthRecordCubit>(context),
-        child: _SelectionView(),
       ),
     );
   }
@@ -230,154 +221,3 @@ class _TimelineItem extends StatelessWidget {
   }
 }
 
-class _SelectionView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GlassmorphicCard(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.picture_as_pdf, color: CyberTheme.secondary),
-              title: const Text('Subir PDF'),
-              onTap: () {
-                Navigator.pop(context);
-                context.read<HealthRecordCubit>().pickPdf();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt, color: CyberTheme.secondary),
-              title: const Text('Tomar Foto'),
-              onTap: () {
-                Navigator.pop(context);
-                context.read<HealthRecordCubit>().pickImage(true);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.image, color: CyberTheme.secondary),
-              title: const Text('Galería'),
-              onTap: () {
-                Navigator.pop(context);
-                context.read<HealthRecordCubit>().pickImage(false);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _RecordForm extends StatefulWidget {
-  final String filePath;
-  final String initialText;
-  const _RecordForm({required this.filePath, required this.initialText});
-  @override
-  State<_RecordForm> createState() => _RecordFormState();
-}
-
-class _RecordFormState extends State<_RecordForm> {
-  final _formKey = GlobalKey<FormState>();
-  late TextEditingController _textController;
-  late TextEditingController _summaryController;
-  late DateTime _selectedDate;
-  RecordType _selectedType = RecordType.clinicalNote;
-
-  @override
-  void initState() {
-    super.initState();
-    _textController = TextEditingController(text: widget.initialText);
-    _summaryController = TextEditingController();
-    _selectedDate = DateTime.now();
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    _summaryController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Archivo: ${widget.filePath.split('/').last}'),
-            const SizedBox(height: 16),
-            GlassmorphicCard(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: DropdownButtonFormField<RecordType>(
-                  initialValue: _selectedType,
-                  decoration: const InputDecoration(labelText: 'Tipo de Documento', border: InputBorder.none),
-                  items: RecordType.values.map((type) => DropdownMenuItem(value: type, child: Text(type.name))).toList(),
-                  onChanged: (val) => setState(() => _selectedType = val!),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-             GlassmorphicCard(
-               child: InkWell(
-                onTap: () async {
-                  final date = await showDatePicker(
-                    context: context,
-                    initialDate: _selectedDate,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime.now(),
-                  );
-                  if (date != null) setState(() => _selectedDate = date);
-                },
-                child: InputDecorator(
-                  decoration: const InputDecoration(labelText: 'Fecha del Documento', border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
-                  child: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
-                ),
-                         ),
-             ),
-            const SizedBox(height: 16),
-             GlassmorphicCard(child: TextFormField(
-              controller: _summaryController,
-              decoration: const InputDecoration(labelText: 'Resumen Breve', border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
-              validator: (v) => v?.isEmpty == true ? 'Requerido' : null,
-            )),
-            const SizedBox(height: 16),
-            GlassmorphicCard(child: TextFormField(
-              controller: _textController,
-              decoration: const InputDecoration(labelText: 'Texto Extraído (Editable)', border: InputBorder.none, contentPadding: EdgeInsets.all(12)),
-              maxLines: 10,
-            )),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(child: OutlinedButton(onPressed: () => context.read<HealthRecordCubit>().reset(), child: const Text('Cancelar'))),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<HealthRecordCubit>().saveRecord(
-                              filePath: widget.filePath,
-                              extractedText: _textController.text,
-                              summary: _summaryController.text,
-                              type: _selectedType,
-                              date: _selectedDate,
-                            );
-                      }
-                    },
-                    child: const Text('Guardar'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
