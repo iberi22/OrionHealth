@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/bloc/report_bloc.dart';
 import '../../domain/entities/report.dart';
@@ -34,7 +34,7 @@ class _ReportsPageState extends State<ReportsPage> {
               onRefresh: () async {
                 context.read<ReportBloc>().add(LoadReports());
               },
-              color: CyberTheme.primary,
+              color: AppColors.primary,
               child: BlocBuilder<ReportBloc, ReportState>(
                 builder: (context, state) {
                   return CustomScrollView(
@@ -130,7 +130,7 @@ class _ReportsPageState extends State<ReportsPage> {
             child: Text(
               entry.key,
               style: TextStyle(
-                color: CyberTheme.secondary.withValues(alpha: 0.8),
+                color: AppColors.secondary.withValues(alpha: 0.8),
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
@@ -250,7 +250,7 @@ class _ReportsPageState extends State<ReportsPage> {
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => setState(() => _selectedStatus = null),
-              child: const Text('Limpiar Filtros', style: TextStyle(color: CyberTheme.primary)),
+              child: const Text('Limpiar Filtros', style: TextStyle(color: AppColors.primary)),
             ),
           ],
         ),
@@ -276,17 +276,17 @@ class _FilterChip extends StatelessWidget {
       label: Text(label),
       selected: isSelected,
       onSelected: onSelected,
-      selectedColor: CyberTheme.primary.withValues(alpha: 0.2),
-      checkmarkColor: CyberTheme.primary,
+      selectedColor: AppColors.primary.withValues(alpha: 0.2),
+      checkmarkColor: AppColors.primary,
       labelStyle: TextStyle(
-        color: isSelected ? CyberTheme.primary : Colors.white70,
+        color: isSelected ? AppColors.primary : Colors.white70,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       backgroundColor: Colors.white.withValues(alpha: 0.05),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isSelected ? CyberTheme.primary : Colors.transparent,
+          color: isSelected ? AppColors.primary : Colors.transparent,
         ),
       ),
     );
@@ -301,7 +301,7 @@ class _PrimaryActionCard extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const Icon(Icons.analytics_outlined, color: CyberTheme.primary, size: 48),
+            const Icon(Icons.analytics_outlined, color: AppColors.primary, size: 48),
             const SizedBox(height: 16),
             const Text('Generar Nuevo Informe',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -314,7 +314,7 @@ class _PrimaryActionCard extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: CyberTheme.primary,
+                backgroundColor: AppColors.primary,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 12),

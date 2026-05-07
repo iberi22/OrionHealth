@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../theme/cyber_theme.dart';
+import '../../../core/theme/app_colors.dart';
+
+
 
 class PageHeader extends StatelessWidget {
   final String title;
@@ -40,7 +42,7 @@ class PageHeader extends StatelessWidget {
                   icon: Icon(backButtonIcon ?? Icons.arrow_back_ios_new, size: 20),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  color: CyberTheme.secondary,
+                  color: AppColors.secondary,
                 ),
                 const SizedBox(width: 12),
               ] else if (leading != null) ...[
@@ -77,8 +79,8 @@ class PageHeader extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  CyberTheme.primary,
-                  CyberTheme.primary.withValues(alpha: 0),
+                  AppColors.primary,
+                  AppColors.primary.withValues(alpha: 0),
                 ],
               ),
             ),

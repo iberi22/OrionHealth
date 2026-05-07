@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/cyber_theme.dart';
+
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/bloc/health_record_cubit.dart';
 import '../../domain/entities/medical_record.dart';
+import '../../../../../core/theme/app_colors.dart';
+
 
 class UploadPage extends StatelessWidget {
   const UploadPage({super.key});
@@ -47,10 +49,10 @@ class UploadPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: CyberTheme.primary),
+            CircularProgressIndicator(color: AppColors.primary),
             SizedBox(height: 24),
             Text('Procesando documento...',
-                style: TextStyle(color: CyberTheme.secondary, fontSize: 18)),
+                style: TextStyle(color: AppColors.secondary, fontSize: 18)),
             SizedBox(height: 8),
             Text('Extrayendo información médica con IA',
                 style: TextStyle(color: Colors.white70)),
@@ -83,7 +85,7 @@ class _SourceSelectionStep extends StatelessWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: CyberTheme.primary,
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 8),
@@ -159,7 +161,6 @@ class _OptionCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: GlassmorphicCard(
-        borderColor: isPrimary ? CyberTheme.primary.withValues(alpha: 0.5) : Colors.white10,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(
@@ -167,12 +168,12 @@ class _OptionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: (isPrimary ? CyberTheme.primary : CyberTheme.secondary).withValues(alpha: 0.1),
+                  color: (isPrimary ? AppColors.primary : AppColors.secondary).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   icon,
-                  color: isPrimary ? CyberTheme.primary : CyberTheme.secondary,
+                  color: isPrimary ? AppColors.primary : AppColors.secondary,
                   size: 32,
                 ),
               ),
@@ -186,7 +187,7 @@ class _OptionCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isPrimary ? CyberTheme.primary : Colors.white,
+                        color: isPrimary ? AppColors.primary : Colors.white,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -262,7 +263,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: CyberTheme.primary,
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 8),
@@ -273,7 +274,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
             const SizedBox(height: 24),
 
             Text('Archivo: ${widget.filePath.split('/').last}',
-                style: const TextStyle(color: CyberTheme.secondary, fontSize: 12)),
+                style: const TextStyle(color: AppColors.secondary, fontSize: 12)),
             const SizedBox(height: 16),
 
             GlassmorphicCard(
@@ -285,7 +286,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
                       controller: _summaryController,
                       decoration: const InputDecoration(
                         labelText: 'Resumen o Título',
-                        labelStyle: TextStyle(color: CyberTheme.secondary),
+                        labelStyle: TextStyle(color: AppColors.secondary),
                         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
                       ),
                       validator: (v) => v?.isEmpty == true ? 'Requerido' : null,
@@ -293,10 +294,10 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
                     const SizedBox(height: 16),
                     DropdownButtonFormField<RecordType>(
                       value: _selectedType,
-                      dropdownColor: CyberTheme.surfaceDark,
+                      dropdownColor: AppColors.surfaceVariant,
                       decoration: const InputDecoration(
                         labelText: 'Tipo de Documento',
-                        labelStyle: TextStyle(color: CyberTheme.secondary),
+                        labelStyle: TextStyle(color: AppColors.secondary),
                         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
                       ),
                       items: RecordType.values
@@ -321,7 +322,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
                       child: InputDecorator(
                         decoration: const InputDecoration(
                           labelText: 'Fecha del Documento',
-                          labelStyle: TextStyle(color: CyberTheme.secondary),
+                          labelStyle: TextStyle(color: AppColors.secondary),
                           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
                         ),
                         child: Text('${_selectedDate.toLocal()}'.split(' ')[0]),
@@ -334,7 +335,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
 
             const SizedBox(height: 16),
 
-            const Text('Texto Extraído', style: TextStyle(color: CyberTheme.secondary, fontWeight: FontWeight.bold)),
+            const Text('Texto Extraído', style: TextStyle(color: AppColors.secondary, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             GlassmorphicCard(
               child: TextFormField(
@@ -366,7 +367,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: CyberTheme.primary,
+                  backgroundColor: AppColors.primary,
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),

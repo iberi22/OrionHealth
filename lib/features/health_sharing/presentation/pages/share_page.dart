@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/page_header.dart';
 import '../../application/sharing_cubit.dart';
 import '../../domain/entities/shared_health_package.dart';
+import '../../../../core/theme/app_colors.dart';
+
 
 /// Page to share health data with another OrionHealth node
 class SharePage extends StatelessWidget {
@@ -60,11 +62,12 @@ class _SharePageContentState extends State<_SharePageContent> {
                     onBackPress: () => Navigator.of(context).pop(),
                   ),
                   _buildCategorySelector(),
-                const SizedBox(height: 24),
-                _buildMethodSelector(),
-                const SizedBox(height: 24),
-                _buildShareButton(context, state),
-              ],
+                  const SizedBox(height: 24),
+                  _buildMethodSelector(),
+                  const SizedBox(height: 24),
+                  _buildShareButton(context, state),
+                ],
+              ),
             ),
           );
         },
@@ -127,22 +130,20 @@ class _SharePageContentState extends State<_SharePageContent> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            RadioGroup<TransferMethod>(
-              groupValue: _selectedMethod,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _selectedMethod = value);
-                }
-              },
-              child: Column(
-                children: TransferMethod.values.map((method) {
-                  return RadioListTile<TransferMethod>(
-                    title: Text(method.displayName),
-                    subtitle: Text(method.description),
-                    value: method,
-                  );
-                }).toList(),
-              ),
+            Column(
+              children: TransferMethod.values.map((method) {
+                return ListTile(
+                  title: Text(method.displayName),
+                  subtitle: Text(method.description),
+                  leading: Icon(
+                    _selectedMethod == method ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                    color: _selectedMethod == method ? AppColors.primary : Colors.grey,
+                  ),
+                  onTap: () {
+                    setState(() => _selectedMethod = method);
+                  },
+                );
+              }).toList(),
             ),
           ],
         ),
