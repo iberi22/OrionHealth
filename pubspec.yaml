@@ -73,7 +73,7 @@ dependencies:
   shared_preferences: ^2.3.0
 
   # Bluetooth Low Energy for medical data sharing
-  flutter_blue_plus: ^1.35.2
+  flutter_blue_plus: ^2.3.1
   google_mlkit_text_recognition: ^0.15.1
   
 dev_dependencies:
