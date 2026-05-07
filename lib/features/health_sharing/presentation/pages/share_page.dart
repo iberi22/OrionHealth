@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/widgets/page_header.dart';
 import '../../application/sharing_cubit.dart';
 import '../../domain/entities/shared_health_package.dart';
 
@@ -30,15 +31,6 @@ class _SharePageContentState extends State<_SharePageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Compartir Datos'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
       body: BlocConsumer<SharingCubit, SharingState>(
         listener: (context, state) {
           if (state is SharingComplete) {
@@ -54,12 +46,20 @@ class _SharePageContentState extends State<_SharePageContent> {
             return _buildTransferringUI(state);
           }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildCategorySelector(),
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PageHeader(
+                    title: 'Compartir Datos',
+                    subtitle: 'Transfiere de forma segura tu historial médico a otros nodos OrionHealth',
+                    showBackButton: true,
+                    backButtonIcon: Icons.close,
+                    onBackPress: () => Navigator.of(context).pop(),
+                  ),
+                  _buildCategorySelector(),
                 const SizedBox(height: 24),
                 _buildMethodSelector(),
                 const SizedBox(height: 24),

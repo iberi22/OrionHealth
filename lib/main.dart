@@ -7,6 +7,7 @@ import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
 import 'core/theme/cyber_theme.dart';
 import 'core/widgets/floating_assistant_button.dart';
+import 'core/widgets/page_header.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/health_report/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
@@ -17,7 +18,21 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Home Page')));
+    return const Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              PageHeader(
+                title: 'Inicio',
+                subtitle: 'Gestiona tu salud y consulta tu asistente inteligente',
+              ),
+              // More content can be added here
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
