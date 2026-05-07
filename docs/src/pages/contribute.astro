@@ -1,0 +1,113 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Contribute" description="Developer onboarding guide and contribution guidelines">
+  <div class="prose">
+    <h1>Contribute to OrionHealth</h1>
+    <p>We welcome contributors of all skill levels! Whether you are fixing a typo, improving docs, or implementing a feature, your help is appreciated.</p>
+
+    <h2>Quick Start</h2>
+    <p>First, fork and clone the repository:</p>
+    <pre><code>git clone https://github.com/YOUR_USERNAME/OrionHealth.git
+cd OrionHealth
+git remote add upstream https://github.com/iberi22/OrionHealth.git</code></pre>
+
+    <p>Requirements: Flutter SDK 3.x, Android Studio or VS Code, Dart 3.x, Android SDK.</p>
+    <pre><code>flutter pub get
+flutter run</code></pre>
+
+    <h2>Branch Naming</h2>
+    <ul>
+      <li>feat/your-feature-name</li>
+      <li>fix/issue-number-description</li>
+      <li>docs/update-documentation</li>
+      <li>refactor/refactor-feature</li>
+      <li>chore/update-dependencies</li>
+    </ul>
+
+    <h2>Commit Messages</h2>
+    <p>Follow Conventional Commits: feat:, fix:, docs:, refactor:, chore:</p>
+
+    <h2>Code Style</h2>
+    <ul>
+      <li>2-space indentation</li>
+      <li>const where possible</li>
+      <li>Type annotations for public APIs</li>
+      <li>Doc comments for public methods</li>
+    </ul>
+
+    <h2>Pull Request Process</h2>
+    <ol>
+      <li>Keep PRs focused - one issue per PR</li>
+      <li>Update documentation if changing behavior</li>
+      <li>Add tests for new functionality</li>
+      <li>Follow code style conventions</li>
+      <li>Fill PR template</li>
+    </ol>
+
+    <h2>Security Guidelines</h2>
+    <p>DO NOT create public GitHub issues for security vulnerabilities. Contact via GitHub Security Advisories.</p>
+    <ul>
+      <li>Never log sensitive data (PII, medical records)</li>
+      <li>Use the encryption service for all sensitive data</li>
+      <li>Validate all inputs</li>
+    </ul>
+
+    <h2>Code of Conduct</h2>
+    <p>We follow the Contributor Covenant Code of Conduct. Be respectful, inclusive, and constructive.</p>
+
+    <h2>First-Time Contributors</h2>
+    <ul>
+      <li>Fix a typo in documentation</li>
+      <li>Add an example to a doc page</li>
+      <li>Review a simple PR</li>
+      <li>Take a good first issue</li>
+    </ul>
+    <p>Look for labels: good-first-issue, beginner-friendly, documentation.</p>
+
+    <h2>Questions</h2>
+    <ul>
+      <li>Check existing GitHub Issues</li>
+      <li>Create a Discussion</li>
+      <li>Read CONTRIBUTING.md</li>
+    </ul>
+
+    <hr />
+    <p>Thank you for contributing to OrionHealth!</p>
+    <p>Your contributions help people worldwide access their health data securely.</p>
+  </div>
+</BaseLayout>
+
+<style>
+.prose {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.prose h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  color: var(--text-primary);
+}
+.prose code {
+  background: var(--glass-bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+.prose pre {
+  background: var(--glass-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+</style>
