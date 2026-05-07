@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../../../main.dart';
 
@@ -18,10 +18,10 @@ class CompleteStep extends StatelessWidget {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: CyberTheme.primary.withAlpha(26),
+              color: AppColors.primary.withAlpha(26),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.check_circle, size: 60, color: CyberTheme.primary),
+            child: const Icon(Icons.check_circle, size: 60, color: AppColors.primary),
           ),
           const SizedBox(height: 32),
           const Text(
@@ -39,7 +39,7 @@ class CompleteStep extends StatelessWidget {
           GlassmorphicCard(
             child: Row(
               children: [
-                const Icon(Icons.favorite, color: CyberTheme.primary, size: 32),
+                const Icon(Icons.favorite, color: AppColors.primary, size: 32),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -61,8 +61,8 @@ class CompleteStep extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: CyberTheme.primary,
-                foregroundColor: CyberTheme.backgroundDark,
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.background,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

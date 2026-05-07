@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../../../core/widgets/page_header.dart';
 import '../../application/bloc/health_report_bloc.dart';
@@ -19,7 +19,7 @@ class ReportsPage extends StatelessWidget {
           onRefresh: () async {
             context.read<HealthReportBloc>().add(LoadReports());
           },
-          color: CyberTheme.primary,
+          color: AppColors.primary,
           child: BlocBuilder<HealthReportBloc, HealthReportState>(
             builder: (context, state) {
               return CustomScrollView(
@@ -123,7 +123,7 @@ class _PrimaryActionCard extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const Icon(Icons.add_circle, color: CyberTheme.primary, size: 48),
+            const Icon(Icons.add_circle, color: AppColors.primary, size: 48),
             const SizedBox(height: 16),
             const Text('Agendar Nueva Cita',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -136,7 +136,7 @@ class _PrimaryActionCard extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: CyberTheme.primary,
+                backgroundColor: AppColors.primary,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 12),
@@ -185,7 +185,7 @@ class _AppointmentItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.favorite_border, color: CyberTheme.secondary, size: 40),
+                    const Icon(Icons.favorite_border, color: AppColors.secondary, size: 40),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
@@ -196,7 +196,7 @@ class _AppointmentItem extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Text(dateTime, style: const TextStyle(color: CyberTheme.secondary)),
+                    Text(dateTime, style: const TextStyle(color: AppColors.secondary)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -206,7 +206,7 @@ class _AppointmentItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Status: $status', style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
-                    const Text('Ver Detalles', style: TextStyle(color: CyberTheme.secondary)),
+                    const Text('Ver Detalles', style: TextStyle(color: AppColors.secondary)),
                   ],
                 ),
               ],
