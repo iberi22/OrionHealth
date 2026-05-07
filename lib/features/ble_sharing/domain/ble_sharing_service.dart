@@ -55,8 +55,9 @@ class BleSharingService {
       ],
     );
 
-    // Listen for results
-    await for (final scanResults in FlutterBluePlus.scanResults) {
+    // Listen for results — subscription stored for lifecycle management
+    final completer = Completer<void>();
+    _scanSubscription = FlutterBluePlus.scanResults.listen((scanResults) {
       for (final r in scanResults) {
         final deviceType = _detectDeviceType(r.advertisementData.serviceUuids);
         results.add(BleDevice(
@@ -66,8 +67,12 @@ class BleSharingService {
           type: deviceType,
         ));
       }
-      if (results.length > 20) break; // Limit results
-    }
+      if (results.length > 20) completer.complete(); // Limit results
+    }, onDone: () => completer.complete());
+
+    await completer.future.timeout(timeout, onTimeout: () {});
+    await _scanSubscription?.cancel();
+    _scanSubscription = null;
 
     _stateController.add(BleServiceState.ready());
     return results.toSet().toList(); // Remove duplicates

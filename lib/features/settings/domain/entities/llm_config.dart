@@ -21,12 +21,32 @@ class LlmConfig {
   /// Recommended model based on device capability
   String? recommendedModel;
 
+  /// Provider type: 'local', 'openai', 'gemini'
+  String providerType;
+
+  /// User-provided API key for custom provider (OpenAI-compatible or Anthropic)
+  String? apiKey;
+
+  /// Base URL for custom provider (e.g., https://api.openai.com/v1)
+  String? baseUrl;
+
+  /// Selected cloud model name (e.g., 'gpt-4o', 'claude-3-opus')
+  String? cloudModel;
+
+  /// Local model identifier (e.g., 'qwen3-0.6b', 'deepseek-r1')
+  String? localModelId;
+
   LlmConfig({
     this.selectedModel = 'gemini-2.0-flash',
     this.useCloudApi = true,
     this.allowCloudApiCalls = true,
     this.deviceCapabilityTier = 'medium',
     this.recommendedModel,
+    this.providerType = 'local',
+    this.apiKey,
+    this.baseUrl,
+    this.cloudModel = 'gpt-4o',
+    this.localModelId,
   });
 
   LlmConfig copyWith({
@@ -35,6 +55,11 @@ class LlmConfig {
     bool? allowCloudApiCalls,
     String? deviceCapabilityTier,
     String? recommendedModel,
+    String? providerType,
+    String? apiKey,
+    String? baseUrl,
+    String? cloudModel,
+    String? localModelId,
   }) {
     return LlmConfig(
       selectedModel: selectedModel ?? this.selectedModel,
@@ -42,6 +67,11 @@ class LlmConfig {
       allowCloudApiCalls: allowCloudApiCalls ?? this.allowCloudApiCalls,
       deviceCapabilityTier: deviceCapabilityTier ?? this.deviceCapabilityTier,
       recommendedModel: recommendedModel ?? this.recommendedModel,
+      providerType: providerType ?? this.providerType,
+      apiKey: apiKey ?? this.apiKey,
+      baseUrl: baseUrl ?? this.baseUrl,
+      cloudModel: cloudModel ?? this.cloudModel,
+      localModelId: localModelId ?? this.localModelId,
     )..id = id;
   }
 
@@ -49,6 +79,8 @@ class LlmConfig {
   String toString() {
     return 'LlmConfig(id: $id, selectedModel: $selectedModel, useCloudApi: $useCloudApi, '
         'allowCloudApiCalls: $allowCloudApiCalls, deviceCapabilityTier: $deviceCapabilityTier, '
-        'recommendedModel: $recommendedModel)';
+        'recommendedModel: $recommendedModel, providerType: $providerType, '
+        'apiKey: ${apiKey != null ? '***' : null}, baseUrl: $baseUrl, '
+        'cloudModel: $cloudModel, localModelId: $localModelId)';
   }
 }

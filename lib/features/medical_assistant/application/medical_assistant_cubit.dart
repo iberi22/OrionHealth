@@ -7,9 +7,11 @@ import '../domain/entities/medical_query.dart';
 import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
 import '../domain/services/medical_analysis_service.dart';
+import '../domain/services/health_context_service.dart';
 import '../infrastructure/llm/medical_llm_adapter.dart';
 import '../domain/services/clinical_reasoner_service.dart';
 import '../../../core/services/privacy_anonymizer.dart';
+import '../../../core/services/app_logger.dart';
 import '../../../core/di/injection.dart';
 import '../../../features/local_agent/infrastructure/llm_service.dart';
 import '../infrastructure/analysis/lab_interpreter.dart';
@@ -58,16 +60,19 @@ class MedicalAssistantError extends MedicalAssistantState {
 
 // Cubit
 class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
+  static const _tag = 'MedicalAssistantCubit';
+
   final MedicalLlmAdapter _llmAdapter;
   final MedicalAnalysisService _analysisService;
   final ClinicalReasonerService _reasoner;
+  final HealthContextService _healthContext;
+  final PromptScrubber _scrubber;
   // ignore: unused_field
   final LabInterpreter _labInterpreter;
   // ignore: unused_field
   final VitalSignAnalyzer _vitalAnalyzer;
   // ignore: unused_field
   final RiskCalculator _riskCalculator;
-  final MemoryGraph? _memory;
 
   MedicalAssistantCubit({
     MedicalLlmAdapter? llmAdapter,
@@ -76,6 +81,8 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
     VitalSignAnalyzer? vitalAnalyzer,
     RiskCalculator? riskCalculator,
     ClinicalReasonerService? reasoner,
+    HealthContextService? healthContext,
+    PromptScrubber? scrubber,
     MemoryGraph? memory,
     LlmService? llmService,
   })  : _llmAdapter = llmAdapter ??
@@ -88,7 +95,8 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
         _vitalAnalyzer = vitalAnalyzer ?? VitalSignAnalyzer(),
         _riskCalculator = riskCalculator ?? getIt<RiskCalculator>(),
         _reasoner = reasoner ?? getIt<ClinicalReasonerService>(),
-        _memory = memory,
+        _healthContext = healthContext ?? getIt<HealthContextService>(),
+        _scrubber = scrubber ?? getIt<PromptScrubber>(),
         super(const MedicalAssistantIdle());
 
   /// Submit a medical query with STRICT confidence enforcement.
@@ -128,13 +136,13 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
         return;
       }
 
-      // Gather user context from memory
-      final userContext = await _getUserContext(userId);
-      final chronicConditions =
-          userContext['conditions'] as List<Icd10Code>? ?? [];
-      final labValues =
-          userContext['labs'] as Map<String, double>? ?? {};
-      final vitals = userContext['vitals'] as Map<String, double>? ?? {};
+      // Gather real user context from typed Isar repos
+      AppLogger.d(_tag, 'Loading health context for user=$userId...');
+      final healthCtx = await _healthContext.getContextForUser(userId ?? 'anonymous');
+      final userContext = healthCtx.toContextMap();
+      final chronicConditions = healthCtx.conditions;
+      final labValues = healthCtx.labValues;
+      final vitals = healthCtx.vitals;
 
       // ---- Lab Analysis ----
       emit(const MedicalAssistantLoading(message: 'Analizando laboratorios...'));
@@ -174,8 +182,10 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
       );
 
       // ---- Symptom Analysis (Agentic Reasoner) ----
+      // Scrub PII from user input before it enters the clinical reasoning engine
       emit(const MedicalAssistantLoading(message: 'Razonando sobre tus síntomas...'));
-      final diagnosticMatches = await _reasoner.analyzeSymptoms(question);
+      final scrubbedQuestion = await _scrubber.scrub(question, apiName: 'clinical_reasoner');
+      final diagnosticMatches = await _reasoner.analyzeSymptoms(scrubbedQuestion);
       final diagnosticInsights = diagnosticMatches.map((m) => MedicalInsight(
         id: 'diag_${m.code.code}',
         title: 'Posible asociación: ${m.code.displayName}',
@@ -305,19 +315,5 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
       'hi', 'hello', 'hey', 'saludos', 'que tal'
     ];
     return greetings.any((g) => lower == g || lower.startsWith('$g '));
-  }
-
-  Future<Map<String, dynamic>> _getUserContext(String? userId) async {
-    if (_memory == null || userId == null) {
-      return {};
-    }
-
-    // Stub: would query isar_agent_memory for user health data
-    return {
-      'conditions': <Icd10Code>[],
-      'labs': <String, double>{},
-      'vitals': <String, double>{},
-      'medications': <String>[],
-    };
   }
 }

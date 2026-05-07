@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:injectable/injectable.dart';
 import '../../domain/services/llm_adapter.dart';
 
 /// Gemma 4 adapter with hybrid local/cloud strategy.
@@ -24,8 +23,9 @@ import '../../domain/services/llm_adapter.dart';
 ///   - Gemma 4 model downloaded via AICore app
 ///
 /// See: docs/gemma4-integration.md for full setup guide.
-@LazySingleton(as: LlmAdapter)
-@Named('gemma')
+/// Legacy adapter — kept for reference. Use FlutterGemmaAdapter instead.
+// @LazySingleton(as: LlmAdapter)
+// @Named('gemma')
 class GemmaLlmAdapter implements LlmAdapter {
   static const _channel = MethodChannel('com.orionhealth/gemma4');
   GenerativeModel? _geminiModel;
