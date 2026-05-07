@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_auth/local_auth.dart';
 import '../../application/onboarding_cubit.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 
 class PrivacyStep extends StatefulWidget {
@@ -63,7 +63,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.shield, color: CyberTheme.primary, size: 22),
+                    const Icon(Icons.shield, color: AppColors.primary, size: 22),
                     const SizedBox(width: 10),
                     const Text(
                       'Protección de acceso',
@@ -86,7 +86,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.lock_outline, color: CyberTheme.secondary, size: 22),
+                    const Icon(Icons.lock_outline, color: AppColors.secondary, size: 22),
                     const SizedBox(width: 10),
                     const Expanded(
                       child: Text(
@@ -215,7 +215,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
         children: [
           Icon(
             _biometricEnabled ? Icons.fingerprint : Icons.lock_outline,
-            color: _biometricEnabled ? CyberTheme.primary : Colors.white38,
+            color: _biometricEnabled ? AppColors.primary : Colors.white38,
             size: 22,
           ),
           const SizedBox(width: 12),
@@ -244,8 +244,8 @@ class _PrivacyStepState extends State<PrivacyStep> {
           Switch(
             value: _biometricEnabled,
             onChanged: (v) => setState(() => _biometricEnabled = v),
-            activeThumbColor: CyberTheme.primary,
-            activeTrackColor: CyberTheme.primary.withAlpha(102),
+            activeThumbColor: AppColors.primary,
+            activeTrackColor: AppColors.primary.withAlpha(102),
             inactiveThumbColor: Colors.white38,
             inactiveTrackColor: Colors.white12,
           ),
@@ -270,7 +270,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
             child: Checkbox(
               value: value,
               onChanged: onChanged,
-              activeColor: CyberTheme.primary,
+              activeColor: AppColors.primary,
               side: const BorderSide(color: Colors.white38, width: 1.5),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
@@ -308,8 +308,8 @@ class _PrivacyStepState extends State<PrivacyStep> {
           flex: 2,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: canComplete ? CyberTheme.primary : Colors.grey[800],
-              foregroundColor: CyberTheme.backgroundDark,
+              backgroundColor: canComplete ? AppColors.primary : Colors.grey[800],
+              foregroundColor: AppColors.background,
               padding: const EdgeInsets.symmetric(vertical: 15),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),

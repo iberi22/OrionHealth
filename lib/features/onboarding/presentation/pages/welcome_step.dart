@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/onboarding_cubit.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class WelcomeStep extends StatelessWidget {
   const WelcomeStep({super.key});
@@ -18,13 +18,13 @@ class WelcomeStep extends StatelessWidget {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: CyberTheme.primary.withAlpha(26),
+              color: AppColors.primary.withAlpha(26),
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.favorite,
               size: 50,
-              color: CyberTheme.primary,
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 32),
@@ -52,19 +52,8 @@ class WelcomeStep extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CyberTheme.primary,
-                foregroundColor: CyberTheme.backgroundDark,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
               onPressed: () => context.read<OnboardingCubit>().nextStep(),
-              child: const Text(
-                'Comenzar',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              child: const Text('Comenzar'),
             ),
           ),
           const SizedBox(height: 32),

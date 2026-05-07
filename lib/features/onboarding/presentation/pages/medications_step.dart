@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/onboarding_cubit.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 
 class MedicationsStep extends StatefulWidget {
@@ -76,7 +76,7 @@ class _MedicationsStepState extends State<MedicationsStep> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle, color: CyberTheme.primary),
+                  icon: const Icon(Icons.add_circle, color: AppColors.primary),
                   onPressed: () => _addMed(_medController.text),
                 ),
               ],
@@ -84,7 +84,7 @@ class _MedicationsStepState extends State<MedicationsStep> {
           ),
           if (_medications.isNotEmpty) ...[
             const SizedBox(height: 12),
-            ..._medications.map((m) => _buildChip(m, CyberTheme.primary, () => _removeMed(m))),
+            ..._medications.map((m) => _buildChip(m, AppColors.primary, () => _removeMed(m))),
           ],
           const SizedBox(height: 32),
           const Text('Alergias', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
@@ -155,7 +155,7 @@ class _MedicationsStepState extends State<MedicationsStep> {
           flex: 2,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: CyberTheme.primary, foregroundColor: CyberTheme.backgroundDark,
+              backgroundColor: AppColors.primary, foregroundColor: AppColors.background,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),

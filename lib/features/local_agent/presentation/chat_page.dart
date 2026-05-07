@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:orionhealth_health/core/theme/cyber_theme.dart';
+import 'package:orionhealth_health/core/theme/app_colors.dart';
 import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
 
@@ -71,9 +71,9 @@ class _ChatPageState extends State<ChatPage> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.circle, color: CyberTheme.primary, size: 8),
+              Icon(Icons.circle, color: AppColors.primary, size: 8),
               SizedBox(width: 4),
-              Text('Online', style: TextStyle(fontSize: 12, color: CyberTheme.primary)),
+              Text('Online', style: TextStyle(fontSize: 12, color: AppColors.primary)),
             ],
           )
         ],
@@ -141,7 +141,7 @@ class _ChatMessageWidget extends StatelessWidget {
               bottomRight: isUser ? Radius.zero : const Radius.circular(16),
               bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
             ),
-            border: Border.all(color: isUser ? CyberTheme.primary.withValues(alpha: 0.3) : CyberTheme.secondary.withValues(alpha: 0.3)),
+            border: Border.all(color: isUser ? AppColors.primary.withValues(alpha: 0.3) : AppColors.secondary.withValues(alpha: 0.3)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +194,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Row(
         children: [
-          const Icon(Icons.computer, color: CyberTheme.secondary, size: 24),
+          const Icon(Icons.computer, color: AppColors.secondary, size: 24),
           const SizedBox(width: 8),
           FadeTransition(
             opacity: _animation,
@@ -239,7 +239,7 @@ class _MessageComposer extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
-            icon: const Icon(Icons.send, color: CyberTheme.primary),
+            icon: const Icon(Icons.send, color: AppColors.primary),
             onPressed: onSend,
           ),
         ],

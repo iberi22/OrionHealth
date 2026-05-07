@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/health_import_state.dart';
 
@@ -86,14 +86,14 @@ class DataSourceCard extends StatelessWidget {
                             height: 8,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isAvailable ? CyberTheme.primary : Colors.grey,
+                              color: isAvailable ? AppColors.primary : Colors.grey,
                             ),
                           ),
                           const SizedBox(width: 6),
                           Text(
                             isAvailable ? 'Available' : 'Not available',
                             style: TextStyle(
-                              color: isAvailable ? CyberTheme.primary : Colors.grey,
+                              color: isAvailable ? AppColors.primary : Colors.grey,
                               fontSize: 12,
                             ),
                           ),
@@ -121,7 +121,7 @@ class DataSourceCard extends StatelessWidget {
                 label: const Text('Import Data'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isAvailable
-                      ? CyberTheme.primary
+                      ? AppColors.primary
                       : Colors.grey.withValues(alpha: 0.3),
                   foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 12),
