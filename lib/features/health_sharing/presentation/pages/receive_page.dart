@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/widgets/page_header.dart';
 import '../../application/sharing_cubit.dart';
 import '../../domain/entities/shared_health_package.dart';
 
@@ -36,15 +37,6 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Recibir Datos'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
       body: BlocConsumer<SharingCubit, SharingState>(
         listener: (context, state) {
           if (state is SharingReceiving && state.package != null) {
@@ -58,7 +50,20 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
           }
         },
         builder: (context, state) {
-          return _buildWaitingUI(state);
+          return SafeArea(
+            child: Column(
+              children: [
+                PageHeader(
+                  title: 'Recibir Datos',
+                  subtitle: 'Acepta transferencias de salud cifradas de otros dispositivos cercanos',
+                  showBackButton: true,
+                  backButtonIcon: Icons.close,
+                  onBackPress: () => Navigator.of(context).pop(),
+                ),
+                Expanded(child: _buildWaitingUI(state)),
+              ],
+            ),
+          );
         },
       ),
     );

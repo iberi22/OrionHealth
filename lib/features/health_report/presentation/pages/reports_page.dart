@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../../core/widgets/page_header.dart';
 import '../../application/bloc/health_report_bloc.dart';
 import 'report_detail_page.dart';
 
@@ -14,10 +15,6 @@ class ReportsPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => getIt<HealthReportBloc>()..add(LoadReports()),
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('Programar Citas'),
-        ),
         body: RefreshIndicator(
           onRefresh: () async {
             context.read<HealthReportBloc>().add(LoadReports());
@@ -27,6 +24,15 @@ class ReportsPage extends StatelessWidget {
             builder: (context, state) {
               return CustomScrollView(
                 slivers: [
+                  const SliverToBoxAdapter(
+                    child: SafeArea(
+                      bottom: false,
+                      child: PageHeader(
+                        title: 'Citas Médicas',
+                        subtitle: 'Gestiona tus próximas consultas y seguimiento médico',
+                      ),
+                    ),
+                  ),
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
