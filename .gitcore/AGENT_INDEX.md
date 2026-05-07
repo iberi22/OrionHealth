@@ -1,4 +1,4 @@
-# Agent Index — Git-Core Protocol v2
+﻿# Agent Index — Git-Core Protocol v2
 
 ## Protocol Overview
 Git-Core Protocol v2 defines agent behavior, task management, and collaboration conventions for this repository.
@@ -16,47 +16,54 @@ Git-Core Protocol v2 defines agent behavior, task management, and collaboration 
 - **Default project**: OrionHealth
 
 ### Prohibited
-- ❌ "Buena pregunta, déjame investigar..."
-- ❌ "Podrías hacer..."
+- ❌ "Buena pregunta, dejame investigar..."
+- ❌ "Podrias hacer..."
 - ❌ "Te sugiero..."
-- ❌ `cd X && python Y` — write script first, execute after
+- ❌ cd X && python Y — write script first, execute after
 - ❌ Newlines in bash chains
 
 ### File Operations
 - Always use absolute paths
-- Quote paths with spaces: `"path with spaces/file.txt"`
-- Use `workdir` parameter instead of `cd`
+- Quote paths with spaces: "path with spaces/file.txt"
+- Use workdir parameter instead of cd
 
 ### Commands
 - **commit**: NEVER update git config, NEVER destructive commands
 - **push**: NEVER force push to main/master, warn user if requested
-- **PR**: Use `gh pr create` with proper format
+- **PR**: Use gh pr create with proper format
 
-## Task Templates
+## Directory Structure (Professional Standard)
 
-### Planning (`PLANNING.md`)
-- Context
-- Goals
-- Architecture decisions
-- Implementation plan
+### Root — KEEP CLEAN
+Only these files belong at root:
+- pubspec.yaml / pubspec.lock — Flutter project config
+- README.md — Project overview
+- LICENSE — Open source license
+- CHANGELOG.md — Version history
+- CONTRIBUTING.md — How to contribute
+- SECURITY.md — Security policies
+- .gitignore — Git ignore rules
+- .metadata — Flutter metadata
+- analysis_options.yaml — Dart linting rules
 
-### Task (`TASK.md`)
-- Objective
-- Steps
-- Verification
-- Notes
+### docs/ — All documentation
+- /docs/planning/  — PLANNING.md, TASK.md, mainIdea, TASK_GH_ISSUES
+- /docs/status/    — APK_BUILD_STATUS.md, DEVELOPMENT_STATUS.md
+- /docs/reviews/   — CODE_REVIEW_ANOMALIES.md
+- /docs/medical/   — MEDICAL_DATA_GAPS.md
+- /docs/architecture/ — ARCHITECTURE.md
+- /docs/assets/    — Images, diagrams
 
-## Directory Structure
-```
-.gitcore/
-├── version           # Protocol version
-├── AGENT_INDEX.md    # This file
-├── planning/         # Planning templates
-│   ├── PLANNING.md
-│   └── TASK.md
-├── features/         # Feature documentation
-└── src/             # Source documentation
-```
+### scripts/ — Build & maintenance
+- scripts/build_apk.ps1
+- scripts/run_integration_tests.ps1
+- scripts/verify_docs.py
 
-## CI/CD Integration
-All workflows must check for `.gitcore/version` and validate protocol compliance.
+### lib/ — Main Flutter source
+### test/ — Tests (fixtures in /test/fixtures/)
+
+### Rules for Agents
+1. NEVER create scripts, docs, or data at root — use docs/, scripts/, or test/fixtures/
+2. NEVER commit .env or credentials
+3. Clean up dev artifacts before PR (temp files, logs, build artifacts)
+4. Follow Flutter standard: root stays minimal
