@@ -16,7 +16,7 @@ import '../../domain/repositories/medical_knowledge_repository.dart';
 /// the working directory, or the app's data bundle path in production).
 ///
 /// Once loaded, all codes are indexed in memory for fast lookup.
-@LazySingleton(as: MedicalKnowledgeRepository)
+@Injectable(as: MedicalKnowledgeRepository, env: ['desktop', 'test'])
 class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
   JsonMedicalKnowledgeRepository();
 

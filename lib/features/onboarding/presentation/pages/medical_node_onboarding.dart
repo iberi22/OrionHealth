@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class MedicalNodeOnboarding extends StatefulWidget {
   const MedicalNodeOnboarding({super.key});
@@ -33,7 +33,7 @@ class _MedicalNodeOnboardingState extends State<MedicalNodeOnboarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CyberTheme.backgroundDark,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -85,7 +85,7 @@ class _MedicalNodeOnboardingState extends State<MedicalNodeOnboarding> {
             child: LinearProgressIndicator(
               value: (_currentPage + 1) / _totalPages,
               backgroundColor: Colors.white12,
-              valueColor: const AlwaysStoppedAnimation<Color>(CyberTheme.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
               minHeight: 4,
             ),
           ),
@@ -102,8 +102,8 @@ class _MedicalNodeOnboardingState extends State<MedicalNodeOnboarding> {
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: CyberTheme.primary,
-            foregroundColor: CyberTheme.backgroundDark,
+            backgroundColor: AppColors.primary,
+            foregroundColor: AppColors.background,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -136,13 +136,13 @@ class _WhatIsMedicalNetworkStep extends StatelessWidget {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: CyberTheme.primary.withAlpha(26),
+              color: AppColors.primary.withAlpha(26),
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.local_hospital,
               size: 50,
-              color: CyberTheme.primary,
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 32),
@@ -189,7 +189,7 @@ class _WhatIsMedicalNetworkStep extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: CyberTheme.secondary, size: 20),
+          Icon(icon, color: AppColors.secondary, size: 20),
           const SizedBox(width: 12),
           Flexible(
             child: Text(
@@ -222,13 +222,13 @@ class _SecureDataSharingStep extends StatelessWidget {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: CyberTheme.secondary.withAlpha(26),
+              color: AppColors.secondary.withAlpha(26),
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.security,
               size: 50,
-              color: CyberTheme.secondary,
+              color: AppColors.secondary,
             ),
           ),
           const SizedBox(height: 32),
@@ -279,7 +279,7 @@ class _SecureDataSharingStep extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: CyberTheme.secondary, size: 20),
+          Icon(icon, color: AppColors.secondary, size: 20),
           const SizedBox(width: 12),
           Flexible(
             child: Text(
@@ -312,13 +312,13 @@ class _PatientBenefitsStep extends StatelessWidget {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: CyberTheme.primary.withAlpha(26),
+              color: AppColors.primary.withAlpha(26),
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.favorite,
               size: 50,
-              color: CyberTheme.primary,
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 32),
@@ -369,7 +369,7 @@ class _PatientBenefitsStep extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: CyberTheme.primary, size: 20),
+          Icon(icon, color: AppColors.primary, size: 20),
           const SizedBox(width: 12),
           Flexible(
             child: Text(

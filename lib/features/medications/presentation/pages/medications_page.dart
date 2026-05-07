@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../domain/entities/medication.dart';
 import '../../domain/repositories/medication_repository.dart';
@@ -47,7 +47,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, color: CyberTheme.primary),
+            icon: const Icon(Icons.add, color: AppColors.primary),
             onPressed: () {
               HapticFeedback.lightImpact();
               _showMedicationForm();
@@ -57,8 +57,8 @@ class _MedicationsPageState extends State<MedicationsPage> {
       ),
       body: RefreshIndicator(
         onRefresh: _loadMedications,
-        color: CyberTheme.primary,
-        backgroundColor: CyberTheme.surfaceDark,
+        color: AppColors.primary,
+        backgroundColor: AppColors.surface,
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _medications.isEmpty
@@ -71,7 +71,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                 : _buildMedicationList(),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: CyberTheme.primary,
+        backgroundColor: AppColors.primary,
         onPressed: () {
           HapticFeedback.lightImpact();
           _showMedicationForm();
@@ -127,7 +127,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: item == 'Activos' ? CyberTheme.primary : Colors.grey,
+                color: item == 'Activos' ? AppColors.primary : Colors.grey,
               ),
             ),
           );
@@ -178,7 +178,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                             Icon(
                               Icons.calendar_today,
                               size: 14,
-                              color: isArchived ? Colors.grey[600] : CyberTheme.secondary,
+                              color: isArchived ? Colors.grey[600] : AppColors.secondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -198,12 +198,12 @@ class _MedicationsPageState extends State<MedicationsPage> {
                     decoration: BoxDecoration(
                       color: isArchived
                           ? Colors.grey.withValues(alpha: 0.1)
-                          : CyberTheme.primary.withValues(alpha: 0.1),
+                          : AppColors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(
                         color: isArchived
                             ? Colors.grey.withValues(alpha: 0.3)
-                            : CyberTheme.primary.withValues(alpha: 0.3),
+                            : AppColors.primary.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -211,7 +211,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: isArchived ? Colors.grey : CyberTheme.primary,
+                        color: isArchived ? Colors.grey : AppColors.primary,
                       ),
                     ),
                   ),
@@ -239,7 +239,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
           decoration: const BoxDecoration(
-            color: CyberTheme.surfaceDark,
+            color: AppColors.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           padding: EdgeInsets.only(
@@ -261,7 +261,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: CyberTheme.primary,
+                        color: AppColors.primary,
                       ),
                     ),
                     if (medication != null)
@@ -289,7 +289,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                 const SizedBox(height: 12),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.calendar_today, color: CyberTheme.secondary),
+                  leading: const Icon(Icons.calendar_today, color: AppColors.secondary),
                   title: const Text('Fecha de inicio'),
                   subtitle: Text(DateFormat('dd MMM yyyy').format(selectedDate)),
                   onTap: () async {
@@ -302,9 +302,9 @@ class _MedicationsPageState extends State<MedicationsPage> {
                         return Theme(
                           data: Theme.of(context).copyWith(
                             colorScheme: const ColorScheme.dark(
-                              primary: CyberTheme.primary,
+                              primary: AppColors.primary,
                               onPrimary: Colors.black,
-                              surface: CyberTheme.surfaceDark,
+                              surface: AppColors.surface,
                               onSurface: Colors.white,
                             ),
                           ),
@@ -322,10 +322,10 @@ class _MedicationsPageState extends State<MedicationsPage> {
                   title: const Text('Activo'),
                   secondary: Icon(
                     isActive ? Icons.check_circle : Icons.pause_circle,
-                    color: isActive ? CyberTheme.primary : Colors.grey,
+                    color: isActive ? AppColors.primary : Colors.grey,
                   ),
                   value: isActive,
-                  activeThumbColor: CyberTheme.primary,
+                  activeThumbColor: AppColors.primary,
                   onChanged: (val) => setModalState(() => isActive = val),
                 ),
                 _buildTextField(notesController, 'Notas', Icons.notes, maxLines: 3),
@@ -335,7 +335,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: CyberTheme.primary,
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -393,7 +393,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: CyberTheme.secondary, size: 20),
+        prefixIcon: Icon(icon, color: AppColors.secondary, size: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
@@ -404,7 +404,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: CyberTheme.primary),
+          borderSide: const BorderSide(color: AppColors.primary),
         ),
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.05),

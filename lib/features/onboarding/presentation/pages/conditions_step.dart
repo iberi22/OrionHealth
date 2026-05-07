@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/onboarding_cubit.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 
 class ConditionsStep extends StatefulWidget {
@@ -57,11 +57,11 @@ class _ConditionsStepState extends State<ConditionsStep> {
                 label: Text(c),
                 selected: isSelected,
                 onSelected: (selected) => selected ? _add(c) : _remove(c),
-                selectedColor: CyberTheme.primary.withAlpha(77),
-                checkmarkColor: CyberTheme.primary,
-                labelStyle: TextStyle(color: isSelected ? CyberTheme.primary : Colors.white70),
-                backgroundColor: CyberTheme.surfaceDark,
-                side: BorderSide(color: isSelected ? CyberTheme.primary : Colors.white24),
+                selectedColor: AppColors.primary.withAlpha(77),
+                checkmarkColor: AppColors.primary,
+                labelStyle: TextStyle(color: isSelected ? AppColors.primary : Colors.white70),
+                backgroundColor: AppColors.surface,
+                side: BorderSide(color: isSelected ? AppColors.primary : Colors.white24),
               );
             }).toList(),
           ),
@@ -82,7 +82,7 @@ class _ConditionsStepState extends State<ConditionsStep> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle, color: CyberTheme.primary),
+                  icon: const Icon(Icons.add_circle, color: AppColors.primary),
                   onPressed: () => _add(_controller.text),
                 ),
               ],
@@ -98,8 +98,8 @@ class _ConditionsStepState extends State<ConditionsStep> {
                 return Chip(
                   label: Text(c), deleteIcon: const Icon(Icons.close, size: 18),
                   onDeleted: () => _remove(c),
-                  backgroundColor: CyberTheme.primary.withAlpha(51),
-                  deleteIconColor: CyberTheme.primary,
+                  backgroundColor: AppColors.primary.withAlpha(51),
+                  deleteIconColor: AppColors.primary,
                   labelStyle: const TextStyle(color: Colors.white),
                 );
               }).toList(),
@@ -131,7 +131,7 @@ class _ConditionsStepState extends State<ConditionsStep> {
           flex: 2,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: CyberTheme.primary, foregroundColor: CyberTheme.backgroundDark,
+              backgroundColor: AppColors.primary, foregroundColor: AppColors.background,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),

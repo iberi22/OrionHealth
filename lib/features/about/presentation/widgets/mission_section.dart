@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 
 class MissionSection extends StatelessWidget {
@@ -28,7 +28,7 @@ class MissionSection extends StatelessWidget {
         Text(
           'NUESTRA MISIÓN',
           style: TextStyle(
-            color: CyberTheme.primary,
+            color: AppColors.primary,
             fontWeight: FontWeight.bold,
             letterSpacing: 2,
             fontSize: 14,
@@ -84,7 +84,7 @@ class MissionSection extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.check_circle_outline, color: CyberTheme.primary, size: 20),
+                  const Icon(Icons.check_circle_outline, color: AppColors.primary, size: 20),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -120,7 +120,7 @@ class MissionSection extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.bolt, color: CyberTheme.secondary, size: 20),
+                  const Icon(Icons.bolt, color: AppColors.secondary, size: 20),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(

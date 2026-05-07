@@ -1,10 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/llm_settings_cubit.dart';
 import '../../domain/services/device_capability_service.dart';
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const List<Map<String, String>> localModelsCatalog = [
+  {'id': 'smolLM-135m', 'name': 'SmolLM 135M', 'size': '135MB', 'minRam': '1GB'},
+  {'id': 'gemma-3-270m', 'name': 'Gemma 3 270M', 'size': '270MB', 'minRam': '2GB'},
+  {'id': 'qwen3-0.6b', 'name': 'Qwen3 0.6B', 'size': '600MB', 'minRam': '3GB'},
+  {'id': 'deepseek-r1', 'name': 'DeepSeek R1', 'size': '1.7GB', 'minRam': '4GB'},
+  {'id': 'gemma-4-e2b', 'name': 'Gemma 4 E2B', 'size': '2.4GB', 'minRam': '6GB'},
+  {'id': 'phi-4-mini', 'name': 'Phi-4 Mini', 'size': '3.9GB', 'minRam': '6GB'},
+];
+
+const List<String> cloudProviders = ['openai', 'gemini', 'custom'];
+
+const List<String> cloudModels = [
+  'gpt-4o',
+  'gpt-4o-mini',
+  'gpt-5.4',
+  'o4-mini',
+  'gemini-2.0-flash',
+  'gemini-2.5-flash',
+  'gemini-2.5-pro',
+];
+
+// ---------------------------------------------------------------------------
+// Simulation helpers for local model download status (UI demo only)
+// ---------------------------------------------------------------------------
+
+enum _DownloadStatus { notDownloaded, downloading, ready }
+
+_DownloadStatus _simulatedStatus(String modelId) {
+  switch (modelId) {
+    case 'smolLM-135m':
+      return _DownloadStatus.ready;
+    case 'qwen3-0.6b':
+      return _DownloadStatus.ready;
+    case 'deepseek-r1':
+      return _DownloadStatus.downloading;
+    default:
+      return _DownloadStatus.notDownloaded;
+  }
+}
+
+double _simulatedProgress(String modelId) {
+  if (modelId == 'deepseek-r1') return 0.6;
+  return 0.0;
+}
+
+// ---------------------------------------------------------------------------
+// Main page
+// ---------------------------------------------------------------------------
 
 class LlmSettingsPage extends StatelessWidget {
   const LlmSettingsPage({super.key});
@@ -13,26 +66,51 @@ class LlmSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<LlmSettingsCubit>()..loadSettings(),
-      child: Scaffold(
-        body: BlocBuilder<LlmSettingsCubit, LlmSettingsState>(
-          builder: (context, state) {
-            if (state is LlmSettingsLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is LlmSettingsLoaded) {
-              return _LlmSettingsView(
-                config: state.config,
-                deviceCapability: state.deviceCapability,
-              );
-            } else if (state is LlmSettingsError) {
-              return Center(child: Text('Error: ${state.message}'));
-            }
-            return const Center(child: Text('Iniciando...'));
-          },
-        ),
+      child: BlocBuilder<LlmSettingsCubit, LlmSettingsState>(
+        builder: (context, state) {
+          if (state is LlmSettingsLoading) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (state is LlmSettingsLoaded) {
+            return _LlmSettingsView(
+              config: state.config,
+              deviceCapability: state.deviceCapability,
+            );
+          } else if (state is LlmSettingsError) {
+            return Scaffold(
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.error_outline,
+                          color: Colors.redAccent, size: 56),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Error: ${state.message}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+          return const Scaffold(
+            body: Center(child: Text('Iniciando...')),
+          );
+        },
       ),
     );
   }
 }
+
+// ============================================================================
+// VIEW – Tab-based redesign
+// ============================================================================
 
 class _LlmSettingsView extends StatelessWidget {
   final dynamic config;
@@ -46,76 +124,1335 @@ class _LlmSettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
           backgroundColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new),
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
             'Configuración de LLM',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          pinned: true,
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const SizedBox(height: 24),
-                _DeviceCapabilityCard(deviceCapability: deviceCapability),
-                const SizedBox(height: 32),
-                _Section(
-                  title: 'Modelo de IA',
-                  children: [
-                    _ModelSelector(
-                      selectedModel: config.selectedModel as String,
-                      recommendedModel: deviceCapability.recommendedModel,
-                      onChanged: (model) {
-                        context.read<LlmSettingsCubit>().updateSelectedModel(model);
-                      },
-                    ),
-                  ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: CyberTheme.surfaceDark.withAlpha(120),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: TabBar(
+                indicator: BoxDecoration(
+                  color: CyberTheme.primary.withAlpha(51),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: CyberTheme.primary.withAlpha(77), width: 1),
                 ),
-                const SizedBox(height: 32),
-                _Section(
-                  title: 'Modo de Ejecución',
-                  children: [
-                    _ModeToggle(
-                      useCloudApi: config.useCloudApi as bool,
-                      onChanged: (useCloud) {
-                        context.read<LlmSettingsCubit>().updateUseCloudApi(useCloud);
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                _Section(
-                  title: 'Privacidad',
-                  children: [
-                    _PrivacyToggle(
-                      allowCloudApiCalls: config.allowCloudApiCalls as bool,
-                      onChanged: (allow) {
-                        context.read<LlmSettingsCubit>().updateAllowCloudApiCalls(allow);
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                _InfoCard(),
-                const SizedBox(height: 32),
-              ],
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelColor: CyberTheme.primary,
+                unselectedLabelColor: Colors.white54,
+                labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w600, fontSize: 12),
+                unselectedLabelStyle: const TextStyle(fontSize: 12),
+                dividerColor: Colors.transparent,
+                tabs: const [
+                  Tab(
+                    icon: Icon(Icons.phone_android, size: 20),
+                    text: 'LOCAL',
+                  ),
+                  Tab(
+                    icon: Icon(Icons.cloud, size: 20),
+                    text: 'CLOUD',
+                  ),
+                  Tab(
+                    icon: Icon(Icons.tune, size: 20),
+                    text: 'MODO',
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ],
+        body: TabBarView(
+          children: [
+            _LocalModelsTab(
+              config: config,
+              deviceCapability: deviceCapability,
+            ),
+            _CloudProviderTab(config: config),
+            _ExecutionModeTab(config: config),
+          ],
+        ),
+      ),
     );
   }
 }
+
+// ============================================================================
+// TAB 1 – Local Models
+// ============================================================================
+
+class _LocalModelsTab extends StatelessWidget {
+  final dynamic config;
+  final DeviceCapability deviceCapability;
+
+  const _LocalModelsTab({
+    required this.config,
+    required this.deviceCapability,
+  });
+
+  int _getAvailableRamMb() {
+    final totalRamGbTxt = deviceCapability.totalMemoryMb;
+    // Rough estimate: 40% of total RAM is typically available
+    return (totalRamGbTxt * 0.4).round();
+  }
+
+  bool _isCompatible(Map<String, String> model) {
+    final minRamStr = model['minRam'] ?? '4GB';
+    final minRamMb = int.tryParse(minRamStr.replaceAll(RegExp(r'[^0-9]'), '')) ?? 4;
+    return _getAvailableRamMb() >= (minRamMb * 1024);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final availableRamMb = _getAvailableRamMb();
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // -- Device Capability Card (existing widget) --
+          _DeviceCapabilityCard(deviceCapability: deviceCapability),
+          const SizedBox(height: 24),
+
+          // -- Section header --
+          Row(
+            children: [
+              const Icon(Icons.inventory_2_outlined,
+                  color: Colors.white70, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Modelos Disponibles',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: CyberTheme.textDark,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withAlpha(15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${localModelsCatalog.length} modelos',
+                  style: const TextStyle(
+                      fontSize: 12, color: Colors.white54),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // -- Model list --
+          ...localModelsCatalog.map((model) {
+            final status = _simulatedStatus(model['id'] ?? '');
+            final progress = _simulatedProgress(model['id'] ?? '');
+            final compatible = _isCompatible(model);
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: _ModelListItem(
+                model: model,
+                status: status,
+                progress: progress,
+                compatible: compatible,
+                availableRamMb: availableRamMb,
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _ModelListItem extends StatelessWidget {
+  final Map<String, String> model;
+  final _DownloadStatus status;
+  final double progress;
+  final bool compatible;
+  final int availableRamMb;
+
+  const _ModelListItem({
+    required this.model,
+    required this.status,
+    required this.progress,
+    required this.compatible,
+    required this.availableRamMb,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final modelId = model['id'] ?? '';
+    final modelName = model['name'] ?? modelId;
+    final size = model['size'] ?? '—';
+    final minRamStr = model['minRam'] ?? '4GB';
+
+    return GlassmorphicCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // -- Top row: name, size, status badge --
+          Row(
+            children: [
+              // Model icon
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: CyberTheme.primary.withAlpha(26),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.smart_toy_outlined,
+                    color: CyberTheme.primary, size: 20),
+              ),
+              const SizedBox(width: 12),
+              // Name + size
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      modelName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      size,
+                      style: const TextStyle(
+                          color: Colors.white54, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              // Status badge
+              _statusBadge(status, progress),
+            ],
+          ),
+
+          // -- Progress bar (only when downloading) --
+          if (status == _DownloadStatus.downloading) ...[
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: progress,
+                backgroundColor: Colors.white.withAlpha(26),
+                valueColor: AlwaysStoppedAnimation(
+                    progress < 1.0
+                        ? CyberTheme.secondary
+                        : CyberTheme.primary),
+                minHeight: 6,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Text(
+                  '${(progress * 100).toInt()}%',
+                  style: TextStyle(
+                    color: CyberTheme.secondary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '${(sizeToMb(size) * progress).toInt()} MB / ${sizeToMb(size)} MB',
+                  style: const TextStyle(color: Colors.white38, fontSize: 10),
+                ),
+              ],
+            ),
+          ],
+
+          const SizedBox(height: 10),
+
+          // -- Action row --
+          Row(
+            children: [
+              // Compatibility indicator
+              if (status != _DownloadStatus.ready) ...[
+                Icon(
+                  compatible ? Icons.check_circle : Icons.warning_amber_rounded,
+                  size: 14,
+                  color: compatible ? Colors.greenAccent : Colors.orangeAccent,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  compatible
+                      ? 'Compatible con tu dispositivo'
+                      : 'Requiere $minRamStr RAM',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: compatible ? Colors.greenAccent : Colors.orangeAccent,
+                  ),
+                ),
+                const Spacer(),
+              ],
+              if (status == _DownloadStatus.notDownloaded) ...[
+                const Spacer(),
+                _actionButton(
+                  label: 'Descargar',
+                  icon: Icons.download,
+                  onTap: () {
+                    // Placeholder – download logic will go here
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Descargando $modelName...'),
+                        backgroundColor: CyberTheme.surfaceDark,
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+              ],
+              if (status == _DownloadStatus.downloading) ...[
+                const Spacer(),
+                _actionButton(
+                  label: 'Pausar',
+                  icon: Icons.pause,
+                  isSecondary: true,
+                  onTap: () {},
+                ),
+                const SizedBox(width: 8),
+                _actionButton(
+                  label: 'Cancelar',
+                  icon: Icons.cancel_outlined,
+                  isSecondary: true,
+                  onTap: () {},
+                ),
+              ],
+              if (status == _DownloadStatus.ready) ...[
+                _actionButton(
+                  label: 'Usar',
+                  icon: Icons.play_arrow,
+                  onTap: () {
+                    context
+                        .read<LlmSettingsCubit>()
+                        .updateLocalModel(modelId);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Usando $modelName'),
+                        backgroundColor: CyberTheme.primary.withAlpha(180),
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(width: 8),
+                _actionButton(
+                  label: 'Eliminar',
+                  icon: Icons.delete_outline,
+                  isSecondary: true,
+                  onTap: () {},
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _statusBadge(_DownloadStatus status, double progress) {
+    switch (status) {
+      case _DownloadStatus.notDownloaded:
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+            color: Colors.white.withAlpha(15),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Text(
+            'No descargado',
+            style: TextStyle(color: Colors.white38, fontSize: 10),
+          ),
+        );
+      case _DownloadStatus.downloading:
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+            color: CyberTheme.secondary.withAlpha(30),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+                color: CyberTheme.secondary.withAlpha(60), width: 1),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 12,
+                height: 12,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  value: progress,
+                  color: CyberTheme.secondary,
+                ),
+              ),
+              const SizedBox(width: 4),
+              const Text(
+                'Descargando',
+                style: TextStyle(
+                    color: CyberTheme.secondary,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        );
+      case _DownloadStatus.ready:
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+            color: Colors.greenAccent.withAlpha(26),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+                color: Colors.greenAccent.withAlpha(60), width: 1),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.check_circle, size: 12, color: Colors.greenAccent),
+              SizedBox(width: 4),
+              Text(
+                'Listo',
+                style: TextStyle(
+                    color: Colors.greenAccent,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        );
+    }
+  }
+
+  Widget _actionButton({
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+    bool isSecondary = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: isSecondary
+              ? Colors.white.withAlpha(15)
+              : CyberTheme.primary.withAlpha(40),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSecondary
+                ? Colors.white.withAlpha(30)
+                : CyberTheme.primary.withAlpha(80),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon,
+                size: 14,
+                color:
+                    isSecondary ? Colors.white54 : CyberTheme.primary),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: isSecondary ? Colors.white54 : CyberTheme.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+int sizeToMb(String sizeStr) {
+  final numPart =
+      int.tryParse(sizeStr.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
+  if (sizeStr.contains('GB')) return numPart * 1024;
+  if (sizeStr.contains('MB')) return numPart;
+  return numPart;
+}
+
+// ============================================================================
+// TAB 2 – Cloud Provider
+// ============================================================================
+
+enum _ConnectionStatus { idle, testing, connected, error }
+
+class _CloudProviderTab extends StatefulWidget {
+  final dynamic config;
+
+  const _CloudProviderTab({required this.config});
+
+  @override
+  State<_CloudProviderTab> createState() => _CloudProviderTabState();
+}
+
+class _CloudProviderTabState extends State<_CloudProviderTab> {
+  bool _obscureApiKey = true;
+  _ConnectionStatus _connectionStatus = _ConnectionStatus.idle;
+  String? _connectionMessage;
+  String _testPrompt = '';
+
+  dynamic get config => widget.config;
+
+  @override
+  Widget build(BuildContext context) {
+    final providerType = config.providerType ?? 'openai';
+    final apiKey = config.apiKey ?? '';
+    final baseUrl = config.baseUrl ?? '';
+    final cloudModel = config.cloudModel ?? cloudModels.first;
+    final isCustom = providerType == 'custom';
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // -- Main card --
+          GlassmorphicCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: CyberTheme.primary.withAlpha(26),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.cloud_outlined,
+                          color: CyberTheme.primary, size: 22),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Configuración de Proveedor Cloud',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Conecta con APIs externas de IA',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white.withAlpha(120),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+                const Divider(color: Colors.white12),
+                const SizedBox(height: 16),
+
+                // -- Provider selector --
+                _labeledField(
+                  label: 'Proveedor',
+                  child: DropdownButton<String>(
+                    value: providerType,
+                    isExpanded: true,
+                    dropdownColor: CyberTheme.surfaceDark,
+                    underline: Container(
+                      height: 1,
+                      color: CyberTheme.primary.withAlpha(51),
+                    ),
+                    items: cloudProviders.map((p) {
+                      return DropdownMenuItem(
+                        value: p,
+                        child: Row(
+                          children: [
+                            Icon(
+                              p == 'openai'
+                                  ? Icons.bolt
+                                  : p == 'gemini'
+                                      ? Icons.auto_awesome
+                                      : Icons.dns,
+                              size: 16,
+                              color: CyberTheme.secondary,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              p == 'openai'
+                                  ? 'OpenAI'
+                                  : p == 'gemini'
+                                      ? 'Gemini'
+                                      : 'Custom (OpenAI compatible)',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        context
+                            .read<LlmSettingsCubit>()
+                            .updateProviderType(value);
+                      }
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // -- Base URL (only for custom) --
+                if (isCustom) ...[
+                  _labeledField(
+                    label: 'Base URL',
+                    child: TextField(
+                      controller: TextEditingController(text: baseUrl),
+                      style: const TextStyle(color: Colors.white),
+                      decoration: _inputDecoration(
+                        hint: 'https://api.ejemplo.com/v1',
+                        prefixIcon: Icons.link,
+                      ),
+                      onChanged: (value) {
+                        context
+                            .read<LlmSettingsCubit>()
+                            .updateBaseUrl(value);
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+
+                // -- API Key --
+                _labeledField(
+                  label: 'API Key',
+                  child: TextField(
+                    controller: TextEditingController(text: apiKey),
+                    obscureText: _obscureApiKey,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: _inputDecoration(
+                      hint: 'sk-...',
+                      prefixIcon: Icons.vpn_key,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureApiKey
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.white38,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureApiKey = !_obscureApiKey;
+                          });
+                        },
+                      ),
+                    ),
+                    onChanged: (value) {
+                      context
+                          .read<LlmSettingsCubit>()
+                          .updateApiKey(value);
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // -- Cloud model selector --
+                _labeledField(
+                  label: 'Modelo',
+                  child: DropdownButton<String>(
+                    value: cloudModels.contains(cloudModel)
+                        ? cloudModel
+                        : cloudModels.first,
+                    isExpanded: true,
+                    dropdownColor: CyberTheme.surfaceDark,
+                    underline: Container(
+                      height: 1,
+                      color: CyberTheme.primary.withAlpha(51),
+                    ),
+                    items: cloudModels.map((m) {
+                      return DropdownMenuItem(
+                        value: m,
+                        child: Text(
+                          m,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        context
+                            .read<LlmSettingsCubit>()
+                            .updateCloudModel(value);
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // -- Connection test card --
+          _ConnectionTestWidget(
+            status: _connectionStatus,
+            message: _connectionMessage,
+            onTest: () async {
+              setState(() {
+                _connectionStatus = _ConnectionStatus.testing;
+                _connectionMessage = null;
+              });
+              try {
+                await context.read<LlmSettingsCubit>().verifyConnection();
+                setState(() {
+                  _connectionStatus = _ConnectionStatus.connected;
+                  _connectionMessage = 'Conectado (simulado)';
+                });
+              } catch (e) {
+                setState(() {
+                  _connectionStatus = _ConnectionStatus.error;
+                  _connectionMessage = 'Error: ${e.toString()}';
+                });
+              }
+            },
+            testPrompt: _testPrompt,
+            onPromptChanged: (value) {
+              setState(() => _testPrompt = value);
+            },
+          ),
+
+          const SizedBox(height: 24),
+
+          // -- Provider info --
+          GlassmorphicCard(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline,
+                      color: CyberTheme.secondary, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      providerType == 'custom'
+                          ? 'Usa cualquier endpoint compatible con OpenAI. '
+                              'Asegúrate de que la URL termine en /v1.'
+                          : providerType == 'gemini'
+                              ? 'Gemini API de Google. '
+                                  'Obtén tu API Key en ai.google.dev.'
+                              : 'OpenAI API. '
+                                  'Obtén tu API Key en platform.openai.com.',
+                      style: const TextStyle(
+                          color: Colors.white54, fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _labeledField({required String label, required Widget child}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 6),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: Colors.white.withAlpha(150),
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        child,
+      ],
+    );
+  }
+
+  InputDecoration _inputDecoration({
+    required String hint,
+    required IconData prefixIcon,
+    Widget? suffixIcon,
+  }) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: Colors.white24),
+      prefixIcon: Icon(prefixIcon, color: Colors.white38, size: 18),
+      suffixIcon: suffixIcon,
+      filled: true,
+      fillColor: Colors.white.withAlpha(10),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(color: Colors.white.withAlpha(20)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(color: Colors.white.withAlpha(20)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide:
+            BorderSide(color: CyberTheme.primary.withAlpha(100), width: 1.5),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Connection test widget (Stateless; state managed by parent)
+// ---------------------------------------------------------------------------
+
+class _ConnectionTestWidget extends StatelessWidget {
+  final _ConnectionStatus status;
+  final String? message;
+  final VoidCallback onTest;
+  final String testPrompt;
+  final ValueChanged<String> onPromptChanged;
+
+  const _ConnectionTestWidget({
+    required this.status,
+    required this.message,
+    required this.onTest,
+    required this.testPrompt,
+    required this.onPromptChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassmorphicCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Icon(Icons.dns_outlined,
+                  color: CyberTheme.secondary, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Verificar Conexión',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: CyberTheme.textDark,
+                  fontSize: 15,
+                ),
+              ),
+              const Spacer(),
+              if (status == _ConnectionStatus.testing)
+                const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: CyberTheme.secondary),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Test button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: status == _ConnectionStatus.testing ? null : onTest,
+              icon: const Icon(Icons.wifi_tethering, size: 18),
+              label: Text(
+                status == _ConnectionStatus.testing
+                    ? 'Verificando...'
+                    : 'Verificar Conexión',
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CyberTheme.primary.withAlpha(40),
+                foregroundColor: CyberTheme.primary,
+                side: BorderSide(
+                    color: CyberTheme.primary.withAlpha(80), width: 1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Status indicator
+          if (status == _ConnectionStatus.connected) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.greenAccent.withAlpha(20),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                    color: Colors.greenAccent.withAlpha(50), width: 1),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.check_circle,
+                      color: Colors.greenAccent, size: 16),
+                  const SizedBox(width: 8),
+                  Text(
+                    message ?? '✅ Conectado',
+                    style: const TextStyle(
+                        color: Colors.greenAccent,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          if (status == _ConnectionStatus.error) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.redAccent.withAlpha(20),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                    color: Colors.redAccent.withAlpha(50), width: 1),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.error_outline,
+                      color: Colors.redAccent, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      message ?? '❌ Error de conexión',
+                      style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          const SizedBox(height: 16),
+          const Divider(color: Colors.white12),
+          const SizedBox(height: 8),
+
+          // Test prompt
+          Text(
+            'Prueba rápida',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.white.withAlpha(180),
+            ),
+          ),
+          const SizedBox(height: 6),
+          TextField(
+            controller: TextEditingController(text: testPrompt),
+            maxLines: 2,
+            style: const TextStyle(color: Colors.white, fontSize: 13),
+            decoration: InputDecoration(
+              hintText: 'Escribe un mensaje para probar...',
+              hintStyle: const TextStyle(color: Colors.white24, fontSize: 13),
+              filled: true,
+              fillColor: Colors.white.withAlpha(8),
+              contentPadding: const EdgeInsets.all(12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.white.withAlpha(20)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.white.withAlpha(20)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                    color: CyberTheme.primary.withAlpha(80), width: 1.5),
+              ),
+            ),
+            onChanged: onPromptChanged,
+          ),
+          const SizedBox(height: 8),
+
+          // Send test button
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed:
+                  testPrompt.isEmpty || status == _ConnectionStatus.testing
+                      ? null
+                      : () {
+                          // Simulate sending a test prompt
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Enviando: "$testPrompt"'),
+                              backgroundColor: CyberTheme.surfaceDark,
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
+              icon: const Icon(Icons.send, size: 16),
+              label: const Text('Probar'),
+              style: TextButton.styleFrom(
+                foregroundColor: CyberTheme.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// TAB 3 – Execution Mode
+// ============================================================================
+
+enum _ExecutionStrategy { localOnly, localWithFallback, cloudOnly }
+
+class _ExecutionModeTab extends StatelessWidget {
+  final dynamic config;
+
+  const _ExecutionModeTab({required this.config});
+
+  _ExecutionStrategy _currentStrategy() {
+    final useCloud = config.useCloudApi ?? false;
+    final allowCloud = config.allowCloudApiCalls ?? false;
+    if (!useCloud && !allowCloud) return _ExecutionStrategy.localOnly;
+    if (!useCloud && allowCloud) return _ExecutionStrategy.localWithFallback;
+    return _ExecutionStrategy.cloudOnly;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final strategy = _currentStrategy();
+    final allowCloudApiCalls = config.allowCloudApiCalls ?? false;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // -- Execution strategy card --
+          GlassmorphicCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: CyberTheme.primary.withAlpha(26),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.route_outlined,
+                          color: CyberTheme.primary, size: 22),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Estrategia de Ejecución',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'Define cómo se ejecutan los modelos de IA',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withAlpha(120),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Divider(color: Colors.white12),
+                const SizedBox(height: 8),
+
+                _ModeOption(
+                  strategy: _ExecutionStrategy.localOnly,
+                  isSelected: strategy == _ExecutionStrategy.localOnly,
+                  icon: Icons.phone_android,
+                  title: 'Solo local',
+                  subtitle: '100% offline, sin conexiones externas',
+                  description: 'Usa únicamente modelos descargados en el '
+                      'dispositivo. No se realizan llamadas a la nube.',
+                  onTap: () {
+                    context
+                        .read<LlmSettingsCubit>()
+                        .updateUseCloudApi(false);
+                    context
+                        .read<LlmSettingsCubit>()
+                        .updateAllowCloudApiCalls(false);
+                  },
+                ),
+                const Divider(color: Colors.white10, indent: 16, endIndent: 16),
+
+                _ModeOption(
+                  strategy: _ExecutionStrategy.localWithFallback,
+                  isSelected: strategy == _ExecutionStrategy.localWithFallback,
+                  icon: Icons.swap_horiz,
+                  title: 'Local → Cloud (fallback)',
+                  subtitle: 'Intenta local, usa cloud si es necesario',
+                  description: 'Primero intenta ejecutar localmente. Si el '
+                      'modelo local no es suficiente, usa la nube como respaldo.',
+                  onTap: () {
+                    context
+                        .read<LlmSettingsCubit>()
+                        .updateUseCloudApi(false);
+                    context
+                        .read<LlmSettingsCubit>()
+                        .updateAllowCloudApiCalls(true);
+                  },
+                ),
+                const Divider(color: Colors.white10, indent: 16, endIndent: 16),
+
+                _ModeOption(
+                  strategy: _ExecutionStrategy.cloudOnly,
+                  isSelected: strategy == _ExecutionStrategy.cloudOnly,
+                  icon: Icons.cloud,
+                  title: 'Solo cloud',
+                  subtitle: 'Usa siempre la API en la nube',
+                  description: 'Todas las consultas se envían al proveedor '
+                      'cloud configurado. Requiere conexión a internet.',
+                  onTap: () {
+                    context
+                        .read<LlmSettingsCubit>()
+                        .updateUseCloudApi(true);
+                    context
+                        .read<LlmSettingsCubit>()
+                        .updateAllowCloudApiCalls(true);
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // -- Privacy card (reuses existing _PrivacyToggle logic) --
+          GlassmorphicCard(
+            child: _PrivacyToggle(
+              allowCloudApiCalls: allowCloudApiCalls,
+              onChanged: (allow) {
+                context
+                    .read<LlmSettingsCubit>()
+                    .updateAllowCloudApiCalls(allow);
+              },
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // -- Info note --
+          GlassmorphicCard(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.security,
+                      color: CyberTheme.secondary, size: 18),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      strategy == _ExecutionStrategy.localOnly
+                          ? '✅ Todos los datos permanecen en tu '
+                              'dispositivo. Sin conexión a internet requerida.'
+                          : strategy == _ExecutionStrategy.cloudOnly
+                              ? '☁️ Los datos se envían al proveedor cloud '
+                                  'configurado. Asegúrate de revisar la '
+                                  'política de privacidad del proveedor.'
+                              : '🔄 Modo híbrido: datos locales primero, '
+                                  'cloud solo cuando sea necesario.',
+                      style: const TextStyle(
+                          color: Colors.white54, fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ModeOption extends StatelessWidget {
+  final _ExecutionStrategy strategy;
+  final bool isSelected;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final String description;
+  final VoidCallback onTap;
+
+  const _ModeOption({
+    required this.strategy,
+    required this.isSelected,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.description,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Row(
+          children: [
+            // Radio circle
+            Container(
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? CyberTheme.primary : Colors.white38,
+                  width: 2,
+                ),
+                color: isSelected
+                    ? CyberTheme.primary.withAlpha(40)
+                    : Colors.transparent,
+              ),
+              child: isSelected
+                  ? Center(
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: CyberTheme.primary,
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 14),
+            // Icon
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? CyberTheme.primary.withAlpha(26)
+                    : Colors.white.withAlpha(10),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                size: 20,
+                color: isSelected ? CyberTheme.primary : Colors.white54,
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Text content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color:
+                          isSelected ? CyberTheme.primary : Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withAlpha(120)),
+                  ),
+                  if (isSelected) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                          fontSize: 11, color: Colors.white38),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            // Check icon when selected
+            if (isSelected)
+              Icon(Icons.check_circle,
+                  color: CyberTheme.primary, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// EXISTING WIDGETS (preserved for backward compatibility)
+// ============================================================================
 
 class _DeviceCapabilityCard extends StatelessWidget {
   final DeviceCapability deviceCapability;
@@ -144,7 +1481,7 @@ class _DeviceCapabilityCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: CyberTheme.textDark,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -152,7 +1489,7 @@ class _DeviceCapabilityCard extends StatelessWidget {
                       deviceCapability.tierLabel,
                       style: TextStyle(
                         fontSize: 14,
-                        color: CyberTheme.secondary,
+                        color: AppColors.secondary,
                       ),
                     ),
                   ],
@@ -185,19 +1522,19 @@ class _DeviceCapabilityCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: CyberTheme.primary.withAlpha(26),
+              color: AppColors.primary.withAlpha(26),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: CyberTheme.primary.withAlpha(51)),
+              border: Border.all(color: AppColors.primary.withAlpha(51)),
             ),
             child: Row(
               children: [
-                Icon(Icons.auto_awesome, color: CyberTheme.primary, size: 20),
+                Icon(Icons.auto_awesome, color: AppColors.primary, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Modelo recomendado: ${deviceCapability.recommendedModel}',
                     style: TextStyle(
-                      color: CyberTheme.primary,
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -227,11 +1564,11 @@ class _CapabilityBadge extends StatelessWidget {
         label = 'Baja';
         break;
       case DeviceCapabilityTier.medium:
-        color = CyberTheme.secondary;
+        color = AppColors.secondary;
         label = 'Media';
         break;
       case DeviceCapabilityTier.high:
-        color = CyberTheme.primary;
+        color = AppColors.primary;
         label = 'Alta';
         break;
     }
@@ -304,7 +1641,8 @@ class _Section extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
           child: Text(
             title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
         GlassmorphicCard(
@@ -335,7 +1673,7 @@ class _ModelSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.smart_toy, color: CyberTheme.secondary),
+      leading: Icon(Icons.smart_toy, color: AppColors.secondary),
       title: const Text('Modelo Gemini'),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,10 +1682,10 @@ class _ModelSelector extends StatelessWidget {
           DropdownButton<String>(
             value: selectedModel,
             isExpanded: true,
-            dropdownColor: CyberTheme.surfaceDark,
+            dropdownColor: AppColors.surface,
             underline: Container(
               height: 1,
-              color: CyberTheme.primary.withAlpha(77),
+              color: AppColors.primary.withAlpha(77),
             ),
             items: availableGeminiModels.map((model) {
               final isRecommended = model == recommendedModel;
@@ -358,23 +1696,24 @@ class _ModelSelector extends StatelessWidget {
                     Text(
                       model,
                       style: TextStyle(
-                        color: isRecommended ? CyberTheme.primary : Colors.white,
+color: isRecommended ? AppColors.primary : Colors.white,
                         fontWeight: isRecommended ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                     if (isRecommended) ...[
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: CyberTheme.primary.withAlpha(51),
+                          color: AppColors.primary.withAlpha(51),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
                           'Recomendado',
                           style: TextStyle(
                             fontSize: 10,
-                            color: CyberTheme.primary,
+                            color: AppColors.primary,
                           ),
                         ),
                       ),
@@ -407,7 +1746,7 @@ class _ModeToggle extends StatelessWidget {
     return ListTile(
       leading: Icon(
         useCloudApi ? Icons.cloud : Icons.phone_android,
-        color: CyberTheme.secondary,
+        color: AppColors.secondary,
       ),
       title: const Text('Modo de Ejecución'),
       subtitle: Text(
@@ -418,7 +1757,7 @@ class _ModeToggle extends StatelessWidget {
       ),
       trailing: Switch(
         value: useCloudApi,
-        activeThumbColor: CyberTheme.primary,
+        activeThumbColor: AppColors.primary,
         onChanged: onChanged,
       ),
     );
@@ -439,7 +1778,7 @@ class _PrivacyToggle extends StatelessWidget {
     return ListTile(
       leading: Icon(
         allowCloudApiCalls ? Icons.lock_open : Icons.lock,
-        color: allowCloudApiCalls ? Colors.orange : CyberTheme.primary,
+        color: allowCloudApiCalls ? Colors.orange : AppColors.primary,
       ),
       title: const Text('Permitir llamadas a la nube'),
       subtitle: Text(
@@ -450,7 +1789,7 @@ class _PrivacyToggle extends StatelessWidget {
       ),
       trailing: Switch(
         value: allowCloudApiCalls,
-        activeThumbColor: CyberTheme.primary,
+        activeThumbColor: AppColors.primary,
         onChanged: onChanged,
       ),
     );
@@ -466,13 +1805,13 @@ class _InfoCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline, color: CyberTheme.secondary, size: 20),
+              Icon(Icons.info_outline, color: AppColors.secondary, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Acerca de los modelos',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: CyberTheme.secondary,
+                  color: AppColors.secondary,
                 ),
               ),
             ],
@@ -485,7 +1824,8 @@ class _InfoCard extends StatelessWidget {
           const SizedBox(height: 8),
           _ModelInfoRow(
             model: 'gemini-2.0-flash-lite',
-            description: 'Optimizado para dispositivos con capacidad baja',
+            description:
+                'Optimizado para dispositivos con capacidad baja',
           ),
           const SizedBox(height: 8),
           _ModelInfoRow(
@@ -495,7 +1835,8 @@ class _InfoCard extends StatelessWidget {
           const SizedBox(height: 8),
           _ModelInfoRow(
             model: 'gemini-2.5-pro',
-            description: 'Máximo rendimiento (requiere dispositivo de alta capacidad)',
+            description:
+                'Máximo rendimiento (requiere dispositivo de alta capacidad)',
           ),
         ],
       ),
@@ -520,14 +1861,14 @@ class _ModelInfoRow extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: CyberTheme.primary.withAlpha(26),
+            color: AppColors.primary.withAlpha(26),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
             model,
             style: TextStyle(
               fontSize: 12,
-              color: CyberTheme.primary,
+              color: AppColors.primary,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -546,3 +1887,5 @@ class _ModelInfoRow extends StatelessWidget {
     );
   }
 }
+
+

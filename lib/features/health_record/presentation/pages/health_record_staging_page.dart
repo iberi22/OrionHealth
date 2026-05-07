@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/bloc/health_record_cubit.dart';
 import '../../domain/entities/medical_record.dart';
@@ -52,11 +52,11 @@ class _RecordHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.security, color: CyberTheme.secondary),
+        leading: const Icon(Icons.security, color: AppColors.secondary),
         title: const Text('Historial Médico'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.ios_share, color: CyberTheme.secondary),
+            icon: const Icon(Icons.ios_share, color: AppColors.secondary),
             onPressed: () {},
           ),
         ],
@@ -87,7 +87,7 @@ class _RecordHistoryView extends StatelessWidget {
         onPressed: () => _showSelectionModal(context),
         label: const Text('Añadir Registro'),
         icon: const Icon(Icons.add),
-        backgroundColor: CyberTheme.primary,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.black,
       ),
     );
@@ -112,9 +112,9 @@ class _SearchBar extends StatelessWidget {
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Buscar por diagnóstico, medicación...',
-          prefixIcon: const Icon(Icons.search, color: CyberTheme.secondary),
+          prefixIcon: const Icon(Icons.search, color: AppColors.secondary),
           border: InputBorder.none,
-          hintStyle: TextStyle(color: CyberTheme.secondary.withValues(alpha: 0.7)),
+          hintStyle: TextStyle(color: AppColors.secondary.withValues(alpha: 0.7)),
         ),
       ),
     );
@@ -127,7 +127,7 @@ class _FilterChips extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Chip(label: const Text('Todos'), backgroundColor: CyberTheme.primary.withValues(alpha: 0.3)),
+        Chip(label: const Text('Todos'), backgroundColor: AppColors.primary.withValues(alpha: 0.3)),
         Chip(label: const Text('Diagnóstico'), backgroundColor: Colors.white10),
         Chip(label: const Text('Medicación'), backgroundColor: Colors.white10),
         Chip(label: const Text('Documentos'), backgroundColor: Colors.white10),
@@ -174,13 +174,13 @@ class _TimelineItem extends StatelessWidget {
                 GlassmorphicCard(
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.medical_services, color: CyberTheme.secondary),
+                    child: Icon(Icons.medical_services, color: AppColors.secondary),
                   ),
                 ),
                 Expanded(
                   child: Container(
                     width: 2,
-                    color: CyberTheme.secondary.withValues(alpha: 0.3),
+                    color: AppColors.secondary.withValues(alpha: 0.3),
                   ),
                 ),
               ],
@@ -194,7 +194,7 @@ class _TimelineItem extends StatelessWidget {
                 children: [
                   Text(
                     DateFormat('dd MMMM, yyyy').format(record.date ?? DateTime.now()),
-                    style: const TextStyle(color: CyberTheme.secondary),
+                    style: const TextStyle(color: AppColors.secondary),
                   ),
                   const SizedBox(height: 8),
                   GlassmorphicCard(
@@ -235,7 +235,7 @@ class _SelectionView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.picture_as_pdf, color: CyberTheme.secondary),
+              leading: const Icon(Icons.picture_as_pdf, color: AppColors.secondary),
               title: const Text('Subir PDF'),
               onTap: () {
                 Navigator.pop(context);
@@ -243,7 +243,7 @@ class _SelectionView extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.camera_alt, color: CyberTheme.secondary),
+              leading: const Icon(Icons.camera_alt, color: AppColors.secondary),
               title: const Text('Tomar Foto'),
               onTap: () {
                 Navigator.pop(context);
@@ -251,7 +251,7 @@ class _SelectionView extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.image, color: CyberTheme.secondary),
+              leading: const Icon(Icons.image, color: AppColors.secondary),
               title: const Text('Galería'),
               onTap: () {
                 Navigator.pop(context);

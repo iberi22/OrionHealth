@@ -46,14 +46,14 @@ dependencies:
   google_generative_ai: ^0.4.7
   dio: ^5.0.0
   get_it: ^9.2.1
-  injectable: ^2.6.0
+  injectable: ^2.7.1+4
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   objectbox_flutter_libs: any
   path_provider: ^2.1.5
   flutter_markdown: ^0.7.7+1
   equatable: ^2.0.7
-  device_info_plus: 12.2.0
+  device_info_plus: 12.4.0
   isar_agent_memory:
     path: packages/isar_agent_memory
   medical_standards:
@@ -64,7 +64,7 @@ dependencies:
   permission_handler: ^12.0.1
   health: ^13.2.1
   google_fonts: ^6.3.2
-  # flutter_gemma: 0.12.6 (replaced by llama.cpp)
+  flutter_gemma: ^0.12.6
 
   # Authentication & Security
   local_auth: ^2.3.0
@@ -73,8 +73,10 @@ dependencies:
   shared_preferences: ^2.3.0
 
   # Bluetooth Low Energy for medical data sharing
-  flutter_blue_plus: ^1.35.2
+  flutter_blue_plus: ^2.3.1
   google_mlkit_text_recognition: ^0.15.1
+  openai_dart: ^1.0.0
+  http: ^1.2.0
   
 dev_dependencies:
   flutter_test:
@@ -136,3 +138,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+

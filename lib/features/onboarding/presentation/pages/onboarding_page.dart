@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/onboarding_cubit.dart';
-import '../../../../core/theme/cyber_theme.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../main.dart';
 import 'welcome_step.dart';
 import 'basic_info_step.dart';
@@ -60,7 +60,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: CyberTheme.backgroundDark,
+        backgroundColor: AppColors.background,
         body: SafeArea(
           child: Column(
             children: [
@@ -119,7 +119,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             child: LinearProgressIndicator(
               value: (currentStep + 1) / _totalSteps,
               backgroundColor: Colors.white12,
-              valueColor: const AlwaysStoppedAnimation<Color>(CyberTheme.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
               minHeight: 4,
             ),
           ),
