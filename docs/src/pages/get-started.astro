@@ -1,0 +1,180 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Get Started"
+  description="Installation guide and quick start for OrionHealth"
+>
+  <div class="prose">
+# Get Started
+
+Welcome to OrionHealth! This guide will help you install and set up OrionHealth on your device.
+
+## Prerequisites
+
+- **Android**: Android 8.0+ (API 26+) with at least 4GB RAM
+- **Linux**: Flutter SDK 3.x installed
+- **Development**: Android Studio or VS Code with Flutter extensions
+
+## Installation
+
+### Android (Recommended)
+
+1. **Download APK** from the [latest release](https://github.com/iberi22/OrionHealth/releases)
+2. Enable "Install from unknown sources" in Settings → Security
+3. Open the APK file and tap Install
+4. Launch OrionHealth and follow the setup wizard
+
+### Build from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/iberi22/OrionHealth.git
+cd OrionHealth
+
+# Install dependencies
+flutter pub get
+
+# Run the app
+flutter run
+```
+
+### Linux Desktop
+
+```bash
+# Enable Linux desktop support
+flutter config --enable-linux-desktop
+
+# Run on Linux
+flutter run -d linux
+```
+
+## Initial Setup
+
+### 1. Create Your Profile
+
+After first launch, you'll be prompted to:
+- Set a PIN code for app access
+- Enable biometric authentication (fingerprint/face)
+- Create your health profile
+
+### 2. Configure AI Assistant
+
+OrionHealth includes an on-device AI assistant. To enable:
+
+1. Go to Settings → AI Assistant
+2. Choose between:
+   - **Local (Recommended)**: Gemma 4B GGUF via Ollama
+   - **Cloud**: Optional cloud AI for faster responses
+3. Download the Gemma model if using local mode
+
+### 3. Connect Medical Devices (Optional)
+
+To connect BLE medical devices:
+
+1. Go to Settings → Devices
+2. Tap "Scan for Devices"
+3. Select your device (heart rate monitor, glucose sensor, etc.)
+4. Follow pairing instructions
+
+## Data Import
+
+### Import from Google Health
+
+1. Go to Settings → Import Data
+2. Select "Google Health Connect"
+3. Grant permissions
+4. Choose which data types to import
+
+## Security Setup
+
+### PIN Code
+
+Your PIN protects access to your medical data:
+
+1. Go to Settings → Security → Change PIN
+2. Enter a 6-digit PIN
+3. Confirm your PIN
+
+### Biometric Authentication
+
+Enable fingerprint or face unlock:
+
+1. Go to Settings → Security → Biometrics
+2. Enable biometric authentication
+3. Complete enrollment
+
+### Encryption
+
+All data is encrypted by default with AES-256-GCM. No action needed!
+
+## Troubleshooting
+
+### App Crashes on Launch
+
+1. Clear app cache: Settings → Apps → OrionHealth → Clear Cache
+2. Reinstall the app
+3. Check if your Android version is supported
+
+### AI Assistant Not Working
+
+1. Ensure Gemma model is downloaded: Settings → AI → Download Model
+2. Try cloud mode as alternative
+3. Check internet connection for cloud mode
+
+### BLE Device Not Connecting
+
+1. Ensure Bluetooth is enabled
+2. Move closer to the device
+3. Check device battery level
+4. Restart the device and try again
+
+## Next Steps
+
+- Explore [Features](/features) in detail
+- Read our [Privacy Policy](/privacy)
+- Learn how to [Contribute](/contribute)
+- Check [About](/about) page for project story
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/iberi22/OrionHealth/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/iberi22/OrionHealth/discussions)
+  </div>
+</BaseLayout>
+
+<style>
+.prose {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.prose h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  color: var(--text-primary);
+}
+.prose code {
+  background: var(--glass-bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.prose pre {
+  background: var(--glass-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+</style>

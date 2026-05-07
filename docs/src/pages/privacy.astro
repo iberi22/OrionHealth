@@ -1,0 +1,138 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="OrionHealth privacy policy - your health data stays on your device"
+>
+  <div class="prose">
+# Privacy Policy
+
+**Last Updated**: May 2026
+
+OrionHealth is built on the fundamental principle that **your health data belongs to you**. This privacy policy explains how we handle your medical information.
+
+## Core Privacy Principles
+
+### 1. Data Minimization
+We collect only the minimum data necessary to provide the app's functionality. We do not collect any data that isn't required for the app to work.
+
+### 2. Local-First Storage
+All medical data is stored **exclusively on your device**. Your health records, appointments, and personal information never leave your device unless you explicitly choose to share them.
+
+### 3. End-to-End Encryption
+Your data is encrypted using **AES-256-GCM** encryption at rest and in transit. Only you have access to your encryption keys.
+
+### 4. No Advertising or Analytics Tracking
+We do not:
+- Serve advertisements
+- Track your browsing or app usage
+- Share any data with third parties
+- Use cloud services for your medical data (optional cloud AI is anonymized)
+
+## Data We Collect
+
+### Required Data
+- **Medical Records**: Health history, diagnoses, prescriptions, allergies
+- **Profile Information**: Name, date of birth, blood type (stored locally only)
+- **Authentication Data**: PIN hash, biometric templates (stored securely)
+
+### Optional Data
+- **BLE Device Data**: Vital signs from connected devices (heart rate, glucose, etc.)
+- **AI Queries**: Medical questions asked to the assistant (processed locally)
+
+## Data We Do NOT Collect
+
+- Location data
+- Contacts from your phone
+- Call logs or SMS
+- Device identifiers for advertising
+- Usage analytics
+- Any data sent to third-party servers (except optional cloud AI)
+
+## Data Sharing
+
+### You Control Your Data
+Any data sharing requires your explicit consent. When you share health data via BLE, NFC, or WiFi Direct:
+- You choose which data to share
+- You choose who to share with
+- The recipient must accept the transfer
+
+## Security Measures
+
+### Encryption
+| Data State | Encryption Method |
+|------------|-------------------|
+| At Rest | AES-256-GCM with device-derived key |
+| In Transit (BLE) | AES-256-GCM E2EE |
+| In Transit (WiFi) | AES-256-GCM E2EE |
+
+### Authentication
+- **PIN**: Argon2id-hashed, never stored in plaintext
+- **Biometrics**: Stored using Android Keystore, never leaves device
+- **Auto-Lock**: App locks after 5 minutes of inactivity
+
+## Your Rights
+
+As a OrionHealth user, you have the right to:
+
+1. **Access**: View all your stored medical data
+2. **Export**: Download your data in standard formats
+3. **Delete**: Permanently delete all your data
+4. **Correct**: Update inaccurate health information
+5. **Portability**: Transfer your data to other healthcare providers
+
+## Legal Compliance
+
+OrionHealth is designed to comply with:
+- **HIPAA** (Health Insurance Portability and Accountability Act) - USA
+- **GDPR** (General Data Protection Regulation) - EU
+- **LGPD** (Lei Geral de Proteção de Dados) - Brazil
+- **PDPA** (Personal Data Protection Act) - Multiple jurisdictions
+
+## Summary
+
+| Aspect | Our Commitment |
+|--------|----------------|
+| Data Storage | 100% on your device |
+| Data Sharing | Only with your consent |
+| Analytics | Zero tracking |
+| Advertising | None |
+| Encryption | AES-256-GCM |
+| Compliance | HIPAA-ready, GDPR-compliant |
+
+**Your health data stays with you.**
+  </div>
+</BaseLayout>
+
+<style>
+.prose {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.prose h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  color: var(--text-primary);
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.prose th, .prose td {
+  padding: 0.75rem;
+  border: 1px solid var(--glass-border);
+  text-align: left;
+}
+.prose th {
+  background: var(--glass-bg);
+}
+</style>

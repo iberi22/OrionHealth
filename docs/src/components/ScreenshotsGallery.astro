@@ -1,15 +1,13 @@
 ---
-// Screenshots Gallery Component for OrionHealth Landing Page
-// TODO: Re-enable screenshots when layout is fixed
-// const base = import.meta.env.BASE_URL || '/OrionHealth';
-// const screenshots = [
-//   { src: `${base}/screenshots/01_main_navigation.png`, title: 'Main Navigation', description: 'Intuitive bottom navigation with 4 main sections' },
-//   { src: `${base}/screenshots/02_profile_page.png`, title: 'Profile Page', description: 'Personal health profile management' },
-//   { src: `${base}/screenshots/03_records_page.png`, title: 'Health Records', description: 'Track and view your health data' },
-//   { src: `${base}/screenshots/08_chat_interface.png`, title: 'AI Assistant', description: 'Private AI-powered health conversations' },
-//   { src: `${base}/screenshots/09_reports_list.png`, title: 'Reports', description: 'View AI-generated health insights' },
-//   { src: `${base}/screenshots/07_profile_form.png`, title: 'Profile Form', description: 'Easy health data input' },
-// ];
+const base = import.meta.env.BASE_URL || '/OrionHealth';
+const screenshots = [
+  { src: `${base}/screenshots/01_main_navigation.png`, title: 'Main Navigation', description: 'Intuitive bottom navigation with 4 main sections' },
+  { src: `${base}/screenshots/02_profile_page.png`, title: 'Profile Page', description: 'Personal health profile management' },
+  { src: `${base}/screenshots/03_records_page.png`, title: 'Health Records', description: 'Track and view your health data' },
+  { src: `${base}/screenshots/08_chat_interface.png`, title: 'AI Assistant', description: 'Private AI-powered health conversations' },
+  { src: `${base}/screenshots/09_reports_list.png`, title: 'Reports', description: 'View AI-generated health insights' },
+  { src: `${base}/screenshots/07_profile_form.png`, title: 'Profile Form', description: 'Easy health data input' },
+];
 ---
 
 <section id="screenshots" class="relative py-16 md:py-24 px-4 bg-gradient-to-b from-transparent to-charcoal/30">
@@ -23,37 +21,55 @@
       </p>
     </div>
 
-    <!-- Screenshot Gallery Grid - Temporarily disabled -->
-    <div class="text-center py-12">
-      <p class="text-bone-dark/60 text-sm">📱 Screenshots coming soon...</p>
-    </div>
-
-    <!-- TODO: Re-enable when layout is fixed
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
-      {screenshots.map((screenshot, index) => (
-        <div
-          class="flashlight-card glass rounded-xl overflow-hidden group cursor-pointer"
-          data-animate
-          style={`animation-delay: ${index * 100}ms`}
-        >
-          <div class="relative aspect-[9/16] overflow-hidden bg-charcoal">
-            <img
-              src={screenshot.src}
-              alt={screenshot.title}
-              class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-              loading="lazy"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-              <div class="text-white">
-                <h3 class="font-bold text-sm md:text-base">{screenshot.title}</h3>
-                <p class="text-xs text-bone-dark opacity-80">{screenshot.description}</p>
+    <!-- Screenshots Carousel - Horizontal scroll on mobile, grid on desktop -->
+    <div class="relative max-w-6xl mx-auto">
+      <!-- Mobile: Horizontal scroll carousel -->
+      <div class="flex md:hidden overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4 pb-4 -mx-4 px-4">
+        {screenshots.map((screenshot, index) => (
+          <div class="flex-shrink-0 w-48 snap-center">
+            <div class="flashlight-card glass rounded-xl overflow-hidden group">
+              <div class="aspect-[9/16] bg-charcoal overflow-hidden">
+                <img
+                  src={screenshot.src}
+                  alt={screenshot.title}
+                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              <div class="p-3">
+                <h3 class="font-bold text-sm text-bone-dark">{screenshot.title}</h3>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      <!-- Desktop: 3-column grid -->
+      <div class="hidden md:grid md:grid-cols-3 gap-6">
+        {screenshots.map((screenshot, index) => (
+          <div
+            class="flashlight-card glass rounded-xl overflow-hidden group cursor-pointer"
+            data-animate
+            style={`animation-delay: ${index * 100}ms`}
+          >
+            <div class="aspect-[9/16] bg-charcoal overflow-hidden">
+              <img
+                src={screenshot.src}
+                alt={screenshot.title}
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                <div class="text-white">
+                  <h3 class="font-bold text-sm md:text-base">{screenshot.title}</h3>
+                  <p class="text-xs text-bone-dark opacity-80">{screenshot.description}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
-    -->
 
     <!-- Feature badges under gallery -->
     <div class="flex flex-wrap justify-center gap-3 mt-8" data-animate>
@@ -82,5 +98,13 @@
   .flashlight-card:hover {
     border-color: rgba(16, 185, 129, 0.3);
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 </style>

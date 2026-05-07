@@ -1,0 +1,127 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="About"
+  description="Learn about OrionHealth project history, mission and vision"
+>
+  <div class="prose">
+# About OrionHealth
+
+## Our Story
+
+OrionHealth began with a simple observation: **health data is fragmented, siloed, and often inaccessible to the people who need it most**.
+
+Modern healthcare generates vast amounts of data — electronic health records, lab results, medical imaging, wearable device readings — yet patients often struggle to access their own information. We believe technology should **empower individuals**, not create new barriers.
+
+## The Problem
+
+### Fragmentation
+Medical data is scattered across multiple healthcare providers, hospitals, clinics, and personal devices.
+
+### Privacy Concerns
+Sharing health data raises legitimate privacy concerns. Current systems often lack granular consent mechanisms.
+
+### Access Inequality
+In many parts of the world, accessing healthcare means navigating paper-based systems.
+
+## Our Solution
+
+### 1. Patient-Centric Data Ownership
+OrionHealth stores all data on the user's device. You own your health records — not hospitals, not insurers, not tech companies.
+
+### 2. Privacy by Design
+Every feature in OrionHealth is designed with privacy first:
+- **Zero-knowledge architecture**: Your data is encrypted, and we can't read it
+- **Local AI processing**: Medical AI runs on your device
+- **Explicit consent**: Every data sharing action requires your approval
+
+### 3. Standards-Based Interoperability
+We implement medical standards correctly:
+- **ICD-10**: Disease classification for diagnoses
+- **LOINC**: Laboratory observations and measurements
+- **SNOMED CT**: Clinical terminology
+
+## Technology Choices
+
+| Component | Technology |
+|-----------|------------|
+| Framework | Flutter 3.x |
+| Database | Isar (local, encrypted) |
+| AI | Gemma 4B GGUF + Ollama |
+| Encryption | AES-256-GCM, Argon2id |
+| BLE | flutter_blue_plus 2.3.1 |
+| Standards | ICD-10, LOINC, SNOMED CT |
+
+## Milestones
+
+| Date | Milestone |
+|------|----------|
+| 2024 Q1 | Project inception, initial architecture design |
+| 2024 Q2 | First functional prototype with encrypted local storage |
+| 2024 Q3 | BLE sharing implementation |
+| 2024 Q4 | AI assistant integration, Gemma 4B GGUF support |
+| 2025 Q1 | Medical standards integration |
+| 2025 Q2 | Professional UI redesign |
+| 2025 Q3 | Privacy-first analytics, community features |
+
+## The Name
+
+**Orion** — the hunter constellation visible worldwide — represents our vision: a guiding presence in the complex landscape of personal health management.
+
+## Open Source
+
+OrionHealth is and will remain open source. We believe healthcare technology should be auditable and community contributions improve quality.
+
+## Future Vision
+
+### Short Term
+- iOS support
+- Health insurance integration
+- Telemedicine appointment scheduling
+
+### Long Term
+- Decentralized health records network
+- AI-powered health insights
+- Integration with national health systems
+
+## Contact
+
+- **GitHub**: [github.com/iberi22/OrionHealth](https://github.com/iberi22/OrionHealth)
+- **Documentation**: [iberi22.github.io/OrionHealth](https://iberi22.github.io/OrionHealth/)
+- **Discussions**: [GitHub Discussions](https://github.com/iberi22/OrionHealth/discussions)
+
+---
+
+*Your health data belongs to you. OrionHealth is here to help you own it.*
+  </div>
+</BaseLayout>
+
+<style>
+.prose {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.prose h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  color: var(--text-primary);
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.prose th, .prose td {
+  padding: 0.75rem;
+  border: 1px solid var(--glass-border);
+  text-align: left;
+}
+</style>

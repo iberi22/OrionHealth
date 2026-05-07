@@ -1,0 +1,105 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Features"
+  description="Technical breakdown of OrionHealth features - privacy-first medical AI with offline capabilities"
+>
+  <div class="prose">
+# Features
+
+OrionHealth is a privacy-first medical AI application with offline capabilities.
+
+## Core Features
+
+### 🔒 Privacy-First Architecture
+- **100% Offline**: All medical data stored locally on device using Isar database
+- **End-to-End Encryption**: AES-256-GCM encryption for data at rest and in transit
+- **Self-Sovereign Identity**: SSI implementation for secure data sharing
+- **No Cloud Dependency**: Your data never leaves your device
+
+### 🏥 Medical Data Management
+- **Comprehensive Health Records**: Store and manage medical history, prescriptions, allergies
+- **ICD-10, LOINC, SNOMED CT Integration**: International medical standards compliance
+- **Document Upload with OCR**: Scan and digitize medical documents
+- **BLE Medical Device Integration**: Connect to heart rate monitors, glucose sensors
+
+### 🤖 AI Medical Assistant
+- **On-Device LLM**: Gemma 4B GGUF running locally via llama.cpp
+- **Privacy-Preserving**: Medical queries processed locally, no data sent to cloud
+- **RAG Enrichment**: Medical knowledge base for accurate responses
+- **Multi-language Support**: English and Spanish medical terminology
+
+### 📡 Secure Data Sharing
+- **BLE (Bluetooth Low Energy)**: Share health data with nearby devices
+- **NFC**: Near-field communication for quick data transfer
+- **WiFi Direct**: High-bandwidth sharing for large medical files
+- **Consent-Based**: All sharing requires explicit user consent
+
+### 📊 Analytics & Insights
+- **Vital Signs Tracking**: Monitor heart rate, oxygen, temperature
+- **Trend Analysis**: Historical data visualization
+- **Privacy-Conscious**: All analytics run locally
+
+## Technical Stack
+
+| Component | Technology |
+|-----------|------------|
+| Framework | Flutter 3.x |
+| Database | Isar (local, encrypted) |
+| AI | Gemma 4B GGUF + Ollama |
+| Encryption | AES-256-GCM, Argon2id |
+| BLE | flutter_blue_plus 2.3.1 |
+| Standards | ICD-10, LOINC, SNOMED CT |
+
+## Security Features
+
+- **Encryption at Rest**: All data encrypted with AES-256-GCM
+- **Encryption in Transit**: TLS-like security for BLE/WiFi sharing
+- **Biometric Authentication**: Fingerprint/face unlock for app access
+- **PIN Protection**: Backup authentication method
+- **Secure Key Derivation**: Argon2id for password hashing
+
+## Platform Support
+
+- **Android**: Primary platform with full feature support
+- **iOS**: Coming soon
+- **Linux**: Development and testing supported
+
+## Future Roadmap
+
+- [ ] Health insurance integration
+- [ ] Telemedicine appointments
+- [ ] Multi-device sync via SSI
+- [ ] Apple Health / Google Fit integration
+  </div>
+</BaseLayout>
+
+<style>
+.prose {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.prose h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  color: var(--text-primary);
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.prose th, .prose td {
+  padding: 0.75rem;
+  border: 1px solid var(--glass-border);
+  text-align: left;
+}
+</style>
