@@ -1,7 +1,7 @@
-import '../entities/health_report.dart';
+import '../entities/report.dart';
 
 abstract class ReportGenerationService {
-  Future<HealthReport> generateReport({
+  Future<Report> generateReport({
     required String prompt,
     required List<String> contextData, // e.g., medical record summaries
   });

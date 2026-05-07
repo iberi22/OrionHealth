@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import '../../domain/entities/health_report.dart';
+import '../../domain/entities/report.dart';
 
 class ReportDetailPage extends StatelessWidget {
-  final HealthReport report;
+  final Report report;
 
   const ReportDetailPage({super.key, required this.report});
 
