@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 class GlassmorphicCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
-  const GlassmorphicCard({super.key, required this.child, this.padding});
+  final VoidCallback? onTap;
+
+  const GlassmorphicCard({
+    super.key,
+    required this.child,
+    this.padding,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +19,18 @@ class GlassmorphicCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: padding ?? const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white.withAlpha(13),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withAlpha(26)),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: padding ?? const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white.withAlpha(13),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white.withAlpha(26)),
+            ),
+            child: child,
           ),
-          child: child,
         ),
       ),
     );
