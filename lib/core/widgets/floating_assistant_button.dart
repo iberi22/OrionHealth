@@ -115,12 +115,15 @@ class _FloatingAssistantButtonState extends State<FloatingAssistantButton>
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          FloatingActionButton(
-            onPressed: _openAssistant,
-            backgroundColor: const Color(0xFF00BFA5),
-            foregroundColor: Colors.white,
-            elevation: 6,
-            child: Icon(widget.icon),
+          Tooltip(
+            message: 'Asistente Médico',
+            child: FloatingActionButton(
+              onPressed: _openAssistant,
+              backgroundColor: const Color(0xFF00BFA5),
+              foregroundColor: Colors.white,
+              elevation: 6,
+              child: Icon(widget.icon),
+            ),
           ),
           // Badge indicator
           if (widget.hasNotification || widget.badgeCount > 0)
