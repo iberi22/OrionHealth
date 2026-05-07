@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../features/auth/presentation/pages/receive_medical_data_page.dart';
-import '../../../../features/auth/presentation/pages/share_medical_data_page.dart';
+import '../../../../features/health_sharing/presentation/pages/receive_page.dart';
+import '../../../../features/health_sharing/presentation/pages/share_page.dart';
 import '../../../../features/about/presentation/pages/about_page.dart';
 import '../../../../features/settings/presentation/pages/llm_settings_page.dart';
 import '../../../../core/di/injection.dart';
@@ -35,9 +35,62 @@ class UserProfilePage extends StatelessWidget {
   }
 }
 
-class _UserProfileView extends StatelessWidget {
+class _UserProfileView extends StatefulWidget {
   final UserProfile userProfile;
   const _UserProfileView({required this.userProfile});
+
+  @override
+  State<_UserProfileView> createState() => _UserProfileViewState();
+}
+
+class _UserProfileViewState extends State<_UserProfileView> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+  late TextEditingController _weightController;
+  late TextEditingController _heightController;
+  late TextEditingController _ageController;
+  late TextEditingController _bloodTypeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.userProfile.name);
+    _emailController = TextEditingController(text: widget.userProfile.email);
+    _phoneController = TextEditingController(text: widget.userProfile.phoneNumber);
+    _weightController = TextEditingController(text: widget.userProfile.weight?.toString());
+    _heightController = TextEditingController(text: widget.userProfile.height?.toString());
+    _ageController = TextEditingController(text: widget.userProfile.age?.toString());
+    _bloodTypeController = TextEditingController(text: widget.userProfile.bloodType);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
+    _ageController.dispose();
+    _bloodTypeController.dispose();
+    super.dispose();
+  }
+
+  void _saveProfile() {
+    final updatedProfile = widget.userProfile.copyWith(
+      name: _nameController.text,
+      email: _emailController.text,
+      phoneNumber: _phoneController.text,
+      weight: double.tryParse(_weightController.text),
+      height: double.tryParse(_heightController.text),
+      age: int.tryParse(_ageController.text),
+      bloodType: _bloodTypeController.text,
+    );
+    context.read<UserProfileCubit>().saveUserProfile(updatedProfile);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Perfil guardado')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +106,12 @@ class _UserProfileView extends StatelessWidget {
           ),
           centerTitle: true,
           pinned: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.check, color: CyberTheme.primary),
+              onPressed: _saveProfile,
+            ),
+          ],
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -60,25 +119,65 @@ class _UserProfileView extends StatelessWidget {
             delegate: SliverChildListDelegate(
               [
                 const SizedBox(height: 24),
-                _ProfileHeader(userProfile: userProfile),
+                _ProfileHeader(userProfile: widget.userProfile),
                 const SizedBox(height: 32),
                 _Section(
-                  title: 'Información Personal',
+                  title: 'Datos Personales',
                   children: [
-                    _InfoTile(
+                    _EditTile(
                       icon: Icons.person,
-                      title: 'Nombre Completo',
-                      subtitle: userProfile.name,
+                      label: 'Nombre Completo',
+                      controller: _nameController,
                     ),
-                    const _InfoTile(
-                      icon: Icons.cake,
-                      title: 'Fecha de Nacimiento',
-                      subtitle: '15 de Agosto, 1988',
+                    _EditTile(
+                      icon: Icons.email,
+                      label: 'Email',
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                    const _InfoTile(
+                    _EditTile(
                       icon: Icons.call,
-                      title: 'Número de Contacto',
-                      subtitle: '+1 (555) 123-4567',
+                      label: 'Número de Contacto',
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                _Section(
+                  title: 'Métricas',
+                  children: [
+                    _EditTile(
+                      icon: Icons.monitor_weight,
+                      label: 'Peso',
+                      controller: _weightController,
+                      keyboardType: TextInputType.number,
+                      suffixText: 'kg',
+                    ),
+                    _EditTile(
+                      icon: Icons.height,
+                      label: 'Altura',
+                      controller: _heightController,
+                      keyboardType: TextInputType.number,
+                      suffixText: 'cm',
+                    ),
+                    _EditTile(
+                      icon: Icons.cake,
+                      label: 'Edad',
+                      controller: _ageController,
+                      keyboardType: TextInputType.number,
+                      suffixText: 'años',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                _Section(
+                  title: 'Detalles Médicos',
+                  children: [
+                    _EditTile(
+                      icon: Icons.bloodtype,
+                      label: 'Tipo de Sangre',
+                      controller: _bloodTypeController,
                     ),
                   ],
                 ),
@@ -94,7 +193,7 @@ class _UserProfileView extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ShareMedicalDataPage(),
+                            builder: (context) => const SharePage(),
                           ),
                         );
                       },
@@ -107,7 +206,7 @@ class _UserProfileView extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ReceiveMedicalDataPage(),
+                            builder: (context) => const ReceivePage(),
                           ),
                         );
                       },
@@ -170,10 +269,10 @@ class _UserProfileView extends StatelessWidget {
                       title: 'Permitir llamadas a APIs en la nube',
                       subtitle: 'Anonimización activa si está ON',
                       trailing: Switch(
-                        value: userProfile.allowCloudApi,
+                        value: widget.userProfile.allowCloudApi,
                         onChanged: (v) {
                           context.read<UserProfileCubit>().saveUserProfile(
-                                userProfile.copyWith(allowCloudApi: v),
+                                widget.userProfile.copyWith(allowCloudApi: v),
                               );
                         },
                       ),
@@ -192,14 +291,7 @@ class _UserProfileView extends StatelessWidget {
                     minimumSize: const Size(double.infinity, 56),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  onPressed: () {
-                    // In a real app, you would collect data from editing screens
-                    // For now, just save the existing profile to show functionality
-                    context.read<UserProfileCubit>().saveUserProfile(userProfile);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Perfil guardado')),
-                    );
-                  },
+                  onPressed: _saveProfile,
                   child: const Text('Guardar Cambios', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
                 TextButton(
@@ -253,9 +345,9 @@ class _ProfileHeader extends StatelessWidget {
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
-        const Text(
-          'alex.damon@orion.health',
-          style: TextStyle(fontSize: 16, color: CyberTheme.secondary),
+        Text(
+          userProfile.email ?? 'alex.damon@orion.health',
+          style: const TextStyle(fontSize: 16, color: CyberTheme.secondary),
         ),
       ],
     );
@@ -281,6 +373,7 @@ class _Section extends StatelessWidget {
           ),
         ),
         GlassmorphicCard(
+          padding: EdgeInsets.zero,
           child: Column(
             children: ListTile.divideTiles(
               context: context,
@@ -318,7 +411,42 @@ class _InfoTile extends StatelessWidget {
       subtitle: subtitle != null
           ? Text(subtitle!, style: TextStyle(color: Colors.white.withValues(alpha: 0.7)))
           : null,
-      trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.white54),
+      trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right, color: Colors.white54) : null),
+    );
+  }
+}
+
+class _EditTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final TextEditingController controller;
+  final TextInputType? keyboardType;
+  final String? suffixText;
+
+  const _EditTile({
+    required this.icon,
+    required this.label,
+    required this.controller,
+    this.keyboardType,
+    this.suffixText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: CyberTheme.secondary),
+      title: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+          border: InputBorder.none,
+          suffixText: suffixText,
+          suffixStyle: const TextStyle(color: CyberTheme.primary),
+        ),
+      ),
     );
   }
 }
