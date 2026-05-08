@@ -1,6 +1,9 @@
+import 'dart:typed_data';
+import 'package:hex/hex.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../features/auth/infrastructure/services/encryption_service.dart';
 import '../domain/entities/api_audit_log.dart';
 import '../../features/user_profile/domain/entities/user_profile.dart';
 import '../../features/local_agent/domain/chat_message.dart';
@@ -15,29 +18,46 @@ import 'package:health_wallet/health_wallet.dart' hide HealthRecord, LabResult, 
 
 @module
 abstract class DatabaseModule {
+  String uint8ListToHex(Uint8List bytes) => HEX.encode(bytes);
+
   @preResolve
   Future<Isar> get isar async {
     final dir = await getApplicationDocumentsDirectory();
-    return Isar.open(
-      [
-        UserProfileSchema,
-        ApiAuditLogSchema,
-        ChatMessageSchema,
-        MedicalRecordSchema,
-        MemoryNodeSchema,
-        MemoryEdgeSchema,
-        ReportSchema,
-        MedicationSchema,
-        AppointmentSchema,
-        AllergySchema,
-        HealthRecordSchema,
-        LabResultSchema,
-        VitalSignSchema,
-        MedicationEntrySchema,
-        MedicalDocumentSchema,
-        MedicalEventSchema,
-      ],
-      directory: dir.path,
-    );
+    final encryptionService = EncryptionServiceImpl();
+    final keyBytes = await encryptionService.getDatabaseKey();
+    final keyHex = uint8ListToHex(Uint8List.fromList(keyBytes));
+
+    final schemas = [
+      UserProfileSchema,
+      ApiAuditLogSchema,
+      ChatMessageSchema,
+      MedicalRecordSchema,
+      MemoryNodeSchema,
+      MemoryEdgeSchema,
+      ReportSchema,
+      MedicationSchema,
+      AppointmentSchema,
+      AllergySchema,
+      HealthRecordSchema,
+      LabResultSchema,
+      VitalSignSchema,
+      MedicationEntrySchema,
+      MedicalDocumentSchema,
+      MedicalEventSchema,
+    ];
+
+    try {
+      return await Isar.open(
+        schemas,
+        directory: dir.path,
+        encryptionKey: keyHex,
+      );
+    } catch (e) {
+      // Fallback for existing unencrypted databases or migration path
+      return await Isar.open(
+        schemas,
+        directory: dir.path,
+      );
+    }
   }
 }
