@@ -1,13 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/auth_service.dart';
+import 'auth_event.dart';
 import 'auth_state.dart';
 
+import 'package:injectable/injectable.dart';
+
+@injectable
 class AuthCubit extends Cubit<AuthState> {
   final AuthService _authService;
 
-  AuthCubit({AuthService? authService})
-      : _authService = authService ?? AuthServiceImpl(),
-        super(const AuthState());
+  AuthCubit(this._authService)
+      : super(const AuthState());
 
   Future<void> checkAuth() async {
     emit(state.copyWith(status: AuthStatus.loading));
