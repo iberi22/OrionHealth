@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
-import 'package:medical_standards/medical_standards.dart';
 
 import '../domain/entities/medical_query.dart';
 import '../domain/entities/medical_insight.dart';
