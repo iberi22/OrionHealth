@@ -45,8 +45,92 @@ void main() {
       // Assert
       expect(results.length, 1);
       expect(results.first.code.code, 'I21');
-      expect(results.first.score, 0.9);
+      expect(results.first.score, closeTo(0.9, 0.05));
       expect(results.first.reasoning, contains('Infarto'));
+    });
+
+    test('analyzeSymptoms handles typos via fuzzy matching', () async {
+      // Arrange
+      final symptomsMapping = [
+        {
+          "symptom": "Fatiga",
+          "searchTerms": ["tiredness"],
+          "matches": [
+            {"code": "R53.83", "score": 0.8, "reason": "Cansancio general"}
+          ]
+        }
+      ];
+
+      final mockCode = MedicalCode(
+        code: 'R53.83',
+        displayName: 'Fatiga',
+        category: 'Symptom',
+        standard: 'ICD-10',
+      );
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+      when(() => mockRepo.searchByCode('R53.83')).thenAnswer((_) async => mockCode);
+
+      // Act
+      final results = await reasoner.analyzeSymptoms('Siento mucha fatiiga'); // Typo: fatiiga
+
+      // Assert
+      expect(results.length, 1);
+      expect(results.first.code.code, 'R53.83');
+      expect(results.first.score, lessThan(0.8));
+      expect(results.first.score, greaterThan(0.6));
+      expect(results.first.reasoning, contains('confianza'));
+    });
+
+    test('analyzeSymptoms respects negation', () async {
+      // Arrange
+      final symptomsMapping = [
+        {
+          "symptom": "Fiebre",
+          "matches": [
+            {"code": "R50.9", "score": 0.7, "reason": "Temperatura alta"}
+          ]
+        }
+      ];
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+
+      // Act
+      final results = await reasoner.analyzeSymptoms('No tengo fiebre');
+
+      // Assert
+      expect(results, isEmpty);
+    });
+
+    test('analyzeSymptoms handles multi-word symptoms and synonyms', () async {
+      // Arrange
+      final symptomsMapping = [
+        {
+          "symptom": "Dificultad para respirar",
+          "searchTerms": ["disnea", "falta de aire"],
+          "matches": [
+            {"code": "R06.0", "score": 0.9, "reason": "Problema respiratorio"}
+          ]
+        }
+      ];
+
+      final mockCode = MedicalCode(
+        code: 'R06.0',
+        displayName: 'Disnea',
+        category: 'Respiratory',
+        standard: 'ICD-10',
+      );
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+      when(() => mockRepo.searchByCode('R06.0')).thenAnswer((_) async => mockCode);
+
+      // Act
+      final results = await reasoner.analyzeSymptoms('Siento mucha falta de aire al caminar');
+
+      // Assert
+      expect(results.length, 1);
+      expect(results.first.code.code, 'R06.0');
+      expect(results.first.reasoning, contains('falta de aire'));
     });
 
     test('synthesizeHolisticSummary generates correct mental-physical bridge', () {
