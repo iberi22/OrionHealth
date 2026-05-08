@@ -1,144 +1,96 @@
-# OrionHealth Documentation Site
+# OrionHealth Monorepo Documentation
 
-Professional landing page built with **Astro 5** and **Cyber-Minimalism** design system, featuring OrionHealth's medical-grade color palette.
+Welcome to the **OrionHealth** monorepo. This repository contains the mobile application, internal packages, medical standards data, and the professional documentation site.
 
-## 🎨 Design System
+## 📁 Repository Structure
 
-### Color Palette (Medical Professional)
-- **Primary**: `#1E88E5` (Medical Blue) - Trust, healthcare, professionalism
-- **Secondary**: `#43A047` (Health Green) - Wellness, vitality, growth
-- **Accent**: `#00BCD4` (Cyan) - Technology, AI, innovation
-- **Surface**: `#1A1A1A` - Dark backgrounds
-- **Text**: `#E8E8E8` - High contrast readability
+This monorepo is organized to support a privacy-first, local-first medical intelligence network.
 
-### Typography
-- **Font**: Fira Code (Monospace) - Developer-friendly, technical precision
-- **Headings**: Bold, Uppercase, Tight tracking
-- **Body**: Light weight, Relaxed leading
+```text
+.
+├── android/            # Android-specific native code and configurations
+├── assets/             # Global assets (images, icons, medical-standards JSON)
+├── docs/               # Documentation site (Astro) and markdown guides
+│   ├── api/            # API documentation for internal packages
+│   ├── architecture/   # Architectural deep-dives and diagrams
+│   ├── medical/        # Medical data gaps and research
+│   ├── planning/       # Roadmap, tasks, and project vision
+│   └── src/            # Astro source code for the documentation site
+├── functions/          # Backend functions (e.g., Telegram support bot)
+├── ios/                # iOS-specific native code and configurations
+├── lib/                # Main Flutter application source code (Hexagonal Architecture)
+│   ├── core/           # Shared utilities, DI, theme, and common widgets
+│   └── features/       # Modular features (auth, reports, health_record, etc.)
+├── medical-standards/  # Raw medical standards data (ICD-10, LOINC, etc.)
+├── packages/           # Internal Dart/Flutter packages
+│   ├── health_wallet/  # Encrypted local health record models
+│   ├── isar_agent_memory/ # Graph + Vector DB for RAG
+│   └── medical_standards/ # Parsers and loaders for medical codes
+├── scripts/            # Build, maintenance, and verification scripts
+├── test/               # Unit and widget tests for the main application
+└── integration_test/   # E2E and visual regression tests
+```
 
-### Effects
-- **Noise Overlay**: Subtle texture (3% opacity)
-- **Medical Grid**: Blue grid pattern (3% opacity)
-- **Glassmorphism**: Blurred backgrounds with medical blue borders
-- **Flashlight Effect**: Interactive gradient borders on hover
-- **Blob Animation**: Ambient medical-colored backgrounds
+## 🚀 Getting Started
 
-## 🚀 Development
+### Prerequisites
 
+- **Flutter SDK**: ^3.7.0
+- **Node.js & npm**: (For the documentation site)
+- **Git**: Latest version
+
+### 📱 Developing the Mobile App
+
+1.  **Clone and Install**:
+    ```bash
+    git clone https://github.com/iberi22/OrionHealth.git
+    cd OrionHealth
+    flutter pub get
+    ```
+2.  **Generate Code**:
+    ```bash
+    dart run build_runner build --delete-conflicting-outputs
+    ```
+3.  **Run the App**:
+    ```bash
+    flutter run
+    ```
+
+### 🌐 Developing the Documentation Site
+
+The documentation site is built with **Astro 6** and **Tailwind CSS v4**.
+
+1.  **Navigate and Install**:
+    ```bash
+    cd docs
+    npm install --legacy-peer-deps
+    ```
+2.  **Start Dev Server**:
+    ```bash
+    npm run dev
+    ```
+
+## 📖 Internal Documentation
+
+- **[Architecture](./ARCHITECTURE.md)**: Deep dive into Hexagonal Architecture and RAG pipeline.
+- **[Contributing](./CONTRIBUTING.md)**: Guidelines for contributing code and documentation.
+- **[Dev Guide](./dev-guide.md)**: Onboarding guide for new developers.
+- **[RAG Architecture](./rag-architecture-review.md)**: Detailed review of the on-device AI system.
+- **[API Index](./api/index.md)**: Documentation for internal packages.
+
+## 🚢 Deployment
+
+### Mobile App
+The app is built and released via GitHub Actions (`.github/workflows/android_build.yml`).
+Manual release build:
 ```bash
-cd docs
-
-# Install dependencies
-npm install
-
-# Start dev server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+flutter build apk --release
 ```
 
-## 📁 Structure
+### Documentation Site
+The site is automatically deployed to GitHub Pages via `.github/workflows/deploy-docs.yml`.
+Live URL: [https://iberi22.github.io/OrionHealth](https://iberi22.github.io/OrionHealth)
 
-```
-docs/
-├── src/
-│   ├── components/
-│   │   ├── Header.astro          # Top navigation with logo
-│   │   ├── Footer.astro          # Footer with links
-│   │   ├── FeatureCard.astro     # Feature showcase cards
-│   │   ├── DonationSection.astro # Support/funding section
-│   │   └── LandingPage.astro     # Main landing page
-│   ├── layouts/
-│   │   └── BaseLayout.astro      # Base HTML with design system
-│   ├── pages/
-│   │   └── index.astro           # Homepage
-│   └── i18n/
-│       └── ui.ts                 # Translations (10 languages)
-├── public/
-│   ├── robots.txt                # SEO
-│   └── .nojekyll                 # GitHub Pages config
-└── astro.config.mjs              # Astro configuration
-```
+## ⚖️ License
 
-## 🌐 Deployment
-
-Automatically deployed to GitHub Pages on every push to `main` branch via GitHub Actions.
-
-**Live URL**: https://iberi22.github.io/OrionHealth
-
-## ✨ Features
-
-- ✅ Cyber-Minimalism design with medical color palette
-- ✅ Professional glassmorphism effects
-- ✅ Interactive flashlight card borders
-- ✅ Animated background blobs (medical colors)
-- ✅ Responsive design (mobile-first)
-- ✅ SEO optimized (meta tags, robots.txt)
-- ✅ Fast loading (Astro static generation)
-- ✅ Accessible (WCAG AA compliant colors)
-
-## 🎯 Design Philosophy
-
-**"Medical-Grade Cyber-Minimalism"**
-
-- High contrast for medical accuracy
-- Professional color palette for healthcare trust
-- Technical typography for developer audience
-- Subtle animations for modern feel
-- Zero compromise on privacy messaging
-
-## 📝 Content Sections
-
-1. **Hero**: Bold statement about privacy-first healthcare
-2. **Features**: Core capabilities with medical icons
-3. **Privacy**: Detailed privacy commitments
-4. **Support**: Donation options (GitHub Sponsors, Open Collective)
-5. **Download**: APK download and GitHub links
-
-## 🔧 Customization
-
-### Changing Colors
-
-Edit `src/layouts/BaseLayout.astro`:
-
-```js
-colors: {
-  primary: { DEFAULT: '#1E88E5', ... },  // Medical Blue
-  secondary: { DEFAULT: '#43A047', ... }, // Health Green
-  accent: { DEFAULT: '#00BCD4', ... },    // Cyan
-}
-```
-
-### Adding Languages
-
-Edit `src/i18n/ui.ts`:
-
-```ts
-export const ui = {
-  en: { features: 'Features', ... },
-  es: { features: 'Características', ... },
-  // Add more languages
-}
-```
-
-## 📊 Performance
-
-- **Lighthouse Score**: 100/100 (Performance, Accessibility, Best Practices, SEO)
-- **Bundle Size**: < 50KB (CSS inlined via Tailwind CDN)
-- **Load Time**: < 1s (Static generation)
-
-## 🤝 Contributing
-
-1. Make changes in `docs/` directory
-2. Test locally: `npm run dev`
-3. Build: `npm run build`
-4. Commit and push to `main` branch
-5. GitHub Actions will auto-deploy
-
-## 📄 License
-
-AGPL-3.0 - See LICENSE file in repository root.
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. See the [LICENSE](../LICENSE) file in the repository root for details.

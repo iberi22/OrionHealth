@@ -1,17 +1,46 @@
-# OrionHealth API Documentation
+# API Documentation Index
 
-## Dart Services
+OrionHealth uses a modular package system to encapsulate core functionalities. Below is the documentation for the internal packages located in `packages/`.
 
-### Core Services
-- [AicoreService](../lib/core/services/aicore_service.dart) — MethodChannel bridge for on-device LLM
-- [DeviceCapabilityService](../lib/core/services/device_capability_service.dart) — Device profile detection
-- [PrivacyAnonymizer](../lib/core/services/privacy_anonymizer.dart) — PII scrubbing for medical prompts
+## 📦 Internal Packages
 
-### RAG Pipeline
-- [RagLlmService](../lib/features/local_agent/infrastructure/rag_llm_service.dart) — RAG query engine
-- [MockLlmAdapter](../lib/features/local_agent/infrastructure/adapters/mock_llm_adapter.dart) — Test adapter
-- [GemmaLlmAdapter](../lib/features/local_agent/infrastructure/adapters/gemma_llm_adapter.dart) — On-device Gemma 4 adapter
+### 1. `isar_agent_memory`
+The core engine for the AI Assistant's memory.
+- **Purpose**: Provides a hybrid Vector + Graph database using Isar.
+- **Key Features**:
+  - `MemoryGraph`: Manage nodes and semantic edges.
+  - `HierarchicalRAG`: Multi-hop context retrieval.
+  - `VectorSearch`: Similarity search for health history.
+- **Documentation**: [packages/isar_agent_memory/README.md](../../packages/isar_agent_memory/README.md)
 
-### Android Native
-- [AicorePlugin.kt](../android/app/src/main/kotlin/com/orionhealth/orionhealth_health/AicorePlugin.kt) — Flutter plugin
-- [AicoreServiceKt.kt](../android/app/src/main/kotlin/com/orionhealth/orionhealth_health/AicoreServiceKt.kt) — ML Kit helper
+### 2. `medical_standards`
+The interface between the app and global medical knowledge.
+- **Purpose**: Parsers and loaders for standardized medical codes.
+- **Supported Standards**: ICD-10, LOINC, RxNorm, SNOMED CT.
+- **Key Features**:
+  - `MedicalKnowledgeRepository`: Asynchronous lookup of codes and definitions.
+  - `StandardParser`: Converts raw JSON into domain entities.
+
+### 3. `health_wallet`
+Secure, encrypted storage for personal health records.
+- **Purpose**: Defines the domain entities and encryption logic for medical data.
+- **Key Entities**:
+  - `HealthRecord`: Base entity for medical history.
+  - `VitalSign`: Time-series data for metrics (BP, Heart Rate).
+  - `EncryptionService`: AES-256-GCM implementation for local data.
+
+## 🔌 Core Services (lib/core/services)
+
+### `AicoreService`
+Manages native AI inference and device capability detection.
+- **MethodChannels**: `com.orionhealth/aicore`, `com.orionhealth/llama`.
+- **Capabilities**: RAM detection, GPU support, model recommendation.
+
+### `LlmService`
+The abstraction layer for LLM interactions.
+- **Adapters**: Gemma (Native), Gemini (Cloud), Local (Ollama).
+- **Functionality**: Streaming responses, prompt engineering, RAG integration.
+
+---
+
+*For detailed API references, please refer to the source code doc comments (`///`).*
