@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../ble_sharing/application/ble_sharing_cubit.dart';
 import '../../../ble_sharing/domain/ble_sharing_service.dart';
+import '../../../ble_sharing/presentation/pages/share_page.dart';
 
 class ShareMedicalDataPage extends StatelessWidget {
   const ShareMedicalDataPage({super.key});
@@ -132,23 +133,19 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            RadioGroup<MedicalTransferMethod>(
-              groupValue: _selectedMethod,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _selectedMethod = value);
-                }
-              },
-              child: Column(
-                children: MedicalTransferMethod.values.map((method) {
-                  return RadioListTile<MedicalTransferMethod>(
-                    title: Text(method.displayName),
-                    subtitle: Text(method.description),
-                    value: method,
-                  );
-                }).toList(),
-              ),
-            ),
+            ...MedicalTransferMethod.values.map((method) {
+              return RadioListTile<MedicalTransferMethod>(
+                title: Text(method.displayName),
+                subtitle: Text(method.description),
+                value: method,
+                groupValue: _selectedMethod,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() => _selectedMethod = value);
+                  }
+                },
+              );
+            }),
           ],
         ),
       ),

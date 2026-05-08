@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
+import '../infrastructure/services/encryption_service.dart';
 
 enum AuthMethod { pin, biometric, none }
 
@@ -20,9 +24,18 @@ abstract class AuthService {
   Future<void> clearAuth();
 }
 
+@LazySingleton(as: AuthService)
 class AuthServiceImpl implements AuthService {
+  static const _pinKey = 'auth_pin_hash';
+  static const _pinSaltKey = 'auth_pin_salt';
+
+  final EncryptionService _encryptionService;
+  
   String? _cachedPinHash;
+  String? _cachedPinSalt;
   bool _biometricAvailable = false;
+
+  AuthServiceImpl(this._encryptionService);
 
   @override
   Future<bool> isPinSet() async {
@@ -40,9 +53,12 @@ class AuthServiceImpl implements AuthService {
       );
     }
 
-    final hash = _hashPin(pin);
+    final salt = await _encryptionService.generatePinSalt();
+    final hash = await _encryptionService.hashPin(pin, salt);
+
     await _storePinHash(hash);
     _cachedPinHash = hash;
+    _cachedPinSalt = salt;
     
     return AuthResult(success: true, method: AuthMethod.pin);
   }
@@ -50,6 +66,7 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<AuthResult> verifyPin(String pin) async {
     final storedHash = _cachedPinHash ?? await _getStoredPinHash();
+    final salt = _cachedPinSalt ?? await _encryptionService.generatePinSalt();
     
     if (storedHash == null) {
       return AuthResult(
@@ -59,8 +76,8 @@ class AuthServiceImpl implements AuthService {
       );
     }
 
-    final inputHash = _hashPin(pin);
-    if (inputHash == storedHash) {
+    final isValid = await _encryptionService.verifyPin(pin, storedHash, salt);
+    if (isValid) {
       return AuthResult(success: true, method: AuthMethod.pin);
     }
 
@@ -120,13 +137,9 @@ class AuthServiceImpl implements AuthService {
   }
 
   String _hashPin(String pin) {
-    // Simple hash for PIN verification
     final bytes = utf8.encode(pin);
-    var hash = 0;
-    for (final byte in bytes) {
-      hash = ((hash << 5) - hash) + byte;
-    }
-    return hash.toRadixString(16).padLeft(8, '0');
+    final digest = sha256.convert(bytes);
+    return digest.toString();
   }
 
   Future<String?> _getStoredPinHash() async {
