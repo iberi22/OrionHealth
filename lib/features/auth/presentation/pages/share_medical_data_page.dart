@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../ble_sharing/application/ble_sharing_cubit.dart';
 import '../../../ble_sharing/domain/ble_sharing_service.dart';
-import '../../../ble_sharing/presentation/pages/share_page.dart';
 
 class ShareMedicalDataPage extends StatelessWidget {
   const ShareMedicalDataPage({super.key});
