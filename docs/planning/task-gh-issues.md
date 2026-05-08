@@ -29,6 +29,21 @@
 **Required:** Tests for MedicalAssistantCubit, MedicalLlmAdapter, InsightCard widget  
 **Blocked by:** None  
 
+### #15 · SSI - DID Generation & Long-Form Resolution
+**Status:** Open
+**Required:** Implement offline DID generation using Sidetree logic.
+**Blocked by:** Research #111
+
+### #16 · SSI - VC Schema for Medical Records
+**Status:** Open
+**Required:** Define AnonCreds-compatible schemas for vitals and lab results.
+**Blocked by:** Research #111
+
+### #17 · SSI - Selective Disclosure Share UI
+**Status:** Open
+**Required:** Create share preview screen with ZKP field selection.
+**Blocked by:** #15, #16
+
 ---
 
 ## 🟡 MEDIUM PRIORITY — Open
