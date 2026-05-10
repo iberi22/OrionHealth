@@ -1626,5 +1626,33 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
+class _PrivacyToggle extends StatelessWidget {
+  final bool allowCloudApiCalls;
+  final ValueChanged<bool> onChanged;
 
+  const _PrivacyToggle({
+    required this.allowCloudApiCalls,
+    required this.onChanged,
+  });
 
+  @override
+  Widget build(BuildContext context) {
+    return SwitchListTile(
+      title: const Text(
+        'Permitir llamadas a la nube',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: const Text(
+        'Permite el uso de modelos en la nube para mejorar las respuestas.',
+        style: TextStyle(color: Colors.white70),
+      ),
+      value: allowCloudApiCalls,
+      onChanged: onChanged,
+      activeTrackColor: AppColors.primary.withValues(alpha: 0.5),
+      activeThumbColor: AppColors.primary,
+    );
+  }
+}
