@@ -51,6 +51,15 @@ class Did {
         'keyType': keyType,
       };
 
+  factory Did.fromJson(Map<String, dynamic> json) => Did(
+        did: json['did'] as String,
+        shortForm: json['shortForm'] as String?,
+        longForm: json['longForm'] as String,
+        createdAt: DateTime.parse(json['createdAt'] as String),
+        isAnchored: json['isAnchored'] as bool? ?? false,
+        keyType: json['keyType'] as String? ?? 'Ed25519',
+      );
+
   @override
   String toString() => 'Did($activeDid, anchored: $isAnchored)';
 }

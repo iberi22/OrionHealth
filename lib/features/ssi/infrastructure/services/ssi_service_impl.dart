@@ -19,6 +19,8 @@ import '../../domain/services/ssi_service.dart';
 /// Reference: docs/research/SSI_ARCHITECTURE_DECISION.md
 @LazySingleton(as: SsiService)
 class SsiServiceImpl implements SsiService {
+  // TODO(ssi): Migrate to Isar persistence for DIDs, credentials, and DID documents.
+  // Currently in-memory only — data lost on app restart.
   final List<Did> _dids = [];
   final List<VerifiableCredential> _credentials = [];
   final Map<String, Map<String, dynamic>> _didDocuments = {};
@@ -166,14 +168,22 @@ class SsiServiceImpl implements SsiService {
   }
 
   String _schemaIdToType(String schemaId) {
-    if (schemaId.contains('Vaccination')) return 'VaccinationCredential';
-    if (schemaId.contains('LabResult')) return 'LabResultCredential';
-    if (schemaId.contains('Prescription')) return 'PrescriptionCredential';
-    return 'VerifiableCredential';
+    const typeMap = {
+      'orion:schemas:VaccinationCredential:v1': 'VaccinationCredential',
+      'orion:schemas:LabResultCredential:v1': 'LabResultCredential',
+      'orion:schemas:PrescriptionCredential:v1': 'PrescriptionCredential',
+    };
+    return typeMap[schemaId] ?? 'VerifiableCredential';
   }
 
   String _generateProof(String credentialId, Map<String, dynamic> claims, String issuer) {
-    final data = '$credentialId|${claims.keys.join(',')}|$issuer';
+    // Hash claim keys AND values for integrity — prevents tampering
+    final sortedEntries = claims.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    final claimParts = sortedEntries
+        .map((e) => '${e.key}=${e.value}')
+        .join('|');
+    final data = '$credentialId|$claimParts|$issuer';
     final hash = sha256.convert(utf8.encode(data));
     return base64Url.encode(hash.bytes);
   }
