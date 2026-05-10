@@ -162,18 +162,6 @@ class BleSharingService {
     // flutter_blue_plus 2.3.1+ requires license parameter for connect()
   }
 
-  int _parseHeartRate(List<int> data) {
-    if (data.isEmpty) return 0;
-    final flags = data[0];
-    final is16bit = (flags & 0x01) != 0;
-    if (is16bit && data.length >= 3) {
-      return (data[2] << 8) | data[1];
-    } else if (data.length >= 2) {
-      return data[1];
-    }
-    return 0;
-  }
-
   Future<MedicalSharePackage?> receiveData() async {
     if (_connectedDeviceId == null) return null;
     _stateController.add(BleServiceState.transferring('Receiving...'));

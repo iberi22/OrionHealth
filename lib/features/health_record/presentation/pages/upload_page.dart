@@ -293,7 +293,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<RecordType>(
-                      value: _selectedType,
+                      initialValue: _selectedType,
                       dropdownColor: AppColors.surfaceVariant,
                       decoration: const InputDecoration(
                         labelText: 'Tipo de Documento',
