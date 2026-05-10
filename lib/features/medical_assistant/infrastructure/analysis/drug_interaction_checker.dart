@@ -167,6 +167,29 @@ class DrugInteractionChecker {
       );
     }
 
+    // Pregnancy contraindications
+    if (conditionCode.startsWith('Z33') || conditionCode.startsWith('O')) {
+      if (drugClass.contains('ace inhibitor') || drugName.contains('lisinopril') || drugName.contains('enalapril')) {
+        return DrugConditionWarning(
+          drug: med.displayName,
+          condition: 'Pregnancy',
+          severity: InsightSeverity.critical,
+          description: 'ACE inhibitors are contraindicated in pregnancy as they can cause fetal injury and death',
+          recommendation: 'Discontinue ACE inhibitor immediately and consult obstetrician for alternative BP management.',
+        );
+      }
+
+      if (drugClass.contains('statin') || drugName.contains('atorvastatin') || drugName.contains('simvastatin')) {
+        return DrugConditionWarning(
+          drug: med.displayName,
+          condition: 'Pregnancy',
+          severity: InsightSeverity.critical,
+          description: 'Statins are generally contraindicated in pregnancy due to potential risks to the fetus',
+          recommendation: 'Stop statin therapy and discuss with your physician.',
+        );
+      }
+    }
+
     return null;
   }
 
