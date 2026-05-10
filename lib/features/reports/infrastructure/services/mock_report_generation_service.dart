@@ -3,7 +3,8 @@ import '../../domain/entities/report.dart';
 import '../../domain/services/report_generation_service.dart';
 import 'dart:math';
 
-@LazySingleton(as: ReportGenerationService)
+@LazySingleton()
+@Named('mock')
 class MockReportGenerationService implements ReportGenerationService {
   @override
   Future<Report> generateReport({
