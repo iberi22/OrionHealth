@@ -52,6 +52,10 @@ class SymphonyClinicalReasonerService implements ClinicalReasonerService {
       'jamás',
       'negativo para',
       'ausencia de',
+      'niega',
+      'sin rastro de',
+      'sin signos de',
+      'descartado',
     ];
 
     for (final keyword in negationKeywords) {
@@ -66,15 +70,27 @@ class SymphonyClinicalReasonerService implements ClinicalReasonerService {
     return false;
   }
 
+  String _normalize(String text) {
+    var normalized = text.toLowerCase();
+    normalized = normalized.replaceAll('á', 'a');
+    normalized = normalized.replaceAll('é', 'e');
+    normalized = normalized.replaceAll('í', 'i');
+    normalized = normalized.replaceAll('ó', 'o');
+    normalized = normalized.replaceAll('ú', 'u');
+    normalized = normalized.replaceAll('ü', 'u');
+    return normalized;
+  }
+
   @override
   Future<List<DiagnosticMatch>> analyzeSymptoms(String text) async {
     final matches = <DiagnosticMatch>[];
     final mappings = _repository.getSymptomMappings();
     final lowerText = text.toLowerCase();
+    final normalizedText = _normalize(text);
 
     // Tokenize the input text with their start indices
     final tokens = <_SymptomToken>[];
-    final matchesIter = RegExp(r'[\wáéíóúüñ]+').allMatches(lowerText);
+    final matchesIter = RegExp(r'[\wáéíóúüñ]+').allMatches(normalizedText);
     for (final m in matchesIter) {
       tokens.add(_SymptomToken(m.group(0)!, m.start));
     }
@@ -82,9 +98,9 @@ class SymphonyClinicalReasonerService implements ClinicalReasonerService {
     if (tokens.isEmpty) return [];
 
     for (final mapping in mappings) {
-      final symptom = (mapping['symptom'] as String).toLowerCase();
+      final symptom = _normalize(mapping['symptom'] as String);
       final searchTerms =
-          (mapping['searchTerms'] as List<dynamic>?)?.map((e) => e.toString().toLowerCase()) ?? [];
+          (mapping['searchTerms'] as List<dynamic>?)?.map((e) => _normalize(e.toString())) ?? [];
 
       final allTerms = [symptom, ...searchTerms];
 

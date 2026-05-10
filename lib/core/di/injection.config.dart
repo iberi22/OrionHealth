@@ -113,6 +113,8 @@ import '../../features/reports/infrastructure/repositories/isar_report_repositor
     as _i35;
 import '../../features/reports/infrastructure/services/gemma_report_generation_service.dart'
     as _i100;
+import '../../features/reports/infrastructure/services/mock_report_generation_service.dart'
+    as _i101;
 import '../../features/settings/application/llm_settings_cubit.dart' as _i59;
 import '../../features/settings/domain/repositories/llm_settings_repository.dart'
     as _i16;
@@ -221,9 +223,14 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i13.LlmAdapter>(instanceName: 'gemma'),
           gh<_i38.VectorStoreService>(),
           gh<_i36.UserProfileRepository>(),
+          gh<_i31.PromptScrubber>(),
         ));
     gh.lazySingleton<_i34.ReportRepository>(
         () => _i35.IsarReportRepository(gh<_i12.Isar>()));
+    gh.lazySingleton<_i32.ReportGenerationService>(
+      () => _i101.MockReportGenerationService(),
+      instanceName: 'mock',
+    );
     gh.lazySingleton<_i18.SyncService>(() => networkModule.syncService);
     gh.lazySingleton<_i36.UserProfileRepository>(
         () => _i37.UserProfileRepositoryImpl(gh<_i12.Isar>()));
@@ -246,7 +253,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i46.AuthService>(
         () => _i46.AuthServiceImpl(gh<_i8.EncryptionService>()));
     gh.lazySingleton<_i47.BleMedicalSharingService>(
-        () => _i47.BleMedicalSharingService(gh<_i8.EncryptionService>()));
+        () => _i47.BleMedicalSharingService());
     gh.lazySingleton<_i48.ClinicalReasonerService>(() =>
         _i49.SymphonyClinicalReasonerService(
             gh<_i19.MedicalKnowledgeRepository>()));

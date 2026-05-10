@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import '../../../../features/local_agent/domain/services/llm_adapter.dart';
+import '../../../../core/services/privacy_anonymizer.dart';
 import '../../../../features/local_agent/domain/services/vector_store_service.dart';
 import '../../../../features/user_profile/domain/repositories/user_profile_repository.dart';
 import '../../domain/entities/report.dart';
@@ -17,11 +18,13 @@ class GemmaReportGenerationService implements ReportGenerationService {
   final LlmAdapter _llmAdapter;
   final VectorStoreService _vectorStoreService;
   final UserProfileRepository _userProfileRepository;
+  final PromptScrubber _promptScrubber;
 
   GemmaReportGenerationService(
     @Named('gemma') this._llmAdapter,
     this._vectorStoreService,
     this._userProfileRepository,
+    this._promptScrubber,
   );
 
   @override
@@ -29,10 +32,19 @@ class GemmaReportGenerationService implements ReportGenerationService {
     required String prompt,
     required List<String> contextData,
   }) async {
+    if (prompt.trim().isEmpty) {
+      throw ArgumentError('Prompt cannot be empty');
+    }
+
+    final scrubbedPrompt = await _promptScrubber.scrub(
+      prompt,
+      apiName: 'GemmaReportGenerationService',
+    );
+
     final now = DateTime.now();
 
     // 1. Retrieve relevant medical knowledge from local vector store (HiRAG)
-    final knowledgeDocs = await _vectorStoreService.search(prompt);
+    final knowledgeDocs = await _vectorStoreService.search(scrubbedPrompt);
     final knowledgeContext = knowledgeDocs.isNotEmpty
         ? '\n## Conocimiento Médico Relevante\n${knowledgeDocs.map((d) => "- $d").join('\n')}'
         : '';
@@ -72,7 +84,7 @@ ${contextData.map((d) => "- $d").join('\n')}
 $profileContext
 $knowledgeContext
 
-SOLICITUD DEL INFORME: $prompt
+SOLICITUD DEL INFORME: $scrubbedPrompt
 ''';
 
     // 4. Generate report via LLM (Gemma local → Gemini cloud fallback)
@@ -81,11 +93,11 @@ SOLICITUD DEL INFORME: $prompt
       reportContent = await _llmAdapter.generate(systemPrompt);
     } catch (e) {
       // Graceful fallback with structured content
-      reportContent = _buildFallbackReport(now, prompt, contextData, knowledgeDocs);
+      reportContent = _buildFallbackReport(now, scrubbedPrompt, contextData, knowledgeDocs);
     }
 
     // 5. Determine report status based on content analysis
-    final status = _determineStatus(reportContent, prompt);
+    final status = _determineStatus(reportContent, scrubbedPrompt);
 
     // 6. Extract title from content or generate one
     final title = _extractTitle(reportContent) ??
@@ -112,6 +124,7 @@ SOLICITUD DEL INFORME: $prompt
     final urgentKeywords = [
       'urgente', 'crítico', 'emergencia', 'grave', 'severa',
       'riesgo alto', 'atención inmediata', 'hospitalización',
+      'taquicardia', 'síncope', 'hemorragia', 'dolor torácico', 'disnea',
     ];
 
     for (final keyword in urgentKeywords) {

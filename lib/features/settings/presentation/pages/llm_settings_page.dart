@@ -146,15 +146,15 @@ class _LlmSettingsView extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: AppColors.surfaceVariant.withAlpha(120),
+                color: AppColors.surfaceVariant.withValues(alpha: 0.47),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TabBar(
                 indicator: BoxDecoration(
-                  color: AppColors.primary.withAlpha(51),
+                  color: AppColors.primary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: AppColors.primary.withAlpha(77), width: 1),
+                      color: AppColors.primary.withValues(alpha: 0.3), width: 1),
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
                 labelColor: AppColors.primary,
@@ -253,7 +253,7 @@ class _LocalModelsTab extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(15),
+                  color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -323,7 +323,7 @@ class _ModelListItem extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withAlpha(26),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.smart_toy_outlined,
@@ -364,7 +364,7 @@ class _ModelListItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
                 value: progress,
-                backgroundColor: Colors.white.withAlpha(26),
+                backgroundColor: Colors.white.withValues(alpha: 0.1),
                 valueColor: AlwaysStoppedAnimation(
                     progress < 1.0
                         ? AppColors.secondary
@@ -460,7 +460,7 @@ class _ModelListItem extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Usando $modelName'),
-                        backgroundColor: AppColors.primary.withAlpha(180),
+                        backgroundColor: AppColors.primary.withValues(alpha: 0.71),
                         duration: const Duration(seconds: 1),
                       ),
                     );
@@ -487,7 +487,7 @@ class _ModelListItem extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
-            color: Colors.white.withAlpha(15),
+            color: Colors.white.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Text(
@@ -499,10 +499,10 @@ class _ModelListItem extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
-            color: AppColors.secondary.withAlpha(30),
+            color: AppColors.secondary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-                color: AppColors.secondary.withAlpha(60), width: 1),
+                color: AppColors.secondary.withValues(alpha: 0.24), width: 1),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -531,10 +531,10 @@ class _ModelListItem extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
-            color: Colors.greenAccent.withAlpha(26),
+            color: Colors.greenAccent.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-                color: Colors.greenAccent.withAlpha(60), width: 1),
+                color: Colors.greenAccent.withValues(alpha: 0.24), width: 1),
           ),
           child: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -566,13 +566,13 @@ class _ModelListItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: isSecondary
-              ? Colors.white.withAlpha(15)
-              : AppColors.primary.withAlpha(40),
+              ? Colors.white.withValues(alpha: 0.06)
+              : AppColors.primary.withValues(alpha: 0.16),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isSecondary
-                ? Colors.white.withAlpha(30)
-                : AppColors.primary.withAlpha(80),
+                ? Colors.white.withValues(alpha: 0.12)
+                : AppColors.primary.withValues(alpha: 0.31),
             width: 1,
           ),
         ),
@@ -654,7 +654,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(26),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(Icons.cloud_outlined,
@@ -678,7 +678,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                             'Conecta con APIs externas de IA',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.white.withAlpha(120),
+                              color: Colors.white.withValues(alpha: 0.47),
                             ),
                           ),
                         ],
@@ -700,7 +700,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                     dropdownColor: AppColors.surfaceVariant,
                     underline: Container(
                       height: 1,
-                      color: AppColors.primary.withAlpha(51),
+                      color: AppColors.primary.withValues(alpha: 0.2),
                     ),
                     items: cloudProviders.map((p) {
                       return DropdownMenuItem(
@@ -808,7 +808,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                     dropdownColor: AppColors.surfaceVariant,
                     underline: Container(
                       height: 1,
-                      color: AppColors.primary.withAlpha(51),
+                      color: AppColors.primary.withValues(alpha: 0.2),
                     ),
                     items: cloudModels.map((m) {
                       return DropdownMenuItem(
@@ -907,7 +907,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withAlpha(150),
+              color: Colors.white.withValues(alpha: 0.59),
               letterSpacing: 0.5,
             ),
           ),
@@ -928,21 +928,21 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
       prefixIcon: Icon(prefixIcon, color: Colors.white38, size: 18),
       suffixIcon: suffixIcon,
       filled: true,
-      fillColor: Colors.white.withAlpha(10),
+      fillColor: Colors.white.withValues(alpha: 0.04),
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.white.withAlpha(20)),
+        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.white.withAlpha(20)),
+        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide:
-            BorderSide(color: AppColors.primary.withAlpha(100), width: 1.5),
+            BorderSide(color: AppColors.primary.withValues(alpha: 0.39), width: 1.5),
       ),
     );
   }
@@ -1011,10 +1011,10 @@ class _ConnectionTestWidget extends StatelessWidget {
                     : 'Verificar Conexión',
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary.withAlpha(40),
+                backgroundColor: AppColors.primary.withValues(alpha: 0.16),
                 foregroundColor: AppColors.primary,
                 side: BorderSide(
-                    color: AppColors.primary.withAlpha(80), width: 1),
+                    color: AppColors.primary.withValues(alpha: 0.31), width: 1),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1029,10 +1029,10 @@ class _ConnectionTestWidget extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.greenAccent.withAlpha(20),
+                color: Colors.greenAccent.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: Colors.greenAccent.withAlpha(50), width: 1),
+                    color: Colors.greenAccent.withValues(alpha: 0.2), width: 1),
               ),
               child: Row(
                 children: [
@@ -1055,10 +1055,10 @@ class _ConnectionTestWidget extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.redAccent.withAlpha(20),
+                color: Colors.redAccent.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: Colors.redAccent.withAlpha(50), width: 1),
+                    color: Colors.redAccent.withValues(alpha: 0.2), width: 1),
               ),
               child: Row(
                 children: [
@@ -1089,7 +1089,7 @@ class _ConnectionTestWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withAlpha(180),
+              color: Colors.white.withValues(alpha: 0.71),
             ),
           ),
           const SizedBox(height: 6),
@@ -1101,20 +1101,20 @@ class _ConnectionTestWidget extends StatelessWidget {
               hintText: 'Escribe un mensaje para probar...',
               hintStyle: const TextStyle(color: Colors.white24, fontSize: 13),
               filled: true,
-              fillColor: Colors.white.withAlpha(8),
+              fillColor: Colors.white.withValues(alpha: 0.03),
               contentPadding: const EdgeInsets.all(12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.white.withAlpha(20)),
+                borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.white.withAlpha(20)),
+                borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
-                    color: AppColors.primary.withAlpha(80), width: 1.5),
+                    color: AppColors.primary.withValues(alpha: 0.31), width: 1.5),
               ),
             ),
             onChanged: onPromptChanged,
@@ -1191,7 +1191,7 @@ class _ExecutionModeTab extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(26),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(Icons.route_outlined,
@@ -1213,7 +1213,7 @@ class _ExecutionModeTab extends StatelessWidget {
                           'Define cómo se ejecutan los modelos de IA',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white.withAlpha(120),
+                            color: Colors.white.withValues(alpha: 0.47),
                           ),
                         ),
                       ],
@@ -1373,7 +1373,7 @@ class _ModeOption extends StatelessWidget {
                   width: 2,
                 ),
                 color: isSelected
-                    ? AppColors.primary.withAlpha(40)
+                    ? AppColors.primary.withValues(alpha: 0.16)
                     : Colors.transparent,
               ),
               child: isSelected
@@ -1396,8 +1396,8 @@ class _ModeOption extends StatelessWidget {
               height: 38,
               decoration: BoxDecoration(
                 color: isSelected
-                    ? AppColors.primary.withAlpha(26)
-                    : Colors.white.withAlpha(10),
+                    ? AppColors.primary.withValues(alpha: 0.1)
+                    : Colors.white.withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -1426,7 +1426,7 @@ class _ModeOption extends StatelessWidget {
                     subtitle,
                     style: TextStyle(
                         fontSize: 12,
-                        color: Colors.white.withAlpha(120)),
+                        color: Colors.white.withValues(alpha: 0.47)),
                   ),
                   if (isSelected) ...[
                     const SizedBox(height: 4),
@@ -1522,9 +1522,9 @@ class _DeviceCapabilityCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.primary.withAlpha(26),
+              color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.primary.withAlpha(51)),
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
             ),
             child: Row(
               children: [
@@ -1576,9 +1576,9 @@ class _CapabilityBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withAlpha(26),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withAlpha(77)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
@@ -1626,263 +1626,6 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-class _Section extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const _Section({required this.title, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: Text(
-            title,
-            style: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        GlassmorphicCard(
-          child: Column(
-            children: ListTile.divideTiles(
-              context: context,
-              tiles: children,
-              color: Colors.white.withValues(alpha: 0.1),
-            ).toList(),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ModelSelector extends StatelessWidget {
-  final String selectedModel;
-  final String recommendedModel;
-  final ValueChanged<String> onChanged;
-
-  const _ModelSelector({
-    required this.selectedModel,
-    required this.recommendedModel,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(Icons.smart_toy, color: AppColors.secondary),
-      title: const Text('Modelo Gemini'),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 4),
-          DropdownButton<String>(
-            value: selectedModel,
-            isExpanded: true,
-            dropdownColor: AppColors.surface,
-            underline: Container(
-              height: 1,
-              color: AppColors.primary.withAlpha(77),
-            ),
-            items: availableGeminiModels.map((model) {
-              final isRecommended = model == recommendedModel;
-              return DropdownMenuItem(
-                value: model,
-                child: Row(
-                  children: [
-                    Text(
-                      model,
-                      style: TextStyle(
-color: isRecommended ? AppColors.primary : Colors.white,
-                        fontWeight: isRecommended ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                    if (isRecommended) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withAlpha(51),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          'Recomendado',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (value) {
-              if (value != null) onChanged(value);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ModeToggle extends StatelessWidget {
-  final bool useCloudApi;
-  final ValueChanged<bool> onChanged;
-
-  const _ModeToggle({
-    required this.useCloudApi,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        useCloudApi ? Icons.cloud : Icons.phone_android,
-        color: AppColors.secondary,
-      ),
-      title: const Text('Modo de Ejecución'),
-      subtitle: Text(
-        useCloudApi
-            ? 'Usando API en la nube (Gemini Cloud)'
-            : 'Ejecutando localmente (Gemma)',
-        style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-      ),
-      trailing: Switch(
-        value: useCloudApi,
-        activeThumbColor: AppColors.primary,
-        onChanged: onChanged,
-      ),
-    );
-  }
-}
-
-class _PrivacyToggle extends StatelessWidget {
-  final bool allowCloudApiCalls;
-  final ValueChanged<bool> onChanged;
-
-  const _PrivacyToggle({
-    required this.allowCloudApiCalls,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        allowCloudApiCalls ? Icons.lock_open : Icons.lock,
-        color: allowCloudApiCalls ? Colors.orange : AppColors.primary,
-      ),
-      title: const Text('Permitir llamadas a la nube'),
-      subtitle: Text(
-        allowCloudApiCalls
-            ? 'Se enviarán datos a servidores Gemini'
-            : 'Tus datos permanecen en el dispositivo',
-        style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-      ),
-      trailing: Switch(
-        value: allowCloudApiCalls,
-        activeThumbColor: AppColors.primary,
-        onChanged: onChanged,
-      ),
-    );
-  }
-}
-
-class _InfoCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GlassmorphicCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.info_outline, color: AppColors.secondary, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'Acerca de los modelos',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.secondary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _ModelInfoRow(
-            model: 'gemini-2.0-flash',
-            description: 'Rápido y eficiente para la mayoría de tareas',
-          ),
-          const SizedBox(height: 8),
-          _ModelInfoRow(
-            model: 'gemini-2.0-flash-lite',
-            description:
-                'Optimizado para dispositivos con capacidad baja',
-          ),
-          const SizedBox(height: 8),
-          _ModelInfoRow(
-            model: 'gemini-2.5-flash',
-            description: 'Mayor capacidad de razonamiento',
-          ),
-          const SizedBox(height: 8),
-          _ModelInfoRow(
-            model: 'gemini-2.5-pro',
-            description:
-                'Máximo rendimiento (requiere dispositivo de alta capacidad)',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ModelInfoRow extends StatelessWidget {
-  final String model;
-  final String description;
-
-  const _ModelInfoRow({
-    required this.model,
-    required this.description,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withAlpha(26),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            model,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.primary,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            description,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.white70,
-            ),
-          ),
-        ),
       ],
     );
   }

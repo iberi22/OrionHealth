@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/auth_service.dart';
-import 'auth_event.dart';
 import 'auth_state.dart';
 
 import 'package:injectable/injectable.dart';
