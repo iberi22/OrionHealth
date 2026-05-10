@@ -10,40 +10,130 @@ class SymphonyClinicalReasonerService implements ClinicalReasonerService {
 
   SymphonyClinicalReasonerService(this._repository);
 
+  int _levenshteinDistance(String s1, String s2) {
+    if (s1 == s2) return 0;
+    if (s1.isEmpty) return s2.length;
+    if (s2.isEmpty) return s1.length;
+
+    final List<int> v0 = List<int>.generate(s2.length + 1, (i) => i);
+    final List<int> v1 = List<int>.filled(s2.length + 1, 0);
+
+    for (int i = 0; i < s1.length; i++) {
+      v1[0] = i + 1;
+
+      for (int j = 0; j < s2.length; j++) {
+        final int cost = (s1[i] == s2[j]) ? 0 : 1;
+        v1[j + 1] = [v1[j] + 1, v0[j + 1] + 1, v0[j] + cost]
+            .reduce((a, b) => a < b ? a : b);
+      }
+
+      for (int j = 0; j <= s2.length; j++) {
+        v0[j] = v1[j];
+      }
+    }
+
+    return v1[s2.length];
+  }
+
+  bool _isNegated(String text, int matchIndex) {
+    if (matchIndex <= 0) return false;
+
+    // Look back for negation words (up to 30 chars for performance and relevance)
+    final start = matchIndex > 30 ? matchIndex - 30 : 0;
+    final lookBack = text.substring(start, matchIndex).toLowerCase();
+
+    final negationKeywords = [
+      'no',
+      'sin',
+      'tampoco',
+      'nada de',
+      'ni',
+      'nunca',
+      'jamás',
+      'negativo para',
+      'ausencia de',
+    ];
+
+    for (final keyword in negationKeywords) {
+      // Use word boundary to avoid matching "no" in "noche"
+      // and ensure it's at the end of the lookback (optionally followed by spaces/linking words)
+      final regex = RegExp('\\b$keyword\\s*([\\wáéíóúüñ]*\\s*){0,2}\$');
+      if (regex.hasMatch(lookBack.trim())) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   @override
   Future<List<DiagnosticMatch>> analyzeSymptoms(String text) async {
     final matches = <DiagnosticMatch>[];
     final mappings = _repository.getSymptomMappings();
     final lowerText = text.toLowerCase();
 
+    // Tokenize the input text with their start indices
+    final tokens = <_SymptomToken>[];
+    final matchesIter = RegExp(r'[\wáéíóúüñ]+').allMatches(lowerText);
+    for (final m in matchesIter) {
+      tokens.add(_SymptomToken(m.group(0)!, m.start));
+    }
+
+    if (tokens.isEmpty) return [];
+
     for (final mapping in mappings) {
       final symptom = (mapping['symptom'] as String).toLowerCase();
-      final searchTerms = (mapping['searchTerms'] as List<dynamic>?)?.map((e) => e.toString().toLowerCase()) ?? [];
+      final searchTerms =
+          (mapping['searchTerms'] as List<dynamic>?)?.map((e) => e.toString().toLowerCase()) ?? [];
 
-      bool found = lowerText.contains(symptom);
-      if (!found) {
-        for (final term in searchTerms) {
-          if (lowerText.contains(term)) {
-            found = true;
-            break;
+      final allTerms = [symptom, ...searchTerms];
+
+      double bestMatchConfidence = 0.0;
+      String matchedTerm = '';
+      int matchedTextIndex = -1;
+
+      for (final term in allTerms) {
+        final termTokens = term.split(RegExp(r'[\s,;.]+')).where((t) => t.isNotEmpty).toList();
+        if (termTokens.isEmpty) continue;
+
+        final n = termTokens.length;
+
+        // Sliding window for n-gram matching
+        for (int i = 0; i <= tokens.length - n; i++) {
+          final windowTokens = tokens.sublist(i, i + n);
+          final windowStr = windowTokens.map((t) => t.text).join(' ');
+
+          final distance = _levenshteinDistance(windowStr, term);
+          final maxLength = windowStr.length > term.length ? windowStr.length : term.length;
+          final confidence = 1.0 - (distance / maxLength);
+
+          if (confidence > bestMatchConfidence) {
+            bestMatchConfidence = confidence;
+            matchedTerm = term;
+            matchedTextIndex = windowTokens.first.index;
           }
         }
       }
 
-      if (found) {
-        final matchEntries = mapping['matches'] as List<dynamic>;
-        for (final entry in matchEntries) {
-          final code = entry['code'] as String;
-          final score = (entry['score'] as num).toDouble();
-          final reason = entry['reason'] as String;
+      // Threshold for fuzzy matching
+      if (bestMatchConfidence > 0.75) {
+        // Check for negation
+        if (!_isNegated(lowerText, matchedTextIndex)) {
+          final matchEntries = mapping['matches'] as List<dynamic>;
+          for (final entry in matchEntries) {
+            final code = entry['code'] as String;
+            final baseScore = (entry['score'] as num).toDouble();
+            final reason = entry['reason'] as String;
 
-          final medCode = await _repository.searchByCode(code);
-          if (medCode != null) {
-            matches.add(DiagnosticMatch(
-              code: medCode,
-              score: score,
-              reasoning: 'Asociado a "$symptom": $reason',
-            ));
+            final medCode = await _repository.searchByCode(code);
+            if (medCode != null) {
+              matches.add(DiagnosticMatch(
+                code: medCode,
+                score: baseScore * bestMatchConfidence,
+                reasoning:
+                    'Asociado a "$matchedTerm" (confianza ${(bestMatchConfidence * 100).toStringAsFixed(0)}%): $reason',
+              ));
+            }
           }
         }
       }
@@ -110,4 +200,10 @@ class SymphonyClinicalReasonerService implements ClinicalReasonerService {
 
     return buffer.toString();
   }
+}
+
+class _SymptomToken {
+  final String text;
+  final int index;
+  _SymptomToken(this.text, this.index);
 }
