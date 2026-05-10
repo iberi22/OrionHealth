@@ -13,7 +13,7 @@
 
 ## 📊 Project Status
 
-**0.7.0 beta — Flutter analyze: 0 issues • 41/41 tests passing • Ready for public beta**
+**0.8.0-beta — Flutter analyze: 0 issues • 41/41 tests passing • BLE medical sharing • Real ML Kit OCR • Drug Interaction Checker • Risk Calculator (ASCVD+QDiabetes+HTN) • GemmaLlmService with streaming • VectorStore HiRAG re-ranking • ReportGenerationService with Gemma/Gemini**
 
 ---
 
