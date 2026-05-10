@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:injectable/injectable.dart';
-import 'encryption_service.dart';
 
 @lazySingleton
 class BleMedicalSharingService {
