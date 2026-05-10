@@ -153,17 +153,24 @@ class RiskCalculator {
     required bool hasDiabetes,
     required bool isSmoker,
   }) {
-    final base = 0.97682 * Math.log(age.toDouble()) - 18.0004;
-    final tcCoeff = totalCholesterol > 0 ? 4.47264 * Math.log(totalCholesterol / 200) : 0.0;
-    final hdlCoeff = hdlCholesterol > 0 ? -16.1869 * Math.log(hdlCholesterol / 50) : 0.0;
+    // Correcting the formula for female ASCVD risk
+    // Using a more standard Pooled Cohort Equation approach for the sum
+    final lnAge = Math.log(age.toDouble());
+    final base = -29.799 * lnAge + 4.884 * lnAge * lnAge + 13.540;
+
+    final tcCoeff = totalCholesterol > 0 ? 7.674 * Math.log(totalCholesterol) - 1.665 * lnAge * Math.log(totalCholesterol) : 0.0;
+    final hdlCoeff = hdlCholesterol > 0 ? -7.065 * Math.log(hdlCholesterol) + 1.155 * lnAge * Math.log(hdlCholesterol) : 0.0;
+
     final bpCoeff = onBpMeds
-        ? 2.54890 * Math.log(systolicBp / 90)
-        : 2.78956 * Math.log(systolicBp / 90);
-    final diabetesCoeff = hasDiabetes ? 0.87682 : 0.0;
-    final smokerCoeff = isSmoker ? 0.69196 : 0.0;
+        ? 2.019 * Math.log(systolicBp)
+        : 1.957 * Math.log(systolicBp);
+
+    final diabetesCoeff = hasDiabetes ? 0.661 : 0.0;
+    final smokerCoeff = isSmoker ? 0.586 : 0.0;
 
     final sum = base + tcCoeff + hdlCoeff + bpCoeff + diabetesCoeff + smokerCoeff;
-    return (1 - Math.exp(Math.exp(sum))).abs() * 100;
+    // Survival probability calculation (simplified)
+    return (1 - Math.exp(-Math.exp(sum))) * 100;
   }
 
   String _ascvdCategory(double risk) {
@@ -204,7 +211,7 @@ class RiskCalculator {
       if (fastingGlucose >= 126) score += 5.0;
     }
 
-    final riskPercent = (score / 20) * 100;
+    final riskPercent = (score / 30) * 100;
     final guideline = await ClinicalGuidelines.findByCode('ADA-MC-2024');
 
     return QDiabetesRisk(
