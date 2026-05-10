@@ -161,5 +161,122 @@ void main() {
       expect(summary, contains('Manifestaciones Físicas'));
       expect(summary, contains('Alteración del cortisol'));
     });
+
+    test('analyzeSymptoms handles multi-sentence input with mixed findings', () async {
+      final symptomsMapping = [
+        {
+          "symptom": "Fiebre",
+          "matches": [
+            {"code": "R50.9", "score": 0.7, "reason": "Temperatura alta"}
+          ]
+        },
+        {
+          "symptom": "Tos",
+          "matches": [
+            {"code": "R05", "score": 0.6, "reason": "Tos seca"}
+          ]
+        }
+      ];
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+      when(() => mockRepo.searchByCode(any())).thenAnswer((invocation) async {
+        final code = invocation.positionalArguments[0] as String;
+        return MedicalCode(code: code, displayName: 'Test', category: 'Symptom', standard: 'ICD-10');
+      });
+
+      final results = await reasoner.analyzeSymptoms('Tengo mucha fiebre. Pero no tengo tos.');
+
+      expect(results.any((m) => m.code.code == 'R50.9'), true);
+      expect(results.any((m) => m.code.code == 'R05'), false); // Negated
+    });
+
+    test('analyzeSymptoms handles numbers and units', () async {
+      final symptomsMapping = [
+        {
+          "symptom": "Presión alta",
+          "searchTerms": ["140 90", "130 80"],
+          "matches": [
+            {"code": "I10", "score": 0.9, "reason": "Hipertensión"}
+          ]
+        }
+      ];
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+      when(() => mockRepo.searchByCode('I10')).thenAnswer((_) async =>
+        MedicalCode(code: 'I10', displayName: 'Hipertensión', category: 'CVD', standard: 'ICD-10'));
+
+      // The reasoner tokenizes by \w+, so 140/90 becomes tokens [140, 90]
+      final results = await reasoner.analyzeSymptoms('Mi presión es de 140/90 mmHg');
+
+      expect(results.isNotEmpty, true);
+      expect(results.first.code.code, 'I10');
+    });
+
+    test('analyzeSymptoms handles Portuguese input (partial support)', () async {
+      final symptomsMapping = [
+        {
+          "symptom": "Dolor de pecho",
+          "searchTerms": ["dor no peito"],
+          "matches": [
+            {"code": "I21", "score": 0.9, "reason": "Infarto"}
+          ]
+        }
+      ];
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+      when(() => mockRepo.searchByCode('I21')).thenAnswer((_) async =>
+        MedicalCode(code: 'I21', displayName: 'Infarto', category: 'CVD', standard: 'ICD-10'));
+
+      final results = await reasoner.analyzeSymptoms('Eu tenho dor no peito');
+
+      expect(results.isNotEmpty, true);
+      expect(results.first.code.code, 'I21');
+    });
+
+    test('analyzeSymptoms handles extremely long input', () async {
+      final symptomsMapping = [
+        {
+          "symptom": "Fatiga",
+          "matches": [
+            {"code": "R53.83", "score": 0.8, "reason": "Cansancio"}
+          ]
+        }
+      ];
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+      when(() => mockRepo.searchByCode('R53.83')).thenAnswer((_) async =>
+        MedicalCode(code: 'R53.83', displayName: 'Fatiga', category: 'Symptom', standard: 'ICD-10'));
+
+      final longText = 'Fatiga ' * 100;
+      final results = await reasoner.analyzeSymptoms(longText);
+
+      expect(results.isNotEmpty, true);
+    });
+
+    test('analyzeSymptoms handles null-like/empty input', () async {
+      when(() => mockRepo.getSymptomMappings()).thenReturn([]);
+      final results = await reasoner.analyzeSymptoms('');
+      expect(results, isEmpty);
+    });
+
+    test('analyzeSymptoms handles special characters', () async {
+      final symptomsMapping = [
+        {
+          "symptom": "Asma",
+          "matches": [
+            {"code": "J45", "score": 0.9, "reason": "Asma"}
+          ]
+        }
+      ];
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+      when(() => mockRepo.searchByCode('J45')).thenAnswer((_) async =>
+        MedicalCode(code: 'J45', displayName: 'Asma', category: 'Respiratory', standard: 'ICD-10'));
+
+      final results = await reasoner.analyzeSymptoms('¿Tengo asma?!!! (No lo sé)');
+
+      expect(results.isNotEmpty, true);
+      expect(results.first.code.code, 'J45');
+    });
   });
 }
