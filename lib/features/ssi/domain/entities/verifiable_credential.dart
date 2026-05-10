@@ -87,6 +87,21 @@ class VerifiableCredential {
         'isRevoked': isRevoked,
       };
 
+  factory VerifiableCredential.fromJson(Map<String, dynamic> json) => VerifiableCredential(
+        id: json['id'] as String,
+        issuer: json['issuer'] as String,
+        subject: json['subject'] as String,
+        type: json['type'] as String,
+        schemaId: json['schemaId'] as String,
+        claims: Map<String, dynamic>.from(json['claims'] as Map),
+        issuanceDate: DateTime.parse(json['issuanceDate'] as String),
+        expirationDate: json['expirationDate'] != null
+            ? DateTime.parse(json['expirationDate'] as String)
+            : null,
+        proof: json['proof'] as String?,
+        isRevoked: json['isRevoked'] as bool? ?? false,
+      );
+
   @override
   String toString() => 'VerifiableCredential($id, type: $type)';
 }

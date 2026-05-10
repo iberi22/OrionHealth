@@ -16,7 +16,8 @@ class CredentialSchema {
   /// List of attribute names in this schema
   final List<String> attributes;
 
-  /// Attribute type hints (name → type)
+  /// Attribute type hints (name → type, e.g. 'dosage' → 'number').
+  /// Currently informational; used for future schema validation.
   final Map<String, String> attributeTypes;
 
   const CredentialSchema({
