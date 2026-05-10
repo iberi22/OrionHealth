@@ -26,9 +26,6 @@ abstract class AuthService {
 
 @LazySingleton(as: AuthService)
 class AuthServiceImpl implements AuthService {
-  static const _pinKey = 'auth_pin_hash';
-  static const _pinSaltKey = 'auth_pin_salt';
-
   final EncryptionService _encryptionService;
   
   String? _cachedPinHash;
@@ -134,12 +131,6 @@ class AuthServiceImpl implements AuthService {
   Future<void> clearAuth() async {
     _cachedPinHash = null;
     await _clearStoredData();
-  }
-
-  String _hashPin(String pin) {
-    final bytes = utf8.encode(pin);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
   }
 
   Future<String?> _getStoredPinHash() async {

@@ -6,9 +6,7 @@ import 'encryption_service.dart';
 
 @lazySingleton
 class BleMedicalSharingService {
-  final EncryptionService _encryptionService;
-  
-  BleMedicalSharingService(this._encryptionService);
+  BleMedicalSharingService();
 
   Future<void> initialize() async {
     // TODO: Implement actual BLE initialization
