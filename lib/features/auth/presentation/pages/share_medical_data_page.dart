@@ -132,19 +132,23 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            ...MedicalTransferMethod.values.map((method) {
-              return RadioListTile<MedicalTransferMethod>(
-                title: Text(method.displayName),
-                subtitle: Text(method.description),
-                value: method,
-                groupValue: _selectedMethod,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedMethod = value);
-                  }
-                },
-              );
-            }),
+            RadioGroup<MedicalTransferMethod>(
+              groupValue: _selectedMethod,
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() => _selectedMethod = value);
+                }
+              },
+              child: Column(
+                children: MedicalTransferMethod.values.map((method) {
+                  return RadioListTile<MedicalTransferMethod>(
+                    title: Text(method.displayName),
+                    subtitle: Text(method.description),
+                    value: method,
+                  );
+                }).toList(),
+              ),
+            ),
           ],
         ),
       ),

@@ -115,6 +115,9 @@ import '../../features/reports/infrastructure/services/gemma_report_generation_s
     as _i100;
 import '../../features/reports/infrastructure/services/mock_report_generation_service.dart'
     as _i101;
+import '../../features/ssi/domain/services/ssi_service.dart' as _i102;
+import '../../features/ssi/infrastructure/services/ssi_service_impl.dart'
+    as _i103;
 import '../../features/settings/application/llm_settings_cubit.dart' as _i59;
 import '../../features/settings/domain/repositories/llm_settings_repository.dart'
     as _i16;
@@ -231,6 +234,8 @@ extension GetItInjectableX on _i1.GetIt {
       () => _i101.MockReportGenerationService(),
       instanceName: 'mock',
     );
+    gh.lazySingleton<_i102.SsiService>(
+        () => _i103.SsiServiceImpl());
     gh.lazySingleton<_i18.SyncService>(() => networkModule.syncService);
     gh.lazySingleton<_i36.UserProfileRepository>(
         () => _i37.UserProfileRepositoryImpl(gh<_i12.Isar>()));
