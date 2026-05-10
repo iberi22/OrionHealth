@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.8.0-beta] — 2026-05-10
+
+### Added
+- **GemmaReportGenerationService**: Real LLM-based medical report generation with HiRAG RAG context
+  - Retrieves medical knowledge from VectorStore for evidence-based reports
+  - Loads UserProfile for personalized context (conditions, medications)
+  - Gemma 4 local → Gemini cloud → offline fallback pipeline
+  - Automatic urgent report detection via clinical keyword analysis
+- **ML Kit OCR Service**: Real OCR using `google_mlkit_text_recognition` replacing mock
+- **Architecture docs**: `SSI_ARCHITECTURE_DECISION.md` (Sidetree/ION + Hyperledger Aries)
+- **Monorepo documentation**: `docs/ARCHITECTURE.md` with hexagonal architecture diagrams
+
+### Changed
+- **ClinicalReasonerService**: Fuzzy symptom matching with Levenshtein distance
+  - Sliding window n-gram token matching
+  - Negation detection (Spanish: "no", "sin", "nunca", etc.)
+  - Confidence-scored diagnostic matches
+  - 211 additions, 31 deletions across 3 files
+- **Xavier2**: Revived to v0.4.1, Docker port 8006, SessionSyncTask cron active
+- **Build**: `user_profile.g.dart` regenerated, `injection.config.dart` wired for GemmaReportGenerationService
+- **Pubspec**: Version bump from `1.0.0+1` → `0.8.0-beta+1`
+
+### Fixed
+- **Repo sanitization**: 45 stale remote branches deleted, 14 local branches cleaned
+- **PR cleanup**: 3 PRs merged (#163, #164, #166), 2 closed (#165, #167)
+- **Issue #162**: Closed (Xavier2 session sync operational)
+- **Issue #111**: Updated body with current security status
+
+---
+
 ## [0.7.0] — 2026-05-03
 
 ### Added
