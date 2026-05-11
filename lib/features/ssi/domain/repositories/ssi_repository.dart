@@ -1,5 +1,6 @@
 import '../../domain/entities/did.dart';
 import '../../domain/entities/verifiable_credential.dart';
+import '../entities/revocation_entry.dart';
 
 abstract class SsiRepository {
   /// Save a DID and its document
@@ -22,4 +23,10 @@ abstract class SsiRepository {
 
   /// Remove a credential
   Future<void> deleteCredential(String credentialId);
+
+  /// Save a revocation entry
+  Future<void> saveRevocationEntry(RevocationEntry entry);
+
+  /// Get a revocation entry by issuer and credential index
+  Future<RevocationEntry?> getRevocationEntry(String issuerPublicKey, int credentialIndex);
 }
