@@ -218,6 +218,49 @@ class BleMedicalSharingService {
     return _bleService.sendData(package);
   }
 
+  /// Encrypt any medical data into a [MedicalSharePackage].
+  Future<MedicalSharePackage> encryptPackage(
+    Map<String, dynamic> data, {
+    required String packageType,
+    required String recipientNodeId,
+  }) async {
+    final jsonStr = jsonEncode(data);
+    final plainBytes = utf8.encode(jsonStr);
+    final encrypted = await _encryptionService.encryptBytes(
+      Uint8List.fromList(plainBytes),
+    );
+
+    return MedicalSharePackage(
+      id: 'pkg:${DateTime.now().millisecondsSinceEpoch}',
+      senderNodeId: 'self',
+      recipientNodeId: recipientNodeId,
+      createdAt: DateTime.now(),
+      expiresAt: DateTime.now().add(const Duration(minutes: 5)),
+      payload: EncryptedMedicalPayload(
+        cipherText: base64Encode(encrypted),
+        iv: _generateIv(),
+        authTag: '',
+      ),
+      metadata: MedicalShareMetadata(
+        packageType: packageType,
+        consentVerified: true,
+        includedCategories: const {},
+        appVersion: '1.0.0',
+      ),
+      signature: '',
+    );
+  }
+
+  /// Decrypt a [MedicalSharePackage] back into a data map.
+  Future<Map<String, dynamic>> decryptPackage(
+      MedicalSharePackage package) async {
+    final encryptedBytes = base64Decode(package.payload.cipherText);
+    final decryptedBytes =
+        await _encryptionService.decryptBytes(encryptedBytes);
+    final jsonStr = utf8.decode(decryptedBytes);
+    return jsonDecode(jsonStr) as Map<String, dynamic>;
+  }
+
   String _generateIv() {
     // IV is handled by EncryptionService; placeholder for non-sensitive payload
     return base64Encode(Uint8List(12));
