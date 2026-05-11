@@ -75,6 +75,19 @@ const IsarRevocationEntrySchema = CollectionSchema(
           caseSensitive: true,
         )
       ],
+    ),
+    r'credentialIndex': IndexSchema(
+      id: 182462548740310685,
+      name: r'credentialIndex',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'credentialIndex',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
     )
   },
   links: {},
@@ -167,6 +180,15 @@ extension IsarRevocationEntryQueryWhereSort
   QueryBuilder<IsarRevocationEntry, IsarRevocationEntry, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<IsarRevocationEntry, IsarRevocationEntry, QAfterWhere>
+      anyCredentialIndex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'credentialIndex'),
+      );
     });
   }
 }
@@ -328,6 +350,99 @@ extension IsarRevocationEntryQueryWhere
               includeUpper: false,
             ));
       }
+    });
+  }
+
+  QueryBuilder<IsarRevocationEntry, IsarRevocationEntry, QAfterWhereClause>
+      credentialIndexEqualTo(int credentialIndex) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'credentialIndex',
+        value: [credentialIndex],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarRevocationEntry, IsarRevocationEntry, QAfterWhereClause>
+      credentialIndexNotEqualTo(int credentialIndex) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'credentialIndex',
+              lower: [],
+              upper: [credentialIndex],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'credentialIndex',
+              lower: [credentialIndex],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'credentialIndex',
+              lower: [credentialIndex],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'credentialIndex',
+              lower: [],
+              upper: [credentialIndex],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarRevocationEntry, IsarRevocationEntry, QAfterWhereClause>
+      credentialIndexGreaterThan(
+    int credentialIndex, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'credentialIndex',
+        lower: [credentialIndex],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarRevocationEntry, IsarRevocationEntry, QAfterWhereClause>
+      credentialIndexLessThan(
+    int credentialIndex, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'credentialIndex',
+        lower: [],
+        upper: [credentialIndex],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarRevocationEntry, IsarRevocationEntry, QAfterWhereClause>
+      credentialIndexBetween(
+    int lowerCredentialIndex,
+    int upperCredentialIndex, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'credentialIndex',
+        lower: [lowerCredentialIndex],
+        includeLower: includeLower,
+        upper: [upperCredentialIndex],
+        includeUpper: includeUpper,
+      ));
     });
   }
 }

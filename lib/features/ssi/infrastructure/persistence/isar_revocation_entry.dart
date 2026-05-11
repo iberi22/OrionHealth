@@ -10,9 +10,10 @@ class IsarRevocationEntry {
   late String credentialId;
 
   /// Composite index for fast non-revocation checks
-  @Index(composite: [IndexColumn('credentialIndex')])
+  @Index()
   late String issuerPublicKey;
 
+  @Index()
   late int credentialIndex;
 
   late DateTime revokedAt;

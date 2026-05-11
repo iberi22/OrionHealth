@@ -151,9 +151,9 @@ import 'database_module.dart' as _i83;
 import 'memory_module.dart' as _i82;
 import 'network_module.dart' as _i81;
 
+const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
-const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
