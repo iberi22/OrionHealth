@@ -137,6 +137,34 @@ void main() {
       final isValid = await service.verifyPresentation(presentation);
       expect(isValid, true);
     });
+
+    test('verifyPresentation fails if issuance date is tampered', () async {
+      final issuerKeys = await service.generateIssuerKeys();
+      final vc = await service.issueCredential(
+        credential: _createBaseVC('vc:1'),
+        issuerKeys: issuerKeys,
+      );
+
+      final tampered = VerifiableCredential(
+        id: vc.id,
+        issuer: vc.issuer,
+        subject: vc.subject,
+        type: vc.type,
+        schemaId: vc.schemaId,
+        claims: vc.claims,
+        issuanceDate: vc.issuanceDate.add(const Duration(days: 1)),
+        expirationDate: vc.expirationDate,
+        proof: vc.proof,
+      );
+
+      final presentation = await service.createPresentation(
+        credential: tampered,
+        disclosedFields: [],
+      );
+
+      final isValid = await service.verifyPresentation(presentation);
+      expect(isValid, false);
+    });
   });
 }
 

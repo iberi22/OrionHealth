@@ -65,7 +65,7 @@ void main() {
     expect(credentials.first.claims['vaccineName'], 'COVID-19');
   });
 
-  test('revokeCredential persists removal', () async {
+  test('revokeCredential persists revocation status', () async {
     final did = await service.createDid();
     final vc = await service.issueCredential(
       schemaId: 'orion:schemas:VaccinationCredential:v1',
@@ -78,6 +78,7 @@ void main() {
     // Restart
     final newRepository = IsarSsiRepository(isar);
     final credentials = await newRepository.getCredentials();
-    expect(credentials, isEmpty);
+    expect(credentials.length, 1);
+    expect(credentials.first.isRevoked, true);
   });
 }
