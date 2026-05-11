@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/credential_schema.dart';
@@ -20,6 +21,8 @@ void main() {
     when(() => mockRepository.getDids()).thenAnswer((_) async => []);
     when(() => mockRepository.saveDid(any(), any())).thenAnswer((_) async {});
     when(() => mockRepository.saveCredential(any())).thenAnswer((_) async {});
+    when(() => mockRepository.getDidDocument(any())).thenAnswer((_) async => null);
+    when(() => mockRepository.getCredentialById(any())).thenAnswer((_) async => null);
   });
 
   setUpAll(() {
@@ -119,8 +122,14 @@ void main() {
       });
 
       test('issued credential is verifiable', () async {
+        late Map<String, dynamic> storedDidDoc;
+        when(() => mockRepository.saveDid(any(), any())).thenAnswer((inv) async {
+          storedDidDoc = inv.positionalArguments[1] as Map<String, dynamic>;
+        });
+
         final did = await service.createDid();
         when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+        when(() => mockRepository.getDidDocument(did.did)).thenAnswer((_) async => storedDidDoc);
 
         final vc = await service.issueCredential(
           schemaId: 'orion:schemas:PrescriptionCredential:v1',
@@ -133,8 +142,14 @@ void main() {
       });
 
       test('does not verify tampered credential', () async {
+        late Map<String, dynamic> storedDidDoc;
+        when(() => mockRepository.saveDid(any(), any())).thenAnswer((inv) async {
+          storedDidDoc = inv.positionalArguments[1] as Map<String, dynamic>;
+        });
+
         final did = await service.createDid();
         when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+        when(() => mockRepository.getDidDocument(did.did)).thenAnswer((_) async => storedDidDoc);
 
         final vc = await service.issueCredential(
           schemaId: 'orion:schemas:LabResultCredential:v1',
@@ -155,6 +170,38 @@ void main() {
         );
 
         final isValid = await service.verifyCredential(tampered);
+        expect(isValid, false);
+      });
+
+      test('does not verify credential with forged signature', () async {
+        late Map<String, dynamic> storedDidDoc;
+        when(() => mockRepository.saveDid(any(), any())).thenAnswer((inv) async {
+          storedDidDoc = inv.positionalArguments[1] as Map<String, dynamic>;
+        });
+
+        final did = await service.createDid();
+        when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+        when(() => mockRepository.getDidDocument(did.did)).thenAnswer((_) async => storedDidDoc);
+
+        final vc = await service.issueCredential(
+          schemaId: 'orion:schemas:PrescriptionCredential:v1',
+          subjectDid: did.activeDid,
+          claims: {'medicationName': 'Paracetamol'},
+        );
+
+        // Forge signature (valid base64 but wrong key/data)
+        final forged = VerifiableCredential(
+          id: vc.id,
+          issuer: vc.issuer,
+          subject: vc.subject,
+          type: vc.type,
+          schemaId: vc.schemaId,
+          claims: vc.claims,
+          issuanceDate: vc.issuanceDate,
+          proof: base64Url.encode(List.generate(64, (_) => 0)),
+        );
+
+        final isValid = await service.verifyCredential(forged);
         expect(isValid, false);
       });
     });
@@ -190,12 +237,25 @@ void main() {
     });
 
     group('revokeCredential', () {
-      test('removes credential from store', () async {
-        when(() => mockRepository.deleteCredential(any())).thenAnswer((_) async {});
+      test('marks credential as revoked', () async {
+        final vc = VerifiableCredential(
+          id: 'vc:123',
+          issuer: 'did:orion:issuer',
+          subject: 'did:orion:subject',
+          type: 'Test',
+          schemaId: 'schema',
+          claims: {},
+          issuanceDate: DateTime.now(),
+        );
+
+        when(() => mockRepository.getCredentialById('vc:123')).thenAnswer((_) async => vc);
+        when(() => mockRepository.saveCredential(any())).thenAnswer((_) async {});
 
         await service.revokeCredential('vc:123');
 
-        verify(() => mockRepository.deleteCredential('vc:123')).called(1);
+        final captured = verify(() => mockRepository.saveCredential(captureAny())).captured.first as VerifiableCredential;
+        expect(captured.id, 'vc:123');
+        expect(captured.isRevoked, true);
       });
     });
   group('VerifiableCredential', () {

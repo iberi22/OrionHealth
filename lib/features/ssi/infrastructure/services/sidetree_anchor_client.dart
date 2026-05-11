@@ -125,8 +125,8 @@ class SidetreeAnchorClient {
     // Create the Sidetree Create operation
     final operation = {
       'type': 'create',
-      'suffixData': base64Url.encode(suffixData).replaceAll('=', ''),
-      'delta': base64Url.encode(delta).replaceAll('=', ''),
+      'suffixData': _base64UrlNoPadding(suffixData),
+      'delta': _base64UrlNoPadding(delta),
     };
 
     // Submit to ION node
@@ -190,11 +190,15 @@ class SidetreeAnchorClient {
       'publicKeyJwk': {
         'kty': 'EC',
         'crv': 'secp256k1',
-        'x': base64Url.encode(xBytes).replaceAll('=', ''),
-        'y': base64Url.encode(yBytes).replaceAll('=', ''),
+        'x': _base64UrlNoPadding(xBytes),
+        'y': _base64UrlNoPadding(yBytes),
       },
       'privateKeyHex': privateKeyHex,
     };
+  }
+
+  String _base64UrlNoPadding(List<int> bytes) {
+    return base64Url.encode(bytes).split('=').first;
   }
 
   Uint8List _bigIntToUint8List(BigInt bi) {

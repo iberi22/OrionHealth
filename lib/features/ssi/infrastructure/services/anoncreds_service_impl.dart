@@ -41,8 +41,8 @@ class AnonCredsServiceImpl implements AnonCredsService {
     final publicKey = data.publicKey;
 
     return AnonCredsKeyPair(
-      publicKey: base64Url.encode(publicKey.bytes),
-      privateKey: base64Url.encode(data.bytes),
+      publicKey: base64Url.encode(publicKey.bytes).replaceAll('=', ''),
+      privateKey: base64Url.encode(data.bytes).replaceAll('=', ''),
       keyType: 'Ed25519',
     );
   }
@@ -75,7 +75,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
       expirationDate: credential.expirationDate,
       proof: jsonEncode({
         'type': 'Ed25519Signature2020',
-        'signatureValue': base64Url.encode(signature.bytes),
+        'signatureValue': base64Url.encode(signature.bytes).replaceAll('=', ''),
         'issuerKey': issuerKeys.publicKey,
         'credentialIndex': credentialIndex,
         'created': DateTime.now().toIso8601String(),
@@ -149,7 +149,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
 
     // Reconstruct the public key
     final publicKey = SimplePublicKey(
-      base64Url.decode(issuerKeyB64),
+      _decodeBase64Url(issuerKeyB64),
       type: KeyPairType.ed25519,
     );
 
@@ -159,7 +159,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
     final isValid = await _ed25519.verify(
       message,
       signature: Signature(
-        base64Url.decode(signatureB64),
+        _decodeBase64Url(signatureB64),
         publicKey: publicKey,
       ),
     );
@@ -184,7 +184,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
 
     // Check non-revocation
     final credentialIndex = proof['credentialIndex'] as int?;
-    if (credentialIndex != null && issuerKeyB64 != null) {
+    if (credentialIndex != null) {
       final revocationEntry = await _repository.getRevocationEntry(
         issuerKeyB64,
         credentialIndex,
@@ -194,14 +194,14 @@ class AnonCredsServiceImpl implements AnonCredsService {
         // Verify revocation signature
         final dataToVerify = '${revocationEntry.issuerPublicKey}:${revocationEntry.credentialIndex}:${revocationEntry.revokedAt.toIso8601String()}';
         final publicKey = SimplePublicKey(
-          base64Url.decode(revocationEntry.issuerPublicKey),
+          _decodeBase64Url(revocationEntry.issuerPublicKey),
           type: KeyPairType.ed25519,
         );
 
         final isSignatureValid = await _ed25519.verify(
           utf8.encode(dataToVerify),
           signature: Signature(
-            base64Url.decode(revocationEntry.issuerSignature),
+            _decodeBase64Url(revocationEntry.issuerSignature),
             publicKey: publicKey,
           ),
         );
@@ -243,7 +243,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
       credentialIndex: credentialIndex,
       issuerPublicKey: issuerKeys.publicKey,
       revokedAt: revokedAt,
-      issuerSignature: base64Url.encode(signature.bytes),
+      issuerSignature: base64Url.encode(signature.bytes).replaceAll('=', ''),
     );
 
     await _repository.saveRevocationEntry(entry);
@@ -274,7 +274,9 @@ class AnonCredsServiceImpl implements AnonCredsService {
         entries.map((e) => '${e.key}=${e.value}').join('|');
 
     final fullMessage =
-        '${credential.id}|${credential.issuer}|${credential.type}|${credential.schemaId}|$canonical';
+        '${credential.id}|${credential.issuer}|${credential.type}|${credential.schemaId}|'
+        '${credential.issuanceDate.toIso8601String()}|'
+        '${credential.expirationDate?.toIso8601String()}|$canonical';
 
     return Uint8List.fromList(utf8.encode(fullMessage));
   }
@@ -287,8 +289,8 @@ class AnonCredsServiceImpl implements AnonCredsService {
   /// Reconstruct a SimpleKeyPairData from base64-encoded keys.
   SimpleKeyPairData _reconstructKeyPair(
       String publicB64, String privateB64) {
-    final publicBytes = base64Url.decode(publicB64);
-    final privateBytes = base64Url.decode(privateB64);
+    final publicBytes = _decodeBase64Url(publicB64);
+    final privateBytes = _decodeBase64Url(privateB64);
 
     final publicKey = SimplePublicKey(
       publicBytes,
@@ -300,5 +302,13 @@ class AnonCredsServiceImpl implements AnonCredsService {
       publicKey: publicKey,
       type: KeyPairType.ed25519,
     );
+  }
+
+  Uint8List _decodeBase64Url(String input) {
+    var normalized = input;
+    while (normalized.length % 4 != 0) {
+      normalized += '=';
+    }
+    return Uint8List.fromList(base64Url.decode(normalized));
   }
 }
