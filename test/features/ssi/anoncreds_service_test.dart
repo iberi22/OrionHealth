@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/verifiable_credential.dart';
@@ -125,7 +127,7 @@ void main() {
         credentialIndex: 1,
         issuerPublicKey: issuerKeys.publicKey,
         revokedAt: DateTime.now(),
-        issuerSignature: 'INVALID_SIGNATURE',
+        issuerSignature: 'BeeGRZr9YODAEBmKLqBAcP2G/SQDey4iqZ3y2C81fmEAZBJKpKDMUwnQsPfJlUzrv66k7uHvVf8SNhHDmnDvyQ==',
       );
 
       when(() => mockRepository.getRevocationEntry(any(), any()))
