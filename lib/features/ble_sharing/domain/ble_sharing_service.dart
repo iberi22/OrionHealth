@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
@@ -22,6 +23,7 @@ class BleSharingService {
 
   bool _isInitialized = false;
   String? _connectedDeviceId;
+  BluetoothDevice? _connectedDevice;
   SecretKey? _sessionKey;
   final AesGcm _aesGcm = AesGcm.with256bits();
   StreamSubscription<List<ScanResult>>? _scanSubscription;
@@ -94,7 +96,9 @@ class BleSharingService {
   Future<bool> connect(String deviceId) async {
     _stateController.add(BleServiceState.connecting(deviceId));
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      final device = BluetoothDevice.fromId(deviceId);
+      await device.connect();
+      _connectedDevice = device;
       _connectedDeviceId = deviceId;
       _sessionKey = _generateSessionKey();
       _stateController.add(BleServiceState.connected(deviceId));
@@ -106,7 +110,14 @@ class BleSharingService {
   }
 
   Future<void> disconnect() async {
-    if (_connectedDeviceId == null) return;
+    try {
+      if (_connectedDevice != null) {
+        await _connectedDevice!.disconnect();
+        _connectedDevice = null;
+      }
+    } catch (e) {
+      // Ignore disconnect errors
+    }
     _connectedDeviceId = null;
     _sessionKey = null;
     _stateController.add(BleServiceState.ready());
@@ -128,18 +139,22 @@ class BleSharingService {
     final startTime = DateTime.now();
 
     try {
+      if (Platform.isAndroid) {
+        await _connectedDevice?.requestMtu(512);
+      }
+
+      final tx = await _getCharacteristic(_connectedDevice!, txCharacteristic);
+      if (tx == null) throw Exception("TX characteristic not found");
+
       final encrypted = await _encryptPackage(package);
       final bytes = utf8.encode(encrypted);
 
-      const chunkSize = 512;
+      final chunkSize = Platform.isAndroid ? 509 : 512;
       for (int i = 0; i < bytes.length; i += chunkSize) {
         final end = i + chunkSize > bytes.length ? bytes.length : i + chunkSize;
         final chunk = bytes.sublist(i, end);
-        // TODO: Write chunk to BLE GATT characteristic when flutter_blue_plus
-        // connection is fully implemented.
-        // ignore: unused_local_variable
-        final _ = chunk;
-        await Future.delayed(const Duration(milliseconds: 50));
+        await tx.write(chunk, withoutResponse: false);
+        await Future.delayed(const Duration(milliseconds: 10));
       }
 
       final transferTime = DateTime.now().difference(startTime);
@@ -172,11 +187,48 @@ class BleSharingService {
     if (_connectedDeviceId == null) return null;
     _stateController.add(BleServiceState.transferring('Receiving...'));
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      final rx = await _getCharacteristic(_connectedDevice!, rxCharacteristic);
+      if (rx == null) throw Exception("RX characteristic not found");
+
+      await rx.setNotifyValue(true);
+
+      final buffer = <int>[];
+      final completer = Completer<MedicalSharePackage?>();
+      Timer? timeoutTimer;
+
+      void resetTimer() {
+        timeoutTimer?.cancel();
+        timeoutTimer = Timer(const Duration(seconds: 2), () {
+          if (buffer.isNotEmpty) {
+            try {
+              final jsonStr = utf8.decode(buffer);
+              final json = jsonDecode(jsonStr);
+              completer.complete(MedicalSharePackage.fromJson(json));
+            } catch (e) {
+              completer.completeError("Failed to decode package: $e");
+            }
+          } else {
+            completer.complete(null);
+          }
+        });
+      }
+
+      final subscription = rx.onValueReceived.listen((value) {
+        buffer.addAll(value);
+        resetTimer();
+      });
+
+      resetTimer();
+      final package = await completer.future;
+
+      await subscription.cancel();
+      await rx.setNotifyValue(false);
+      timeoutTimer?.cancel();
+
       _stateController.add(BleServiceState.ready());
-      return null;
+      return package;
     } catch (e) {
-      _stateController.add(BleServiceState.error('Receive failed: $e'));
+      _stateController.add(BleServiceState.error("Receive failed: $e"));
       return null;
     }
   }
@@ -243,6 +295,21 @@ class BleSharingService {
   Future<void> stopAdvertising() async {
     _stateController.add(BleServiceState.ready());
     // Stub implementation for now
+  }
+
+  Future<BluetoothCharacteristic?> _getCharacteristic(
+    BluetoothDevice device,
+    String uuid,
+  ) async {
+    final services = await device.discoverServices();
+    for (final service in services) {
+      for (final characteristic in service.characteristics) {
+        if (characteristic.uuid.str.toLowerCase() == uuid.toLowerCase()) {
+          return characteristic;
+        }
+      }
+    }
+    return null;
   }
 
   void dispose() {
