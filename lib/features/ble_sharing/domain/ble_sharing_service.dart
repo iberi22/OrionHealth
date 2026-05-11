@@ -24,13 +24,28 @@ class BleSharingService {
   String? _connectedDeviceId;
   SecretKey? _sessionKey;
   final AesGcm _aesGcm = AesGcm.with256bits();
+
+  // BLE device references from the last scan
+  final Map<String, BluetoothDevice> _scannedDevices = {};
+
+  // Active BLE connection state
+  BluetoothDevice? _connectedDevice;
+  BluetoothCharacteristic? _txCharacteristic;
+  BluetoothCharacteristic? _rxCharacteristic;
+  StreamSubscription? _rxSubscription;
   StreamSubscription<List<ScanResult>>? _scanSubscription;
+
+  // Completer for receiving data (signals when a full package is received)
+  Completer<MedicalSharePackage?>? _receiveCompleter;
+  final List<int> _receiveBuffer = [];
 
   final _stateController = StreamController<BleServiceState>.broadcast();
   Stream<BleServiceState> get stateStream => _stateController.stream;
 
   final _dataController = StreamController<MedicalSharePackage>.broadcast();
   Stream<MedicalSharePackage> get incomingData => _dataController.stream;
+
+  // ─── Lifecycle ──────────────────────────────────────────────────
 
   Future<void> initialize() async {
     if (_isInitialized) return;
@@ -40,15 +55,26 @@ class BleSharingService {
     _isInitialized = true;
   }
 
+  void dispose() {
+    stopAdvertising();
+    disconnect();
+    _rxSubscription?.cancel();
+    _scanSubscription?.cancel();
+    _stateController.close();
+    _dataController.close();
+  }
+
+  // ─── Scanning ───────────────────────────────────────────────────
+
   Future<List<BleDevice>> scanForDevices({
     Duration timeout = const Duration(seconds: 15),
   }) async {
     if (!_isInitialized) await initialize();
-    
+
     final results = <BleDevice>[];
+    _scannedDevices.clear();
     _stateController.add(BleServiceState.scanning());
 
-    // Start scanning
     await FlutterBluePlus.startScan(
       timeout: timeout,
       withServices: [
@@ -59,27 +85,35 @@ class BleSharingService {
       ],
     );
 
-    // Listen for results — subscription stored for lifecycle management
     final completer = Completer<void>();
     _scanSubscription = FlutterBluePlus.scanResults.listen((scanResults) {
       for (final r in scanResults) {
+        final deviceId = r.device.remoteId.str;
+        // Cache the BluetoothDevice reference for later connect()
+        _scannedDevices[deviceId] = r.device;
+
         final deviceType = _detectDeviceType(r.advertisementData.serviceUuids);
         results.add(BleDevice(
-          id: r.device.remoteId.str,
-          name: r.device.platformName.isNotEmpty ? r.device.platformName : 'Unknown Device',
+          id: deviceId,
+          name: r.device.platformName.isNotEmpty
+              ? r.device.platformName
+              : 'Unknown Device',
           rssi: r.rssi,
           type: deviceType,
         ));
       }
-      if (results.length > 20) completer.complete(); // Limit results
-    }, onDone: () => completer.complete());
+      if (results.length > 20) completer.complete();
+    }, onDone: () {
+      if (!completer.isCompleted) completer.complete();
+    });
 
     await completer.future.timeout(timeout, onTimeout: () {});
     await _scanSubscription?.cancel();
     _scanSubscription = null;
+    await FlutterBluePlus.stopScan();
 
     _stateController.add(BleServiceState.ready());
-    return results.toSet().toList(); // Remove duplicates
+    return results.toSet().toList();
   }
 
   String _detectDeviceType(List<Guid> uuids) {
@@ -91,12 +125,86 @@ class BleSharingService {
     return 'Medical Device';
   }
 
+  // ─── Connection ─────────────────────────────────────────────────
+
+  /// Connect to a previously scanned device.
+  ///
+  /// Performs: connect → discoverServices → find OrionHealth GATT service
+  /// → store TX (write) and RX (notify) characteristics.
   Future<bool> connect(String deviceId) async {
+    // Look up the BluetoothDevice from our scan cache
+    BluetoothDevice device;
+    if (_scannedDevices.containsKey(deviceId)) {
+      device = _scannedDevices[deviceId]!;
+    } else {
+      // Fallback: create from ID (only works on Android with cached devices)
+      device = BluetoothDevice.fromId(deviceId);
+    }
+
     _stateController.add(BleServiceState.connecting(deviceId));
+
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      // Real BLE connection
+      await device.connect(
+        license: License.free,
+        timeout: const Duration(seconds: 35),
+        mtu: 512,
+        autoConnect: false,
+      );
+
+      // Discover GATT services
+      final services = await device.discoverServices(
+        subscribeToServicesChanged: true,
+        timeout: 15,
+      );
+
+      // Find our custom OrionHealth service
+      BluetoothService? orionService;
+      for (final service in services) {
+        if (service.uuid.str.toLowerCase() == serviceUuid.toLowerCase()) {
+          orionService = service;
+          break;
+        }
+      }
+
+      if (orionService == null) {
+        await device.disconnect();
+        _stateController.add(
+          BleServiceState.error('OrionHealth service not found on device'),
+        );
+        return false;
+      }
+
+      // Find TX (write) and RX (notify) characteristics
+      for (final characteristic in orionService.characteristics) {
+        final uuid = characteristic.uuid.str.toLowerCase();
+        if (uuid == txCharacteristic.toLowerCase()) {
+          _txCharacteristic = characteristic;
+        } else if (uuid == rxCharacteristic.toLowerCase()) {
+          _rxCharacteristic = characteristic;
+        }
+      }
+
+      if (_txCharacteristic == null) {
+        await device.disconnect();
+        _stateController.add(
+          BleServiceState.error('TX characteristic not found'),
+        );
+        return false;
+      }
+
+      // Subscribe to RX characteristic for incoming data
+      if (_rxCharacteristic != null) {
+        await _rxCharacteristic!.setNotifyValue(true, timeout: 15);
+        _rxSubscription = _rxCharacteristic!.lastValueStream.listen(
+          _onRxDataReceived,
+        );
+      }
+
+      _connectedDevice = device;
       _connectedDeviceId = deviceId;
       _sessionKey = _generateSessionKey();
+
       _stateController.add(BleServiceState.connected(deviceId));
       return true;
     } catch (e) {
@@ -106,14 +214,33 @@ class BleSharingService {
   }
 
   Future<void> disconnect() async {
-    if (_connectedDeviceId == null) return;
+    if (_connectedDevice == null) return;
+
+    // Unsubscribe from RX notifications
+    _rxSubscription?.cancel();
+    _rxSubscription = null;
+    _rxCharacteristic = null;
+    _txCharacteristic = null;
+
+    // Cancel pending receive
+    if (_receiveCompleter != null && !_receiveCompleter!.isCompleted) {
+      _receiveCompleter!.complete(null);
+    }
+    _receiveCompleter = null;
+    _receiveBuffer.clear();
+
+    await _connectedDevice!.disconnect();
+    _connectedDevice = null;
     _connectedDeviceId = null;
     _sessionKey = null;
+
     _stateController.add(BleServiceState.ready());
   }
 
+  // ─── Sending ────────────────────────────────────────────────────
+
   Future<SharingResult> sendData(MedicalSharePackage package) async {
-    if (_connectedDeviceId == null) {
+    if (_txCharacteristic == null || _connectedDeviceId == null) {
       return SharingResult(
         success: false,
         error: 'Not connected to any device',
@@ -131,15 +258,25 @@ class BleSharingService {
       final encrypted = await _encryptPackage(package);
       final bytes = utf8.encode(encrypted);
 
+      // Send length prefix first (4 bytes, big-endian)
+      final lengthBytes = Uint8List(4);
+      final byteData = ByteData.sublistView(lengthBytes);
+      byteData.setUint32(0, bytes.length, Endian.big);
+      await _txCharacteristic!.write(lengthBytes.toList(),
+          withoutResponse: false, timeout: 15);
+
+      // Chunked write: 512 bytes per packet (MTU default)
       const chunkSize = 512;
       for (int i = 0; i < bytes.length; i += chunkSize) {
-        final end = i + chunkSize > bytes.length ? bytes.length : i + chunkSize;
+        final end =
+            i + chunkSize > bytes.length ? bytes.length : i + chunkSize;
         final chunk = bytes.sublist(i, end);
-        // TODO: Write chunk to BLE GATT characteristic when flutter_blue_plus
-        // connection is fully implemented.
-        // ignore: unused_local_variable
-        final _ = chunk;
-        await Future.delayed(const Duration(milliseconds: 50));
+
+        await _txCharacteristic!.write(chunk.toList(),
+            withoutResponse: true, timeout: 15);
+
+        // Small delay between chunks to avoid overwhelming the BLE stack
+        await Future.delayed(const Duration(milliseconds: 20));
       }
 
       final transferTime = DateTime.now().difference(startTime);
@@ -163,23 +300,118 @@ class BleSharingService {
     }
   }
 
-  Future<void> startMedicalDataStream(String deviceId) async {
-    // TODO: Re-enable when BLE license is properly configured
-    // flutter_blue_plus 2.3.1+ requires license parameter for connect()
+  // ─── Receiving ──────────────────────────────────────────────────
+
+  /// Called when data arrives on the RX characteristic.
+  void _onRxDataReceived(List<int> data) {
+    _receiveBuffer.addAll(data);
+
+    // First 4 bytes = length prefix
+    if (_receiveBuffer.length < 4) return;
+
+    final expectedLength =
+        ByteData.sublistView(Uint8List.fromList(_receiveBuffer.sublist(0, 4)))
+            .getUint32(0, Endian.big);
+
+    // Buffer now contains: 4-byte length + data
+    final totalExpected = 4 + expectedLength;
+
+    if (_receiveBuffer.length >= totalExpected) {
+      // Extract the payload (skip 4-byte length prefix)
+      final payload = _receiveBuffer.sublist(4, totalExpected);
+      _receiveBuffer.removeRange(0, totalExpected);
+
+      // Decrypt and parse
+      _decryptAndParsePackage(payload);
+    }
   }
 
-  Future<MedicalSharePackage?> receiveData() async {
-    if (_connectedDeviceId == null) return null;
-    _stateController.add(BleServiceState.transferring('Receiving...'));
+  Future<void> _decryptAndParsePackage(List<int> encryptedData) async {
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      // Decrypt with session key
+      final nonce = encryptedData.sublist(0, 12);
+      final mac = encryptedData.sublist(encryptedData.length - 16);
+      final ciphertext =
+          encryptedData.sublist(12, encryptedData.length - 16);
+
+      final secretBox = SecretBox(
+        ciphertext,
+        nonce: nonce,
+        mac: Mac(mac),
+      );
+
+      final decrypted = await _aesGcm.decrypt(secretBox, secretKey: _sessionKey!);
+      final jsonStr = utf8.decode(decrypted);
+      final json = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+      final encPayload = EncryptedMedicalPayload.fromJson(json['enc']);
+      final package = MedicalSharePackage(
+        id: json['meta']['sender'] ?? 'unknown',
+        senderNodeId: json['meta']['sender'] ?? 'unknown',
+        recipientNodeId: _connectedDeviceId ?? 'self',
+        createdAt: DateTime.parse(json['meta']['created']),
+        expiresAt: DateTime.parse(json['meta']['expires']),
+        payload: encPayload,
+        metadata: const MedicalShareMetadata(
+          packageType: 'MedicalData',
+          consentVerified: false,
+          includedCategories: {},
+          appVersion: '1.0.0',
+        ),
+        signature: '',
+      );
+
       _stateController.add(BleServiceState.ready());
-      return null;
+      _dataController.add(package);
+
+      if (_receiveCompleter != null && !_receiveCompleter!.isCompleted) {
+        _receiveCompleter!.complete(package);
+      }
+    } catch (e) {
+      _stateController.add(
+        BleServiceState.error('Decrypt failed: $e'),
+      );
+    }
+  }
+
+  /// Wait for incoming data. Returns null on timeout.
+  Future<MedicalSharePackage?> receiveData({
+    Duration timeout = const Duration(seconds: 30),
+  }) async {
+    if (_connectedDeviceId == null) return null;
+
+    _stateController.add(BleServiceState.transferring('Receiving...'));
+    _receiveCompleter = Completer<MedicalSharePackage?>();
+
+    try {
+      final result = await _receiveCompleter!.future.timeout(
+        timeout,
+        onTimeout: () => null,
+      );
+      _receiveCompleter = null;
+      return result;
     } catch (e) {
       _stateController.add(BleServiceState.error('Receive failed: $e'));
+      _receiveCompleter = null;
       return null;
     }
   }
+
+  Future<void> startMedicalDataStream(String deviceId) async {
+    if (!_isInitialized) await initialize();
+
+    // Scan for the specific device
+    await scanForDevices(timeout: const Duration(seconds: 10));
+
+    if (_scannedDevices.containsKey(deviceId)) {
+      final connected = await connect(deviceId);
+      if (!connected) {
+        throw Exception('Failed to connect to medical device: $deviceId');
+      }
+    }
+  }
+
+  // ─── Encryption ─────────────────────────────────────────────────
 
   SecretKey _generateSessionKey() {
     final random = Random.secure();
@@ -234,24 +466,25 @@ class BleSharingService {
     });
   }
 
+  // ─── Advertising (BLE Peripheral) ───────────────────────────────
+
+  /// Start advertising as an OrionHealth node.
+  ///
+  /// TODO: BLE peripheral mode requires platform-specific GATT server.
+  /// flutter_blue_plus 2.3.2 does not expose startAdvertising in the
+  /// public API. Advertising requires Android GATT server / iOS CBPeripheralManager.
+  /// For now, use the scan+connect pairing flow.
   Future<void> startAdvertising(String nodeId) async {
     _stateController.add(BleServiceState.advertising(nodeId));
-    // Stub implementation for now
     await Future.delayed(const Duration(seconds: 1));
   }
 
   Future<void> stopAdvertising() async {
     _stateController.add(BleServiceState.ready());
-    // Stub implementation for now
-  }
-
-  void dispose() {
-    stopAdvertising();
-    disconnect();
-    _stateController.close();
-    _dataController.close();
   }
 }
+
+// ─── Data Models ──────────────────────────────────────────────────
 
 class BleDevice {
   final String id;
@@ -286,24 +519,24 @@ class BleServiceState {
 
   factory BleServiceState.ready() => const BleServiceState._(status: 'ready');
   factory BleServiceState.scanning() => const BleServiceState._(
-    status: 'scanning',
-    message: 'Searching for nearby devices...',
-  );
+        status: 'scanning',
+        message: 'Searching for nearby devices...',
+      );
   factory BleServiceState.advertising(String nodeId) => BleServiceState._(
-    status: 'advertising',
-    deviceId: nodeId,
-    message: 'Waiting for receiver...',
-  );
+        status: 'advertising',
+        deviceId: nodeId,
+        message: 'Waiting for receiver...',
+      );
   factory BleServiceState.connecting(String deviceId) => BleServiceState._(
-    status: 'connecting',
-    deviceId: deviceId,
-    message: 'Connecting...',
-  );
+        status: 'connecting',
+        deviceId: deviceId,
+        message: 'Connecting...',
+      );
   factory BleServiceState.connected(String deviceId) => BleServiceState._(
-    status: 'connected',
-    deviceId: deviceId,
-    message: 'Connected',
-  );
+        status: 'connected',
+        deviceId: deviceId,
+        message: 'Connected',
+      );
   factory BleServiceState.transferring(String message) =>
       BleServiceState._(status: 'transferring', message: message);
   factory BleServiceState.completed(int bytes, Duration time) =>
@@ -348,15 +581,15 @@ class MedicalSharePackage extends Equatable {
   bool get canShare => !isExpired && metadata.consentVerified;
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'senderNodeId': senderNodeId,
-    'recipientNodeId': recipientNodeId,
-    'createdAt': createdAt.toIso8601String(),
-    'expiresAt': expiresAt.toIso8601String(),
-    'payload': payload.toJson(),
-    'metadata': metadata.toJson(),
-    'signature': signature,
-  };
+        'id': id,
+        'senderNodeId': senderNodeId,
+        'recipientNodeId': recipientNodeId,
+        'createdAt': createdAt.toIso8601String(),
+        'expiresAt': expiresAt.toIso8601String(),
+        'payload': payload.toJson(),
+        'metadata': metadata.toJson(),
+        'signature': signature,
+      };
 
   factory MedicalSharePackage.fromJson(Map<String, dynamic> json) {
     return MedicalSharePackage(
@@ -373,12 +606,12 @@ class MedicalSharePackage extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    senderNodeId,
-    recipientNodeId,
-    createdAt,
-    expiresAt,
-  ];
+        id,
+        senderNodeId,
+        recipientNodeId,
+        createdAt,
+        expiresAt,
+      ];
 }
 
 class EncryptedMedicalPayload extends Equatable {
@@ -393,10 +626,10 @@ class EncryptedMedicalPayload extends Equatable {
   });
 
   Map<String, dynamic> toJson() => {
-    'cipherText': cipherText,
-    'iv': iv,
-    'authTag': authTag,
-  };
+        'cipherText': cipherText,
+        'iv': iv,
+        'authTag': authTag,
+      };
 
   factory EncryptedMedicalPayload.fromJson(Map<String, dynamic> json) {
     return EncryptedMedicalPayload(
@@ -426,12 +659,12 @@ class MedicalShareMetadata extends Equatable {
   });
 
   Map<String, dynamic> toJson() => {
-    'packageType': packageType,
-    'consentVerified': consentVerified,
-    'includedCategories': includedCategories.map((c) => c.name).toList(),
-    'pinHash': pinHash,
-    'appVersion': appVersion,
-  };
+        'packageType': packageType,
+        'consentVerified': consentVerified,
+        'includedCategories': includedCategories.map((c) => c.name).toList(),
+        'pinHash': pinHash,
+        'appVersion': appVersion,
+      };
 
   factory MedicalShareMetadata.fromJson(Map<String, dynamic> json) {
     return MedicalShareMetadata(
@@ -447,11 +680,11 @@ class MedicalShareMetadata extends Equatable {
 
   @override
   List<Object?> get props => [
-    packageType,
-    consentVerified,
-    includedCategories,
-    appVersion,
-  ];
+        packageType,
+        consentVerified,
+        includedCategories,
+        appVersion,
+      ];
 }
 
 enum MedicalDataCategory {
