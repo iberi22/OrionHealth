@@ -5,7 +5,10 @@ import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:injectable/injectable.dart';
+import 'package:cryptography/cryptography.dart';
 
+@lazySingleton
 class BleSharingService {
   // Standard GATT Service UUIDs
   static const String heartRateServiceUuid = '180d';
@@ -19,7 +22,8 @@ class BleSharingService {
 
   bool _isInitialized = false;
   String? _connectedDeviceId;
-  Uint8List? _sessionKey;
+  SecretKey? _sessionKey;
+  final AesGcm _aesGcm = AesGcm.with256bits();
   StreamSubscription<List<ScanResult>>? _scanSubscription;
 
   final _stateController = StreamController<BleServiceState>.broadcast();
@@ -124,15 +128,17 @@ class BleSharingService {
     final startTime = DateTime.now();
 
     try {
-      final encrypted = _encryptPackage(package);
+      final encrypted = await _encryptPackage(package);
       final bytes = utf8.encode(encrypted);
 
       const chunkSize = 512;
       for (int i = 0; i < bytes.length; i += chunkSize) {
-        bytes.sublist(
-          i,
-          i + chunkSize > bytes.length ? bytes.length : i + chunkSize,
-        );
+        final end = i + chunkSize > bytes.length ? bytes.length : i + chunkSize;
+        final chunk = bytes.sublist(i, end);
+        // TODO: Write chunk to BLE GATT characteristic when flutter_blue_plus
+        // connection is fully implemented.
+        // ignore: unused_local_variable
+        final _ = chunk;
         await Future.delayed(const Duration(milliseconds: 50));
       }
 
@@ -175,31 +181,50 @@ class BleSharingService {
     }
   }
 
-  Uint8List _generateSessionKey() {
+  SecretKey _generateSessionKey() {
     final random = Random.secure();
-    return Uint8List.fromList(
-      List<int>.generate(32, (_) => random.nextInt(256)),
-    );
+    final bytes = List<int>.generate(32, (_) => random.nextInt(256));
+    return SecretKey(bytes);
   }
 
-  String _encryptPackage(MedicalSharePackage package) {
+  Future<String> _encryptPackage(MedicalSharePackage package) async {
     final payload = package.toJson();
     final jsonStr = jsonEncode(payload);
     final plainBytes = utf8.encode(jsonStr);
 
-    final iv = Uint8List.fromList(
-      List<int>.generate(12, (_) => Random.secure().nextInt(256)),
+    final nonce = _aesGcm.newNonce();
+    final secretBox = await _aesGcm.encrypt(
+      plainBytes,
+      secretKey: _sessionKey!,
+      nonce: nonce,
     );
-    final encrypted = _aes256GcmEncrypt(plainBytes, _sessionKey!, iv);
+
+    // Pack: nonce (12) + ciphertext + mac (16)
+    final combined = Uint8List(
+      nonce.length + secretBox.cipherText.length + secretBox.mac.bytes.length,
+    );
+    combined.setRange(0, nonce.length, nonce, 0);
+    combined.setRange(
+      nonce.length,
+      nonce.length + secretBox.cipherText.length,
+      secretBox.cipherText,
+      0,
+    );
+    combined.setRange(
+      nonce.length + secretBox.cipherText.length,
+      combined.length,
+      secretBox.mac.bytes,
+      0,
+    );
 
     final encryptedPackage = EncryptedMedicalPayload(
-      cipherText: base64Encode(encrypted),
-      iv: base64Encode(iv),
-      authTag: base64Encode(List<int>.filled(16, 0)),
+      cipherText: base64Encode(combined),
+      iv: base64Encode(nonce),
+      authTag: base64Encode(secretBox.mac.bytes),
     );
 
     return jsonEncode({
-      'v': 1,
+      'v': 2,
       'enc': encryptedPackage.toJson(),
       'meta': {
         'sender': package.senderNodeId,
@@ -207,14 +232,6 @@ class BleSharingService {
         'expires': package.expiresAt.toIso8601String(),
       },
     });
-  }
-
-  Uint8List _aes256GcmEncrypt(Uint8List plain, Uint8List key, Uint8List iv) {
-    final result = Uint8List(plain.length);
-    for (int i = 0; i < plain.length; i++) {
-      result[i] = plain[i] ^ key[i % key.length] ^ iv[i % iv.length];
-    }
-    return result;
   }
 
   Future<void> startAdvertising(String nodeId) async {
