@@ -88,3 +88,6 @@ node_modules/
 venv/
 # Environment variables
 .env
+
+# Golden test failure artifacts (local only)
+test/widgets/failures/
