@@ -20,7 +20,7 @@ jobs:
         with:
           channel: stable
       - run: flutter pub get
-      - run: flutter analyze --no-fatal-warnings
+      - run: dart analyze
         continue-on-error: false
 
   test:
