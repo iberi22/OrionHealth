@@ -35,10 +35,10 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^1.0.9
   file_picker: ^10.3.7
-  image_picker: ^1.2.1
-  uuid: ^4.5.2
+  image_picker: ^1.2.2
+  uuid: ^4.5.3
   intl: ^0.20.2
   flutter_bloc: ^8.1.0
   hex: ^0.2.0
@@ -51,8 +51,8 @@ dependencies:
   isar_flutter_libs: ^3.1.0+1
   objectbox_flutter_libs: any
   path_provider: ^2.1.5
-  flutter_markdown: ^0.7.7+1
-  equatable: ^2.0.7
+  flutter_markdown_plus: ^1.0.7
+  equatable: ^2.0.8
   device_info_plus: 12.4.0
   isar_agent_memory:
     path: packages/isar_agent_memory
@@ -62,7 +62,7 @@ dependencies:
     path: packages/health_wallet
   onnxruntime: ^1.4.1
   permission_handler: ^12.0.1
-  health: ^13.2.1
+  health: ^13.3.1
   google_fonts: ^6.3.2
   flutter_gemma: ^0.12.6
 
@@ -73,7 +73,8 @@ dependencies:
   shared_preferences: ^2.3.0
 
   # Bluetooth Low Energy for medical data sharing
-  flutter_blue_plus: ^2.3.1
+  flutter_blue_plus: ^2.3.2
+  flutter_blue_plus_winrt: ^0.0.20
   google_mlkit_text_recognition: ^0.15.1
   openai_dart: ^1.0.0
   http: ^1.2.0
@@ -88,7 +89,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   build_runner: ^2.4.13
   isar_generator: ^3.1.0+1
   injectable_generator: ^2.4.2
