@@ -12,7 +12,8 @@ import '../entities/verifiable_credential.dart';
 abstract class SsiService {
   /// Generate a new Long-Form DID for the user.
   /// This DID is usable immediately without blockchain anchoring.
-  Future<Did> createDid();
+  /// If [anchor] is true, the DID will be registered on the ION/Sidetree network.
+  Future<Did> createDid({bool anchor = false});
 
   /// Resolve a DID to its DID Document.
   /// Supports both short-form (anchored) and long-form DIDs.

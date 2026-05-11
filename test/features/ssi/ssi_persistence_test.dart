@@ -1,17 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/ssi/domain/repositories/ssi_repository.dart';
 import 'package:orionhealth_health/features/ssi/infrastructure/repositories/isar_ssi_repository.dart';
+import 'package:orionhealth_health/features/ssi/infrastructure/services/sidetree_anchor_client.dart';
 import 'package:orionhealth_health/features/ssi/infrastructure/services/ssi_service_impl.dart';
 import 'package:orionhealth_health/features/ssi/infrastructure/persistence/isar_did.dart';
 import 'package:orionhealth_health/features/ssi/infrastructure/persistence/isar_credential.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 
+class MockSidetreeAnchorClient extends Mock implements SidetreeAnchorClient {}
+
 void main() {
   late Isar isar;
   late SsiRepository repository;
   late SsiServiceImpl service;
+  late MockSidetreeAnchorClient mockAnchorClient;
   late String testPath;
 
   setUpAll(() async {
@@ -38,7 +43,8 @@ void main() {
       await isar.isarCredentials.clear();
     });
     repository = IsarSsiRepository(isar);
-    service = SsiServiceImpl(repository);
+    mockAnchorClient = MockSidetreeAnchorClient();
+    service = SsiServiceImpl(repository, mockAnchorClient);
   });
 
   test('SSI data persists across service restarts', () async {
@@ -52,7 +58,7 @@ void main() {
 
     // 2. Simulate "app restart" by creating new service instance with same Isar
     final newRepository = IsarSsiRepository(isar);
-    final newService = SsiServiceImpl(newRepository);
+    final newService = SsiServiceImpl(newRepository, mockAnchorClient);
 
     // 3. Verify data is still there
     final resolvedDoc = await newService.resolveDid(did.did);

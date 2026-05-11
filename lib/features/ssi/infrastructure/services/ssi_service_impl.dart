@@ -6,6 +6,7 @@ import '../../domain/entities/did.dart';
 import '../../domain/entities/verifiable_credential.dart';
 import '../../domain/repositories/ssi_repository.dart';
 import '../../domain/services/ssi_service.dart';
+import 'sidetree_anchor_client.dart';
 
 /// Basic SSI Service implementation.
 ///
@@ -21,26 +22,33 @@ import '../../domain/services/ssi_service.dart';
 @LazySingleton(as: SsiService)
 class SsiServiceImpl implements SsiService {
   final SsiRepository _repository;
+  final SidetreeAnchorClient _anchorClient;
 
-  SsiServiceImpl(this._repository);
+  SsiServiceImpl(this._repository, this._anchorClient);
 
   @override
-  Future<Did> createDid() async {
+  Future<Did> createDid({bool anchor = false}) async {
     // Generate a unique identifier using cryptographic hash
     final seed = _generateSeed();
     final hashBytes = sha256.convert(utf8.encode(seed));
     final uniqueId = base64Url.encode(hashBytes.bytes).substring(0, 32);
 
-    final didString = 'did:orion:$uniqueId';
-    final longForm = '$didString;initial-state=$seed';
+    // Sidetree-compatible DID format
+    final didString = 'did:ion:$uniqueId';
+    final longForm = '$didString:initial-state=$seed';
 
-    final did = Did(
+    var did = Did(
       did: didString,
       longForm: longForm,
       createdAt: DateTime.now(),
       isAnchored: false,
       keyType: 'Ed25519',
     );
+
+    // Anchoring step (Optional)
+    if (anchor) {
+      did = await _anchorClient.anchorDid(did);
+    }
 
     // Store the DID and its Document
     await _repository.saveDid(did, _createDidDocument(did));
@@ -59,13 +67,13 @@ class SsiServiceImpl implements SsiService {
     // Try resolving as long-form DID (if short-form was provided)
     final allDids = await _repository.getDids();
     for (final d in allDids) {
-      if (d.longForm == did || d.activeDid == did) {
+      if (d.longForm == did || d.activeDid == did || d.shortForm == did) {
         return _repository.getDidDocument(d.did);
       }
     }
 
-    // External resolution not implemented yet
-    return null;
+    // External resolution fallback via Sidetree node
+    return _anchorClient.resolveDid(did);
   }
 
   @override

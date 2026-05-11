@@ -4,17 +4,21 @@ import 'package:orionhealth_health/features/ssi/domain/entities/credential_schem
 import 'package:orionhealth_health/features/ssi/domain/entities/verifiable_credential.dart';
 import 'package:orionhealth_health/features/ssi/domain/repositories/ssi_repository.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/did.dart';
+import 'package:orionhealth_health/features/ssi/infrastructure/services/sidetree_anchor_client.dart';
 import 'package:orionhealth_health/features/ssi/infrastructure/services/ssi_service_impl.dart';
 
 class MockSsiRepository extends Mock implements SsiRepository {}
+class MockSidetreeAnchorClient extends Mock implements SidetreeAnchorClient {}
 
 void main() {
   late SsiServiceImpl service;
   late MockSsiRepository mockRepository;
+  late MockSidetreeAnchorClient mockAnchorClient;
 
   setUp(() {
     mockRepository = MockSsiRepository();
-    service = SsiServiceImpl(mockRepository);
+    mockAnchorClient = MockSidetreeAnchorClient();
+    service = SsiServiceImpl(mockRepository, mockAnchorClient);
 
     // Default mock behaviors
     when(() => mockRepository.getDids()).thenAnswer((_) async => []);
@@ -44,8 +48,8 @@ void main() {
       test('generates a valid Long-Form DID', () async {
         final did = await service.createDid();
 
-        expect(did.did, startsWith('did:orion:'));
-        expect(did.longForm, contains(';initial-state='));
+        expect(did.did, startsWith('did:ion:'));
+        expect(did.longForm, contains(':initial-state='));
         expect(did.keyType, 'Ed25519');
         expect(did.isAnchored, false);
         expect(did.createdAt, isA<DateTime>());
@@ -64,6 +68,25 @@ void main() {
       test('activeDid returns long-form when not anchored', () async {
         final did = await service.createDid();
         expect(did.activeDid, did.longForm);
+      });
+
+      test('calls anchorDid when anchor flag is true', () async {
+        when(() => mockAnchorClient.anchorDid(any())).thenAnswer((invocation) async {
+          final did = invocation.positionalArguments[0] as Did;
+          return Did(
+            did: did.did,
+            longForm: did.longForm,
+            shortForm: 'did:ion:short123',
+            createdAt: did.createdAt,
+            isAnchored: true,
+          );
+        });
+
+        final did = await service.createDid(anchor: true);
+
+        expect(did.isAnchored, true);
+        expect(did.shortForm, 'did:ion:short123');
+        verify(() => mockAnchorClient.anchorDid(any())).called(1);
       });
     });
 
@@ -84,12 +107,24 @@ void main() {
         expect(doc!['id'], did.did);
       });
 
-      test('returns null for unknown DID', () async {
+      test('returns null for unknown DID when external resolution fails', () async {
         when(() => mockRepository.getDidDocument(any())).thenAnswer((_) async => null);
         when(() => mockRepository.getDids()).thenAnswer((_) async => []);
+        when(() => mockAnchorClient.resolveDid(any())).thenAnswer((_) async => null);
 
-        final doc = await service.resolveDid('did:orion:unknown');
+        final doc = await service.resolveDid('did:ion:unknown');
         expect(doc, isNull);
+        verify(() => mockAnchorClient.resolveDid('did:ion:unknown')).called(1);
+      });
+
+      test('falls back to external resolution', () async {
+        final doc = {'id': 'did:ion:ext'};
+        when(() => mockRepository.getDidDocument(any())).thenAnswer((_) async => null);
+        when(() => mockRepository.getDids()).thenAnswer((_) async => []);
+        when(() => mockAnchorClient.resolveDid(any())).thenAnswer((_) async => doc);
+
+        final result = await service.resolveDid('did:ion:ext');
+        expect(result, doc);
       });
     });
 

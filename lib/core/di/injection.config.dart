@@ -16,30 +16,30 @@ import 'package:isar_agent_memory/isar_agent_memory.dart' as _i8;
 import 'package:medical_standards/medical_standards.dart' as _i19;
 
 import '../../features/allergies/domain/repositories/allergy_repository.dart'
-    as _i46;
-import '../../features/allergies/infrastructure/repositories/allergy_repository_impl.dart'
     as _i47;
-import '../../features/appointments/domain/repositories/appointment_repository.dart'
+import '../../features/allergies/infrastructure/repositories/allergy_repository_impl.dart'
     as _i48;
-import '../../features/appointments/infrastructure/repositories/appointment_repository_impl.dart'
+import '../../features/appointments/domain/repositories/appointment_repository.dart'
     as _i49;
-import '../../features/auth/application/auth_cubit.dart' as _i73;
-import '../../features/auth/domain/auth_service.dart' as _i50;
+import '../../features/appointments/infrastructure/repositories/appointment_repository_impl.dart'
+    as _i50;
+import '../../features/auth/application/auth_cubit.dart' as _i74;
+import '../../features/auth/domain/auth_service.dart' as _i51;
 import '../../features/auth/infrastructure/services/ble_medical_sharing_service.dart'
-    as _i51;
+    as _i52;
 import '../../features/auth/infrastructure/services/encryption_service.dart'
     as _i9;
 import '../../features/ble_sharing/domain/ble_sharing_service.dart' as _i3;
 import '../../features/health_data_import/application/health_import_cubit.dart'
-    as _i56;
+    as _i57;
 import '../../features/health_data_import/domain/services/health_data_import_service.dart'
     as _i11;
 import '../../features/health_record/application/bloc/health_record_cubit.dart'
-    as _i74;
+    as _i75;
 import '../../features/health_record/domain/repositories/health_record_repository.dart'
-    as _i57;
-import '../../features/health_record/infrastructure/repositories/health_record_repository_impl.dart'
     as _i58;
+import '../../features/health_record/infrastructure/repositories/health_record_repository_impl.dart'
+    as _i59;
 import '../../features/health_record/infrastructure/services/file_picker_service.dart'
     as _i10;
 import '../../features/health_record/infrastructure/services/image_picker_service.dart'
@@ -47,42 +47,42 @@ import '../../features/health_record/infrastructure/services/image_picker_servic
 import '../../features/health_record/infrastructure/services/ocr_service.dart'
     as _i32;
 import '../../features/local_agent/application/use_cases/smart_search_use_case.dart'
-    as _i70;
+    as _i71;
 import '../../features/local_agent/domain/repositories/medical_knowledge_repository.dart'
     as _i20;
 import '../../features/local_agent/domain/services/llm_adapter.dart' as _i14;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
-    as _i42;
+    as _i43;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
     as _i15;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
     as _i60;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i59;
+    as _i61;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
     as _i16;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
-    as _i62;
-import '../../features/local_agent/infrastructure/llm_service.dart' as _i61;
-import '../../features/local_agent/infrastructure/rag_llm_service.dart' as _i75;
+    as _i63;
+import '../../features/local_agent/infrastructure/llm_service.dart' as _i62;
+import '../../features/local_agent/infrastructure/rag_llm_service.dart' as _i76;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i22;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i21;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i22;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
-    as _i43;
+    as _i44;
 import '../../features/local_agent/infrastructure/services/medical_indexing_service.dart'
-    as _i64;
+    as _i65;
 import '../../features/medical_assistant/domain/services/clinical_reasoner_service.dart'
-    as _i52;
-import '../../features/medical_assistant/domain/services/health_context_service.dart'
-    as _i54;
-import '../../features/medical_assistant/infrastructure/analysis/risk_calculator.dart'
-    as _i69;
-import '../../features/medical_assistant/infrastructure/services/clinical_reasoner_service.dart'
     as _i53;
-import '../../features/medical_assistant/infrastructure/services/health_context_service_impl.dart'
+import '../../features/medical_assistant/domain/services/health_context_service.dart'
     as _i55;
+import '../../features/medical_assistant/infrastructure/analysis/risk_calculator.dart'
+    as _i70;
+import '../../features/medical_assistant/infrastructure/services/clinical_reasoner_service.dart'
+    as _i54;
+import '../../features/medical_assistant/infrastructure/services/health_context_service_impl.dart'
+    as _i56;
 import '../../features/medical_research/domain/services/medical_scraper_service.dart'
     as _i23;
 import '../../features/medical_research/domain/services/medical_standards_service.dart'
@@ -92,7 +92,7 @@ import '../../features/medical_research/domain/services/medical_web_search_servi
 import '../../features/medical_research/infrastructure/bot_bypass_handler.dart'
     as _i4;
 import '../../features/medical_research/infrastructure/medical_research_service.dart'
-    as _i65;
+    as _i66;
 import '../../features/medical_research/infrastructure/medical_scraper_service_impl.dart'
     as _i24;
 import '../../features/medical_research/infrastructure/medical_standards_service_impl.dart'
@@ -103,51 +103,53 @@ import '../../features/medications/domain/repositories/medication_repository.dar
     as _i29;
 import '../../features/medications/infrastructure/repositories/isar_medication_repository.dart'
     as _i30;
-import '../../features/onboarding/application/onboarding_cubit.dart' as _i66;
-import '../../features/onboarding/application/sync_cubit.dart' as _i71;
-import '../../features/reports/application/bloc/report_bloc.dart' as _i76;
+import '../../features/onboarding/application/onboarding_cubit.dart' as _i67;
+import '../../features/onboarding/application/sync_cubit.dart' as _i72;
+import '../../features/reports/application/bloc/report_bloc.dart' as _i77;
 import '../../features/reports/domain/repositories/report_repository.dart'
     as _i34;
 import '../../features/reports/domain/services/report_generation_service.dart'
-    as _i67;
+    as _i68;
 import '../../features/reports/infrastructure/repositories/isar_report_repository.dart'
     as _i35;
 import '../../features/reports/infrastructure/services/gemma_report_generation_service.dart'
-    as _i68;
+    as _i69;
 import '../../features/reports/infrastructure/services/mock_report_generation_service.dart'
     as _i31;
-import '../../features/settings/application/llm_settings_cubit.dart' as _i63;
+import '../../features/settings/application/llm_settings_cubit.dart' as _i64;
 import '../../features/settings/domain/repositories/llm_settings_repository.dart'
     as _i17;
 import '../../features/settings/domain/services/device_capability_service.dart'
     as _i5;
 import '../../features/settings/infrastructure/repositories/llm_settings_repository_impl.dart'
     as _i18;
-import '../../features/ssi/domain/repositories/ssi_repository.dart' as _i36;
-import '../../features/ssi/domain/services/ssi_service.dart' as _i38;
+import '../../features/ssi/domain/repositories/ssi_repository.dart' as _i37;
+import '../../features/ssi/domain/services/ssi_service.dart' as _i39;
 import '../../features/ssi/infrastructure/repositories/isar_ssi_repository.dart'
-    as _i37;
+    as _i38;
+import '../../features/ssi/infrastructure/services/sidetree_anchor_client.dart'
+    as _i36;
 import '../../features/ssi/infrastructure/services/ssi_service_impl.dart'
-    as _i39;
-import '../../features/user_profile/application/bloc/user_profile_cubit.dart'
-    as _i72;
-import '../../features/user_profile/domain/repositories/user_profile_repository.dart'
     as _i40;
-import '../../features/user_profile/infrastructure/repositories/user_profile_repository_impl.dart'
+import '../../features/user_profile/application/bloc/user_profile_cubit.dart'
+    as _i73;
+import '../../features/user_profile/domain/repositories/user_profile_repository.dart'
     as _i41;
+import '../../features/user_profile/infrastructure/repositories/user_profile_repository_impl.dart'
+    as _i42;
 import '../../features/vitals/domain/repositories/vital_sign_repository.dart'
-    as _i44;
-import '../../features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart'
     as _i45;
+import '../../features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart'
+    as _i46;
 import '../services/device_capability_service.dart' as _i6;
 import '../services/privacy_anonymizer.dart' as _i33;
-import 'database_module.dart' as _i79;
-import 'memory_module.dart' as _i78;
-import 'network_module.dart' as _i77;
+import 'database_module.dart' as _i80;
+import 'memory_module.dart' as _i79;
+import 'network_module.dart' as _i78;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -196,15 +198,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i19.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i20.MedicalKnowledgeRepository>(
-      () => _i21.JsonMedicalKnowledgeRepository(),
+      () => _i21.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
+    );
+    gh.factory<_i20.MedicalKnowledgeRepository>(
+      () => _i22.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
-    );
-    gh.factory<_i20.MedicalKnowledgeRepository>(
-      () => _i22.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
     );
     gh.lazySingleton<_i23.MedicalScraperService>(
         () => _i24.MedicalScraperServiceImpl(
@@ -233,16 +235,20 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i33.PromptScrubber(gh<_i13.Isar>()));
     gh.lazySingleton<_i34.ReportRepository>(
         () => _i35.IsarReportRepository(gh<_i13.Isar>()));
-    gh.lazySingleton<_i36.SsiRepository>(
-        () => _i37.IsarSsiRepository(gh<_i13.Isar>()));
-    gh.lazySingleton<_i38.SsiService>(
-        () => _i39.SsiServiceImpl(gh<_i36.SsiRepository>()));
+    gh.lazySingleton<_i36.SidetreeAnchorClient>(
+        () => _i36.SidetreeAnchorClient(gh<_i7.Dio>()));
+    gh.lazySingleton<_i37.SsiRepository>(
+        () => _i38.IsarSsiRepository(gh<_i13.Isar>()));
+    gh.lazySingleton<_i39.SsiService>(() => _i40.SsiServiceImpl(
+          gh<_i37.SsiRepository>(),
+          gh<_i36.SidetreeAnchorClient>(),
+        ));
     gh.lazySingleton<_i19.SyncService>(() => networkModule.syncService);
-    gh.lazySingleton<_i40.UserProfileRepository>(
-        () => _i41.UserProfileRepositoryImpl(gh<_i13.Isar>()));
-    await gh.lazySingletonAsync<_i42.VectorStoreService>(
+    gh.lazySingleton<_i41.UserProfileRepository>(
+        () => _i42.UserProfileRepositoryImpl(gh<_i13.Isar>()));
+    await gh.lazySingletonAsync<_i43.VectorStoreService>(
       () {
-        final i = _i43.IsarVectorStoreService(
+        final i = _i44.IsarVectorStoreService(
           gh<_i8.MemoryGraph>(),
           gh<_i20.MedicalKnowledgeRepository>(),
         );
@@ -250,111 +256,111 @@ extension GetItInjectableX on _i1.GetIt {
       },
       preResolve: true,
     );
-    gh.lazySingleton<_i44.VitalSignRepository>(
-        () => _i45.VitalSignRepositoryImpl(gh<_i13.Isar>()));
-    gh.lazySingleton<_i46.AllergyRepository>(
-        () => _i47.AllergyRepositoryImpl(gh<_i13.Isar>()));
-    gh.lazySingleton<_i48.AppointmentRepository>(
-        () => _i49.AppointmentRepositoryImpl(gh<_i13.Isar>()));
-    gh.lazySingleton<_i50.AuthService>(
-        () => _i50.AuthServiceImpl(gh<_i9.EncryptionService>()));
-    gh.lazySingleton<_i51.BleMedicalSharingService>(
-        () => _i51.BleMedicalSharingService(
+    gh.lazySingleton<_i45.VitalSignRepository>(
+        () => _i46.VitalSignRepositoryImpl(gh<_i13.Isar>()));
+    gh.lazySingleton<_i47.AllergyRepository>(
+        () => _i48.AllergyRepositoryImpl(gh<_i13.Isar>()));
+    gh.lazySingleton<_i49.AppointmentRepository>(
+        () => _i50.AppointmentRepositoryImpl(gh<_i13.Isar>()));
+    gh.lazySingleton<_i51.AuthService>(
+        () => _i51.AuthServiceImpl(gh<_i9.EncryptionService>()));
+    gh.lazySingleton<_i52.BleMedicalSharingService>(
+        () => _i52.BleMedicalSharingService(
               gh<_i3.BleSharingService>(),
               gh<_i9.EncryptionService>(),
-              gh<_i38.SsiService>(),
+              gh<_i39.SsiService>(),
             ));
-    gh.lazySingleton<_i52.ClinicalReasonerService>(() =>
-        _i53.SymphonyClinicalReasonerService(
+    gh.lazySingleton<_i53.ClinicalReasonerService>(() =>
+        _i54.SymphonyClinicalReasonerService(
             gh<_i20.MedicalKnowledgeRepository>()));
-    gh.lazySingleton<_i54.HealthContextService>(
-        () => _i55.IsarHealthContextService(
-              gh<_i44.VitalSignRepository>(),
+    gh.lazySingleton<_i55.HealthContextService>(
+        () => _i56.IsarHealthContextService(
+              gh<_i45.VitalSignRepository>(),
               gh<_i29.MedicationRepository>(),
               gh<_i8.MemoryGraph>(),
             ));
-    gh.factory<_i56.HealthImportCubit>(() => _i56.HealthImportCubit(
+    gh.factory<_i57.HealthImportCubit>(() => _i57.HealthImportCubit(
           gh<_i11.HealthDataImportService>(),
-          gh<_i44.VitalSignRepository>(),
+          gh<_i45.VitalSignRepository>(),
         ));
-    gh.lazySingleton<_i57.HealthRecordRepository>(
-        () => _i58.HealthRecordRepositoryImpl(gh<_i13.Isar>()));
-    gh.factory<_i14.LlmAdapter>(
-      () => _i59.MockLlmAdapter(gh<_i33.PromptScrubber>()),
-      instanceName: 'mock',
-    );
+    gh.lazySingleton<_i58.HealthRecordRepository>(
+        () => _i59.HealthRecordRepositoryImpl(gh<_i13.Isar>()));
     gh.lazySingleton<_i14.LlmAdapter>(
       () => _i60.GeminiLlmAdapter(
         scrubber: gh<_i33.PromptScrubber>(),
-        userProfileRepository: gh<_i40.UserProfileRepository>(),
+        userProfileRepository: gh<_i41.UserProfileRepository>(),
       ),
       instanceName: 'gemini',
     );
-    gh.lazySingleton<_i61.LlmService>(() => _i62.GemmaLlmService(
-          gh<_i42.VectorStoreService>(),
-          gh<_i40.UserProfileRepository>(),
+    gh.factory<_i14.LlmAdapter>(
+      () => _i61.MockLlmAdapter(gh<_i33.PromptScrubber>()),
+      instanceName: 'mock',
+    );
+    gh.lazySingleton<_i62.LlmService>(() => _i63.GemmaLlmService(
+          gh<_i43.VectorStoreService>(),
+          gh<_i41.UserProfileRepository>(),
           gh<_i14.LlmAdapter>(instanceName: 'gemma'),
         ));
-    gh.factory<_i63.LlmSettingsCubit>(() => _i63.LlmSettingsCubit(
+    gh.factory<_i64.LlmSettingsCubit>(() => _i64.LlmSettingsCubit(
           gh<_i17.LlmSettingsRepository>(),
           gh<_i5.DeviceCapabilityService>(),
         ));
-    gh.lazySingleton<_i64.MedicalIndexingService>(
-        () => _i64.MedicalIndexingService(
+    gh.lazySingleton<_i65.MedicalIndexingService>(
+        () => _i65.MedicalIndexingService(
               gh<_i20.MedicalKnowledgeRepository>(),
-              gh<_i42.VectorStoreService>(),
+              gh<_i43.VectorStoreService>(),
             ));
-    gh.lazySingleton<_i65.MedicalResearchService>(
-        () => _i65.MedicalResearchService(
+    gh.lazySingleton<_i66.MedicalResearchService>(
+        () => _i66.MedicalResearchService(
               gh<_i27.MedicalWebSearchService>(),
               gh<_i23.MedicalScraperService>(),
             ));
-    gh.factory<_i66.OnboardingCubit>(
-        () => _i66.OnboardingCubit(gh<_i40.UserProfileRepository>()));
-    gh.lazySingleton<_i67.ReportGenerationService>(
-        () => _i68.GemmaReportGenerationService(
+    gh.factory<_i67.OnboardingCubit>(
+        () => _i67.OnboardingCubit(gh<_i41.UserProfileRepository>()));
+    gh.lazySingleton<_i68.ReportGenerationService>(
+        () => _i69.GemmaReportGenerationService(
               gh<_i14.LlmAdapter>(instanceName: 'gemma'),
-              gh<_i42.VectorStoreService>(),
-              gh<_i40.UserProfileRepository>(),
+              gh<_i43.VectorStoreService>(),
+              gh<_i41.UserProfileRepository>(),
               gh<_i33.PromptScrubber>(),
             ));
-    gh.lazySingleton<_i69.RiskCalculator>(
-        () => _i69.RiskCalculator(gh<_i40.UserProfileRepository>()));
-    gh.lazySingleton<_i70.SmartSearchUseCase>(
-        () => _i70.SmartSearchUseCase(gh<_i42.VectorStoreService>()));
-    gh.factory<_i71.SyncCubit>(() => _i71.SyncCubit(
+    gh.lazySingleton<_i70.RiskCalculator>(
+        () => _i70.RiskCalculator(gh<_i41.UserProfileRepository>()));
+    gh.lazySingleton<_i71.SmartSearchUseCase>(
+        () => _i71.SmartSearchUseCase(gh<_i43.VectorStoreService>()));
+    gh.factory<_i72.SyncCubit>(() => _i72.SyncCubit(
           gh<_i19.SyncService>(),
-          gh<_i42.VectorStoreService>(),
+          gh<_i43.VectorStoreService>(),
         ));
-    gh.factory<_i72.UserProfileCubit>(
-        () => _i72.UserProfileCubit(gh<_i40.UserProfileRepository>()));
-    gh.factory<_i73.AuthCubit>(() => _i73.AuthCubit(gh<_i50.AuthService>()));
-    gh.factory<_i74.HealthRecordCubit>(() => _i74.HealthRecordCubit(
-          gh<_i57.HealthRecordRepository>(),
+    gh.factory<_i73.UserProfileCubit>(
+        () => _i73.UserProfileCubit(gh<_i41.UserProfileRepository>()));
+    gh.factory<_i74.AuthCubit>(() => _i74.AuthCubit(gh<_i51.AuthService>()));
+    gh.factory<_i75.HealthRecordCubit>(() => _i75.HealthRecordCubit(
+          gh<_i58.HealthRecordRepository>(),
           gh<_i10.FilePickerService>(),
           gh<_i12.ImagePickerService>(),
           gh<_i32.OcrService>(),
-          gh<_i42.VectorStoreService>(),
+          gh<_i43.VectorStoreService>(),
         ));
-    gh.lazySingleton<_i61.LlmService>(
-      () => _i75.RagLlmService(
-        gh<_i42.VectorStoreService>(),
-        gh<_i65.MedicalResearchService>(),
-        gh<_i40.UserProfileRepository>(),
+    gh.lazySingleton<_i62.LlmService>(
+      () => _i76.RagLlmService(
+        gh<_i43.VectorStoreService>(),
+        gh<_i66.MedicalResearchService>(),
+        gh<_i41.UserProfileRepository>(),
         gh<_i14.LlmAdapter>(instanceName: 'gemma'),
       ),
       instanceName: 'rag',
     );
-    gh.factory<_i76.ReportBloc>(() => _i76.ReportBloc(
+    gh.factory<_i77.ReportBloc>(() => _i77.ReportBloc(
           gh<_i34.ReportRepository>(),
-          gh<_i67.ReportGenerationService>(),
+          gh<_i68.ReportGenerationService>(),
         ));
     return this;
   }
 }
 
-class _$NetworkModule extends _i77.NetworkModule {}
+class _$NetworkModule extends _i78.NetworkModule {}
 
-class _$MemoryModule extends _i78.MemoryModule {}
+class _$MemoryModule extends _i79.MemoryModule {}
 
-class _$DatabaseModule extends _i79.DatabaseModule {}
+class _$DatabaseModule extends _i80.DatabaseModule {}
