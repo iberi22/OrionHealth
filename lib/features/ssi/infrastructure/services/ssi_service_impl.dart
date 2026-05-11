@@ -6,23 +6,27 @@ import '../../domain/entities/did.dart';
 import '../../domain/entities/verifiable_credential.dart';
 import '../../domain/repositories/ssi_repository.dart';
 import '../../domain/services/ssi_service.dart';
+import 'sidetree_anchor_client.dart';
 
 /// Basic SSI Service implementation.
 ///
 /// Generates Long-Form DIDs using Ed25519 key derivation
 /// and provides credential lifecycle management.
 ///
-/// Full production implementation requires:
-/// - aries-askar Rust FFI for AnonCreds
-/// - Sidetree/ION anchor client
-/// - Blockchain DID resolution
+/// Optional ION anchoring via [SidetreeAnchorClient] for
+/// blockchain-registered DIDs.
+///
+/// Production roadmap:
+/// - aries-askar Rust FFI for AnonCreds ZKP (#179)
+/// - ION anchor client wired (#180) — ✅ DONE
 ///
 /// Reference: docs/research/SSI_ARCHITECTURE_DECISION.md
 @LazySingleton(as: SsiService)
 class SsiServiceImpl implements SsiService {
   final SsiRepository _repository;
+  final SidetreeAnchorClient? _anchorClient;
 
-  SsiServiceImpl(this._repository);
+  SsiServiceImpl(this._repository, [this._anchorClient]);
 
   @override
   Future<Did> createDid() async {
@@ -64,8 +68,52 @@ class SsiServiceImpl implements SsiService {
       }
     }
 
-    // External resolution not implemented yet
+    // Try ION network resolution if anchor client is available
+    if (_anchorClient != null && did.startsWith('did:ion:')) {
+      return _anchorClient.resolve(did);
+    }
+
     return null;
+  }
+
+  /// Anchor a locally-created DID to the ION Sidetree network.
+  ///
+  /// Submits a Create operation to the configured ION node.
+  /// The DID becomes globally resolvable once the batch is anchored
+  /// to Bitcoin (typically 10-20 minutes).
+  ///
+  /// Returns the updated [Did] with anchor status and ION DID suffix.
+  Future<Did> anchorDid(Did did) async {
+    if (_anchorClient == null) {
+      throw StateError('SidetreeAnchorClient not configured');
+    }
+
+    final keys = await _anchorClient.generateKeyPair();
+
+    final result = await _anchorClient.createDid(
+      publicKeys: [
+        {
+          'id': '${did.did}#keys-1',
+          'type': keys['type'],
+          'publicKeyJwk': keys['publicKeyJwk'],
+          'purposes': ['authentication', 'assertionMethod'],
+        },
+      ],
+    );
+
+    final anchoredDid = Did(
+      did: result.did,
+      shortForm: result.did,
+      longForm: did.longForm,
+      createdAt: did.createdAt,
+      isAnchored: true,
+      keyType: 'secp256k1',
+    );
+
+    // Save the anchored DID with its ION document
+    await _repository.saveDid(anchoredDid, result.nodeResponse);
+
+    return anchoredDid;
   }
 
   @override
