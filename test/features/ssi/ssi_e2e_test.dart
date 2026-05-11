@@ -8,6 +8,7 @@ import 'package:orionhealth_health/features/auth/infrastructure/services/ble_med
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
 import 'package:orionhealth_health/features/ble_sharing/domain/ble_sharing_service.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/did.dart';
+import 'package:orionhealth_health/features/ssi/domain/entities/revocation_entry.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/verifiable_credential.dart';
 import 'package:orionhealth_health/features/ssi/domain/repositories/ssi_repository.dart';
 import 'package:orionhealth_health/features/ssi/domain/services/anoncreds_service.dart';
@@ -19,6 +20,7 @@ class FakeSsiRepository implements SsiRepository {
   final Map<String, Did> _dids = {};
   final Map<String, Map<String, dynamic>> _didDocs = {};
   final Map<String, VerifiableCredential> _credentials = {};
+  final Map<String, RevocationEntry> _revocations = {};
 
   @override
   Future<void> saveDid(Did did, Map<String, dynamic> didDocument) async {
@@ -46,6 +48,16 @@ class FakeSsiRepository implements SsiRepository {
   @override
   Future<void> deleteCredential(String credentialId) async {
     _credentials.remove(credentialId);
+  }
+
+  @override
+  Future<void> saveRevocationEntry(RevocationEntry entry) async {
+    _revocations['${entry.issuerPublicKey}_${entry.credentialIndex}'] = entry;
+  }
+
+  @override
+  Future<RevocationEntry?> getRevocationEntry(String issuerPublicKey, int credentialIndex) async {
+    return _revocations['${issuerPublicKey}_$credentialIndex'];
   }
 }
 
@@ -88,7 +100,7 @@ void main() {
     mockBleService = MockBleSharingService();
 
     ssiService = SsiServiceImpl(repository);
-    anonCredsService = AnonCredsServiceImpl();
+    anonCredsService = AnonCredsServiceImpl(repository);
     bleSharingService = BleMedicalSharingService(
       mockBleService,
       encryptionService,
