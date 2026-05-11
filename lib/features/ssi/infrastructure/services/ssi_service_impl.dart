@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:crypto/crypto.dart';
 import '../../domain/entities/did.dart';
 import '../../domain/entities/verifiable_credential.dart';
+import '../../domain/repositories/ssi_repository.dart';
 import '../../domain/services/ssi_service.dart';
 
 /// Basic SSI Service implementation.
@@ -19,11 +20,9 @@ import '../../domain/services/ssi_service.dart';
 /// Reference: docs/research/SSI_ARCHITECTURE_DECISION.md
 @LazySingleton(as: SsiService)
 class SsiServiceImpl implements SsiService {
-  // TODO(ssi): Migrate to Isar persistence for DIDs, credentials, and DID documents.
-  // Currently in-memory only — data lost on app restart.
-  final List<Did> _dids = [];
-  final List<VerifiableCredential> _credentials = [];
-  final Map<String, Map<String, dynamic>> _didDocuments = {};
+  final SsiRepository _repository;
+
+  SsiServiceImpl(this._repository);
 
   @override
   Future<Did> createDid() async {
@@ -43,25 +42,25 @@ class SsiServiceImpl implements SsiService {
       keyType: 'Ed25519',
     );
 
-    _dids.add(did);
-
-    // Store the DID Document
-    _didDocuments[didString] = _createDidDocument(did);
+    // Store the DID and its Document
+    await _repository.saveDid(did, _createDidDocument(did));
 
     return did;
   }
 
   @override
   Future<Map<String, dynamic>?> resolveDid(String did) async {
-    // Local resolution first (long-form includes initial state)
-    if (_didDocuments.containsKey(did)) {
-      return _didDocuments[did];
+    // Local resolution first
+    final doc = await _repository.getDidDocument(did);
+    if (doc != null) {
+      return doc;
     }
 
-    // Try resolving as long-form DID
-    for (final d in _dids) {
+    // Try resolving as long-form DID (if short-form was provided)
+    final allDids = await _repository.getDids();
+    for (final d in allDids) {
       if (d.longForm == did || d.activeDid == did) {
-        return _didDocuments[d.did];
+        return _repository.getDidDocument(d.did);
       }
     }
 
@@ -77,7 +76,9 @@ class SsiServiceImpl implements SsiService {
     DateTime? expirationDate,
   }) async {
     final credentialId = 'vc:${_generateSeed().substring(0, 16)}';
-    final ourDid = _dids.isNotEmpty ? _dids.first : await createDid();
+
+    final allDids = await _repository.getDids();
+    final ourDid = allDids.isNotEmpty ? allDids.first : await createDid();
 
     final vc = VerifiableCredential(
       id: credentialId,
@@ -91,7 +92,7 @@ class SsiServiceImpl implements SsiService {
       proof: _generateProof(credentialId, claims, ourDid.activeDid),
     );
 
-    _credentials.add(vc);
+    await _repository.saveCredential(vc);
     return vc;
   }
 
@@ -132,7 +133,7 @@ class SsiServiceImpl implements SsiService {
 
   @override
   Future<void> revokeCredential(String credentialId) async {
-    _credentials.removeWhere((vc) => vc.id == credentialId);
+    await _repository.deleteCredential(credentialId);
   }
 
   @override

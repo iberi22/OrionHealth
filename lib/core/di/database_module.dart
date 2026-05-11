@@ -10,6 +10,8 @@ import '../../features/medications/domain/entities/medication.dart';
 import '../../features/vitals/domain/entities/vital_sign.dart';
 import '../../features/appointments/domain/entities/appointment.dart';
 import '../../features/allergies/domain/entities/allergy.dart';
+import '../../features/ssi/infrastructure/persistence/isar_did.dart';
+import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'package:health_wallet/health_wallet.dart' hide HealthRecord, LabResult, VitalSign, VitalSignSchema, MedicationEntry, MedicalDocument, MedicalEvent;
 
@@ -36,6 +38,8 @@ abstract class DatabaseModule {
         MedicationEntrySchema,
         MedicalDocumentSchema,
         MedicalEventSchema,
+        IsarDidSchema,
+        IsarCredentialSchema,
       ],
       directory: dir.path,
     );

@@ -1,13 +1,42 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/credential_schema.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/verifiable_credential.dart';
+import 'package:orionhealth_health/features/ssi/domain/repositories/ssi_repository.dart';
+import 'package:orionhealth_health/features/ssi/domain/entities/did.dart';
 import 'package:orionhealth_health/features/ssi/infrastructure/services/ssi_service_impl.dart';
+
+class MockSsiRepository extends Mock implements SsiRepository {}
 
 void main() {
   late SsiServiceImpl service;
+  late MockSsiRepository mockRepository;
 
   setUp(() {
-    service = SsiServiceImpl();
+    mockRepository = MockSsiRepository();
+    service = SsiServiceImpl(mockRepository);
+
+    // Default mock behaviors
+    when(() => mockRepository.getDids()).thenAnswer((_) async => []);
+    when(() => mockRepository.saveDid(any(), any())).thenAnswer((_) async {});
+    when(() => mockRepository.saveCredential(any())).thenAnswer((_) async {});
+  });
+
+  setUpAll(() {
+    registerFallbackValue(Did(
+      did: 'did:test',
+      longForm: 'did:test:long',
+      createdAt: DateTime.now(),
+    ));
+    registerFallbackValue(VerifiableCredential(
+      id: 'vc:test',
+      issuer: 'did:issuer',
+      subject: 'did:subject',
+      type: 'Test',
+      schemaId: 'schema',
+      claims: {},
+      issuanceDate: DateTime.now(),
+    ));
   });
 
   group('SsiServiceImpl', () {
@@ -20,6 +49,8 @@ void main() {
         expect(did.keyType, 'Ed25519');
         expect(did.isAnchored, false);
         expect(did.createdAt, isA<DateTime>());
+
+        verify(() => mockRepository.saveDid(did, any())).called(1);
       });
 
       test('generates unique DIDs on each call', () async {
@@ -38,15 +69,25 @@ void main() {
 
     group('resolveDid', () {
       test('resolves locally created DID', () async {
-        final did = await service.createDid();
+        final did = Did(
+          did: 'did:orion:123',
+          longForm: 'did:orion:123;initial-state=abc',
+          createdAt: DateTime.now(),
+        );
+        final didDoc = {'id': did.did, 'verificationMethod': []};
+
+        when(() => mockRepository.getDidDocument(did.did)).thenAnswer((_) async => didDoc);
+
         final doc = await service.resolveDid(did.did);
 
         expect(doc, isNotNull);
         expect(doc!['id'], did.did);
-        expect(doc['verificationMethod'], isA<List>());
       });
 
       test('returns null for unknown DID', () async {
+        when(() => mockRepository.getDidDocument(any())).thenAnswer((_) async => null);
+        when(() => mockRepository.getDids()).thenAnswer((_) async => []);
+
         final doc = await service.resolveDid('did:orion:unknown');
         expect(doc, isNull);
       });
@@ -55,6 +96,8 @@ void main() {
     group('issueCredential', () {
       test('issues a VerifiableCredential with proof', () async {
         final did = await service.createDid();
+        when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+
         final vc = await service.issueCredential(
           schemaId: 'orion:schemas:VaccinationCredential:v1',
           subjectDid: did.activeDid,
@@ -71,10 +114,14 @@ void main() {
         expect(vc.claims['vaccineName'], 'COVID-19 mRNA');
         expect(vc.proof, isNotNull);
         expect(vc.isValid, true);
+
+        verify(() => mockRepository.saveCredential(vc)).called(1);
       });
 
       test('issued credential is verifiable', () async {
         final did = await service.createDid();
+        when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+
         final vc = await service.issueCredential(
           schemaId: 'orion:schemas:PrescriptionCredential:v1',
           subjectDid: did.activeDid,
@@ -87,6 +134,8 @@ void main() {
 
       test('does not verify tampered credential', () async {
         final did = await service.createDid();
+        when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+
         final vc = await service.issueCredential(
           schemaId: 'orion:schemas:LabResultCredential:v1',
           subjectDid: did.activeDid,
@@ -113,6 +162,8 @@ void main() {
     group('selective disclosure', () {
       test('creates presentation with only specified fields', () async {
         final did = await service.createDid();
+        when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+
         final vc = await service.issueCredential(
           schemaId: 'orion:schemas:VaccinationCredential:v1',
           subjectDid: did.activeDid,
@@ -140,21 +191,13 @@ void main() {
 
     group('revokeCredential', () {
       test('removes credential from store', () async {
-        final did = await service.createDid();
-        final vc = await service.issueCredential(
-          schemaId: 'orion:schemas:VaccinationCredential:v1',
-          subjectDid: did.activeDid,
-          claims: {'vaccineName': 'Flu'},
-        );
+        when(() => mockRepository.deleteCredential(any())).thenAnswer((_) async {});
 
-        await service.revokeCredential(vc.id);
+        await service.revokeCredential('vc:123');
 
-        // Verification should fail for revoked credential
-        // (in production, this would check a revocation registry)
+        verify(() => mockRepository.deleteCredential('vc:123')).called(1);
       });
     });
-  });
-
   group('VerifiableCredential', () {
     test('isValid returns true for non-expired, non-revoked credential', () {
       final vc = VerifiableCredential(
@@ -223,5 +266,6 @@ void main() {
       expect(CredentialSchema.prescriptionCredential.attributes, contains('medicationName'));
       expect(CredentialSchema.prescriptionCredential.attributes, contains('dosage'));
     });
+  });
   });
 }
