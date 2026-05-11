@@ -22,6 +22,10 @@ class BleSharingService {
 
   bool _isInitialized = false;
   String? _connectedDeviceId;
+  BluetoothDevice? _connectedDevice;
+  BluetoothCharacteristic? _txChar;
+  BluetoothCharacteristic? _rxChar;
+  final Map<String, BluetoothDevice> _discoveredDevices = {};
   SecretKey? _sessionKey;
   final AesGcm _aesGcm = AesGcm.with256bits();
   StreamSubscription<List<ScanResult>>? _scanSubscription;
@@ -44,8 +48,9 @@ class BleSharingService {
     Duration timeout = const Duration(seconds: 15),
   }) async {
     if (!_isInitialized) await initialize();
-    
+
     final results = <BleDevice>[];
+    _discoveredDevices.clear();
     _stateController.add(BleServiceState.scanning());
 
     // Start scanning
@@ -63,6 +68,7 @@ class BleSharingService {
     final completer = Completer<void>();
     _scanSubscription = FlutterBluePlus.scanResults.listen((scanResults) {
       for (final r in scanResults) {
+        _discoveredDevices[r.device.remoteId.str] = r.device;
         final deviceType = _detectDeviceType(r.advertisementData.serviceUuids);
         results.add(BleDevice(
           id: r.device.remoteId.str,
@@ -94,20 +100,58 @@ class BleSharingService {
   Future<bool> connect(String deviceId) async {
     _stateController.add(BleServiceState.connecting(deviceId));
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      // Verify Bluetooth is on
+      final state = await FlutterBluePlus.adapterState.first;
+      if (state != BluetoothAdapterState.on) {
+        throw Exception('Bluetooth is turned off');
+      }
+
+      final device = _discoveredDevices[deviceId];
+      if (device == null) {
+        throw Exception('Device not found in scan results');
+      }
+
+      // ignore: undefined_named_parameter
+      await (device as dynamic).connect(autoConnect: false);
+      _connectedDevice = device;
       _connectedDeviceId = deviceId;
+
+      final services = await device.discoverServices();
+      for (final service in services) {
+        if (service.uuid.toString().toLowerCase() == serviceUuid.toLowerCase()) {
+          for (final char in service.characteristics) {
+            if (char.uuid.toString().toLowerCase() == txCharacteristic.toLowerCase()) {
+              _txChar = char;
+            } else if (char.uuid.toString().toLowerCase() == rxCharacteristic.toLowerCase()) {
+              _rxChar = char;
+            }
+          }
+        }
+      }
+
+      if (_txChar == null || _rxChar == null) {
+        throw Exception('OrionHealth GATT characteristics not found');
+      }
+
       _sessionKey = _generateSessionKey();
       _stateController.add(BleServiceState.connected(deviceId));
       return true;
     } catch (e) {
+      await disconnect();
       _stateController.add(BleServiceState.error('Failed to connect: $e'));
       return false;
     }
   }
 
   Future<void> disconnect() async {
-    if (_connectedDeviceId == null) return;
+    try {
+      await _connectedDevice?.disconnect();
+    } catch (_) {}
+
+    _connectedDevice = null;
     _connectedDeviceId = null;
+    _txChar = null;
+    _rxChar = null;
     _sessionKey = null;
     _stateController.add(BleServiceState.ready());
   }
@@ -135,11 +179,9 @@ class BleSharingService {
       for (int i = 0; i < bytes.length; i += chunkSize) {
         final end = i + chunkSize > bytes.length ? bytes.length : i + chunkSize;
         final chunk = bytes.sublist(i, end);
-        // TODO: Write chunk to BLE GATT characteristic when flutter_blue_plus
-        // connection is fully implemented.
-        // ignore: unused_local_variable
-        final _ = chunk;
-        await Future.delayed(const Duration(milliseconds: 50));
+
+        await _txChar!.write(chunk, withoutResponse: false);
+        await Future.delayed(const Duration(milliseconds: 20)); // Flow control
       }
 
       final transferTime = DateTime.now().difference(startTime);
