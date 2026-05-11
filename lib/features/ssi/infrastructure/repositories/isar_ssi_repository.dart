@@ -4,8 +4,10 @@ import 'package:isar/isar.dart';
 import '../../domain/entities/did.dart';
 import '../../domain/entities/verifiable_credential.dart';
 import '../../domain/repositories/ssi_repository.dart';
+import '../../domain/entities/revocation_entry.dart';
 import '../persistence/isar_credential.dart';
 import '../persistence/isar_did.dart';
+import '../persistence/isar_revocation_entry.dart';
 
 @LazySingleton(as: SsiRepository)
 class IsarSsiRepository implements SsiRepository {
@@ -108,5 +110,38 @@ class IsarSsiRepository implements SsiRepository {
     await _isar.writeTxn(() async {
       await _isar.isarCredentials.filter().credentialIdEqualTo(credentialId).deleteAll();
     });
+  }
+
+  @override
+  Future<void> saveRevocationEntry(RevocationEntry entry) async {
+    await _isar.writeTxn(() async {
+      final isarEntry = IsarRevocationEntry()
+        ..credentialId = entry.credentialId
+        ..issuerPublicKey = entry.issuerPublicKey
+        ..credentialIndex = entry.credentialIndex
+        ..revokedAt = entry.revokedAt
+        ..issuerSignature = entry.issuerSignature;
+
+      await _isar.isarRevocationEntrys.put(isarEntry);
+    });
+  }
+
+  @override
+  Future<RevocationEntry?> getRevocationEntry(String issuerPublicKey, int credentialIndex) async {
+    final isarEntry = await _isar.isarRevocationEntrys
+        .filter()
+        .issuerPublicKeyEqualTo(issuerPublicKey)
+        .credentialIndexEqualTo(credentialIndex)
+        .findFirst();
+
+    if (isarEntry == null) return null;
+
+    return RevocationEntry(
+      credentialId: isarEntry.credentialId,
+      credentialIndex: isarEntry.credentialIndex,
+      issuerPublicKey: isarEntry.issuerPublicKey,
+      revokedAt: isarEntry.revokedAt,
+      issuerSignature: isarEntry.issuerSignature,
+    );
   }
 }

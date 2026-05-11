@@ -5,7 +5,9 @@ import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../domain/entities/revocation_entry.dart';
 import '../../domain/entities/verifiable_credential.dart';
+import '../../domain/repositories/ssi_repository.dart';
 import '../../domain/services/anoncreds_service.dart';
 
 /// AnonCreds PoC implementation using Ed25519 + SHA256 commitments.
@@ -27,8 +29,9 @@ import '../../domain/services/anoncreds_service.dart';
 @LazySingleton(as: AnonCredsService)
 class AnonCredsServiceImpl implements AnonCredsService {
   final Ed25519 _ed25519 = Ed25519();
-  final Map<String, Set<int>> _revocationRegistry = {};
-  int _credentialCounter = 0;
+  final SsiRepository _repository;
+
+  AnonCredsServiceImpl(this._repository);
 
   @override
   Future<AnonCredsKeyPair> generateIssuerKeys() async {
@@ -59,7 +62,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
     final signature = await _ed25519.sign(message, keyPair: keyPair);
 
     // Add index for revocation tracking
-    _credentialCounter++;
+    final credentialIndex = await _getNextIndex(issuerKeys.publicKey);
 
     final updatedCredential = VerifiableCredential(
       id: credential.id,
@@ -74,12 +77,30 @@ class AnonCredsServiceImpl implements AnonCredsService {
         'type': 'Ed25519Signature2020',
         'signatureValue': base64Url.encode(signature.bytes),
         'issuerKey': issuerKeys.publicKey,
-        'credentialIndex': _credentialCounter,
+        'credentialIndex': credentialIndex,
         'created': DateTime.now().toIso8601String(),
       }),
     );
 
     return updatedCredential;
+  }
+
+  /// Get the next available index for a given issuer.
+  Future<int> _getNextIndex(String issuerPublicKey) async {
+    final credentials = await _repository.getCredentials();
+    int maxIndex = 0;
+
+    for (final vc in credentials) {
+      final proof = _parseProof(vc.proof);
+      if (proof != null && proof['issuerKey'] == issuerPublicKey) {
+        final index = proof['credentialIndex'] as int?;
+        if (index != null && index > maxIndex) {
+          maxIndex = index;
+        }
+      }
+    }
+
+    return maxIndex + 1;
   }
 
   @override
@@ -163,10 +184,31 @@ class AnonCredsServiceImpl implements AnonCredsService {
 
     // Check non-revocation
     final credentialIndex = proof['credentialIndex'] as int?;
-    if (credentialIndex != null) {
-      final revoked = _revocationRegistry[issuerKeyB64];
-      if (revoked != null && revoked.contains(credentialIndex)) {
-        return false; // Credential is revoked
+    if (credentialIndex != null && issuerKeyB64 != null) {
+      final revocationEntry = await _repository.getRevocationEntry(
+        issuerKeyB64,
+        credentialIndex,
+      );
+
+      if (revocationEntry != null) {
+        // Verify revocation signature
+        final dataToVerify = '${revocationEntry.issuerPublicKey}:${revocationEntry.credentialIndex}:${revocationEntry.revokedAt.toIso8601String()}';
+        final publicKey = SimplePublicKey(
+          base64Url.decode(revocationEntry.issuerPublicKey),
+          type: KeyPairType.ed25519,
+        );
+
+        final isSignatureValid = await _ed25519.verify(
+          utf8.encode(dataToVerify),
+          signature: Signature(
+            base64Url.decode(revocationEntry.issuerSignature),
+            publicKey: publicKey,
+          ),
+        );
+
+        if (isSignatureValid) {
+          return false; // Credential is validly revoked
+        }
       }
     }
 
@@ -176,8 +218,35 @@ class AnonCredsServiceImpl implements AnonCredsService {
   @override
   Future<void> revokeCredential(
       String credentialId, AnonCredsKeyPair issuerKeys) async {
-    // In production: add to accumulator-based revocation registry
-    _revocationRegistry.putIfAbsent(issuerKeys.publicKey, () => <int>{});
+    final credential = await _repository.getCredentialById(credentialId);
+    if (credential == null) return;
+
+    final proof = _parseProof(credential.proof);
+    final credentialIndex = proof?['credentialIndex'] as int?;
+    if (credentialIndex == null) return;
+
+    final revokedAt = DateTime.now();
+    final dataToSign = '${issuerKeys.publicKey}:$credentialIndex:${revokedAt.toIso8601String()}';
+
+    final keyPair = _reconstructKeyPair(
+      issuerKeys.publicKey,
+      issuerKeys.privateKey,
+    );
+
+    final signature = await _ed25519.sign(
+      utf8.encode(dataToSign),
+      keyPair: keyPair,
+    );
+
+    final entry = RevocationEntry(
+      credentialId: credentialId,
+      credentialIndex: credentialIndex,
+      issuerPublicKey: issuerKeys.publicKey,
+      revokedAt: revokedAt,
+      issuerSignature: base64Url.encode(signature.bytes),
+    );
+
+    await _repository.saveRevocationEntry(entry);
   }
 
   @override
