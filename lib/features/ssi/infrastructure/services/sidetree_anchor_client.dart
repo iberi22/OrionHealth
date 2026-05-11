@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
+import 'package:pointycastle/export.dart';
 
 /// ION Sidetree Anchor Client — registers DIDs on the ION network.
 ///
@@ -24,7 +26,7 @@ import 'package:injectable/injectable.dart';
 /// Current implementation:
 ///   - DID resolution via public ION node (FULLY FUNCTIONAL)
 ///   - DID creation skeleton (needs secp256k1 keys)
-///   - Uses Ed25519 as placeholder (ION requires secp256k1)
+///   - Uses secp256k1 for key generation (ION REQUIREMENT)
 ///
 /// Reference: https://identity.foundation/sidetree/spec/
 @lazySingleton
@@ -93,9 +95,9 @@ class SidetreeAnchorClient {
     required List<Map<String, dynamic>> publicKeys,
     List<Map<String, dynamic>> services = const [],
   }) async {
-    // Generate placeholder keys (Ed25519 — ION needs secp256k1, see TODO)
-    final recoveryKey = await _generatePlaceholderKey();
-    final updateKey = await _generatePlaceholderKey();
+    // Generate real secp256k1 keys for ION
+    final recoveryKey = await generateKeyPair();
+    final updateKey = await generateKeyPair();
 
     // Build the DID Document patches
     final patches = <Map<String, dynamic>>[
@@ -123,8 +125,8 @@ class SidetreeAnchorClient {
     // Create the Sidetree Create operation
     final operation = {
       'type': 'create',
-      'suffixData': base64Url.encode(suffixData),
-      'delta': base64Url.encode(delta),
+      'suffixData': base64Url.encode(suffixData).replaceAll('=', ''),
+      'delta': base64Url.encode(delta).replaceAll('=', ''),
     };
 
     // Submit to ION node
@@ -156,35 +158,63 @@ class SidetreeAnchorClient {
 
   /// Generate a key pair for ION operations.
   ///
-  /// NOTE: This currently generates Ed25519 keys. ION REQUIRES secp256k1
-  /// keys (Bitcoin's curve). To fix:
-  ///   1. Add `pointycastle` or `secp256k1` Dart package
-  ///   2. Generate a secp256k1 keypair
-  ///   3. Encode public key in JWK format with "kty": "EC", "crv": "secp256k1"
+  /// Generates a secp256k1 key pair (Bitcoin's curve) and returns it
+  /// in JWK format for the public key and hex format for the private key.
   Future<Map<String, dynamic>> generateKeyPair() async {
-    return _generatePlaceholderKey();
-  }
+    final domainParams = ECDomainParameters('secp256k1');
+    final keyGen = ECKeyGenerator();
 
-  Future<Map<String, dynamic>> _generatePlaceholderKey() async {
     final random = Random.secure();
-    final privateBytes = List<int>.generate(32, (_) => random.nextInt(256));
+    final seed = Uint8List.fromList(List.generate(32, (_) => random.nextInt(256)));
 
-    // Ed25519 public key generation (simplified)
-    final hash = sha256.convert(privateBytes);
-    final publicKeyBytes = base64Url.encode(hash.bytes).substring(0, 43);
+    keyGen.init(ParametersWithRandom(
+      ECKeyGeneratorParameters(domainParams),
+      FortunaRandom()..seed(KeyParameter(seed)),
+    ));
+
+    final pair = keyGen.generateKeyPair();
+    final publicKey = pair.publicKey;
+    final privateKey = pair.privateKey;
+
+    final xBigInt = publicKey.Q!.x!.toBigInteger()!;
+    final yBigInt = publicKey.Q!.y!.toBigInteger()!;
+    final d = privateKey.d!;
+
+    final xBytes = _bigIntToUint8List(xBigInt);
+    final yBytes = _bigIntToUint8List(yBigInt);
+    final privateKeyHex = d.toRadixString(16).padLeft(64, '0');
 
     return {
       'type': 'JsonWebKey2020',
       'id': '#key-${random.nextInt(999999)}',
       'publicKeyJwk': {
-        // TODO: Change to secp256k1:
-        // "kty": "EC", "crv": "secp256k1", "x": "...", "y": "..."
-        'kty': 'OKP',
-        'crv': 'Ed25519',
-        'x': publicKeyBytes,
+        'kty': 'EC',
+        'crv': 'secp256k1',
+        'x': base64Url.encode(xBytes).replaceAll('=', ''),
+        'y': base64Url.encode(yBytes).replaceAll('=', ''),
       },
-      'privateKeyHex': privateBytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(),
+      'privateKeyHex': privateKeyHex,
     };
+  }
+
+  Uint8List _bigIntToUint8List(BigInt bi) {
+    var hex = bi.toRadixString(16);
+    if (hex.length % 2 != 0) {
+      hex = '0$hex';
+    }
+    // Ensure 32 bytes for secp256k1 coordinates
+    while (hex.length < 64) {
+      hex = '00$hex';
+    }
+    if (hex.length > 64) {
+      hex = hex.substring(hex.length - 64);
+    }
+
+    final result = Uint8List(32);
+    for (var i = 0; i < 32; i++) {
+      result[i] = int.parse(hex.substring(i * 2, i * 2 + 2), radix: 16);
+    }
+    return result;
   }
 
   String _hashPublicKey(Map<String, dynamic> jwk) {
