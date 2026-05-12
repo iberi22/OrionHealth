@@ -2,14 +2,10 @@ import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import '../domain/entities/api_audit_log.dart';
-import '../../features/user_profile/domain/entities/user_profile.dart';
-import '../../features/local_agent/domain/chat_message.dart';
-import '../../features/health_record/domain/entities/medical_record.dart';
-import '../../features/reports/domain/entities/report.dart';
-import '../../features/medications/domain/entities/medication.dart';
-import '../../features/vitals/domain/entities/vital_sign.dart';
-import '../../features/appointments/domain/entities/appointment.dart';
-import '../../features/allergies/domain/entities/allergy.dart';
+import '../../features/user_profile/infrastructure/persistence/isar_user_profile.dart';
+import '../../features/local_agent/infrastructure/persistence/isar_chat_message.dart';
+import '../../features/health_record/infrastructure/persistence/isar_medical_record.dart';
+import '../../features/reports/infrastructure/persistence/isar_report.dart';
 import '../../features/ssi/infrastructure/persistence/isar_did.dart';
 import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
 import '../../features/ssi/infrastructure/persistence/isar_revocation_entry.dart';
@@ -23,25 +19,22 @@ abstract class DatabaseModule {
     final dir = await getApplicationDocumentsDirectory();
     return Isar.open(
       [
-        UserProfileSchema,
+        IsarUserProfileSchema,
         ApiAuditLogSchema,
-        ChatMessageSchema,
-        MedicalRecordSchema,
+        IsarChatMessageSchema,
+        IsarMedicalRecordSchema,
         MemoryNodeSchema,
         MemoryEdgeSchema,
-        ReportSchema,
-        MedicationSchema,
-        AppointmentSchema,
-        AllergySchema,
+        IsarReportSchema,
+        IsarDidSchema,
+        IsarCredentialSchema,
+        IsarRevocationEntrySchema,
         HealthRecordSchema,
         LabResultSchema,
         VitalSignSchema,
         MedicationEntrySchema,
         MedicalDocumentSchema,
         MedicalEventSchema,
-        IsarDidSchema,
-        IsarCredentialSchema,
-        IsarRevocationEntrySchema,
       ],
       directory: dir.path,
     );
