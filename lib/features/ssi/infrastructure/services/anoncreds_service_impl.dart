@@ -20,8 +20,17 @@ import '../../domain/services/anoncreds_service.dart';
 ///
 /// Gap from real AnonCreds:
 /// - No CL-signatures (Camenisch-Lysyanskaya) — currently using EdDSA
-/// - No true zero-knowledge proofs — hash commitments are not ZKP
+/// - No true zero-knowledge proofs — hash commitments are NOT ZKP
 /// - No link secrets for holder binding (placeholder)
+///
+/// ⚠️ SECURITY WARNING — SHA256 commitments are NOT Zero-Knowledge:
+/// The `_hashValue()` method produces SHA256(claimValue) commitments.
+/// A malicious verifier CAN brute-force hidden claims by hashing known
+/// values (vaccine names, lab codes, drug names) and comparing against
+/// commitments. This is a COMMITMENT scheme, not a Zero-Knowledge Proof.
+/// Production requires aries-askar Rust FFI with CL-signatures for real
+/// predicate proofs that reveal NOTHING beyond what the holder chooses.
+/// See: https://anoncreds-wg.github.io/anoncreds-spec/
 ///
 /// References:
 /// - aries-askar: https://github.com/hyperledger/aries-askar
@@ -267,21 +276,31 @@ class AnonCredsServiceImpl implements AnonCredsService {
 
   /// Serialize credential claims to canonical bytes for signing.
   Uint8List _credentialToCanonicalBytes(VerifiableCredential credential) {
-    final entries = credential.claims.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
-
-    final canonical =
-        entries.map((e) => '${e.key}=${e.value}').join('|');
-
-    final fullMessage =
-        '${credential.id}|${credential.issuer}|${credential.type}|${credential.schemaId}|'
-        '${credential.issuanceDate.toIso8601String()}|'
-        '${credential.expirationDate?.toIso8601String()}|$canonical';
-
-    return Uint8List.fromList(utf8.encode(fullMessage));
+    // TODO: version the canonicalization format for backward compatibility with existing credentials
+    // Switched from pipe-separated concatenation to JSON canonicalization to
+    // prevent collision attacks where claim values containing '|' could produce
+    // identical canonical strings for different claim sets.
+    final sortedClaims = Map.fromEntries(
+      credential.claims.entries.toList()
+        ..sort((a, b) => a.key.compareTo(b.key)),
+    );
+    final canonical = jsonEncode({
+      'id': credential.id,
+      'issuer': credential.issuer,
+      'type': credential.type,
+      'schemaId': credential.schemaId,
+      'issuanceDate': credential.issuanceDate.toIso8601String(),
+      'expirationDate': credential.expirationDate?.toIso8601String(),
+      'claims': sortedClaims,
+    });
+    return Uint8List.fromList(utf8.encode(canonical));
   }
 
   /// SHA256 hash commitment for selective disclosure.
+  ///
+  /// ⚠️ NOT ZERO-KNOWLEDGE: Commitments are reversible via brute-force
+  /// on low-entropy values (vaccine names, lab codes, drug names).
+  /// Production: replace with aries-askar CL-signature predicate proofs.
   String _hashValue(String value) {
     return sha256.convert(utf8.encode(value)).toString();
   }

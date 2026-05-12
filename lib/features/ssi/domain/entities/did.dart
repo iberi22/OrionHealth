@@ -26,6 +26,10 @@ class Did {
   /// Key type used for this DID (e.g., secp256k1, Ed25519)
   final String keyType;
 
+  /// The ION-anchored DID (e.g., did:ion:EiD3...), null if not anchored.
+  /// Used to map between local and ION DIDs for cross-resolution.
+  final String? ionDid;
+
   const Did({
     required this.did,
     this.shortForm,
@@ -33,6 +37,7 @@ class Did {
     required this.createdAt,
     this.isAnchored = false,
     this.keyType = 'Ed25519',
+    this.ionDid,
   });
 
   /// The active DID string to use in operations.
@@ -49,6 +54,7 @@ class Did {
         'createdAt': createdAt.toIso8601String(),
         'isAnchored': isAnchored,
         'keyType': keyType,
+        'ionDid': ionDid,
       };
 
   factory Did.fromJson(Map<String, dynamic> json) => Did(
@@ -58,8 +64,9 @@ class Did {
         createdAt: DateTime.parse(json['createdAt'] as String),
         isAnchored: json['isAnchored'] as bool? ?? false,
         keyType: json['keyType'] as String? ?? 'Ed25519',
+        ionDid: json['ionDid'] as String?,
       );
 
   @override
-  String toString() => 'Did($activeDid, anchored: $isAnchored)';
+  String toString() => 'Did($activeDid, anchored: $isAnchored, ionDid: $ionDid)';
 }

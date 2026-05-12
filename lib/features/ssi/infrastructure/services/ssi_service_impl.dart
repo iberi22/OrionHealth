@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:injectable/injectable.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart';
+import 'package:pointycastle/export.dart' hide Signature;
 import '../../domain/entities/did.dart';
 import '../../domain/entities/verifiable_credential.dart';
 import '../../domain/repositories/ssi_repository.dart';
 import '../../domain/services/ssi_service.dart';
+import 'crypto_helpers.dart';
 import 'sidetree_anchor_client.dart';
 
 /// Basic SSI Service implementation.
@@ -86,6 +89,10 @@ class SsiServiceImpl implements SsiService {
 
   /// Anchor a locally-created DID to the ION Sidetree network.
   ///
+  /// Derives a secp256k1 key deterministically from the DID's seed
+  /// (extracted from [Did.longForm]) so the ION key is mathematically
+  /// bound to the original local `did:orion:*` identifier.
+  ///
   /// Submits a Create operation to the configured ION node.
   /// The DID becomes globally resolvable once the batch is anchored
   /// to Bitcoin (typically 10-20 minutes).
@@ -96,22 +103,29 @@ class SsiServiceImpl implements SsiService {
       throw StateError('SidetreeAnchorClient not configured');
     }
 
-    final keys = await _anchorClient.generateKeyPair();
+    // Extract the seed from the long-form DID and derive a
+    // deterministic secp256k1 keypair — this binds the ION key
+    // to the original local DID instead of creating an orphan.
+    final seed = _extractSeed(did.longForm);
+    final ionKeys = await _deriveSecp256k1FromSeed(seed);
 
     final result = await _anchorClient.createDid(
       publicKeys: [
         {
           'id': '${did.did}#keys-1',
-          'type': keys['type'],
-          'publicKeyJwk': keys['publicKeyJwk'],
+          'type': ionKeys['type'],
+          'publicKeyJwk': ionKeys['publicKeyJwk'],
           'purposes': ['authentication', 'assertionMethod'],
         },
       ],
     );
 
+    // Keep the original local DID as the primary identifier;
+    // store the ION DID as shortForm / ionDid for cross-resolution.
     final anchoredDid = Did(
-      did: result.did,
+      did: did.did,
       shortForm: result.did,
+      ionDid: result.did,
       longForm: did.longForm,
       createdAt: did.createdAt,
       isAnchored: true,
@@ -147,11 +161,12 @@ class SsiServiceImpl implements SsiService {
       claims: claims,
       issuanceDate: issuanceDate,
       expirationDate: expirationDate,
-      proof: await _generateProof(
-        credentialId,
-        claims,
-        ourDid.activeDid,
-        _extractSeed(ourDid.longForm),
+      proof: await CryptoHelpers.generateProof(
+        credentialId: credentialId,
+        claims: claims,
+        issuer: ourDid.activeDid,
+        keyPair: await Ed25519()
+            .newKeyPairFromSeed(base64Url.decode(_extractSeed(ourDid.longForm))),
         schemaId: schemaId,
         issuanceDate: issuanceDate,
         expirationDate: expirationDate,
@@ -187,10 +202,10 @@ class SsiServiceImpl implements SsiService {
         type: KeyPairType.ed25519,
       );
 
-      final data = _canonicalizeClaims(
-        credential.id,
-        credential.claims,
-        credential.issuer,
+      final data = CryptoHelpers.canonicalizeClaims(
+        credentialId: credential.id,
+        claims: credential.claims,
+        issuer: credential.issuer,
         schemaId: credential.schemaId,
         issuanceDate: credential.issuanceDate,
         expirationDate: credential.expirationDate,
@@ -228,11 +243,12 @@ class SsiServiceImpl implements SsiService {
       'schema': credential.schemaId,
       'issuer': credential.issuer,
       'disclosed': disclosed,
-      'proof': await _generateProof(
-        credential.id,
-        disclosed,
-        holderDid.activeDid,
-        _extractSeed(holderDid.longForm),
+      'proof': await CryptoHelpers.generateProof(
+        credentialId: credential.id,
+        claims: disclosed,
+        issuer: holderDid.activeDid,
+        keyPair: await Ed25519()
+            .newKeyPairFromSeed(base64Url.decode(_extractSeed(holderDid.longForm))),
         schemaId: credential.schemaId,
         issuanceDate: credential.issuanceDate,
         expirationDate: credential.expirationDate,
@@ -308,45 +324,70 @@ class SsiServiceImpl implements SsiService {
     return parts[1];
   }
 
-  Future<String> _generateProof(
-    String credentialId,
-    Map<String, dynamic> claims,
-    String issuer,
-    String seed, {
-    String? schemaId,
-    DateTime? issuanceDate,
-    DateTime? expirationDate,
-  }) async {
-    final keyPair = await Ed25519().newKeyPairFromSeed(base64Url.decode(seed));
-    final data = _canonicalizeClaims(
-      credentialId,
-      claims,
-      issuer,
-      schemaId: schemaId,
-      issuanceDate: issuanceDate,
-      expirationDate: expirationDate,
-    );
-    final signature = await Ed25519().sign(utf8.encode(data), keyPair: keyPair);
-    return base64Url.encode(signature.bytes);
+  /// Derive a deterministic secp256k1 keypair from the DID's seed bytes.
+  ///
+  /// The seed (32 bytes from the long-form DID's initial-state) is
+  /// SHA-256 hashed to produce a deterministic Fortuna seed, ensuring the
+  /// same local `did:orion:*` always maps to the same secp256k1 key on ION.
+  /// This prevents the orphan-DID bug where a random keypair was generated
+  /// with no mathematical binding to the original DID.
+  Future<Map<String, dynamic>> _deriveSecp256k1FromSeed(String seed) async {
+    final seedBytes = base64Url.decode(seed);
+
+    // Hash the seed to produce a uniform 32-byte RNG seed
+    final hashedSeed = sha256.convert(seedBytes);
+    final rngSeed = Uint8List.fromList(hashedSeed.bytes);
+
+    final domainParams = ECDomainParameters('secp256k1');
+    final keyGen = ECKeyGenerator();
+    final rng = FortunaRandom()..seed(KeyParameter(rngSeed));
+
+    keyGen.init(ParametersWithRandom(
+      ECKeyGeneratorParameters(domainParams),
+      rng,
+    ));
+
+    final pair = keyGen.generateKeyPair();
+    final publicKey = pair.publicKey;
+    final privateKey = pair.privateKey;
+
+    final xBigInt = publicKey.Q!.x!.toBigInteger()!;
+    final yBigInt = publicKey.Q!.y!.toBigInteger()!;
+    final d = privateKey.d!;
+
+    final xBytes = _bigIntTo32Bytes(xBigInt);
+    final yBytes = _bigIntTo32Bytes(yBigInt);
+    final privateKeyHex = d.toRadixString(16).padLeft(64, '0');
+
+    return {
+      'type': 'JsonWebKey2020',
+      'id': '#key-1',
+      'publicKeyJwk': {
+        'kty': 'EC',
+        'crv': 'secp256k1',
+        'x': base64Url.encode(xBytes).split('=').first,
+        'y': base64Url.encode(yBytes).split('=').first,
+      },
+      'privateKeyHex': privateKeyHex,
+    };
   }
 
-  String _canonicalizeClaims(
-    String credentialId,
-    Map<String, dynamic> claims,
-    String issuer, {
-    String? schemaId,
-    DateTime? issuanceDate,
-    DateTime? expirationDate,
-  }) {
-    // Hash claim keys AND values for integrity — prevents tampering
-    final sortedEntries = claims.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
-    final claimParts = sortedEntries
-        .map((e) => '${e.key}=${jsonEncode(e.value)}')
-        .join('|');
-
-    return '$credentialId|$claimParts|$issuer|$schemaId|'
-        '${issuanceDate?.toIso8601String()}|'
-        '${expirationDate?.toIso8601String()}';
+  /// Convert a BigInt to a 32-byte Uint8List (secp256k1 coordinate size).
+  Uint8List _bigIntTo32Bytes(BigInt bi) {
+    var hex = bi.toRadixString(16);
+    // Pad to exactly 64 hex chars (32 bytes)
+    while (hex.length < 64) {
+      hex = '00$hex';
+    }
+    if (hex.length > 64) {
+      hex = hex.substring(hex.length - 64);
+    }
+    final result = Uint8List(32);
+    for (var i = 0; i < 32; i++) {
+      result[i] = int.parse(hex.substring(i * 2, i * 2 + 2), radix: 16);
+    }
+    return result;
   }
+
+
 }
