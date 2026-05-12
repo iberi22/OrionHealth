@@ -73,6 +73,13 @@ assets/models/*.pt
 *.so
 *.dylib
 
+# Isar native binary (generated at build time)
+isar.dll
+
+# IDE
+.idea/
+.vscode/
+
 # Medical data generation outputs
 medical-standards/*.json
 medical-standards/*.csv
@@ -91,3 +98,7 @@ venv/
 
 # Golden test failure artifacts (local only)
 test/widgets/failures/
+
+# Debug/temp investigation scripts (not for public repo)
+investigate_tests.js
+resolve_pr112.js

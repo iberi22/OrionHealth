@@ -80,17 +80,18 @@ By using OrionHealth today, you're not just organizing your health data—**you'
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/01_main_navigation.png" alt="Main Navigation" width="200"/>
-  <img src="assets/screenshots/02_profile_page.png" alt="User Profile" width="200"/>
-  <img src="assets/screenshots/03_records_page.png" alt="Medical Records" width="200"/>
-  <img src="assets/screenshots/04_ai_assistant_page.png" alt="AI Assistant" width="200"/>
-  <img src="assets/screenshots/05_reports_page.png" alt="Reports" width="200"/>
-  <img src="assets/screenshots/06_upload_buttons.png" alt="Upload" width="200"/>
-  <img src="assets/screenshots/07_profile_form.png" alt="Profile Form" width="200"/>
-  <img src="assets/screenshots/08_chat_interface.png" alt="Chat Interface" width="200"/>
+  <img src="assets/screenshots/01_main_navigation.png" alt="Profile with Health Data" width="200"/>
+  <img src="assets/screenshots/02_profile_page.png" alt="Full User Profile" width="200"/>
+  <img src="assets/screenshots/03_records_page.png" alt="Medical Records List" width="200"/>
+  <img src="assets/screenshots/04_ai_assistant_page.png" alt="AI Health Assistant Chat" width="200"/>
+  <img src="assets/screenshots/05_reports_page.png" alt="Health Dashboard" width="200"/>
+  <img src="assets/screenshots/06_upload_buttons.png" alt="Upload Documents" width="200"/>
+  <img src="assets/screenshots/07_profile_form.png" alt="Edit Profile Form" width="200"/>
+  <img src="assets/screenshots/08_chat_interface.png" alt="Chat with AI Assistant" width="200"/>
+  <img src="assets/screenshots/09_reports_list.png" alt="Health Reports" width="200"/>
 </p>
 
-> 📸 Auto-generated via `flutter test integration_test/app_test.dart -d windows --update-goldens`
+> 📸 Screenshots realistas generadas con `flutter test integration_test/app_test.dart -d windows --update-goldens`
 
 ---
 
