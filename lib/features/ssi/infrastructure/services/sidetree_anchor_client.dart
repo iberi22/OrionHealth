@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -43,6 +44,38 @@ class SidetreeAnchorClient {
   })  : _ionNodeUrl = ionNodeUrl ?? defaultIonNode,
         _httpClient = httpClient ?? http.Client();
 
+  // ─── Retry Logic ────────────────────────────────────────────────
+
+  /// Executes [operation] with exponential backoff on transient
+  /// network errors (SocketException, TimeoutException,
+  /// http.ClientException). Does NOT retry on HTTP error responses
+  /// (4xx/5xx), which are thrown as [SidetreeException].
+  Future<T> _withRetry<T>(
+    Future<T> Function() operation, {
+    int maxRetries = 3,
+  }) async {
+    var attempt = 0;
+    while (true) {
+      try {
+        return await operation();
+      } on SidetreeException {
+        rethrow; // Don't retry HTTP error responses
+      } catch (e) {
+        attempt++;
+        if (attempt >= maxRetries) rethrow;
+
+        if (e is SocketException ||
+            e is TimeoutException ||
+            e is http.ClientException) {
+          final delayMs = (1 << (attempt - 1)) * 1000; // 1s, 2s, 4s
+          await Future.delayed(Duration(milliseconds: delayMs));
+          continue;
+        }
+        rethrow;
+      }
+    }
+  }
+
   // ─── DID Resolution ─────────────────────────────────────────────
 
   /// Resolve a DID via the ION network.
@@ -51,24 +84,26 @@ class SidetreeAnchorClient {
   /// This works for ANY ION DID, even those created elsewhere.
   Future<Map<String, dynamic>?> resolve(String did) async {
     try {
-      final uri = Uri.parse('$_ionNodeUrl/identifiers/$did');
-      final response = await _httpClient.get(
-        uri,
-        headers: {'Accept': 'application/json'},
-      );
+      return await _withRetry(() async {
+        final uri = Uri.parse('$_ionNodeUrl/identifiers/$did');
+        final response = await _httpClient.get(
+          uri,
+          headers: {'Accept': 'application/json'},
+        );
 
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
-      }
+        if (response.statusCode == 200) {
+          return jsonDecode(response.body) as Map<String, dynamic>;
+        }
 
-      if (response.statusCode == 404) {
-        return null; // Not anchored yet
-      }
+        if (response.statusCode == 404) {
+          return null; // Not anchored yet
+        }
 
-      throw SidetreeException(
-        'Resolution failed: HTTP ${response.statusCode}',
-        response.statusCode,
-      );
+        throw SidetreeException(
+          'Resolution failed: HTTP ${response.statusCode}',
+          response.statusCode,
+        );
+      });
     } catch (e) {
       if (e is SidetreeException) rethrow;
       throw SidetreeException('Resolution error: $e', 0);
@@ -110,15 +145,15 @@ class SidetreeAnchorClient {
       },
     ];
 
-    // Build the delta
+    // Build the delta (hash the update key as multihash)
     final delta = utf8.encode(jsonEncode({
       'patches': patches,
       'updateCommitment': _hashPublicKey(updateKey['publicKeyJwk']!),
     }));
 
-    // Build the suffix data
+    // Build the suffix data (deltaHash is multihash of the delta bytes)
     final suffixData = utf8.encode(jsonEncode({
-      'deltaHash': sha256.convert(delta).toString(),
+      'deltaHash': _base64UrlNoPadding(_multihashSha256(delta)),
       'recoveryCommitment': _hashPublicKey(recoveryKey['publicKeyJwk']!),
     }));
 
@@ -129,31 +164,33 @@ class SidetreeAnchorClient {
       'delta': _base64UrlNoPadding(delta),
     };
 
-    // Submit to ION node
-    final uri = Uri.parse('$_ionNodeUrl/operations');
-    final response = await _httpClient.post(
-      uri,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(operation),
-    );
-
-    if (response.statusCode != 200) {
-      throw SidetreeException(
-        'Create failed: HTTP ${response.statusCode}',
-        response.statusCode,
-        body: response.body,
+    // Submit to ION node with retry on transient network errors
+    return _withRetry(() async {
+      final uri = Uri.parse('$_ionNodeUrl/operations');
+      final response = await _httpClient.post(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(operation),
       );
-    }
 
-    final body = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode != 200) {
+        throw SidetreeException(
+          'Create failed: HTTP ${response.statusCode}',
+          response.statusCode,
+          body: response.body,
+        );
+      }
 
-    return IonCreateResult(
-      didSuffix: _extractDidSuffix(body),
-      recoveryKey: recoveryKey,
-      updateKey: updateKey,
-      operationHash: body['operationHash'] as String?,
-      nodeResponse: body,
-    );
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+
+      return IonCreateResult(
+        didSuffix: _extractDidSuffix(body),
+        recoveryKey: recoveryKey,
+        updateKey: updateKey,
+        operationHash: body['operationHash'] as String?,
+        nodeResponse: body,
+      );
+    });
   }
 
   /// Generate a key pair for ION operations.
@@ -221,10 +258,22 @@ class SidetreeAnchorClient {
     return result;
   }
 
+  /// Encode a SHA-256 hash as a multihash per the Sidetree spec.
+  ///
+  /// Multihash format: [hash code (0x12)] [length (0x20)] [32-byte digest]
+  Uint8List _multihashSha256(Uint8List data) {
+    final hashBytes = sha256.convert(data).bytes;
+    final result = Uint8List(2 + hashBytes.length);
+    result[0] = 0x12; // SHA2-256 multicodec
+    result[1] = hashBytes.length; // 32
+    result.setRange(2, result.length, hashBytes);
+    return result;
+  }
+
   String _hashPublicKey(Map<String, dynamic> jwk) {
     final canonical = jsonEncode(_sortMapKeys(jwk));
-    final hash = sha256.convert(utf8.encode(canonical));
-    return hash.toString();
+    final multihash = _multihashSha256(utf8.encode(canonical));
+    return _base64UrlNoPadding(multihash);
   }
 
   Map<String, dynamic> _sortMapKeys(Map<String, dynamic> map) {
