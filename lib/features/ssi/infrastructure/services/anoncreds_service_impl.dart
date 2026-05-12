@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
@@ -58,7 +59,18 @@ class AnonCredsServiceImpl implements AnonCredsService {
       issuerKeys.privateKey,
     );
 
-    final message = _credentialToCanonicalBytes(credential);
+    // Generate random salts for each claim to prevent brute-force/dictionary attacks
+    final salts = <String, String>{};
+    for (final key in credential.claims.keys) {
+      salts[key] = _generateSalt();
+    }
+
+    if (linkSecret != null) {
+      salts['_link_secret'] = _generateSalt();
+    }
+
+    // Compute commitments and sign them
+    final message = _credentialToCanonicalCommitments(credential, salts, linkSecret);
     final signature = await _ed25519.sign(message, keyPair: keyPair);
 
     // Add index for revocation tracking
@@ -78,6 +90,8 @@ class AnonCredsServiceImpl implements AnonCredsService {
         'signatureValue': base64Url.encode(signature.bytes).replaceAll('=', ''),
         'issuerKey': issuerKeys.publicKey,
         'credentialIndex': credentialIndex,
+        'salts': salts,
+        'hasLinkSecret': linkSecret != null,
         'created': DateTime.now().toIso8601String(),
       }),
     );
@@ -109,28 +123,67 @@ class AnonCredsServiceImpl implements AnonCredsService {
     required List<String> disclosedFields,
     String? linkSecret,
   }) async {
+    final proof = _parseProof(credential.proof);
+    final salts = Map<String, String>.from(proof?['salts'] as Map? ?? {});
+
     final disclosed = <String, dynamic>{};
+    final disclosedSalts = <String, String>{};
     final hiddenCommitments = <String, String>{};
 
     for (final entry in credential.claims.entries) {
       if (disclosedFields.contains(entry.key)) {
         disclosed[entry.key] = entry.value;
+        disclosedSalts[entry.key] = salts[entry.key] ?? '';
       } else {
-        // SHA256 commitment: hides the value but proves knowledge
-        hiddenCommitments[entry.key] = _hashValue(entry.value.toString());
+        // Compute hidden commitment: H(key:value:salt)
+        final salt = salts[entry.key] ?? '';
+        hiddenCommitments[entry.key] =
+            _computeCommitment(entry.key, entry.value.toString(), salt);
       }
     }
 
-    // Include the link secret in the presentation for holder binding
-    if (linkSecret != null) {
-      hiddenCommitments['_link_secret'] = _hashValue(linkSecret);
+    // Link secret is always proven via commitment, never disclosed as raw value
+    if (linkSecret != null && salts.containsKey('_link_secret')) {
+      final salt = salts['_link_secret']!;
+      disclosedSalts['_link_secret'] = salt;
+      // We don't put the link secret in disclosedFields, the verifier will use
+      // its own 'expectedLinkSecret' to verify the commitment.
+    } else if (salts.containsKey('_link_secret')) {
+      // If we have a link secret but didn't provide it for this presentation,
+      // we must provide the commitment.
+      // Note: in real AnonCreds, link secret is usually mandatory if present.
     }
 
+    // Redact the credential to remove hidden claims and salts from the
+    // presentation object, ensuring they are not leaked even if serialized.
+    final redactedClaims = Map<String, dynamic>.from(disclosed);
+
+    // Also redact the salts from the proof JSON to prevent leakage
+    final redactedProofJson = proof != null
+        ? jsonEncode({
+            ...proof,
+            'salts': {}, // Remove all salts from the proof metadata
+          })
+        : null;
+
+    final redactedCredential = VerifiableCredential(
+      id: credential.id,
+      issuer: credential.issuer,
+      subject: credential.subject,
+      type: credential.type,
+      schemaId: credential.schemaId,
+      claims: redactedClaims,
+      issuanceDate: credential.issuanceDate,
+      expirationDate: credential.expirationDate,
+      proof: redactedProofJson,
+    );
+
     return AnonCredsPresentation(
-      credential: credential,
+      credential: redactedCredential,
       disclosedFields: disclosed,
+      disclosedSalts: disclosedSalts,
       hiddenCommitments: hiddenCommitments,
-      issuerSignature: _parseProof(credential.proof)?['signatureValue'] as String? ?? '',
+      issuerSignature: proof?['signatureValue'] as String? ?? '',
       createdAt: DateTime.now(),
     );
   }
@@ -147,14 +200,40 @@ class AnonCredsServiceImpl implements AnonCredsService {
     final issuerKeyB64 = proof['issuerKey'] as String?;
     if (signatureB64 == null || issuerKeyB64 == null) return false;
 
+    // Reconstruct the commitments list
+    final commitments = <String, String>{};
+
+    // 1. Reconstruct commitments for disclosed fields
+    for (final entry in presentation.disclosedFields.entries) {
+      final salt = presentation.disclosedSalts[entry.key];
+      if (salt == null) return false;
+      commitments[entry.key] =
+          _computeCommitment(entry.key, entry.value.toString(), salt);
+    }
+
+    // 2. Add hidden commitments provided in the presentation
+    commitments.addAll(presentation.hiddenCommitments);
+
+    // 3. Handle link secret verification if expected
+    if (proof['hasLinkSecret'] == true) {
+      if (expectedLinkSecret == null) return false; // Holder binding required
+      final salt = presentation.disclosedSalts['_link_secret'];
+      if (salt == null) return false;
+      commitments['_link_secret'] =
+          _computeCommitment('_link_secret', expectedLinkSecret, salt);
+    }
+
     // Reconstruct the public key
     final publicKey = SimplePublicKey(
       _decodeBase64Url(issuerKeyB64),
       type: KeyPairType.ed25519,
     );
 
-    // Verify issuer signature over the original credential
-    final message = _credentialToCanonicalBytes(presentation.credential);
+    // Verify issuer signature over the commitments
+    final message = _canonicalCommitmentsToBytes(
+      presentation.credential,
+      commitments,
+    );
 
     final isValid = await _ed25519.verify(
       message,
@@ -165,22 +244,6 @@ class AnonCredsServiceImpl implements AnonCredsService {
     );
 
     if (!isValid) return false;
-
-    // Verify hidden commitments match the original claims
-    for (final entry in presentation.hiddenCommitments.entries) {
-      if (entry.key == '_link_secret') {
-        if (expectedLinkSecret != null &&
-            entry.value != _hashValue(expectedLinkSecret)) {
-          return false;
-        }
-        continue;
-      }
-
-      // Each commitment must match the hash of the original claim value
-      final actualClaim = presentation.credential.claims[entry.key];
-      if (actualClaim == null) return false;
-      if (entry.value != _hashValue(actualClaim.toString())) return false;
-    }
 
     // Check non-revocation
     final credentialIndex = proof['credentialIndex'] as int?;
@@ -265,13 +328,51 @@ class AnonCredsServiceImpl implements AnonCredsService {
     }
   }
 
-  /// Serialize credential claims to canonical bytes for signing.
-  Uint8List _credentialToCanonicalBytes(VerifiableCredential credential) {
-    final entries = credential.claims.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
+  /// Generate a random 32-byte salt and return it as base64url.
+  String _generateSalt() {
+    final random = Random.secure();
+    final bytes =
+        Uint8List.fromList(List<int>.generate(32, (_) => random.nextInt(256)));
+    return base64Url.encode(bytes).replaceAll('=', '');
+  }
 
+  /// Compute a salted commitment for a claim.
+  String _computeCommitment(String key, String value, String salt) {
+    // Format: key:value:salt to ensure commitment is bound to the specific attribute
+    return sha256.convert(utf8.encode('$key:$value:$salt')).toString();
+  }
+
+  /// Serialize credential commitments to canonical bytes for signing.
+  Uint8List _credentialToCanonicalCommitments(
+    VerifiableCredential credential,
+    Map<String, String> salts,
+    String? linkSecret,
+  ) {
+    final commitments = <String, String>{};
+
+    for (final entry in credential.claims.entries) {
+      final salt = salts[entry.key]!;
+      commitments[entry.key] =
+          _computeCommitment(entry.key, entry.value.toString(), salt);
+    }
+
+    if (linkSecret != null) {
+      final salt = salts['_link_secret']!;
+      commitments['_link_secret'] =
+          _computeCommitment('_link_secret', linkSecret, salt);
+    }
+
+    return _canonicalCommitmentsToBytes(credential, commitments);
+  }
+
+  /// Format commitments into a canonical byte array for signature.
+  Uint8List _canonicalCommitmentsToBytes(
+    VerifiableCredential credential,
+    Map<String, String> commitments,
+  ) {
+    final sortedKeys = commitments.keys.toList()..sort();
     final canonical =
-        entries.map((e) => '${e.key}=${e.value}').join('|');
+        sortedKeys.map((key) => '$key=${commitments[key]}').join('|');
 
     final fullMessage =
         '${credential.id}|${credential.issuer}|${credential.type}|${credential.schemaId}|'
@@ -279,11 +380,6 @@ class AnonCredsServiceImpl implements AnonCredsService {
         '${credential.expirationDate?.toIso8601String()}|$canonical';
 
     return Uint8List.fromList(utf8.encode(fullMessage));
-  }
-
-  /// SHA256 hash commitment for selective disclosure.
-  String _hashValue(String value) {
-    return sha256.convert(utf8.encode(value)).toString();
   }
 
   /// Reconstruct a SimpleKeyPairData from base64-encoded keys.
