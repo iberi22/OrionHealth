@@ -27,6 +27,7 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
   Map<String, List<MedicalCode>> _termIndex = {};
   Map<String, List<MedicalCode>> _categoryIndex = {};
   Map<String, List<MedicalCode>> _standardIndex = {};
+  List<Map<String, dynamic>> _symptomMappings = [];
   bool _initialized = false;
   AssetMedicalKnowledgeRepository();
 
@@ -75,6 +76,18 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
     }
 
     _allCodes = allCodes;
+
+    // Load Symptom Mappings from Assets
+    try {
+      final symptomsPath = p.join(_assetBasePath, 'symptom_checker.json');
+      final symptomsJson = await rootBundle.loadString(symptomsPath);
+      final decoded = jsonDecode(symptomsJson) as Map<String, dynamic>;
+      _symptomMappings = List<Map<String, dynamic>>.from(decoded['data'] ?? []);
+    } catch (e) {
+      // ignore: avoid_print
+      print('[AssetMedicalRepo] Warning: Failed to load symptom_checker.json: $e');
+    }
+
     _buildIndexes();
     _initialized = true;
 
@@ -203,9 +216,7 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
 
   @override
   List<Map<String, dynamic>> getSymptomMappings() {
-    // Asset repository does not load symptom mappings (file-system only feature).
-    // Returns empty list; the JsonMedicalKnowledgeRepository is used on desktop/server.
-    return const [];
+    return _symptomMappings;
   }
 
   List<MedicalCode> _searchByTokens(String query) {

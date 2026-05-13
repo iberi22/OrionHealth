@@ -137,7 +137,7 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
 
     // Load Symptoms Mapping
     String? symptomsJson;
-    final symptomsFileName = 'symptoms_mapping.json';
+    final symptomsFileName = 'symptom_checker.json';
     if (supportPath != null) {
       final syncedFile = File(p.join(supportPath, symptomsFileName));
       if (await syncedFile.exists()) {
@@ -154,7 +154,7 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
     if (symptomsJson != null) {
       try {
         final decoded = jsonDecode(symptomsJson) as Map<String, dynamic>;
-        _symptomMappings = List<Map<String, dynamic>>.from(decoded['mappings'] ?? []);
+        _symptomMappings = List<Map<String, dynamic>>.from(decoded['data'] ?? []);
       } catch (e) {
         stderr.writeln('Warning: Failed to parse symptoms: $e');
       }
