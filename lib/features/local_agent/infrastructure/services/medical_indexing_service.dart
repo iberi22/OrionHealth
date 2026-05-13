@@ -1,10 +1,12 @@
-﻿import 'dart:io' show stderr;
+import 'dart:async';
+import 'dart:io' show stderr;
 
 import 'package:injectable/injectable.dart';
 
 import '../../domain/entities/medical_code.dart';
 import '../../domain/repositories/medical_knowledge_repository.dart';
 import '../../domain/services/vector_store_service.dart';
+import 'patient_context_indexer.dart';
 
 /// Service that orchestrates the loading and indexing of medical standards
 /// into the vector store at application startup.
@@ -19,12 +21,17 @@ import '../../domain/services/vector_store_service.dart';
 class MedicalIndexingService {
   final MedicalKnowledgeRepository _knowledgeRepo;
   final VectorStoreService _vectorStore;
+  final PatientContextIndexer _patientIndexer;
 
   bool _hasIndexed = false;
   int _indexedCount = 0;
   int _errorCount = 0;
 
-  MedicalIndexingService(this._knowledgeRepo, this._vectorStore);
+  MedicalIndexingService(
+    this._knowledgeRepo,
+    this._vectorStore,
+    this._patientIndexer,
+  );
 
   /// Whether the full indexing pass has completed.
   bool get hasIndexed => _hasIndexed;
@@ -77,6 +84,10 @@ class MedicalIndexingService {
     _indexedCount = indexed;
     _errorCount = errors;
     _hasIndexed = true;
+
+    // 4. Also index patient context
+    // This is non-blocking to the medical standards indexing result
+    unawaited(_patientIndexer.indexAll());
 
     return IndexingResult(
       total: total,
