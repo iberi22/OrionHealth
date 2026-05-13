@@ -116,4 +116,7 @@ class GemmaLlmAdapter implements LlmAdapter {
 
   @override
   Future<void> cancelDownload(String modelId) async {}
+
+  @override
+  Future<bool> isModelInstalled(String modelId) async => false;
 }

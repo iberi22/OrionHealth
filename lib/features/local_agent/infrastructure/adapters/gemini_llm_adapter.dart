@@ -36,6 +36,12 @@ class GeminiLlmAdapter implements LlmAdapter {
   }
 
   @override
+  Future<List<String>> listInstalledModels() async => [];
+
+  @override
+  Future<bool> isModelInstalled(String modelId) async => false;
+
+  @override
   Future<String> generate(String prompt) async {
     final profile = await _userProfileRepository.getUserProfile();
     if (profile?.allowCloudApi == false) {
@@ -61,11 +67,6 @@ class GeminiLlmAdapter implements LlmAdapter {
   @override
   Stream<int> installModel({required String modelId, required String url}) {
     throw UnsupportedError('Gemini is a cloud model and cannot be installed.');
-  }
-
-  @override
-  Future<List<String>> listInstalledModels() async {
-    return [];
   }
 
   @override

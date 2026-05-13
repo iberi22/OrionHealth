@@ -30,4 +30,7 @@ abstract class LlmAdapter {
 
   /// Stop an active download.
   Future<void> cancelDownload(String modelId);
+
+  /// Check whether a model (by its identifier) is installed.
+  Future<bool> isModelInstalled(String modelId);
 }
