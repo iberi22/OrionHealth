@@ -76,7 +76,7 @@ dependencies:
   flutter_blue_plus: ^2.3.2
   flutter_blue_plus_winrt: ^0.0.20
   google_mlkit_text_recognition: ^0.15.1
-  openai_dart: ^1.0.0
+  openai_dart: ^5.0.0
   http: ^1.2.0
   crypto: ^3.0.7
   pointycastle: ^4.0.0
