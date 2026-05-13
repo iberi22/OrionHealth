@@ -275,13 +275,19 @@ class DeviceCapabilityService {
   }
 
   String _getRecommendedModel(DeviceCapabilityTier tier) {
+    final recommendedLocal = getRecommendedLocalModel();
+    if (recommendedLocal != null) {
+      return recommendedLocal;
+    }
+
+    // Fallback based on tier if no local model found
     switch (tier) {
       case DeviceCapabilityTier.high:
-        return 'gemini-2.5-flash';
+        return 'phi-4-mini';
       case DeviceCapabilityTier.medium:
-        return 'gemini-2.0-flash';
+        return 'deepseek-r1';
       case DeviceCapabilityTier.low:
-        return 'gemini-2.0-flash-lite';
+        return 'smolLM-135m';
     }
   }
 
