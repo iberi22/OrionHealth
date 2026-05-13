@@ -17,7 +17,8 @@ class HealthRecordCubit extends Cubit<HealthRecordState> {
   final FilePickerService _filePickerService;
   final ImagePickerService _imagePickerService;
   final OcrService _ocrService;
-  final VectorStoreService _vectorStoreService;
+  // ignore: unused_field
+  final VectorStoreService _vectorStoreService; // PatientContextIndexer handles indexing now
 
   HealthRecordCubit(
     this._repository,
