@@ -3,70 +3,8 @@ import 'dart:async';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../domain/entities/local_model_descriptor.dart';
 import '../../domain/services/llm_adapter.dart';
-
-/// Model descriptor for the local model catalog.
-class LocalModelDescriptor {
-  final String id;
-  final String displayName;
-  final ModelType modelType;
-  final String sizeLabel;
-  final int minRamMb;
-
-  const LocalModelDescriptor({
-    required this.id,
-    required this.displayName,
-    required this.modelType,
-    required this.sizeLabel,
-    required this.minRamMb,
-  });
-}
-
-/// Built-in catalog of supported local models.
-const List<LocalModelDescriptor> kAvailableLocalModels = [
-  LocalModelDescriptor(
-    id: 'gemma-3-270m',
-    displayName: 'Gemma 3 270M',
-    modelType: ModelType.gemmaIt,
-    sizeLabel: '270MB',
-    minRamMb: 2048,
-  ),
-  LocalModelDescriptor(
-    id: 'qwen3-0.6b',
-    displayName: 'Qwen3 0.6B',
-    modelType: ModelType.qwen,
-    sizeLabel: '600MB',
-    minRamMb: 3072,
-  ),
-  LocalModelDescriptor(
-    id: 'deepseek-r1',
-    displayName: 'DeepSeek R1',
-    modelType: ModelType.deepSeek,
-    sizeLabel: '1.7GB',
-    minRamMb: 4096,
-  ),
-  LocalModelDescriptor(
-    id: 'phi-4-mini',
-    displayName: 'Phi-4 Mini',
-    modelType: ModelType.llama,
-    sizeLabel: '3.9GB',
-    minRamMb: 6144,
-  ),
-  LocalModelDescriptor(
-    id: 'smolLM-135m',
-    displayName: 'SmolLM 135M',
-    modelType: ModelType.gemmaIt,
-    sizeLabel: '135MB',
-    minRamMb: 1024,
-  ),
-  LocalModelDescriptor(
-    id: 'gemma-4-e2b',
-    displayName: 'Gemma 4 E2B',
-    modelType: ModelType.gemmaIt,
-    sizeLabel: '2.4GB',
-    minRamMb: 6144,
-  ),
-];
 
 /// flutter_gemma adapter for on-device LLM inference.
 ///
