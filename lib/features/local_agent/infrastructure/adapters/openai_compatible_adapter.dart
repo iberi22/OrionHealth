@@ -40,6 +40,12 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
   Future<bool> isAvailable() async => _configured && _client != null;
 
   @override
+  Future<List<String>> listInstalledModels() async => [];
+
+  @override
+  Future<bool> isModelInstalled(String modelId) async => false;
+
+  @override
   Future<String> generate(String prompt) async {
     _ensureConfigured();
 
@@ -117,11 +123,6 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
   @override
   Stream<int> installModel({required String modelId, required String url}) {
     throw UnsupportedError('OpenAI models are cloud-based and cannot be installed.');
-  }
-
-  @override
-  Future<List<String>> listInstalledModels() async {
-    return [];
   }
 
   @override

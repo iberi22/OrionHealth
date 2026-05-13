@@ -23,6 +23,12 @@ class MockLlmAdapter implements LlmAdapter {
   Future<bool> isAvailable() async => true;
 
   @override
+  Future<List<String>> listInstalledModels() async => [];
+
+  @override
+  Future<bool> isModelInstalled(String modelId) async => false;
+
+  @override
   Future<String> generate(String prompt) async {
     final scrubbedPrompt = await _scrubber.scrub(prompt, apiName: 'mock');
 
@@ -87,11 +93,6 @@ class MockLlmAdapter implements LlmAdapter {
   @override
   Stream<int> installModel({required String modelId, required String url}) {
     return Stream.fromIterable([0, 25, 50, 75, 100]);
-  }
-
-  @override
-  Future<List<String>> listInstalledModels() async {
-    return [];
   }
 
   @override

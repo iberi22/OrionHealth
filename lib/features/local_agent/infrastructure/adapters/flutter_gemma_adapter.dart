@@ -111,6 +111,7 @@ class FlutterGemmaAdapter implements LlmAdapter {
   }
 
   /// Check whether a model (by its file identifier) is installed.
+  @override
   Future<bool> isModelInstalled(String modelId) =>
       FlutterGemma.isModelInstalled(modelId);
 
