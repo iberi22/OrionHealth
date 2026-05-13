@@ -83,4 +83,20 @@ class MockLlmAdapter implements LlmAdapter {
     if (text.length <= maxLength) return text;
     return '${text.substring(0, maxLength)}...';
   }
+
+  @override
+  Stream<int> installModel({required String modelId, required String url}) {
+    return Stream.fromIterable([0, 25, 50, 75, 100]);
+  }
+
+  @override
+  Future<List<String>> listInstalledModels() async {
+    return [];
+  }
+
+  @override
+  Future<void> uninstallModel(String modelId) async {}
+
+  @override
+  Future<void> cancelDownload(String modelId) async {}
 }

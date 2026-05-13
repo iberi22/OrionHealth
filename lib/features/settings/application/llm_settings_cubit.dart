@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -6,6 +7,8 @@ import 'package:injectable/injectable.dart';
 import '../domain/entities/llm_config.dart';
 import '../domain/repositories/llm_settings_repository.dart';
 import '../domain/services/device_capability_service.dart';
+import '../../local_agent/domain/services/llm_adapter.dart';
+import '../../local_agent/domain/entities/local_model_descriptor.dart';
 
 part 'llm_settings_state.dart';
 
@@ -43,11 +46,23 @@ const List<Map<String, dynamic>> availableLocalModels = [
 class LlmSettingsCubit extends Cubit<LlmSettingsState> {
   final LlmSettingsRepository _repository;
   final DeviceCapabilityService _deviceCapabilityService;
+  final LlmAdapter _llmAdapter;
+
+  final Map<String, StreamSubscription<int>> _downloadSubscriptions = {};
 
   LlmSettingsCubit(
     this._repository,
     this._deviceCapabilityService,
+    @Named('gemma') this._llmAdapter,
   ) : super(LlmSettingsInitial());
+
+  @override
+  Future<void> close() {
+    for (final subscription in _downloadSubscriptions.values) {
+      subscription.cancel();
+    }
+    return super.close();
+  }
 
   Future<void> loadSettings() async {
     emit(LlmSettingsLoading());
@@ -56,13 +71,15 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
       final capability = await _deviceCapabilityService.detectCapability();
 
       if (config != null) {
-        emit(LlmSettingsLoaded(
+        final loadedState = LlmSettingsLoaded(
           config: config.copyWith(
             deviceCapabilityTier: capability.tier.name,
             recommendedModel: capability.recommendedModel,
           ),
           deviceCapability: capability,
-        ));
+        );
+        emit(loadedState);
+        await _refreshInstalledModels();
       } else {
         // Create default config based on device capability
         final defaultConfig = LlmConfig(
@@ -73,10 +90,12 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
           recommendedModel: capability.recommendedModel,
         );
         await _repository.saveLlmConfig(defaultConfig);
-        emit(LlmSettingsLoaded(
+        final loadedState = LlmSettingsLoaded(
           config: defaultConfig,
           deviceCapability: capability,
-        ));
+        );
+        emit(loadedState);
+        await _refreshInstalledModels();
       }
     } catch (e) {
       emit(LlmSettingsError(e.toString()));
@@ -157,6 +176,98 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
       final updatedConfig = currentState.config.copyWith(localModelId: modelId);
       await _repository.saveLlmConfig(updatedConfig);
       emit(currentState.copyWith(config: updatedConfig));
+    }
+  }
+
+  Future<void> _refreshInstalledModels() async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      try {
+        final installed = await _llmAdapter.listInstalledModels();
+        emit(currentState.copyWith(installedModels: installed.toSet()));
+      } catch (_) {
+        // Silent fail or update state with error if needed
+      }
+    }
+  }
+
+  Future<void> downloadModel(String modelId) async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      if (_downloadSubscriptions.containsKey(modelId)) return;
+
+      final descriptor = kAvailableLocalModels.firstWhere(
+        (m) => m.id == modelId,
+        orElse: () => throw ArgumentError('Unknown model: $modelId'),
+      );
+
+      final subscription = _llmAdapter
+          .installModel(modelId: modelId, url: descriptor.url)
+          .listen(
+        (progress) {
+          final updatedState = state;
+          if (updatedState is LlmSettingsLoaded) {
+            final newProgress = Map<String, double>.from(updatedState.downloadProgress);
+            newProgress[modelId] = progress / 100.0;
+            emit(updatedState.copyWith(downloadProgress: newProgress));
+          }
+        },
+        onDone: () {
+          _downloadSubscriptions.remove(modelId);
+          final updatedState = state;
+          if (updatedState is LlmSettingsLoaded) {
+            final newProgress = Map<String, double>.from(updatedState.downloadProgress);
+            newProgress.remove(modelId);
+            emit(updatedState.copyWith(downloadProgress: newProgress));
+          }
+          _refreshInstalledModels();
+        },
+        onError: (e) {
+          _downloadSubscriptions.remove(modelId);
+          final updatedState = state;
+          if (updatedState is LlmSettingsLoaded) {
+            final newProgress = Map<String, double>.from(updatedState.downloadProgress);
+            newProgress.remove(modelId);
+            emit(updatedState.copyWith(
+              downloadProgress: newProgress,
+              connectionError: 'Download failed: $e',
+            ));
+          }
+        },
+      );
+
+      _downloadSubscriptions[modelId] = subscription;
+
+      // Initial progress update
+      final newProgress = Map<String, double>.from(currentState.downloadProgress);
+      newProgress[modelId] = 0.0;
+      emit(currentState.copyWith(downloadProgress: newProgress));
+    }
+  }
+
+  Future<void> cancelDownload(String modelId) async {
+    final subscription = _downloadSubscriptions.remove(modelId);
+    if (subscription != null) {
+      await subscription.cancel();
+      await _llmAdapter.cancelDownload(modelId);
+      final currentState = state;
+      if (currentState is LlmSettingsLoaded) {
+        final newProgress = Map<String, double>.from(currentState.downloadProgress);
+        newProgress.remove(modelId);
+        emit(currentState.copyWith(downloadProgress: newProgress));
+      }
+    }
+  }
+
+  Future<void> deleteModel(String modelId) async {
+    try {
+      await _llmAdapter.uninstallModel(modelId);
+      await _refreshInstalledModels();
+    } catch (e) {
+      final currentState = state;
+      if (currentState is LlmSettingsLoaded) {
+        emit(currentState.copyWith(connectionError: 'Delete failed: $e'));
+      }
     }
   }
 
