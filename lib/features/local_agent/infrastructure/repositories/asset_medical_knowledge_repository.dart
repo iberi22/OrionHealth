@@ -47,6 +47,7 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
       'LOINC': 'loinc.json',
       'RxNorm': 'rxnorm.json',
       'SNOMED': 'snomed.json',
+      'Clinical Guidelines': 'clinical_guidelines.json',
     };
 
     final allCodes = <MedicalCode>[];

@@ -27,6 +27,12 @@ class MedicalCode extends Equatable {
   final String? parentCode;
   final List<String> childCodes;
 
+  /// Guideline specific fields
+  final String? firstLineTreatment;
+  final String? alternatives;
+  final String? redFlags;
+  final String? followUp;
+
   const MedicalCode({
     required this.code,
     required this.displayName,
@@ -39,6 +45,10 @@ class MedicalCode extends Equatable {
     this.referenceValues,
     this.parentCode,
     this.childCodes = const [],
+    this.firstLineTreatment,
+    this.alternatives,
+    this.redFlags,
+    this.followUp,
   });
 
   factory MedicalCode.fromJson(Map<String, dynamic> json, String standard) {
@@ -60,12 +70,23 @@ class MedicalCode extends Equatable {
               ?.map((e) => e as String)
               .toList() ??
           [],
+      firstLineTreatment: json['firstLineTreatment'] as String?,
+      alternatives: json['alternatives'] as String?,
+      redFlags: json['redFlags'] as String?,
+      followUp: json['followUp'] as String?,
     );
   }
 
   /// All searchable text strings for embedding.
-  List<String> get allSearchableTerms =>
-      [displayName, ...searchTerms, if (definition != null) definition!];
+  List<String> get allSearchableTerms => [
+        displayName,
+        ...searchTerms,
+        if (definition != null) definition!,
+        if (firstLineTreatment != null) firstLineTreatment!,
+        if (alternatives != null) alternatives!,
+        if (redFlags != null) redFlags!,
+        if (followUp != null) followUp!,
+      ];
 
   /// Single text block for vector embedding.
   String get embeddingText {
@@ -73,12 +94,33 @@ class MedicalCode extends Equatable {
     final def = definition != null ? '\nDefinition: $definition' : '';
     final mental = mentalHealthImpact != null ? '\nMental Health: $mentalHealthImpact' : '';
     final physical = physicalHealthImpact != null ? '\nPhysical Health: $physicalHealthImpact' : '';
-    
-    return '$displayName [$standard] - $category\n$terms$def$mental$physical'.trim();
+    final firstLine = firstLineTreatment != null ? '\nFirst-line Treatment: $firstLineTreatment' : '';
+    final alt = alternatives != null ? '\nAlternatives: $alternatives' : '';
+    final flags = redFlags != null ? '\nRed Flags: $redFlags' : '';
+    final fup = followUp != null ? '\nFollow-up: $followUp' : '';
+
+    return '$displayName [$standard] - $category\n$terms$def$mental$physical$firstLine$alt$flags$fup'
+        .trim();
   }
 
   @override
-  List<Object?> get props => [code, standard];
+  List<Object?> get props => [
+        code,
+        standard,
+        displayName,
+        category,
+        searchTerms,
+        definition,
+        mentalHealthImpact,
+        physicalHealthImpact,
+        referenceValues,
+        parentCode,
+        childCodes,
+        firstLineTreatment,
+        alternatives,
+        redFlags,
+        followUp,
+      ];
 
   @override
   String toString() => 'MedicalCode($standard: $code - $displayName)';
