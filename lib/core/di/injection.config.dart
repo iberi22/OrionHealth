@@ -74,6 +74,8 @@ import '../../features/local_agent/infrastructure/services/isar_vector_store_ser
     as _i45;
 import '../../features/local_agent/infrastructure/services/medical_indexing_service.dart'
     as _i68;
+import '../../features/local_agent/infrastructure/services/patient_context_indexer.dart'
+    as _i84;
 import '../../features/medical_assistant/domain/services/clinical_reasoner_service.dart'
     as _i56;
 import '../../features/medical_assistant/domain/services/health_context_service.dart'
@@ -314,10 +316,20 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i6.DeviceCapabilityService>(),
           gh<_i14.LlmAdapter>(instanceName: 'gemma'),
         ));
+    gh.lazySingleton<_i84.PatientContextIndexer>(() => _i84.PatientContextIndexer(
+          gh<_i13.Isar>(),
+          gh<_i44.VectorStoreService>(),
+          gh<_i61.HealthRecordRepository>(),
+          gh<_i29.MedicationRepository>(),
+          gh<_i48.AllergyRepository>(),
+          gh<_i46.VitalSignRepository>(),
+          gh<_i52.AppointmentRepository>(),
+        ));
     gh.lazySingleton<_i68.MedicalIndexingService>(
         () => _i68.MedicalIndexingService(
               gh<_i20.MedicalKnowledgeRepository>(),
               gh<_i44.VectorStoreService>(),
+              gh<_i84.PatientContextIndexer>(),
             ));
     gh.lazySingleton<_i69.MedicalResearchService>(
         () => _i69.MedicalResearchService(

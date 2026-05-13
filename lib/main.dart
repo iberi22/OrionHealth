@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/di/injection.dart';
@@ -13,6 +15,7 @@ import 'features/health_record/presentation/pages/health_record_staging_page.dar
 import 'features/reports/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
+import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
 
 // Placeholder pages
 class HomePage extends StatelessWidget {
@@ -41,6 +44,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies();
   await getIt<MemoryGraph>().initialize();
+
+  // Index medical standards and patient context at startup
+  unawaited(getIt<MedicalIndexingService>().indexAll());
+
   runApp(const MyApp());
 }
 
