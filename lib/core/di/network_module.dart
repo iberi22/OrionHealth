@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
