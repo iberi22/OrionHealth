@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
+import '../../local_agent/domain/services/llm_adapter.dart';
 import '../domain/entities/llm_config.dart';
 import '../domain/repositories/llm_settings_repository.dart';
 import '../domain/services/device_capability_service.dart';
@@ -29,24 +30,16 @@ const List<String> availableOpenaiModels = [
   'claude-3-sonnet',
 ];
 
-/// Available local models for flutter_gemma
-const List<Map<String, dynamic>> availableLocalModels = [
-  {'id': 'gemma-3-270m', 'name': 'Gemma 3 270M', 'size': '270MB', 'minRam': '2GB'},
-  {'id': 'qwen3-0.6b', 'name': 'Qwen3 0.6B', 'size': '600MB', 'minRam': '3GB'},
-  {'id': 'deepseek-r1', 'name': 'DeepSeek R1', 'size': '1.7GB', 'minRam': '4GB'},
-  {'id': 'phi-4-mini', 'name': 'Phi-4 Mini', 'size': '3.9GB', 'minRam': '6GB'},
-  {'id': 'smolLM-135m', 'name': 'SmolLM 135M', 'size': '135MB', 'minRam': '1GB'},
-  {'id': 'gemma-4-e2b', 'name': 'Gemma 4 E2B', 'size': '2.4GB', 'minRam': '6GB', 'requiresGpu': true},
-];
-
 @injectable
 class LlmSettingsCubit extends Cubit<LlmSettingsState> {
   final LlmSettingsRepository _repository;
   final DeviceCapabilityService _deviceCapabilityService;
+  final LlmAdapter _gemmaAdapter;
 
   LlmSettingsCubit(
     this._repository,
     this._deviceCapabilityService,
+    @Named('gemma') this._gemmaAdapter,
   ) : super(LlmSettingsInitial());
 
   Future<void> loadSettings() async {
@@ -55,6 +48,20 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
       final config = await _repository.getLlmConfig();
       final capability = await _deviceCapabilityService.detectCapability();
 
+      // Fetch actually installed models
+      final installedModels = await _gemmaAdapter.listInstalledModels();
+      final localModelList = availableLocalModelDefs.map((model) {
+        final isInstalled = installedModels.contains(model.id);
+        return {
+          'id': model.id,
+          'name': model.name,
+          'size': model.size,
+          'minRam': model.minRam,
+          'requiresGpu': model.requiresGpu,
+          'isInstalled': isInstalled,
+        };
+      }).toList();
+
       if (config != null) {
         emit(LlmSettingsLoaded(
           config: config.copyWith(
@@ -62,6 +69,7 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
             recommendedModel: capability.recommendedModel,
           ),
           deviceCapability: capability,
+          localModelList: localModelList,
         ));
       } else {
         // Create default config based on device capability
@@ -76,6 +84,7 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
         emit(LlmSettingsLoaded(
           config: defaultConfig,
           deviceCapability: capability,
+          localModelList: localModelList,
         ));
       }
     } catch (e) {

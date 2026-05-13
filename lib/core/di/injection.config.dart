@@ -57,9 +57,9 @@ import '../../features/local_agent/domain/services/vector_store_service.dart'
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
     as _i16;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i63;
-import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
     as _i64;
+import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
+    as _i63;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
     as _i15;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
@@ -151,9 +151,9 @@ import 'database_module.dart' as _i83;
 import 'memory_module.dart' as _i82;
 import 'network_module.dart' as _i81;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -293,16 +293,16 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.lazySingleton<_i61.HealthRecordRepository>(
         () => _i62.HealthRecordRepositoryImpl(gh<_i13.Isar>()));
+    gh.factory<_i14.LlmAdapter>(
+      () => _i63.MockLlmAdapter(gh<_i33.PromptScrubber>()),
+      instanceName: 'mock',
+    );
     gh.lazySingleton<_i14.LlmAdapter>(
-      () => _i63.GeminiLlmAdapter(
+      () => _i64.GeminiLlmAdapter(
         scrubber: gh<_i33.PromptScrubber>(),
         userProfileRepository: gh<_i42.UserProfileRepository>(),
       ),
       instanceName: 'gemini',
-    );
-    gh.factory<_i14.LlmAdapter>(
-      () => _i64.MockLlmAdapter(gh<_i33.PromptScrubber>()),
-      instanceName: 'mock',
     );
     gh.lazySingleton<_i65.LlmService>(() => _i66.GemmaLlmService(
           gh<_i44.VectorStoreService>(),
@@ -312,6 +312,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i67.LlmSettingsCubit>(() => _i67.LlmSettingsCubit(
           gh<_i17.LlmSettingsRepository>(),
           gh<_i6.DeviceCapabilityService>(),
+          gh<_i14.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.lazySingleton<_i68.MedicalIndexingService>(
         () => _i68.MedicalIndexingService(

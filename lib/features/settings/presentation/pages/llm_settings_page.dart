@@ -10,15 +10,6 @@ import '../../domain/services/device_capability_service.dart';
 // Constants
 // ---------------------------------------------------------------------------
 
-const List<Map<String, String>> localModelsCatalog = [
-  {'id': 'smolLM-135m', 'name': 'SmolLM 135M', 'size': '135MB', 'minRam': '1GB'},
-  {'id': 'gemma-3-270m', 'name': 'Gemma 3 270M', 'size': '270MB', 'minRam': '2GB'},
-  {'id': 'qwen3-0.6b', 'name': 'Qwen3 0.6B', 'size': '600MB', 'minRam': '3GB'},
-  {'id': 'deepseek-r1', 'name': 'DeepSeek R1', 'size': '1.7GB', 'minRam': '4GB'},
-  {'id': 'gemma-4-e2b', 'name': 'Gemma 4 E2B', 'size': '2.4GB', 'minRam': '6GB'},
-  {'id': 'phi-4-mini', 'name': 'Phi-4 Mini', 'size': '3.9GB', 'minRam': '6GB'},
-];
-
 const List<String> cloudProviders = ['openai', 'gemini', 'custom'];
 
 const List<String> cloudModels = [
@@ -31,29 +22,7 @@ const List<String> cloudModels = [
   'gemini-2.5-pro',
 ];
 
-// ---------------------------------------------------------------------------
-// Simulation helpers for local model download status (UI demo only)
-// ---------------------------------------------------------------------------
-
 enum _DownloadStatus { notDownloaded, downloading, ready }
-
-_DownloadStatus _simulatedStatus(String modelId) {
-  switch (modelId) {
-    case 'smolLM-135m':
-      return _DownloadStatus.ready;
-    case 'qwen3-0.6b':
-      return _DownloadStatus.ready;
-    case 'deepseek-r1':
-      return _DownloadStatus.downloading;
-    default:
-      return _DownloadStatus.notDownloaded;
-  }
-}
-
-double _simulatedProgress(String modelId) {
-  if (modelId == 'deepseek-r1') return 0.6;
-  return 0.0;
-}
 
 // ---------------------------------------------------------------------------
 // Main page
@@ -76,6 +45,7 @@ class LlmSettingsPage extends StatelessWidget {
             return _LlmSettingsView(
               config: state.config,
               deviceCapability: state.deviceCapability,
+              localModelList: state.localModelList ?? [],
             );
           } else if (state is LlmSettingsError) {
             return Scaffold(
@@ -115,10 +85,12 @@ class LlmSettingsPage extends StatelessWidget {
 class _LlmSettingsView extends StatelessWidget {
   final dynamic config;
   final DeviceCapability deviceCapability;
+  final List<Map<String, dynamic>> localModelList;
 
   const _LlmSettingsView({
     required this.config,
     required this.deviceCapability,
+    required this.localModelList,
   });
 
   @override
@@ -186,6 +158,7 @@ class _LlmSettingsView extends StatelessWidget {
             _LocalModelsTab(
               config: config,
               deviceCapability: deviceCapability,
+              localModelList: localModelList,
             ),
             _CloudProviderTab(config: config),
             _ExecutionModeTab(config: config),
@@ -203,22 +176,25 @@ class _LlmSettingsView extends StatelessWidget {
 class _LocalModelsTab extends StatelessWidget {
   final dynamic config;
   final DeviceCapability deviceCapability;
+  final List<Map<String, dynamic>> localModelList;
 
   const _LocalModelsTab({
     required this.config,
     required this.deviceCapability,
+    required this.localModelList,
   });
 
   int _getAvailableRamMb() {
-    final totalRamGbTxt = deviceCapability.totalMemoryMb;
+    final totalRamMb = deviceCapability.totalMemoryMb;
     // Rough estimate: 40% of total RAM is typically available
-    return (totalRamGbTxt * 0.4).round();
+    return (totalRamMb * 0.4).round();
   }
 
-  bool _isCompatible(Map<String, String> model) {
-    final minRamStr = model['minRam'] ?? '4GB';
-    final minRamMb = int.tryParse(minRamStr.replaceAll(RegExp(r'[^0-9]'), '')) ?? 4;
-    return _getAvailableRamMb() >= (minRamMb * 1024);
+  bool _isCompatible(Map<String, dynamic> model) {
+    final minRamStr = model['minRam']?.toString() ?? '4GB';
+    final minRamValue = int.tryParse(minRamStr.replaceAll(RegExp(r'[^0-9]'), '')) ?? 4;
+    final minRamMb = minRamStr.contains('GB') ? minRamValue * 1024 : minRamValue;
+    return _getAvailableRamMb() >= minRamMb;
   }
 
   @override
@@ -245,7 +221,7 @@ class _LocalModelsTab extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: AppColors.textPrimary,
                 ),
               ),
               const Spacer(),
@@ -257,7 +233,7 @@ class _LocalModelsTab extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  '${localModelsCatalog.length} modelos',
+                  '${localModelList.length} modelos',
                   style: const TextStyle(
                       fontSize: 12, color: Colors.white54),
                 ),
@@ -267,9 +243,10 @@ class _LocalModelsTab extends StatelessWidget {
           const SizedBox(height: 12),
 
           // -- Model list --
-          ...localModelsCatalog.map((model) {
-            final status = _simulatedStatus(model['id'] ?? '');
-            final progress = _simulatedProgress(model['id'] ?? '');
+          ...localModelList.map((model) {
+            final isInstalled = model['isInstalled'] as bool? ?? false;
+            final status = isInstalled ? _DownloadStatus.ready : _DownloadStatus.notDownloaded;
+            final progress = 0.0; // Download progress tracking not yet implemented in Cubit
             final compatible = _isCompatible(model);
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
@@ -289,7 +266,7 @@ class _LocalModelsTab extends StatelessWidget {
 }
 
 class _ModelListItem extends StatelessWidget {
-  final Map<String, String> model;
+  final Map<String, dynamic> model;
   final _DownloadStatus status;
   final double progress;
   final bool compatible;
@@ -983,7 +960,7 @@ class _ConnectionTestWidget extends StatelessWidget {
                 'Verificar Conexión',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: AppColors.textPrimary,
                   fontSize: 15,
                 ),
               ),

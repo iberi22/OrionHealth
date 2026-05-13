@@ -23,6 +23,12 @@ class MockLlmAdapter implements LlmAdapter {
   Future<bool> isAvailable() async => true;
 
   @override
+  Future<List<String>> listInstalledModels() async => [];
+
+  @override
+  Future<bool> isModelInstalled(String modelId) async => false;
+
+  @override
   Future<String> generate(String prompt) async {
     final scrubbedPrompt = await _scrubber.scrub(prompt, apiName: 'mock');
 

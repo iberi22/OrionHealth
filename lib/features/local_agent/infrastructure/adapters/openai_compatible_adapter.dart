@@ -40,6 +40,12 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
   Future<bool> isAvailable() async => _configured && _client != null;
 
   @override
+  Future<List<String>> listInstalledModels() async => [];
+
+  @override
+  Future<bool> isModelInstalled(String modelId) async => false;
+
+  @override
   Future<String> generate(String prompt) async {
     _ensureConfigured();
 

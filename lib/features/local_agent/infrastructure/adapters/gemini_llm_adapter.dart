@@ -36,6 +36,12 @@ class GeminiLlmAdapter implements LlmAdapter {
   }
 
   @override
+  Future<List<String>> listInstalledModels() async => [];
+
+  @override
+  Future<bool> isModelInstalled(String modelId) async => false;
+
+  @override
   Future<String> generate(String prompt) async {
     final profile = await _userProfileRepository.getUserProfile();
     if (profile?.allowCloudApi == false) {

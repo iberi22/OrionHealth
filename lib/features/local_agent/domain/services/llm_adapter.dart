@@ -14,4 +14,14 @@ abstract class LlmAdapter {
 
   /// Optional: Check if the adapter is available/configured
   Future<bool> isAvailable();
+
+  /// Optional: List all installed model identifiers.
+  Future<List<String>> listInstalledModels() {
+    return Future.value([]);
+  }
+
+  /// Optional: Check whether a model (by its identifier) is installed.
+  Future<bool> isModelInstalled(String modelId) {
+    return Future.value(false);
+  }
 }
