@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-05-15",
+    "source": "WHO, CDC, AHA/ACC, GINA, ADA",
+    "totalCount": 10
+  },
+  "data": [
+    {
+      "condition": "Essential hypertension",
+      "icd10": "I10",
+      "firstLineTreatment": "Lifestyle modifications (DASH diet, sodium reduction <1,500 mg/day, weight loss, aerobic exercise 150 min/week, limited alcohol). \nPharmacotherapy for Stage 1 (>=130/80) with high ASCVD risk or Stage 2 (>=140/90): \n1. ACE inhibitors (e.g., Lisinopril 10-40 mg QD) \n2. ARBs (e.g., Losartan 50-100 mg QD) \n3. Thiazide-type diuretics (e.g., Chlorthalidone 12.5-25 mg QD) \n4. Calcium Channel Blockers (e.g., Amlodipine 5-10 mg QD).",
+      "alternatives": "Beta-blockers (preferred in patients with HFrEF or CAD), Mineralocorticoid receptor antagonists (Spironolactone for resistant hypertension), Alpha-1 blockers, or Central alpha-2 agonists.",
+      "redFlags": "Hypertensive crisis (BP >180/120 mmHg), Chest pain (acute coronary syndrome), Shortness of breath (pulmonary edema), Neurological deficits (stroke/TIA), Acute vision changes (retinal hemorrhage), Severe headache/confusion (encephalopathy).",
+      "followUp": "Re-evaluate monthly until blood pressure goal (<130/80 mmHg) is achieved. Once controlled, follow up every 3 to 6 months. Annual labs: CMP (electrolytes/renal function), fasting glucose/A1C, lipid panel, and urinalysis.",
+      "references": "AHA/ACC 2017 Guideline for High Blood Pressure in Adults"
+    },
+    {
+      "condition": "Type 2 diabetes mellitus",
+      "icd10": "E11",
+      "firstLineTreatment": "Lifestyle management: Medical Nutrition Therapy (MNT), weight management (7% loss goal), and physical activity (150 min/week). \nPharmacotherapy: Metformin (initial 500 mg QD, titrate to 1,000 mg BID) is the preferred initial agent if eGFR >30 mL/min. \nEarly combination therapy may be considered if A1C is 1.5-2.0% above target.",
+      "alternatives": "GLP-1 Receptor Agonists (e.g., Semaglutide) or SGLT2 Inhibitors (e.g., Empagliflozin) for patients with ASCVD, Heart Failure, or CKD regardless of A1C. DPP-4 inhibitors, Pioglitazone, or Sulfonylureas are secondary options. Insulin for severe hyperglycemia (A1C >10%).",
+      "redFlags": "Hyperglycemic Hyperosmolar State (HHS) or DKA (confusion, extreme thirst, polyuria, fruity breath), Severe Hypoglycemia (glucose <54 mg/dL), Non-healing foot ulcers (risk of osteomyelitis/amputation), Sudden vision loss, Unexplained weight loss.",
+      "followUp": "A1C every 3 months if not at goal; every 6 months if stable and meeting goals. Annual screenings: Comprehensive foot exam, Dilated eye exam, UACR (microalbuminuria), and Lipid panel. Target A1C <7.0% for most non-pregnant adults.",
+      "references": "ADA Standards of Care in Diabetes 2024"
+    },
+    {
+      "condition": "Asthma",
+      "icd10": "J45",
+      "firstLineTreatment": "GINA 2024 recommends Track 1 (Preferred): Low-dose Inhaled Corticosteroid (ICS)-formoterol as needed for symptom relief (rescue) and as maintenance for Steps 3-5. \nTrack 2: SABA rescue (e.g., Albuterol) PLUS regular daily low-dose ICS to reduce risk of severe exacerbations.",
+      "alternatives": "Leukotriene Receptor Antagonists (LTRA, e.g., Montelukast), Long-Acting Muscarinic Antagonists (LAMA), Biologic therapies (e.g., Omalizumab) for severe eosinophilic asthma, Bronchial thermoplasty for refractory cases.",
+      "redFlags": "Status asthmaticus: Silent chest (no air movement), Cyanosis (blue lips/nails), Inability to speak in full sentences, Peak expiratory flow <50% predicted, Accessory muscle use, Paradoxical pulse, Altered mental status.",
+      "followUp": "Review 1-3 months after treatment initiation, then every 3-12 months. Assess symptom control (ACT score), medication technique/adherence, and lung function (Spirometry). After an exacerbation, follow up within 1 week.",
+      "references": "GINA 2024 Global Strategy for Asthma Management and Prevention"
+    },
+    {
+      "condition": "Major depressive disorder",
+      "icd10": "F32",
+      "firstLineTreatment": "Pharmacotherapy: Selective Serotonin Reuptake Inhibitors (SSRIs - e.g., Sertraline 50-200 mg, Escitalopram 10-20 mg) or SNRIs (e.g., Venlafaxine, Duloxetine). \nPsychotherapy: Cognitive Behavioral Therapy (CBT) or Interpersonal Therapy (IPT). \nCombination therapy (Medication + Psychotherapy) is most effective for moderate to severe cases.",
+      "alternatives": "Atypical antidepressants (e.g., Bupropion, Mirtazapine), Tricyclic Antidepressants (TCAs), MAOIs (rarely used). Augmentation with atypical antipsychotics or Lithium. Electroconvulsive therapy (ECT) or Transcranial Magnetic Stimulation (TMS) for treatment-resistant depression.",
+      "redFlags": "Suicidal ideation with plan/intent, Psychosis (hallucinations/delusions), Catatonia, Severe self-neglect (dehydration/starvation), Serotonin Syndrome signs (if on meds), Bipolar switch (manic symptoms after starting antidepressants).",
+      "followUp": "Initially every 1-2 weeks to monitor for suicidal ideation and side effects. Assess response at 4-6 weeks (PHQ-9 score). Continue treatment for at least 6-9 months after remission to prevent relapse. For recurrent episodes, long-term maintenance may be required.",
+      "references": "WHO Mental Health Gap Action Programme (mhGAP); APA Practice Guideline"
+    },
+    {
+      "condition": "Anxiety disorder",
+      "icd10": "F41",
+      "firstLineTreatment": "Psychotherapy: Cognitive Behavioral Therapy (CBT) including exposure therapy. \nPharmacotherapy: SSRIs (e.g., Paroxetine, Sertraline) or SNRIs (e.g., Duloxetine, Venlafaxine) are first-line for GAD, Panic Disorder, and Social Anxiety. Start at half-depression doses to minimize initial jitteriness.",
+      "alternatives": "Buspirone (for GAD specifically), Pregabalin, Hydroxyzine. Benzodiazepines (e.g., Lorazepam, Alprazolam) only for short-term use/crisis management (risk of dependence). Beta-blockers (e.g., Propranolol) for performance anxiety/physical symptoms.",
+      "redFlags": "Suicidal ideation, Co-occurring substance use disorder, Severe panic attacks mimicking cardiac events, Significant functional impairment (inability to leave home/work), Agoraphobia development, Paradoxical reaction to benzodiazepines.",
+      "followUp": "Monitor every 2 weeks initially, then monthly until stable. Use GAD-7 scale to track progress. Treatment should continue for 6-12 months after symptoms stabilize. Taper medications slowly to avoid withdrawal/rebound anxiety.",
+      "references": "WHO mhGAP Intervention Guide; NICE Clinical Guidelines"
+    },
+    {
+      "condition": "Hyperlipidemia",
+      "icd10": "E78",
+      "firstLineTreatment": "Heart-healthy lifestyle: Saturated fat <7% of calories, eliminate trans fats, high fiber (soluble), plant sterols, and 150 min/week exercise. \nPharmacotherapy: HMG-CoA reductase inhibitors (Statins). High-intensity (Atorvastatin 40-80 mg, Rosuvastatin 20-40 mg) for clinical ASCVD or LDL >=190 mg/dL.",
+      "alternatives": "Ezetimibe (initial add-on to statins), PCSK9 Inhibitors (Evolocumab) for very high risk, Bempedoic acid, Fibrates (primarily for hypertriglyceridemia >500 mg/dL to prevent pancreatitis), Omega-3 fatty acids (Vascepa).",
+      "redFlags": "Statin-associated muscle symptoms (SAMS): Rhabdomyolysis (severe pain, dark tea-colored urine, weakness), LDL >=190 mg/dL in young adults (familial hypercholesterolemia), Acute pancreatitis (triglycerides >1,000 mg/dL).",
+      "followUp": "Repeat lipid panel 4-12 weeks after starting or adjusting statin therapy to assess adherence and percentage LDL reduction. Once stable, check every 3-12 months. Monitor ALT/AST only if symptoms of hepatotoxicity occur.",
+      "references": "AHA/ACC 2018 Guideline on the Management of Blood Cholesterol"
+    },
+    {
+      "condition": "Upper respiratory infection",
+      "icd10": "J06",
+      "firstLineTreatment": "Supportive care (90% are viral): Rest, hydration, honey for cough (adults/children >1y), saline nasal drops/rinses. \nSymptomatic relief: NSAIDs (Ibuprofen) or Acetaminophen for fever/sore throat/headache. Oral decongestants (Pseudoephedrine) for adults (short-term use).",
+      "alternatives": "Intranasal steroids for significant congestion. Antihistamines for rhinorrhea (older generation more effective but sedating). Dextromethorphan for non-productive cough. Ipratropium nasal spray for severe rhinorrhea.",
+      "redFlags": "Bacterial complications: Persistent symptoms >10 days without improvement, 'Double worsening' (new fever/cough after initial recovery), High fever (>102F) with purulent nasal discharge for 3+ days (Sinusitis), Drooling/stridor (Epiglottitis), Neck stiffness (Meningitis).",
+      "followUp": "Usually not required for uncomplicated URI. Advise 'watchful waiting' for 7-10 days. Instruct patient to return if symptoms worsen, respiratory distress develops, or fever persists beyond 3-5 days. Discourage routine antibiotic use for 'common cold'.",
+      "references": "CDC Adult Symptomatic Treatment for Common Cold and URI"
+    },
+    {
+      "condition": "Urinary tract infection",
+      "icd10": "N39",
+      "firstLineTreatment": "Uncomplicated Cystitis (Women): \n1. Nitrofurantoin (Macrobid) 100 mg BID for 5 days \n2. Trimethoprim-sulfamethoxazole (Bactrim DS) 1 BID for 3 days (if local resistance <20%) \n3. Fosfomycin 3g single dose. \nIncrease fluid intake.",
+      "alternatives": "Fluoroquinolones (Ciprofloxacin/Levofloxacin) should be reserved for complicated cases or when first-line options cannot be used. Beta-lactams (Amoxicillin-Clavulanate, Cefdinir) for 3-7 days. Phenazopyridine for short-term symptomatic pain relief.",
+      "redFlags": "Pyelonephritis: Flank pain, Costovertebral angle (CVA) tenderness, Fever/chills, Nausea/vomiting. \nSepsis: Hypotension, Tachycardia, Confusion. \nComplicated UTI: Pregnancy, Male gender, Immunosuppression, Nephrolithiasis, Recent catheterization.",
+      "followUp": "Not required for uncomplicated cystitis if symptoms resolve. For recurrent UTIs (>=3/year), consider lifestyle changes, post-coital prophylaxis, or vaginal estrogen in postmenopausal women. Culture/sensitivity required for all complicated or non-resolving cases.",
+      "references": "IDSA Guidelines for Treatment of Uncomplicated Cystitis"
+    },
+    {
+      "condition": "GERD",
+      "icd10": "K21",
+      "firstLineTreatment": "Lifestyle: Weight loss, elevating head of bed, avoiding late-night meals (within 3 hours of sleep), tobacco/alcohol cessation, and avoiding trigger foods (caffeine, chocolate, spicy). \nPharmacotherapy: Proton Pump Inhibitors (PPIs, e.g., Omeprazole 20 mg QD) for 8 weeks.",
+      "alternatives": "H2 Receptor Antagonists (e.g., Famotidine) for mild/intermittent symptoms. Antacids (Tums, Maalox) for immediate relief. Baclofen or Prokinetics (rarely). Surgical options (Nissen fundoplication) or endoscopic therapies for refractory cases.",
+      "redFlags": "Alarm symptoms: Dysphagia (difficulty swallowing), Odynophagia (painful swallowing), Unexplained weight loss, Iron deficiency anemia or GI bleeding (melena/hematemesis), Persistent vomiting, New onset symptoms in patients >60 years old.",
+      "followUp": "Assess response after 8 weeks of PPI therapy. If successful, attempt to taper to the lowest effective dose or 'on-demand' H2RA therapy. Refer for Endoscopy (EGD) if alarm symptoms are present or if symptoms persist despite optimized PPI therapy.",
+      "references": "ACG Clinical Guideline: Diagnosis and Management of GERD"
+    },
+    {
+      "condition": "Migraine",
+      "icd10": "G43",
+      "firstLineTreatment": "Acute: NSAIDs (Ibuprofen 400-800 mg, Naproxen 500 mg) or Acetaminophen for mild-moderate attacks. \nSpecific Acute: Triptans (e.g., Sumatriptan 50-100 mg) for moderate-severe attacks, taken at earliest onset. \nPreventive (>=4 days/month): Beta-blockers (Propranolol), Topiramate, Amitriptyline.",
+      "alternatives": "CGRP Antagonists (e.g., Ubrogepant for acute; Erenumab for prevention), Gepants, Ditans (Lasmiditan). Magnesium, Riboflavin (B2), or Coenzyme Q10 for natural prevention. Botox injections for chronic migraine (>=15 days/month).",
+      "redFlags": "SNOOP mnemonic: Systemic symptoms (fever, weight loss), Neurologic signs, Onset sudden (Thunderclap headache), Older age at onset (>50y), Progression or change in pattern. Pregnancy (limited drug options). Aura lasting >60 minutes.",
+      "followUp": "Maintain a headache diary to identify triggers and monitor frequency/severity. Re-evaluate every 2-4 weeks when initiating prevention. Screen for Medication Overuse Headache (MOH) if acute treatments used >10-15 days/month. Target 50% reduction in frequency.",
+      "references": "American Headache Society/AAN Evidence-Based Guidelines"
+    }
+  ]
+}
