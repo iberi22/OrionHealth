@@ -5,6 +5,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/llm_settings_cubit.dart';
 import '../../domain/services/device_capability_service.dart';
+import '../../../local_agent/domain/services/llm_adapter.dart';
+import '../../../local_agent/infrastructure/adapters/flutter_gemma_adapter.dart';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -453,14 +455,37 @@ class _ModelListItem extends StatelessWidget {
                 _actionButton(
                   label: 'Usar',
                   icon: Icons.play_arrow,
-                  onTap: () {
-                    context
+                  onTap: () async {
+                    final adapter = getIt<LlmAdapter>(instanceName: 'gemma')
+                        as FlutterGemmaAdapter;
+
+                    final isInstalled = await adapter.isModelInstalled(modelId);
+
+                    if (!context.mounted) return;
+
+                    if (!isInstalled) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('El modelo $modelName no está instalado'),
+                          backgroundColor: Colors.orangeAccent,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                      return;
+                    }
+
+                    await context
                         .read<LlmSettingsCubit>()
                         .updateLocalModel(modelId);
+                    await adapter.reloadActiveModel();
+
+                    if (!context.mounted) return;
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Usando $modelName'),
-                        backgroundColor: AppColors.primary.withValues(alpha: 0.71),
+                        content: Text('$modelName activado para inferencia'),
+                        backgroundColor:
+                            AppColors.primary.withValues(alpha: 0.71),
                         duration: const Duration(seconds: 1),
                       ),
                     );
