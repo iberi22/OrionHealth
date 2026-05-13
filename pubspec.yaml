@@ -40,7 +40,7 @@ dependencies:
   image_picker: ^1.2.2
   uuid: ^4.5.3
   intl: ^0.20.2
-  flutter_bloc: ^8.1.0
+  flutter_bloc: ^9.1.1
   hex: ^0.2.0
   path: ^1.8.0
   google_generative_ai: ^0.4.7
