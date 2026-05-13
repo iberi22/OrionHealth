@@ -15,13 +15,22 @@ abstract class LlmAdapter {
   /// Optional: Check if the adapter is available/configured
   Future<bool> isAvailable();
 
-  /// Optional: List all installed model identifiers.
-  Future<List<String>> listInstalledModels() {
-    return Future.value([]);
-  }
+  /// Install a model from a network URL.
+  /// Returns a stream of progress percentages (0–100).
+  Stream<int> installModel({
+    required String modelId,
+    required String url,
+  });
 
-  /// Optional: Check whether a model (by its identifier) is installed.
-  Future<bool> isModelInstalled(String modelId) {
-    return Future.value(false);
-  }
+  /// List all installed model file identifiers.
+  Future<List<String>> listInstalledModels();
+
+  /// Uninstall (delete) a model from disk.
+  Future<void> uninstallModel(String modelId);
+
+  /// Stop an active download.
+  Future<void> cancelDownload(String modelId);
+
+  /// Check whether a model (by its identifier) is installed.
+  Future<bool> isModelInstalled(String modelId);
 }

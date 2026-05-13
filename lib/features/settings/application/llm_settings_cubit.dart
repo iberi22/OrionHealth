@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
-import '../../local_agent/domain/services/llm_adapter.dart';
 import '../domain/entities/llm_config.dart';
 import '../domain/repositories/llm_settings_repository.dart';
 import '../domain/services/device_capability_service.dart';
+import '../../local_agent/domain/services/llm_adapter.dart';
+import '../../local_agent/domain/entities/local_model_descriptor.dart';
 
 part 'llm_settings_state.dart';
 
@@ -30,17 +32,37 @@ const List<String> availableOpenaiModels = [
   'claude-3-sonnet',
 ];
 
+/// Available local models for flutter_gemma
+const List<Map<String, dynamic>> availableLocalModels = [
+  {'id': 'gemma-3-270m', 'name': 'Gemma 3 270M', 'size': '270MB', 'minRam': '2GB'},
+  {'id': 'qwen3-0.6b', 'name': 'Qwen3 0.6B', 'size': '600MB', 'minRam': '3GB'},
+  {'id': 'deepseek-r1', 'name': 'DeepSeek R1', 'size': '1.7GB', 'minRam': '4GB'},
+  {'id': 'phi-4-mini', 'name': 'Phi-4 Mini', 'size': '3.9GB', 'minRam': '6GB'},
+  {'id': 'smolLM-135m', 'name': 'SmolLM 135M', 'size': '135MB', 'minRam': '1GB'},
+  {'id': 'gemma-4-e2b', 'name': 'Gemma 4 E2B', 'size': '2.4GB', 'minRam': '6GB', 'requiresGpu': true},
+];
+
 @injectable
 class LlmSettingsCubit extends Cubit<LlmSettingsState> {
   final LlmSettingsRepository _repository;
   final DeviceCapabilityService _deviceCapabilityService;
-  final LlmAdapter _gemmaAdapter;
+  final LlmAdapter _llmAdapter;
+
+  final Map<String, StreamSubscription<int>> _downloadSubscriptions = {};
 
   LlmSettingsCubit(
     this._repository,
     this._deviceCapabilityService,
-    @Named('gemma') this._gemmaAdapter,
+    @Named('gemma') this._llmAdapter,
   ) : super(LlmSettingsInitial());
+
+  @override
+  Future<void> close() {
+    for (final subscription in _downloadSubscriptions.values) {
+      subscription.cancel();
+    }
+    return super.close();
+  }
 
   Future<void> loadSettings() async {
     emit(LlmSettingsLoading());
@@ -48,29 +70,16 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
       final config = await _repository.getLlmConfig();
       final capability = await _deviceCapabilityService.detectCapability();
 
-      // Fetch actually installed models
-      final installedModels = await _gemmaAdapter.listInstalledModels();
-      final localModelList = availableLocalModelDefs.map((model) {
-        final isInstalled = installedModels.contains(model.id);
-        return {
-          'id': model.id,
-          'name': model.name,
-          'size': model.size,
-          'minRam': model.minRam,
-          'requiresGpu': model.requiresGpu,
-          'isInstalled': isInstalled,
-        };
-      }).toList();
-
       if (config != null) {
-        emit(LlmSettingsLoaded(
+        final loadedState = LlmSettingsLoaded(
           config: config.copyWith(
             deviceCapabilityTier: capability.tier.name,
             recommendedModel: capability.recommendedModel,
           ),
           deviceCapability: capability,
-          localModelList: localModelList,
-        ));
+        );
+        emit(loadedState);
+        await _refreshInstalledModels();
       } else {
         // Create default config based on device capability
         final defaultConfig = LlmConfig(
@@ -81,11 +90,12 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
           recommendedModel: capability.recommendedModel,
         );
         await _repository.saveLlmConfig(defaultConfig);
-        emit(LlmSettingsLoaded(
+        final loadedState = LlmSettingsLoaded(
           config: defaultConfig,
           deviceCapability: capability,
-          localModelList: localModelList,
-        ));
+        );
+        emit(loadedState);
+        await _refreshInstalledModels();
       }
     } catch (e) {
       emit(LlmSettingsError(e.toString()));
@@ -166,6 +176,98 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
       final updatedConfig = currentState.config.copyWith(localModelId: modelId);
       await _repository.saveLlmConfig(updatedConfig);
       emit(currentState.copyWith(config: updatedConfig));
+    }
+  }
+
+  Future<void> _refreshInstalledModels() async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      try {
+        final installed = await _llmAdapter.listInstalledModels();
+        emit(currentState.copyWith(installedModels: installed.toSet()));
+      } catch (_) {
+        // Silent fail or update state with error if needed
+      }
+    }
+  }
+
+  Future<void> downloadModel(String modelId) async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      if (_downloadSubscriptions.containsKey(modelId)) return;
+
+      final descriptor = kAvailableLocalModels.firstWhere(
+        (m) => m.id == modelId,
+        orElse: () => throw ArgumentError('Unknown model: $modelId'),
+      );
+
+      final subscription = _llmAdapter
+          .installModel(modelId: modelId, url: descriptor.url)
+          .listen(
+        (progress) {
+          final updatedState = state;
+          if (updatedState is LlmSettingsLoaded) {
+            final newProgress = Map<String, double>.from(updatedState.downloadProgress);
+            newProgress[modelId] = progress / 100.0;
+            emit(updatedState.copyWith(downloadProgress: newProgress));
+          }
+        },
+        onDone: () {
+          _downloadSubscriptions.remove(modelId);
+          final updatedState = state;
+          if (updatedState is LlmSettingsLoaded) {
+            final newProgress = Map<String, double>.from(updatedState.downloadProgress);
+            newProgress.remove(modelId);
+            emit(updatedState.copyWith(downloadProgress: newProgress));
+          }
+          _refreshInstalledModels();
+        },
+        onError: (e) {
+          _downloadSubscriptions.remove(modelId);
+          final updatedState = state;
+          if (updatedState is LlmSettingsLoaded) {
+            final newProgress = Map<String, double>.from(updatedState.downloadProgress);
+            newProgress.remove(modelId);
+            emit(updatedState.copyWith(
+              downloadProgress: newProgress,
+              connectionError: 'Download failed: $e',
+            ));
+          }
+        },
+      );
+
+      _downloadSubscriptions[modelId] = subscription;
+
+      // Initial progress update
+      final newProgress = Map<String, double>.from(currentState.downloadProgress);
+      newProgress[modelId] = 0.0;
+      emit(currentState.copyWith(downloadProgress: newProgress));
+    }
+  }
+
+  Future<void> cancelDownload(String modelId) async {
+    final subscription = _downloadSubscriptions.remove(modelId);
+    if (subscription != null) {
+      await subscription.cancel();
+      await _llmAdapter.cancelDownload(modelId);
+      final currentState = state;
+      if (currentState is LlmSettingsLoaded) {
+        final newProgress = Map<String, double>.from(currentState.downloadProgress);
+        newProgress.remove(modelId);
+        emit(currentState.copyWith(downloadProgress: newProgress));
+      }
+    }
+  }
+
+  Future<void> deleteModel(String modelId) async {
+    try {
+      await _llmAdapter.uninstallModel(modelId);
+      await _refreshInstalledModels();
+    } catch (e) {
+      final currentState = state;
+      if (currentState is LlmSettingsLoaded) {
+        emit(currentState.copyWith(connectionError: 'Delete failed: $e'));
+      }
     }
   }
 

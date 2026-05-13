@@ -5,6 +5,10 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/llm_settings_cubit.dart';
 import '../../domain/services/device_capability_service.dart';
+import '../../../local_agent/domain/services/llm_adapter.dart';
+import '../../../local_agent/infrastructure/adapters/flutter_gemma_adapter.dart';
+
+import '../../../../features/local_agent/domain/entities/local_model_descriptor.dart';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -21,6 +25,10 @@ const List<String> cloudModels = [
   'gemini-2.5-flash',
   'gemini-2.5-pro',
 ];
+
+// ---------------------------------------------------------------------------
+// Download status enum
+// ---------------------------------------------------------------------------
 
 enum _DownloadStatus { notDownloaded, downloading, ready }
 
@@ -45,7 +53,6 @@ class LlmSettingsPage extends StatelessWidget {
             return _LlmSettingsView(
               config: state.config,
               deviceCapability: state.deviceCapability,
-              localModelList: state.localModelList ?? [],
             );
           } else if (state is LlmSettingsError) {
             return Scaffold(
@@ -85,12 +92,10 @@ class LlmSettingsPage extends StatelessWidget {
 class _LlmSettingsView extends StatelessWidget {
   final dynamic config;
   final DeviceCapability deviceCapability;
-  final List<Map<String, dynamic>> localModelList;
 
   const _LlmSettingsView({
     required this.config,
     required this.deviceCapability,
-    required this.localModelList,
   });
 
   @override
@@ -158,7 +163,6 @@ class _LlmSettingsView extends StatelessWidget {
             _LocalModelsTab(
               config: config,
               deviceCapability: deviceCapability,
-              localModelList: localModelList,
             ),
             _CloudProviderTab(config: config),
             _ExecutionModeTab(config: config),
@@ -176,101 +180,112 @@ class _LlmSettingsView extends StatelessWidget {
 class _LocalModelsTab extends StatelessWidget {
   final dynamic config;
   final DeviceCapability deviceCapability;
-  final List<Map<String, dynamic>> localModelList;
 
   const _LocalModelsTab({
     required this.config,
     required this.deviceCapability,
-    required this.localModelList,
   });
 
   int _getAvailableRamMb() {
-    final totalRamMb = deviceCapability.totalMemoryMb;
+    final totalRamGbTxt = deviceCapability.totalMemoryMb;
     // Rough estimate: 40% of total RAM is typically available
-    return (totalRamMb * 0.4).round();
+    return (totalRamGbTxt * 0.4).round();
   }
 
-  bool _isCompatible(Map<String, dynamic> model) {
-    final minRamStr = model['minRam']?.toString() ?? '4GB';
-    final minRamValue = int.tryParse(minRamStr.replaceAll(RegExp(r'[^0-9]'), '')) ?? 4;
-    final minRamMb = minRamStr.contains('GB') ? minRamValue * 1024 : minRamValue;
-    return _getAvailableRamMb() >= minRamMb;
+  bool _isCompatible(LocalModelDescriptor model) {
+    return _getAvailableRamMb() >= model.minRamMb;
   }
 
   @override
   Widget build(BuildContext context) {
     final availableRamMb = _getAvailableRamMb();
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // -- Device Capability Card (existing widget) --
-          _DeviceCapabilityCard(deviceCapability: deviceCapability),
-          const SizedBox(height: 24),
+    return BlocBuilder<LlmSettingsCubit, LlmSettingsState>(
+      builder: (context, state) {
+        if (state is! LlmSettingsLoaded) return const SizedBox.shrink();
 
-          // -- Section header --
-          Row(
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.inventory_2_outlined,
-                  color: Colors.white70, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'Modelos Disponibles',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
+              // -- Device Capability Card (existing widget) --
+              _DeviceCapabilityCard(deviceCapability: deviceCapability),
+              const SizedBox(height: 24),
+
+              // -- Section header --
+              Row(
+                children: [
+                  const Icon(Icons.inventory_2_outlined,
+                      color: Colors.white70, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Modelos Disponibles',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '${kAvailableLocalModels.length} modelos',
+                      style: const TextStyle(
+                          fontSize: 12, color: Colors.white54),
+                    ),
+                  ),
+                ],
               ),
-              const Spacer(),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '${localModelList.length} modelos',
-                  style: const TextStyle(
-                      fontSize: 12, color: Colors.white54),
-                ),
-              ),
+              const SizedBox(height: 12),
+
+              // -- Model list --
+              ...kAvailableLocalModels.map((model) {
+                final isInstalled = state.installedModels.contains(model.id);
+                final progress = state.downloadProgress[model.id];
+                final isDownloading = progress != null;
+
+                final status = isInstalled
+                    ? _DownloadStatus.ready
+                    : isDownloading
+                        ? _DownloadStatus.downloading
+                        : _DownloadStatus.notDownloaded;
+
+                final compatible = _isCompatible(model);
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _ModelListItem(
+                    model: model,
+                    status: status,
+                    progress: progress ?? 0.0,
+                    compatible: compatible,
+                    availableRamMb: availableRamMb,
+                    isCurrentModel: state.config.localModelId == model.id,
+                  ),
+                );
+              }),
             ],
           ),
-          const SizedBox(height: 12),
-
-          // -- Model list --
-          ...localModelList.map((model) {
-            final isInstalled = model['isInstalled'] as bool? ?? false;
-            final status = isInstalled ? _DownloadStatus.ready : _DownloadStatus.notDownloaded;
-            final progress = 0.0; // Download progress tracking not yet implemented in Cubit
-            final compatible = _isCompatible(model);
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: _ModelListItem(
-                model: model,
-                status: status,
-                progress: progress,
-                compatible: compatible,
-                availableRamMb: availableRamMb,
-              ),
-            );
-          }),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class _ModelListItem extends StatelessWidget {
-  final Map<String, dynamic> model;
+  final LocalModelDescriptor model;
   final _DownloadStatus status;
   final double progress;
   final bool compatible;
   final int availableRamMb;
+  final bool isCurrentModel;
 
   const _ModelListItem({
     required this.model,
@@ -278,14 +293,15 @@ class _ModelListItem extends StatelessWidget {
     required this.progress,
     required this.compatible,
     required this.availableRamMb,
+    required this.isCurrentModel,
   });
 
   @override
   Widget build(BuildContext context) {
-    final modelId = model['id'] ?? '';
-    final modelName = model['name'] ?? modelId;
-    final size = model['size'] ?? '—';
-    final minRamStr = model['minRam'] ?? '4GB';
+    final modelId = model.id;
+    final modelName = model.displayName;
+    final size = model.sizeLabel;
+    final minRamStr = '${(model.minRamMb / 1024).toStringAsFixed(0)}GB';
 
     return GlassmorphicCard(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -312,13 +328,36 @@ class _ModelListItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      modelName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          modelName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                        if (isCurrentModel) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text(
+                              'ACTIVO',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -399,56 +438,69 @@ class _ModelListItem extends StatelessWidget {
                   label: 'Descargar',
                   icon: Icons.download,
                   onTap: () {
-                    // Placeholder – download logic will go here
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Descargando $modelName...'),
-                        backgroundColor: AppColors.surfaceVariant,
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
+                    context.read<LlmSettingsCubit>().downloadModel(modelId);
                   },
                 ),
               ],
               if (status == _DownloadStatus.downloading) ...[
                 const Spacer(),
                 _actionButton(
-                  label: 'Pausar',
-                  icon: Icons.pause,
-                  isSecondary: true,
-                  onTap: () {},
-                ),
-                const SizedBox(width: 8),
-                _actionButton(
                   label: 'Cancelar',
                   icon: Icons.cancel_outlined,
                   isSecondary: true,
-                  onTap: () {},
+                  onTap: () {
+                    context.read<LlmSettingsCubit>().cancelDownload(modelId);
+                  },
                 ),
               ],
               if (status == _DownloadStatus.ready) ...[
                 _actionButton(
-                  label: 'Usar',
+label: 'Usar',
                   icon: Icons.play_arrow,
-                  onTap: () {
-                    context
+                  onTap: () async {
+                    final adapter = getIt<LlmAdapter>(instanceName: 'gemma')
+                        as FlutterGemmaAdapter;
+
+                    final isInstalled = await adapter.isModelInstalled(modelId);
+
+                    if (!context.mounted) return;
+
+                    if (!isInstalled) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('El modelo $modelName no está instalado'),
+                          backgroundColor: Colors.orangeAccent,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                      return;
+                    }
+
+                    await context
                         .read<LlmSettingsCubit>()
                         .updateLocalModel(modelId);
+                    await adapter.reloadActiveModel();
+
+                    if (!context.mounted) return;
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Usando $modelName'),
-                        backgroundColor: AppColors.primary.withValues(alpha: 0.71),
+                        content: Text('$modelName activado para inferencia'),
+                        backgroundColor:
+                            AppColors.primary.withValues(alpha: 0.71),
                         duration: const Duration(seconds: 1),
                       ),
                     );
-                  },
+                  }
                 ),
                 const SizedBox(width: 8),
                 _actionButton(
                   label: 'Eliminar',
                   icon: Icons.delete_outline,
                   isSecondary: true,
-                  onTap: () {},
+                  onTap: () {
+                    context.read<LlmSettingsCubit>().deleteModel(modelId);
+                  },
                 ),
               ],
             ],
@@ -960,7 +1012,7 @@ class _ConnectionTestWidget extends StatelessWidget {
                 'Verificar Conexión',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+                  color: Colors.black,
                   fontSize: 15,
                 ),
               ),

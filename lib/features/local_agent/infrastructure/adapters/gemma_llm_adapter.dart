@@ -100,4 +100,23 @@ class GemmaLlmAdapter implements LlmAdapter {
       throw Exception('Gemma 4 generation failed (local + cloud): $e');
     }
   }
+
+  @override
+  Stream<int> installModel({required String modelId, required String url}) {
+    throw UnsupportedError('GemmaLlmAdapter is legacy and does not support installations.');
+  }
+
+  @override
+  Future<List<String>> listInstalledModels() async {
+    return [];
+  }
+
+  @override
+  Future<void> uninstallModel(String modelId) async {}
+
+  @override
+  Future<void> cancelDownload(String modelId) async {}
+
+  @override
+  Future<bool> isModelInstalled(String modelId) async => false;
 }
