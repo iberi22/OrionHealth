@@ -24,7 +24,7 @@ jobs:
   validate-git-core:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Validate Git-Core Protocol
         run: |
           if [ -f ".gitcore/version" ]; then
@@ -41,7 +41,7 @@ jobs:
         working-directory: ./docs
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
         uses: actions/setup-node@v6
