@@ -5,6 +5,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/llm_settings_cubit.dart';
 import '../../domain/services/device_capability_service.dart';
+import '../../../local_agent/domain/services/llm_adapter.dart';
+import '../../../local_agent/infrastructure/adapters/flutter_gemma_adapter.dart';
 
 import '../../../../features/local_agent/domain/entities/local_model_descriptor.dart';
 
@@ -453,22 +455,43 @@ class _ModelListItem extends StatelessWidget {
               ],
               if (status == _DownloadStatus.ready) ...[
                 _actionButton(
-                  label: isCurrentModel ? 'En uso' : 'Usar',
-                  icon: isCurrentModel ? Icons.check : Icons.play_arrow,
-                  onTap: isCurrentModel
-                      ? () {}
-                      : () {
-                          context
-                              .read<LlmSettingsCubit>()
-                              .updateLocalModel(modelId);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Usando $modelName'),
-                              backgroundColor: AppColors.primary.withValues(alpha: 0.71),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
-                        },
+label: 'Usar',
+                  icon: Icons.play_arrow,
+                  onTap: () async {
+                    final adapter = getIt<LlmAdapter>(instanceName: 'gemma')
+                        as FlutterGemmaAdapter;
+
+                    final isInstalled = await adapter.isModelInstalled(modelId);
+
+                    if (!context.mounted) return;
+
+                    if (!isInstalled) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('El modelo $modelName no está instalado'),
+                          backgroundColor: Colors.orangeAccent,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                      return;
+                    }
+
+                    await context
+                        .read<LlmSettingsCubit>()
+                        .updateLocalModel(modelId);
+                    await adapter.reloadActiveModel();
+
+                    if (!context.mounted) return;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('$modelName activado para inferencia'),
+                        backgroundColor:
+                            AppColors.primary.withValues(alpha: 0.71),
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  }
                 ),
                 const SizedBox(width: 8),
                 _actionButton(
