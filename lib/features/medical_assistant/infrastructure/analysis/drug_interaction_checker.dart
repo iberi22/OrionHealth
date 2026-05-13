@@ -230,24 +230,24 @@ class DrugInteractionChecker {
   static Map<String, _InteractionRule> _initInteractions() {
     return {
       // Major interactions
-      '314076-1191': _InteractionRule(InteractionSeverity.major, 'Increased risk of hyperkalemia and renal impairment', 'Monitor potassium and renal function. Consider alternative antihypertensive.'),
-      '1191-314076': _InteractionRule(InteractionSeverity.major, 'Increased risk of hyperkalemia and renal impairment', 'Monitor potassium and renal function. Consider alternative antihypertensive.'),
-      '161-310410': _InteractionRule(InteractionSeverity.major, 'Increased risk of bleeding and hemorrhage', 'Avoid combination. Use alternative anticoagulant or antiplatelet.'),
-      '310410-161': _InteractionRule(InteractionSeverity.major, 'Increased risk of bleeding and hemorrhage', 'Avoid combination. Use alternative anticoagulant or antiplatelet.'),
-      '723-7052': _InteractionRule(InteractionSeverity.major, 'Increased statin levels - risk of rhabdomyolysis', 'Avoid simvastatin. Use lowest effective dose of atorvastatin or rosuvastatin.'),
-      '7052-723': _InteractionRule(InteractionSeverity.major, 'Increased statin levels - risk of rhabdomyolysis', 'Avoid simvastatin. Use lowest effective dose of atorvastatin or rosuvastatin.'),
-      '860090-161': _InteractionRule(InteractionSeverity.major, 'Increased risk of bleeding and hemorrhage', 'Avoid combination. Use alternative pain management.'),
-      '161-860090': _InteractionRule(InteractionSeverity.major, 'Increased risk of bleeding and hemorrhage', 'Avoid combination. Use alternative pain management.'),
+      '29046-9997': _InteractionRule(InteractionSeverity.major, 'Increased risk of hyperkalemia and renal impairment', 'Monitor potassium and renal function. Consider alternative antihypertensive.'),
+      '9997-29046': _InteractionRule(InteractionSeverity.major, 'Increased risk of hyperkalemia and renal impairment', 'Monitor potassium and renal function. Consider alternative antihypertensive.'),
+      '11289-1191': _InteractionRule(InteractionSeverity.major, 'Increased risk of bleeding and hemorrhage', 'Avoid combination. Use alternative anticoagulant or antiplatelet.'),
+      '1191-11289': _InteractionRule(InteractionSeverity.major, 'Increased risk of bleeding and hemorrhage', 'Avoid combination. Use alternative anticoagulant or antiplatelet.'),
+      '36567-21212': _InteractionRule(InteractionSeverity.major, 'Increased statin levels - risk of rhabdomyolysis', 'Avoid simvastatin. Use lowest effective dose of atorvastatin or rosuvastatin.'),
+      '21212-36567': _InteractionRule(InteractionSeverity.major, 'Increased statin levels - risk of rhabdomyolysis', 'Avoid simvastatin. Use lowest effective dose of atorvastatin or rosuvastatin.'),
+      '5640-11289': _InteractionRule(InteractionSeverity.major, 'Increased risk of bleeding and hemorrhage', 'Avoid combination. Use alternative pain management.'),
+      '11289-5640': _InteractionRule(InteractionSeverity.major, 'Increased risk of bleeding and hemorrhage', 'Avoid combination. Use alternative pain management.'),
 
       // Moderate interactions
-      '314076-310410': _InteractionRule(InteractionSeverity.moderate, 'ACE inhibitor + anticoagulant: increased bleeding risk in elderly', 'Monitor INR and renal function. Educate patient about bleeding signs.'),
-      '310410-314076': _InteractionRule(InteractionSeverity.moderate, 'ACE inhibitor + anticoagulant: increased bleeding risk in elderly', 'Monitor INR and renal function. Educate patient about bleeding signs.'),
-      '1191-310410': _InteractionRule(InteractionSeverity.moderate, 'ARB + anticoagulant: potential increased bleeding risk', 'Monitor renal function and bleeding signs.'),
-      '310410-1191': _InteractionRule(InteractionSeverity.moderate, 'ARB + anticoagulant: potential increased bleeding risk', 'Monitor renal function and bleeding signs.'),
-      '6809-1191': _InteractionRule(InteractionSeverity.moderate, 'Metformin + contrast dye: risk of lactic acidosis', 'Hold metformin 48h before and after contrast procedures.'),
-      '1191-6809': _InteractionRule(InteractionSeverity.moderate, 'Metformin + contrast dye: risk of lactic acidosis', 'Hold metformin 48h before and after contrast procedures.'),
-      '723-310410': _InteractionRule(InteractionSeverity.moderate, 'Statin + anticoagulant: possible increased INR', 'Monitor INR more frequently when starting/changing statin therapy.'),
-      '310410-723': _InteractionRule(InteractionSeverity.moderate, 'Statin + anticoagulant: possible increased INR', 'Monitor INR more frequently when starting/changing statin therapy.'),
+      '29046-11289': _InteractionRule(InteractionSeverity.moderate, 'ACE inhibitor + anticoagulant: increased bleeding risk in elderly', 'Monitor INR and renal function. Educate patient about bleeding signs.'),
+      '11289-29046': _InteractionRule(InteractionSeverity.moderate, 'ACE inhibitor + anticoagulant: increased bleeding risk in elderly', 'Monitor INR and renal function. Educate patient about bleeding signs.'),
+      '40188-11289': _InteractionRule(InteractionSeverity.moderate, 'ARB + anticoagulant: potential increased bleeding risk', 'Monitor renal function and bleeding signs.'),
+      '11289-40188': _InteractionRule(InteractionSeverity.moderate, 'ARB + anticoagulant: potential increased bleeding risk', 'Monitor renal function and bleeding signs.'),
+      '6809-5970': _InteractionRule(InteractionSeverity.moderate, 'Metformin + contrast dye: risk of lactic acidosis', 'Hold metformin 48h before and after contrast procedures.'),
+      '5970-6809': _InteractionRule(InteractionSeverity.moderate, 'Metformin + contrast dye: risk of lactic acidosis', 'Hold metformin 48h before and after contrast procedures.'),
+      '36567-11289': _InteractionRule(InteractionSeverity.moderate, 'Statin + anticoagulant: possible increased INR', 'Monitor INR more frequently when starting/changing statin therapy.'),
+      '11289-36567': _InteractionRule(InteractionSeverity.moderate, 'Statin + anticoagulant: possible increased INR', 'Monitor INR more frequently when starting/changing statin therapy.'),
     };
   }
 

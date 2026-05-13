@@ -13,8 +13,8 @@ void main() {
   group('DrugInteractionChecker - Drug-Drug Interactions', () {
     test('detects major interaction between specific RxNorm codes (Warfarin + Aspirin)', () {
       final medications = [
-        const Medication(rxnormCode: '161', displayName: 'Warfarin'),
-        const Medication(rxnormCode: '310410', displayName: 'Aspirin'),
+        const Medication(rxnormCode: '11289', displayName: 'Warfarin'),
+        const Medication(rxnormCode: '1191', displayName: 'Aspirin'),
       ];
 
       final result = checker.checkInteractions(medications);
@@ -47,7 +47,7 @@ void main() {
 
     test('returns no interactions for safe combination (Acetaminophen + Amoxicillin)', () {
       final medications = [
-        const Medication(rxnormCode: '1611', displayName: 'Acetaminophen'),
+        const Medication(rxnormCode: '161', displayName: 'Acetaminophen'),
         const Medication(rxnormCode: '723', displayName: 'Amoxicillin'),
       ];
 
@@ -74,8 +74,8 @@ void main() {
 
     test('generates critical insights for major interactions', () {
       final medications = [
-        const Medication(rxnormCode: '161', displayName: 'Warfarin'),
-        const Medication(rxnormCode: '310410', displayName: 'Aspirin'),
+        const Medication(rxnormCode: '11289', displayName: 'Warfarin'),
+        const Medication(rxnormCode: '1191', displayName: 'Aspirin'),
       ];
 
       final result = checker.checkInteractions(medications);
@@ -87,12 +87,12 @@ void main() {
     test('supports Spanish medication names via displayName', () {
       final medications = [
         const Medication(
-          rxnormCode: '111',
+          rxnormCode: '11289',
           displayName: 'Warfarina',
           drugClass: 'anticoagulant'
         ),
         const Medication(
-          rxnormCode: '222',
+          rxnormCode: '5640',
           displayName: 'Aspirina',
           drugClass: 'nsaid'
         ),

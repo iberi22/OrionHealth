@@ -1,0 +1,2364 @@
+{
+  "metadata": {
+    "standard": "Drug-Drug Interactions",
+    "version": "1.1.0",
+    "lastUpdated": "2026-05-13",
+    "source": "OrionHealth Internal Safety DB",
+    "totalCount": 181
+  },
+  "data": [
+    {
+      "drugA": {
+        "code": "10324",
+        "name": "Tamoxifen"
+      },
+      "drugB": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "severity": "major",
+      "description": "Reduced clinical efficacy of tamoxifen in breast cancer prevention.",
+      "mechanism": "Inhibition of CYP2D6 prevents conversion of tamoxifen to its active metabolites."
+    },
+    {
+      "drugA": {
+        "code": "10324",
+        "name": "Tamoxifen"
+      },
+      "drugB": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "severity": "major",
+      "description": "Reduced clinical efficacy of tamoxifen in breast cancer prevention.",
+      "mechanism": "Inhibition of CYP2D6 prevents conversion of tamoxifen to its active metabolites."
+    },
+    {
+      "drugA": {
+        "code": "10324",
+        "name": "Tamoxifen"
+      },
+      "drugB": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "severity": "major",
+      "description": "Reduced clinical efficacy of tamoxifen in breast cancer prevention.",
+      "mechanism": "Inhibition of CYP2D6 prevents conversion of tamoxifen to its active metabolites."
+    },
+    {
+      "drugA": {
+        "code": "1039156",
+        "name": "Apixaban"
+      },
+      "drugB": {
+        "code": "1191",
+        "name": "Aspirin"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "1039156",
+        "name": "Apixaban"
+      },
+      "drugB": {
+        "code": "32968",
+        "name": "Clopidogrel"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "1039156",
+        "name": "Apixaban"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "1039156",
+        "name": "Apixaban"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "1039156",
+        "name": "Apixaban"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "10582",
+        "name": "Levothyroxine"
+      },
+      "drugB": {
+        "code": "1897",
+        "name": "Calcium carbonate"
+      },
+      "severity": "moderate",
+      "description": "Reduced drug absorption leading to therapeutic failure.",
+      "mechanism": "Formation of insoluble chelates in the gastrointestinal tract."
+    },
+    {
+      "drugA": {
+        "code": "1114195",
+        "name": "Rivaroxaban"
+      },
+      "drugB": {
+        "code": "1191",
+        "name": "Aspirin"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "1114195",
+        "name": "Rivaroxaban"
+      },
+      "drugB": {
+        "code": "32968",
+        "name": "Clopidogrel"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "1114195",
+        "name": "Rivaroxaban"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "1114195",
+        "name": "Rivaroxaban"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "1114195",
+        "name": "Rivaroxaban"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "1191",
+        "name": "Aspirin"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "18631",
+        "name": "Azithromycin"
+      },
+      "severity": "major",
+      "description": "Enhanced anticoagulant effect increases bleeding risk significantly.",
+      "mechanism": "Inhibition of CYP450 enzymes and alteration of Vitamin K-producing gut flora."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "21212",
+        "name": "Clarithromycin"
+      },
+      "severity": "major",
+      "description": "Enhanced anticoagulant effect increases bleeding risk significantly.",
+      "mechanism": "Inhibition of CYP450 enzymes and alteration of Vitamin K-producing gut flora."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "2551",
+        "name": "Ciprofloxacin"
+      },
+      "severity": "major",
+      "description": "Enhanced anticoagulant effect increases bleeding risk significantly.",
+      "mechanism": "Inhibition of CYP450 enzymes and alteration of Vitamin K-producing gut flora."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "32968",
+        "name": "Clopidogrel"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "major",
+      "description": "Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.",
+      "mechanism": "Synergistic effect on coagulation cascade and platelet aggregation inhibition."
+    },
+    {
+      "drugA": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "drugB": {
+        "code": "82122",
+        "name": "Levofloxacin"
+      },
+      "severity": "major",
+      "description": "Enhanced anticoagulant effect increases bleeding risk significantly.",
+      "mechanism": "Inhibition of CYP450 enzymes and alteration of Vitamin K-producing gut flora."
+    },
+    {
+      "drugA": {
+        "code": "1202",
+        "name": "Atenolol"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "1202",
+        "name": "Atenolol"
+      },
+      "drugB": {
+        "code": "145507",
+        "name": "Glimepiride"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "1202",
+        "name": "Atenolol"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "1202",
+        "name": "Atenolol"
+      },
+      "drugB": {
+        "code": "4820",
+        "name": "Gliclazide"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "135561",
+        "name": "Sildenafil"
+      },
+      "drugB": {
+        "code": "35827",
+        "name": "Isosorbide mononitrate"
+      },
+      "severity": "major",
+      "description": "Severe, potentially fatal hypotension. Co-administration is strictly contraindicated.",
+      "mechanism": "Potentiation of nitric oxide-mediated vasodilation via cGMP accumulation."
+    },
+    {
+      "drugA": {
+        "code": "135561",
+        "name": "Sildenafil"
+      },
+      "drugB": {
+        "code": "7434",
+        "name": "Nitroglycerin"
+      },
+      "severity": "major",
+      "description": "Severe, potentially fatal hypotension. Co-administration is strictly contraindicated.",
+      "mechanism": "Potentiation of nitric oxide-mediated vasodilation via cGMP accumulation."
+    },
+    {
+      "drugA": {
+        "code": "1488564",
+        "name": "Dapagliflozin"
+      },
+      "drugB": {
+        "code": "4603",
+        "name": "Furosemide"
+      },
+      "severity": "minor",
+      "description": "Increased risk of volume depletion, hypotension, and electrolyte disturbances.",
+      "mechanism": "Additive osmotic and pharmacological diuretic effects."
+    },
+    {
+      "drugA": {
+        "code": "1488564",
+        "name": "Dapagliflozin"
+      },
+      "drugB": {
+        "code": "5487",
+        "name": "Hydrochlorothiazide"
+      },
+      "severity": "minor",
+      "description": "Increased risk of volume depletion, hypotension, and electrolyte disturbances.",
+      "mechanism": "Additive osmotic and pharmacological diuretic effects."
+    },
+    {
+      "drugA": {
+        "code": "1488564",
+        "name": "Dapagliflozin"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "minor",
+      "description": "Increased risk of volume depletion, hypotension, and electrolyte disturbances.",
+      "mechanism": "Additive osmotic and pharmacological diuretic effects."
+    },
+    {
+      "drugA": {
+        "code": "153165",
+        "name": "Esomeprazole"
+      },
+      "drugB": {
+        "code": "32968",
+        "name": "Clopidogrel"
+      },
+      "severity": "moderate",
+      "description": "Reduced antiplatelet efficacy of clopidogrel, increasing cardiovascular risk.",
+      "mechanism": "Inhibition of CYP2C19 prevents conversion of clopidogrel to its active form."
+    },
+    {
+      "drugA": {
+        "code": "1545631",
+        "name": "Empagliflozin"
+      },
+      "drugB": {
+        "code": "4603",
+        "name": "Furosemide"
+      },
+      "severity": "minor",
+      "description": "Increased risk of volume depletion, hypotension, and electrolyte disturbances.",
+      "mechanism": "Additive osmotic and pharmacological diuretic effects."
+    },
+    {
+      "drugA": {
+        "code": "1545631",
+        "name": "Empagliflozin"
+      },
+      "drugB": {
+        "code": "5487",
+        "name": "Hydrochlorothiazide"
+      },
+      "severity": "minor",
+      "description": "Increased risk of volume depletion, hypotension, and electrolyte disturbances.",
+      "mechanism": "Additive osmotic and pharmacological diuretic effects."
+    },
+    {
+      "drugA": {
+        "code": "1545631",
+        "name": "Empagliflozin"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "minor",
+      "description": "Increased risk of volume depletion, hypotension, and electrolyte disturbances.",
+      "mechanism": "Additive osmotic and pharmacological diuretic effects."
+    },
+    {
+      "drugA": {
+        "code": "1603",
+        "name": "Bisoprolol"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "1603",
+        "name": "Bisoprolol"
+      },
+      "drugB": {
+        "code": "145507",
+        "name": "Glimepiride"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "1603",
+        "name": "Bisoprolol"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "1603",
+        "name": "Bisoprolol"
+      },
+      "drugB": {
+        "code": "4820",
+        "name": "Gliclazide"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "18631",
+        "name": "Azithromycin"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "moderate",
+      "description": "Potential for severe hypotension and acute kidney injury.",
+      "mechanism": "Inhibition of CYP3A4-mediated metabolism of calcium channel blockers."
+    },
+    {
+      "drugA": {
+        "code": "18631",
+        "name": "Azithromycin"
+      },
+      "drugB": {
+        "code": "17767",
+        "name": "Amlodipine"
+      },
+      "severity": "moderate",
+      "description": "Potential for severe hypotension and acute kidney injury.",
+      "mechanism": "Inhibition of CYP3A4-mediated metabolism of calcium channel blockers."
+    },
+    {
+      "drugA": {
+        "code": "18631",
+        "name": "Azithromycin"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "moderate",
+      "description": "Potential for severe hypotension and acute kidney injury.",
+      "mechanism": "Inhibition of CYP3A4-mediated metabolism of calcium channel blockers."
+    },
+    {
+      "drugA": {
+        "code": "18631",
+        "name": "Azithromycin"
+      },
+      "drugB": {
+        "code": "7424",
+        "name": "Nifedipine"
+      },
+      "severity": "moderate",
+      "description": "Potential for severe hypotension and acute kidney injury.",
+      "mechanism": "Inhibition of CYP3A4-mediated metabolism of calcium channel blockers."
+    },
+    {
+      "drugA": {
+        "code": "19001",
+        "name": "Irbesartan"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "19001",
+        "name": "Irbesartan"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "19001",
+        "name": "Irbesartan"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "19001",
+        "name": "Irbesartan"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "major",
+      "description": "Combination increases risk of life-threatening hyperkalemia.",
+      "mechanism": "Additive potassium-sparing effects in the distal nephron."
+    },
+    {
+      "drugA": {
+        "code": "1998",
+        "name": "Captopril"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "1998",
+        "name": "Captopril"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "1998",
+        "name": "Captopril"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "1998",
+        "name": "Captopril"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "major",
+      "description": "Combination increases risk of life-threatening hyperkalemia.",
+      "mechanism": "Additive potassium-sparing effects in the distal nephron."
+    },
+    {
+      "drugA": {
+        "code": "2002",
+        "name": "Carbamazepine"
+      },
+      "drugB": {
+        "code": "1039156",
+        "name": "Apixaban"
+      },
+      "severity": "moderate",
+      "description": "Reduced efficacy of the co-administered drug.",
+      "mechanism": "Induction of hepatic enzymes (CYP3A4) increases drug metabolism."
+    },
+    {
+      "drugA": {
+        "code": "2002",
+        "name": "Carbamazepine"
+      },
+      "drugB": {
+        "code": "1114195",
+        "name": "Rivaroxaban"
+      },
+      "severity": "moderate",
+      "description": "Reduced efficacy of the co-administered drug.",
+      "mechanism": "Induction of hepatic enzymes (CYP3A4) increases drug metabolism."
+    },
+    {
+      "drugA": {
+        "code": "2002",
+        "name": "Carbamazepine"
+      },
+      "drugB": {
+        "code": "11289",
+        "name": "Warfarin"
+      },
+      "severity": "moderate",
+      "description": "Reduced efficacy of the co-administered drug.",
+      "mechanism": "Induction of hepatic enzymes (CYP3A4) increases drug metabolism."
+    },
+    {
+      "drugA": {
+        "code": "2002",
+        "name": "Carbamazepine"
+      },
+      "drugB": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "severity": "moderate",
+      "description": "Reduced efficacy of the co-administered drug.",
+      "mechanism": "Induction of hepatic enzymes (CYP3A4) increases drug metabolism."
+    },
+    {
+      "drugA": {
+        "code": "2002",
+        "name": "Carbamazepine"
+      },
+      "drugB": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "severity": "moderate",
+      "description": "Reduced efficacy of the co-administered drug.",
+      "mechanism": "Induction of hepatic enzymes (CYP3A4) increases drug metabolism."
+    },
+    {
+      "drugA": {
+        "code": "2002",
+        "name": "Carbamazepine"
+      },
+      "drugB": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "severity": "moderate",
+      "description": "Reduced efficacy of the co-administered drug.",
+      "mechanism": "Induction of hepatic enzymes (CYP3A4) increases drug metabolism."
+    },
+    {
+      "drugA": {
+        "code": "2002",
+        "name": "Carbamazepine"
+      },
+      "drugB": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "severity": "moderate",
+      "description": "Reduced efficacy of the co-administered drug.",
+      "mechanism": "Induction of hepatic enzymes (CYP3A4) increases drug metabolism."
+    },
+    {
+      "drugA": {
+        "code": "20352",
+        "name": "Carvedilol"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "20352",
+        "name": "Carvedilol"
+      },
+      "drugB": {
+        "code": "145507",
+        "name": "Glimepiride"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "20352",
+        "name": "Carvedilol"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "20352",
+        "name": "Carvedilol"
+      },
+      "drugB": {
+        "code": "4820",
+        "name": "Gliclazide"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "21212",
+        "name": "Clarithromycin"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "moderate",
+      "description": "Potential for severe hypotension and acute kidney injury.",
+      "mechanism": "Inhibition of CYP3A4-mediated metabolism of calcium channel blockers."
+    },
+    {
+      "drugA": {
+        "code": "21212",
+        "name": "Clarithromycin"
+      },
+      "drugB": {
+        "code": "17767",
+        "name": "Amlodipine"
+      },
+      "severity": "moderate",
+      "description": "Potential for severe hypotension and acute kidney injury.",
+      "mechanism": "Inhibition of CYP3A4-mediated metabolism of calcium channel blockers."
+    },
+    {
+      "drugA": {
+        "code": "21212",
+        "name": "Clarithromycin"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "moderate",
+      "description": "Potential for severe hypotension and acute kidney injury.",
+      "mechanism": "Inhibition of CYP3A4-mediated metabolism of calcium channel blockers."
+    },
+    {
+      "drugA": {
+        "code": "21212",
+        "name": "Clarithromycin"
+      },
+      "drugB": {
+        "code": "7424",
+        "name": "Nifedipine"
+      },
+      "severity": "moderate",
+      "description": "Potential for severe hypotension and acute kidney injury.",
+      "mechanism": "Inhibition of CYP3A4-mediated metabolism of calcium channel blockers."
+    },
+    {
+      "drugA": {
+        "code": "214354",
+        "name": "Candesartan"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "214354",
+        "name": "Candesartan"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "214354",
+        "name": "Candesartan"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "214354",
+        "name": "Candesartan"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "major",
+      "description": "Combination increases risk of life-threatening hyperkalemia.",
+      "mechanism": "Additive potassium-sparing effects in the distal nephron."
+    },
+    {
+      "drugA": {
+        "code": "236430",
+        "name": "Duloxetine"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.",
+      "mechanism": "Additive serotonergic effects via reuptake inhibition and direct receptor stimulation."
+    },
+    {
+      "drugA": {
+        "code": "236430",
+        "name": "Duloxetine"
+      },
+      "drugB": {
+        "code": "704",
+        "name": "Amitriptyline"
+      },
+      "severity": "moderate",
+      "description": "Risk of serotonin syndrome and increased levels of tricyclic antidepressants.",
+      "mechanism": "Additive pharmacodynamic effects and inhibition of hepatic metabolism."
+    },
+    {
+      "drugA": {
+        "code": "236430",
+        "name": "Duloxetine"
+      },
+      "drugB": {
+        "code": "8123",
+        "name": "Phenelzine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "236430",
+        "name": "Duloxetine"
+      },
+      "drugB": {
+        "code": "9744",
+        "name": "Selegiline"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "2551",
+        "name": "Ciprofloxacin"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "Possible increased risk of CNS stimulation and convulsive seizures.",
+      "mechanism": "Antagonism of GABA-mediated inhibitory neurotransmission."
+    },
+    {
+      "drugA": {
+        "code": "2551",
+        "name": "Ciprofloxacin"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "Possible increased risk of CNS stimulation and convulsive seizures.",
+      "mechanism": "Antagonism of GABA-mediated inhibitory neurotransmission."
+    },
+    {
+      "drugA": {
+        "code": "2551",
+        "name": "Ciprofloxacin"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "Possible increased risk of CNS stimulation and convulsive seizures.",
+      "mechanism": "Antagonism of GABA-mediated inhibitory neurotransmission."
+    },
+    {
+      "drugA": {
+        "code": "2598",
+        "name": "Clonazepam"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "2598",
+        "name": "Clonazepam"
+      },
+      "drugB": {
+        "code": "7052",
+        "name": "Morphine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "2598",
+        "name": "Clonazepam"
+      },
+      "drugB": {
+        "code": "7804",
+        "name": "Oxycodone"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "29046",
+        "name": "Lisinopril"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "29046",
+        "name": "Lisinopril"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "29046",
+        "name": "Lisinopril"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "29046",
+        "name": "Lisinopril"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "major",
+      "description": "Combination increases risk of life-threatening hyperkalemia.",
+      "mechanism": "Additive potassium-sparing effects in the distal nephron."
+    },
+    {
+      "drugA": {
+        "code": "301542",
+        "name": "Rosuvastatin"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "moderate",
+      "description": "Increased serum statin levels and risk of muscle-related side effects.",
+      "mechanism": "CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism."
+    },
+    {
+      "drugA": {
+        "code": "301542",
+        "name": "Rosuvastatin"
+      },
+      "drugB": {
+        "code": "18631",
+        "name": "Azithromycin"
+      },
+      "severity": "major",
+      "description": "Increased risk of myopathy and potentially fatal rhabdomyolysis.",
+      "mechanism": "CYP3A4 inhibition increases statin serum concentrations to toxic levels."
+    },
+    {
+      "drugA": {
+        "code": "301542",
+        "name": "Rosuvastatin"
+      },
+      "drugB": {
+        "code": "21212",
+        "name": "Clarithromycin"
+      },
+      "severity": "major",
+      "description": "Increased risk of myopathy and potentially fatal rhabdomyolysis.",
+      "mechanism": "CYP3A4 inhibition increases statin serum concentrations to toxic levels."
+    },
+    {
+      "drugA": {
+        "code": "301542",
+        "name": "Rosuvastatin"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "moderate",
+      "description": "Increased serum statin levels and risk of muscle-related side effects.",
+      "mechanism": "CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism."
+    },
+    {
+      "drugA": {
+        "code": "321207",
+        "name": "Tadalafil"
+      },
+      "drugB": {
+        "code": "35827",
+        "name": "Isosorbide mononitrate"
+      },
+      "severity": "major",
+      "description": "Severe, potentially fatal hypotension. Co-administration is strictly contraindicated.",
+      "mechanism": "Potentiation of nitric oxide-mediated vasodilation via cGMP accumulation."
+    },
+    {
+      "drugA": {
+        "code": "321207",
+        "name": "Tadalafil"
+      },
+      "drugB": {
+        "code": "7434",
+        "name": "Nitroglycerin"
+      },
+      "severity": "major",
+      "description": "Severe, potentially fatal hypotension. Co-administration is strictly contraindicated.",
+      "mechanism": "Potentiation of nitric oxide-mediated vasodilation via cGMP accumulation."
+    },
+    {
+      "drugA": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.",
+      "mechanism": "Additive serotonergic effects via reuptake inhibition and direct receptor stimulation."
+    },
+    {
+      "drugA": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "drugB": {
+        "code": "11002",
+        "name": "Valproic acid"
+      },
+      "severity": "moderate",
+      "description": "Increased plasma concentrations of valproate, potentially increasing toxicity.",
+      "mechanism": "Inhibition of valproate metabolism by certain SSRIs."
+    },
+    {
+      "drugA": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "drugB": {
+        "code": "704",
+        "name": "Amitriptyline"
+      },
+      "severity": "moderate",
+      "description": "Risk of serotonin syndrome and increased levels of tricyclic antidepressants.",
+      "mechanism": "Additive pharmacodynamic effects and inhibition of hepatic metabolism."
+    },
+    {
+      "drugA": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "drugB": {
+        "code": "8123",
+        "name": "Phenelzine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "321988",
+        "name": "Escitalopram"
+      },
+      "drugB": {
+        "code": "9744",
+        "name": "Selegiline"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "3322",
+        "name": "Diazepam"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "3322",
+        "name": "Diazepam"
+      },
+      "drugB": {
+        "code": "7052",
+        "name": "Morphine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "3322",
+        "name": "Diazepam"
+      },
+      "drugB": {
+        "code": "7804",
+        "name": "Oxycodone"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "3407",
+        "name": "Digoxin"
+      },
+      "drugB": {
+        "code": "4603",
+        "name": "Furosemide"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of digoxin toxicity due to electrolyte imbalances.",
+      "mechanism": "Hypokalemia and hypomagnesemia sensitize the myocardium to digoxin."
+    },
+    {
+      "drugA": {
+        "code": "3407",
+        "name": "Digoxin"
+      },
+      "drugB": {
+        "code": "5487",
+        "name": "Hydrochlorothiazide"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of digoxin toxicity due to electrolyte imbalances.",
+      "mechanism": "Hypokalemia and hypomagnesemia sensitize the myocardium to digoxin."
+    },
+    {
+      "drugA": {
+        "code": "3521",
+        "name": "Ramipril"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "3521",
+        "name": "Ramipril"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "3521",
+        "name": "Ramipril"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "3521",
+        "name": "Ramipril"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "major",
+      "description": "Combination increases risk of life-threatening hyperkalemia.",
+      "mechanism": "Additive potassium-sparing effects in the distal nephron."
+    },
+    {
+      "drugA": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.",
+      "mechanism": "Additive serotonergic effects via reuptake inhibition and direct receptor stimulation."
+    },
+    {
+      "drugA": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "drugB": {
+        "code": "11002",
+        "name": "Valproic acid"
+      },
+      "severity": "moderate",
+      "description": "Increased plasma concentrations of valproate, potentially increasing toxicity.",
+      "mechanism": "Inhibition of valproate metabolism by certain SSRIs."
+    },
+    {
+      "drugA": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "drugB": {
+        "code": "704",
+        "name": "Amitriptyline"
+      },
+      "severity": "moderate",
+      "description": "Risk of serotonin syndrome and increased levels of tricyclic antidepressants.",
+      "mechanism": "Additive pharmacodynamic effects and inhibition of hepatic metabolism."
+    },
+    {
+      "drugA": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "drugB": {
+        "code": "8123",
+        "name": "Phenelzine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "36437",
+        "name": "Sertraline"
+      },
+      "drugB": {
+        "code": "9744",
+        "name": "Selegiline"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "36567",
+        "name": "Simvastatin"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "moderate",
+      "description": "Increased serum statin levels and risk of muscle-related side effects.",
+      "mechanism": "CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism."
+    },
+    {
+      "drugA": {
+        "code": "36567",
+        "name": "Simvastatin"
+      },
+      "drugB": {
+        "code": "18631",
+        "name": "Azithromycin"
+      },
+      "severity": "major",
+      "description": "Increased risk of myopathy and potentially fatal rhabdomyolysis.",
+      "mechanism": "CYP3A4 inhibition increases statin serum concentrations to toxic levels."
+    },
+    {
+      "drugA": {
+        "code": "36567",
+        "name": "Simvastatin"
+      },
+      "drugB": {
+        "code": "21212",
+        "name": "Clarithromycin"
+      },
+      "severity": "major",
+      "description": "Increased risk of myopathy and potentially fatal rhabdomyolysis.",
+      "mechanism": "CYP3A4 inhibition increases statin serum concentrations to toxic levels."
+    },
+    {
+      "drugA": {
+        "code": "36567",
+        "name": "Simvastatin"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "moderate",
+      "description": "Increased serum statin levels and risk of muscle-related side effects.",
+      "mechanism": "CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism."
+    },
+    {
+      "drugA": {
+        "code": "3827",
+        "name": "Enalapril"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "3827",
+        "name": "Enalapril"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "3827",
+        "name": "Enalapril"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "3827",
+        "name": "Enalapril"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "major",
+      "description": "Combination increases risk of life-threatening hyperkalemia.",
+      "mechanism": "Additive potassium-sparing effects in the distal nephron."
+    },
+    {
+      "drugA": {
+        "code": "39786",
+        "name": "Venlafaxine"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.",
+      "mechanism": "Additive serotonergic effects via reuptake inhibition and direct receptor stimulation."
+    },
+    {
+      "drugA": {
+        "code": "39786",
+        "name": "Venlafaxine"
+      },
+      "drugB": {
+        "code": "704",
+        "name": "Amitriptyline"
+      },
+      "severity": "moderate",
+      "description": "Risk of serotonin syndrome and increased levels of tricyclic antidepressants.",
+      "mechanism": "Additive pharmacodynamic effects and inhibition of hepatic metabolism."
+    },
+    {
+      "drugA": {
+        "code": "39786",
+        "name": "Venlafaxine"
+      },
+      "drugB": {
+        "code": "8123",
+        "name": "Phenelzine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "39786",
+        "name": "Venlafaxine"
+      },
+      "drugB": {
+        "code": "9744",
+        "name": "Selegiline"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "40188",
+        "name": "Losartan"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "40188",
+        "name": "Losartan"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "40188",
+        "name": "Losartan"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "40188",
+        "name": "Losartan"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "major",
+      "description": "Combination increases risk of life-threatening hyperkalemia.",
+      "mechanism": "Additive potassium-sparing effects in the distal nephron."
+    },
+    {
+      "drugA": {
+        "code": "42463",
+        "name": "Pravastatin"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "moderate",
+      "description": "Increased serum statin levels and risk of muscle-related side effects.",
+      "mechanism": "CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism."
+    },
+    {
+      "drugA": {
+        "code": "42463",
+        "name": "Pravastatin"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "moderate",
+      "description": "Increased serum statin levels and risk of muscle-related side effects.",
+      "mechanism": "CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism."
+    },
+    {
+      "drugA": {
+        "code": "4450",
+        "name": "Alendronate"
+      },
+      "drugB": {
+        "code": "1897",
+        "name": "Calcium carbonate"
+      },
+      "severity": "moderate",
+      "description": "Reduced drug absorption leading to therapeutic failure.",
+      "mechanism": "Formation of insoluble chelates in the gastrointestinal tract."
+    },
+    {
+      "drugA": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.",
+      "mechanism": "Additive serotonergic effects via reuptake inhibition and direct receptor stimulation."
+    },
+    {
+      "drugA": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "drugB": {
+        "code": "11002",
+        "name": "Valproic acid"
+      },
+      "severity": "moderate",
+      "description": "Increased plasma concentrations of valproate, potentially increasing toxicity.",
+      "mechanism": "Inhibition of valproate metabolism by certain SSRIs."
+    },
+    {
+      "drugA": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "drugB": {
+        "code": "704",
+        "name": "Amitriptyline"
+      },
+      "severity": "moderate",
+      "description": "Risk of serotonin syndrome and increased levels of tricyclic antidepressants.",
+      "mechanism": "Additive pharmacodynamic effects and inhibition of hepatic metabolism."
+    },
+    {
+      "drugA": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "drugB": {
+        "code": "8123",
+        "name": "Phenelzine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "4493",
+        "name": "Fluoxetine"
+      },
+      "drugB": {
+        "code": "9744",
+        "name": "Selegiline"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "596",
+        "name": "Alprazolam"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "596",
+        "name": "Alprazolam"
+      },
+      "drugB": {
+        "code": "7052",
+        "name": "Morphine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "596",
+        "name": "Alprazolam"
+      },
+      "drugB": {
+        "code": "7804",
+        "name": "Oxycodone"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "6470",
+        "name": "Lorazepam"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "6470",
+        "name": "Lorazepam"
+      },
+      "drugB": {
+        "code": "7052",
+        "name": "Morphine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "6470",
+        "name": "Lorazepam"
+      },
+      "drugB": {
+        "code": "7804",
+        "name": "Oxycodone"
+      },
+      "severity": "major",
+      "description": "Extreme risk of profound sedation, respiratory depression, and fatal overdose.",
+      "mechanism": "Synergistic CNS depression through GABA-A and mu-opioid receptor pathways."
+    },
+    {
+      "drugA": {
+        "code": "6711",
+        "name": "Methotrexate"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "major",
+      "description": "Increased methotrexate toxicity, including bone marrow suppression and GI toxicity.",
+      "mechanism": "NSAIDs reduce renal clearance of methotrexate via tubular secretion inhibition."
+    },
+    {
+      "drugA": {
+        "code": "6711",
+        "name": "Methotrexate"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "major",
+      "description": "Increased methotrexate toxicity, including bone marrow suppression and GI toxicity.",
+      "mechanism": "NSAIDs reduce renal clearance of methotrexate via tubular secretion inhibition."
+    },
+    {
+      "drugA": {
+        "code": "6711",
+        "name": "Methotrexate"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "major",
+      "description": "Increased methotrexate toxicity, including bone marrow suppression and GI toxicity.",
+      "mechanism": "NSAIDs reduce renal clearance of methotrexate via tubular secretion inhibition."
+    },
+    {
+      "drugA": {
+        "code": "6809",
+        "name": "Metformin"
+      },
+      "drugB": {
+        "code": "5970",
+        "name": "Iohexol"
+      },
+      "severity": "moderate",
+      "description": "Risk of lactic acidosis if renal function is impaired by contrast medium.",
+      "mechanism": "Contrast-induced nephropathy can lead to metformin accumulation."
+    },
+    {
+      "drugA": {
+        "code": "6918",
+        "name": "Metoprolol"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "6918",
+        "name": "Metoprolol"
+      },
+      "drugB": {
+        "code": "145507",
+        "name": "Glimepiride"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "6918",
+        "name": "Metoprolol"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "6918",
+        "name": "Metoprolol"
+      },
+      "drugB": {
+        "code": "4820",
+        "name": "Gliclazide"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "69749",
+        "name": "Valsartan"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "69749",
+        "name": "Valsartan"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "69749",
+        "name": "Valsartan"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.",
+      "mechanism": "Prostaglandin inhibition leads to afferent arteriole constriction."
+    },
+    {
+      "drugA": {
+        "code": "69749",
+        "name": "Valsartan"
+      },
+      "drugB": {
+        "code": "9997",
+        "name": "Spironolactone"
+      },
+      "severity": "major",
+      "description": "Combination increases risk of life-threatening hyperkalemia.",
+      "mechanism": "Additive potassium-sparing effects in the distal nephron."
+    },
+    {
+      "drugA": {
+        "code": "7646",
+        "name": "Omeprazole"
+      },
+      "drugB": {
+        "code": "32968",
+        "name": "Clopidogrel"
+      },
+      "severity": "moderate",
+      "description": "Reduced antiplatelet efficacy of clopidogrel, increasing cardiovascular risk.",
+      "mechanism": "Inhibition of CYP2C19 prevents conversion of clopidogrel to its active form."
+    },
+    {
+      "drugA": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "drugB": {
+        "code": "10689",
+        "name": "Tramadol"
+      },
+      "severity": "major",
+      "description": "High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.",
+      "mechanism": "Additive serotonergic effects via reuptake inhibition and direct receptor stimulation."
+    },
+    {
+      "drugA": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "drugB": {
+        "code": "11002",
+        "name": "Valproic acid"
+      },
+      "severity": "moderate",
+      "description": "Increased plasma concentrations of valproate, potentially increasing toxicity.",
+      "mechanism": "Inhibition of valproate metabolism by certain SSRIs."
+    },
+    {
+      "drugA": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "drugB": {
+        "code": "704",
+        "name": "Amitriptyline"
+      },
+      "severity": "moderate",
+      "description": "Risk of serotonin syndrome and increased levels of tricyclic antidepressants.",
+      "mechanism": "Additive pharmacodynamic effects and inhibition of hepatic metabolism."
+    },
+    {
+      "drugA": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "Increased risk of upper gastrointestinal bleeding.",
+      "mechanism": "SSRIs impair platelet aggregation by depleting serotonin stores in platelets."
+    },
+    {
+      "drugA": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "drugB": {
+        "code": "8123",
+        "name": "Phenelzine"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "7934",
+        "name": "Paroxetine"
+      },
+      "drugB": {
+        "code": "9744",
+        "name": "Selegiline"
+      },
+      "severity": "major",
+      "description": "Extreme risk of fatal serotonin syndrome.",
+      "mechanism": "Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation."
+    },
+    {
+      "drugA": {
+        "code": "82122",
+        "name": "Levofloxacin"
+      },
+      "drugB": {
+        "code": "3350",
+        "name": "Diclofenac"
+      },
+      "severity": "moderate",
+      "description": "Possible increased risk of CNS stimulation and convulsive seizures.",
+      "mechanism": "Antagonism of GABA-mediated inhibitory neurotransmission."
+    },
+    {
+      "drugA": {
+        "code": "82122",
+        "name": "Levofloxacin"
+      },
+      "drugB": {
+        "code": "5640",
+        "name": "Ibuprofen"
+      },
+      "severity": "moderate",
+      "description": "Possible increased risk of CNS stimulation and convulsive seizures.",
+      "mechanism": "Antagonism of GABA-mediated inhibitory neurotransmission."
+    },
+    {
+      "drugA": {
+        "code": "82122",
+        "name": "Levofloxacin"
+      },
+      "drugB": {
+        "code": "7299",
+        "name": "Naproxen"
+      },
+      "severity": "moderate",
+      "description": "Possible increased risk of CNS stimulation and convulsive seizures.",
+      "mechanism": "Antagonism of GABA-mediated inhibitory neurotransmission."
+    },
+    {
+      "drugA": {
+        "code": "83367",
+        "name": "Atorvastatin"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "moderate",
+      "description": "Increased serum statin levels and risk of muscle-related side effects.",
+      "mechanism": "CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism."
+    },
+    {
+      "drugA": {
+        "code": "83367",
+        "name": "Atorvastatin"
+      },
+      "drugB": {
+        "code": "18631",
+        "name": "Azithromycin"
+      },
+      "severity": "major",
+      "description": "Increased risk of myopathy and potentially fatal rhabdomyolysis.",
+      "mechanism": "CYP3A4 inhibition increases statin serum concentrations to toxic levels."
+    },
+    {
+      "drugA": {
+        "code": "83367",
+        "name": "Atorvastatin"
+      },
+      "drugB": {
+        "code": "21212",
+        "name": "Clarithromycin"
+      },
+      "severity": "major",
+      "description": "Increased risk of myopathy and potentially fatal rhabdomyolysis.",
+      "mechanism": "CYP3A4 inhibition increases statin serum concentrations to toxic levels."
+    },
+    {
+      "drugA": {
+        "code": "83367",
+        "name": "Atorvastatin"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "moderate",
+      "description": "Increased serum statin levels and risk of muscle-related side effects.",
+      "mechanism": "CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism."
+    },
+    {
+      "drugA": {
+        "code": "8787",
+        "name": "Propranolol"
+      },
+      "drugB": {
+        "code": "11170",
+        "name": "Verapamil"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "8787",
+        "name": "Propranolol"
+      },
+      "drugB": {
+        "code": "145507",
+        "name": "Glimepiride"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    },
+    {
+      "drugA": {
+        "code": "8787",
+        "name": "Propranolol"
+      },
+      "drugB": {
+        "code": "3443",
+        "name": "Diltiazem"
+      },
+      "severity": "major",
+      "description": "Risk of severe bradycardia, heart block, and decreased cardiac output.",
+      "mechanism": "Synergistic negative inotropic and chronotropic effects on the myocardium."
+    },
+    {
+      "drugA": {
+        "code": "8787",
+        "name": "Propranolol"
+      },
+      "drugB": {
+        "code": "4820",
+        "name": "Gliclazide"
+      },
+      "severity": "moderate",
+      "description": "Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.",
+      "mechanism": "Blockade of beta-adrenergic receptors prevents compensatory tachycardia."
+    }
+  ]
+}
