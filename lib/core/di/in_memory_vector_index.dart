@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
