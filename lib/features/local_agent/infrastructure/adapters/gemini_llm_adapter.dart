@@ -57,6 +57,22 @@ class GeminiLlmAdapter implements LlmAdapter {
       throw Exception('Failed to generate summary: $e');
     }
   }
+
+  @override
+  Stream<int> installModel({required String modelId, required String url}) {
+    throw UnsupportedError('Gemini is a cloud model and cannot be installed.');
+  }
+
+  @override
+  Future<List<String>> listInstalledModels() async {
+    return [];
+  }
+
+  @override
+  Future<void> uninstallModel(String modelId) async {}
+
+  @override
+  Future<void> cancelDownload(String modelId) async {}
 }
 
 class SecurityException implements Exception {
