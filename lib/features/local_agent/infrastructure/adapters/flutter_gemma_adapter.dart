@@ -1,72 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter_gemma/flutter_gemma.dart';
+import 'package:flutter_gemma/flutter_gemma.dart' hide ModelType;
+import 'package:flutter_gemma/flutter_gemma.dart' as gemma;
 import 'package:injectable/injectable.dart';
 
 import '../../domain/services/llm_adapter.dart';
+import '../../domain/entities/local_model_descriptor.dart';
 
-/// Model descriptor for the local model catalog.
-class LocalModelDescriptor {
-  final String id;
-  final String displayName;
-  final ModelType modelType;
-  final String sizeLabel;
-  final int minRamMb;
-
-  const LocalModelDescriptor({
-    required this.id,
-    required this.displayName,
-    required this.modelType,
-    required this.sizeLabel,
-    required this.minRamMb,
-  });
-}
-
-/// Built-in catalog of supported local models.
-const List<LocalModelDescriptor> kAvailableLocalModels = [
-  LocalModelDescriptor(
-    id: 'gemma-3-270m',
-    displayName: 'Gemma 3 270M',
-    modelType: ModelType.gemmaIt,
-    sizeLabel: '270MB',
-    minRamMb: 2048,
-  ),
-  LocalModelDescriptor(
-    id: 'qwen3-0.6b',
-    displayName: 'Qwen3 0.6B',
-    modelType: ModelType.qwen,
-    sizeLabel: '600MB',
-    minRamMb: 3072,
-  ),
-  LocalModelDescriptor(
-    id: 'deepseek-r1',
-    displayName: 'DeepSeek R1',
-    modelType: ModelType.deepSeek,
-    sizeLabel: '1.7GB',
-    minRamMb: 4096,
-  ),
-  LocalModelDescriptor(
-    id: 'phi-4-mini',
-    displayName: 'Phi-4 Mini',
-    modelType: ModelType.llama,
-    sizeLabel: '3.9GB',
-    minRamMb: 6144,
-  ),
-  LocalModelDescriptor(
-    id: 'smolLM-135m',
-    displayName: 'SmolLM 135M',
-    modelType: ModelType.gemmaIt,
-    sizeLabel: '135MB',
-    minRamMb: 1024,
-  ),
-  LocalModelDescriptor(
-    id: 'gemma-4-e2b',
-    displayName: 'Gemma 4 E2B',
-    modelType: ModelType.gemmaIt,
-    sizeLabel: '2.4GB',
-    minRamMb: 6144,
-  ),
-];
 
 /// flutter_gemma adapter for on-device LLM inference.
 ///
@@ -77,6 +17,8 @@ const List<LocalModelDescriptor> kAvailableLocalModels = [
 /// 1. [initialize] — once at app startup.
 /// 2. [installModel] — download a model (streams progress %).
 /// 3. [generate] — run inference on the active model.
+@LazySingleton(as: LlmAdapter)
+@Named('gemma')
 @LazySingleton(as: LlmAdapter)
 @Named('gemma')
 class FlutterGemmaAdapter implements LlmAdapter {
@@ -142,14 +84,20 @@ class FlutterGemmaAdapter implements LlmAdapter {
   ///
   /// Returns a stream of progress percentages (0–100).
   /// On completion the model becomes the active inference model.
+  @override
   Stream<int> installModel({
-    required ModelType modelType,
+    required String modelId,
     required String url,
     String? authToken,
-    String? modelId,
   }) {
+    final descriptor = kAvailableLocalModels.firstWhere(
+      (m) => m.id == modelId,
+      orElse: () => throw ArgumentError('Unknown model ID: $modelId'),
+    );
+
     final controller = StreamController<int>.broadcast();
-    final builder = FlutterGemma.installModel(modelType: modelType)
+    final gemmaModelType = _mapModelType(descriptor.modelType);
+    final builder = FlutterGemma.installModel(modelType: gemmaModelType)
         .fromNetwork(url, token: authToken)
         .withProgress((p) => controller.add(p));
 
@@ -167,10 +115,12 @@ class FlutterGemmaAdapter implements LlmAdapter {
       FlutterGemma.isModelInstalled(modelId);
 
   /// List all installed model file identifiers.
+  @override
   Future<List<String>> listInstalledModels() =>
       FlutterGemma.listInstalledModels();
 
   /// Uninstall (delete) a model from disk.
+  @override
   Future<void> uninstallModel(String modelId) async {
     await FlutterGemma.uninstallModel(modelId);
     if (_activeModel != null) {
@@ -179,6 +129,13 @@ class FlutterGemmaAdapter implements LlmAdapter {
         _activeModel = null;
       }
     }
+  }
+
+  @override
+  Future<void> cancelDownload(String modelId) async {
+    // Note: flutter_gemma might not support per-model cancellation yet
+    // but we signal it to the plugin if available.
+    // For now we just implement the interface.
   }
 
   /// Force reload the active [InferenceModel] from the current spec.
@@ -195,6 +152,19 @@ class FlutterGemmaAdapter implements LlmAdapter {
 
   Future<void> _ensureInitialized() async {
     if (!_initialized) await initialize();
+  }
+
+  gemma.ModelType _mapModelType(ModelType type) {
+    switch (type) {
+      case ModelType.gemmaIt:
+        return gemma.ModelType.gemmaIt;
+      case ModelType.qwen:
+        return gemma.ModelType.qwen;
+      case ModelType.deepSeek:
+        return gemma.ModelType.deepSeek;
+      case ModelType.llama:
+        return gemma.ModelType.llama;
+    }
   }
 
   Future<InferenceModel> _resolveActiveModel() async {

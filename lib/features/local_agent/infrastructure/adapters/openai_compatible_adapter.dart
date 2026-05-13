@@ -113,4 +113,20 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
       );
     }
   }
+
+  @override
+  Stream<int> installModel({required String modelId, required String url}) {
+    throw UnsupportedError('OpenAI models are cloud-based and cannot be installed.');
+  }
+
+  @override
+  Future<List<String>> listInstalledModels() async {
+    return [];
+  }
+
+  @override
+  Future<void> uninstallModel(String modelId) async {}
+
+  @override
+  Future<void> cancelDownload(String modelId) async {}
 }

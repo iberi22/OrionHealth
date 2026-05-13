@@ -17,6 +17,8 @@ class LlmSettingsLoaded extends LlmSettingsState {
   final bool? connectionVerified;
   final String? connectionError;
   final List<Map<String, dynamic>>? localModelList;
+  final Map<String, double> downloadProgress;
+  final Set<String> installedModels;
 
   const LlmSettingsLoaded({
     required this.config,
@@ -24,10 +26,20 @@ class LlmSettingsLoaded extends LlmSettingsState {
     this.connectionVerified,
     this.connectionError,
     this.localModelList,
+    this.downloadProgress = const {},
+    this.installedModels = const {},
   });
 
   @override
-  List<Object?> get props => [config, deviceCapability, connectionVerified, connectionError, localModelList];
+  List<Object?> get props => [
+        config,
+        deviceCapability,
+        connectionVerified,
+        connectionError,
+        localModelList,
+        downloadProgress,
+        installedModels,
+      ];
 
   LlmSettingsLoaded copyWith({
     LlmConfig? config,
@@ -35,6 +47,8 @@ class LlmSettingsLoaded extends LlmSettingsState {
     bool? connectionVerified,
     String? connectionError,
     List<Map<String, dynamic>>? localModelList,
+    Map<String, double>? downloadProgress,
+    Set<String>? installedModels,
   }) {
     return LlmSettingsLoaded(
       config: config ?? this.config,
@@ -42,6 +56,8 @@ class LlmSettingsLoaded extends LlmSettingsState {
       connectionVerified: connectionVerified ?? this.connectionVerified,
       connectionError: connectionError ?? this.connectionError,
       localModelList: localModelList ?? this.localModelList,
+      downloadProgress: downloadProgress ?? this.downloadProgress,
+      installedModels: installedModels ?? this.installedModels,
     );
   }
 }
