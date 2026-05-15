@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
 import 'core/theme/app_theme.dart';
@@ -22,14 +23,15 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final l10n = AppLocalizations.of(context)!;
+    return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               PageHeader(
-                title: 'Inicio',
-                subtitle: 'Gestiona tu salud y consulta tu asistente inteligente',
+                title: l10n.homeTitle,
+                subtitle: l10n.homeSubtitle,
               ),
               // More content can be added here
             ],
@@ -57,19 +59,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OrionHealth',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('es', ''),
-        Locale('en', ''),
-      ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('es', ''), // Force Spanish for now as requested
       home: const MainNavigationPage(),
     );
@@ -94,15 +89,19 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     const UserProfilePage(),
   ];
 
-  final List<({IconData icon, IconData activeIcon, String label})> _destinations = [
-    (icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Inicio'),
-    (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: 'Citas'),
-    (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: 'Archivos'),
-    (icon: Icons.person_outline, activeIcon: Icons.person, label: 'Perfil'),
-  ];
+  List<({IconData icon, IconData activeIcon, String label})> _getDestinations(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.navHome),
+      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: l10n.navAppointments),
+      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.navFiles),
+      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.navProfile),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final destinations = _getDestinations(context);
     return FloatingAssistantButtonScope(
       notifier: _fabController,
       child: ResponsiveLayout(
@@ -118,7 +117,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                 _currentIndex = index;
               });
             },
-            items: _destinations.map((d) => BottomNavigationBarItem(
+            items: destinations.map((d) => BottomNavigationBarItem(
               icon: Icon(d.icon),
               activeIcon: Icon(d.activeIcon),
               label: d.label,
@@ -140,7 +139,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                   });
                 },
                 labelType: NavigationRailLabelType.all,
-                destinations: _destinations.map((d) => NavigationRailDestination(
+                destinations: destinations.map((d) => NavigationRailDestination(
                   icon: Icon(d.icon),
                   selectedIcon: Icon(d.activeIcon),
                   label: Text(d.label),
