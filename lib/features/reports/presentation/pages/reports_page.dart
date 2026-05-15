@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
@@ -28,7 +29,7 @@ class _ReportsPageState extends State<ReportsPage> {
           return Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: const Text('Informes de Salud'),
+              title: Text(AppLocalizations.of(context)!.reports),
             ),
             body: RefreshIndicator(
               onRefresh: () async {

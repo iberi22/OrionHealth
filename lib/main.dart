@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
 import 'core/theme/app_theme.dart';
@@ -28,8 +29,8 @@ class HomePage extends StatelessWidget {
           child: Column(
             children: [
               PageHeader(
-                title: 'Inicio',
-                subtitle: 'Gestiona tu salud y consulta tu asistente inteligente',
+                title: AppLocalizations.of(context)!.homeTitle,
+                subtitle: AppLocalizations.of(context)!.homeSubtitle,
               ),
               // More content can be added here
             ],
@@ -61,16 +62,8 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('es', ''),
-        Locale('en', ''),
-      ],
-      locale: const Locale('es', ''), // Force Spanish for now as requested
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const MainNavigationPage(),
     );
   }
@@ -94,11 +87,11 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     const UserProfilePage(),
   ];
 
-  final List<({IconData icon, IconData activeIcon, String label})> _destinations = [
-    (icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Inicio'),
-    (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: 'Citas'),
-    (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: 'Archivos'),
-    (icon: Icons.person_outline, activeIcon: Icons.person, label: 'Perfil'),
+  List<({IconData icon, IconData activeIcon, String label})> get _destinations => [
+    (icon: Icons.home_outlined, activeIcon: Icons.home, label: AppLocalizations.of(context)!.home),
+    (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: AppLocalizations.of(context)!.reports),
+    (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: AppLocalizations.of(context)!.records),
+    (icon: Icons.person_outline, activeIcon: Icons.person, label: AppLocalizations.of(context)!.profile),
   ];
 
   @override
