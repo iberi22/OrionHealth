@@ -1,0 +1,31 @@
+{
+  "@@locale": "en",
+  "appTitle": "OrionHealth",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Title for the Home page"
+  },
+  "homeSubtitle": "Manage your health and consult your smart assistant",
+  "@homeSubtitle": {
+    "description": "Subtitle for the Home page"
+  },
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Label for the home navigation destination"
+  },
+  "navAppointments": "Appointments",
+  "@navAppointments": {
+    "description": "Label for the appointments navigation destination"
+  },
+  "navFiles": "Files",
+  "@navFiles": {
+    "description": "Label for the files navigation destination"
+  },
+  "navProfile": "Profile",
+  "@navProfile": {
+    "description": "Label for the profile navigation destination"
+  }
+}

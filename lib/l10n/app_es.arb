@@ -1,0 +1,10 @@
+{
+  "@@locale": "es",
+  "appTitle": "OrionHealth",
+  "homeTitle": "Inicio",
+  "homeSubtitle": "Gestiona tu salud y consulta tu asistente inteligente",
+  "navHome": "Inicio",
+  "navAppointments": "Citas",
+  "navFiles": "Archivos",
+  "navProfile": "Perfil"
+}
