@@ -4,10 +4,12 @@ import '../entities/analysis_response.dart';
 import 'analysis/lab_analysis_strategy.dart';
 import 'analysis/vital_analysis_strategy.dart';
 import 'analysis/symptom_analysis_strategy.dart';
+import "package:injectable/injectable.dart";
 
 /// Domain service for medical analysis orchestration
 ///
 /// IMPORTANT: All analysis follows strict confidence rules:
+@lazySingleton
 /// - AI NEVER says "you have X" unless 90%+ confidence
 /// - AI ALWAYS explains what symptoms COULD mean
 /// - AI ALWAYS recommends consulting a doctor

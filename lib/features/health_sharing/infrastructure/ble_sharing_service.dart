@@ -1,131 +1,246 @@
+import "../domain/entities/shared_health_package.dart";
 import 'dart:async';
 import 'dart:convert';
-import '../domain/entities/shared_health_package.dart';
+import 'dart:math';
+import 'dart:typed_data';
 
-/// BLE Service UUID for OrionHealth sharing
-const String kOrionHealthServiceUuid = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
-const String kOrionHealthTxCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
-const String kOrionHealthRxCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a9';
+import "package:flutter_blue_plus/flutter_blue_plus.dart";
+import 'package:injectable/injectable.dart';
+import 'package:cryptography/cryptography.dart';
 
-/// BLE sharing service for P2P health data transfer
+@lazySingleton
 class BleSharingService {
-  static const Duration connectionTimeout = Duration(seconds: 30);
-  static const Duration transferTimeout = Duration(minutes: 3);
+  // Standard GATT Service UUIDs
+  static const String heartRateServiceUuid = '180d';
+  static const String glucoseServiceUuid = '1808';
+  static const String thermometerServiceUuid = '1809';
+  static const String pulseOximeterServiceUuid = '1822';
+
+  static const String serviceUuid = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
+  static const String txCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
+  static const String rxCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a9';
 
   bool _isInitialized = false;
-  bool _isAdvertising = false;
-  bool _isScanning = false;
   String? _connectedDeviceId;
+  SecretKey? _sessionKey;
+  final AesGcm _aesGcm = AesGcm.with256bits();
 
-  final _stateController = StreamController<BleSharingState>.broadcast();
-  Stream<BleSharingState> get stateStream => _stateController.stream;
+  // BLE device references from the last scan
+  final Map<String, BluetoothDevice> _scannedDevices = {};
+
+  // Active BLE connection state
+  BluetoothDevice? _connectedDevice;
+  BluetoothCharacteristic? _txCharacteristic;
+  BluetoothCharacteristic? _rxCharacteristic;
+  StreamSubscription? _rxSubscription;
+  StreamSubscription<List<ScanResult>>? _scanSubscription;
+
+  // Completer for receiving data (signals when a full package is received)
+  Completer<SharedHealthPackage?>? _receiveCompleter;
+  final List<int> _receiveBuffer = [];
+
+  final _stateController = StreamController<BleServiceState>.broadcast();
+  Stream<BleServiceState> get stateStream => _stateController.stream;
 
   final _dataController = StreamController<SharedHealthPackage>.broadcast();
   Stream<SharedHealthPackage> get incomingData => _dataController.stream;
 
-  /// Initialize BLE adapter
+  // ─── Lifecycle ──────────────────────────────────────────────────
+
   Future<void> initialize() async {
     if (_isInitialized) return;
-
-    // In production, use flutter_blue_plus:
-    // await FlutterBluePlus.startScan(timeout: scanTimeout);
-    // await FlutterBluePlus.startAdvertising(...);
-
+    if (await FlutterBluePlus.isSupported == false) {
+      throw Exception('Bluetooth not supported on this device');
+    }
     _isInitialized = true;
-    _stateController.add(BleSharingState.ready());
   }
 
-  /// Start advertising as a BLE server (to send data)
-  Future<void> startAdvertising(String nodeId) async {
+  void dispose() {
+    stopAdvertising();
+    disconnect();
+    _rxSubscription?.cancel();
+    _scanSubscription?.cancel();
+    _stateController.close();
+    _dataController.close();
+  }
+
+  // ─── Scanning ───────────────────────────────────────────────────
+
+  Future<List<BleDevice>> scanForDevices({
+    Duration timeout = const Duration(seconds: 15),
+  }) async {
     if (!_isInitialized) await initialize();
-    if (_isAdvertising) return;
 
-    // In production:
-    // await FlutterBluePlus.startAdvertising(
-    //   services: [Guid(kOrionHealthServiceUuid)],
-    //   name: 'OrionHealth_$nodeId',
-    // );
+    final results = <BleDevice>[];
+    _scannedDevices.clear();
+    _stateController.add(BleServiceState.scanning());
 
-    _isAdvertising = true;
-    _stateController.add(BleSharingState.advertising(nodeId));
+    await FlutterBluePlus.startScan(
+      timeout: timeout,
+      withServices: [
+        Guid(heartRateServiceUuid),
+        Guid(glucoseServiceUuid),
+        Guid(thermometerServiceUuid),
+        Guid(serviceUuid), // OrionHealth P2P
+      ],
+    );
+
+    final completer = Completer<void>();
+    _scanSubscription = FlutterBluePlus.scanResults.listen((scanResults) {
+      for (final r in scanResults) {
+        final deviceId = r.device.remoteId.str;
+        // Cache the BluetoothDevice reference for later connect()
+        _scannedDevices[deviceId] = r.device;
+
+        final deviceType = _detectDeviceType(r.advertisementData.serviceUuids);
+        results.add(BleDevice(
+          id: deviceId,
+          name: r.device.platformName.isNotEmpty
+              ? r.device.platformName
+              : 'Unknown Device',
+          rssi: r.rssi,
+          type: deviceType,
+        ));
+      }
+      if (results.length > 20) completer.complete();
+    }, onDone: () {
+      if (!completer.isCompleted) completer.complete();
+    });
+
+    await completer.future.timeout(timeout, onTimeout: () {});
+    await _scanSubscription?.cancel();
+    _scanSubscription = null;
+    await FlutterBluePlus.stopScan();
+
+    _stateController.add(BleServiceState.ready());
+    return results.toSet().toList();
   }
 
-  /// Stop advertising
-  Future<void> stopAdvertising() async {
-    if (!_isAdvertising) return;
-
-    // await FlutterBluePlus.stopAdvertising();
-
-    _isAdvertising = false;
-    _stateController.add(BleSharingState.ready());
+  String _detectDeviceType(List<Guid> uuids) {
+    final strUuids = uuids.map((u) => u.str.toLowerCase()).toList();
+    if (strUuids.contains(heartRateServiceUuid)) return 'Heart Rate Monitor';
+    if (strUuids.contains(glucoseServiceUuid)) return 'Glucose Meter';
+    if (strUuids.contains(thermometerServiceUuid)) return 'Health Thermometer';
+    if (strUuids.contains(serviceUuid)) return 'OrionHealth Node';
+    return 'Medical Device';
   }
 
-  /// Scan for nearby OrionHealth devices (to receive data)
-  Future<List<BleDevice>> scanForDevices({Duration timeout = const Duration(seconds: 10)}) async {
-    if (!_isInitialized) await initialize();
-    if (_isScanning) return [];
+  // ─── Connection ─────────────────────────────────────────────────
 
-    _isScanning = true;
-    _stateController.add(BleSharingState.scanning());
-
-    final devices = <BleDevice>[];
-
-    // In production:
-    // final scanResults = await FlutterBluePlus.startScan(timeout: timeout);
-    // for (final result in scanResults) {
-    //   if (result.advertisementData.serviceUuids.contains(Guid(kOrionHealthServiceUuid))) {
-    //     devices.add(BleDevice(
-    //       id: result.device.remoteId.str,
-    //       name: result.advertisementData.advName ?? 'OrionHealth',
-    //     ));
-    //   }
-    // }
-
-    // Simulated scan results
-    await Future.delayed(timeout);
-
-    _isScanning = false;
-    _stateController.add(BleSharingState.ready());
-
-    return devices;
-  }
-
-  /// Connect to a BLE device
+  /// Connect to a previously scanned device.
+  ///
+  /// Performs: connect → discoverServices → find OrionHealth GATT service
+  /// → store TX (write) and RX (notify) characteristics.
   Future<bool> connect(String deviceId) async {
-    _stateController.add(BleSharingState.connecting(deviceId));
+    // Look up the BluetoothDevice from our scan cache
+    BluetoothDevice device;
+    if (_scannedDevices.containsKey(deviceId)) {
+      device = _scannedDevices[deviceId]!;
+    } else {
+      // Fallback: create from ID (only works on Android with cached devices)
+      device = BluetoothDevice.fromId(deviceId);
+    }
+
+    _stateController.add(BleServiceState.connecting(deviceId));
 
     try {
-      // In production:
-      // final device = FlutterBluePlus.deviceFromId(deviceId);
-      // await device.connect(timeout: connectionTimeout);
-      // _connectedDeviceId = deviceId;
+      // Real BLE connection
+      await device.connect(
+        license: License.free,
+        timeout: const Duration(seconds: 35),
+        mtu: 512,
+        autoConnect: false,
+      );
 
-      await Future.delayed(const Duration(seconds: 2)); // Simulate connection
+      // Discover GATT services
+      final services = await device.discoverServices(
+        subscribeToServicesChanged: true,
+        timeout: 15,
+      );
 
+      // Find our custom OrionHealth service
+      BluetoothService? orionService;
+      for (final service in services) {
+        if (service.uuid.str.toLowerCase() == serviceUuid.toLowerCase()) {
+          orionService = service;
+          break;
+        }
+      }
+
+      if (orionService == null) {
+        await device.disconnect();
+        _stateController.add(
+          BleServiceState.error('OrionHealth service not found on device'),
+        );
+        return false;
+      }
+
+      // Find TX (write) and RX (notify) characteristics
+      for (final characteristic in orionService.characteristics) {
+        final uuid = characteristic.uuid.str.toLowerCase();
+        if (uuid == txCharacteristic.toLowerCase()) {
+          _txCharacteristic = characteristic;
+        } else if (uuid == rxCharacteristic.toLowerCase()) {
+          _rxCharacteristic = characteristic;
+        }
+      }
+
+      if (_txCharacteristic == null) {
+        await device.disconnect();
+        _stateController.add(
+          BleServiceState.error('TX characteristic not found'),
+        );
+        return false;
+      }
+
+      // Subscribe to RX characteristic for incoming data
+      if (_rxCharacteristic != null) {
+        await _rxCharacteristic!.setNotifyValue(true, timeout: 15);
+        _rxSubscription = _rxCharacteristic!.lastValueStream.listen(
+          _onRxDataReceived,
+        );
+      }
+
+      _connectedDevice = device;
       _connectedDeviceId = deviceId;
-      _stateController.add(BleSharingState.connected(deviceId));
+      _sessionKey = _generateSessionKey();
+
+      _stateController.add(BleServiceState.connected(deviceId));
       return true;
     } catch (e) {
-      _stateController.add(BleSharingState.error('Failed to connect: $e'));
+      _stateController.add(BleServiceState.error('Failed to connect: $e'));
       return false;
     }
   }
 
-  /// Disconnect from current device
   Future<void> disconnect() async {
-    if (_connectedDeviceId == null) return;
+    if (_connectedDevice == null) return;
 
-    // In production:
-    // final device = FlutterBluePlus.deviceFromId(_connectedDeviceId!);
-    // await device.disconnect();
+    // Unsubscribe from RX notifications
+    _rxSubscription?.cancel();
+    _rxSubscription = null;
+    _rxCharacteristic = null;
+    _txCharacteristic = null;
 
+    // Cancel pending receive
+    if (_receiveCompleter != null && !_receiveCompleter!.isCompleted) {
+      _receiveCompleter!.complete(null);
+    }
+    _receiveCompleter = null;
+    _receiveBuffer.clear();
+
+    await _connectedDevice!.disconnect();
+    _connectedDevice = null;
     _connectedDeviceId = null;
-    _stateController.add(BleSharingState.ready());
+    _sessionKey = null;
+
+    _stateController.add(BleServiceState.ready());
   }
 
-  /// Send data package to connected device
+  // ─── Sending ────────────────────────────────────────────────────
+
   Future<SharingResult> sendData(SharedHealthPackage package) async {
-    if (_connectedDeviceId == null) {
+    if (_txCharacteristic == null || _connectedDeviceId == null) {
       return SharingResult(
         success: false,
         error: 'Not connected to any device',
@@ -134,34 +249,40 @@ class BleSharingService {
       );
     }
 
-    _stateController.add(BleSharingState.transferring('Sending...'));
-
+    _stateController.add(
+      BleServiceState.transferring('Encrypting and sending...'),
+    );
     final startTime = DateTime.now();
 
     try {
-      final data = package.encode();
-      final bytes = utf8.encode(data);
+      final encrypted = await _encryptPackage(package);
+      final bytes = utf8.encode(encrypted);
 
-      // In production, write to BLE characteristic:
-      // final characteristic = device.getCharacteristic(Guid(kOrionHealthTxCharacteristic));
-      // await characteristic.write(utf8.encode(data));
+      // Send length prefix first (4 bytes, big-endian)
+      final lengthBytes = Uint8List(4);
+      final byteData = ByteData.sublistView(lengthBytes);
+      byteData.setUint32(0, bytes.length, Endian.big);
+      await _txCharacteristic!.write(lengthBytes.toList(),
+          withoutResponse: false, timeout: 15);
 
-      // Simulate chunked transfer
+      // Chunked write: 512 bytes per packet (MTU default)
       const chunkSize = 512;
       for (int i = 0; i < bytes.length; i += chunkSize) {
-        bytes.sublist(
-          i,
-          i + chunkSize > bytes.length ? bytes.length : i + chunkSize,
-        );
-        await Future.delayed(const Duration(milliseconds: 50));
+        final end =
+            i + chunkSize > bytes.length ? bytes.length : i + chunkSize;
+        final chunk = bytes.sublist(i, end);
+
+        await _txCharacteristic!.write(chunk.toList(),
+            withoutResponse: true, timeout: 15);
+
+        // Small delay between chunks to avoid overwhelming the BLE stack
+        await Future.delayed(const Duration(milliseconds: 20));
       }
 
       final transferTime = DateTime.now().difference(startTime);
-
-      _stateController.add(BleSharingState.completed(
-        bytes.length,
-        transferTime,
-      ));
+      _stateController.add(
+        BleServiceState.completed(bytes.length, transferTime),
+      );
 
       return SharingResult(
         success: true,
@@ -169,7 +290,7 @@ class BleSharingService {
         transferTime: transferTime,
       );
     } catch (e) {
-      _stateController.add(BleSharingState.error('Transfer failed: $e'));
+      _stateController.add(BleServiceState.error('Transfer failed: $e'));
       return SharingResult(
         success: false,
         error: e.toString(),
@@ -179,52 +300,211 @@ class BleSharingService {
     }
   }
 
-  /// Receive data from connected device
-  Future<SharedHealthPackage?> receiveData() async {
+  // ─── Receiving ──────────────────────────────────────────────────
+
+  /// Called when data arrives on the RX characteristic.
+  void _onRxDataReceived(List<int> data) {
+    _receiveBuffer.addAll(data);
+
+    // First 4 bytes = length prefix
+    if (_receiveBuffer.length < 4) return;
+
+    final expectedLength =
+        ByteData.sublistView(Uint8List.fromList(_receiveBuffer.sublist(0, 4)))
+            .getUint32(0, Endian.big);
+
+    // Buffer now contains: 4-byte length + data
+    final totalExpected = 4 + expectedLength;
+
+    if (_receiveBuffer.length >= totalExpected) {
+      // Extract the payload (skip 4-byte length prefix)
+      final payload = _receiveBuffer.sublist(4, totalExpected);
+      _receiveBuffer.removeRange(0, totalExpected);
+
+      // Decrypt and parse
+      _decryptAndParsePackage(payload);
+    }
+  }
+
+  Future<void> _decryptAndParsePackage(List<int> encryptedData) async {
+    try {
+      // Decrypt with session key
+      final nonce = encryptedData.sublist(0, 12);
+      final mac = encryptedData.sublist(encryptedData.length - 16);
+      final ciphertext =
+          encryptedData.sublist(12, encryptedData.length - 16);
+
+      final secretBox = SecretBox(
+        ciphertext,
+        nonce: nonce,
+        mac: Mac(mac),
+      );
+
+      final decrypted = await _aesGcm.decrypt(secretBox, secretKey: _sessionKey!);
+      final jsonStr = utf8.decode(decrypted);
+      final json = jsonDecode(jsonStr) as Map<String, dynamic>;
+
+      final encPayload = EncryptedPayload.fromJson(json['enc']);
+      final package = SharedHealthPackage(
+        id: json['meta']['sender'] ?? 'unknown',
+        senderNodeId: json['meta']['sender'] ?? 'unknown',
+        recipientNodeId: _connectedDeviceId ?? 'self',
+        createdAt: DateTime.parse(json['meta']['created']),
+        expiresAt: DateTime.parse(json['meta']['expires']),
+        payload: encPayload,
+        metadata: const PackageMetadata(
+          packageType: 'MedicalData',
+          consentVerified: false,
+          includedCategories: {},
+          appVersion: '1.0.0',
+        ),
+        signature: '',
+      );
+
+      _stateController.add(BleServiceState.ready());
+      _dataController.add(package);
+
+      if (_receiveCompleter != null && !_receiveCompleter!.isCompleted) {
+        _receiveCompleter!.complete(package);
+      }
+    } catch (e) {
+      _stateController.add(
+        BleServiceState.error('Decrypt failed: $e'),
+      );
+    }
+  }
+
+  /// Wait for incoming data. Returns null on timeout.
+  Future<SharedHealthPackage?> receiveData({
+    Duration timeout = const Duration(seconds: 30),
+  }) async {
     if (_connectedDeviceId == null) return null;
 
-    _stateController.add(BleSharingState.transferring('Receiving...'));
+    _stateController.add(BleServiceState.transferring('Receiving...'));
+    _receiveCompleter = Completer<SharedHealthPackage?>();
 
     try {
-      // In production, read from BLE characteristic:
-      // final characteristic = device.getCharacteristic(Guid(kOrionHealthRxCharacteristic));
-      // final data = await characteristic.read();
-      // return SharedHealthPackage.decode(utf8.decode(data));
-
-      await Future.delayed(const Duration(seconds: 2)); // Simulate receive
-
-      _stateController.add(BleSharingState.ready());
-      return null; // Would return actual package in production
+      final result = await _receiveCompleter!.future.timeout(
+        timeout,
+        onTimeout: () => null,
+      );
+      _receiveCompleter = null;
+      return result;
     } catch (e) {
-      _stateController.add(BleSharingState.error('Receive failed: $e'));
+      _stateController.add(BleServiceState.error('Receive failed: $e'));
+      _receiveCompleter = null;
       return null;
     }
   }
 
-  /// Clean up resources
-  void dispose() {
-    stopAdvertising();
-    disconnect();
-    _stateController.close();
-    _dataController.close();
+  Future<void> startMedicalDataStream(String deviceId) async {
+    if (!_isInitialized) await initialize();
+
+    // Scan for the specific device
+    await scanForDevices(timeout: const Duration(seconds: 10));
+
+    if (_scannedDevices.containsKey(deviceId)) {
+      final connected = await connect(deviceId);
+      if (!connected) {
+        throw Exception('Failed to connect to medical device: $deviceId');
+      }
+    }
+  }
+
+  // ─── Encryption ─────────────────────────────────────────────────
+
+  SecretKey _generateSessionKey() {
+    final random = Random.secure();
+    final bytes = List<int>.generate(32, (_) => random.nextInt(256));
+    return SecretKey(bytes);
+  }
+
+  Future<String> _encryptPackage(SharedHealthPackage package) async {
+    final payload = package.toJson();
+    final jsonStr = jsonEncode(payload);
+    final plainBytes = utf8.encode(jsonStr);
+
+    final nonce = _aesGcm.newNonce();
+    final secretBox = await _aesGcm.encrypt(
+      plainBytes,
+      secretKey: _sessionKey!,
+      nonce: nonce,
+    );
+
+    // Pack: nonce (12) + ciphertext + mac (16)
+    final combined = Uint8List(
+      nonce.length + secretBox.cipherText.length + secretBox.mac.bytes.length,
+    );
+    combined.setRange(0, nonce.length, nonce, 0);
+    combined.setRange(
+      nonce.length,
+      nonce.length + secretBox.cipherText.length,
+      secretBox.cipherText,
+      0,
+    );
+    combined.setRange(
+      nonce.length + secretBox.cipherText.length,
+      combined.length,
+      secretBox.mac.bytes,
+      0,
+    );
+
+    final encryptedPackage = EncryptedPayload(
+      cipherText: base64Encode(combined),
+      iv: base64Encode(nonce),
+      authTag: base64Encode(secretBox.mac.bytes),
+    );
+
+    return jsonEncode({
+      'v': 2,
+      'enc': encryptedPackage.toJson(),
+      'meta': {
+        'sender': package.senderNodeId,
+        'created': package.createdAt.toIso8601String(),
+        'expires': package.expiresAt.toIso8601String(),
+      },
+    });
+  }
+
+  // ─── Advertising (BLE Peripheral) ───────────────────────────────
+
+  /// Start advertising as an OrionHealth node.
+  ///
+  /// ARCHITECTURAL LIMITATION: BLE peripheral mode requires platform-specific
+  /// GATT server implementation. flutter_blue_plus 2.3.2 does not expose
+  /// startAdvertising/GATT server in the public API. For full P2P peripheral
+  /// support, a platform-specific plugin or a package like `flutter_ble_peripheral`
+  /// must be integrated.
+  ///
+  /// For now, OrionHealth uses the scan+connect pairing flow where medical
+  /// devices are the peripherals and the app is the central.
+  Future<void> startAdvertising(String nodeId) async {
+    _stateController.add(BleServiceState.advertising(nodeId));
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<void> stopAdvertising() async {
+    _stateController.add(BleServiceState.ready());
   }
 }
 
-/// BLE device discovered during scan
+// ─── Data Models ──────────────────────────────────────────────────
+
 class BleDevice {
   final String id;
   final String name;
   final int? rssi;
+  final String type;
 
   const BleDevice({
     required this.id,
     required this.name,
     this.rssi,
+    this.type = 'Unknown',
   });
 }
 
-/// State of BLE sharing service
-class BleSharingState {
+class BleServiceState {
   final String status;
   final String? deviceId;
   final String? message;
@@ -232,7 +512,7 @@ class BleSharingState {
   final int? bytesTransferred;
   final Duration? transferTime;
 
-  const BleSharingState._({
+  const BleServiceState._({
     required this.status,
     this.deviceId,
     this.message,
@@ -241,46 +521,35 @@ class BleSharingState {
     this.transferTime,
   });
 
-  factory BleSharingState.ready() => const BleSharingState._(status: 'ready');
-
-  factory BleSharingState.scanning() => const BleSharingState._(
+  factory BleServiceState.ready() => const BleServiceState._(status: 'ready');
+  factory BleServiceState.scanning() => const BleServiceState._(
         status: 'scanning',
         message: 'Searching for nearby devices...',
       );
-
-  factory BleSharingState.advertising(String nodeId) => BleSharingState._(
+  factory BleServiceState.advertising(String nodeId) => BleServiceState._(
         status: 'advertising',
         deviceId: nodeId,
         message: 'Waiting for receiver...',
       );
-
-  factory BleSharingState.connecting(String deviceId) => BleSharingState._(
+  factory BleServiceState.connecting(String deviceId) => BleServiceState._(
         status: 'connecting',
         deviceId: deviceId,
         message: 'Connecting...',
       );
-
-  factory BleSharingState.connected(String deviceId) => BleSharingState._(
+  factory BleServiceState.connected(String deviceId) => BleServiceState._(
         status: 'connected',
         deviceId: deviceId,
         message: 'Connected',
       );
-
-  factory BleSharingState.transferring(String message) => BleSharingState._(
-        status: 'transferring',
-        message: message,
-      );
-
-  factory BleSharingState.completed(int bytes, Duration time) => BleSharingState._(
+  factory BleServiceState.transferring(String message) =>
+      BleServiceState._(status: 'transferring', message: message);
+  factory BleServiceState.completed(int bytes, Duration time) =>
+      BleServiceState._(
         status: 'completed',
         message: 'Transfer complete',
         bytesTransferred: bytes,
         transferTime: time,
       );
-
-  factory BleSharingState.error(String message) => BleSharingState._(
-        status: 'error',
-        message: message,
-        isError: true,
-      );
+  factory BleServiceState.error(String message) =>
+      BleServiceState._(status: 'error', message: message, isError: true);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../ble_sharing/application/ble_sharing_cubit.dart';
-import '../../../ble_sharing/domain/ble_sharing_service.dart';
+import "../../../health_sharing/domain/entities/shared_health_package.dart";
+import '../../../health_sharing/application/health_sharing_cubit.dart';
 
 class ShareMedicalDataPage extends StatelessWidget {
   const ShareMedicalDataPage({super.key});
@@ -9,7 +9,7 @@ class ShareMedicalDataPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => BleSharingCubit()..initialize(),
+      create: (_) => HealthSharingCubit()..initialize(),
       child: const _ShareMedicalDataContent(),
     );
   }
@@ -23,8 +23,8 @@ class _ShareMedicalDataContent extends StatefulWidget {
 }
 
 class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
-  final Set<MedicalDataCategory> _selectedCategories = {};
-  MedicalTransferMethod _selectedMethod = MedicalTransferMethod.nfc;
+  final Set<DataCategory> _selectedCategories = {};
+  TransferMethod _selectedMethod = TransferMethod.nfc;
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,11 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
           ),
         ],
       ),
-      body: BlocConsumer<BleSharingCubit, BleSharingState>(
+      body: BlocConsumer<HealthSharingCubit, HealthSharingState>(
         listener: (context, state) {
-          if (state is BleSharingComplete) {
+          if (state is HealthSharingComplete) {
             _showSuccessDialog(context, state.result);
-          } else if (state is BleSharingError) {
+          } else if (state is HealthSharingError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -52,10 +52,10 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
           }
         },
         builder: (context, state) {
-          if (state is BleSharingScanning ||
-              state is BleSharingConnecting ||
-              state is BleSharingConnected ||
-              state is BleSharingTransferring) {
+          if (state is HealthSharingScanning ||
+              state is HealthSharingConnecting ||
+              state is HealthSharingConnected ||
+              state is SharingTransferring) {
             return _buildTransferringUI(state);
           }
 
@@ -92,7 +92,7 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: MedicalDataCategory.values.map((category) {
+              children: DataCategory.values.map((category) {
                 final isSelected = _selectedCategories.contains(category);
                 return FilterChip(
                   label: Text(category.displayName),
@@ -132,7 +132,7 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            RadioGroup<MedicalTransferMethod>(
+            RadioGroup<TransferMethod>(
               groupValue: _selectedMethod,
               onChanged: (value) {
                 if (value != null) {
@@ -140,8 +140,8 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
                 }
               },
               child: Column(
-                children: MedicalTransferMethod.values.map((method) {
-                  return RadioListTile<MedicalTransferMethod>(
+                children: TransferMethod.values.map((method) {
+                  return RadioListTile<TransferMethod>(
                     title: Text(method.displayName),
                     subtitle: Text(method.description),
                     value: method,
@@ -155,8 +155,8 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
     );
   }
 
-  Widget _buildShareButton(BuildContext context, BleSharingState state) {
-    final canShare = _selectedCategories.isNotEmpty && state is BleSharingReady;
+  Widget _buildShareButton(BuildContext context, HealthSharingState state) {
+    final canShare = _selectedCategories.isNotEmpty && state is HealthSharingReady;
 
     return SizedBox(
       width: double.infinity,
@@ -169,20 +169,20 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
     );
   }
 
-  Widget _buildTransferringUI(BleSharingState state) {
+  Widget _buildTransferringUI(HealthSharingState state) {
     String message = 'Transferring...';
     double progress = 0.5;
 
-    if (state is BleSharingScanning) {
+    if (state is HealthSharingScanning) {
       message = 'Searching for devices...';
       progress = 0.2;
-    } else if (state is BleSharingConnecting) {
+    } else if (state is HealthSharingConnecting) {
       message = 'Connecting...';
       progress = 0.4;
-    } else if (state is BleSharingConnected) {
+    } else if (state is HealthSharingConnected) {
       message = 'Connected';
       progress = 0.6;
-    } else if (state is BleSharingTransferring) {
+    } else if (state is SharingTransferring) {
       message = state.message;
       progress = state.progress;
     }
@@ -198,7 +198,7 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
           LinearProgressIndicator(value: progress),
           const SizedBox(height: 32),
           TextButton(
-            onPressed: () => context.read<BleSharingCubit>().cancelSharing(),
+            onPressed: () => context.read<HealthSharingCubit>().cancelSharing(),
             child: const Text('Cancel'),
           ),
         ],
@@ -207,18 +207,18 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
   }
 
   void _startSharing(BuildContext context) {
-    final package = MedicalSharePackage(
+    final package = SharedHealthPackage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       senderNodeId: 'my-node-id',
       recipientNodeId: 'target-node-id',
       createdAt: DateTime.now(),
       expiresAt: DateTime.now().add(const Duration(minutes: 3)),
-      payload: const EncryptedMedicalPayload(
+      payload: const EncryptedPayload(
         cipherText: '',
         iv: '',
         authTag: '',
       ),
-      metadata: MedicalShareMetadata(
+      metadata: PackageMetadata(
         packageType: 'selective',
         consentVerified: true,
         includedCategories: _selectedCategories,
@@ -227,7 +227,7 @@ class _ShareMedicalDataContentState extends State<_ShareMedicalDataContent> {
       signature: '',
     );
 
-    context.read<BleSharingCubit>().startSharing(
+    context.read<HealthSharingCubit>().startSharing(
       method: _selectedMethod,
       package: package,
     );

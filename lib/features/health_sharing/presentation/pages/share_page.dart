@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/page_header.dart';
-import '../../application/sharing_cubit.dart';
+import '../../application/health_sharing_cubit.dart';
 import '../../domain/entities/shared_health_package.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -13,7 +13,7 @@ class SharePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SharingCubit()..initialize(),
+      create: (_) => HealthSharingCubit()..initialize(),
       child: const _SharePageContent(),
     );
   }
@@ -33,18 +33,18 @@ class _SharePageContentState extends State<_SharePageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<SharingCubit, SharingState>(
+      body: BlocConsumer<HealthSharingCubit, HealthSharingState>(
         listener: (context, state) {
-          if (state is SharingComplete) {
+          if (state is HealthSharingComplete) {
             _showSuccessDialog(context, state.result);
-          } else if (state is SharingError) {
+          } else if (state is HealthSharingError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message), backgroundColor: Colors.red),
             );
           }
         },
         builder: (context, state) {
-          if (state is SharingScanning || state is SharingConnecting || state is SharingConnected) {
+          if (state is HealthSharingScanning || state is HealthSharingConnecting || state is HealthSharingConnected) {
             return _buildTransferringUI(state);
           }
 
@@ -151,8 +151,8 @@ class _SharePageContentState extends State<_SharePageContent> {
     );
   }
 
-  Widget _buildShareButton(BuildContext context, SharingState state) {
-    final canShare = _selectedCategories.isNotEmpty && state is SharingReady;
+  Widget _buildShareButton(BuildContext context, HealthSharingState state) {
+    final canShare = _selectedCategories.isNotEmpty && state is HealthSharingReady;
 
     return SizedBox(
       width: double.infinity,
@@ -167,17 +167,17 @@ class _SharePageContentState extends State<_SharePageContent> {
     );
   }
 
-  Widget _buildTransferringUI(SharingState state) {
+  Widget _buildTransferringUI(HealthSharingState state) {
     String message = 'Transferiendo...';
     double progress = 0.5;
 
-    if (state is SharingScanning) {
+    if (state is HealthSharingScanning) {
       message = 'Buscando dispositivos...';
       progress = 0.2;
-    } else if (state is SharingConnecting) {
+    } else if (state is HealthSharingConnecting) {
       message = 'Conectando...';
       progress = 0.4;
-    } else if (state is SharingConnected) {
+    } else if (state is HealthSharingConnected) {
       message = 'Conectado';
       progress = 0.6;
     } else if (state is SharingTransferring) {
@@ -199,7 +199,7 @@ class _SharePageContentState extends State<_SharePageContent> {
           LinearProgressIndicator(value: progress),
           const SizedBox(height: 32),
           TextButton(
-            onPressed: () => context.read<SharingCubit>().cancelSharing(),
+            onPressed: () => context.read<HealthSharingCubit>().cancelSharing(),
             child: const Text('Cancelar'),
           ),
         ],
@@ -216,9 +216,9 @@ class _SharePageContentState extends State<_SharePageContent> {
       createdAt: DateTime.now(),
       expiresAt: DateTime.now().add(const Duration(minutes: 3)),
       payload: const EncryptedPayload(
-        encryptedData: '',
+        cipherText: '',
         iv: '',
-        ephemeralPublicKey: '',
+        authTag: '',
       ),
       metadata: PackageMetadata(
         packageType: 'selective',
@@ -229,7 +229,7 @@ class _SharePageContentState extends State<_SharePageContent> {
       signature: '',
     );
 
-    context.read<SharingCubit>().startSharing(
+    context.read<HealthSharingCubit>().startSharing(
       method: _selectedMethod,
       package: package,
     );

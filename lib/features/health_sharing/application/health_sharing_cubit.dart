@@ -13,56 +13,56 @@ import 'protocol_handler.dart';
 // STATES
 // ============================================================================
 
-abstract class SharingState extends Equatable {
-  const SharingState();
+abstract class HealthSharingState extends Equatable {
+  const HealthSharingState();
 
   @override
   List<Object?> get props => [];
 }
 
-class SharingInitial extends SharingState {}
+class HealthSharingInitial extends HealthSharingState {}
 
-class SharingReady extends SharingState {}
+class HealthSharingReady extends HealthSharingState {}
 
-class SharingScanning extends SharingState {
+class HealthSharingScanning extends HealthSharingState {
   final TransferMethod method;
-  const SharingScanning(this.method);
+  const HealthSharingScanning(this.method);
 
   @override
   List<Object?> get props => [method];
 }
 
-class SharingAdvertising extends SharingState {
+class HealthSharingAdvertising extends HealthSharingState {
   final TransferMethod method;
   final String nodeId;
 
-  const SharingAdvertising(this.method, this.nodeId);
+  const HealthSharingAdvertising(this.method, this.nodeId);
 
   @override
   List<Object?> get props => [method, nodeId];
 }
 
-class SharingConnecting extends SharingState {
+class HealthSharingConnecting extends HealthSharingState {
   final TransferMethod method;
   final String deviceId;
 
-  const SharingConnecting(this.method, this.deviceId);
+  const HealthSharingConnecting(this.method, this.deviceId);
 
   @override
   List<Object?> get props => [method, deviceId];
 }
 
-class SharingConnected extends SharingState {
+class HealthSharingConnected extends HealthSharingState {
   final TransferMethod method;
   final String deviceId;
 
-  const SharingConnected(this.method, this.deviceId);
+  const HealthSharingConnected(this.method, this.deviceId);
 
   @override
   List<Object?> get props => [method, deviceId];
 }
 
-class SharingTransferring extends SharingState {
+class SharingTransferring extends HealthSharingState {
   final TransferMethod method;
   final double progress;
   final String message;
@@ -77,29 +77,29 @@ class SharingTransferring extends SharingState {
   List<Object?> get props => [method, progress, message];
 }
 
-class SharingComplete extends SharingState {
+class HealthSharingComplete extends HealthSharingState {
   final SharingResult result;
   final TransferMethod method;
 
-  const SharingComplete(this.result, this.method);
+  const HealthSharingComplete(this.result, this.method);
 
   @override
   List<Object?> get props => [result, method];
 }
 
-class SharingReceiving extends SharingState {
+class HealthSharingReceiving extends HealthSharingState {
   final SharedHealthPackage? package;
   final TransferMethod method;
 
-  const SharingReceiving({this.package, required this.method});
+  const HealthSharingReceiving({this.package, required this.method});
 
   @override
   List<Object?> get props => [package, method];
 }
 
-class SharingError extends SharingState {
+class HealthSharingError extends HealthSharingState {
   final String message;
-  const SharingError(this.message);
+  const HealthSharingError(this.message);
 
   @override
   List<Object?> get props => [message];
@@ -109,7 +109,7 @@ class SharingError extends SharingState {
 // CUBIT
 // ============================================================================
 
-class SharingCubit extends Cubit<SharingState> {
+class HealthSharingCubit extends Cubit<HealthSharingState> {
   final BleSharingService _bleService;
   final NfcSharingService _nfcService;
   final WifiDirectService _wifiService;
@@ -123,7 +123,7 @@ class SharingCubit extends Cubit<SharingState> {
   // ignore: unused_field
   SharedHealthPackage? _pendingPackage;
 
-  SharingCubit({
+  HealthSharingCubit({
     BleSharingService? bleService,
     NfcSharingService? nfcService,
     WifiDirectService? wifiService,
@@ -132,7 +132,7 @@ class SharingCubit extends Cubit<SharingState> {
         _nfcService = nfcService ?? NfcSharingService(),
         _wifiService = wifiService ?? WifiDirectService(),
         _healthRecordRepo = healthRecordRepo,
-        super(SharingInitial());
+        super(HealthSharingInitial());
 
   /// Initialize all services
   Future<void> initialize() async {
@@ -142,7 +142,7 @@ class SharingCubit extends Cubit<SharingState> {
 
     _setupSubscriptions();
 
-    emit(SharingReady());
+    emit(HealthSharingReady());
   }
 
   void _setupSubscriptions() {
@@ -162,16 +162,16 @@ class SharingCubit extends Cubit<SharingState> {
   void _onProtocolEvent(ProtocolEvent event, TransferMethod method) {
     switch (event.type) {
       case ProtocolEventType.scanning:
-        emit(SharingScanning(method));
+        emit(HealthSharingScanning(method));
         break;
       case ProtocolEventType.advertising:
-        emit(SharingAdvertising(method, event.id ?? ''));
+        emit(HealthSharingAdvertising(method, event.id ?? ''));
         break;
       case ProtocolEventType.connecting:
-        emit(SharingConnecting(method, event.id ?? ''));
+        emit(HealthSharingConnecting(method, event.id ?? ''));
         break;
       case ProtocolEventType.connected:
-        emit(SharingConnected(method, event.id ?? ''));
+        emit(HealthSharingConnected(method, event.id ?? ''));
         break;
       case ProtocolEventType.transferring:
         emit(SharingTransferring(
@@ -181,7 +181,7 @@ class SharingCubit extends Cubit<SharingState> {
         ));
         break;
       case ProtocolEventType.completed:
-        emit(SharingComplete(
+        emit(HealthSharingComplete(
           SharingResult(
             success: true,
             bytesTransferred: event.bytes ?? 0,
@@ -191,13 +191,13 @@ class SharingCubit extends Cubit<SharingState> {
         ));
         break;
       case ProtocolEventType.received:
-        emit(SharingReceiving(
+        emit(HealthSharingReceiving(
           package: event.package as SharedHealthPackage?,
           method: method,
         ));
         break;
       case ProtocolEventType.error:
-        emit(SharingError(event.message ?? 'Error'));
+        emit(HealthSharingError(event.message ?? 'Error'));
         break;
     }
   }
@@ -231,15 +231,15 @@ class SharingCubit extends Cubit<SharingState> {
   Future<void> sendViaBle(String deviceId, SharedHealthPackage package) async {
     final connected = await _bleService.connect(deviceId);
     if (!connected) {
-      emit(const SharingError('Failed to connect'));
+      emit(const HealthSharingError('Failed to connect'));
       return;
     }
 
     final result = await _bleService.sendData(package);
     if (result.success) {
-      emit(SharingComplete(result, TransferMethod.ble));
+      emit(HealthSharingComplete(result, TransferMethod.ble));
     } else {
-      emit(SharingError(result.error ?? 'Transfer failed'));
+      emit(HealthSharingError(result.error ?? 'Transfer failed'));
     }
   }
 
@@ -247,9 +247,9 @@ class SharingCubit extends Cubit<SharingState> {
   Future<void> sendViaWifi(String targetIp, SharedHealthPackage package) async {
     final result = await _wifiService.sendData(targetIp, package);
     if (result.success) {
-      emit(SharingComplete(result, TransferMethod.wifi));
+      emit(HealthSharingComplete(result, TransferMethod.wifi));
     } else {
-      emit(SharingError(result.error ?? 'Transfer failed'));
+      emit(HealthSharingError(result.error ?? 'Transfer failed'));
     }
   }
 
@@ -263,7 +263,7 @@ class SharingCubit extends Cubit<SharingState> {
     _pendingPackage = null;
     _currentMethod = null;
 
-    emit(SharingReady());
+    emit(HealthSharingReady());
   }
 
   // ==========================================================================
@@ -289,13 +289,13 @@ class SharingCubit extends Cubit<SharingState> {
 
   /// Handle incoming package
   void handleIncomingPackage(SharedHealthPackage package) {
-    emit(SharingReceiving(package: package, method: _currentMethod!));
+    emit(HealthSharingReceiving(package: package, method: _currentMethod!));
   }
 
   /// Accept and import incoming package
   Future<void> acceptIncomingPackage() async {
     final currentState = state;
-    if (currentState is SharingReceiving &&
+    if (currentState is HealthSharingReceiving &&
         currentState.package != null &&
         _healthRecordRepo != null) {
       final package = currentState.package!;
@@ -312,12 +312,12 @@ class SharingCubit extends Cubit<SharingState> {
       await _healthRecordRepo.saveRecord(record);
     }
 
-    emit(SharingReady());
+    emit(HealthSharingReady());
   }
 
   /// Reject incoming package
   void rejectIncomingPackage() {
-    emit(SharingReady());
+    emit(HealthSharingReady());
   }
 
   // ==========================================================================
@@ -340,7 +340,7 @@ class SharingCubit extends Cubit<SharingState> {
 
   /// Reset to ready state
   void reset() {
-    emit(SharingReady());
+    emit(HealthSharingReady());
   }
 
   @override

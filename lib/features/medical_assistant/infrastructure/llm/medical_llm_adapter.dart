@@ -5,12 +5,14 @@ import '../../domain/entities/analysis_response.dart';
 import '../../../../core/services/privacy_anonymizer.dart';
 import 'medical_response_generator.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
+import "package:injectable/injectable.dart";
 
 /// Adapter for medical LLM API integration.
 ///
 /// Enforces strict confidence-based responses:
 /// - AI NEVER diagnoses below 90% confidence
 /// - AI ALWAYS explains what symptoms COULD mean
+@lazySingleton
 /// - AI ALWAYS recommends consulting a doctor
 class MedicalLlmAdapter {
   final PromptScrubber? _scrubber;

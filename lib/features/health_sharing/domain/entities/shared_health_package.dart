@@ -68,32 +68,32 @@ class SharedHealthPackage extends Equatable {
 
 /// Encrypted payload containing health data
 class EncryptedPayload extends Equatable {
-  final String encryptedData; // AES-256-GCM encrypted JSON
+  final String cipherText; // AES-256-GCM encrypted JSON
   final String iv; // Initialization vector
-  final String ephemeralPublicKey; // ECDH ephemeral key for recipient
+  final String authTag; // ECDH ephemeral key for recipient
 
   const EncryptedPayload({
-    required this.encryptedData,
+    required this.cipherText,
     required this.iv,
-    required this.ephemeralPublicKey,
+    required this.authTag,
   });
 
   Map<String, dynamic> toJson() => {
-        'encryptedData': encryptedData,
+        'cipherText': cipherText,
         'iv': iv,
-        'ephemeralPublicKey': ephemeralPublicKey,
+        'authTag': authTag,
       };
 
   factory EncryptedPayload.fromJson(Map<String, dynamic> json) {
     return EncryptedPayload(
-      encryptedData: json['encryptedData'],
+      cipherText: json['cipherText'],
       iv: json['iv'],
-      ephemeralPublicKey: json['ephemeralPublicKey'],
+      authTag: json['authTag'],
     );
   }
 
   @override
-  List<Object?> get props => [encryptedData, iv, ephemeralPublicKey];
+  List<Object?> get props => [cipherText, iv, authTag];
 }
 
 /// Metadata about the shared package

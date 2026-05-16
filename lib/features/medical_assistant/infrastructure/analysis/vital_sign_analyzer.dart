@@ -2,7 +2,9 @@ import 'package:medical_standards/medical_standards.dart';
 import '../../domain/entities/medical_insight.dart';
 
 /// Analyzes vital signs against clinical guidelines
+import "package:injectable/injectable.dart";
 class VitalSignAnalyzer {
+@lazySingleton
   /// Analyze blood pressure reading
   Future<VitalSignInterpretation> analyzeBloodPressure({
     required double systolic,

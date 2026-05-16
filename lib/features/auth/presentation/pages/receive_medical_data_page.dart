@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../ble_sharing/application/ble_sharing_cubit.dart';
-import '../../../ble_sharing/domain/ble_sharing_service.dart';
+import "../../../health_sharing/domain/entities/shared_health_package.dart";
+import '../../../health_sharing/application/health_sharing_cubit.dart';
 
 class ReceiveMedicalDataPage extends StatelessWidget {
   const ReceiveMedicalDataPage({super.key});
@@ -9,7 +9,7 @@ class ReceiveMedicalDataPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => BleSharingCubit()..initialize(),
+      create: (_) => HealthSharingCubit()..initialize(),
       child: const _ReceiveMedicalDataContent(),
     );
   }
@@ -27,7 +27,7 @@ class _ReceiveMedicalDataContentState extends State<_ReceiveMedicalDataContent> 
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<BleSharingCubit>().startListening(MedicalTransferMethod.nfc);
+      context.read<HealthSharingCubit>().startListening(TransferMethod.nfc);
     });
   }
 
@@ -43,13 +43,13 @@ class _ReceiveMedicalDataContentState extends State<_ReceiveMedicalDataContent> 
           ),
         ],
       ),
-      body: BlocConsumer<BleSharingCubit, BleSharingState>(
+      body: BlocConsumer<HealthSharingCubit, HealthSharingState>(
         listener: (context, state) {
-          if (state is BleSharingReceiving && state.package != null) {
+          if (state is HealthSharingReceiving && state.package != null) {
             _showPreviewDialog(context, state.package!);
-          } else if (state is BleSharingComplete) {
+          } else if (state is HealthSharingComplete) {
             _showSuccessDialog(context, state.result);
-          } else if (state is BleSharingError) {
+          } else if (state is HealthSharingError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -65,30 +65,30 @@ class _ReceiveMedicalDataContentState extends State<_ReceiveMedicalDataContent> 
     );
   }
 
-  Widget _buildWaitingUI(BleSharingState state) {
+  Widget _buildWaitingUI(HealthSharingState state) {
     String message = 'Waiting for data...';
     IconData icon = Icons.wifi;
     Color color = Colors.blue;
 
-    if (state is BleSharingScanning) {
+    if (state is HealthSharingScanning) {
       switch (state.method) {
-        case MedicalTransferMethod.nfc:
+        case TransferMethod.nfc:
           message = 'Tap devices to receive...';
           icon = Icons.nfc;
           break;
-        case MedicalTransferMethod.ble:
+        case TransferMethod.ble:
           message = 'Searching Bluetooth devices...';
           icon = Icons.bluetooth;
           break;
-        case MedicalTransferMethod.wifi:
+        case TransferMethod.wifi:
           message = 'Waiting for WiFi connection...';
           icon = Icons.wifi;
           break;
       }
-    } else if (state is BleSharingConnecting) {
+    } else if (state is HealthSharingConnecting) {
       message = 'Connection established';
       color = Colors.orange;
-    } else if (state is BleSharingTransferring) {
+    } else if (state is SharingTransferring) {
       message = state.message;
       color = Colors.blue;
     }
@@ -129,7 +129,7 @@ class _ReceiveMedicalDataContentState extends State<_ReceiveMedicalDataContent> 
     );
   }
 
-  void _showPreviewDialog(BuildContext context, MedicalSharePackage package) {
+  void _showPreviewDialog(BuildContext context, SharedHealthPackage package) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -158,14 +158,14 @@ class _ReceiveMedicalDataContentState extends State<_ReceiveMedicalDataContent> 
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<BleSharingCubit>().rejectIncomingPackage();
+              context.read<HealthSharingCubit>().rejectIncomingPackage();
             },
             child: const Text('Reject'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<BleSharingCubit>().acceptIncomingPackage();
+              context.read<HealthSharingCubit>().acceptIncomingPackage();
             },
             child: const Text('Import'),
           ),

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../../ble_sharing/domain/ble_sharing_service.dart';
+import '../../../health_sharing/infrastructure/ble_sharing_service.dart';
 
 class VitalsMonitorPage extends StatefulWidget {
   const VitalsMonitorPage({super.key});

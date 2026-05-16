@@ -30,7 +30,7 @@ import '../../features/auth/infrastructure/services/ble_medical_sharing_service.
     as _i55;
 import '../../features/auth/infrastructure/services/encryption_service.dart'
     as _i9;
-import '../../features/ble_sharing/domain/ble_sharing_service.dart' as _i3;
+import '../../features/health_sharing/infrastructure/ble_sharing_service.dart' as _i3;
 import '../../features/health_data_import/application/health_import_cubit.dart'
     as _i60;
 import '../../features/health_data_import/domain/services/health_data_import_service.dart'
