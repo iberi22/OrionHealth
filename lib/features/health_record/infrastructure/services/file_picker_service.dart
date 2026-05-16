@@ -9,7 +9,7 @@ abstract class FilePickerService {
 class FilePickerServiceImpl implements FilePickerService {
   @override
   Future<String?> pickPdf() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
