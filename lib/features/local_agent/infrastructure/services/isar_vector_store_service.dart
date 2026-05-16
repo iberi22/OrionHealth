@@ -23,13 +23,17 @@ class IsarVectorStoreService implements VectorStoreService {
   IsarVectorStoreService(this._memoryGraph, this._medicalRepo);
 
   /// Index all medical standards (ICD-10, LOINC, RxNorm, SNOMED)
-  /// into the vector store at startup. Safe to call multiple times.
-  /// Errors are caught and logged — DI chain will not break.
+  /// into the vector store. This runs in the background to avoid 
+  /// blocking the app startup.
   @override
-  @PostConstruct(preResolve: true)
   Future<void> indexMedicalStandards({bool force = false}) async {
+    // We return immediately to avoid blocking the DI chain/Startup
+    _runIndexingInBackground(force);
+  }
+
+  Future<void> _runIndexingInBackground(bool force) async {
     try {
-      AppLogger.i('IsarVectorStore', 'Starting indexing medical standards (force: $force)...');
+      AppLogger.i('IsarVectorStore', 'Starting background indexing medical standards (force: $force)...');
       await _medicalRepo.initialize(force: force);
 
       final allCodes = await _medicalRepo.getAllCodes();
@@ -48,6 +52,8 @@ class IsarVectorStoreService implements VectorStoreService {
           'displayName': code.displayName,
         };
         try {
+          // Note: storeNodeWithEmbedding might compute embeddings, 
+          // which is heavy. Running in loop is fine here as it is background.
           await _memoryGraph.storeNodeWithEmbedding(
             content: content,
             metadata: {'externalId': id, ...metadata},

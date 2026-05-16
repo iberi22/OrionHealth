@@ -34,9 +34,9 @@ class LoincCode extends MedicalConcept {
       code: json['code'] as String,
       displayName: json['displayName'] as String,
       description: json['description'] as String?,
-      component: json['component'] as String,
-      property: json['property'] as String,
-      unit: json['unit'] as String,
+      component: (json['component'] as String?) ?? (json['displayName'] as String),
+      property: (json['property'] as String?) ?? 'Mass/Vol',
+      unit: (json['unit'] as String?) ?? 'mg/dL',
     );
   }
 

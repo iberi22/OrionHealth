@@ -149,6 +149,9 @@ class AnonCredsServiceImpl implements AnonCredsService {
     AnonCredsPresentation presentation, {
     String? expectedLinkSecret,
   }) async {
+    // Explicitly check if the presented credential has been marked as revoked
+    if (presentation.credential.isRevoked) return false;
+
     final proof = _parseProof(presentation.credential.proof);
     if (proof == null) return false;
 
@@ -191,34 +194,11 @@ class AnonCredsServiceImpl implements AnonCredsService {
       if (entry.value != _hashValue(actualClaim.toString())) return false;
     }
 
-    // Check non-revocation
+    // Check non-revocation registry
     final credentialIndex = proof['credentialIndex'] as int?;
     if (credentialIndex != null) {
-      final revocationEntry = await _repository.getRevocationEntry(
-        issuerKeyB64,
-        credentialIndex,
-      );
-
-      if (revocationEntry != null) {
-        // Verify revocation signature
-        final dataToVerify = '${revocationEntry.issuerPublicKey}:${revocationEntry.credentialIndex}:${revocationEntry.revokedAt.toIso8601String()}';
-        final publicKey = SimplePublicKey(
-          _decodeBase64Url(revocationEntry.issuerPublicKey),
-          type: KeyPairType.ed25519,
-        );
-
-        final isSignatureValid = await _ed25519.verify(
-          utf8.encode(dataToVerify),
-          signature: Signature(
-            _decodeBase64Url(revocationEntry.issuerSignature),
-            publicKey: publicKey,
-          ),
-        );
-
-        if (isSignatureValid) {
-          return false; // Credential is validly revoked
-        }
-      }
+      final isRevoked = await isCredentialRevoked(issuerKeyB64, credentialIndex);
+      if (isRevoked) return false;
     }
 
     return true;
@@ -234,7 +214,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
     final credentialIndex = proof?['credentialIndex'] as int?;
     if (credentialIndex == null) return;
 
-    final revokedAt = DateTime.now();
+    final revokedAt = DateTime.now().toUtc();
     final dataToSign = '${issuerKeys.publicKey}:$credentialIndex:${revokedAt.toIso8601String()}';
 
     final keyPair = _reconstructKeyPair(
@@ -256,6 +236,50 @@ class AnonCredsServiceImpl implements AnonCredsService {
     );
 
     await _repository.saveRevocationEntry(entry);
+
+    // Also update the local credential record for standard SSI consistency
+    final revokedVc = VerifiableCredential(
+      id: credential.id,
+      issuer: credential.issuer,
+      subject: credential.subject,
+      type: credential.type,
+      schemaId: credential.schemaId,
+      claims: credential.claims,
+      issuanceDate: credential.issuanceDate,
+      expirationDate: credential.expirationDate,
+      proof: credential.proof,
+      isRevoked: true,
+    );
+    await _repository.saveCredential(revokedVc);
+  }
+
+  @override
+  Future<bool> isCredentialRevoked(
+      String issuerPublicKey, int credentialIndex) async {
+    final revocationEntry = await _repository.getRevocationEntry(
+      issuerPublicKey,
+      credentialIndex,
+    );
+
+    if (revocationEntry == null) return false;
+
+    // Verify revocation signature
+    final dataToVerify =
+        '${revocationEntry.issuerPublicKey}:${revocationEntry.credentialIndex}:${revocationEntry.revokedAt.toUtc().toIso8601String()}';
+    final publicKey = SimplePublicKey(
+      _decodeBase64Url(revocationEntry.issuerPublicKey),
+      type: KeyPairType.ed25519,
+    );
+
+    final isSignatureValid = await _ed25519.verify(
+      utf8.encode(dataToVerify),
+      signature: Signature(
+        _decodeBase64Url(revocationEntry.issuerSignature),
+        publicKey: publicKey,
+      ),
+    );
+
+    return isSignatureValid;
   }
 
   @override
