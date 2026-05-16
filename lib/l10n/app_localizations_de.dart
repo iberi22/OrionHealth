@@ -4,79 +4,79 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for German (`de`).
+class AppLocalizationsDe extends AppLocalizations {
+  AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
   String get appTitle => 'OrionHealth';
 
   @override
-  String get home => 'Home';
+  String get home => 'Startseite';
 
   @override
-  String get reports => 'Reports';
+  String get reports => 'Berichte';
 
   @override
-  String get records => 'Records';
+  String get records => 'Aufzeichnungen';
 
   @override
-  String get profile => 'Profile';
+  String get profile => 'Profil';
 
   @override
-  String get homeTitle => 'Home';
+  String get homeTitle => 'Startseite';
 
   @override
   String get homeSubtitle =>
-      'Manage your health and consult your intelligent assistant';
+      'Verwalten Sie Ihre Gesundheit und konsultieren Sie Ihren intelligenten Assistenten';
 
   @override
-  String get profileTitle => 'User Profile';
+  String get profileTitle => 'Benutzerprofil';
 
   @override
-  String get personalInfo => 'Personal Information';
+  String get personalInfo => 'Persönliche Informationen';
 
   @override
-  String get fullName => 'Full Name';
+  String get fullName => 'Vollständiger Name';
 
   @override
-  String get birthDate => 'Birth Date';
+  String get birthDate => 'Geburtsdatum';
 
   @override
-  String get contactNumber => 'Contact Number';
+  String get contactNumber => 'Kontaktnummer';
 
   @override
-  String get bleDataExchange => 'BLE Data Exchange';
+  String get bleDataExchange => 'BLE-Datenaustausch';
 
   @override
-  String get shareMyData => 'Share My Data';
+  String get shareMyData => 'Meine Daten teilen';
 
   @override
-  String get receiveData => 'Receive Data';
+  String get receiveData => 'Daten empfangen';
 
   @override
-  String get appPreferences => 'App Preferences';
+  String get appPreferences => 'App-Einstellungen';
 
   @override
-  String get pushNotifications => 'Push Notifications';
+  String get pushNotifications => 'Push-Benachrichtigungen';
 
   @override
-  String get theme => 'Theme';
+  String get theme => 'Design';
 
   @override
-  String get llmSettings => 'LLM Settings';
+  String get llmSettings => 'LLM-Einstellungen';
 
   @override
-  String get aboutOrionHealth => 'About OrionHealth';
+  String get aboutOrionHealth => 'Über OrionHealth';
 
   @override
-  String get privacySecurity => 'Privacy & Security';
+  String get privacySecurity => 'Datenschutz & Sicherheit';
 
   @override
-  String get saveChanges => 'Save Changes';
+  String get saveChanges => 'Änderungen speichern';
 
   @override
-  String get logOut => 'Log Out';
+  String get logOut => 'Abmelden';
 
   @override
   String get error => 'Error';

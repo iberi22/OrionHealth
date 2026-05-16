@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../features/auth/presentation/pages/receive_medical_data_page.dart';
 import '../../../../features/auth/presentation/pages/share_medical_data_page.dart';
 import '../../../../features/about/presentation/pages/about_page.dart';
@@ -25,9 +26,9 @@ class UserProfilePage extends StatelessWidget {
             } else if (state is UserProfileLoaded) {
               return _UserProfileView(userProfile: state.userProfile);
             } else if (state is UserProfileError) {
-              return Center(child: Text('Error: ${state.message}'));
+              return Center(child: Text('${AppLocalizations.of(context)!.error}: ${state.message}'));
             }
-            return const Center(child: Text('Iniciando...'));
+            return Center(child: Text(AppLocalizations.of(context)!.loading));
           },
         ),
       ),
@@ -48,7 +49,7 @@ class _UserProfileView extends StatelessWidget {
           backgroundColor: Colors.transparent,
           leading: const Icon(Icons.arrow_back_ios_new),
           title: Text(
-            'Perfil del Usuario',
+            AppLocalizations.of(context)!.profileTitle,
             style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -63,33 +64,33 @@ class _UserProfileView extends StatelessWidget {
                 _ProfileHeader(userProfile: userProfile),
                 const SizedBox(height: 32),
                 _Section(
-                  title: 'Información Personal',
+                  title: AppLocalizations.of(context)!.personalInfo,
                   children: [
                     _InfoTile(
                       icon: Icons.person,
-                      title: 'Nombre Completo',
+                      title: AppLocalizations.of(context)!.fullName,
                       subtitle: userProfile.name,
                     ),
-                    const _InfoTile(
+                    _InfoTile(
                       icon: Icons.cake,
-                      title: 'Fecha de Nacimiento',
+                      title: AppLocalizations.of(context)!.birthDate,
                       subtitle: '15 de Agosto, 1988',
                     ),
-                    const _InfoTile(
+                    _InfoTile(
                       icon: Icons.call,
-                      title: 'Número de Contacto',
+                      title: AppLocalizations.of(context)!.contactNumber,
                       subtitle: '+1 (555) 123-4567',
                     ),
                   ],
                 ),
                 const SizedBox(height: 32),
                 _Section(
-                  title: 'Intercambio de Datos BLE',
+                  title: AppLocalizations.of(context)!.bleDataExchange,
                   children: [
                     _InfoTile(
                       icon: Icons.bluetooth_audio,
-                      title: 'Compartir mis Datos',
-                      subtitle: 'Enviar historial al médico',
+                      title: AppLocalizations.of(context)!.shareMyData,
+                      subtitle: AppLocalizations.of(context)!.sendHistoryToDoctor,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -101,8 +102,8 @@ class _UserProfileView extends StatelessWidget {
                     ),
                     _InfoTile(
                       icon: Icons.download_for_offline,
-                      title: 'Recibir Datos',
-                      subtitle: 'Modo receptor (Médico)',
+                      title: AppLocalizations.of(context)!.receiveData,
+                      subtitle: AppLocalizations.of(context)!.receiverMode,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -116,22 +117,22 @@ class _UserProfileView extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 _Section(
-                  title: 'Preferencias de la App',
+                  title: AppLocalizations.of(context)!.appPreferences,
                   children: [
                     _InfoTile(
                       icon: Icons.notifications,
-                      title: 'Notificaciones Push',
+                      title: AppLocalizations.of(context)!.pushNotifications,
                       trailing: Switch(value: true, onChanged: (v) {}),
                     ),
-                    const _InfoTile(
+                    _InfoTile(
                       icon: Icons.dark_mode,
-                      title: 'Tema',
-                      subtitle: 'Modo Oscuro',
+                      title: AppLocalizations.of(context)!.theme,
+                      subtitle: 'Dark Mode',
                     ),
                     _InfoTile(
                       icon: Icons.smart_toy,
-                      title: 'Configuración de LLM',
-                      subtitle: 'Modelo de IA y preferencias',
+                      title: AppLocalizations.of(context)!.llmSettings,
+                      subtitle: AppLocalizations.of(context)!.aiModelPreferences,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -143,8 +144,8 @@ class _UserProfileView extends StatelessWidget {
                     ),
                     _InfoTile(
                       icon: Icons.info_outline,
-                      title: 'Sobre OrionHealth',
-                      subtitle: 'Nuestra misión y visión',
+                      title: AppLocalizations.of(context)!.aboutOrionHealth,
+                      subtitle: AppLocalizations.of(context)!.ourMissionVision,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -158,17 +159,17 @@ class _UserProfileView extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 _Section(
-                  title: 'Privacidad y Seguridad',
+                  title: AppLocalizations.of(context)!.privacySecurity,
                   children: [
                     _InfoTile(
                       icon: Icons.fingerprint,
-                      title: 'Autenticación Biométrica',
+                      title: AppLocalizations.of(context)!.biometricAuth,
                       trailing: Switch(value: false, onChanged: (v) {}),
                     ),
                     _InfoTile(
                       icon: Icons.cloud_off,
-                      title: 'Permitir llamadas a APIs en la nube',
-                      subtitle: 'Anonimización activa si está ON',
+                      title: AppLocalizations.of(context)!.allowCloudApi,
+                      subtitle: AppLocalizations.of(context)!.anonymizationActive,
                       trailing: Switch(
                         value: userProfile.allowCloudApi,
                         onChanged: (v) {
@@ -178,9 +179,9 @@ class _UserProfileView extends StatelessWidget {
                         },
                       ),
                     ),
-                    const _InfoTile(
+                    _InfoTile(
                       icon: Icons.password,
-                      title: 'Cambiar Contraseña',
+                      title: AppLocalizations.of(context)!.changePassword,
                     ),
                   ],
                 ),
@@ -191,19 +192,19 @@ class _UserProfileView extends StatelessWidget {
                     // For now, just save the existing profile to show functionality
                     context.read<UserProfileCubit>().saveUserProfile(userProfile);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Perfil guardado')),
+                      SnackBar(content: Text(AppLocalizations.of(context)!.profileSaved)),
                     );
                   },
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: double.infinity,
-                    child: Center(child: Text('Guardar Cambios')),
+                    child: Center(child: Text(AppLocalizations.of(context)!.saveChanges)),
                   ),
                 ),
                 Center(
                   child: TextButton(
                     onPressed: () {},
                     child: Text(
-                      'Cerrar Sesión',
+                      AppLocalizations.of(context)!.logOut,
                       style: TextStyle(color: AppColors.secondary.withValues(alpha: 0.8)),
                     ),
                   ),

@@ -4,79 +4,78 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for Chinese (`zh`).
+class AppLocalizationsZh extends AppLocalizations {
+  AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
   String get appTitle => 'OrionHealth';
 
   @override
-  String get home => 'Home';
+  String get home => '首页';
 
   @override
-  String get reports => 'Reports';
+  String get reports => '报告';
 
   @override
-  String get records => 'Records';
+  String get records => '记录';
 
   @override
-  String get profile => 'Profile';
+  String get profile => '个人资料';
 
   @override
-  String get homeTitle => 'Home';
+  String get homeTitle => '首页';
 
   @override
-  String get homeSubtitle =>
-      'Manage your health and consult your intelligent assistant';
+  String get homeSubtitle => '管理您的健康并咨询您的智能助手';
 
   @override
-  String get profileTitle => 'User Profile';
+  String get profileTitle => '用户资料';
 
   @override
-  String get personalInfo => 'Personal Information';
+  String get personalInfo => '个人信息';
 
   @override
-  String get fullName => 'Full Name';
+  String get fullName => '全名';
 
   @override
-  String get birthDate => 'Birth Date';
+  String get birthDate => '出生日期';
 
   @override
-  String get contactNumber => 'Contact Number';
+  String get contactNumber => '联系电话';
 
   @override
-  String get bleDataExchange => 'BLE Data Exchange';
+  String get bleDataExchange => 'BLE 数据交换';
 
   @override
-  String get shareMyData => 'Share My Data';
+  String get shareMyData => '共享我的数据';
 
   @override
-  String get receiveData => 'Receive Data';
+  String get receiveData => '接收数据';
 
   @override
-  String get appPreferences => 'App Preferences';
+  String get appPreferences => '应用偏好';
 
   @override
-  String get pushNotifications => 'Push Notifications';
+  String get pushNotifications => '推送通知';
 
   @override
-  String get theme => 'Theme';
+  String get theme => '主题';
 
   @override
-  String get llmSettings => 'LLM Settings';
+  String get llmSettings => 'LLM 设置';
 
   @override
-  String get aboutOrionHealth => 'About OrionHealth';
+  String get aboutOrionHealth => '关于 OrionHealth';
 
   @override
-  String get privacySecurity => 'Privacy & Security';
+  String get privacySecurity => '隐私与安全';
 
   @override
-  String get saveChanges => 'Save Changes';
+  String get saveChanges => '保存更改';
 
   @override
-  String get logOut => 'Log Out';
+  String get logOut => '退出登录';
 
   @override
   String get error => 'Error';

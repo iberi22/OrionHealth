@@ -4,9 +4,9 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for Nigerian Pidgin (`pcm`).
+class AppLocalizationsPcm extends AppLocalizations {
+  AppLocalizationsPcm([String locale = 'pcm']) : super(locale);
 
   @override
   String get appTitle => 'OrionHealth';
@@ -28,7 +28,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeSubtitle =>
-      'Manage your health and consult your intelligent assistant';
+      'Manage your health and talk to your smart assistant';
 
   @override
   String get profileTitle => 'User Profile';
@@ -43,22 +43,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get birthDate => 'Birth Date';
 
   @override
-  String get contactNumber => 'Contact Number';
+  String get contactNumber => 'Phone Number';
 
   @override
-  String get bleDataExchange => 'BLE Data Exchange';
+  String get bleDataExchange => 'BLE Data Sharing';
 
   @override
-  String get shareMyData => 'Share My Data';
+  String get shareMyData => 'Share my data';
 
   @override
-  String get receiveData => 'Receive Data';
+  String get receiveData => 'Receive data';
 
   @override
-  String get appPreferences => 'App Preferences';
+  String get appPreferences => 'App Settings';
 
   @override
-  String get pushNotifications => 'Push Notifications';
+  String get pushNotifications => 'Notifications';
 
   @override
   String get theme => 'Theme';
@@ -70,13 +70,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutOrionHealth => 'About OrionHealth';
 
   @override
-  String get privacySecurity => 'Privacy & Security';
+  String get privacySecurity => 'Privacy and Security';
 
   @override
-  String get saveChanges => 'Save Changes';
+  String get saveChanges => 'Save';
 
   @override
-  String get logOut => 'Log Out';
+  String get logOut => 'Log out';
 
   @override
   String get error => 'Error';

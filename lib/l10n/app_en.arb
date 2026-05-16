@@ -4,28 +4,37 @@
   "@appTitle": {
     "description": "The title of the application"
   },
+  "home": "Home",
+  "reports": "Reports",
+  "records": "Records",
+  "profile": "Profile",
   "homeTitle": "Home",
-  "@homeTitle": {
-    "description": "Title for the Home page"
-  },
-  "homeSubtitle": "Manage your health and consult your smart assistant",
-  "@homeSubtitle": {
-    "description": "Subtitle for the Home page"
-  },
-  "navHome": "Home",
-  "@navHome": {
-    "description": "Label for the home navigation destination"
-  },
-  "navAppointments": "Appointments",
-  "@navAppointments": {
-    "description": "Label for the appointments navigation destination"
-  },
-  "navFiles": "Files",
-  "@navFiles": {
-    "description": "Label for the files navigation destination"
-  },
-  "navProfile": "Profile",
-  "@navProfile": {
-    "description": "Label for the profile navigation destination"
-  }
+  "homeSubtitle": "Manage your health and consult your intelligent assistant",
+  "profileTitle": "User Profile",
+  "personalInfo": "Personal Information",
+  "fullName": "Full Name",
+  "birthDate": "Birth Date",
+  "contactNumber": "Contact Number",
+  "bleDataExchange": "BLE Data Exchange",
+  "shareMyData": "Share My Data",
+  "receiveData": "Receive Data",
+  "appPreferences": "App Preferences",
+  "pushNotifications": "Push Notifications",
+  "theme": "Theme",
+  "llmSettings": "LLM Settings",
+  "aboutOrionHealth": "About OrionHealth",
+  "privacySecurity": "Privacy & Security",
+  "saveChanges": "Save Changes",
+  "logOut": "Log Out",
+  "error": "Error",
+  "loading": "Loading...",
+  "profileSaved": "Profile saved",
+  "sendHistoryToDoctor": "Send history to doctor",
+  "receiverMode": "Receiver mode (Doctor)",
+  "aiModelPreferences": "AI model and preferences",
+  "ourMissionVision": "Our mission and vision",
+  "biometricAuth": "Biometric Authentication",
+  "allowCloudApi": "Allow cloud API calls",
+  "anonymizationActive": "Active anonymization if ON",
+  "changePassword": "Change Password"
 }
