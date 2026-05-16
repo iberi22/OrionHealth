@@ -53,6 +53,12 @@ abstract class AnonCredsService {
   /// Future verifications can check non-revocation via the registry.
   Future<void> revokeCredential(String credentialId, AnonCredsKeyPair issuerKeys);
 
+  /// Check if a specific credential has been revoked.
+  ///
+  /// Returns true if a valid revocation entry exists for the given
+  /// [issuerPublicKey] and [credentialIndex].
+  Future<bool> isCredentialRevoked(String issuerPublicKey, int credentialIndex);
+
   /// Check if the service is available.
   Future<bool> isAvailable();
 }
