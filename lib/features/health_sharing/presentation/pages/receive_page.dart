@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/page_header.dart';
-import '../../application/sharing_cubit.dart';
+import '../../application/health_sharing_cubit.dart';
 import '../../domain/entities/shared_health_package.dart';
 
 /// Page to receive health data from another OrionHealth node
@@ -11,7 +11,7 @@ class ReceivePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SharingCubit()..initialize(),
+      create: (_) => HealthSharingCubit()..initialize(),
       child: const _ReceivePageContent(),
     );
   }
@@ -30,20 +30,20 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
     super.initState();
     // Start listening for incoming data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SharingCubit>().startListening(TransferMethod.nfc);
+      context.read<HealthSharingCubit>().startListening(TransferMethod.nfc);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<SharingCubit, SharingState>(
+      body: BlocConsumer<HealthSharingCubit, HealthSharingState>(
         listener: (context, state) {
-          if (state is SharingReceiving && state.package != null) {
+          if (state is HealthSharingReceiving && state.package != null) {
             _showPreviewDialog(context, state.package!);
-          } else if (state is SharingComplete) {
+          } else if (state is HealthSharingComplete) {
             _showSuccessDialog(context, state.result);
-          } else if (state is SharingError) {
+          } else if (state is HealthSharingError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message), backgroundColor: Colors.red),
             );
@@ -69,12 +69,12 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
     );
   }
 
-  Widget _buildWaitingUI(SharingState state) {
+  Widget _buildWaitingUI(HealthSharingState state) {
     String message = 'Esperando datos...';
     IconData icon = Icons.wifi;
     Color color = Colors.blue;
 
-    if (state is SharingScanning) {
+    if (state is HealthSharingScanning) {
       switch (state.method) {
         case TransferMethod.nfc:
           message = 'Acerca los dispositivos para recibir...';
@@ -89,7 +89,7 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
           icon = Icons.wifi;
           break;
       }
-    } else if (state is SharingConnected) {
+    } else if (state is HealthSharingConnected) {
       message = 'Conexión establecida';
       color = Colors.orange;
     } else if (state is SharingTransferring) {
@@ -144,7 +144,7 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('De: ${package.senderNodeId}'),
-            Text('Tamaño: ${package.payload.encryptedData.length} bytes'),
+            Text('Tamaño: ${package.payload.cipherText.length} bytes'),
             Text('Expira: ${package.timeRemaining.inMinutes}m ${package.timeRemaining.inSeconds % 60}s'),
             const Divider(),
             const Text('Categorías:', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -157,14 +157,14 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<SharingCubit>().rejectIncomingPackage();
+              context.read<HealthSharingCubit>().rejectIncomingPackage();
             },
             child: const Text('Rechazar'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<SharingCubit>().acceptIncomingPackage();
+              context.read<HealthSharingCubit>().acceptIncomingPackage();
             },
             child: const Text('Importar'),
           ),

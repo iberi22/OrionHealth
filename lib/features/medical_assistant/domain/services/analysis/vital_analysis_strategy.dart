@@ -144,4 +144,66 @@ class VitalAnalysisStrategy {
       insights: insights,
     );
   }
+
+  /// Original analyzeVitals logic moved to strategy
+  Future<List<MedicalInsight>> analyzeBatch({
+    required Map<String, double> vitals,
+    required List<Icd10Code> chronicConditions,
+  }) async {
+    final insights = <MedicalInsight>[];
+
+    if (vitals.containsKey('systolic') && vitals.containsKey('diastolic')) {
+      final systolic = vitals['systolic']!;
+      final diastolic = vitals['diastolic']!;
+
+      InsightSeverity severity = InsightSeverity.info;
+      if (systolic >= 180 || diastolic >= 120) {
+        severity = InsightSeverity.critical;
+      } else if (systolic >= 140 || diastolic >= 90) {
+        severity = InsightSeverity.alert;
+      } else if (systolic >= 130 || diastolic >= 80) {
+        severity = InsightSeverity.warning;
+      }
+
+      final bpGuideline = await ClinicalGuidelines.findByCode('AHA-2017');
+
+      insights.add(MedicalInsight(
+        id: 'bp-${DateTime.now().millisecondsSinceEpoch}',
+        title: 'Blood Pressure Assessment',
+        description: 'BP: $systolic/$diastolic mmHg',
+        severity: severity,
+        category: InsightCategory.vitalSignAnalysis,
+        guidelineReference: bpGuideline?.code ?? 'AHA-2017',
+        recommendations: ['Monitor blood pressure regularly'],
+        generatedAt: DateTime.now(),
+      ));
+    }
+
+    return insights;
+  }
+
+  /// Original calculateRisks logic moved to strategy
+  Future<List<MedicalInsight>> calculateRisks({
+    required Map<String, double> labValues,
+    required Map<String, double> vitals,
+    required List<Icd10Code> conditions,
+  }) async {
+    final insights = <MedicalInsight>[];
+
+    final riskGuideline =
+        await ClinicalGuidelines.findByCode('ACC-AHA-PRIMARY-2019');
+
+    insights.add(MedicalInsight(
+      id: 'ascvd-${DateTime.now().millisecondsSinceEpoch}',
+      title: 'Cardiovascular Risk',
+      description: 'ASCVD risk assessment based on available data',
+      severity: InsightSeverity.info,
+      category: InsightCategory.riskAssessment,
+      guidelineReference: riskGuideline?.code ?? 'ACC-AHA-PRIMARY-2019',
+      recommendations: ['Complete lipid panel for accurate assessment'],
+      generatedAt: DateTime.now(),
+    ));
+
+    return insights;
+  }
 }

@@ -20,11 +20,24 @@ void main() {
 
     // Default mock behaviors
     when(() => mockRepository.getCredentials()).thenAnswer((_) async => []);
-    when(() => mockRepository.getRevocationEntry(any(), any())).thenAnswer((_) async => null);
-    when(() => mockRepository.saveRevocationEntry(any())).thenAnswer((_) async {});
+    when(() => mockRepository.getRevocationEntry(any(), any()))
+        .thenAnswer((_) async => null);
+    when(() => mockRepository.saveRevocationEntry(any()))
+        .thenAnswer((_) async {});
+    when(() => mockRepository.saveCredential(any())).thenAnswer((_) async {});
   });
 
   setUpAll(() {
+    registerFallbackValue(VerifiableCredential(
+      id: 'id',
+      issuer: 'issuer',
+      subject: 'subject',
+      type: 'type',
+      schemaId: 'schema',
+      claims: {},
+      issuanceDate: DateTime.now(),
+      proof: '',
+    ));
     registerFallbackValue(RevocationEntry(
       credentialId: 'vc:test',
       credentialIndex: 1,

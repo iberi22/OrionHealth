@@ -2,7 +2,9 @@ import 'package:medical_standards/medical_standards.dart';
 import '../../domain/entities/medical_insight.dart';
 
 /// Interprets laboratory results using LOINC codes and clinical guidelines
+import "package:injectable/injectable.dart";
 class LabInterpreter {
+@lazySingleton
   /// Interpret a single lab value
   Future<LabInterpretation> interpret({
     required String loincCode,

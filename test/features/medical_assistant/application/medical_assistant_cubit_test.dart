@@ -7,6 +7,7 @@ import 'package:orionhealth_health/features/medical_assistant/domain/services/me
 import 'package:orionhealth_health/features/medical_assistant/domain/services/clinical_reasoner_service.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/services/health_context_service.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/ai_response.dart';
+import 'package:orionhealth_health/features/medical_assistant/domain/entities/analysis_response.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/medical_insight.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/medical_query.dart';
 import 'package:orionhealth_health/features/medical_assistant/infrastructure/analysis/lab_interpreter.dart';

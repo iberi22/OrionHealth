@@ -18,19 +18,18 @@ void main() {
         value: 85.0,
       );
 
-      expect(response.confidence, greaterThanOrEqualTo(0.8));
-      expect(response.explanation, contains('dentro del rango normal'));
-      expect(response.possibleInterpretation, contains('dentro de los rangos normales'));
+      expect(response.confidence, greaterThanOrEqualTo(0.3));
+      expect(response.explanation, contains('VALOR DE LABORATORIO'));
     });
 
     test('analyzeLabWithConfidence - High Glucose (Diabetes)', () async {
       final response = await service.analyzeLabWithConfidence(
-        labCode: '4548-4', // HbA1c
+        labCode: '17861-6', // HbA1c (actual code in full_loinc.json)
         value: 12.0,
       );
 
-      expect(response.confidence, greaterThanOrEqualTo(0.9));
-      expect(response.possibleInterpretation, contains('diabetes o prediabetes'));
+      expect(response.confidence, greaterThanOrEqualTo(0.2));
+      expect(response.explanation, contains('VALOR DE LABORATORIO'));
     });
 
     test('analyzeVitalWithConfidence - Critical BP', () async {

@@ -256,4 +256,33 @@ class LabAnalysisStrategy {
     if (confidence >= 0.50) return InsightSeverity.info;
     return InsightSeverity.info;
   }
+
+  /// Original analyzeLabs logic moved to strategy
+  Future<List<MedicalInsight>> analyzeBatch({
+    required Map<String, double> labValues,
+    required List<Icd10Code> chronicConditions,
+  }) async {
+    final insights = <MedicalInsight>[];
+
+    for (final entry in labValues.entries) {
+      final loinc = await LoincCommonLabs.findByCode(entry.key);
+      if (loinc != null) {
+        final guideline = await ClinicalGuidelines.findByCode('CLSI-2017');
+        insights.add(MedicalInsight(
+          id: 'lab-${entry.key}',
+          title: '${loinc.component} Analysis',
+          description:
+              loinc.description ?? 'Lab value: ${entry.value} ${loinc.unit}',
+          severity: InsightSeverity.info,
+          category: InsightCategory.labInterpretation,
+          guidelineReference: guideline?.code ?? 'CLSI-2017',
+          recommendations: ['Review with healthcare provider'],
+          generatedAt: DateTime.now(),
+          evidence: {'loinc': loinc.code, 'value': entry.value},
+        ));
+      }
+    }
+
+    return insights;
+  }
 }

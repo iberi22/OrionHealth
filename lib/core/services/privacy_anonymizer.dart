@@ -7,6 +7,7 @@ import '../domain/entities/api_audit_log.dart';
 
 @lazySingleton
 class PromptScrubber {
+@lazySingleton
   final Isar _isar;
 
   PromptScrubber(this._isar);
