@@ -55,21 +55,21 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i14;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i44;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
-    as _i16;
+    as _i15;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
     as _i64;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
     as _i63;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
-    as _i15;
+    as _i16;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
     as _i66;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i65;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart' as _i79;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i21;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i22;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i21;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i45;
 import '../../features/local_agent/infrastructure/services/medical_indexing_service.dart'
@@ -153,9 +153,9 @@ import 'database_module.dart' as _i84;
 import 'memory_module.dart' as _i83;
 import 'network_module.dart' as _i82;
 
+const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
-const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -192,27 +192,27 @@ extension GetItInjectableX on _i1.GetIt {
       preResolve: true,
     );
     gh.lazySingleton<_i14.LlmAdapter>(
-      () => _i15.OpenaiCompatibleAdapter(),
-      instanceName: 'openai',
+      () => _i15.FlutterGemmaAdapter(),
+      instanceName: 'gemma',
     );
     gh.lazySingleton<_i14.LlmAdapter>(
-      () => _i16.FlutterGemmaAdapter(),
-      instanceName: 'gemma',
+      () => _i16.OpenaiCompatibleAdapter(),
+      instanceName: 'openai',
     );
     gh.lazySingleton<_i17.LlmSettingsRepository>(
         () => _i18.LlmSettingsRepositoryImpl(gh<_i13.Isar>()));
     gh.lazySingleton<_i19.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i20.MedicalKnowledgeRepository>(
-      () => _i21.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
-    );
-    gh.factory<_i20.MedicalKnowledgeRepository>(
-      () => _i22.JsonMedicalKnowledgeRepository(),
+      () => _i21.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
+    );
+    gh.factory<_i20.MedicalKnowledgeRepository>(
+      () => _i22.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
     );
     gh.lazySingleton<_i23.MedicalScraperService>(
         () => _i24.MedicalScraperServiceImpl(
