@@ -300,7 +300,6 @@ class AnonCredsServiceImpl implements AnonCredsService {
 
   /// Serialize credential claims to canonical bytes for signing.
   Uint8List _credentialToCanonicalBytes(VerifiableCredential credential) {
-    // TODO: version the canonicalization format for backward compatibility with existing credentials
     // Switched from pipe-separated concatenation to JSON canonicalization to
     // prevent collision attacks where claim values containing '|' could produce
     // identical canonical strings for different claim sets.
@@ -309,6 +308,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
         ..sort((a, b) => a.key.compareTo(b.key)),
     );
     final canonical = jsonEncode({
+      '@version': '1.0', // Format versioning for backward compatibility
       'id': credential.id,
       'issuer': credential.issuer,
       'type': credential.type,

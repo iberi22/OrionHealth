@@ -18,7 +18,7 @@ class UserProfile {
 
   String? avatarUrl; // Profile picture URL
 
-  String? uniqueId; // User ID like "ORION-XXX"
+  String? uniqueId; // User ID like "ORION-ID-001"
 
   String? email;
 

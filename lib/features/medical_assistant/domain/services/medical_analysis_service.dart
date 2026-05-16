@@ -70,96 +70,39 @@ class MedicalAnalysisService {
     );
   }
 
-  // ============ Original Methods (kept for compatibility) ============
+  // ============ Legacy methods delegated to strategies ============
 
-  /// Analyze lab results and generate insights (original method)
+  /// Analyze lab results and generate insights (delegated)
   Future<List<MedicalInsight>> analyzeLabs({
     required Map<String, double> labValues,
     required List<Icd10Code> chronicConditions,
-  }) async {
-    final insights = <MedicalInsight>[];
+  }) =>
+      _labStrategy.analyzeBatch(
+        labValues: labValues,
+        chronicConditions: chronicConditions,
+      );
 
-    for (final entry in labValues.entries) {
-      final loinc = await LoincCommonLabs.findByCode(entry.key);
-      if (loinc != null) {
-        final guideline = await ClinicalGuidelines.findByCode('CLSI-2017');
-        insights.add(MedicalInsight(
-          id: 'lab-${entry.key}',
-          title: '${loinc.component} Analysis',
-          description: loinc.description ?? 'Lab value: ${entry.value} ${loinc.unit}',
-          severity: InsightSeverity.info,
-          category: InsightCategory.labInterpretation,
-          guidelineReference: guideline?.code ?? 'CLSI-2017',
-          recommendations: ['Review with healthcare provider'],
-          generatedAt: DateTime.now(),
-          evidence: {'loinc': loinc.code, 'value': entry.value},
-        ));
-      }
-    }
-
-    return insights;
-  }
-
-  /// Analyze vital signs and generate insights (original method)
+  /// Analyze vital signs and generate insights (delegated)
   Future<List<MedicalInsight>> analyzeVitals({
     required Map<String, double> vitals,
     required List<Icd10Code> chronicConditions,
-  }) async {
-    final insights = <MedicalInsight>[];
+  }) =>
+      _vitalStrategy.analyzeBatch(
+        vitals: vitals,
+        chronicConditions: chronicConditions,
+      );
 
-    if (vitals.containsKey('systolic') && vitals.containsKey('diastolic')) {
-      final systolic = vitals['systolic']!;
-      final diastolic = vitals['diastolic']!;
-
-      InsightSeverity severity = InsightSeverity.info;
-      if (systolic >= 180 || diastolic >= 120) {
-        severity = InsightSeverity.critical;
-      } else if (systolic >= 140 || diastolic >= 90) {
-        severity = InsightSeverity.alert;
-      } else if (systolic >= 130 || diastolic >= 80) {
-        severity = InsightSeverity.warning;
-      }
-
-      final bpGuideline = await ClinicalGuidelines.findByCode('AHA-2017');
-
-      insights.add(MedicalInsight(
-        id: 'bp-${DateTime.now().millisecondsSinceEpoch}',
-        title: 'Blood Pressure Assessment',
-        description: 'BP: $systolic/$diastolic mmHg',
-        severity: severity,
-        category: InsightCategory.vitalSignAnalysis,
-        guidelineReference: bpGuideline?.code ?? 'AHA-2017',
-        recommendations: ['Monitor blood pressure regularly'],
-        generatedAt: DateTime.now(),
-      ));
-    }
-
-    return insights;
-  }
-
-  /// Calculate health risk scores (original method)
+  /// Calculate health risk scores (delegated)
   Future<List<MedicalInsight>> calculateRisks({
     required Map<String, double> labValues,
     required Map<String, double> vitals,
     required List<Icd10Code> conditions,
-  }) async {
-    final insights = <MedicalInsight>[];
-
-    final riskGuideline = await ClinicalGuidelines.findByCode('ACC-AHA-PRIMARY-2019');
-
-    insights.add(MedicalInsight(
-      id: 'ascvd-${DateTime.now().millisecondsSinceEpoch}',
-      title: 'Cardiovascular Risk',
-      description: 'ASCVD risk assessment based on available data',
-      severity: InsightSeverity.info,
-      category: InsightCategory.riskAssessment,
-      guidelineReference: riskGuideline?.code ?? 'ACC-AHA-PRIMARY-2019',
-      recommendations: ['Complete lipid panel for accurate assessment'],
-      generatedAt: DateTime.now(),
-    ));
-
-    return insights;
-  }
+  }) =>
+      _vitalStrategy.calculateRisks(
+        labValues: labValues,
+        vitals: vitals,
+        conditions: conditions,
+      );
 
   /// Get guidelines relevant to patient's conditions
   Future<List<ClinicalGuidelineReference>> getRelevantGuidelines(List<Icd10Code> conditions) async {

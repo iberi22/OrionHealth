@@ -9,48 +9,53 @@ class VitalSignAnalyzer {
     required double diastolic,
     int? age,
   }) async {
-    BpCategory category = BpCategory.normal;
-    InsightSeverity severity = InsightSeverity.info;
-    final recommendations = <String>[];
-
-    if (systolic >= 180 || diastolic >= 120) {
-      category = BpCategory.crisis;
-      severity = InsightSeverity.critical;
-      recommendations.add('Hypertensive crisis - seek immediate care');
-      recommendations.add('Call 911 or emergency services');
-    } else if (systolic >= 140 || diastolic >= 90) {
-      category = BpCategory.stage2;
-      severity = InsightSeverity.alert;
-      recommendations.add('Stage 2 hypertension - consult physician');
-      recommendations.add('Consider medication adjustment');
-      recommendations.add('Reduce sodium intake');
-    } else if (systolic >= 130 || diastolic >= 80) {
-      category = BpCategory.stage1;
-      severity = InsightSeverity.warning;
-      recommendations.add('Stage 1 hypertension - lifestyle modifications');
-      recommendations.add('Increase physical activity');
-      recommendations.add('DASH diet recommended');
-    } else if (systolic >= 120 && diastolic < 80) {
-      category = BpCategory.elevated;
-      severity = InsightSeverity.info;
-      recommendations.add('Elevated blood pressure');
-      recommendations.add('Lifestyle changes recommended');
-    } else {
-      category = BpCategory.normal;
-      severity = InsightSeverity.info;
-      recommendations.add('Blood pressure within normal range');
-    }
-
+    final result = _getBpStatus(systolic, diastolic);
     final guideline = await ClinicalGuidelines.findByCode('AHA-2017');
 
     return VitalSignInterpretation(
       vitalType: 'blood_pressure',
       value: '$systolic/$diastolic',
       unit: 'mmHg',
-      category: category.name,
-      severity: severity,
-      recommendations: recommendations,
+      category: result.category.name,
+      severity: result.severity,
+      recommendations: result.recommendations,
       guideline: guideline,
+    );
+  }
+
+  _BpResult _getBpStatus(double systolic, double diastolic) {
+    if (systolic >= 180 || diastolic >= 120) {
+      return const _BpResult(
+        BpCategory.crisis,
+        InsightSeverity.critical,
+        ['Hypertensive crisis - seek immediate care', 'Call 911 or emergency services'],
+      );
+    }
+    if (systolic >= 140 || diastolic >= 90) {
+      return const _BpResult(
+        BpCategory.stage2,
+        InsightSeverity.alert,
+        ['Stage 2 hypertension - consult physician', 'Consider medication adjustment', 'Reduce sodium intake'],
+      );
+    }
+    if (systolic >= 130 || diastolic >= 80) {
+      return const _BpResult(
+        BpCategory.stage1,
+        InsightSeverity.warning,
+        ['Stage 1 hypertension - lifestyle modifications', 'Increase physical activity', 'DASH diet recommended'],
+      );
+    }
+    if (systolic >= 120 && diastolic < 80) {
+      return const _BpResult(
+        BpCategory.elevated,
+        InsightSeverity.info,
+        ['Elevated blood pressure', 'Lifestyle changes recommended'],
+      );
+    }
+    return const _BpResult(
+      BpCategory.normal,
+      InsightSeverity.info,
+      ['Blood pressure within normal range'],
     );
   }
 
@@ -59,85 +64,61 @@ class VitalSignAnalyzer {
     required double rate,
     bool isResting = true,
   }) {
-    InsightSeverity severity = InsightSeverity.info;
-    String category = 'normal';
-
-    if (isResting) {
-      if (rate < 40) {
-        severity = InsightSeverity.alert;
-        category = 'bradycardia';
-      } else if (rate < 60) {
-        severity = InsightSeverity.info;
-        category = 'low-normal';
-      } else if (rate <= 100) {
-        severity = InsightSeverity.info;
-        category = 'normal';
-      } else if (rate <= 150) {
-        severity = InsightSeverity.warning;
-        category = 'elevated';
-      } else {
-        severity = InsightSeverity.alert;
-        category = 'tachycardia';
-      }
-    } else {
-      if (rate < 100) {
-        severity = InsightSeverity.warning;
-        category = 'inadequate response';
-      } else if (rate <= 200) {
-        severity = InsightSeverity.info;
-        category = 'normal response';
-      } else {
-        severity = InsightSeverity.alert;
-        category = 'excessive response';
-      }
-    }
+    final status = isResting ? _getRestingHrStatus(rate) : _getActiveHrStatus(rate);
 
     return VitalSignInterpretation(
       vitalType: 'heart_rate',
       value: rate.toString(),
       unit: 'bpm',
-      category: category,
-      severity: severity,
-      recommendations: _heartRateRecommendations(category),
+      category: status.category,
+      severity: status.severity,
+      recommendations: _heartRateRecommendations(status.category),
       guideline: null,
     );
+  }
+
+  _HrStatus _getRestingHrStatus(double rate) {
+    if (rate < 40) return const _HrStatus('bradycardia', InsightSeverity.alert);
+    if (rate < 60) return const _HrStatus('low-normal', InsightSeverity.info);
+    if (rate <= 100) return const _HrStatus('normal', InsightSeverity.info);
+    if (rate <= 150) return const _HrStatus('elevated', InsightSeverity.warning);
+    return const _HrStatus('tachycardia', InsightSeverity.alert);
+  }
+
+  _HrStatus _getActiveHrStatus(double rate) {
+    if (rate < 100) return const _HrStatus('inadequate response', InsightSeverity.warning);
+    if (rate <= 200) return const _HrStatus('normal response', InsightSeverity.info);
+    return const _HrStatus('excessive response', InsightSeverity.alert);
   }
 
   /// Analyze oxygen saturation
   VitalSignInterpretation analyzeOxygenSaturation({
     required double spo2,
   }) {
-    InsightSeverity severity;
-    String category;
-    final recommendations = <String>[];
-
-    if (spo2 < 90) {
-      severity = InsightSeverity.critical;
-      category = 'severe hypoxemia';
-      recommendations.add('Severe hypoxemia - emergency care needed');
-    } else if (spo2 < 94) {
-      severity = InsightSeverity.alert;
-      category = 'hypoxemia';
-      recommendations.add('Low oxygen - consult physician');
-    } else if (spo2 < 96) {
-      severity = InsightSeverity.warning;
-      category = 'mild hypoxemia';
-      recommendations.add('Monitor closely');
-    } else {
-      severity = InsightSeverity.info;
-      category = 'normal';
-      recommendations.add('Oxygen saturation normal');
-    }
+    final result = _getSpo2Status(spo2);
 
     return VitalSignInterpretation(
       vitalType: 'oxygen_saturation',
       value: spo2.toString(),
       unit: '%',
-      category: category,
-      severity: severity,
-      recommendations: recommendations,
+      category: result.category,
+      severity: result.severity,
+      recommendations: result.recommendations,
       guideline: null,
     );
+  }
+
+  _StatusResult _getSpo2Status(double spo2) {
+    if (spo2 < 90) {
+      return const _StatusResult('severe hypoxemia', InsightSeverity.critical, ['Severe hypoxemia - emergency care needed']);
+    }
+    if (spo2 < 94) {
+      return const _StatusResult('hypoxemia', InsightSeverity.alert, ['Low oxygen - consult physician']);
+    }
+    if (spo2 < 96) {
+      return const _StatusResult('mild hypoxemia', InsightSeverity.warning, ['Monitor closely']);
+    }
+    return const _StatusResult('normal', InsightSeverity.info, ['Oxygen saturation normal']);
   }
 
   /// Analyze temperature
@@ -145,53 +126,27 @@ class VitalSignAnalyzer {
     required double temp,
     String unit = 'C',
   }) {
-    // Convert to Celsius if needed
-    double tempC = temp;
-    if (unit == 'F') {
-      tempC = (temp - 32) * 5 / 9;
-    }
-
-    InsightSeverity severity;
-    String category;
-    final recommendations = <String>[];
-
-    if (tempC < 35.0) {
-      severity = InsightSeverity.alert;
-      category = 'hypothermia';
-      recommendations.add('Low body temperature');
-    } else if (tempC < 36.5) {
-      severity = InsightSeverity.info;
-      category = 'low-normal';
-    } else if (tempC <= 37.5) {
-      severity = InsightSeverity.info;
-      category = 'normal';
-      recommendations.add('Temperature normal');
-    } else if (tempC <= 38.0) {
-      severity = InsightSeverity.info;
-      category = 'mild elevated';
-      recommendations.add('Low-grade fever - monitor');
-    } else if (tempC <= 39.5) {
-      severity = InsightSeverity.warning;
-      category = 'fever';
-      recommendations.add('Fever - stay hydrated');
-    } else {
-      severity = InsightSeverity.alert;
-      category = 'high fever';
-      recommendations.add('High fever - consider antipyretics');
-      if (tempC > 40.0) {
-        recommendations.add('Very high fever - seek medical attention');
-      }
-    }
+    double tempC = unit == 'F' ? (temp - 32) * 5 / 9 : temp;
+    final result = _getTempStatus(tempC);
 
     return VitalSignInterpretation(
       vitalType: 'temperature',
       value: '${temp.toStringAsFixed(1)}°$unit',
       unit: '°$unit',
-      category: category,
-      severity: severity,
-      recommendations: recommendations,
+      category: result.category,
+      severity: result.severity,
+      recommendations: result.recommendations,
       guideline: null,
     );
+  }
+
+  _StatusResult _getTempStatus(double tempC) {
+    if (tempC < 35.0) return const _StatusResult('hypothermia', InsightSeverity.alert, ['Low body temperature']);
+    if (tempC < 36.5) return const _StatusResult('low-normal', InsightSeverity.info, []);
+    if (tempC <= 37.5) return const _StatusResult('normal', InsightSeverity.info, ['Temperature normal']);
+    if (tempC <= 38.0) return const _StatusResult('mild elevated', InsightSeverity.info, ['Low-grade fever - monitor']);
+    if (tempC <= 39.5) return const _StatusResult('fever', InsightSeverity.warning, ['Fever - stay hydrated']);
+    return const _StatusResult('high fever', InsightSeverity.alert, ['High fever - consider antipyretics', 'Very high fever - seek medical attention']);
   }
 
   /// Generate insights from vital sign interpretations
@@ -236,6 +191,26 @@ class VitalSignAnalyzer {
         return vitalType;
     }
   }
+}
+
+class _BpResult {
+  final BpCategory category;
+  final InsightSeverity severity;
+  final List<String> recommendations;
+  const _BpResult(this.category, this.severity, this.recommendations);
+}
+
+class _HrStatus {
+  final String category;
+  final InsightSeverity severity;
+  const _HrStatus(this.category, this.severity);
+}
+
+class _StatusResult {
+  final String category;
+  final InsightSeverity severity;
+  final List<String> recommendations;
+  const _StatusResult(this.category, this.severity, this.recommendations);
 }
 
 /// Blood pressure categories per AHA guidelines

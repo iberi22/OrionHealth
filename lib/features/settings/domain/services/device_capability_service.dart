@@ -118,7 +118,7 @@ class DeviceCapabilityService {
     return DeviceCapability(
       tier: tier,
       totalMemoryMb: memoryMb,
-      availableMemoryMb: _getAvailableMemoryMb(),
+      availableMemoryMb: _calculateAvailableMemoryMb(memoryMb),
       processorCount: processorCount,
       supportsGeminiCloud: true,
       recommendedModel: _getRecommendedModel(tier),
@@ -126,6 +126,14 @@ class DeviceCapabilityService {
       hasGpu: gpuAvailable,
       os: os,
     );
+  }
+
+  int _calculateAvailableMemoryMb(int totalMemoryMb) {
+    try {
+      return (totalMemoryMb * 0.4).round(); // Assume 40% available
+    } catch (e) {
+      return 2048;
+    }
   }
 
   /// Get the best local model for the current device.
@@ -210,14 +218,6 @@ class DeviceCapabilityService {
     }
   }
 
-  int _getAvailableMemoryMb() {
-    try {
-      final total = _getTotalMemoryMb();
-      return (total * 0.4).round(); // Assume 40% available
-    } catch (e) {
-      return 2048;
-    }
-  }
 
   int _getProcessorCount() {
     try {

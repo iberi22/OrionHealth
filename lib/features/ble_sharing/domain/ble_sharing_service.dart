@@ -470,10 +470,14 @@ class BleSharingService {
 
   /// Start advertising as an OrionHealth node.
   ///
-  /// TODO: BLE peripheral mode requires platform-specific GATT server.
-  /// flutter_blue_plus 2.3.2 does not expose startAdvertising in the
-  /// public API. Advertising requires Android GATT server / iOS CBPeripheralManager.
-  /// For now, use the scan+connect pairing flow.
+  /// ARCHITECTURAL LIMITATION: BLE peripheral mode requires platform-specific
+  /// GATT server implementation. flutter_blue_plus 2.3.2 does not expose
+  /// startAdvertising/GATT server in the public API. For full P2P peripheral
+  /// support, a platform-specific plugin or a package like `flutter_ble_peripheral`
+  /// must be integrated.
+  ///
+  /// For now, OrionHealth uses the scan+connect pairing flow where medical
+  /// devices are the peripherals and the app is the central.
   Future<void> startAdvertising(String nodeId) async {
     _stateController.add(BleServiceState.advertising(nodeId));
     await Future.delayed(const Duration(seconds: 1));

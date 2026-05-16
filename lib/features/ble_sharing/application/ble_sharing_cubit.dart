@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import '../domain/ble_sharing_service.dart';
 import '../infrastructure/nfc_sharing_service.dart';
 import '../infrastructure/wifi_direct_service.dart';
+import '../../health_sharing/application/protocol_handler.dart';
 
 abstract class BleSharingState extends Equatable {
   const BleSharingState();
@@ -130,130 +131,58 @@ class BleSharingCubit extends Cubit<BleSharingState> {
 
   void _setupSubscriptions() {
     _bleSubscription = _bleService.stateStream.listen((state) {
-      _handleBleState(state);
+      ProtocolHandler.handleBleState(state, (event) => _onProtocolEvent(event, MedicalTransferMethod.ble));
     });
 
     _nfcSubscription = _nfcService.stateStream.listen((state) {
-      _handleNfcState(state);
+      ProtocolHandler.handleBleNfcState(state, (event) => _onProtocolEvent(event, MedicalTransferMethod.nfc));
     });
 
     _wifiSubscription = _wifiService.stateStream.listen((state) {
-      _handleWifiState(state);
+      ProtocolHandler.handleBleWifiState(state, (event) => _onProtocolEvent(event, MedicalTransferMethod.wifi));
     });
   }
 
-  void _handleBleState(BleServiceState state) {
-    if (state.status == 'scanning') {
-      emit(BleSharingScanning(MedicalTransferMethod.ble));
-    } else if (state.status == 'advertising') {
-      emit(
-        BleSharingAdvertising(MedicalTransferMethod.ble, state.deviceId ?? ''),
-      );
-    } else if (state.status == 'connecting') {
-      emit(
-        BleSharingConnecting(MedicalTransferMethod.ble, state.deviceId ?? ''),
-      );
-    } else if (state.status == 'connected') {
-      emit(
-        BleSharingConnected(MedicalTransferMethod.ble, state.deviceId ?? ''),
-      );
-    } else if (state.status == 'transferring') {
-      emit(
-        BleSharingTransferring(
-          method: MedicalTransferMethod.ble,
-          progress: 0.5,
-          message: state.message ?? 'Transferring...',
-        ),
-      );
-    } else if (state.status == 'completed') {
-      emit(
-        BleSharingComplete(
+  void _onProtocolEvent(ProtocolEvent event, MedicalTransferMethod method) {
+    switch (event.type) {
+      case ProtocolEventType.scanning:
+        emit(BleSharingScanning(method));
+        break;
+      case ProtocolEventType.advertising:
+        emit(BleSharingAdvertising(method, event.id ?? ''));
+        break;
+      case ProtocolEventType.connecting:
+        emit(BleSharingConnecting(method, event.id ?? ''));
+        break;
+      case ProtocolEventType.connected:
+        emit(BleSharingConnected(method, event.id ?? ''));
+        break;
+      case ProtocolEventType.transferring:
+        emit(BleSharingTransferring(
+          method: method,
+          progress: event.progress ?? 0.5,
+          message: event.message ?? 'Transferring...',
+        ));
+        break;
+      case ProtocolEventType.completed:
+        emit(BleSharingComplete(
           SharingResult(
             success: true,
-            bytesTransferred: state.bytesTransferred ?? 0,
-            transferTime: state.transferTime ?? Duration.zero,
+            bytesTransferred: event.bytes ?? 0,
+            transferTime: event.time ?? Duration.zero,
           ),
-          MedicalTransferMethod.ble,
-        ),
-      );
-    } else if (state.isError) {
-      emit(BleSharingError(state.message ?? 'BLE Error'));
-    }
-  }
-
-  void _handleNfcState(NfcSharingState state) {
-    if (state.status == 'listening') {
-      emit(const BleSharingScanning(MedicalTransferMethod.nfc));
-    } else if (state.status == 'ndef_beam') {
-      emit(
-        BleSharingTransferring(
-          method: MedicalTransferMethod.nfc,
-          progress: 0.5,
-          message: state.message ?? 'Beaming...',
-        ),
-      );
-    } else if (state.status == 'received') {
-      emit(
-        BleSharingReceiving(
-          package: state.receivedPackage,
-          method: MedicalTransferMethod.nfc,
-        ),
-      );
-    } else if (state.status == 'completed') {
-      emit(
-        BleSharingComplete(
-          SharingResult(
-            success: true,
-            bytesTransferred: state.bytesTransferred ?? 0,
-            transferTime: state.transferTime ?? Duration.zero,
-          ),
-          MedicalTransferMethod.nfc,
-        ),
-      );
-    } else if (state.isError) {
-      emit(BleSharingError(state.message ?? 'NFC Error'));
-    }
-  }
-
-  void _handleWifiState(WifiServiceState state) {
-    if (state.status == 'discovering') {
-      emit(BleSharingScanning(MedicalTransferMethod.wifi));
-    } else if (state.status == 'hosting') {
-      emit(
-        BleSharingAdvertising(MedicalTransferMethod.wifi, state.address ?? ''),
-      );
-    } else if (state.status == 'connecting') {
-      emit(
-        BleSharingConnecting(MedicalTransferMethod.wifi, state.address ?? ''),
-      );
-    } else if (state.status == 'transferring') {
-      emit(
-        BleSharingTransferring(
-          method: MedicalTransferMethod.wifi,
-          progress: 0.5,
-          message: state.message ?? 'Transferring...',
-        ),
-      );
-    } else if (state.status == 'received') {
-      emit(
-        BleSharingReceiving(
-          package: state.receivedPackage,
-          method: MedicalTransferMethod.wifi,
-        ),
-      );
-    } else if (state.status == 'completed') {
-      emit(
-        BleSharingComplete(
-          SharingResult(
-            success: true,
-            bytesTransferred: state.bytesTransferred ?? 0,
-            transferTime: state.transferTime ?? Duration.zero,
-          ),
-          MedicalTransferMethod.wifi,
-        ),
-      );
-    } else if (state.isError) {
-      emit(BleSharingError(state.message ?? 'WiFi Error'));
+          method,
+        ));
+        break;
+      case ProtocolEventType.received:
+        emit(BleSharingReceiving(
+          package: event.package as MedicalSharePackage?,
+          method: method,
+        ));
+        break;
+      case ProtocolEventType.error:
+        emit(BleSharingError(event.message ?? 'Error'));
+        break;
     }
   }
 
