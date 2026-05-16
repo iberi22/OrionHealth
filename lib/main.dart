@@ -21,15 +21,16 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final l10n = AppLocalizations.of(context)!;
+    return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PageHeader(
-                title: AppLocalizations.of(context)!.homeTitle,
-                subtitle: AppLocalizations.of(context)!.homeSubtitle,
+                title: l10n.homeTitle,
+                subtitle: l10n.homeSubtitle,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -264,12 +265,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OrionHealth',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('es', ''), // Force Spanish for now as requested
       home: const MainNavigationPage(),
     );
   }
@@ -293,15 +295,19 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     const UserProfilePage(),
   ];
 
-  List<({IconData icon, IconData activeIcon, String label})> get _destinations => [
-    (icon: Icons.home_outlined, activeIcon: Icons.home, label: AppLocalizations.of(context)!.home),
-    (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: AppLocalizations.of(context)!.reports),
-    (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: AppLocalizations.of(context)!.records),
-    (icon: Icons.person_outline, activeIcon: Icons.person, label: AppLocalizations.of(context)!.profile),
-  ];
+  List<({IconData icon, IconData activeIcon, String label})> _getDestinations(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.navHome),
+      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: l10n.navAppointments),
+      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.navFiles),
+      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.navProfile),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final destinations = _getDestinations(context);
     return FloatingAssistantButtonScope(
       notifier: _fabController,
       child: ResponsiveLayout(
@@ -317,7 +323,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                 _currentIndex = index;
               });
             },
-            items: _destinations.map((d) => BottomNavigationBarItem(
+            items: destinations.map((d) => BottomNavigationBarItem(
               icon: Icon(d.icon),
               activeIcon: Icon(d.activeIcon),
               label: d.label,
@@ -371,7 +377,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                     _currentIndex = index;
                   });
                 },
-                destinations: _destinations.map((d) => NavigationRailDestination(
+                labelType: NavigationRailLabelType.all,
+                destinations: destinations.map((d) => NavigationRailDestination(
                   icon: Icon(d.icon),
                   selectedIcon: Icon(d.activeIcon),
                   label: Text(d.label),
