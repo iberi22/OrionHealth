@@ -67,7 +67,7 @@ dependencies:
 
   # Authentication & Security
   local_auth: ^3.0.1
-  flutter_secure_storage: ^9.2.4
+  flutter_secure_storage: ^10.2.0
   cryptography: ^2.7.0
   shared_preferences: ^2.3.0
 
