@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
 import 'core/theme/app_theme.dart';
@@ -17,21 +17,34 @@ import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
 
-// Placeholder pages
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final l10n = AppLocalizations.of(context)!;
+    return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PageHeader(
-                title: 'Inicio',
-                subtitle: 'Gestiona tu salud y consulta tu asistente inteligente',
+                title: l10n.homeTitle,
+                subtitle: l10n.homeSubtitle,
               ),
-              // More content can be added here
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: [
+                    const _HealthStatusGrid(),
+                    const SizedBox(height: 24),
+                    const _RecentInsightsSection(),
+                    const SizedBox(height: 24),
+                    const _LocalAgentPromo(),
+                    const SizedBox(height: 100), // Space for FAB
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -40,15 +53,210 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class _HealthStatusGrid extends StatelessWidget {
+  const _HealthStatusGrid();
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      children: const [
+        _StatusCard(
+          icon: Icons.favorite,
+          label: 'Ritmo Cardíaco',
+          value: '72 bpm',
+          color: Colors.redAccent,
+        ),
+        _StatusCard(
+          icon: Icons.bloodtype,
+          label: 'Presión Arterial',
+          value: '120/80',
+          color: Colors.blueAccent,
+        ),
+        _StatusCard(
+          icon: Icons.thermostat,
+          label: 'Temperatura',
+          value: '36.5 °C',
+          color: Colors.orangeAccent,
+        ),
+        _StatusCard(
+          icon: Icons.water_drop,
+          label: 'Oxígeno (SpO2)',
+          value: '98%',
+          color: Colors.cyanAccent,
+        ),
+      ],
+    );
+  }
+}
+
+class _StatusCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+  const _StatusCard({required this.icon, required this.label, required this.value, required this.color});
+  @override
+  Widget build(BuildContext context) {
+    return GlassmorphicCard(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: color, size: 28),
+          const SizedBox(height: 8),
+          Text(label, style: const TextStyle(fontSize: 10, color: Colors.white54), textAlign: TextAlign.center),
+          const SizedBox(height: 4),
+          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecentInsightsSection extends StatelessWidget {
+  const _RecentInsightsSection();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Insights Recientes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        GlassmorphicCard(
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(color: Colors.greenAccent.withOpacity(0.5), shape: BoxShape.circle),
+                child: const Icon(Icons.auto_awesome, color: Colors.greenAccent),
+              ),
+              const SizedBox(width: 16),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Tu salud cardiovascular está estable', style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 4),
+                    Text('Tus últimos 5 registros de presión arterial están dentro del rango normal.', style: TextStyle(fontSize: 12, color: Colors.white70)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LocalAgentPromo extends StatelessWidget {
+  const _LocalAgentPromo();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [AppTheme.darkTheme.primaryColor.withOpacity(0.2), Colors.transparent]),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.darkTheme.primaryColor.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.security, color: Colors.blue, size: 20),
+              SizedBox(width: 8),
+              Text('Privacidad 100% Local', style: TextStyle(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Text('Consulta a tu Asistente Orion', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          const Text('Pregúntame cualquier cosa sobre tus registros médicos. No salen de tu dispositivo.', style: TextStyle(color: Colors.white70)),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.chat_bubble_outline),
+            label: const Text('Iniciar Consulta'),
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.darkTheme.primaryColor, foregroundColor: Colors.black),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await configureDependencies();
-  await getIt<MemoryGraph>().initialize();
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    
+    // Global error handlers
+    FlutterError.onError = (details) {
+      FlutterError.presentError(details);
+      _logError(details.exception, details.stack);
+    };
 
-  // Index medical standards and patient context at startup
-  unawaited(getIt<MedicalIndexingService>().indexAll());
+    try {
+      await configureDependencies();
+      await getIt<MemoryGraph>().initialize();
 
-  runApp(const MyApp());
+      // Index medical standards and patient context at startup (Jules' Addition)
+      unawaited(getIt<MedicalIndexingService>().indexAll());
+
+      runApp(const MyApp());
+    } catch (e, stack) {
+      _logError(e, stack);
+      runApp(MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 64),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Error de Inicialización',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Hubo un problema al iniciar OrionHealth. Por favor, intenta reiniciar la aplicación.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () => main(),
+                    child: const Text('Reintentar'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          backgroundColor: Colors.black,
+        ),
+      ));
+    }
+  }, (error, stack) {
+    _logError(error, stack);
+  });
+}
+
+void _logError(Object error, StackTrace? stack) {
+  // ignore: avoid_print
+  print('--- FATAL ERROR ---');
+  // ignore: avoid_print
+  print(error);
+  // ignore: avoid_print
+  print(stack);
 }
 
 class MyApp extends StatelessWidget {
@@ -57,19 +265,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OrionHealth',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('es', ''),
-        Locale('en', ''),
-      ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('es', ''), // Force Spanish for now as requested
       home: const MainNavigationPage(),
     );
@@ -94,15 +295,19 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     const UserProfilePage(),
   ];
 
-  final List<({IconData icon, IconData activeIcon, String label})> _destinations = [
-    (icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Inicio'),
-    (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: 'Citas'),
-    (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: 'Archivos'),
-    (icon: Icons.person_outline, activeIcon: Icons.person, label: 'Perfil'),
-  ];
+  List<({IconData icon, IconData activeIcon, String label})> _getDestinations(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.navHome),
+      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: l10n.navAppointments),
+      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.navFiles),
+      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.navProfile),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final destinations = _getDestinations(context);
     return FloatingAssistantButtonScope(
       notifier: _fabController,
       child: ResponsiveLayout(
@@ -118,7 +323,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                 _currentIndex = index;
               });
             },
-            items: _destinations.map((d) => BottomNavigationBarItem(
+            items: destinations.map((d) => BottomNavigationBarItem(
               icon: Icon(d.icon),
               activeIcon: Icon(d.activeIcon),
               label: d.label,
@@ -129,10 +334,43 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             badgeCount: _fabController.badgeCount,
           ),
         ),
+        tablet: Scaffold(
+          body: Row(
+            children: [
+              NavigationRail(
+                extended: MediaQuery.of(context).size.width > 900,
+                selectedIndex: _currentIndex,
+                onDestinationSelected: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                labelType: MediaQuery.of(context).size.width > 900 ? NavigationRailLabelType.none : NavigationRailLabelType.all,
+                destinations: _destinations.map((d) => NavigationRailDestination(
+                  icon: Icon(d.icon),
+                  selectedIcon: Icon(d.activeIcon),
+                  label: Text(d.label),
+                )).toList(),
+              ),
+              const VerticalDivider(thickness: 1, width: 1),
+              Expanded(
+                child: IndexedStack(
+                  index: _currentIndex,
+                  children: _pages,
+                ),
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingAssistantButton(
+            hasNotification: _fabController.hasNotification,
+            badgeCount: _fabController.badgeCount,
+          ),
+        ),
         desktop: Scaffold(
           body: Row(
             children: [
               NavigationRail(
+                extended: true,
                 selectedIndex: _currentIndex,
                 onDestinationSelected: (index) {
                   setState(() {
@@ -140,7 +378,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                   });
                 },
                 labelType: NavigationRailLabelType.all,
-                destinations: _destinations.map((d) => NavigationRailDestination(
+                destinations: destinations.map((d) => NavigationRailDestination(
                   icon: Icon(d.icon),
                   selectedIcon: Icon(d.activeIcon),
                   label: Text(d.label),
@@ -169,5 +407,3 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     );
   }
 }
-
-
