@@ -3,11 +3,12 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/glassmorphic_card.dart';
 
 import 'core/widgets/floating_assistant_button.dart';
 import 'core/widgets/page_header.dart';
@@ -16,9 +17,29 @@ import 'features/reports/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
+import 'features/home/application/home_cubit.dart';
+import 'features/home/application/home_state.dart';
+import 'features/vitals/domain/entities/vital_sign.dart';
+import 'features/vitals/domain/repositories/vital_sign_repository.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => HomeCubit(
+        getIt<VitalSignRepository>(),
+        getIt<MedicalIndexingService>(),
+      ),
+      child: const _HomePageView(),
+    );
+  }
+}
+
+class _HomePageView extends StatelessWidget {
+  const _HomePageView();
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -32,6 +53,7 @@ class HomePage extends StatelessWidget {
                 title: l10n.homeTitle,
                 subtitle: l10n.homeSubtitle,
               ),
+              const IndexingStatusBanner(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
@@ -53,43 +75,158 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _HealthStatusGrid extends StatelessWidget {
-  const _HealthStatusGrid();
+class IndexingStatusBanner extends StatefulWidget {
+  const IndexingStatusBanner({super.key});
+
+  @override
+  State<IndexingStatusBanner> createState() => _IndexingStatusBannerState();
+}
+
+class _IndexingStatusBannerState extends State<IndexingStatusBanner> {
+  bool _showSuccess = false;
+
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      children: const [
-        _StatusCard(
-          icon: Icons.favorite,
-          label: 'Ritmo Cardíaco',
-          value: '72 bpm',
-          color: Colors.redAccent,
-        ),
-        _StatusCard(
-          icon: Icons.bloodtype,
-          label: 'Presión Arterial',
-          value: '120/80',
-          color: Colors.blueAccent,
-        ),
-        _StatusCard(
-          icon: Icons.thermostat,
-          label: 'Temperatura',
-          value: '36.5 °C',
-          color: Colors.orangeAccent,
-        ),
-        _StatusCard(
-          icon: Icons.water_drop,
-          label: 'Oxígeno (SpO2)',
-          value: '98%',
-          color: Colors.cyanAccent,
-        ),
-      ],
+    return BlocListener<HomeCubit, HomeState>(
+      listenWhen: (previous, current) => previous.isIndexing && !current.isIndexing,
+      listener: (context, state) {
+        setState(() => _showSuccess = true);
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) setState(() => _showSuccess = false);
+        });
+      },
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          if (state.isIndexing) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.blue.withValues(alpha: 0.1),
+              child: const Row(
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    'Sincronizando estándares médicos...',
+                    style: TextStyle(fontSize: 12, color: Colors.blue),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (state.indexingError) {
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.red.withValues(alpha: 0.1),
+              child: Row(
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 16),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Error sincronizando estándares médicos',
+                      style: TextStyle(fontSize: 12, color: Colors.red),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => context.read<HomeCubit>().retryIndexing(),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: const Text('Reintentar', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (_showSuccess) {
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.green.withValues(alpha: 0.1),
+              child: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 16),
+                  SizedBox(width: 12),
+                  Text(
+                    'Sincronización completada',
+                    style: TextStyle(fontSize: 12, color: Colors.green),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
     );
+  }
+}
+
+class _HealthStatusGrid extends StatelessWidget {
+  const _HealthStatusGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        final vitals = state.latestVitals;
+
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          children: [
+            _StatusCard(
+              icon: Icons.favorite,
+              label: 'Ritmo Cardíaco',
+              value: vitals[VitalSignType.heartRate]?.formattedValue ?? 'Sin datos',
+              color: Colors.redAccent,
+              onTap: () {
+                // Navigate to vitals or add vital
+              },
+            ),
+            _StatusCard(
+              icon: Icons.bloodtype,
+              label: 'Presión Arterial',
+              value: _formatBloodPressure(
+                vitals[VitalSignType.bloodPressureSystolic],
+                vitals[VitalSignType.bloodPressureDiastolic],
+              ),
+              color: Colors.blueAccent,
+            ),
+            _StatusCard(
+              icon: Icons.thermostat,
+              label: 'Temperatura',
+              value: vitals[VitalSignType.temperature]?.formattedValue ?? 'Sin datos',
+              color: Colors.orangeAccent,
+            ),
+            _StatusCard(
+              icon: Icons.water_drop,
+              label: 'Oxígeno (SpO2)',
+              value: vitals[VitalSignType.oxygenSaturation]?.formattedValue ?? 'Sin datos',
+              color: Colors.cyanAccent,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _formatBloodPressure(VitalSign? systolic, VitalSign? diastolic) {
+    if (systolic == null || diastolic == null) return 'Sin datos';
+    return '${systolic.value?.toInt()}/${diastolic.value?.toInt()}';
   }
 }
 
@@ -98,11 +235,21 @@ class _StatusCard extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
-  const _StatusCard({required this.icon, required this.label, required this.value, required this.color});
+  final VoidCallback? onTap;
+
+  const _StatusCard({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+    this.onTap,
+  });
+
   @override
   Widget build(BuildContext context) {
     return GlassmorphicCard(
       padding: const EdgeInsets.all(12),
+      onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -110,7 +257,20 @@ class _StatusCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(label, style: const TextStyle(fontSize: 10, color: Colors.white54), textAlign: TextAlign.center),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: value == 'Sin datos' ? 14 : 16,
+              fontWeight: FontWeight.bold,
+              color: value == 'Sin datos' ? Colors.white38 : Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          if (value == 'Sin datos')
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+                child: Icon(Icons.add_circle_outline, size: 14, color: color.withValues(alpha: 0.5)),
+            ),
         ],
       ),
     );
@@ -131,7 +291,7 @@ class _RecentInsightsSection extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.greenAccent.withOpacity(0.5), shape: BoxShape.circle),
+                decoration: BoxDecoration(color: Colors.greenAccent.withValues(alpha: 0.5), shape: BoxShape.circle),
                 child: const Icon(Icons.auto_awesome, color: Colors.greenAccent),
               ),
               const SizedBox(width: 16),
@@ -161,9 +321,9 @@ class _LocalAgentPromo extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [AppTheme.darkTheme.primaryColor.withOpacity(0.2), Colors.transparent]),
+        gradient: LinearGradient(colors: [AppTheme.darkTheme.primaryColor.withValues(alpha: 0.2), Colors.transparent]),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.darkTheme.primaryColor.withOpacity(0.3)),
+        border: Border.all(color: AppTheme.darkTheme.primaryColor.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,10 +458,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   List<({IconData icon, IconData activeIcon, String label})> _getDestinations(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return [
-      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.navHome),
-      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: l10n.navAppointments),
-      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.navFiles),
-      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.navProfile),
+      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.home),
+      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: 'Citas'),
+      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.records),
+      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.profile),
     ];
   }
 
@@ -346,7 +506,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                   });
                 },
                 labelType: MediaQuery.of(context).size.width > 900 ? NavigationRailLabelType.none : NavigationRailLabelType.all,
-                destinations: _destinations.map((d) => NavigationRailDestination(
+                destinations: destinations.map((d) => NavigationRailDestination(
                   icon: Icon(d.icon),
                   selectedIcon: Icon(d.activeIcon),
                   label: Text(d.label),
