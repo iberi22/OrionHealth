@@ -3,19 +3,23 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
 import 'core/theme/app_theme.dart';
 
 import 'core/widgets/floating_assistant_button.dart';
+import 'core/widgets/glassmorphic_card.dart';
 import 'core/widgets/page_header.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/reports/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
+import 'features/onboarding/presentation/pages/onboarding_page.dart';
+import 'features/onboarding/application/onboarding_cubit.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -272,7 +276,33 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('es', ''), // Force Spanish for now as requested
-      home: const MainNavigationPage(),
+      home: const _StartupRouter(),
+    );
+  }
+}
+
+class _StartupRouter extends StatelessWidget {
+  const _StartupRouter();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: SharedPreferences.getInstance()
+          .then((p) => p.getBool('onboarding_completed') ?? false),
+      builder: (context, snap) {
+        if (!snap.hasData) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snap.data == true) {
+          return const MainNavigationPage();
+        }
+        return BlocProvider(
+          create: (_) => getIt<OnboardingCubit>(),
+          child: const OnboardingPage(),
+        );
+      },
     );
   }
 }
@@ -298,10 +328,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   List<({IconData icon, IconData activeIcon, String label})> _getDestinations(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return [
-      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.navHome),
-      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: l10n.navAppointments),
-      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.navFiles),
-      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.navProfile),
+      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.home),
+      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: l10n.reports),
+      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.records),
+      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.profile),
     ];
   }
 
@@ -346,7 +376,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                   });
                 },
                 labelType: MediaQuery.of(context).size.width > 900 ? NavigationRailLabelType.none : NavigationRailLabelType.all,
-                destinations: _destinations.map((d) => NavigationRailDestination(
+                destinations: destinations.map((d) => NavigationRailDestination(
                   icon: Icon(d.icon),
                   selectedIcon: Icon(d.activeIcon),
                   label: Text(d.label),
