@@ -3,11 +3,11 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/glassmorphic_card.dart';
 
 import 'core/widgets/floating_assistant_button.dart';
 import 'core/widgets/page_header.dart';
@@ -298,10 +298,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   List<({IconData icon, IconData activeIcon, String label})> _getDestinations(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return [
-      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.navHome),
-      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: l10n.navAppointments),
-      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.navFiles),
-      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.navProfile),
+      (icon: Icons.home_outlined, activeIcon: Icons.home, label: l10n.home),
+      (icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month, label: l10n.reports),
+      (icon: Icons.folder_shared_outlined, activeIcon: Icons.folder_shared, label: l10n.records),
+      (icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.profile),
     ];
   }
 
@@ -346,7 +346,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                   });
                 },
                 labelType: MediaQuery.of(context).size.width > 900 ? NavigationRailLabelType.none : NavigationRailLabelType.all,
-                destinations: _destinations.map((d) => NavigationRailDestination(
+                destinations: destinations.map((d) => NavigationRailDestination(
                   icon: Icon(d.icon),
                   selectedIcon: Icon(d.activeIcon),
                   label: Text(d.label),

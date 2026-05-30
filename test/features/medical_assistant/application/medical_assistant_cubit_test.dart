@@ -9,6 +9,7 @@ import 'package:orionhealth_health/features/medical_assistant/domain/services/he
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/ai_response.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/medical_insight.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/medical_query.dart';
+import 'package:orionhealth_health/features/medical_assistant/domain/entities/analysis_response.dart';
 import 'package:orionhealth_health/features/medical_assistant/infrastructure/analysis/lab_interpreter.dart';
 import 'package:orionhealth_health/features/medical_assistant/infrastructure/analysis/vital_sign_analyzer.dart';
 import 'package:orionhealth_health/features/medical_assistant/infrastructure/analysis/risk_calculator.dart';

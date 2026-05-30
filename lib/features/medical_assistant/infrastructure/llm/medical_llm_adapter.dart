@@ -1,7 +1,7 @@
 import '../../domain/entities/medical_query.dart';
 import '../../domain/entities/medical_insight.dart';
 import '../../domain/entities/ai_response.dart';
-import '../../domain/services/medical_analysis_service.dart';
+import '../../domain/entities/analysis_response.dart';
 import '../../../../core/services/privacy_anonymizer.dart';
 import 'medical_response_generator.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
