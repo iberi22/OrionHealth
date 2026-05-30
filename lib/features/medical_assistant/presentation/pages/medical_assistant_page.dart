@@ -26,8 +26,21 @@ class MedicalAssistantPage extends StatelessWidget {
   }
 }
 
-class _MedicalAssistantView extends StatelessWidget {
+class _MedicalAssistantView extends StatefulWidget {
   const _MedicalAssistantView();
+
+  @override
+  State<_MedicalAssistantView> createState() => _MedicalAssistantViewState();
+}
+
+class _MedicalAssistantViewState extends State<_MedicalAssistantView> {
+  final _queryController = TextEditingController();
+
+  @override
+  void dispose() {
+    _queryController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +103,11 @@ class _MedicalAssistantView extends StatelessWidget {
                       response: state.response,
                       query: state.query,
                     );
+                  } else if (state is MedicalAssistantNeedsMoreInfo) {
+                    return _NeedsMoreInfoContent(
+                      state: state,
+                      controller: _queryController,
+                    );
                   } else if (state is MedicalAssistantError) {
                     return _ErrorContent(message: state.message);
                   }
@@ -101,6 +119,7 @@ class _MedicalAssistantView extends StatelessWidget {
               builder: (context, state) {
                 final isLoading = state is MedicalAssistantLoading;
                 return QueryInput(
+                  controller: _queryController,
                   enabled: !isLoading,
                   onSubmit: (question) {
                     context.read<MedicalAssistantCubit>().submitQuery(question);
@@ -174,6 +193,8 @@ class _QuickQueryChip extends StatelessWidget {
     return ActionChip(
       label: Text(label),
       onPressed: () {
+        // Find the controller from the view state if needed, or pass it down
+        // For simplicity in _IdleContent, we'll keep direct submit or update if required
         context.read<MedicalAssistantCubit>().submitQuery(label);
       },
     );
@@ -332,6 +353,83 @@ class _ResponseContent extends StatelessWidget {
                   );
                 },
               ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _NeedsMoreInfoContent extends StatelessWidget {
+  final MedicalAssistantNeedsMoreInfo state;
+  final TextEditingController controller;
+
+  const _NeedsMoreInfoContent({
+    required this.state,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Robot icon + message
+          const Icon(Icons.help_outline, size: 48, color: Colors.amber),
+          const SizedBox(height: 16),
+          Text(state.message, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 24),
+          // Questions as chips
+          const Text('Para ayudarte mejor, cuéntame:',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: state.questions
+                .map((q) => ActionChip(
+                      label: Text(q),
+                      onPressed: () {
+                        controller.text = q;
+                      },
+                    ))
+                .toList(),
+          ),
+
+          const SizedBox(height: 32),
+          Center(
+            child: TextButton.icon(
+              onPressed: () {
+                // Submit the last question but with force=true
+                final lastQuery = state.partialAnswer != null
+                    ? 'Continuar con el análisis disponible'
+                    : 'Continuar sin más datos';
+                context
+                    .read<MedicalAssistantCubit>()
+                    .submitQuery(lastQuery, force: true);
+              },
+              icon: const Icon(Icons.arrow_forward),
+              label: const Text('Continuar sin más datos'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.grey[700],
+              ),
+            ),
+          ),
+
+          // Optional partial answer
+          if (state.partialAnswer != null) ...[
+            const SizedBox(height: 24),
+            ExpansionTile(
+              title: const Text('Ver análisis parcial disponible'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(state.partialAnswer!),
+                )
+              ],
             ),
           ],
         ],

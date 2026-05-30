@@ -26,6 +26,7 @@ class MedicalIndexingService {
   bool _hasIndexed = false;
   int _indexedCount = 0;
   int _errorCount = 0;
+  final StreamController<bool> _statusController = StreamController<bool>.broadcast();
 
   MedicalIndexingService(
     this._knowledgeRepo,
@@ -35,6 +36,9 @@ class MedicalIndexingService {
 
   /// Whether the full indexing pass has completed.
   bool get hasIndexed => _hasIndexed;
+
+  /// Stream of indexing status (true when done).
+  Stream<bool> get statusStream => _statusController.stream;
 
   /// How many documents were successfully indexed.
   int get indexedCount => _indexedCount;
@@ -48,6 +52,7 @@ class MedicalIndexingService {
   /// unless [force] is true.
   Future<IndexingResult> indexAll({bool force = false}) async {
     if (_hasIndexed && !force) {
+      _statusController.add(true);
       return IndexingResult(
         total: _indexedCount + _errorCount,
         indexed: _indexedCount,
@@ -55,6 +60,8 @@ class MedicalIndexingService {
         skipped: true,
       );
     }
+
+    _statusController.add(false);
 
     // 1. Ensure knowledge repo is initialized
     await _knowledgeRepo.initialize();
@@ -84,6 +91,7 @@ class MedicalIndexingService {
     _indexedCount = indexed;
     _errorCount = errors;
     _hasIndexed = true;
+    _statusController.add(true);
 
     // 4. Also index patient context
     // This is non-blocking to the medical standards indexing result
