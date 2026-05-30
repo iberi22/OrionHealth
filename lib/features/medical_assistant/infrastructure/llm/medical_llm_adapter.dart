@@ -2,6 +2,7 @@ import '../../domain/entities/medical_query.dart';
 import '../../domain/entities/medical_insight.dart';
 import '../../domain/entities/ai_response.dart';
 import '../../domain/entities/analysis_response.dart';
+import '../../domain/services/medical_analysis_service.dart';
 import '../../../../core/services/privacy_anonymizer.dart';
 import 'medical_response_generator.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
@@ -33,6 +34,7 @@ class MedicalLlmAdapter {
     required MedicalQuery query,
     required List<MedicalInsight> insights,
     required Map<String, dynamic> userContext,
+    List<Map<String, String>> history = const [],
   }) async {
     final responseId = 'resp-${DateTime.now().millisecondsSinceEpoch}';
 
@@ -46,9 +48,10 @@ class MedicalLlmAdapter {
 
     // Build lab/vital context for the LLM
     final context = _buildContext(userContext, insights);
-    
+
     // 3. Build a medical-specific prompt for the LLM
-    final medicalPrompt = _buildMedicalPrompt(scrubbedQuestion, context, insights, confidence);
+    final medicalPrompt = _buildMedicalPrompt(
+        scrubbedQuestion, context, insights, confidence, history);
 
     // 4. Generate response using the real LLM (Gemma/Gemini)
     String answer = "";
@@ -161,6 +164,7 @@ class MedicalLlmAdapter {
     Map<String, dynamic> context,
     List<MedicalInsight> insights,
     double confidence,
+    List<Map<String, String>> history,
   ) {
     final buffer = StringBuffer();
     buffer.writeln('Eres un Asistente Médico de OrionHealth.');
@@ -190,7 +194,17 @@ class MedicalLlmAdapter {
       buffer.writeln();
     }
 
-    buffer.writeln('PREGUNTA DEL USUARIO: $question');
+    if (history.isNotEmpty) {
+      buffer.writeln('HISTORIAL DE CONVERSACIÓN RECIENTE:');
+      final recentHistory =
+          history.length > 6 ? history.sublist(history.length - 6) : history;
+      for (final msg in recentHistory) {
+        buffer.writeln('${msg['role']!.toUpperCase()}: ${msg['content']}');
+      }
+      buffer.writeln();
+    }
+
+    buffer.writeln('PREGUNTA ACTUAL DEL USUARIO: $question');
     buffer.writeln();
     buffer.writeln('INSTRUCCIONES:');
     buffer.writeln('1. Responde en español de forma profesional, detallada y empática.');
