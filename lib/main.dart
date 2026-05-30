@@ -3,49 +3,69 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
 import 'core/theme/app_theme.dart';
-import 'core/widgets/glassmorphic_card.dart';
 
 import 'core/widgets/floating_assistant_button.dart';
+import 'core/widgets/glassmorphic_card.dart';
 import 'core/widgets/page_header.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/reports/presentation/pages/reports_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
+import 'features/onboarding/presentation/pages/onboarding_page.dart';
+import 'features/onboarding/application/onboarding_cubit.dart';
+import 'features/home/application/home_cubit.dart';
+import 'features/home/application/home_state.dart';
+import 'features/vitals/domain/repositories/vital_sign_repository.dart';
+import 'features/vitals/domain/entities/vital_sign.dart';
+
+// ─────────────────────────────────────────────
+// HOME PAGE
+// ─────────────────────────────────────────────
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PageHeader(
-                title: l10n.homeTitle,
-                subtitle: l10n.homeSubtitle,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: [
-                    const _HealthStatusGrid(),
-                    const SizedBox(height: 24),
-                    const _RecentInsightsSection(),
-                    const SizedBox(height: 24),
-                    const _LocalAgentPromo(),
-                    const SizedBox(height: 100), // Space for FAB
-                  ],
+    return BlocProvider(
+      create: (_) => HomeCubit(
+        getIt<VitalSignRepository>(),
+        getIt<MedicalIndexingService>(),
+      ),
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PageHeader(
+                  title: l10n.homeTitle,
+                  subtitle: l10n.homeSubtitle,
                 ),
-              ),
-            ],
+                const IndexingStatusBanner(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      const _HealthStatusGrid(),
+                      const SizedBox(height: 24),
+                      const _RecentInsightsSection(),
+                      const SizedBox(height: 24),
+                      const _LocalAgentPromo(),
+                      const SizedBox(height: 100), // Space for FAB
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -53,43 +73,168 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _HealthStatusGrid extends StatelessWidget {
-  const _HealthStatusGrid();
+// ─────────────────────────────────────────────
+// INDEXING STATUS BANNER
+// ─────────────────────────────────────────────
+
+class IndexingStatusBanner extends StatefulWidget {
+  const IndexingStatusBanner({super.key});
+
+  @override
+  State<IndexingStatusBanner> createState() => _IndexingStatusBannerState();
+}
+
+class _IndexingStatusBannerState extends State<IndexingStatusBanner> {
+  bool _showSuccess = false;
+  Timer? _hideTimer;
+
+  @override
+  void dispose() {
+    _hideTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      children: const [
-        _StatusCard(
-          icon: Icons.favorite,
-          label: 'Ritmo Cardíaco',
-          value: '72 bpm',
-          color: Colors.redAccent,
-        ),
-        _StatusCard(
-          icon: Icons.bloodtype,
-          label: 'Presión Arterial',
-          value: '120/80',
-          color: Colors.blueAccent,
-        ),
-        _StatusCard(
-          icon: Icons.thermostat,
-          label: 'Temperatura',
-          value: '36.5 °C',
-          color: Colors.orangeAccent,
-        ),
-        _StatusCard(
-          icon: Icons.water_drop,
-          label: 'Oxígeno (SpO2)',
-          value: '98%',
-          color: Colors.cyanAccent,
-        ),
-      ],
+    return BlocListener<HomeCubit, HomeState>(
+      listenWhen: (prev, curr) => prev.isIndexing != curr.isIndexing,
+      listener: (context, state) {
+        if (!state.isIndexing && !state.indexingError) {
+          setState(() => _showSuccess = true);
+          _hideTimer = Timer(const Duration(seconds: 3), () {
+            if (mounted) setState(() => _showSuccess = false);
+          });
+        }
+      },
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          if (state.isIndexing) {
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              color: Colors.blue.withValues(alpha: 0.1),
+              child: const Row(
+                children: [
+                  SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blue),
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    'Sincronizando estándares médicos...',
+                    style: TextStyle(fontSize: 12, color: Colors.blue),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (state.indexingError) {
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              color: Colors.red.withValues(alpha: 0.1),
+              child: Row(
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 16),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Error sincronizando estándares médicos',
+                      style: TextStyle(fontSize: 12, color: Colors.red),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => context.read<HomeCubit>().retryIndexing(),
+                    child: const Text('Reintentar', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (_showSuccess) {
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.green.withValues(alpha: 0.1),
+              child: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 16),
+                  SizedBox(width: 12),
+                  Text(
+                    'Sincronización completada',
+                    style: TextStyle(fontSize: 12, color: Colors.green),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
     );
+  }
+}
+
+// ─────────────────────────────────────────────
+// HEALTH STATUS GRID (conectado a datos reales)
+// ─────────────────────────────────────────────
+
+class _HealthStatusGrid extends StatelessWidget {
+  const _HealthStatusGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        final vitals = state.latestVitals;
+
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          children: [
+            _StatusCard(
+              icon: Icons.favorite,
+              label: 'Ritmo Cardíaco',
+              value: vitals[VitalSignType.heartRate]?.formattedValue ?? 'Sin datos',
+              color: Colors.redAccent,
+            ),
+            _StatusCard(
+              icon: Icons.bloodtype,
+              label: 'Presión Arterial',
+              value: _formatBloodPressure(
+                vitals[VitalSignType.bloodPressureSystolic],
+                vitals[VitalSignType.bloodPressureDiastolic],
+              ),
+              color: Colors.blueAccent,
+            ),
+            _StatusCard(
+              icon: Icons.thermostat,
+              label: 'Temperatura',
+              value: vitals[VitalSignType.temperature]?.formattedValue ?? 'Sin datos',
+              color: Colors.orangeAccent,
+            ),
+            _StatusCard(
+              icon: Icons.water_drop,
+              label: 'Oxígeno (SpO2)',
+              value: vitals[VitalSignType.oxygenSaturation]?.formattedValue ?? 'Sin datos',
+              color: Colors.cyanAccent,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _formatBloodPressure(VitalSign? systolic, VitalSign? diastolic) {
+    if (systolic == null || diastolic == null) return 'Sin datos';
+    return '${systolic.value?.toInt()}/${diastolic.value?.toInt()}';
   }
 }
 
@@ -98,11 +243,21 @@ class _StatusCard extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
-  const _StatusCard({required this.icon, required this.label, required this.value, required this.color});
+  final VoidCallback? onTap;
+
+  const _StatusCard({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+    this.onTap,
+  });
+
   @override
   Widget build(BuildContext context) {
     return GlassmorphicCard(
       padding: const EdgeInsets.all(12),
+      onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -110,15 +265,33 @@ class _StatusCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(label, style: const TextStyle(fontSize: 10, color: Colors.white54), textAlign: TextAlign.center),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: value == 'Sin datos' ? 14 : 16,
+              fontWeight: FontWeight.bold,
+              color: value == 'Sin datos' ? Colors.white38 : Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          if (value == 'Sin datos')
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Icon(Icons.add_circle_outline, size: 14, color: color.withValues(alpha: 0.5)),
+            ),
         ],
       ),
     );
   }
 }
 
+// ─────────────────────────────────────────────
+// RECENT INSIGHTS
+// ─────────────────────────────────────────────
+
 class _RecentInsightsSection extends StatelessWidget {
   const _RecentInsightsSection();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -131,7 +304,7 @@ class _RecentInsightsSection extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.greenAccent.withOpacity(0.5), shape: BoxShape.circle),
+                decoration: BoxDecoration(color: Colors.greenAccent.withValues(alpha: 0.5), shape: BoxShape.circle),
                 child: const Icon(Icons.auto_awesome, color: Colors.greenAccent),
               ),
               const SizedBox(width: 16),
@@ -153,17 +326,22 @@ class _RecentInsightsSection extends StatelessWidget {
   }
 }
 
+// ─────────────────────────────────────────────
+// LOCAL AGENT PROMO
+// ─────────────────────────────────────────────
+
 class _LocalAgentPromo extends StatelessWidget {
   const _LocalAgentPromo();
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [AppTheme.darkTheme.primaryColor.withOpacity(0.2), Colors.transparent]),
+        gradient: LinearGradient(colors: [AppTheme.darkTheme.primaryColor.withValues(alpha: 0.2), Colors.transparent]),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.darkTheme.primaryColor.withOpacity(0.3)),
+        border: Border.all(color: AppTheme.darkTheme.primaryColor.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,10 +370,14 @@ class _LocalAgentPromo extends StatelessWidget {
   }
 }
 
+// ─────────────────────────────────────────────
+// MAIN ENTRY POINT
+// ─────────────────────────────────────────────
+
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    
+
     // Global error handlers
     FlutterError.onError = (details) {
       FlutterError.presentError(details);
@@ -206,7 +388,7 @@ void main() async {
       await configureDependencies();
       await getIt<MemoryGraph>().initialize();
 
-      // Index medical standards and patient context at startup (Jules' Addition)
+      // Index medical standards and patient context at startup
       unawaited(getIt<MedicalIndexingService>().indexAll());
 
       runApp(const MyApp());
@@ -259,6 +441,10 @@ void _logError(Object error, StackTrace? stack) {
   print(stack);
 }
 
+// ─────────────────────────────────────────────
+// APP ROOT
+// ─────────────────────────────────────────────
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -272,10 +458,44 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('es', ''), // Force Spanish for now as requested
-      home: const MainNavigationPage(),
+      home: const _StartupRouter(),
     );
   }
 }
+
+// ─────────────────────────────────────────────
+// STARTUP ROUTER — checks onboarding flag
+// ─────────────────────────────────────────────
+
+class _StartupRouter extends StatelessWidget {
+  const _StartupRouter();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: SharedPreferences.getInstance()
+          .then((p) => p.getBool('onboarding_completed') ?? false),
+      builder: (context, snap) {
+        if (!snap.hasData) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snap.data == true) {
+          return const MainNavigationPage();
+        }
+        return BlocProvider(
+          create: (_) => getIt<OnboardingCubit>(),
+          child: const OnboardingPage(),
+        );
+      },
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// MAIN NAVIGATION
+// ─────────────────────────────────────────────
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
