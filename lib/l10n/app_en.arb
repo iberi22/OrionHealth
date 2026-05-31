@@ -111,4 +111,8 @@
   "selectDate": "Select Date",
   "delete": "Delete",
   "cancel": "Cancel"
+<<<<<<< HEAD
 }
+=======
+}\n
+>>>>>>> ed5ac81 (fix: apply code review feedback on #274)

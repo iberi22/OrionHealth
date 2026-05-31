@@ -341,7 +341,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: const Icon(Icons.calendar_today, color: AppColors.secondary),
-                        title: const Text('Fecha'),
+                        title: Text(l10n.date),
                         subtitle: Text(DateFormat('dd MMM yyyy').format(selectedDate)),
                         onTap: () async {
                           final date = await showDatePicker(
@@ -360,7 +360,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: const Icon(Icons.access_time, color: AppColors.secondary),
-                        title: const Text('Hora'),
+                        title: Text(l10n.time),
                         subtitle: Text(selectedTime.format(context)),
                         onTap: () async {
                           final time = await showTimePicker(
@@ -376,7 +376,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                const Text('Tipo de Cita', style: TextStyle(color: Colors.grey)),
+                Text(l10n.appointmentType, style: TextStyle(color: Colors.grey)),
                 const SizedBox(height: 8),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -516,3 +516,5 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     );
   }
 }
+
+
