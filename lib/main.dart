@@ -115,12 +115,13 @@ class _IndexingStatusBannerState extends State<IndexingStatusBanner> {
       },
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
+          final l10n = AppLocalizations.of(context)!;
           if (state.isIndexing) {
             return Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               color: Colors.blue.withValues(alpha: 0.1),
-              child: const Row(
+              child: Row(
                 children: [
                   SizedBox(
                     width: 14,
@@ -129,7 +130,7 @@ class _IndexingStatusBannerState extends State<IndexingStatusBanner> {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'Sincronizando estándares médicos...',
+                    l10n.syncingStandards,
                     style: TextStyle(fontSize: 12, color: Colors.blue),
                   ),
                 ],
@@ -148,13 +149,13 @@ class _IndexingStatusBannerState extends State<IndexingStatusBanner> {
                   const SizedBox(width: 8),
                   const Expanded(
                     child: Text(
-                      'Error sincronizando estándares médicos',
+                      l10n.syncError,
                       style: TextStyle(fontSize: 12, color: Colors.red),
                     ),
                   ),
                   TextButton(
                     onPressed: () => context.read<HomeCubit>().retryIndexing(),
-                    child: const Text('Reintentar', style: TextStyle(fontSize: 12)),
+                    child: Text(l10n.retry, style: TextStyle(fontSize: 12)),
                   ),
                 ],
               ),
@@ -166,12 +167,12 @@ class _IndexingStatusBannerState extends State<IndexingStatusBanner> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               color: Colors.green.withValues(alpha: 0.1),
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(Icons.check_circle, color: Colors.green, size: 16),
                   SizedBox(width: 12),
                   Text(
-                    'Sincronización completada',
+                    l10n.syncCompleted,
                     style: TextStyle(fontSize: 12, color: Colors.green),
                   ),
                 ],
@@ -208,8 +209,8 @@ class _HealthStatusGrid extends StatelessWidget {
           children: [
             _StatusCard(
               icon: Icons.favorite,
-              label: 'Ritmo Cardíaco',
-              value: vitals[VitalSignType.heartRate]?.formattedValue ?? 'Sin datos',
+              label: l10n.heartRate,
+              value: vitals[VitalSignType.heartRate]?.formattedValue ?? l10n.noData,
               color: Colors.redAccent,
               onTap: () => Navigator.push(
                 context,
@@ -218,7 +219,7 @@ class _HealthStatusGrid extends StatelessWidget {
             ),
             _StatusCard(
               icon: Icons.bloodtype,
-              label: 'Presión Arterial',
+              label: l10n.bloodPressure,
               value: _formatBloodPressure(
                 vitals[VitalSignType.bloodPressureSystolic],
                 vitals[VitalSignType.bloodPressureDiastolic],
@@ -231,8 +232,8 @@ class _HealthStatusGrid extends StatelessWidget {
             ),
             _StatusCard(
               icon: Icons.thermostat,
-              label: 'Temperatura',
-              value: vitals[VitalSignType.temperature]?.formattedValue ?? 'Sin datos',
+              label: l10n.temperature,
+              value: vitals[VitalSignType.temperature]?.formattedValue ?? l10n.noData,
               color: Colors.orangeAccent,
               onTap: () => Navigator.push(
                 context,
@@ -241,8 +242,8 @@ class _HealthStatusGrid extends StatelessWidget {
             ),
             _StatusCard(
               icon: Icons.water_drop,
-              label: 'Oxígeno (SpO2)',
-              value: vitals[VitalSignType.oxygenSaturation]?.formattedValue ?? 'Sin datos',
+              label: l10n.oxygenSaturation,
+              value: vitals[VitalSignType.oxygenSaturation]?.formattedValue ?? l10n.noData,
               color: Colors.cyanAccent,
               onTap: () => Navigator.push(
                 context,
@@ -256,7 +257,7 @@ class _HealthStatusGrid extends StatelessWidget {
   }
 
   String _formatBloodPressure(VitalSign? systolic, VitalSign? diastolic) {
-    if (systolic == null || diastolic == null) return 'Sin datos';
+    if (systolic == null || diastolic == null) return l10n.noData;
     return '${systolic.value?.toInt()}/${diastolic.value?.toInt()}';
   }
 }
@@ -291,13 +292,13 @@ class _StatusCard extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontSize: value == 'Sin datos' ? 14 : 16,
+              fontSize: value == l10n.noData ? 14 : 16,
               fontWeight: FontWeight.bold,
-              color: value == 'Sin datos' ? Colors.white38 : Colors.white,
+              color: value == l10n.noData ? Colors.white38 : Colors.white,
             ),
             textAlign: TextAlign.center,
           ),
-          if (value == 'Sin datos')
+          if (value == l10n.noData)
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Icon(Icons.add_circle_outline, size: 14, color: color.withValues(alpha: 0.5)),
@@ -317,16 +318,17 @@ class _RecentInsightsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Insights Recientes',
+            Text(l10n.recentInsights,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             if (state.recentInsights.isEmpty)
-              _buildFallbackInsight(state.isLoadingVitals)
+              _buildFallbackInsight(state.isLoadingVitals, l10n)
             else
               _buildInsightCard(state.recentInsights.first),
           ],
@@ -386,7 +388,7 @@ class _RecentInsightsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildFallbackInsight(bool isLoading) {
+  Widget _buildFallbackInsight(bool isLoading, AppLocalizations l10n) {
     return GlassmorphicCard(
       child: Row(
         children: [
@@ -402,14 +404,14 @@ class _RecentInsightsSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isLoading ? 'Analizando datos...' : 'No se detectaron anomalías',
+                  isLoading ? l10n.analyzingData : l10n.noAnomaliesDetected,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   isLoading
-                      ? 'Espera un momento mientras procesamos tu información clínica.'
-                      : 'Registra más signos vitales para ver insights clínicos detallados.',
+                      ? l10n.waitProcessing
+                      : l10n.recordMoreVitals,
                   style: const TextStyle(fontSize: 12, color: Colors.white70),
                 ),
               ],
@@ -430,6 +432,7 @@ class _LocalAgentPromo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -441,17 +444,17 @@ class _LocalAgentPromo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Icons.security, color: Colors.blue, size: 20),
               SizedBox(width: 8),
-              Text('Privacidad 100% Local', style: TextStyle(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.bold)),
+              Text(l10n.privacy100Local, style: TextStyle(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
-          const Text('Consulta a tu Asistente Orion', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text(l10n.consultAssistant, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          const Text('Pregúntame cualquier cosa sobre tus registros médicos. No salen de tu dispositivo.', style: TextStyle(color: Colors.white70)),
+          Text(l10n.assistantDescription, style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () {
@@ -461,7 +464,7 @@ class _LocalAgentPromo extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.chat_bubble_outline),
-            label: const Text('Iniciar Consulta'),
+            label: Text(l10n.startConsultation),
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.darkTheme.primaryColor, foregroundColor: Colors.black),
           ),
         ],
@@ -494,30 +497,7 @@ void main() async {
       runApp(const MyApp());
     } catch (e, stack) {
       _logError(e, stack);
-      runApp(MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, color: Colors.red, size: 64),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Error de Inicialización',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Hubo un problema al iniciar OrionHealth. Por favor, intenta reiniciar la aplicación.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () => main(),
-                    child: const Text('Reintentar'),
+      child: const Text(\"Reintentar\"),
                   ),
                 ],
               ),
@@ -727,3 +707,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     );
   }
 }
+
+
+
+
+
