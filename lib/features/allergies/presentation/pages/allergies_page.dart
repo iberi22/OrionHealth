@@ -305,11 +305,12 @@ class _AllergiesPageState extends State<AllergiesPage> {
                       ? DateFormat('dd MMM yyyy').format(selectedDate!)
                       : l10n.notSpecified),
                   onTap: () async {
+                    final today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
                     final date = await showDatePicker(
                       context: context,
-                      initialDate: selectedDate ?? DateTime.now(),
+                      initialDate: selectedDate ?? today,
                       firstDate: DateTime(1900),
-                      lastDate: DateTime.now(),
+                      lastDate: today,
                       builder: (context, child) {
                         return Theme(
                           data: Theme.of(context).copyWith(
@@ -426,3 +427,5 @@ class _AllergiesPageState extends State<AllergiesPage> {
     );
   }
 }
+
+
