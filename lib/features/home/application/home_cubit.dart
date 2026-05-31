@@ -78,12 +78,14 @@ class HomeCubit extends Cubit<HomeState> {
         vitalsMap['oxygenSaturation'] = spo2.value!;
       }
 
-      // Load chronic conditions from user profile
+      // Load chronic conditions from user profile (parallelized)
       final userProfile = await _userProfileRepository.getUserProfile();
       final chronicConditions = <Icd10Code>[];
-      if (userProfile != null) {
-        for (final codeStr in userProfile.medicalConditions) {
-          final code = await Icd10Catalog.findByCode(codeStr);
+      if (userProfile != null && userProfile.medicalConditions.isNotEmpty) {
+        final codes = await Future.wait(
+          userProfile.medicalConditions.map((s) => Icd10Catalog.findByCode(s)),
+        );
+        for (final code in codes) {
           if (code != null) chronicConditions.add(code);
         }
       }
