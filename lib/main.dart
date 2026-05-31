@@ -147,7 +147,7 @@ class _IndexingStatusBannerState extends State<IndexingStatusBanner> {
                 children: [
                   const Icon(Icons.error_outline, color: Colors.red, size: 16),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       l10n.syncError,
                       style: TextStyle(fontSize: 12, color: Colors.red),
@@ -196,6 +196,7 @@ class _HealthStatusGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         final vitals = state.latestVitals;
@@ -223,6 +224,7 @@ class _HealthStatusGrid extends StatelessWidget {
               value: _formatBloodPressure(
                 vitals[VitalSignType.bloodPressureSystolic],
                 vitals[VitalSignType.bloodPressureDiastolic],
+                l10n,
               ),
               color: Colors.blueAccent,
               onTap: () => Navigator.push(
@@ -256,7 +258,7 @@ class _HealthStatusGrid extends StatelessWidget {
     );
   }
 
-  String _formatBloodPressure(VitalSign? systolic, VitalSign? diastolic) {
+    String _formatBloodPressure(VitalSign? systolic, VitalSign? diastolic, AppLocalizations l10n) {
     if (systolic == null || diastolic == null) return l10n.noData;
     return '${systolic.value?.toInt()}/${diastolic.value?.toInt()}';
   }
@@ -292,13 +294,13 @@ class _StatusCard extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontSize: value == l10n.noData ? 14 : 16,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: value == l10n.noData ? Colors.white38 : Colors.white,
+              color: Colors.white,
             ),
             textAlign: TextAlign.center,
           ),
-          if (value == l10n.noData)
+          if (value.isEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Icon(Icons.add_circle_outline, size: 14, color: color.withValues(alpha: 0.5)),
@@ -497,7 +499,30 @@ void main() async {
       runApp(const MyApp());
     } catch (e, stack) {
       _logError(e, stack);
-      child: const Text(\"Reintentar\"),
+      runApp(MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 64),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Error de Inicializaci\u00f3n',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Hubo un problema al iniciar OrionHealth. Por favor, intenta reiniciar la aplicaci\u00f3n.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () => main(),
+                    child: const Text('Reintentar'),
                   ),
                 ],
               ),
@@ -707,6 +732,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     );
   }
 }
+
+
 
 
 
