@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../features/ai_assistant/presentation/pages/chat_page.dart';
-import '../../features/local_agent/infrastructure/llm_service.dart';
-import '../di/injection.dart';
+import '../../features/medical_assistant/presentation/pages/medical_assistant_page.dart';
 
 /// A floating action button with pulse animation for the AI medical assistant.
 /// 
@@ -96,9 +94,7 @@ class _FloatingAssistantButtonState extends State<FloatingAssistantButton>
   void _openAssistant() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ChatPage(
-          llmService: getIt<LlmService>(),
-        ),
+        builder: (context) => const MedicalAssistantPage(),
       ),
     );
   }
