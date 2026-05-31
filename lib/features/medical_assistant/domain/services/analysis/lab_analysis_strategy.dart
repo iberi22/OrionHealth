@@ -1,7 +1,9 @@
+import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
 import '../../entities/medical_insight.dart';
 import '../../entities/analysis_response.dart';
 
+@injectable
 class LabAnalysisStrategy {
   Future<SafeAnalysisResponse> analyze({
     required String labCode,
