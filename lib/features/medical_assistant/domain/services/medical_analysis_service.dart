@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
 import '../entities/medical_insight.dart';
 import '../entities/analysis_response.dart';
@@ -12,6 +13,7 @@ import 'analysis/symptom_analysis_strategy.dart';
 /// - AI ALWAYS explains what symptoms COULD mean
 /// - AI ALWAYS recommends consulting a doctor
 /// - AI ALWAYS provides normal ranges for labs
+@lazySingleton
 class MedicalAnalysisService {
   final LabAnalysisStrategy _labStrategy;
   final VitalAnalysisStrategy _vitalStrategy;
