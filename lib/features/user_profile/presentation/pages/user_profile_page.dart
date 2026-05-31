@@ -5,6 +5,9 @@ import '../../../../features/auth/presentation/pages/receive_medical_data_page.d
 import '../../../../features/auth/presentation/pages/share_medical_data_page.dart';
 import '../../../../features/about/presentation/pages/about_page.dart';
 import '../../../../features/settings/presentation/pages/llm_settings_page.dart';
+import '../../../../features/medications/presentation/pages/medications_page.dart';
+import '../../../../features/allergies/presentation/pages/allergies_page.dart';
+import '../../../../features/appointments/presentation/pages/appointments_page.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
@@ -80,6 +83,48 @@ class _UserProfileView extends StatelessWidget {
                       icon: Icons.call,
                       title: AppLocalizations.of(context)!.contactNumber,
                       subtitle: '+1 (555) 123-4567',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                _Section(
+                  title: AppLocalizations.of(context)!.medicalInformation,
+                  children: [
+                    _InfoTile(
+                      icon: Icons.medication,
+                      title: AppLocalizations.of(context)!.medications,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MedicationsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    _InfoTile(
+                      icon: Icons.warning_amber_rounded,
+                      title: AppLocalizations.of(context)!.allergies,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AllergiesPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    _InfoTile(
+                      icon: Icons.event,
+                      title: AppLocalizations.of(context)!.appointments,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AppointmentsPage(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
