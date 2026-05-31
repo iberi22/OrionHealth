@@ -15,6 +15,7 @@ import 'core/widgets/glassmorphic_card.dart';
 import 'core/widgets/page_header.dart';
 import 'features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'features/reports/presentation/pages/reports_page.dart';
+import 'features/medical_assistant/presentation/pages/medical_assistant_page.dart';
 import 'features/user_profile/presentation/pages/user_profile_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
@@ -359,7 +360,12 @@ class _LocalAgentPromo extends StatelessWidget {
           const Text('Pregúntame cualquier cosa sobre tus registros médicos. No salen de tu dispositivo.', style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 16),
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MedicalAssistantPage()),
+              );
+            },
             icon: const Icon(Icons.chat_bubble_outline),
             label: const Text('Iniciar Consulta'),
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.darkTheme.primaryColor, foregroundColor: Colors.black),
