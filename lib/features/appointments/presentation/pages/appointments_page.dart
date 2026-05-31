@@ -86,7 +86,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
           const SizedBox(height: 16),
           Text(
             l10n.noAppointments,
-            style: const TextStyle(color: Colors.grey[500]),
+            style: const TextStyle(color: Color(0xFF9E9E9E)),
           ),
         ],
       ),
