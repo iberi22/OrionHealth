@@ -1,15 +1,27 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medical_standards/medical_standards.dart';
 import '../../vitals/domain/repositories/vital_sign_repository.dart';
+import '../../vitals/domain/entities/vital_sign.dart' as entity;
 import '../../local_agent/infrastructure/services/medical_indexing_service.dart';
+import '../../medical_assistant/domain/services/medical_analysis_service.dart';
+import '../../medical_assistant/domain/entities/medical_insight.dart';
+import '../../user_profile/domain/repositories/user_profile_repository.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final VitalSignRepository _vitalSignRepository;
   final MedicalIndexingService _indexingService;
+  final MedicalAnalysisService _analysisService;
+  final UserProfileRepository _userProfileRepository;
   StreamSubscription<bool>? _indexingSubscription;
 
-  HomeCubit(this._vitalSignRepository, this._indexingService) : super(const HomeState()) {
+  HomeCubit(
+    this._vitalSignRepository,
+    this._indexingService,
+    this._analysisService,
+    this._userProfileRepository,
+  ) : super(const HomeState()) {
     _init();
   }
 
@@ -42,7 +54,61 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(isLoadingVitals: true));
     try {
       final vitals = await _vitalSignRepository.getLatestVitals();
-      emit(state.copyWith(latestVitals: vitals, isLoadingVitals: false));
+
+      // Convert latest vitals to a map suitable for MedicalAnalysisService
+      final vitalsMap = <String, double>{};
+      final hr = vitals[entity.VitalSignType.heartRate];
+      if (hr != null && hr.value != null) {
+        vitalsMap['heartRate'] = hr.value!;
+      }
+      final systolic = vitals[entity.VitalSignType.bloodPressureSystolic];
+      if (systolic != null && systolic.value != null) {
+        vitalsMap['systolic'] = systolic.value!;
+      }
+      final diastolic = vitals[entity.VitalSignType.bloodPressureDiastolic];
+      if (diastolic != null && diastolic.value != null) {
+        vitalsMap['diastolic'] = diastolic.value!;
+      }
+      final temp = vitals[entity.VitalSignType.temperature];
+      if (temp != null && temp.value != null) {
+        vitalsMap['temperature'] = temp.value!;
+      }
+      final spo2 = vitals[entity.VitalSignType.oxygenSaturation];
+      if (spo2 != null && spo2.value != null) {
+        vitalsMap['oxygenSaturation'] = spo2.value!;
+      }
+
+      // Load chronic conditions from user profile
+      final userProfile = await _userProfileRepository.getUserProfile();
+      final chronicConditions = <Icd10Code>[];
+      if (userProfile != null) {
+        for (final codeStr in userProfile.medicalConditions) {
+          final code = await Icd10Catalog.findByCode(codeStr);
+          if (code != null) chronicConditions.add(code);
+        }
+      }
+
+      // Perform analysis
+      final vitalInsights = await _analysisService.analyzeVitals(
+        vitals: vitalsMap,
+        chronicConditions: chronicConditions,
+      );
+
+      final riskInsights = await _analysisService.calculateRisks(
+        labValues: {}, // Home dashboard focus on vitals for now
+        vitals: vitalsMap,
+        conditions: chronicConditions,
+      );
+
+      final allInsights = [...vitalInsights, ...riskInsights];
+      // Sort by severity (critical > alert > warning > info)
+      allInsights.sort((a, b) => b.severity.index.compareTo(a.severity.index));
+
+      emit(state.copyWith(
+        latestVitals: vitals,
+        recentInsights: allInsights,
+        isLoadingVitals: false,
+      ));
     } catch (e) {
       emit(state.copyWith(error: e.toString(), isLoadingVitals: false));
     }

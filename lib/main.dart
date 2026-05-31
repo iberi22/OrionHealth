@@ -25,6 +25,10 @@ import 'features/home/application/home_cubit.dart';
 import 'features/home/application/home_state.dart';
 import 'features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'features/vitals/domain/entities/vital_sign.dart';
+import 'features/vitals/presentation/pages/vitals_monitor_page.dart';
+import 'features/medical_assistant/domain/services/medical_analysis_service.dart';
+import 'features/medical_assistant/domain/entities/medical_insight.dart';
+import 'features/user_profile/domain/repositories/user_profile_repository.dart';
 
 // ─────────────────────────────────────────────
 // HOME PAGE
@@ -40,6 +44,8 @@ class HomePage extends StatelessWidget {
       create: (_) => HomeCubit(
         getIt<VitalSignRepository>(),
         getIt<MedicalIndexingService>(),
+        getIt<MedicalAnalysisService>(),
+        getIt<UserProfileRepository>(),
       ),
       child: Scaffold(
         body: SafeArea(
@@ -205,6 +211,10 @@ class _HealthStatusGrid extends StatelessWidget {
               label: 'Ritmo Cardíaco',
               value: vitals[VitalSignType.heartRate]?.formattedValue ?? 'Sin datos',
               color: Colors.redAccent,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const VitalsMonitorPage()),
+              ),
             ),
             _StatusCard(
               icon: Icons.bloodtype,
@@ -214,18 +224,30 @@ class _HealthStatusGrid extends StatelessWidget {
                 vitals[VitalSignType.bloodPressureDiastolic],
               ),
               color: Colors.blueAccent,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const VitalsMonitorPage()),
+              ),
             ),
             _StatusCard(
               icon: Icons.thermostat,
               label: 'Temperatura',
               value: vitals[VitalSignType.temperature]?.formattedValue ?? 'Sin datos',
               color: Colors.orangeAccent,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const VitalsMonitorPage()),
+              ),
             ),
             _StatusCard(
               icon: Icons.water_drop,
               label: 'Oxígeno (SpO2)',
               value: vitals[VitalSignType.oxygenSaturation]?.formattedValue ?? 'Sin datos',
               color: Colors.cyanAccent,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const VitalsMonitorPage()),
+              ),
             ),
           ],
         );
@@ -295,34 +317,106 @@ class _RecentInsightsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Insights Recientes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 12),
-        GlassmorphicCard(
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.greenAccent.withValues(alpha: 0.5), shape: BoxShape.circle),
-                child: const Icon(Icons.auto_awesome, color: Colors.greenAccent),
-              ),
-              const SizedBox(width: 16),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Tu salud cardiovascular está estable', style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 4),
-                    Text('Tus últimos 5 registros de presión arterial están dentro del rango normal.', style: TextStyle(fontSize: 12, color: Colors.white70)),
-                  ],
-                ),
-              ),
-            ],
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Insights Recientes',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            if (state.recentInsights.isEmpty)
+              _buildFallbackInsight(state.isLoadingVitals)
+            else
+              _buildInsightCard(state.recentInsights.first),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildInsightCard(MedicalInsight insight) {
+    Color severityColor;
+    IconData severityIcon;
+
+    switch (insight.severity) {
+      case InsightSeverity.critical:
+        severityColor = Colors.redAccent;
+        severityIcon = Icons.warning_rounded;
+        break;
+      case InsightSeverity.alert:
+        severityColor = Colors.orangeAccent;
+        severityIcon = Icons.priority_high_rounded;
+        break;
+      case InsightSeverity.warning:
+        severityColor = Colors.yellowAccent;
+        severityIcon = Icons.info_outline_rounded;
+        break;
+      case InsightSeverity.info:
+      default:
+        severityColor = Colors.greenAccent;
+        severityIcon = Icons.auto_awesome;
+        break;
+    }
+
+    return GlassmorphicCard(
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                color: severityColor.withValues(alpha: 0.2), shape: BoxShape.circle),
+            child: Icon(severityIcon, color: severityColor),
           ),
-        ),
-      ],
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(insight.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(insight.description,
+                    style: const TextStyle(fontSize: 12, color: Colors.white70)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFallbackInsight(bool isLoading) {
+    return GlassmorphicCard(
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                color: Colors.blueAccent.withValues(alpha: 0.2), shape: BoxShape.circle),
+            child: const Icon(Icons.info_outline, color: Colors.blueAccent),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isLoading ? 'Analizando datos...' : 'No se detectaron anomalías',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  isLoading
+                      ? 'Espera un momento mientras procesamos tu información clínica.'
+                      : 'Registra más signos vitales para ver insights clínicos detallados.',
+                  style: const TextStyle(fontSize: 12, color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
