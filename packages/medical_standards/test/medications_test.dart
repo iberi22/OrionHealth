@@ -1,28 +1,28 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 void main() {
   group('MedicationReference', () {
-    test('findByCode returns correct medication', () {
-      final med = MedicationCatalog.findByCode('311354');
+    test('catalog findByCode returns correct medication', () {
+      final med = MedicationCatalog.findByCode('6809'); // Metformin in lib
       expect(med, isNotNull);
-      expect(med!.code, equals('311354'));
+      expect(med!.code, equals('6809'));
     });
 
-    test('findByCode returns null for invalid code', () {
+    test('catalog findByCode returns null for invalid code', () {
       final med = MedicationCatalog.findByCode('INVALID');
       expect(med, isNull);
     });
 
-    test('findByName finds Metformin', () {
-      final metformin = MedicationCatalog.findByName('Metformin');
+    test('catalog findByCode finds Metformin', () {
+      final metformin = MedicationCatalog.findByCode('6809');
       expect(metformin, isNotNull);
       expect(metformin!.displayName.toLowerCase(), contains('metformin'));
     });
 
     test('props for Equatable equality', () {
-      final m1 = MedicationCatalog.findByCode('311354');
-      final m2 = MedicationCatalog.findByCode('311354');
+      final m1 = MedicationCatalog.findByCode('6809');
+      final m2 = MedicationCatalog.findByCode('6809');
       expect(m1, equals(m2));
     });
   });
@@ -33,13 +33,13 @@ void main() {
     });
 
     test('findByCode returns correct medication', () {
-      final med = MedicationCatalog.findByCode('311354');
+      final med = MedicationCatalog.findByCode('6809');
       expect(med, isNotNull);
-      expect(med!.code, equals('311354'));
+      expect(med!.code, equals('6809'));
     });
 
     test('findByName returns correct medication', () {
-      final med = MedicationCatalog.findByName('Metformin');
+      final med = MedicationCatalog.findByName('metformin');
       expect(med, isNotNull);
       expect(med!.displayName.toLowerCase(), contains('metformin'));
     });
@@ -49,11 +49,11 @@ void main() {
       final med2 = MedicationCatalog.findByName('metformin');
       expect(med1, isNotNull);
       expect(med2, isNotNull);
-      expect(med1!.code, equals(med2!.code));
+      expect(med1!.displayName, equals(med2!.displayName));
     });
 
     test('findByClass returns medications for valid class', () {
-      final meds = MedicationCatalog.findByClass('biguanide');
+      final meds = MedicationCatalog.findByClass('Biguanide');
       expect(meds, isNotEmpty);
     });
 

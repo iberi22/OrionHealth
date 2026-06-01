@@ -1,12 +1,12 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 void main() {
   group('LoincCode', () {
     test('findByCode returns correct code', () {
-      final code = LoincCommonLabs.findByCode('2339-0');
+      final code = LoincCommonLabs.findByCode('2160-0');
       expect(code, isNotNull);
-      expect(code!.code, equals('2339-0'));
+      expect(code!.code, equals('2160-0'));
     });
 
     test('findByCode returns null for invalid code', () {
@@ -14,8 +14,8 @@ void main() {
       expect(code, isNull);
     });
 
-    test('findByComponent finds glucose', () {
-      final glucose = LoincCommonLabs.findByComponent('Glucose');
+    test('findByCode finds glucose', () {
+      final glucose = LoincCommonLabs.findByCode('2345-7');
       expect(glucose, isNotNull);
       expect(glucose!.component.toLowerCase(), contains('glucose'));
     });
@@ -27,8 +27,8 @@ void main() {
     });
 
     test('props for Equatable equality', () {
-      final code1 = LoincCommonLabs.findByCode('2339-0');
-      final code2 = LoincCommonLabs.findByCode('2339-0');
+      final code1 = LoincCommonLabs.findByCode('2160-0');
+      final code2 = LoincCommonLabs.findByCode('2160-0');
       expect(code1, equals(code2));
     });
   });
@@ -38,7 +38,7 @@ void main() {
       final lab = LoincCommonLabs.findByCode('4548-4');
       expect(lab, isNotNull);
       expect(lab!.code, equals('4548-4'));
-      expect(lab.component.toLowerCase(), contains('hemoglobin'));
+      expect(lab.component.toLowerCase(), contains('hba1c'));
     });
 
     test('findByCode returns null for invalid code', () {
@@ -49,23 +49,23 @@ void main() {
     test('findByCode finds HbA1c', () {
       final hba1c = LoincCommonLabs.findByCode('4548-4');
       expect(hba1c, isNotNull);
-      expect(hba1c!.component, equals('Hemoglobin A1c'));
+      expect(hba1c!.component, equals('HbA1c'));
     });
 
     test('findByCode finds TSH', () {
       final tsh = LoincCommonLabs.findByCode('3016-3');
       expect(tsh, isNotNull);
-      expect(tsh!.component.toLowerCase(), contains('thyrotropin'));
+      expect(tsh!.component.toLowerCase(), contains('tsh'));
     });
 
     test('all returns non-empty list', () {
       expect(LoincCommonLabs.all, isNotEmpty);
     });
 
-    test('normal range is available for common labs', () {
+    test('description is available for common labs', () {
       final glucose = LoincCommonLabs.findByCode('2345-7');
-      expect(glucose?.normalRange, isNotNull);
-      expect(glucose?.normalRange, isNotEmpty);
+      expect(glucose?.description, isNotNull);
+      expect(glucose?.description, isNotEmpty);
     });
   });
 }

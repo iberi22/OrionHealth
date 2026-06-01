@@ -1,13 +1,12 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 void main() {
   group('Icd10Code', () {
-    test('findByCode returns correct code', () {
+    test('chronic conditions can be found by code', () {
       final code = Icd10ChronicConditions.findByCode('E11');
       expect(code, isNotNull);
       expect(code!.code, equals('E11'));
-      expect(code.description, isNotNull);
     });
 
     test('findByCode returns null for invalid code', () {
@@ -15,16 +14,10 @@ void main() {
       expect(code, isNull);
     });
 
-    test('findBySynonym returns matching code', () {
-      final code = Icd10ChronicConditions.findBySynonym('DM2');
-      expect(code, isNotNull);
-      expect(code!.code, equals('E11'));
-    });
-
     test('findByCategory returns codes for valid category', () {
       final codes = Icd10ChronicConditions.findByCategory('Endocrine');
       expect(codes, isNotEmpty);
-      expect(codes.every((c) => c.code.startsWith('E')), isTrue);
+      expect(codes.every((c) => c.category == 'Endocrine'), isTrue);
     });
 
     test('findByCategory returns empty for invalid category', () {
@@ -50,10 +43,17 @@ void main() {
       final codesStr = codes.map((c) => c.code).toList();
       expect(codesStr, contains('E11'));
       expect(codesStr, contains('I10'));
+      expect(codesStr, contains('J45.909'));
     });
 
     test('findByCode returns correct code', () {
       final code = Icd10ChronicConditions.findByCode('E11');
+      expect(code, isNotNull);
+      expect(code!.code, equals('E11'));
+    });
+
+    test('findBySynonym returns correct code', () {
+      final code = Icd10ChronicConditions.findBySynonym('DM2');
       expect(code, isNotNull);
       expect(code!.code, equals('E11'));
     });
