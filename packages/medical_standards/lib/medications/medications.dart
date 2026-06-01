@@ -18,7 +18,7 @@ class MedicationReference extends MedicalConcept {
   final List<String> routes;
   final List<String> commonDosages;
 
-  MedicationReference({
+  const MedicationReference({
     required this.code,
     required this.displayName,
     this.description,
@@ -35,7 +35,7 @@ class MedicationReference extends MedicalConcept {
 /// Comprehensive medication catalog
 class MedicationCatalog {
   // ==================== ACE INHIBITORS ====================
-  static final MedicationReference lisinopril = MedicationReference(
+  static const MedicationReference lisinopril = MedicationReference(
     code: '29046',
     displayName: 'Lisinopril',
     genericName: 'Lisinopril',
@@ -45,7 +45,7 @@ class MedicationCatalog {
     commonDosages: ['5mg/day', '10mg/day', '20mg/day', '40mg/day'],
   );
 
-  static final MedicationReference enalapril = MedicationReference(
+  static const MedicationReference enalapril = MedicationReference(
     code: '12014',
     displayName: 'Enalapril',
     genericName: 'Enalapril maleate',
@@ -55,7 +55,7 @@ class MedicationCatalog {
     commonDosages: ['2.5mg/day', '5mg/day', '10mg/day', '20mg/day', '40mg/day'],
   );
 
-  static final MedicationReference enalaprilat = MedicationReference(
+  static const MedicationReference enalaprilat = MedicationReference(
     code: '68010',
     displayName: 'Enalaprilat',
     genericName: 'Enalaprilat',
@@ -65,7 +65,7 @@ class MedicationCatalog {
     commonDosages: ['0.625mg-1.25mg IV q6h'],
   );
 
-  static final MedicationReference ramipril = MedicationReference(
+  static const MedicationReference ramipril = MedicationReference(
     code: '52585',
     displayName: 'Ramipril',
     genericName: 'Ramipril',
@@ -75,7 +75,7 @@ class MedicationCatalog {
     commonDosages: ['1.25mg/day', '2.5mg/day', '5mg/day', '10mg/day'],
   );
 
-  static final MedicationReference quinapril = MedicationReference(
+  static const MedicationReference quinapril = MedicationReference(
     code: '33793',
     displayName: 'Quinapril',
     genericName: 'Quinapril hydrochloride',
@@ -85,7 +85,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '20mg/day', '40mg/day'],
   );
 
-  static final MedicationReference captopril = MedicationReference(
+  static const MedicationReference captopril = MedicationReference(
     code: '196503',
     displayName: 'Captopril',
     genericName: 'Captopril',
@@ -95,7 +95,7 @@ class MedicationCatalog {
     commonDosages: ['6.25mg 3x/day', '12.5mg 3x/day', '25mg 3x/day', '50mg 3x/day'],
   );
 
-  static final MedicationReference fosinopril = MedicationReference(
+  static const MedicationReference fosinopril = MedicationReference(
     code: '50165',
     displayName: 'Fosinopril',
     genericName: 'Fosinopril sodium',
@@ -105,7 +105,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '20mg/day', '40mg/day'],
   );
 
-  static final MedicationReference trandolapril = MedicationReference(
+  static const MedicationReference trandolapril = MedicationReference(
     code: '83311',
     displayName: 'Trandolapril',
     genericName: 'Trandolapril',
@@ -116,7 +116,7 @@ class MedicationCatalog {
   );
 
   // ==================== BETA BLOCKERS ====================
-  static final MedicationReference metoprolol = MedicationReference(
+  static const MedicationReference metoprolol = MedicationReference(
     code: '6918249',
     displayName: 'Metoprolol',
     genericName: 'Metoprolol tartrate',
@@ -126,7 +126,7 @@ class MedicationCatalog {
     commonDosages: ['25mg 2x/day', '50mg 2x/day', '100mg 2x/day', '200mg/day'],
   );
 
-  static final MedicationReference metoprololSuccinate = MedicationReference(
+  static const MedicationReference metoprololSuccinate = MedicationReference(
     code: '866924',
     displayName: 'Metoprolol Succinate',
     genericName: 'Metoprolol succinate (extended release)',
@@ -136,7 +136,7 @@ class MedicationCatalog {
     commonDosages: ['25mg/day', '50mg/day', '100mg/day', '200mg/day'],
   );
 
-  static final MedicationReference carvedilol = MedicationReference(
+  static const MedicationReference carvedilol = MedicationReference(
     code: '212017',
     displayName: 'Carvedilol',
     genericName: 'Carvedilol',
@@ -146,7 +146,7 @@ class MedicationCatalog {
     commonDosages: ['3.125mg 2x/day', '6.25mg 2x/day', '12.5mg 2x/day', '25mg 2x/day'],
   );
 
-  static final MedicationReference atenolol = MedicationReference(
+  static const MedicationReference atenolol = MedicationReference(
     code: '1202',
     displayName: 'Atenolol',
     genericName: 'Atenolol',
@@ -156,7 +156,7 @@ class MedicationCatalog {
     commonDosages: ['25mg/day', '50mg/day', '100mg/day'],
   );
 
-  static final MedicationReference bisoprolol = MedicationReference(
+  static const MedicationReference bisoprolol = MedicationReference(
     code: '19189',
     displayName: 'Bisoprolol',
     genericName: 'Bisoprolol fumarate',
@@ -166,7 +166,7 @@ class MedicationCatalog {
     commonDosages: ['2.5mg/day', '5mg/day', '10mg/day'],
   );
 
-  static final MedicationReference propranolol = MedicationReference(
+  static const MedicationReference propranolol = MedicationReference(
     code: '8789',
     displayName: 'Propranolol',
     genericName: 'Propranolol hydrochloride',
@@ -176,7 +176,7 @@ class MedicationCatalog {
     commonDosages: ['10mg 2x/day', '20mg 2x/day', '40mg 2x/day', '80mg 2x/day'],
   );
 
-  static final MedicationReference labetalol = MedicationReference(
+  static const MedicationReference labetalol = MedicationReference(
     code: '397862',
     displayName: 'Labetalol',
     genericName: 'Labetalol hydrochloride',
@@ -186,7 +186,7 @@ class MedicationCatalog {
     commonDosages: ['100mg 2x/day', '200mg 2x/day', '400mg 2x/day', 'IV: 10-20mg bolus'],
   );
 
-  static final MedicationReference nebivolol = MedicationReference(
+  static const MedicationReference nebivolol = MedicationReference(
     code: '1717515',
     displayName: 'Nebivolol',
     genericName: 'Nebivolol hydrochloride',
@@ -196,7 +196,7 @@ class MedicationCatalog {
     commonDosages: ['2.5mg/day', '5mg/day', '10mg/day', '20mg/day'],
   );
 
-  static final MedicationReference esmolol = MedicationReference(
+  static const MedicationReference esmolol = MedicationReference(
     code: '38452',
     displayName: 'Esmolol',
     genericName: 'Esmolol hydrochloride',
@@ -207,7 +207,7 @@ class MedicationCatalog {
   );
 
   // ==================== ARBs (keep existing) ====================
-  static final MedicationReference losartan = MedicationReference(
+  static const MedicationReference losartan = MedicationReference(
     code: '52175',
     displayName: 'Losartan',
     genericName: 'Losartan potassium',
@@ -217,7 +217,7 @@ class MedicationCatalog {
     commonDosages: ['25mg/day', '50mg/day', '100mg/day'],
   );
 
-  static final MedicationReference valsartan = MedicationReference(
+  static const MedicationReference valsartan = MedicationReference(
     code: '69749',
     displayName: 'Valsartan',
     genericName: 'Valsartan',
@@ -227,7 +227,7 @@ class MedicationCatalog {
     commonDosages: ['80mg/day', '160mg/day', '320mg/day'],
   );
 
-  static final MedicationReference olmesartan = MedicationReference(
+  static const MedicationReference olmesartan = MedicationReference(
     code: '321671',
     displayName: 'Olmesartan',
     genericName: 'Olmesartan medoxomil',
@@ -237,7 +237,7 @@ class MedicationCatalog {
     commonDosages: ['20mg/day', '40mg/day'],
   );
 
-  static final MedicationReference irbesartan = MedicationReference(
+  static const MedicationReference irbesartan = MedicationReference(
     code: '57255',
     displayName: 'Irbesartan',
     genericName: 'Irbesartan',
@@ -248,7 +248,7 @@ class MedicationCatalog {
   );
 
   // ==================== CALCIUM CHANNEL BLOCKERS ====================
-  static final MedicationReference amlodipine = MedicationReference(
+  static const MedicationReference amlodipine = MedicationReference(
     code: '17767',
     displayName: 'Amlodipine',
     genericName: 'Amlodipine besylate',
@@ -258,7 +258,7 @@ class MedicationCatalog {
     commonDosages: ['2.5mg/day', '5mg/day', '10mg/day'],
   );
 
-  static final MedicationReference diltiazem = MedicationReference(
+  static const MedicationReference diltiazem = MedicationReference(
     code: '3443',
     displayName: 'Diltiazem',
     genericName: 'Diltiazem hydrochloride',
@@ -268,7 +268,7 @@ class MedicationCatalog {
     commonDosages: ['30mg 3x/day', '120mg/day ER', '240mg/day ER', 'IV: 5-15mg/hr'],
   );
 
-  static final MedicationReference verapamil = MedicationReference(
+  static const MedicationReference verapamil = MedicationReference(
     code: '11170',
     displayName: 'Verapamil',
     genericName: 'Verapamil hydrochloride',
@@ -278,7 +278,7 @@ class MedicationCatalog {
     commonDosages: ['40mg 3x/day', '120mg/day ER', '240mg/day ER'],
   );
 
-  static final MedicationReference nifedipine = MedicationReference(
+  static const MedicationReference nifedipine = MedicationReference(
     code: '3624',
     displayName: 'Nifedipine',
     genericName: 'Nifedipine',
@@ -289,7 +289,7 @@ class MedicationCatalog {
   );
 
   // ==================== DIURETICS ====================
-  static final MedicationReference hydrochlorothiazide = MedicationReference(
+  static const MedicationReference hydrochlorothiazide = MedicationReference(
     code: '4838',
     displayName: 'Hydrochlorothiazide',
     genericName: 'Hydrochlorothiazide',
@@ -299,7 +299,7 @@ class MedicationCatalog {
     commonDosages: ['12.5mg/day', '25mg/day', '50mg/day'],
   );
 
-  static final MedicationReference chlorthalidone = MedicationReference(
+  static const MedicationReference chlorthalidone = MedicationReference(
     code: '38826',
     displayName: 'Chlorthalidone',
     genericName: 'Chlorthalidone',
@@ -309,7 +309,7 @@ class MedicationCatalog {
     commonDosages: ['12.5mg/day', '25mg/day', '50mg/day', '100mg/day'],
   );
 
-  static final MedicationReference indapamide = MedicationReference(
+  static const MedicationReference indapamide = MedicationReference(
     code: '40147',
     displayName: 'Indapamide',
     genericName: 'Indapamide',
@@ -319,7 +319,7 @@ class MedicationCatalog {
     commonDosages: ['1.25mg/day', '2.5mg/day'],
   );
 
-  static final MedicationReference furosemide = MedicationReference(
+  static const MedicationReference furosemide = MedicationReference(
     code: '4608',
     displayName: 'Furosemide',
     genericName: 'Furosemide',
@@ -329,7 +329,7 @@ class MedicationCatalog {
     commonDosages: ['20mg/day', '40mg/day', '40mg 2x/day', 'IV: 20-40mg bolus'],
   );
 
-  static final MedicationReference bumetanide = MedicationReference(
+  static const MedicationReference bumetanide = MedicationReference(
     code: '18400',
     displayName: 'Bumetanide',
     genericName: 'Bumetanide',
@@ -339,7 +339,7 @@ class MedicationCatalog {
     commonDosages: ['0.5mg/day', '1mg/day', '2mg/day'],
   );
 
-  static final MedicationReference torsemide = MedicationReference(
+  static const MedicationReference torsemide = MedicationReference(
     code: '69066',
     displayName: 'Torsemide',
     genericName: 'Torsemide',
@@ -349,7 +349,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '20mg/day', '40mg/day', '100mg/day'],
   );
 
-  static final MedicationReference spironolactone = MedicationReference(
+  static const MedicationReference spironolactone = MedicationReference(
     code: '9997',
     displayName: 'Spironolactone',
     genericName: 'Spironolactone',
@@ -359,7 +359,7 @@ class MedicationCatalog {
     commonDosages: ['12.5mg/day', '25mg/day', '50mg/day', '100mg/day'],
   );
 
-  static final MedicationReference eplerenone = MedicationReference(
+  static const MedicationReference eplerenone = MedicationReference(
     code: '329526',
     displayName: 'Eplerenone',
     genericName: 'Eplerenone',
@@ -369,7 +369,7 @@ class MedicationCatalog {
     commonDosages: ['25mg/day', '50mg/day'],
   );
 
-  static final MedicationReference triamterene = MedicationReference(
+  static const MedicationReference triamterene = MedicationReference(
     code: '10791',
     displayName: 'Triamterene',
     genericName: 'Triamterene',
@@ -379,7 +379,7 @@ class MedicationCatalog {
     commonDosages: ['50mg/day', '100mg 2x/day'],
   );
 
-  static final MedicationReference acetazolamide = MedicationReference(
+  static const MedicationReference acetazolamide = MedicationReference(
     code: '115980',
     displayName: 'Acetazolamide',
     genericName: 'Acetazolamide',
@@ -390,7 +390,7 @@ class MedicationCatalog {
   );
 
   // ==================== STATINS ====================
-  static final MedicationReference atorvastatin = MedicationReference(
+  static const MedicationReference atorvastatin = MedicationReference(
     code: '83367',
     displayName: 'Atorvastatin',
     genericName: 'Atorvastatin calcium',
@@ -400,7 +400,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '20mg/day', '40mg/day', '80mg/day'],
   );
 
-  static final MedicationReference rosuvastatin = MedicationReference(
+  static const MedicationReference rosuvastatin = MedicationReference(
     code: '321167',
     displayName: 'Rosuvastatin',
     genericName: 'Rosuvastatin calcium',
@@ -410,7 +410,7 @@ class MedicationCatalog {
     commonDosages: ['5mg/day', '10mg/day', '20mg/day', '40mg/day'],
   );
 
-  static final MedicationReference simvastatin = MedicationReference(
+  static const MedicationReference simvastatin = MedicationReference(
     code: '36567',
     displayName: 'Simvastatin',
     genericName: 'Simvastatin',
@@ -420,7 +420,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '20mg/day', '40mg/day', '80mg/day'],
   );
 
-  static final MedicationReference pravastatin = MedicationReference(
+  static const MedicationReference pravastatin = MedicationReference(
     code: '55478',
     displayName: 'Pravastatin',
     genericName: 'Pravastatin sodium',
@@ -430,7 +430,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '20mg/day', '40mg/day', '80mg/day'],
   );
 
-  static final MedicationReference pitavastatin = MedicationReference(
+  static const MedicationReference pitavastatin = MedicationReference(
     code: '859740',
     displayName: 'Pitavastatin',
     genericName: 'Pitavastatin calcium',
@@ -440,7 +440,7 @@ class MedicationCatalog {
     commonDosages: ['1mg/day', '2mg/day', '4mg/day'],
   );
 
-  static final MedicationReference ezetimibe = MedicationReference(
+  static const MedicationReference ezetimibe = MedicationReference(
     code: '135814',
     displayName: 'Ezetimibe',
     genericName: 'Ezetimibe',
@@ -451,7 +451,7 @@ class MedicationCatalog {
   );
 
   // ==================== ANTICOAGULANTS / ANTIPLATELETS ====================
-  static final MedicationReference warfarin = MedicationReference(
+  static const MedicationReference warfarin = MedicationReference(
     code: '855332',
     displayName: 'Warfarin',
     genericName: 'Warfarin sodium',
@@ -461,7 +461,7 @@ class MedicationCatalog {
     commonDosages: ['2mg/day', '5mg/day', '7.5mg/day', '10mg/day'],
   );
 
-  static final MedicationReference apixaban = MedicationReference(
+  static const MedicationReference apixaban = MedicationReference(
     code: '825776',
     displayName: 'Apixaban',
     genericName: 'Apixaban',
@@ -471,7 +471,7 @@ class MedicationCatalog {
     commonDosages: ['2.5mg 2x/day', '5mg 2x/day'],
   );
 
-  static final MedicationReference rivaroxaban = MedicationReference(
+  static const MedicationReference rivaroxaban = MedicationReference(
     code: '836444',
     displayName: 'Rivaroxaban',
     genericName: 'Rivaroxaban',
@@ -481,7 +481,7 @@ class MedicationCatalog {
     commonDosages: ['15mg 2x/day (21 days)', '20mg/day'],
   );
 
-  static final MedicationReference dabigatran = MedicationReference(
+  static const MedicationReference dabigatran = MedicationReference(
     code: '737168',
     displayName: 'Dabigatran',
     genericName: 'Dabigatran etexilate',
@@ -491,7 +491,7 @@ class MedicationCatalog {
     commonDosages: ['75mg 2x/day', '110mg 2x/day', '150mg 2x/day'],
   );
 
-  static final MedicationReference enoxaparin = MedicationReference(
+  static const MedicationReference enoxaparin = MedicationReference(
     code: '901965',
     displayName: 'Enoxaparin',
     genericName: 'Enoxaparin sodium',
@@ -501,7 +501,7 @@ class MedicationCatalog {
     commonDosages: ['40mg/day SC', '1mg/kg 2x/day SC', '1.5mg/kg/day SC'],
   );
 
-  static final MedicationReference heparin = MedicationReference(
+  static const MedicationReference heparin = MedicationReference(
     code: '225785',
     displayName: 'Heparin',
     genericName: 'Heparin sodium',
@@ -511,7 +511,7 @@ class MedicationCatalog {
     commonDosages: ['IV: 18 units/kg/hr', 'SC: 5000 units 2-3x/day'],
   );
 
-  static final MedicationReference aspirin = MedicationReference(
+  static const MedicationReference aspirin = MedicationReference(
     code: '1191',
     displayName: 'Aspirin',
     genericName: 'Acetylsalicylic acid',
@@ -521,7 +521,7 @@ class MedicationCatalog {
     commonDosages: ['81mg/day', '325mg/day', '650mg q6h PRN'],
   );
 
-  static final MedicationReference clopidogrel = MedicationReference(
+  static const MedicationReference clopidogrel = MedicationReference(
     code: '333965',
     displayName: 'Clopidogrel',
     genericName: 'Clopidogrel bisulfate',
@@ -531,7 +531,7 @@ class MedicationCatalog {
     commonDosages: ['75mg/day', '300mg loading dose'],
   );
 
-  static final MedicationReference ticagrelor = MedicationReference(
+  static const MedicationReference ticagrelor = MedicationReference(
     code: '1019546',
     displayName: 'Ticagrelor',
     genericName: 'Ticagrelor',
@@ -542,7 +542,7 @@ class MedicationCatalog {
   );
 
   // ==================== DIABETES ====================
-  static final MedicationReference metformin = MedicationReference(
+  static const MedicationReference metformin = MedicationReference(
     code: '6809',
     displayName: 'Metformin',
     genericName: 'Metformin HCl',
@@ -552,7 +552,7 @@ class MedicationCatalog {
     commonDosages: ['500mg 2x/day', '850mg 2x/day', '1000mg 2x/day', '2000mg/day max'],
   );
 
-  static final MedicationReference glipizide = MedicationReference(
+  static const MedicationReference glipizide = MedicationReference(
     code: '5487',
     displayName: 'Glipizide',
     genericName: 'Glipizide',
@@ -562,7 +562,7 @@ class MedicationCatalog {
     commonDosages: ['5mg/day', '10mg/day', '20mg/day'],
   );
 
-  static final MedicationReference glimepiride = MedicationReference(
+  static const MedicationReference glimepiride = MedicationReference(
     code: '25789',
     displayName: 'Glimepiride',
     genericName: 'Glimepiride',
@@ -572,7 +572,7 @@ class MedicationCatalog {
     commonDosages: ['1mg/day', '2mg/day', '4mg/day'],
   );
 
-  static final MedicationReference insulinGlargine = MedicationReference(
+  static const MedicationReference insulinGlargine = MedicationReference(
     code: '225971',
     displayName: 'Insulin Glargine',
     genericName: 'Insulin glargine recombinant',
@@ -582,7 +582,7 @@ class MedicationCatalog {
     commonDosages: ['10 units/day', '20 units/day', '30 units/day', '40 units/day'],
   );
 
-  static final MedicationReference insulinLispro = MedicationReference(
+  static const MedicationReference insulinLispro = MedicationReference(
     code: '8619',
     displayName: 'Insulin Lispro',
     genericName: 'Insulin lispro recombinant',
@@ -592,7 +592,7 @@ class MedicationCatalog {
     commonDosages: ['3 units per 15g carbs', 'Correctional: 1 unit per 50mg/dL above target'],
   );
 
-  static final MedicationReference insulinNph = MedicationReference(
+  static const MedicationReference insulinNph = MedicationReference(
     code: '57317',
     displayName: 'Insulin NPH',
     genericName: 'Insulin human isophane',
@@ -602,7 +602,7 @@ class MedicationCatalog {
     commonDosages: ['10 units 2x/day', '20 units 2x/day'],
   );
 
-  static final MedicationReference empagliflozin = MedicationReference(
+  static const MedicationReference empagliflozin = MedicationReference(
     code: '861007',
     displayName: 'Empagliflozin',
     genericName: 'Empagliflozin',
@@ -612,7 +612,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '25mg/day'],
   );
 
-  static final MedicationReference dapagliflozin = MedicationReference(
+  static const MedicationReference dapagliflozin = MedicationReference(
     code: '1429942',
     displayName: 'Dapagliflozin',
     genericName: 'Dapagliflozin propanediol',
@@ -622,7 +622,7 @@ class MedicationCatalog {
     commonDosages: ['5mg/day', '10mg/day'],
   );
 
-  static final MedicationReference liraglutide = MedicationReference(
+  static const MedicationReference liraglutide = MedicationReference(
     code: '1232043',
     displayName: 'Liraglutide',
     genericName: 'Liraglutide',
@@ -632,7 +632,7 @@ class MedicationCatalog {
     commonDosages: ['0.6mg/day SC (titrate to 1.2-1.8mg/day)'],
   );
 
-  static final MedicationReference semaglutide = MedicationReference(
+  static const MedicationReference semaglutide = MedicationReference(
     code: '1012661',
     displayName: 'Semaglutide',
     genericName: 'Semaglutide',
@@ -642,7 +642,7 @@ class MedicationCatalog {
     commonDosages: ['0.5mg/week SC', '1mg/week SC', '14mg/day oral'],
   );
 
-  static final MedicationReference sitagliptin = MedicationReference(
+  static const MedicationReference sitagliptin = MedicationReference(
     code: '827008',
     displayName: 'Sitagliptin',
     genericName: 'Sitagliptin phosphate',
@@ -652,7 +652,7 @@ class MedicationCatalog {
     commonDosages: ['100mg/day', '50mg/day (if eGFR<45)', '25mg/day (if eGFR<30)'],
   );
 
-  static final MedicationReference linagliptin = MedicationReference(
+  static const MedicationReference linagliptin = MedicationReference(
     code: '1019739',
     displayName: 'Linagliptin',
     genericName: 'Linagliptin',
@@ -663,7 +663,7 @@ class MedicationCatalog {
   );
 
   // ==================== THYROID ====================
-  static final MedicationReference levothyroxine = MedicationReference(
+  static const MedicationReference levothyroxine = MedicationReference(
     code: '8667',
     displayName: 'Levothyroxine',
     genericName: 'Levothyroxine sodium',
@@ -673,7 +673,7 @@ class MedicationCatalog {
     commonDosages: ['25mcg/day', '50mcg/day', '75mcg/day', '100mcg/day', '125mcg/day', '150mcg/day'],
   );
 
-  static final MedicationReference liothyronine = MedicationReference(
+  static const MedicationReference liothyronine = MedicationReference(
     code: '2567',
     displayName: 'Liothyronine',
     genericName: 'Liothyronine sodium (T3)',
@@ -683,7 +683,7 @@ class MedicationCatalog {
     commonDosages: ['5mcg/day', '25mcg/day', '50mcg/day'],
   );
 
-  static final MedicationReference methimazole = MedicationReference(
+  static const MedicationReference methimazole = MedicationReference(
     code: '1301022',
     displayName: 'Methimazole',
     genericName: 'Methimazole',
@@ -693,7 +693,7 @@ class MedicationCatalog {
     commonDosages: ['5mg/day', '10mg/day', '15mg/day', '30mg/day'],
   );
 
-  static final MedicationReference propylthiouracil = MedicationReference(
+  static const MedicationReference propylthiouracil = MedicationReference(
     code: '8727',
     displayName: 'Propylthiouracil',
     genericName: 'Propylthiouracil',
@@ -704,7 +704,7 @@ class MedicationCatalog {
   );
 
   // ==================== PPIs ====================
-  static final MedicationReference omeprazole = MedicationReference(
+  static const MedicationReference omeprazole = MedicationReference(
     code: '7646',
     displayName: 'Omeprazole',
     genericName: 'Omeprazole',
@@ -714,7 +714,7 @@ class MedicationCatalog {
     commonDosages: ['20mg/day', '40mg/day', '20mg 2x/day'],
   );
 
-  static final MedicationReference pantoprazole = MedicationReference(
+  static const MedicationReference pantoprazole = MedicationReference(
     code: '40790',
     displayName: 'Pantoprazole',
     genericName: 'Pantoprazole sodium',
@@ -724,7 +724,7 @@ class MedicationCatalog {
     commonDosages: ['40mg/day', '40mg 2x/day', 'IV: 40mg/day'],
   );
 
-  static final MedicationReference esomeprazole = MedicationReference(
+  static const MedicationReference esomeprazole = MedicationReference(
     code: '149384',
     displayName: 'Esomeprazole',
     genericName: 'Esomeprazole magnesium',
@@ -734,7 +734,7 @@ class MedicationCatalog {
     commonDosages: ['20mg/day', '40mg/day', '40mg 2x/day'],
   );
 
-  static final MedicationReference lansoprazole = MedicationReference(
+  static const MedicationReference lansoprazole = MedicationReference(
     code: '272189',
     displayName: 'Lansoprazole',
     genericName: 'Lansoprazole',
@@ -744,7 +744,7 @@ class MedicationCatalog {
     commonDosages: ['15mg/day', '30mg/day', '30mg 2x/day'],
   );
 
-  static final MedicationReference rabeprazole = MedicationReference(
+  static const MedicationReference rabeprazole = MedicationReference(
     code: '83920',
     displayName: 'Rabeprazole',
     genericName: 'Rabeprazole sodium',
@@ -754,7 +754,7 @@ class MedicationCatalog {
     commonDosages: ['20mg/day', '40mg/day'],
   );
 
-  static final MedicationReference dexlansoprazole = MedicationReference(
+  static const MedicationReference dexlansoprazole = MedicationReference(
     code: '889010',
     displayName: 'Dexlansoprazole',
     genericName: 'Dexlansoprazole',
@@ -765,7 +765,7 @@ class MedicationCatalog {
   );
 
   // ==================== ANTIBIOTICS ====================
-  static final MedicationReference amoxicillin = MedicationReference(
+  static const MedicationReference amoxicillin = MedicationReference(
     code: '723',
     displayName: 'Amoxicillin',
     genericName: 'Amoxicillin',
@@ -775,7 +775,7 @@ class MedicationCatalog {
     commonDosages: ['250mg 3x/day', '500mg 3x/day', '875mg 2x/day', '1g 2x/day'],
   );
 
-  static final MedicationReference amoxicillinClavulanate = MedicationReference(
+  static const MedicationReference amoxicillinClavulanate = MedicationReference(
     code: '308136',
     displayName: 'Amoxicillin-Clavulanate',
     genericName: 'Amoxicillin/Clavulanic acid',
@@ -785,7 +785,7 @@ class MedicationCatalog {
     commonDosages: ['500mg 3x/day', '875mg 2x/day', '1000mg 2x/day'],
   );
 
-  static final MedicationReference azithromycin = MedicationReference(
+  static const MedicationReference azithromycin = MedicationReference(
     code: '18631',
     displayName: 'Azithromycin',
     genericName: 'Azithromycin',
@@ -795,7 +795,7 @@ class MedicationCatalog {
     commonDosages: ['250mg day 1 then 250mg days 2-5', '500mg day 1 then 250mg days 2-5', '500mg IV daily'],
   );
 
-  static final MedicationReference ciprofloxacin = MedicationReference(
+  static const MedicationReference ciprofloxacin = MedicationReference(
     code: '2553',
     displayName: 'Ciprofloxacin',
     genericName: 'Ciprofloxacin hydrochloride',
@@ -805,7 +805,7 @@ class MedicationCatalog {
     commonDosages: ['250mg 2x/day', '500mg 2x/day', '750mg 2x/day', '400mg IV 2x/day'],
   );
 
-  static final MedicationReference levofloxacin = MedicationReference(
+  static const MedicationReference levofloxacin = MedicationReference(
     code: '6387',
     displayName: 'Levofloxacin',
     genericName: 'Levofloxacin',
@@ -815,7 +815,7 @@ class MedicationCatalog {
     commonDosages: ['250mg/day', '500mg/day', '750mg/day'],
   );
 
-  static final MedicationReference doxycycline = MedicationReference(
+  static const MedicationReference doxycycline = MedicationReference(
     code: '351',
     displayName: 'Doxycycline',
     genericName: 'Doxycycline hyclate',
@@ -825,7 +825,7 @@ class MedicationCatalog {
     commonDosages: ['100mg 2x/day', '100mg/day', '200mg day 1 then 100mg days 2-5'],
   );
 
-  static final MedicationReference metronidazole = MedicationReference(
+  static const MedicationReference metronidazole = MedicationReference(
     code: '4444',
     displayName: 'Metronidazole',
     genericName: 'Metronidazole',
@@ -835,7 +835,7 @@ class MedicationCatalog {
     commonDosages: ['250mg 3x/day', '500mg 3x/day', '500mg IV q8h', '0.75% topical 2x/day'],
   );
 
-  static final MedicationReference sulfamethoxazoleTrimethoprim = MedicationReference(
+  static const MedicationReference sulfamethoxazoleTrimethoprim = MedicationReference(
     code: '8537',
     displayName: 'Sulfamethoxazole-Trimethoprim',
     genericName: 'Sulfamethoxazole/Trimethoprim',
@@ -845,7 +845,7 @@ class MedicationCatalog {
     commonDosages: ['SS tab 2x/day', 'DS tab 2x/day', 'IV: 5mg/kg q6-12h'],
   );
 
-  static final MedicationReference cephalexin = MedicationReference(
+  static const MedicationReference cephalexin = MedicationReference(
     code: '2185',
     displayName: 'Cephalexin',
     genericName: 'Cephalexin',
@@ -855,7 +855,7 @@ class MedicationCatalog {
     commonDosages: ['250mg 4x/day', '500mg 4x/day', '500mg 2x/day'],
   );
 
-  static final MedicationReference vancomycin = MedicationReference(
+  static const MedicationReference vancomycin = MedicationReference(
     code: '11289',
     displayName: 'Vancomycin',
     genericName: 'Vancomycin hydrochloride',
@@ -866,7 +866,7 @@ class MedicationCatalog {
   );
 
   // ==================== ANTIDEPRESSANTS ====================
-  static final MedicationReference sertraline = MedicationReference(
+  static const MedicationReference sertraline = MedicationReference(
     code: '36567',
     displayName: 'Sertraline',
     genericName: 'Sertraline hydrochloride',
@@ -876,7 +876,7 @@ class MedicationCatalog {
     commonDosages: ['50mg/day', '100mg/day', '150mg/day', '200mg/day'],
   );
 
-  static final MedicationReference fluoxetine = MedicationReference(
+  static const MedicationReference fluoxetine = MedicationReference(
     code: '312938',
     displayName: 'Fluoxetine',
     genericName: 'Fluoxetine hydrochloride',
@@ -886,7 +886,7 @@ class MedicationCatalog {
     commonDosages: ['20mg/day', '40mg/day', '60mg/day', '80mg/day'],
   );
 
-  static final MedicationReference escitalopram = MedicationReference(
+  static const MedicationReference escitalopram = MedicationReference(
     code: '321967',
     displayName: 'Escitalopram',
     genericName: 'Escitalopram oxalate',
@@ -896,7 +896,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '20mg/day', '30mg/day', '40mg/day'],
   );
 
-  static final MedicationReference citalopram = MedicationReference(
+  static const MedicationReference citalopram = MedicationReference(
     code: '72056',
     displayName: 'Citalopram',
     genericName: 'Citalopram hydrobromide',
@@ -906,7 +906,7 @@ class MedicationCatalog {
     commonDosages: ['20mg/day', '40mg/day', '60mg/day'],
   );
 
-  static final MedicationReference paroxetine = MedicationReference(
+  static const MedicationReference paroxetine = MedicationReference(
     code: '67036',
     displayName: 'Paroxetine',
     genericName: 'Paroxetine hydrochloride',
@@ -916,7 +916,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day', '20mg/day', '40mg/day', '50mg/day'],
   );
 
-  static final MedicationReference venlafaxine = MedicationReference(
+  static const MedicationReference venlafaxine = MedicationReference(
     code: '38676',
     displayName: 'Venlafaxine',
     genericName: 'Venlafaxine hydrochloride',
@@ -926,7 +926,7 @@ class MedicationCatalog {
     commonDosages: ['37.5mg/day', '75mg/day', '150mg/day', '225mg/day'],
   );
 
-  static final MedicationReference desvenlafaxine = MedicationReference(
+  static const MedicationReference desvenlafaxine = MedicationReference(
     code: '102864',
     displayName: 'Desvenlafaxine',
     genericName: 'Desvenlafaxine succinate',
@@ -936,7 +936,7 @@ class MedicationCatalog {
     commonDosages: ['50mg/day', '100mg/day'],
   );
 
-  static final MedicationReference duloxetine = MedicationReference(
+  static const MedicationReference duloxetine = MedicationReference(
     code: '73039',
     displayName: 'Duloxetine',
     genericName: 'Duloxetine hydrochloride',
@@ -946,7 +946,7 @@ class MedicationCatalog {
     commonDosages: ['30mg/day', '60mg/day', '90mg/day'],
   );
 
-  static final MedicationReference bupropion = MedicationReference(
+  static const MedicationReference bupropion = MedicationReference(
     code: '1202',
     displayName: 'Bupropion',
     genericName: 'Bupropion hydrochloride',
@@ -956,7 +956,7 @@ class MedicationCatalog {
     commonDosages: ['150mg/day', '300mg/day', 'Wellbutrin XL: 150-450mg/day'],
   );
 
-  static final MedicationReference mirtazapine = MedicationReference(
+  static const MedicationReference mirtazapine = MedicationReference(
     code: '6839',
     displayName: 'Mirtazapine',
     genericName: 'Mirtazapine',
@@ -966,7 +966,7 @@ class MedicationCatalog {
     commonDosages: ['15mg/day', '30mg/day', '45mg/day at bedtime'],
   );
 
-  static final MedicationReference trazodone = MedicationReference(
+  static const MedicationReference trazodone = MedicationReference(
     code: '2508',
     displayName: 'Trazodone',
     genericName: 'Trazodone hydrochloride',
@@ -977,7 +977,7 @@ class MedicationCatalog {
   );
 
   // ==================== BENZODIAZEPINES / ANXIOLYTICS ====================
-  static final MedicationReference alprazolam = MedicationReference(
+  static const MedicationReference alprazolam = MedicationReference(
     code: '32937',
     displayName: 'Alprazolam',
     genericName: 'Alprazolam',
@@ -987,7 +987,7 @@ class MedicationCatalog {
     commonDosages: ['0.25mg 3x/day', '0.5mg 3x/day', '1mg 3x/day', '2mg 3x/day'],
   );
 
-  static final MedicationReference lorazepam = MedicationReference(
+  static const MedicationReference lorazepam = MedicationReference(
     code: '33641',
     displayName: 'Lorazepam',
     genericName: 'Lorazepam',
@@ -997,7 +997,7 @@ class MedicationCatalog {
     commonDosages: ['0.5mg 3x/day', '1mg 3x/day', '2mg 3x/day', 'IV: 0.5-2mg PRN'],
   );
 
-  static final MedicationReference clonazepam = MedicationReference(
+  static const MedicationReference clonazepam = MedicationReference(
     code: '63713',
     displayName: 'Clonazepam',
     genericName: 'Clonazepam',
@@ -1007,7 +1007,7 @@ class MedicationCatalog {
     commonDosages: ['0.5mg 2x/day', '1mg 2x/day', '2mg 2x/day'],
   );
 
-  static final MedicationReference diazepam = MedicationReference(
+  static const MedicationReference diazepam = MedicationReference(
     code: '4318',
     displayName: 'Diazepam',
     genericName: 'Diazepam',
@@ -1018,7 +1018,7 @@ class MedicationCatalog {
   );
 
   // ==================== PAIN / NSAIDs ====================
-  static final MedicationReference ibuprofen = MedicationReference(
+  static const MedicationReference ibuprofen = MedicationReference(
     code: '5640',
     displayName: 'Ibuprofen',
     genericName: 'Ibuprofen',
@@ -1028,7 +1028,7 @@ class MedicationCatalog {
     commonDosages: ['200mg PRN', '400mg 3x/day', '600mg 3x/day', '800mg 3x/day'],
   );
 
-  static final MedicationReference naproxen = MedicationReference(
+  static const MedicationReference naproxen = MedicationReference(
     code: '83367',
     displayName: 'Naproxen',
     genericName: 'Naproxen sodium',
@@ -1038,7 +1038,7 @@ class MedicationCatalog {
     commonDosages: ['220mg 2-3x/day', '500mg 2x/day', '250mg 4x/day'],
   );
 
-  static final MedicationReference meloxicam = MedicationReference(
+  static const MedicationReference meloxicam = MedicationReference(
     code: '60789',
     displayName: 'Meloxicam',
     genericName: 'Meloxicam',
@@ -1048,7 +1048,7 @@ class MedicationCatalog {
     commonDosages: ['7.5mg/day', '15mg/day'],
   );
 
-  static final MedicationReference celecoxib = MedicationReference(
+  static const MedicationReference celecoxib = MedicationReference(
     code: '141944',
     displayName: 'Celecoxib',
     genericName: 'Celecoxib',
@@ -1058,7 +1058,7 @@ class MedicationCatalog {
     commonDosages: ['100mg 2x/day', '200mg 2x/day', '400mg once'],
   );
 
-  static final MedicationReference acetaminophen = MedicationReference(
+  static const MedicationReference acetaminophen = MedicationReference(
     code: '161',
     displayName: 'Acetaminophen',
     genericName: 'Acetaminophen',
@@ -1068,7 +1068,7 @@ class MedicationCatalog {
     commonDosages: ['325mg PRN', '500mg PRN', '650mg q4-6h', '1000mg q6h', 'IV: 1g q6h'],
   );
 
-  static final MedicationReference tramadol = MedicationReference(
+  static const MedicationReference tramadol = MedicationReference(
     code: '10689',
     displayName: 'Tramadol',
     genericName: 'Tramadol hydrochloride',
@@ -1078,7 +1078,7 @@ class MedicationCatalog {
     commonDosages: ['50mg q6h PRN', '100mg q6h PRN', '200mg 2x/day ER'],
   );
 
-  static final MedicationReference oxycodone = MedicationReference(
+  static const MedicationReference oxycodone = MedicationReference(
     code: '7096',
     displayName: 'Oxycodone',
     genericName: 'Oxycodone hydrochloride',
@@ -1088,7 +1088,7 @@ class MedicationCatalog {
     commonDosages: ['5mg q6h PRN', '10mg q6h PRN', 'OxyContin: 10-80mg q12h'],
   );
 
-  static final MedicationReference hydrocodoneAcetaminophen = MedicationReference(
+  static const MedicationReference hydrocodoneAcetaminophen = MedicationReference(
     code: '570669',
     displayName: 'Hydrocodone-Acetaminophen',
     genericName: 'Hydrocodone/Acetaminophen',
@@ -1099,7 +1099,7 @@ class MedicationCatalog {
   );
 
   // ==================== ALLERGIES / ANTIHISTAMINES ====================
-  static final MedicationReference cetirizine = MedicationReference(
+  static const MedicationReference cetirizine = MedicationReference(
     code: '201250',
     displayName: 'Cetirizine',
     genericName: 'Cetirizine hydrochloride',
@@ -1109,7 +1109,7 @@ class MedicationCatalog {
     commonDosages: ['5mg/day', '10mg/day'],
   );
 
-  static final MedicationReference loratadine = MedicationReference(
+  static const MedicationReference loratadine = MedicationReference(
     code: '26225',
     displayName: 'Loratadine',
     genericName: 'Loratadine',
@@ -1119,7 +1119,7 @@ class MedicationCatalog {
     commonDosages: ['10mg/day'],
   );
 
-  static final MedicationReference fexofenadine = MedicationReference(
+  static const MedicationReference fexofenadine = MedicationReference(
     code: '87516',
     displayName: 'Fexofenadine',
     genericName: 'Fexofenadine hydrochloride',
@@ -1129,7 +1129,7 @@ class MedicationCatalog {
     commonDosages: ['60mg 2x/day', '180mg once daily'],
   );
 
-  static final MedicationReference diphenhydramine = MedicationReference(
+  static const MedicationReference diphenhydramine = MedicationReference(
     code: '3476',
     displayName: 'Diphenhydramine',
     genericName: 'Diphenhydramine hydrochloride',
@@ -1139,7 +1139,7 @@ class MedicationCatalog {
     commonDosages: ['25mg q6h PRN', '50mg q6h PRN', 'IV/IM: 10-50mg PRN'],
   );
 
-  static final MedicationReference promethazine = MedicationReference(
+  static const MedicationReference promethazine = MedicationReference(
     code: '5640',
     displayName: 'Promethazine',
     genericName: 'Promethazine hydrochloride',
@@ -1150,7 +1150,7 @@ class MedicationCatalog {
   );
 
   // ==================== RESPIRATORY ====================
-  static final MedicationReference albuterol = MedicationReference(
+  static const MedicationReference albuterol = MedicationReference(
     code: '435',
     displayName: 'Albuterol',
     genericName: 'Albuterol sulfate',
@@ -1160,7 +1160,7 @@ class MedicationCatalog {
     commonDosages: ['2 puffs q4-6h PRN', '2.5mg via nebulizer q4-6h'],
   );
 
-  static final MedicationReference salmeterol = MedicationReference(
+  static const MedicationReference salmeterol = MedicationReference(
     code: '3511',
     displayName: 'Salmeterol',
     genericName: 'Salmeterol xinafoate',
@@ -1170,7 +1170,7 @@ class MedicationCatalog {
     commonDosages: ['50mcg 2x/day (not for acute symptoms)'],
   );
 
-  static final MedicationReference formoterol = MedicationReference(
+  static const MedicationReference formoterol = MedicationReference(
     code: '728780',
     displayName: 'Formoterol',
     genericName: 'Formoterol fumarate',
@@ -1180,7 +1180,7 @@ class MedicationCatalog {
     commonDosages: ['12mcg 2x/day'],
   );
 
-  static final MedicationReference fluticasone = MedicationReference(
+  static const MedicationReference fluticasone = MedicationReference(
     code: '197530',
     displayName: 'Fluticasone',
     genericName: 'Fluticasone propionate',
@@ -1190,7 +1190,7 @@ class MedicationCatalog {
     commonDosages: ['50mcg 2x/day nasal', '100mcg 2x/day inhaler', '250mcg 2x/day inhaler', '500mcg 2x/day inhaler'],
   );
 
-  static final MedicationReference budesonide = MedicationReference(
+  static const MedicationReference budesonide = MedicationReference(
     code: '11074',
     displayName: 'Budesonide',
     genericName: 'Budesonide',
@@ -1200,7 +1200,7 @@ class MedicationCatalog {
     commonDosages: ['Neb: 0.5mg 2x/day', 'Inhaler: 200mcg 2x/day', 'Nasal: 64mcg 2x/day'],
   );
 
-  static final MedicationReference fluticasoneSalmeterol = MedicationReference(
+  static const MedicationReference fluticasoneSalmeterol = MedicationReference(
     code: '284859',
     displayName: 'Fluticasone-Salmeterol',
     genericName: 'Fluticasone/Salmeterol combination',
@@ -1210,7 +1210,7 @@ class MedicationCatalog {
     commonDosages: ['100/50mcg 2x/day', '250/50mcg 2x/day', '500/50mcg 2x/day'],
   );
 
-  static final MedicationReference budesonideFormoterol = MedicationReference(
+  static const MedicationReference budesonideFormoterol = MedicationReference(
     code: '351056',
     displayName: 'Budesonide-Formoterol',
     genericName: 'Budesonide/Formoterol',
@@ -1220,7 +1220,7 @@ class MedicationCatalog {
     commonDosages: ['80/4.5mcg 2x/day', '160/4.5mcg 2x/day', '320/9mcg 2x/day'],
   );
 
-  static final MedicationReference montelukast = MedicationReference(
+  static const MedicationReference montelukast = MedicationReference(
     code: '292928',
     displayName: 'Montelukast',
     genericName: 'Montelukast sodium',
@@ -1230,7 +1230,7 @@ class MedicationCatalog {
     commonDosages: ['4mg/day (pediatric)', '5mg/day (pediatric)', '10mg/day (adult)'],
   );
 
-  static final MedicationReference ipratropium = MedicationReference(
+  static const MedicationReference ipratropium = MedicationReference(
     code: '197490',
     displayName: 'Ipratropium',
     genericName: 'Ipratropium bromide',
@@ -1240,7 +1240,7 @@ class MedicationCatalog {
     commonDosages: ['2 puffs q4-6h PRN', '500mcg via nebulizer q6-8h'],
   );
 
-  static final MedicationReference tiotropium = MedicationReference(
+  static const MedicationReference tiotropium = MedicationReference(
     code: '71856',
     displayName: 'Tiotropium',
     genericName: 'Tiotropium bromide',
@@ -1251,7 +1251,7 @@ class MedicationCatalog {
   );
 
   // ==================== ALL MEDICATIONS ====================
-  static final List<MedicationReference> all = [
+  static const List<MedicationReference> all = [
     // ACE Inhibitors
     lisinopril, enalapril, enalaprilat, ramipril, quinapril, captopril, fosinopril, trandolapril,
     // Beta Blockers

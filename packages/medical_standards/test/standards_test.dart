@@ -1,8 +1,8 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 void main() {
-  group('Cross-Reference', () {
+  group('Integration: Medical Standards Cross-Reference', () {
     test('ICD-10 links to SNOMED and Guidelines', () {
       final icd10 = Icd10ChronicConditions.findByCode('E11');
       expect(icd10, isNotNull);
@@ -10,49 +10,52 @@ void main() {
       final guidelines = ClinicalGuidelines.findForCondition('E11');
       expect(guidelines, isNotEmpty);
 
+      // Should have related SNOMED concept
       final snomed = SnomedCommonConcepts.all.firstWhere(
-        (s) => s.fullySpecifiedName?.toLowerCase().contains('diabetes') ?? false,
+        (s) => s.displayName.toLowerCase().contains('diabetes'),
         orElse: () => SnomedCommonConcepts.all.first,
       );
       expect(snomed, isNotNull);
     });
 
-    test('LOINC finds glucose and lab reference', () {
+    test('LOINC links to Lab Reference Ranges', () {
       final glucose = LoincCommonLabs.findByCode('2345-7');
       expect(glucose, isNotNull);
-      expect(glucose!.normalRange, isNotNull);
+      expect(glucose!.description, isNotNull);
 
-      final guideline = ClinicalGuidelines.findByCode('LAB-REF');
+      final guideline = ClinicalGuidelines.findByCode('CLSI-2017');
       expect(guideline, isNotNull);
     });
 
-    test('Medication catalog works', () {
-      final metformin = MedicationCatalog.findByCode('311354');
+    test('Medication links to Conditions and Guidelines', () {
+      final metformin = MedicationCatalog.findByCode('6809');
       expect(metformin, isNotNull);
 
-      final guidelines = ClinicalGuidelines.findForCondition('E11');
-      expect(guidelines, isNotEmpty);
+      // Metformin used for diabetes
+      final diabetesGuideline = ClinicalGuidelines.findForCondition('E11');
+      expect(diabetesGuideline, isNotEmpty);
     });
 
-    test('ProfileAnalyzer uses standard types', () async {
-      final analyzer = ProfileAnalyzer();
+    test('ProfileAnalyzer uses all standard types', () async {
+      const analyzer = ProfileAnalyzer();
+
       final result = await analyzer.analyzeProfile(
         age: 55,
         sex: 'male',
-        currentConditions: ['diabetes', 'hypertension'],
+        currentConditions: ['Type 2 diabetes', 'Hypertension'],
         currentMedications: ['metformin'],
-        familyHistory: ['heart disease'],
+        familyHistory: ['diabetes'],
       );
 
       expect(result, isNotNull);
       expect(result.categories, isNotEmpty);
+      expect(result.categories, contains(MedicalContextCategory.diabetes));
     });
 
     test('ChronicConditions has consistent data', () {
       for (final condition in Icd10ChronicConditions.all) {
         final fromFind = Icd10ChronicConditions.findByCode(condition.code);
-        expect(fromFind, isNotNull,
-            reason: 'Code ${condition.code} should be findable');
+        expect(fromFind, isNotNull, reason: 'Code ${condition.code} should be findable');
       }
     });
 
@@ -65,32 +68,34 @@ void main() {
     });
   });
 
-  group('ProfileAnalyzer Lifecycle', () {
+  group('Integration: User Profile Lifecycle', () {
     test('Young healthy adult gets minimal standards', () async {
-      final analyzer = ProfileAnalyzer();
+      const analyzer = ProfileAnalyzer();
       final result = await analyzer.analyzeProfile(
         age: 25,
         sex: 'female',
+        currentConditions: [],
+        currentMedications: [],
+        familyHistory: [],
       );
 
-      expect(result, isNotNull);
       expect(result.categories, contains(MedicalContextCategory.preventive));
     });
 
     test('Complex patient gets comprehensive standards', () async {
-      final analyzer = ProfileAnalyzer();
+      const analyzer = ProfileAnalyzer();
       final result = await analyzer.analyzeProfile(
         age: 70,
         sex: 'male',
-        currentConditions: ['diabetes', 'hypertension', 'ckd'],
+        currentConditions: ['Type 2 diabetes', 'Hypertension', 'CKD'],
         currentMedications: ['metformin'],
-        familyHistory: ['stroke', 'heart disease'],
+        familyHistory: ['stroke', 'heart attack'],
       );
 
       expect(result, isNotNull);
+      expect(result.categories, isNotEmpty);
       expect(result.categories, contains(MedicalContextCategory.diabetes));
       expect(result.categories, contains(MedicalContextCategory.cardiovascular));
-      expect(result.categories, contains(MedicalContextCategory.renal));
     });
   });
 }

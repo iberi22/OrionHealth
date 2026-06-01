@@ -1,4 +1,4 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 void main() {
@@ -16,9 +16,9 @@ void main() {
 
   group('ClinicalGuidelines', () {
     test('findByCode returns correct guideline', () {
-      final guideline = ClinicalGuidelines.findByCode('AHA-2017');
+      final guideline = ClinicalGuidelines.findByCode('ADA-2024');
       expect(guideline, isNotNull);
-      expect(guideline!.code, equals('AHA-2017'));
+      expect(guideline!.code, equals('ADA-2024'));
     });
 
     test('findByCode returns null for invalid code', () {
@@ -26,7 +26,7 @@ void main() {
       expect(guideline, isNull);
     });
 
-    test('findForCondition returns guidelines for E11', () {
+    test('findForCondition returns guidelines for diabetes', () {
       final guidelines = ClinicalGuidelines.findForCondition('E11');
       expect(guidelines, isNotEmpty);
     });
@@ -41,12 +41,12 @@ void main() {
     });
 
     test('labReferenceRanges guideline exists', () {
-      expect(ClinicalGuidelines.labReferenceRanges.code, equals('LAB-REF'));
+      expect(ClinicalGuidelines.labReferenceRanges.code, equals('CLSI-2017'));
       expect(ClinicalGuidelines.labReferenceRanges.displayName, isNotEmpty);
     });
 
     test('accAhaRiskCalculator guideline exists', () {
-      expect(ClinicalGuidelines.accAhaRiskCalculator.code, equals('ASCVD'));
+      expect(ClinicalGuidelines.accAhaRiskCalculator.code, equals('ACC-AHA-ASCVD'));
       expect(ClinicalGuidelines.accAhaRiskCalculator.displayName, isNotEmpty);
     });
 

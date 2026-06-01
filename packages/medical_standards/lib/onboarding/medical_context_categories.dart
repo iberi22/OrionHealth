@@ -5,7 +5,6 @@
 /// reducing the data footprint from ~3GB to ~50-200MB per user.
 
 
-
 /// Medical context categories that can be selectively downloaded
 enum MedicalContextCategory {
   preventive, // Everyone gets this — vaccines, screenings
