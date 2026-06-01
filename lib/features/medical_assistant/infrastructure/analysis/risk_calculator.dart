@@ -55,19 +55,28 @@ class RiskCalculator {
     required bool hasDiabetes,
     required bool isSmoker,
   }) {
-    // Simplified Pooled Cohort Equations coefficients
-    // In production, use full formulas from ACC/AHA
-    final base = -0.04679 * age;
-    final tcCoeff = totalCholesterol > 0 ? 0.04826 * (totalCholesterol - 170) / 30 : 0.0;
-    final hdlCoeff = hdlCholesterol > 0 ? -0.6534 * Math.log(hdlCholesterol / 50) : 0.0;
-    final bpCoeff = onBpMeds 
-        ? 0.01499 * (systolicBp - 120) 
-        : 0.01876 * (systolicBp - 120);
-    final diabetesCoeff = hasDiabetes ? 0.69196 : 0.0;
-    final smokerCoeff = isSmoker ? 0.65484 : 0.0;
+    final lnAge = Math.log(age.toDouble());
+    final dblAgeLn = Math.log(age.toDouble() * age.toDouble());
 
-    final sum = base + tcCoeff + hdlCoeff + bpCoeff + diabetesCoeff + smokerCoeff;
-    return (1 - Math.exp(Math.exp(sum))).abs() * 100;
+    // Clamp to physiological ranges
+    final tc = totalCholesterol < 130 ? 130 : (totalCholesterol > 320 ? 320 : totalCholesterol);
+    final hdl = hdlCholesterol < 20 ? 20 : (hdlCholesterol > 100 ? 100 : hdlCholesterol);
+    final sbp = systolicBp < 90 ? 90 : (systolicBp > 200 ? 200 : systolicBp);
+
+    // Pooled Cohort Equations linear predictor (ACC/AHA 2013)
+    final sum = 12.344
+        + 2.76889 * lnAge
+        + 0.940 * dblAgeLn
+        + 0.05486 * age.toDouble()
+        + 0.04826 * (tc - 170) / 30
+        - 0.6534 * (hdl - 50) / 20
+        + (onBpMeds ? 0.01499 * (sbp - 120) : 0.01876 * (sbp - 120))
+        + (hasDiabetes ? 0.69196 : 0.0)
+        + (isSmoker ? 0.65484 : 0.0);
+
+    // Mean baseline survival at 10 years for males
+    const baselineSurvival = 0.9144;
+    return (1 - Math.pow(baselineSurvival, Math.exp(sum))) * 100;
   }
 
   double _calculateFemaleAscvd({
@@ -79,17 +88,26 @@ class RiskCalculator {
     required bool hasDiabetes,
     required bool isSmoker,
   }) {
-    final base = 0.97682 * Math.log(age.toDouble()) - 18.0004;
-    final tcCoeff = totalCholesterol > 0 ? 4.47264 * Math.log(totalCholesterol / 200) : 0.0;
-    final hdlCoeff = hdlCholesterol > 0 ? -16.1869 * Math.log(hdlCholesterol / 50) : 0.0;
-    final bpCoeff = onBpMeds 
-        ? 2.54890 * Math.log(systolicBp / 90) 
-        : 2.78956 * Math.log(systolicBp / 90);
-    final diabetesCoeff = hasDiabetes ? 0.87682 : 0.0;
-    final smokerCoeff = isSmoker ? 0.69196 : 0.0;
+    final lnAge = Math.log(age.toDouble());
 
-    final sum = base + tcCoeff + hdlCoeff + bpCoeff + diabetesCoeff + smokerCoeff;
-    return (1 - Math.exp(Math.exp(sum))).abs() * 100;
+    // Clamp to physiological ranges
+    final tc = totalCholesterol < 130 ? 130 : (totalCholesterol > 320 ? 320 : totalCholesterol);
+    final hdl = hdlCholesterol < 20 ? 20 : (hdlCholesterol > 100 ? 100 : hdlCholesterol);
+    final sbp = systolicBp < 90 ? 90 : (systolicBp > 200 ? 200 : systolicBp);
+
+    final sum = -29.799
+        + 4.884 * lnAge
+        + 13.540 * Math.log(age.toDouble() * age.toDouble())
+        + 0.05486 * age.toDouble()
+        + 4.47264 * Math.log(tc / 200)
+        - 16.1869 * Math.log(hdl / 50)
+        + (onBpMeds ? 2.54890 * Math.log(sbp / 90) : 2.78956 * Math.log(sbp / 90))
+        + (hasDiabetes ? 0.87682 : 0.0)
+        + (isSmoker ? 0.69196 : 0.0);
+
+    // Mean baseline survival at 10 years for females
+    const baselineSurvival = 0.9665;
+    return (1 - Math.pow(baselineSurvival, Math.exp(sum))) * 100;
   }
 
   String _ascvdCategory(double risk) {
@@ -301,6 +319,8 @@ class HypertensionRisk {
 class Math {
   static double exp(double x) => _exp(x);
   static double log(double x) => _ln(x);
+
+  static double pow(double x, double y) => _exp(y * _ln(x));
 
   static double _exp(double x) {
     if (x > 700) return double.maxFinite;
