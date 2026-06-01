@@ -33,4 +33,10 @@ class AuthRepositoryImpl implements AuthRepository {
     final credentials = await getCredentials();
     return credentials?.hashedPin != null;
   }
+
+  @override
+  Future<bool> isBiometricsEnabled() async {
+    final credentials = await getCredentials();
+    return credentials?.biometricEnabled == true;
+  }
 }
