@@ -116,7 +116,7 @@ class MedicalAnalysisService {
   SafeAnalysisResponse analyzeLabWithConfidence({
     required String labCode,
     required double value,
-    required String unit,
+    String? unit,
     String? patientCondition,
   }) {
     final loinc = LoincCommonLabs.findByCode(labCode);
