@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:orionhealth_health/core/theme/app_colors.dart';
 import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
+import 'package:orionhealth_health/features/local_agent/presentation/pages/llm_settings_page.dart';
 
 class ChatPage extends StatefulWidget {
   final LlmService llmService;
@@ -82,7 +83,11 @@ class _ChatPageState extends State<ChatPage> {
       actions: [
         IconButton(
           icon: const Icon(Icons.settings),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const LlmSettingsPage()),
+            );
+          },
         ),
       ],
       backgroundColor: Colors.black.withValues(alpha: 0.3),

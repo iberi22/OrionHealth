@@ -1,0 +1,96 @@
+name: Medical Standards Update
+description: Update clinical guidelines, medical codes, or regulatory standards in OrionHealth
+title: "[Standards] "
+labels: ["medical-standards", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🏥 Medical Standards Update Request
+
+        This template is for updating clinical guidelines, medical codes (ICD-10, CPT, LOINC), or regulatory standards.
+
+        **Important:** Medical standards updates require clinical review and approval before implementation.
+
+  - type: dropdown
+    id: standard_type
+    attributes:
+      label: Standard Type
+      options:
+        - ICD-10 Diagnosis Codes
+        - CPT Procedure Codes
+        - LOINC Codes
+        - SNOMED CT
+        - HL7/FHIR Versions
+        - Drug Codes (NDC/RxNorm)
+        - Lab Reference Ranges
+        - Clinical Guidelines
+        - Regulatory Requirements (HIPAA, FDA)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_state
+    attributes:
+      label: Current State
+      placeholder: Describe the current codes/standards in the system.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_update
+    attributes:
+      label: Proposed Update
+      placeholder: Describe the new codes or standards to be added/updated.
+    validations:
+      required: true
+
+  - type: input
+    id: source_reference
+    attributes:
+      label: Source Reference
+      description: "URL or document reference for the update"
+      placeholder: e.g., https://www.cms.gov/medicare/coding/...
+    validations:
+      required: true
+
+  - type: input
+    id: effective_date
+    attributes:
+      label: Effective Date
+      description: When should this update take effect?
+      placeholder: e.g., 2024-10-01
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency
+      options:
+        - Routine (60+ days)
+        - Near-term (30-60 days)
+        - Urgent (within 30 days)
+        - Critical (immediate action required)
+    validations:
+      required: true
+
+  - type: textarea
+    id: clinical_impact
+    attributes:
+      label: Clinical Impact Assessment
+      placeholder: Describe how this update affects clinical workflows and patient care.
+
+  - type: checkboxes
+    id: review
+    attributes:
+      label: Review Requirements
+      options:
+        - label: Requires clinical leadership approval
+          value: clinical-approval
+        - label: Requires legal/compliance review
+          value: legal-review
+        - label: Requires QA testing with clinical data
+          value: qa-testing
+        - label: Requires FDA notification
+          value: fda-notification

@@ -1,14 +1,12 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
 
-part 'vital_sign.g.dart';
-
 /// Vital sign reading with timestamp.
 /// Sensitive: vital values are encrypted at rest.
 @collection
-@JsonSerializable()
-class VitalSign {
+class VitalSign extends Equatable {
   VitalSign({
     required this.id,
     required this.loincCode,
@@ -23,7 +21,9 @@ class VitalSign {
     this.encryptedValue,
     this.notes,
   });
-  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  final String id;
 
   /// LOINC code for this vital sign (e.g. "8867-4" for Heart rate).
   @Index()
@@ -44,12 +44,12 @@ class VitalSign {
 
   @Enumerated(EnumType.name)
   @Index()
-  final SyncStatus syncStatus;
+  SyncStatus syncStatus;
 
   /// AES-256-GCM encrypted vital value (base64).
-  final String? encryptedValue;
+  String? encryptedValue;
 
-  final String? notes;
+  String? notes;
 
   /// Common vital LOINC codes for reference:
   /// - 8867-4: Heart rate
@@ -88,7 +88,7 @@ class VitalSign {
   }
 
   VitalSign copyWith({
-    int? id,
+    String? id,
     String? loincCode,
     String? componentName,
     String? value,
@@ -120,4 +120,19 @@ class VitalSign {
   factory VitalSign.fromJson(Map<String, dynamic> json) => _$VitalSignFromJson(json);
   Map<String, dynamic> toJson() => _$VitalSignToJson(this);
 
+  @override
+  List<Object?> get props => [
+        id,
+        loincCode,
+        componentName,
+        value,
+        unit,
+        recordedAt,
+        createdAt,
+        updatedAt,
+        source,
+        syncStatus,
+        encryptedValue,
+        notes,
+      ];
 }

@@ -17,35 +17,20 @@ const AllergySchema = CollectionSchema(
   name: r'Allergy',
   id: -6029403542999152803,
   properties: {
-    r'confirmedDate': PropertySchema(
+    r'allergen': PropertySchema(
       id: 0,
-      name: r'confirmedDate',
-      type: IsarType.dateTime,
-    ),
-    r'isCritical': PropertySchema(
-      id: 1,
-      name: r'isCritical',
-      type: IsarType.bool,
-    ),
-    r'name': PropertySchema(
-      id: 2,
-      name: r'name',
+      name: r'allergen',
       type: IsarType.string,
     ),
     r'notes': PropertySchema(
-      id: 3,
+      id: 1,
       name: r'notes',
       type: IsarType.string,
     ),
-    r'reaction': PropertySchema(
-      id: 4,
-      name: r'reaction',
-      type: IsarType.string,
-    ),
     r'severity': PropertySchema(
-      id: 5,
+      id: 2,
       name: r'severity',
-      type: IsarType.byte,
+      type: IsarType.string,
       enumMap: _AllergyseverityEnumValueMap,
     )
   },
@@ -70,7 +55,7 @@ int _allergyEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
-    final value = object.name;
+    final value = object.allergen;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -81,12 +66,7 @@ int _allergyEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  {
-    final value = object.reaction;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.severity.name.length * 3;
   return bytesCount;
 }
 
@@ -96,12 +76,9 @@ void _allergySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.confirmedDate);
-  writer.writeBool(offsets[1], object.isCritical);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.notes);
-  writer.writeString(offsets[4], object.reaction);
-  writer.writeByte(offsets[5], object.severity.index);
+  writer.writeString(offsets[0], object.allergen);
+  writer.writeString(offsets[1], object.notes);
+  writer.writeString(offsets[2], object.severity.name);
 }
 
 Allergy _allergyDeserialize(
@@ -111,15 +88,13 @@ Allergy _allergyDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Allergy(
-    confirmedDate: reader.readDateTimeOrNull(offsets[0]),
-    isCritical: reader.readBoolOrNull(offsets[1]) ?? false,
-    name: reader.readStringOrNull(offsets[2]),
-    notes: reader.readStringOrNull(offsets[3]),
-    reaction: reader.readStringOrNull(offsets[4]),
-    severity: _AllergyseverityValueEnumMap[reader.readByteOrNull(offsets[5])] ??
-        AllergySeverity.moderate,
+    allergen: reader.readStringOrNull(offsets[0]),
+    id: id,
+    notes: reader.readStringOrNull(offsets[1]),
+    severity:
+        _AllergyseverityValueEnumMap[reader.readStringOrNull(offsets[2])] ??
+            AllergySeverity.mild,
   );
-  object.id = id;
   return object;
 }
 
@@ -131,34 +106,26 @@ P _allergyDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
-    case 3:
-      return (reader.readStringOrNull(offset)) as P;
-    case 4:
-      return (reader.readStringOrNull(offset)) as P;
-    case 5:
-      return (_AllergyseverityValueEnumMap[reader.readByteOrNull(offset)] ??
-          AllergySeverity.moderate) as P;
+      return (_AllergyseverityValueEnumMap[reader.readStringOrNull(offset)] ??
+          AllergySeverity.mild) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
 const _AllergyseverityEnumValueMap = {
-  'mild': 0,
-  'moderate': 1,
-  'severe': 2,
-  'lifeThreatening': 3,
+  r'mild': r'mild',
+  r'moderate': r'moderate',
+  r'severe': r'severe',
 };
 const _AllergyseverityValueEnumMap = {
-  0: AllergySeverity.mild,
-  1: AllergySeverity.moderate,
-  2: AllergySeverity.severe,
-  3: AllergySeverity.lifeThreatening,
+  r'mild': AllergySeverity.mild,
+  r'moderate': AllergySeverity.moderate,
+  r'severe': AllergySeverity.severe,
 };
 
 Id _allergyGetId(Allergy object) {
@@ -250,73 +217,148 @@ extension AllergyQueryWhere on QueryBuilder<Allergy, Allergy, QWhereClause> {
 
 extension AllergyQueryFilter
     on QueryBuilder<Allergy, Allergy, QFilterCondition> {
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> confirmedDateIsNull() {
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'confirmedDate',
+        property: r'allergen',
       ));
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition>
-      confirmedDateIsNotNull() {
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'confirmedDate',
+        property: r'allergen',
       ));
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> confirmedDateEqualTo(
-      DateTime? value) {
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'confirmedDate',
+        property: r'allergen',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition>
-      confirmedDateGreaterThan(
-    DateTime? value, {
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenGreaterThan(
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'confirmedDate',
+        property: r'allergen',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> confirmedDateLessThan(
-    DateTime? value, {
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenLessThan(
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'confirmedDate',
+        property: r'allergen',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> confirmedDateBetween(
-    DateTime? lower,
-    DateTime? upper, {
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenBetween(
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'confirmedDate',
+        property: r'allergen',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'allergen',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'allergen',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'allergen',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'allergen',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'allergen',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> allergenIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'allergen',
+        value: '',
       ));
     });
   }
@@ -369,162 +411,6 @@ extension AllergyQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> isCriticalEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isCritical',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'name',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'name',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> nameIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'name',
-        value: '',
       ));
     });
   }
@@ -675,158 +561,15 @@ extension AllergyQueryFilter
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'reaction',
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'reaction',
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'reaction',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'reaction',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'reaction',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'reaction',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'reaction',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'reaction',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'reaction',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'reaction',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'reaction',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> reactionIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'reaction',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityEqualTo(
-      AllergySeverity value) {
+    AllergySeverity value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'severity',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -834,12 +577,14 @@ extension AllergyQueryFilter
   QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityGreaterThan(
     AllergySeverity value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'severity',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -847,12 +592,14 @@ extension AllergyQueryFilter
   QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityLessThan(
     AllergySeverity value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'severity',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -862,6 +609,7 @@ extension AllergyQueryFilter
     AllergySeverity upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -870,6 +618,75 @@ extension AllergyQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'severity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'severity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'severity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'severity',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'severity',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> severityIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'severity',
+        value: '',
       ));
     });
   }
@@ -882,39 +699,15 @@ extension AllergyQueryLinks
     on QueryBuilder<Allergy, Allergy, QFilterCondition> {}
 
 extension AllergyQuerySortBy on QueryBuilder<Allergy, Allergy, QSortBy> {
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByConfirmedDate() {
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByAllergen() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'confirmedDate', Sort.asc);
+      return query.addSortBy(r'allergen', Sort.asc);
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByConfirmedDateDesc() {
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByAllergenDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'confirmedDate', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByIsCritical() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isCritical', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByIsCriticalDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isCritical', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByName() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'name', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByNameDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'name', Sort.desc);
+      return query.addSortBy(r'allergen', Sort.desc);
     });
   }
 
@@ -927,18 +720,6 @@ extension AllergyQuerySortBy on QueryBuilder<Allergy, Allergy, QSortBy> {
   QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByReaction() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'reaction', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByReactionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'reaction', Sort.desc);
     });
   }
 
@@ -957,15 +738,15 @@ extension AllergyQuerySortBy on QueryBuilder<Allergy, Allergy, QSortBy> {
 
 extension AllergyQuerySortThenBy
     on QueryBuilder<Allergy, Allergy, QSortThenBy> {
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByConfirmedDate() {
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByAllergen() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'confirmedDate', Sort.asc);
+      return query.addSortBy(r'allergen', Sort.asc);
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByConfirmedDateDesc() {
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByAllergenDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'confirmedDate', Sort.desc);
+      return query.addSortBy(r'allergen', Sort.desc);
     });
   }
 
@@ -981,30 +762,6 @@ extension AllergyQuerySortThenBy
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByIsCritical() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isCritical', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByIsCriticalDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isCritical', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByName() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'name', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByNameDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'name', Sort.desc);
-    });
-  }
-
   QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
@@ -1014,18 +771,6 @@ extension AllergyQuerySortThenBy
   QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByReaction() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'reaction', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByReactionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'reaction', Sort.desc);
     });
   }
 
@@ -1044,22 +789,10 @@ extension AllergyQuerySortThenBy
 
 extension AllergyQueryWhereDistinct
     on QueryBuilder<Allergy, Allergy, QDistinct> {
-  QueryBuilder<Allergy, Allergy, QDistinct> distinctByConfirmedDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'confirmedDate');
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QDistinct> distinctByIsCritical() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isCritical');
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QDistinct> distinctByName(
+  QueryBuilder<Allergy, Allergy, QDistinct> distinctByAllergen(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'allergen', caseSensitive: caseSensitive);
     });
   }
 
@@ -1070,16 +803,10 @@ extension AllergyQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Allergy, Allergy, QDistinct> distinctByReaction(
+  QueryBuilder<Allergy, Allergy, QDistinct> distinctBySeverity(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'reaction', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Allergy, Allergy, QDistinct> distinctBySeverity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'severity');
+      return query.addDistinctBy(r'severity', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1092,33 +819,15 @@ extension AllergyQueryProperty
     });
   }
 
-  QueryBuilder<Allergy, DateTime?, QQueryOperations> confirmedDateProperty() {
+  QueryBuilder<Allergy, String?, QQueryOperations> allergenProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'confirmedDate');
-    });
-  }
-
-  QueryBuilder<Allergy, bool, QQueryOperations> isCriticalProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isCritical');
-    });
-  }
-
-  QueryBuilder<Allergy, String?, QQueryOperations> nameProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'name');
+      return query.addPropertyName(r'allergen');
     });
   }
 
   QueryBuilder<Allergy, String?, QQueryOperations> notesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'notes');
-    });
-  }
-
-  QueryBuilder<Allergy, String?, QQueryOperations> reactionProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'reaction');
     });
   }
 

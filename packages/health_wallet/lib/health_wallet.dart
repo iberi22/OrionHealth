@@ -1,8 +1,10 @@
-// SPDX-License-Identifier: AGPL-3.0-only
-// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
-
-// Health Wallet - Private health data management for OrionHealth
-
+/// Health Wallet — Private health data management for OrionHealth.
+///
+/// Handles:
+/// - Encrypted local storage of health records via Isar
+/// - AES-256-GCM encryption for sensitive fields
+/// - P2P encrypted sync between Orion nodes
+library health_wallet;
 
 export 'models/health_record.dart';
 export 'models/lab_result.dart';

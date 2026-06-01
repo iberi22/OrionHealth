@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
@@ -26,8 +27,7 @@ enum DocumentType {
 
 /// Medical document reference (PDF, image, etc.).
 @collection
-@JsonSerializable()
-class MedicalDocument {
+class MedicalDocument extends Equatable {
   MedicalDocument({
     required this.id,
     required this.title,
@@ -46,7 +46,9 @@ class MedicalDocument {
     this.syncStatus = SyncStatus.pending,
     this.encryptedMetadata,
   });
-  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  final String id;
 
   final String title;
 
@@ -67,21 +69,21 @@ class MedicalDocument {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  final String? provider; // physician name
-  final String? facility; // hospital/clinic name
-  final List<String>? icd10Codes; // diagnoses coded
-  final List<String>? loincCodes; // associated LOINC tests
-  final String? notes;
+  String? provider; // physician name
+  String? facility; // hospital/clinic name
+  List<String>? icd10Codes; // diagnoses coded
+  List<String>? loincCodes; // associated LOINC tests
+  String? notes;
 
   @Enumerated(EnumType.name)
   final DataSource source;
 
   @Enumerated(EnumType.name)
   @Index()
-  final SyncStatus syncStatus;
+  SyncStatus syncStatus;
 
   /// Encrypted document metadata (base64).
-  final String? encryptedMetadata;
+  String? encryptedMetadata;
 
   /// File extension derived from mime type.
   @ignore
@@ -101,7 +103,7 @@ class MedicalDocument {
   }
 
   MedicalDocument copyWith({
-    int? id,
+    String? id,
     String? title,
     DocumentType? documentType,
     String? filePath,
@@ -142,4 +144,23 @@ class MedicalDocument {
       _$MedicalDocumentFromJson(json);
   Map<String, dynamic> toJson() => _$MedicalDocumentToJson(this);
 
+  @override
+  List<Object?> get props => [
+        id,
+        title,
+        documentType,
+        filePath,
+        mimeType,
+        documentDate,
+        createdAt,
+        updatedAt,
+        provider,
+        facility,
+        icd10Codes,
+        loincCodes,
+        notes,
+        source,
+        syncStatus,
+        encryptedMetadata,
+      ];
 }

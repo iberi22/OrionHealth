@@ -68,7 +68,7 @@ class InsightCard extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.check_circle_outline,
+                      const Icon(Icons.check_circle_outline, 
                           size: 14, color: Colors.teal),
                       const SizedBox(width: 4),
                       Expanded(
@@ -182,8 +182,6 @@ class _CategoryChip extends StatelessWidget {
         return 'Guidelines';
       case InsightCategory.generalGuidance:
         return 'General';
-      case InsightCategory.symptomAnalysis:
-        return 'Symptoms';
     }
   }
 
@@ -201,8 +199,6 @@ class _CategoryChip extends StatelessWidget {
         return Colors.indigo;
       case InsightCategory.generalGuidance:
         return Colors.grey;
-      case InsightCategory.symptomAnalysis:
-        return Colors.cyan;
     }
   }
 }

@@ -17,44 +17,24 @@ const VitalSignSchema = CollectionSchema(
   name: r'VitalSign',
   id: -8016445015739804507,
   properties: {
-    r'formattedValue': PropertySchema(
+    r'dateTime': PropertySchema(
       id: 0,
-      name: r'formattedValue',
-      type: IsarType.string,
+      name: r'dateTime',
+      type: IsarType.dateTime,
     ),
     r'notes': PropertySchema(
       id: 1,
       name: r'notes',
       type: IsarType.string,
     ),
-    r'recordedAt': PropertySchema(
-      id: 2,
-      name: r'recordedAt',
-      type: IsarType.dateTime,
-    ),
-    r'source': PropertySchema(
-      id: 3,
-      name: r'source',
-      type: IsarType.string,
-    ),
     r'type': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'type',
-      type: IsarType.byte,
+      type: IsarType.string,
       enumMap: _VitalSigntypeEnumValueMap,
     ),
-    r'typeLabel': PropertySchema(
-      id: 5,
-      name: r'typeLabel',
-      type: IsarType.string,
-    ),
-    r'unit': PropertySchema(
-      id: 6,
-      name: r'unit',
-      type: IsarType.string,
-    ),
     r'value': PropertySchema(
-      id: 7,
+      id: 3,
       name: r'value',
       type: IsarType.double,
     )
@@ -79,26 +59,13 @@ int _vitalSignEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.formattedValue.length * 3;
   {
     final value = object.notes;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
   }
-  {
-    final value = object.source;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  bytesCount += 3 + object.typeLabel.length * 3;
-  {
-    final value = object.unit;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.type.name.length * 3;
   return bytesCount;
 }
 
@@ -108,14 +75,10 @@ void _vitalSignSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.formattedValue);
+  writer.writeDateTime(offsets[0], object.dateTime);
   writer.writeString(offsets[1], object.notes);
-  writer.writeDateTime(offsets[2], object.recordedAt);
-  writer.writeString(offsets[3], object.source);
-  writer.writeByte(offsets[4], object.type.index);
-  writer.writeString(offsets[5], object.typeLabel);
-  writer.writeString(offsets[6], object.unit);
-  writer.writeDouble(offsets[7], object.value);
+  writer.writeString(offsets[2], object.type.name);
+  writer.writeDouble(offsets[3], object.value);
 }
 
 VitalSign _vitalSignDeserialize(
@@ -125,13 +88,11 @@ VitalSign _vitalSignDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = VitalSign(
+    dateTime: reader.readDateTime(offsets[0]),
     notes: reader.readStringOrNull(offsets[1]),
-    recordedAt: reader.readDateTimeOrNull(offsets[2]),
-    source: reader.readStringOrNull(offsets[3]),
-    type: _VitalSigntypeValueEnumMap[reader.readByteOrNull(offsets[4])] ??
+    type: _VitalSigntypeValueEnumMap[reader.readStringOrNull(offsets[2])] ??
         VitalSignType.heartRate,
-    unit: reader.readStringOrNull(offsets[6]),
-    value: reader.readDoubleOrNull(offsets[7]),
+    value: reader.readDouble(offsets[3]),
   );
   object.id = id;
   return object;
@@ -145,48 +106,32 @@ P _vitalSignDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 3:
-      return (reader.readStringOrNull(offset)) as P;
-    case 4:
-      return (_VitalSigntypeValueEnumMap[reader.readByteOrNull(offset)] ??
+      return (_VitalSigntypeValueEnumMap[reader.readStringOrNull(offset)] ??
           VitalSignType.heartRate) as P;
-    case 5:
-      return (reader.readString(offset)) as P;
-    case 6:
-      return (reader.readStringOrNull(offset)) as P;
-    case 7:
-      return (reader.readDoubleOrNull(offset)) as P;
+    case 3:
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
 const _VitalSigntypeEnumValueMap = {
-  'heartRate': 0,
-  'bloodPressureSystolic': 1,
-  'bloodPressureDiastolic': 2,
-  'temperature': 3,
-  'oxygenSaturation': 4,
-  'respiratoryRate': 5,
-  'bloodGlucose': 6,
-  'steps': 7,
-  'sleep': 8,
+  r'heartRate': r'heartRate',
+  r'temperature': r'temperature',
+  r'bloodPressureSystolic': r'bloodPressureSystolic',
+  r'bloodPressureDiastolic': r'bloodPressureDiastolic',
+  r'spO2': r'spO2',
 };
 const _VitalSigntypeValueEnumMap = {
-  0: VitalSignType.heartRate,
-  1: VitalSignType.bloodPressureSystolic,
-  2: VitalSignType.bloodPressureDiastolic,
-  3: VitalSignType.temperature,
-  4: VitalSignType.oxygenSaturation,
-  5: VitalSignType.respiratoryRate,
-  6: VitalSignType.bloodGlucose,
-  7: VitalSignType.steps,
-  8: VitalSignType.sleep,
+  r'heartRate': VitalSignType.heartRate,
+  r'temperature': VitalSignType.temperature,
+  r'bloodPressureSystolic': VitalSignType.bloodPressureSystolic,
+  r'bloodPressureDiastolic': VitalSignType.bloodPressureDiastolic,
+  r'spO2': VitalSignType.spO2,
 };
 
 Id _vitalSignGetId(VitalSign object) {
@@ -280,138 +225,55 @@ extension VitalSignQueryWhere
 
 extension VitalSignQueryFilter
     on QueryBuilder<VitalSign, VitalSign, QFilterCondition> {
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> dateTimeEqualTo(
+      DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'formattedValue',
+        property: r'dateTime',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueGreaterThan(
-    String value, {
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> dateTimeGreaterThan(
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'formattedValue',
+        property: r'dateTime',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueLessThan(
-    String value, {
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> dateTimeLessThan(
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'formattedValue',
+        property: r'dateTime',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> dateTimeBetween(
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'formattedValue',
+        property: r'dateTime',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'formattedValue',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'formattedValue',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'formattedValue',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'formattedValue',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'formattedValue',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      formattedValueIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'formattedValue',
-        value: '',
       ));
     });
   }
@@ -615,229 +477,15 @@ extension VitalSignQueryFilter
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> recordedAtIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'recordedAt',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      recordedAtIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'recordedAt',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> recordedAtEqualTo(
-      DateTime? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'recordedAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      recordedAtGreaterThan(
-    DateTime? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'recordedAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> recordedAtLessThan(
-    DateTime? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'recordedAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> recordedAtBetween(
-    DateTime? lower,
-    DateTime? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'recordedAt',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'source',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'source',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'source',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'source',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'source',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'source',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'source',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'source',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'source',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'source',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'source',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'source',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeEqualTo(
-      VitalSignType value) {
+    VitalSignType value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'type',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -845,12 +493,14 @@ extension VitalSignQueryFilter
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeGreaterThan(
     VitalSignType value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'type',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -858,12 +508,14 @@ extension VitalSignQueryFilter
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLessThan(
     VitalSignType value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'type',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
@@ -873,6 +525,7 @@ extension VitalSignQueryFilter
     VitalSignType upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -881,306 +534,81 @@ extension VitalSignQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLabelEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'typeLabel',
-        value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      typeLabelGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'typeLabel',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLabelLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'typeLabel',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLabelBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'typeLabel',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLabelStartsWith(
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'typeLabel',
+        property: r'type',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLabelEndsWith(
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'typeLabel',
+        property: r'type',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLabelContains(
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'typeLabel',
+        property: r'type',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLabelMatches(
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'typeLabel',
+        property: r'type',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeLabelIsEmpty() {
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'typeLabel',
+        property: r'type',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
-      typeLabelIsNotEmpty() {
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'typeLabel',
+        property: r'type',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'unit',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'unit',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unit',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'unit',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'unit',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'unit',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'unit',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'unit',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'unit',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'unit',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'unit',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'unit',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> valueIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'value',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> valueIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'value',
       ));
     });
   }
 
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> valueEqualTo(
-    double? value, {
+    double value, {
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1193,7 +621,7 @@ extension VitalSignQueryFilter
   }
 
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> valueGreaterThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -1208,7 +636,7 @@ extension VitalSignQueryFilter
   }
 
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> valueLessThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -1223,8 +651,8 @@ extension VitalSignQueryFilter
   }
 
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> valueBetween(
-    double? lower,
-    double? upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
     double epsilon = Query.epsilon,
@@ -1249,15 +677,15 @@ extension VitalSignQueryLinks
     on QueryBuilder<VitalSign, VitalSign, QFilterCondition> {}
 
 extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByFormattedValue() {
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByDateTime() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'formattedValue', Sort.asc);
+      return query.addSortBy(r'dateTime', Sort.asc);
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByFormattedValueDesc() {
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByDateTimeDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'formattedValue', Sort.desc);
+      return query.addSortBy(r'dateTime', Sort.desc);
     });
   }
 
@@ -1273,30 +701,6 @@ extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByRecordedAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recordedAt', Sort.asc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByRecordedAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recordedAt', Sort.desc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortBySource() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'source', Sort.asc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortBySourceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'source', Sort.desc);
-    });
-  }
-
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -1306,30 +710,6 @@ extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByTypeLabel() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'typeLabel', Sort.asc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByTypeLabelDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'typeLabel', Sort.desc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByUnit() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unit', Sort.asc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByUnitDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unit', Sort.desc);
     });
   }
 
@@ -1348,15 +728,15 @@ extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
 
 extension VitalSignQuerySortThenBy
     on QueryBuilder<VitalSign, VitalSign, QSortThenBy> {
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByFormattedValue() {
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByDateTime() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'formattedValue', Sort.asc);
+      return query.addSortBy(r'dateTime', Sort.asc);
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByFormattedValueDesc() {
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByDateTimeDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'formattedValue', Sort.desc);
+      return query.addSortBy(r'dateTime', Sort.desc);
     });
   }
 
@@ -1384,30 +764,6 @@ extension VitalSignQuerySortThenBy
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByRecordedAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recordedAt', Sort.asc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByRecordedAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recordedAt', Sort.desc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenBySource() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'source', Sort.asc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenBySourceDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'source', Sort.desc);
-    });
-  }
-
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -1417,30 +773,6 @@ extension VitalSignQuerySortThenBy
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByTypeLabel() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'typeLabel', Sort.asc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByTypeLabelDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'typeLabel', Sort.desc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByUnit() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unit', Sort.asc);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByUnitDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'unit', Sort.desc);
     });
   }
 
@@ -1459,11 +791,9 @@ extension VitalSignQuerySortThenBy
 
 extension VitalSignQueryWhereDistinct
     on QueryBuilder<VitalSign, VitalSign, QDistinct> {
-  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByFormattedValue(
-      {bool caseSensitive = true}) {
+  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByDateTime() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'formattedValue',
-          caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'dateTime');
     });
   }
 
@@ -1474,36 +804,10 @@ extension VitalSignQueryWhereDistinct
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByRecordedAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'recordedAt');
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctBySource(
+  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByType(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'source', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'type');
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByTypeLabel(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'typeLabel', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByUnit(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'unit', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'type', caseSensitive: caseSensitive);
     });
   }
 
@@ -1522,9 +826,9 @@ extension VitalSignQueryProperty
     });
   }
 
-  QueryBuilder<VitalSign, String, QQueryOperations> formattedValueProperty() {
+  QueryBuilder<VitalSign, DateTime, QQueryOperations> dateTimeProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'formattedValue');
+      return query.addPropertyName(r'dateTime');
     });
   }
 
@@ -1534,37 +838,13 @@ extension VitalSignQueryProperty
     });
   }
 
-  QueryBuilder<VitalSign, DateTime?, QQueryOperations> recordedAtProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'recordedAt');
-    });
-  }
-
-  QueryBuilder<VitalSign, String?, QQueryOperations> sourceProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'source');
-    });
-  }
-
   QueryBuilder<VitalSign, VitalSignType, QQueryOperations> typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
     });
   }
 
-  QueryBuilder<VitalSign, String, QQueryOperations> typeLabelProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'typeLabel');
-    });
-  }
-
-  QueryBuilder<VitalSign, String?, QQueryOperations> unitProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'unit');
-    });
-  }
-
-  QueryBuilder<VitalSign, double?, QQueryOperations> valueProperty() {
+  QueryBuilder<VitalSign, double, QQueryOperations> valueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'value');
     });

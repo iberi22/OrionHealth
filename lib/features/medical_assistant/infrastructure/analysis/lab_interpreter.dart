@@ -4,13 +4,13 @@ import '../../domain/entities/medical_insight.dart';
 /// Interprets laboratory results using LOINC codes and clinical guidelines
 class LabInterpreter {
   /// Interpret a single lab value
-  Future<LabInterpretation> interpret({
+  LabInterpretation interpret({
     required String loincCode,
     required double value,
     String? gender,
     int? age,
-  }) async {
-    final loinc = await LoincCommonLabs.findByCode(loincCode);
+  }) {
+    final loinc = LoincCommonLabs.findByCode(loincCode);
     if (loinc == null) {
       return LabInterpretation(
         code: loincCode,
@@ -115,29 +115,23 @@ class LabInterpreter {
   }
 
   /// Interpret a complete metabolic panel
-  Future<List<LabInterpretation>> interpretPanel(Map<String, double> values, {String? gender}) async {
-    final results = <LabInterpretation>[];
-    for (final entry in values.entries) {
-      results.add(await interpret(
-        loincCode: entry.key,
-        value: entry.value,
-        gender: gender,
-      ));
-    }
-    return results;
+  List<LabInterpretation> interpretPanel(Map<String, double> values, {String? gender}) {
+    return values.entries.map((e) => interpret(
+      loincCode: e.key,
+      value: e.value,
+      gender: gender,
+    )).toList();
   }
 
   /// Generate insights from lab interpretations
-  Future<List<MedicalInsight>> generateInsights(List<LabInterpretation> interpretations) async {
-    final guideline = await ClinicalGuidelines.findByCode('CLSI-2017');
-
+  List<MedicalInsight> generateInsights(List<LabInterpretation> interpretations) {
     return interpretations.map((i) => MedicalInsight(
       id: 'lab-insight-${i.code}',
       title: i.displayName ?? i.code,
       description: '${i.value} ${i.unit ?? ""} — ${i.message}',
       severity: _severityFromStatus(i.status),
       category: InsightCategory.labInterpretation,
-      guidelineReference: guideline?.code ?? 'CLSI-2017',
+      guidelineReference: ClinicalGuidelines.labReferenceRanges.code,
       recommendations: _recommendationsFromStatus(i.status, i.code),
       generatedAt: DateTime.now(),
       evidence: {'interpretation': i.status.name, 'reference': i.referenceRange},

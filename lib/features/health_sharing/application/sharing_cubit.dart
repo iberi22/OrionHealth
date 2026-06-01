@@ -116,7 +116,6 @@ class SharingCubit extends Cubit<SharingState> {
   StreamSubscription? _wifiSubscription;
 
   TransferMethod? _currentMethod;
-  // ignore: unused_field
   SharedHealthPackage? _pendingPackage;
 
   SharingCubit({
