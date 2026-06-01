@@ -44,6 +44,9 @@ class SidetreeAnchorClient {
   })  : _ionNodeUrl = ionNodeUrl ?? defaultIonNode,
         _httpClient = httpClient ?? http.Client();
 
+  @factoryMethod
+  static SidetreeAnchorClient create() => SidetreeAnchorClient();
+
   // ─── Retry Logic ────────────────────────────────────────────────
 
   /// Executes [operation] with exponential backoff on transient
@@ -210,8 +213,8 @@ class SidetreeAnchorClient {
     ));
 
     final pair = keyGen.generateKeyPair();
-    final publicKey = pair.publicKey;
-    final privateKey = pair.privateKey;
+    final publicKey = pair.publicKey as ECPublicKey;
+    final privateKey = pair.privateKey as ECPrivateKey;
 
     final xBigInt = publicKey.Q!.x!.toBigInteger()!;
     final yBigInt = publicKey.Q!.y!.toBigInteger()!;

@@ -216,13 +216,13 @@ class MedicalContextProvider {
 
     _loadVersions();
 
-    await Future.wait([
+    await Future.wait<void>([
       _loadIcd10(),
       _loadLoinc(),
       _loadSnomed(),
       _loadRxnorm(),
-      _loadGuidelines(),
     ]);
+    _loadGuidelines();
 
     _buildIndexes();
 

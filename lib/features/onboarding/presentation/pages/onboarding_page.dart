@@ -46,10 +46,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     return BlocListener<OnboardingCubit, OnboardingState>(
       listener: (context, state) {
-        if (state is OnboardingStepChanged) {
-          _animateToPage(state.step);
+        if (state is OnboardingInProgress) {
+          _animateToPage(state.currentStep);
           setState(() {});
-        } else if (state is OnboardingComplete) {
+        } else if (state is OnboardingCompleted) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const MainNavigationPage()),
           );

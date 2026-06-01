@@ -182,6 +182,8 @@ class _CategoryChip extends StatelessWidget {
         return 'Guidelines';
       case InsightCategory.generalGuidance:
         return 'General';
+      case InsightCategory.symptomAnalysis:
+        return 'Symptom';
     }
   }
 
@@ -199,6 +201,8 @@ class _CategoryChip extends StatelessWidget {
         return Colors.indigo;
       case InsightCategory.generalGuidance:
         return Colors.grey;
+      case InsightCategory.symptomAnalysis:
+        return Colors.orange;
     }
   }
 }

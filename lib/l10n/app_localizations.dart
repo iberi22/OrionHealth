@@ -619,6 +619,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start Consultation'**
   String get startConsultation;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @personalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInfo;
+
+  /// No description provided for @birthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth Date'**
+  String get birthDate;
+
+  /// No description provided for @contactNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Number'**
+  String get contactNumber;
+
+  /// No description provided for @medicalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Information'**
+  String get medicalInformation;
+
+  /// No description provided for @bleDataExchange.
+  ///
+  /// In en, this message translates to:
+  /// **'BLE Data Exchange'**
+  String get bleDataExchange;
+
+  /// No description provided for @shareMyData.
+  ///
+  /// In en, this message translates to:
+  /// **'Share My Data'**
+  String get shareMyData;
+
+  /// No description provided for @sendHistoryToDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Send medical history to your doctor'**
+  String get sendHistoryToDoctor;
+
+  /// No description provided for @receiveData.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive Data'**
+  String get receiveData;
+
+  /// No description provided for @receiverMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive medical data from devices'**
+  String get receiverMode;
+
+  /// No description provided for @appPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'App Preferences'**
+  String get appPreferences;
+
+  /// No description provided for @pushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @llmSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'LLM Settings'**
+  String get llmSettings;
+
+  /// No description provided for @aiModelPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'AI model preferences'**
+  String get aiModelPreferences;
+
+  /// No description provided for @aboutOrionHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'About OrionHealth'**
+  String get aboutOrionHealth;
+
+  /// No description provided for @ourMissionVision.
+  ///
+  /// In en, this message translates to:
+  /// **'Our mission & vision'**
+  String get ourMissionVision;
+
+  /// No description provided for @privacySecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Security'**
+  String get privacySecurity;
+
+  /// No description provided for @biometricAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric Authentication'**
+  String get biometricAuth;
+
+  /// No description provided for @allowCloudApi.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Cloud API'**
+  String get allowCloudApi;
+
+  /// No description provided for @anonymizationActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymization active'**
+  String get anonymizationActive;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @profileSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved'**
+  String get profileSaved;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @logOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get logOut;
 }
 
 class _AppLocalizationsDelegate

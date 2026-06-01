@@ -76,6 +76,15 @@ class MockAuthRepository extends _i1.Mock implements _i2.AuthRepository {
         ),
         returnValue: _i3.Future<bool>.value(false),
       ) as _i3.Future<bool>);
+
+  @override
+  _i3.Future<bool> isBiometricsEnabled() => (super.noSuchMethod(
+        Invocation.method(
+          #isBiometricsEnabled,
+          [],
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 }
 
 /// A class which mocks [EncryptionService].

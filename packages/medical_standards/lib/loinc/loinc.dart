@@ -18,7 +18,7 @@ class LoincCode extends MedicalConcept {
   final String property;
   final String unit;
 
-  const LoincCode({
+  LoincCode({
     required this.code,
     required this.displayName,
     this.description,
@@ -27,6 +27,9 @@ class LoincCode extends MedicalConcept {
     required this.unit,
   });
 
+  String? get normalRange => description;
+  String? get interpretation => description != null ? 'Normal range: $description' : null;
+
   @override
   List<Object?> get props => [code, displayName, component, property];
 }
@@ -34,7 +37,7 @@ class LoincCode extends MedicalConcept {
 /// Comprehensive LOINC laboratory codes
 class LoincCommonLabs {
   // ==================== HEMATOLOGY / CBC ====================
-  static const LoincCode hemoglobin = LoincCode(
+  static final LoincCode hemoglobin = LoincCode(
     code: '718-7',
     displayName: 'Hemoglobin [Mass/volume] in Blood',
     component: 'Hemoglobin',
@@ -43,7 +46,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 13.5-17.5 g/dL, Female 12-16 g/dL',
   );
 
-  static const LoincCode hematocrit = LoincCode(
+  static final LoincCode hematocrit = LoincCode(
     code: '4544-3',
     displayName: 'Hematocrit [Volume fraction] of Blood',
     component: 'Hematocrit',
@@ -52,7 +55,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 38-50%, Female 34-44%',
   );
 
-  static const LoincCode whiteBloodCellCount = LoincCode(
+  static final LoincCode whiteBloodCellCount = LoincCode(
     code: '6690-2',
     displayName: 'Leukocytes [Count] in Blood by Automated count',
     component: 'WBC',
@@ -61,7 +64,7 @@ class LoincCommonLabs {
     description: 'Normal: 4.5-11.0 x10³/uL',
   );
 
-  static const LoincCode plateletCount = LoincCode(
+  static final LoincCode plateletCount = LoincCode(
     code: '777-3',
     displayName: 'Platelets [Count] in Blood by Automated count',
     component: 'Platelets',
@@ -71,7 +74,7 @@ class LoincCommonLabs {
   );
 
   // RBC indices
-  static const LoincCode rbcCount = LoincCode(
+  static final LoincCode rbcCount = LoincCode(
     code: '789-8',
     displayName: 'Erythrocytes [Count] in Blood by Automated count',
     component: 'RBC',
@@ -80,7 +83,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 4.5-5.9, Female 4.0-5.4 x10⁶/uL',
   );
 
-  static const LoincCode mcv = LoincCode(
+  static final LoincCode mcv = LoincCode(
     code: '787-2',
     displayName: 'Erythrocyte mean corpuscular volume [Entitic volume]',
     component: 'MCV',
@@ -89,7 +92,7 @@ class LoincCommonLabs {
     description: 'Normal: 80-100 fL (microcytic <80, macrocytic >100)',
   );
 
-  static const LoincCode mch = LoincCode(
+  static final LoincCode mch = LoincCode(
     code: '785-6',
     displayName: 'Erythrocyte mean corpuscular hemoglobin [Entitic mass]',
     component: 'MCH',
@@ -98,7 +101,7 @@ class LoincCommonLabs {
     description: 'Normal: 27-33 pg (hypochromic <27)',
   );
 
-  static const LoincCode mchc = LoincCode(
+  static final LoincCode mchc = LoincCode(
     code: '786-4',
     displayName: 'Erythrocyte mean corpuscular hemoglobin concentration [Mass/volume]',
     component: 'MCHC',
@@ -107,7 +110,7 @@ class LoincCommonLabs {
     description: 'Normal: 32-36 g/dL',
   );
 
-  static const LoincCode rdw = LoincCode(
+  static final LoincCode rdw = LoincCode(
     code: '788-0',
     displayName: 'Erythrocyte distribution width [Ratio]',
     component: 'RDW',
@@ -116,7 +119,7 @@ class LoincCommonLabs {
     description: 'Normal: 11.5-14.5% (elevated in anisocytosis)',
   );
 
-  static const LoincCode neutrophilsAbsolute = LoincCode(
+  static final LoincCode neutrophilsAbsolute = LoincCode(
     code: '753-4',
     displayName: 'Neutrophils [Number fraction] in Blood',
     component: 'Neutrophils (Absolute)',
@@ -125,7 +128,7 @@ class LoincCommonLabs {
     description: 'Normal: 1.5-7.5 x10³/uL',
   );
 
-  static const LoincCode lymphocytesAbsolute = LoincCode(
+  static final LoincCode lymphocytesAbsolute = LoincCode(
     code: '731-0',
     displayName: 'Lymphocytes [Number fraction] in Blood',
     component: 'Lymphocytes (Absolute)',
@@ -134,7 +137,7 @@ class LoincCommonLabs {
     description: 'Normal: 1.0-4.0 x10³/uL',
   );
 
-  static const LoincCode monocytesAbsolute = LoincCode(
+  static final LoincCode monocytesAbsolute = LoincCode(
     code: '742-7',
     displayName: 'Monocytes [Number fraction] in Blood',
     component: 'Monocytes (Absolute)',
@@ -143,7 +146,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.2-0.9 x10³/uL',
   );
 
-  static const LoincCode eosinophilsAbsolute = LoincCode(
+  static final LoincCode eosinophilsAbsolute = LoincCode(
     code: '713-8',
     displayName: 'Eosinophils [Number fraction] in Blood',
     component: 'Eosinophils (Absolute)',
@@ -152,7 +155,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.0-0.4 x10³/uL',
   );
 
-  static const LoincCode basophilsAbsolute = LoincCode(
+  static final LoincCode basophilsAbsolute = LoincCode(
     code: '704-7',
     displayName: 'Basophils [Number fraction] in Blood',
     component: 'Basophils (Absolute)',
@@ -161,7 +164,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.0-0.1 x10³/uL',
   );
 
-  static const LoincCode mpv = LoincCode(
+  static final LoincCode mpv = LoincCode(
     code: '32623-1',
     displayName: 'Mean platelet volume [Entitic volume] in Blood',
     component: 'MPV',
@@ -171,7 +174,7 @@ class LoincCommonLabs {
   );
 
   // ==================== LIVER FUNCTION ====================
-  static const LoincCode alt = LoincCode(
+  static final LoincCode alt = LoincCode(
     code: '1742-6',
     displayName: 'Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma',
     component: 'ALT',
@@ -180,7 +183,7 @@ class LoincCommonLabs {
     description: 'Normal: 7-56 U/L (hepatocyte injury marker)',
   );
 
-  static const LoincCode ast = LoincCode(
+  static final LoincCode ast = LoincCode(
     code: '1920-8',
     displayName: 'Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma',
     component: 'AST',
@@ -189,7 +192,7 @@ class LoincCommonLabs {
     description: 'Normal: 10-40 U/L (liver/cardiac marker)',
   );
 
-  static const LoincCode alp = LoincCode(
+  static final LoincCode alp = LoincCode(
     code: '6768-6',
     displayName: 'Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma',
     component: 'ALP',
@@ -198,7 +201,7 @@ class LoincCommonLabs {
     description: 'Normal: 44-147 U/L (cholestasis/bone marker)',
   );
 
-  static const LoincCode totalBilirubin = LoincCode(
+  static final LoincCode totalBilirubin = LoincCode(
     code: '1975-2',
     displayName: 'Bilirubin.total [Mass/volume] in Serum or Plasma',
     component: 'Total Bilirubin',
@@ -207,7 +210,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.2-1.2 mg/dL',
   );
 
-  static const LoincCode directBilirubin = LoincCode(
+  static final LoincCode directBilirubin = LoincCode(
     code: '1968-7',
     displayName: 'Bilirubin.direct [Mass/volume] in Serum or Plasma',
     component: 'Direct (Conjugated) Bilirubin',
@@ -216,7 +219,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.0-0.3 mg/dL (elevated in obstruction)',
   );
 
-  static const LoincCode indirectBilirubin = LoincCode(
+  static final LoincCode indirectBilirubin = LoincCode(
     code: '1971-1',
     displayName: 'Bilirubin.indirect [Mass/volume] in Serum or Plasma',
     component: 'Indirect (Unconjugated) Bilirubin',
@@ -225,7 +228,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.2-0.8 mg/dL (elevated in hemolysis)',
   );
 
-  static const LoincCode ggt = LoincCode(
+  static final LoincCode ggt = LoincCode(
     code: '2324-2',
     displayName: 'Gamma-glutamyltransferase [Enzymatic activity/volume] in Serum or Plasma',
     component: 'GGT',
@@ -234,7 +237,7 @@ class LoincCommonLabs {
     description: 'Normal: 0-51 U/L (cholestasis/alcohol marker)',
   );
 
-  static const LoincCode ldH = LoincCode(
+  static final LoincCode ldH = LoincCode(
     code: '2532-0',
     displayName: 'Lactate dehydrogenase [Enzymatic activity/volume] in Serum or Plasma',
     component: 'LDH',
@@ -243,7 +246,7 @@ class LoincCommonLabs {
     description: 'Normal: 140-280 U/L (tissue damage marker)',
   );
 
-  static const LoincCode totalProtein = LoincCode(
+  static final LoincCode totalProtein = LoincCode(
     code: '2951-3',
     displayName: 'Protein.total [Mass/volume] in Serum or Plasma',
     component: 'Total Protein',
@@ -252,7 +255,7 @@ class LoincCommonLabs {
     description: 'Normal: 6.0-8.3 g/dL',
   );
 
-  static const LoincCode albumin = LoincCode(
+  static final LoincCode albumin = LoincCode(
     code: '1751-7',
     displayName: 'Albumin [Mass/volume] in Serum or Plasma',
     component: 'Albumin',
@@ -261,7 +264,7 @@ class LoincCommonLabs {
     description: 'Normal: 3.5-5.0 g/dL (low in liver disease/malnutrition)',
   );
 
-  static const LoincCode pt = LoincCode(
+  static final LoincCode pt = LoincCode(
     code: '5902-0',
     displayName: 'Prothrombin time (PT) [Time] in Blood by Coagulation assay',
     component: 'PT',
@@ -270,7 +273,7 @@ class LoincCommonLabs {
     description: 'Normal: 11-13.5 sec (liver synthetic function)',
   );
 
-  static const LoincCode inr = LoincCode(
+  static final LoincCode inr = LoincCode(
     code: '6301-6',
     displayName: 'International normalized ratio of PT',
     component: 'INR',
@@ -279,7 +282,7 @@ class LoincCommonLabs {
     description: 'Target: 2.0-3.0 on warfarin (liver synthetic function)',
   );
 
-  static const LoincCode aptt = LoincCode(
+  static final LoincCode aptt = LoincCode(
     code: '3173-2',
     displayName: 'Partial thromboplastin time (PTT) [Time] in Blood by Coagulation assay',
     component: 'PTT',
@@ -289,7 +292,7 @@ class LoincCommonLabs {
   );
 
   // ==================== KIDNEY FUNCTION ====================
-  static const LoincCode creatinine = LoincCode(
+  static final LoincCode creatinine = LoincCode(
     code: '2160-0',
     displayName: 'Creatinine [Mass/volume] in Serum or Plasma',
     component: 'Creatinine',
@@ -298,7 +301,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 0.7-1.3, Female 0.6-1.1 mg/dL',
   );
 
-  static const LoincCode bun = LoincCode(
+  static final LoincCode bun = LoincCode(
     code: '3094-0',
     displayName: 'Urea nitrogen [Mass/volume] in Serum or Plasma',
     component: 'BUN',
@@ -307,7 +310,7 @@ class LoincCommonLabs {
     description: 'Normal: 7-20 mg/dL',
   );
 
-  static const LoincCode egfr = LoincCode(
+  static final LoincCode egfr = LoincCode(
     code: '69405-6',
     displayName: 'Glomerular filtration rate/1.73 sq M.Averageed [Volume rate/Area] in Serum or Plasma',
     component: 'eGFR',
@@ -316,7 +319,7 @@ class LoincCommonLabs {
     description: 'Normal >90 mL/min/1.73m²; CKD stages 3-5 when <60',
   );
 
-  static const LoincCode egfrNonAfricanAmerican = LoincCode(
+  static final LoincCode egfrNonAfricanAmerican = LoincCode(
     code: '88294-4',
     displayName: 'Glomerular filtration rate/1.73 sq M.Averageed by Creatinine-based formula (MDRD) in Serum or Plasma',
     component: 'eGFR (MDRD)',
@@ -325,7 +328,7 @@ class LoincCommonLabs {
     description: 'eGFR using MDRD formula (non-African American)',
   );
 
-  static const LoincCode egfrAfricanAmerican = LoincCode(
+  static final LoincCode egfrAfricanAmerican = LoincCode(
     code: '88293-6',
     displayName: 'Glomerular filtration rate/1.73 sq M.Averageed by Creatinine-based formula (MDRD) in Serum or Plasma',
     component: 'eGFR (MDRD AA)',
@@ -334,7 +337,7 @@ class LoincCommonLabs {
     description: 'eGFR using MDRD formula (African American)',
   );
 
-  static const LoincCode egfrCkdEpi = LoincCode(
+  static final LoincCode egfrCkdEpi = LoincCode(
     code: '48580-6',
     displayName: 'Glomerular filtration rate/1.73 sq M.Averageed by Creatinine-based CKD-EPI formula in Serum or Plasma',
     component: 'eGFR (CKD-EPI)',
@@ -343,7 +346,7 @@ class LoincCommonLabs {
     description: 'eGFR using CKD-EPI formula (preferred over MDRD)',
   );
 
-  static const LoincCode creatinineUrine = LoincCode(
+  static final LoincCode creatinineUrine = LoincCode(
     code: '2161-8',
     displayName: 'Creatinine [Mass/volume] in Urine',
     component: 'Urine Creatinine',
@@ -352,7 +355,7 @@ class LoincCommonLabs {
     description: 'Spot urine creatinine',
   );
 
-  static const LoincCode proteinUrine = LoincCode(
+  static final LoincCode proteinUrine = LoincCode(
     code: '2888-6',
     displayName: 'Protein [Mass/volume] in 24 hour Urine',
     component: 'Protein (24h urine)',
@@ -361,7 +364,7 @@ class LoincCommonLabs {
     description: 'Normal: <150 mg/24h (proteinuria >300 mg/24h)',
   );
 
-  static const LoincCode proteinUrineSpot = LoincCode(
+  static final LoincCode proteinUrineSpot = LoincCode(
     code: '1742-6',
     displayName: 'Protein [Mass/volume] in Urine by Dipstick',
     component: 'Urine Protein (Spot)',
@@ -370,7 +373,7 @@ class LoincCommonLabs {
     description: 'Dipstick: Negative to Trace',
   );
 
-  static const LoincCode microalbuminUrine = LoincCode(
+  static final LoincCode microalbuminUrine = LoincCode(
     code: '14959-1',
     displayName: 'Microalbumin [Mass/volume] in Urine',
     component: 'Microalbumin (Urine)',
@@ -379,7 +382,7 @@ class LoincCommonLabs {
     description: 'Normal: <30 mg/L (microalbuminuria 30-300 mg/L)',
   );
 
-  static const LoincCode albuminCreatinineRatio = LoincCode(
+  static final LoincCode albuminCreatinineRatio = LoincCode(
     code: '14958-3',
     displayName: 'Albumin/Creatinine ratio [Ratio] in Urine',
     component: 'ACR',
@@ -388,7 +391,7 @@ class LoincCommonLabs {
     description: 'Normal: <30 mg/g; A2: 30-300; A3: >300 mg/g',
   );
 
-  static const LoincCode bunCreatinineRatio = LoincCode(
+  static final LoincCode bunCreatinineRatio = LoincCode(
     code: '48771-1',
     displayName: 'Urea nitrogen/Creatinine ratio [Mass ratio] in Serum or Plasma',
     component: 'BUN/Creatinine Ratio',
@@ -397,7 +400,7 @@ class LoincCommonLabs {
     description: 'Normal: 10-20:1 (elevated in prerenal azotemia)',
   );
 
-  static const LoincCode uricAcid = LoincCode(
+  static final LoincCode uricAcid = LoincCode(
     code: '3084-1',
     displayName: 'Uric acid [Mass/volume] in Serum or Plasma',
     component: 'Uric Acid',
@@ -406,7 +409,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 3.4-7.0, Female 2.4-6.0 mg/dL',
   );
 
-  static const LoincCode cystatinC = LoincCode(
+  static final LoincCode cystatinC = LoincCode(
     code: '1959-6',
     displayName: 'Cystatin C [Mass/volume] in Serum or Plasma',
     component: 'Cystatin C',
@@ -416,7 +419,7 @@ class LoincCommonLabs {
   );
 
   // ==================== METABOLIC PANEL ====================
-  static const LoincCode glucose = LoincCode(
+  static final LoincCode glucose = LoincCode(
     code: '2345-7',
     displayName: 'Glucose [Mass/volume] in Serum or Plasma',
     component: 'Glucose (Fasting)',
@@ -425,7 +428,7 @@ class LoincCommonLabs {
     description: 'Fasting normal: 70-100 mg/dL; Diabetes: >=126 mg/dL',
   );
 
-  static const LoincCode glucoseRandom = LoincCode(
+  static final LoincCode glucoseRandom = LoincCode(
     code: '14749-6',
     displayName: 'Glucose [Mass/volume] in Serum or Plasma by Fasting',
     component: 'Glucose (Random)',
@@ -434,7 +437,7 @@ class LoincCommonLabs {
     description: 'Random glucose: normal <140 mg/dL; Diabetes: >=200 mg/dL',
   );
 
-  static const LoincCode hemoglobinA1c = LoincCode(
+  static final LoincCode hemoglobinA1c = LoincCode(
     code: '4548-4',
     displayName: 'Hemoglobin A1c/Hemoglobin.total in Blood',
     component: 'HbA1c',
@@ -443,7 +446,7 @@ class LoincCommonLabs {
     description: 'Normal <5.7%; Prediabetes 5.7-6.4%; Diabetes >=6.5%',
   );
 
-  static const LoincCode glucoseTwoHourPostPrandial = LoincCode(
+  static final LoincCode glucoseTwoHourPostPrandial = LoincCode(
     code: '1554-5',
     displayName: 'Glucose [Mass/volume] in Serum or Plasma --2 hours post 75g PO',
     component: 'Glucose (2h Postprandial)',
@@ -452,7 +455,7 @@ class LoincCommonLabs {
     description: 'Normal <140 mg/dL; Prediabetes 140-199; Diabetes >=200 mg/dL',
   );
 
-  static const LoincCode insulin = LoincCode(
+  static final LoincCode insulin = LoincCode(
     code: '20448-4',
     displayName: 'Insulin [Mass/volume] in Serum or Plasma',
     component: 'Insulin',
@@ -461,7 +464,7 @@ class LoincCommonLabs {
     description: 'Fasting: 2.6-24.9 mIU/L (insulin resistance marker)',
   );
 
-  static const LoincCode cpeptide = LoincCode(
+  static final LoincCode cpeptide = LoincCode(
     code: '1989-4',
     displayName: 'C-peptide of insulin [Mass/volume] in Serum or Plasma',
     component: 'C-Peptide',
@@ -471,7 +474,7 @@ class LoincCommonLabs {
   );
 
   // Electrolytes
-  static const LoincCode sodium = LoincCode(
+  static final LoincCode sodium = LoincCode(
     code: '2951-2',
     displayName: 'Sodium [Moles/volume] in Serum or Plasma',
     component: 'Sodium',
@@ -480,7 +483,7 @@ class LoincCommonLabs {
     description: 'Normal: 136-145 mmol/L',
   );
 
-  static const LoincCode potassium = LoincCode(
+  static final LoincCode potassium = LoincCode(
     code: '2823-3',
     displayName: 'Potassium [Moles/volume] in Serum or Plasma',
     component: 'Potassium',
@@ -489,7 +492,7 @@ class LoincCommonLabs {
     description: 'Normal: 3.5-5.0 mmol/L',
   );
 
-  static const LoincCode chloride = LoincCode(
+  static final LoincCode chloride = LoincCode(
     code: '2075-0',
     displayName: 'Chloride [Moles/volume] in Serum or Plasma',
     component: 'Chloride',
@@ -498,7 +501,7 @@ class LoincCommonLabs {
     description: 'Normal: 96-106 mmol/L',
   );
 
-  static const LoincCode carbonDioxide = LoincCode(
+  static final LoincCode carbonDioxide = LoincCode(
     code: '2028-9',
     displayName: 'Carbon dioxide [Moles/volume] in Serum or Plasma',
     component: 'CO2 (Bicarbonate)',
@@ -507,7 +510,7 @@ class LoincCommonLabs {
     description: 'Normal: 23-29 mmol/L',
   );
 
-  static const LoincCode anionGap = LoincCode(
+  static final LoincCode anionGap = LoincCode(
     code: '1966-1',
     displayName: 'Anion gap',
     component: 'Anion Gap',
@@ -516,7 +519,7 @@ class LoincCommonLabs {
     description: 'Normal: 8-12 mmol/L (elevated in metabolic acidosis)',
   );
 
-  static const LoincCode calcium = LoincCode(
+  static final LoincCode calcium = LoincCode(
     code: '17861-6',
     displayName: 'Calcium [Mass/volume] in Serum or Plasma',
     component: 'Calcium',
@@ -525,7 +528,7 @@ class LoincCommonLabs {
     description: 'Normal: 8.5-10.5 mg/dL',
   );
 
-  static const LoincCode calciumIonized = LoincCode(
+  static final LoincCode calciumIonized = LoincCode(
     code: '19923-1',
     displayName: 'Calcium.ionized [Mass/volume] in Serum or Plasma',
     component: 'Calcium (Ionized)',
@@ -534,7 +537,7 @@ class LoincCommonLabs {
     description: 'Normal: 4.5-5.6 mg/dL',
   );
 
-  static const LoincCode phosphorus = LoincCode(
+  static final LoincCode phosphorus = LoincCode(
     code: '2777-1',
     displayName: 'Phosphate [Mass/volume] in Serum or Plasma',
     component: 'Phosphorus',
@@ -543,7 +546,7 @@ class LoincCommonLabs {
     description: 'Normal: 2.5-4.5 mg/dL',
   );
 
-  static const LoincCode magnesium = LoincCode(
+  static final LoincCode magnesium = LoincCode(
     code: '2597-2',
     displayName: 'Magnesium [Mass/volume] in Serum or Plasma',
     component: 'Magnesium',
@@ -552,7 +555,7 @@ class LoincCommonLabs {
     description: 'Normal: 1.7-2.2 mg/dL',
   );
 
-  static const LoincCode iron = LoincCode(
+  static final LoincCode iron = LoincCode(
     code: '2508-8',
     displayName: 'Iron [Mass/volume] in Serum or Plasma',
     component: 'Iron (Serum)',
@@ -561,7 +564,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 65-175, Female 50-170 ug/dL',
   );
 
-  static const LoincCode tibc = LoincCode(
+  static final LoincCode tibc = LoincCode(
     code: '2501-3',
     displayName: 'Iron binding capacity unsaturated [Mass/volume] in Serum or Plasma',
     component: 'TIBC',
@@ -570,7 +573,7 @@ class LoincCommonLabs {
     description: 'Normal: 250-370 ug/dL',
   );
 
-  static const LoincCode ferritin = LoincCode(
+  static final LoincCode ferritin = LoincCode(
     code: '2276-4',
     displayName: 'Ferritin [Mass/volume] in Serum or Plasma',
     component: 'Ferritin',
@@ -579,7 +582,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 20-250, Female 10-120 ng/mL',
   );
 
-  static const LoincCode ironSaturation = LoincCode(
+  static final LoincCode ironSaturation = LoincCode(
     code: '2502-1',
     displayName: 'Iron saturation [Mass ratio] in Serum or Plasma',
     component: 'Iron Saturation',
@@ -589,7 +592,7 @@ class LoincCommonLabs {
   );
 
   // ==================== LIPID PANEL ====================
-  static const LoincCode totalCholesterol = LoincCode(
+  static final LoincCode totalCholesterol = LoincCode(
     code: '2093-3',
     displayName: 'Cholesterol [Mass/volume] in Serum or Plasma',
     component: 'Total Cholesterol',
@@ -598,7 +601,7 @@ class LoincCommonLabs {
     description: 'Desirable <200 mg/dL; Borderline high 200-239; High >=240',
   );
 
-  static const LoincCode ldlCholesterol = LoincCode(
+  static final LoincCode ldlCholesterol = LoincCode(
     code: '13457-7',
     displayName: 'Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation',
     component: 'LDL Cholesterol (Calculated)',
@@ -607,7 +610,7 @@ class LoincCommonLabs {
     description: 'Optimal <100; Near optimal 100-129; Borderline high 130-159; High 160-189; Very high >=190',
   );
 
-  static const LoincCode ldlDirect = LoincCode(
+  static final LoincCode ldlDirect = LoincCode(
     code: '2089-1',
     displayName: 'Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay',
     component: 'LDL Cholesterol (Direct)',
@@ -616,7 +619,7 @@ class LoincCommonLabs {
     description: 'Direct measurement when triglycerides >400 mg/dL',
   );
 
-  static const LoincCode hdlCholesterol = LoincCode(
+  static final LoincCode hdlCholesterol = LoincCode(
     code: '2085-9',
     displayName: 'Cholesterol in HDL [Mass/volume] in Serum or Plasma',
     component: 'HDL Cholesterol',
@@ -625,7 +628,7 @@ class LoincCommonLabs {
     description: 'Male >=40, Female >=50 mg/dL (higher is protective)',
   );
 
-  static const LoincCode triglycerides = LoincCode(
+  static final LoincCode triglycerides = LoincCode(
     code: '2571-8',
     displayName: 'Triglycerides [Mass/volume] in Serum or Plasma',
     component: 'Triglycerides',
@@ -634,7 +637,7 @@ class LoincCommonLabs {
     description: 'Normal <150; Borderline high 150-199; High 200-499; Very high >=500',
   );
 
-  static const LoincCode nonHdlCholesterol = LoincCode(
+  static final LoincCode nonHdlCholesterol = LoincCode(
     code: '2514-6',
     displayName: 'Cholesterol non-HDL [Mass/volume] in Serum or Plasma',
     component: 'Non-HDL Cholesterol',
@@ -643,7 +646,7 @@ class LoincCommonLabs {
     description: 'Optimal: <130 mg/dL (total minus HDL)',
   );
 
-  static const LoincCode vldl = LoincCode(
+  static final LoincCode vldl = LoincCode(
     code: '2532-0',
     displayName: 'Cholesterol in VLDL [Mass/volume] in Serum or Plasma by calculation',
     component: 'VLDL Cholesterol',
@@ -652,7 +655,7 @@ class LoincCommonLabs {
     description: 'Normal: 2-30 mg/dL (calculated as TG/5)',
   );
 
-  static const LoincCode apolipoproteinA = LoincCode(
+  static final LoincCode apolipoproteinA = LoincCode(
     code: '1852-3',
     displayName: 'Apolipoprotein A-I [Mass/volume] in Serum or Plasma',
     component: 'Apo A-I',
@@ -661,7 +664,7 @@ class LoincCommonLabs {
     description: 'Normal: 100-180 mg/dL (HDL structural protein)',
   );
 
-  static const LoincCode apolipoproteinB = LoincCode(
+  static final LoincCode apolipoproteinB = LoincCode(
     code: '1853-1',
     displayName: 'Apolipoprotein B [Mass/volume] in Serum or Plasma',
     component: 'Apo B',
@@ -670,7 +673,7 @@ class LoincCommonLabs {
     description: 'Normal: 60-140 mg/dL (LDL structural protein)',
   );
 
-  static const LoincCode lpA = LoincCode(
+  static final LoincCode lpA = LoincCode(
     code: '2942-2',
     displayName: 'Lipoprotein (a) [Mass/volume] in Serum or Plasma',
     component: 'Lp(a)',
@@ -680,7 +683,7 @@ class LoincCommonLabs {
   );
 
   // ==================== INFLAMMATORY MARKERS ====================
-  static const LoincCode crp = LoincCode(
+  static final LoincCode crp = LoincCode(
     code: '1988-5',
     displayName: 'C-reactive protein [Mass/volume] in Serum or Plasma by High sensitivity method',
     component: 'hs-CRP',
@@ -689,7 +692,7 @@ class LoincCommonLabs {
     description: 'Low risk <1.0; Intermediate 1.0-3.0; High >3.0 mg/L',
   );
 
-  static const LoincCode crpStandard = LoincCode(
+  static final LoincCode crpStandard = LoincCode(
     code: '30522-7',
     displayName: 'C-reactive protein [Mass/volume] in Serum or Plasma',
     component: 'CRP (Standard)',
@@ -698,7 +701,7 @@ class LoincCommonLabs {
     description: 'Normal <10 mg/L (acute inflammation marker)',
   );
 
-  static const LoincCode esr = LoincCode(
+  static final LoincCode esr = LoincCode(
     code: '30341-2',
     displayName: 'Erythrocyte sedimentation rate [Velocity] in Blood',
     component: 'ESR',
@@ -707,7 +710,7 @@ class LoincCommonLabs {
     description: 'Normal: Male age/2, Female (age+10)/2 (chronic inflammation)',
   );
 
-  static const LoincCode procalcitonin = LoincCode(
+  static final LoincCode procalcitonin = LoincCode(
     code: '51801-1',
     displayName: 'Procalcitonin [Mass/volume] in Serum or Plasma',
     component: 'PCT',
@@ -716,7 +719,7 @@ class LoincCommonLabs {
     description: 'Normal <0.05; Bacterial infection >0.25; Sepsis >2.0 ng/mL',
   );
 
-  static const LoincCode ferritinHigh = LoincCode(
+  static final LoincCode ferritinHigh = LoincCode(
     code: '2276-4',
     displayName: 'Ferritin [Mass/volume] in Serum or Plasma',
     component: 'Ferritin (Inflammation)',
@@ -726,7 +729,7 @@ class LoincCommonLabs {
   );
 
   // ==================== VITAMINS ====================
-  static const LoincCode vitaminD25Oh = LoincCode(
+  static final LoincCode vitaminD25Oh = LoincCode(
     code: '1989-3',
     displayName: 'Vitamin D, 25-Hydroxy [Mass/volume] in Serum or Plasma',
     component: '25-Hydroxy Vitamin D',
@@ -735,7 +738,7 @@ class LoincCommonLabs {
     description: 'Deficient <20; Insufficient 20-29; Sufficient 30-100; Toxic >150 ng/mL',
   );
 
-  static const LoincCode vitaminB12 = LoincCode(
+  static final LoincCode vitaminB12 = LoincCode(
     code: '2132-9',
     displayName: 'Cobalamin (Vitamin B12) [Mass/volume] in Serum or Plasma',
     component: 'Vitamin B12',
@@ -744,7 +747,7 @@ class LoincCommonLabs {
     description: 'Normal: 200-900 pg/mL; Deficient <200 pg/mL',
   );
 
-  static const LoincCode folate = LoincCode(
+  static final LoincCode folate = LoincCode(
     code: '2284-8',
     displayName: 'Folate [Mass/volume] in Serum or Plasma',
     component: 'Folate (Serum)',
@@ -753,7 +756,7 @@ class LoincCommonLabs {
     description: 'Normal: >3 ng/mL; Deficient <3 ng/mL',
   );
 
-  static const LoincCode folateRbc = LoincCode(
+  static final LoincCode folateRbc = LoincCode(
     code: '2278-0',
     displayName: 'Folate [Mass/volume] in Red Blood Cells',
     component: 'Folate (RBC)',
@@ -762,7 +765,7 @@ class LoincCommonLabs {
     description: 'Normal: 160-700 ng/mL (reflects tissue folate stores)',
   );
 
-  static const LoincCode homocysteine = LoincCode(
+  static final LoincCode homocysteine = LoincCode(
     code: '25428-4',
     displayName: 'Homocysteine [Mass/volume] in Serum or Plasma',
     component: 'Homocysteine',
@@ -771,7 +774,7 @@ class LoincCommonLabs {
     description: 'Normal: 4-15 umol/L (elevated in B12/folate deficiency)',
   );
 
-  static const LoincCode methylmalonicAcid = LoincCode(
+  static final LoincCode methylmalonicAcid = LoincCode(
     code: '2891-9',
     displayName: 'Methylmalonic acid [Mass/volume] in Serum or Plasma',
     component: 'MMA',
@@ -780,7 +783,7 @@ class LoincCommonLabs {
     description: 'Normal: 0-0.4 umol/L (specific for B12 deficiency)',
   );
 
-  static const LoincCode vitaminE = LoincCode(
+  static final LoincCode vitaminE = LoincCode(
     code: '2252-5',
     displayName: 'Vitamin E [Mass/volume] in Serum or Plasma',
     component: 'Vitamin E (Alpha-tocopherol)',
@@ -789,7 +792,7 @@ class LoincCommonLabs {
     description: 'Normal: 5-18 mg/L',
   );
 
-  static const LoincCode vitaminK = LoincCode(
+  static final LoincCode vitaminK = LoincCode(
     code: '9038-9',
     displayName: 'Phylloquinone (Vitamin K1) [Mass/volume] in Serum or Plasma',
     component: 'Vitamin K',
@@ -799,7 +802,7 @@ class LoincCommonLabs {
   );
 
   // ==================== THYROID ====================
-  static const LoincCode tsh = LoincCode(
+  static final LoincCode tsh = LoincCode(
     code: '3016-3',
     displayName: 'Thyrotropin [Units/volume] in Serum or Plasma',
     component: 'TSH',
@@ -808,7 +811,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.4-4.0 mIU/L',
   );
 
-  static const LoincCode freeT4 = LoincCode(
+  static final LoincCode freeT4 = LoincCode(
     code: '3026-2',
     displayName: 'Thyroxine free T4 [Mass/volume] in Serum or Plasma',
     component: 'Free T4',
@@ -817,7 +820,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.8-1.8 ng/dL',
   );
 
-  static const LoincCode freeT3 = LoincCode(
+  static final LoincCode freeT3 = LoincCode(
     code: '3053-6',
     displayName: 'Triiodothyronine free T3 [Mass/volume] in Serum or Plasma',
     component: 'Free T3',
@@ -826,7 +829,7 @@ class LoincCommonLabs {
     description: 'Normal: 2.3-4.2 pg/mL',
   );
 
-  static const LoincCode totalT3 = LoincCode(
+  static final LoincCode totalT3 = LoincCode(
     code: '3051-0',
     displayName: 'Triiodothyronine T3 [Mass/volume] in Serum or Plasma',
     component: 'Total T3',
@@ -836,7 +839,7 @@ class LoincCommonLabs {
     description: 'Normal: 80-200 ng/dL',
   );
 
-  static const LoincCode totalT4 = LoincCode(
+  static final LoincCode totalT4 = LoincCode(
     code: '3024-7',
     displayName: 'Thyroxine T4 [Mass/volume] in Serum or Plasma',
     component: 'Total T4',
@@ -845,7 +848,7 @@ class LoincCommonLabs {
     description: 'Normal: 4.5-12.5 ug/dL',
   );
 
-  static const LoincCode tpoAntibody = LoincCode(
+  static final LoincCode tpoAntibody = LoincCode(
     code: '3016-3',
     displayName: 'Thyroid peroxidase antibody [Titer] in Serum or Plasma',
     component: 'TPO Antibody',
@@ -854,7 +857,7 @@ class LoincCommonLabs {
     description: 'Normal: <35 IU/mL (elevated in Hashimoto/Graves)',
   );
 
-  static const LoincCode tsgAntibody = LoincCode(
+  static final LoincCode tsgAntibody = LoincCode(
     code: '2878-7',
     displayName: 'Thyroglobulin antibody [Titer] in Serum or Plasma',
     component: 'TSI/TRAb',
@@ -864,7 +867,7 @@ class LoincCommonLabs {
   );
 
   // ==================== URINALYSIS ====================
-  static const LoincCode urinePh = LoincCode(
+  static final LoincCode urinePh = LoincCode(
     code: '2756-5',
     displayName: 'pH [Potential of hydrogen] in Urine by Dipstick',
     component: 'Urine pH',
@@ -873,7 +876,7 @@ class LoincCommonLabs {
     description: 'Normal: 4.5-8.0 (acidic diet lowers, infection raises)',
   );
 
-  static const LoincCode urineSpecificGravity = LoincCode(
+  static final LoincCode urineSpecificGravity = LoincCode(
     code: '5811-3',
     displayName: 'Specific gravity of Urine',
     component: 'Urine Specific Gravity',
@@ -882,7 +885,7 @@ class LoincCommonLabs {
     description: 'Normal: 1.005-1.030 (concentrated = hydration status)',
   );
 
-  static const LoincCode urineGlucose = LoincCode(
+  static final LoincCode urineGlucose = LoincCode(
     code: '5792-5',
     displayName: 'Glucose [Mass/volume] in Urine by Dipstick',
     component: 'Urine Glucose',
@@ -891,7 +894,7 @@ class LoincCommonLabs {
     description: 'Normal: Negative (positive = diabetes/uncontrolled)',
   );
 
-  static const LoincCode urineKetones = LoincCode(
+  static final LoincCode urineKetones = LoincCode(
     code: '2514-6',
     displayName: 'Ketones [Mass/volume] in Urine by Dipstick',
     component: 'Urine Ketones',
@@ -900,7 +903,7 @@ class LoincCommonLabs {
     description: 'Normal: Negative (positive = DKA/starvation)',
   );
 
-  static const LoincCode urineBlood = LoincCode(
+  static final LoincCode urineBlood = LoincCode(
     code: '5794-1',
     displayName: 'Hemoglobin [Mass/volume] in Urine by Dipstick',
     component: 'Urine Blood',
@@ -909,7 +912,7 @@ class LoincCommonLabs {
     description: 'Normal: Negative (positive = hematuria/RBCs)',
   );
 
-  static const LoincCode urineLeukocyteEsterase = LoincCode(
+  static final LoincCode urineLeukocyteEsterase = LoincCode(
     code: '5799-0',
     displayName: 'Leukocyte esterase [Enzymatic activity] in Urine by Dipstick',
     component: 'Urine Leukocyte Esterase',
@@ -918,7 +921,7 @@ class LoincCommonLabs {
     description: 'Normal: Negative (positive = WBCs/UTI)',
   );
 
-  static const LoincCode urineNitrite = LoincCode(
+  static final LoincCode urineNitrite = LoincCode(
     code: '5802-2',
     displayName: 'Nitrite [Presence] in Urine by Dipstick',
     component: 'Urine Nitrite',
@@ -927,7 +930,7 @@ class LoincCommonLabs {
     description: 'Normal: Negative (positive = bacterial UTI)',
   );
 
-  static const LoincCode urineProteinDipstick = LoincCode(
+  static final LoincCode urineProteinDipstick = LoincCode(
     code: '20454-0',
     displayName: 'Protein [Mass/volume] in Urine by Dipstick',
     component: 'Urine Protein (Dipstick)',
@@ -936,7 +939,7 @@ class LoincCommonLabs {
     description: 'Normal: Negative to Trace; Significant proteinuria >=30 mg/dL',
   );
 
-  static const LoincCode urineBilirubin = LoincCode(
+  static final LoincCode urineBilirubin = LoincCode(
     code: '20454-1',
     displayName: 'Bilirubin [Mass/volume] in Urine by Dipstick',
     component: 'Urine Bilirubin',
@@ -945,7 +948,7 @@ class LoincCommonLabs {
     description: 'Normal: Negative (positive = liver disease/obstruction)',
   );
 
-  static const LoincCode urineUrobilinogen = LoincCode(
+  static final LoincCode urineUrobilinogen = LoincCode(
     code: '20454-2',
     displayName: 'Urobilinogen [Mass/volume] in Urine',
     component: 'Urine Urobilinogen',
@@ -954,7 +957,7 @@ class LoincCommonLabs {
     description: 'Normal: 0.1-1.0 mg/dL (elevated in hemolysis/liver disease)',
   );
 
-  static const LoincCode urineColor = LoincCode(
+  static final LoincCode urineColor = LoincCode(
     code: '5778-6',
     displayName: 'Color of Urine',
     component: 'Urine Color',
@@ -963,7 +966,7 @@ class LoincCommonLabs {
     description: 'Normal: Pale yellow (dark = dehydration/concentrated)',
   );
 
-  static const LoincCode urineAppearance = LoincCode(
+  static final LoincCode urineAppearance = LoincCode(
     code: '5779-4',
     displayName: 'Appearance of Urine',
     component: 'Urine Appearance',
@@ -973,7 +976,7 @@ class LoincCommonLabs {
   );
 
   // ==================== CARDIAC MARKERS ====================
-  static const LoincCode troponinI = LoincCode(
+  static final LoincCode troponinI = LoincCode(
     code: '6598-7',
     displayName: 'Troponin I [Mass/volume] in Serum or Plasma',
     component: 'Troponin I',
@@ -982,7 +985,7 @@ class LoincCommonLabs {
     description: 'Normal: <0.04 ng/mL (acute MI >0.04)',
   );
 
-  static const LoincCode troponinTHighSensitivity = LoincCode(
+  static final LoincCode troponinTHighSensitivity = LoincCode(
     code: '89579-1',
     displayName: 'Troponin T.cardiac [Mass/volume] in Serum or Plasma by High sensitivity method',
     component: 'hs-Troponin T',
@@ -991,7 +994,7 @@ class LoincCommonLabs {
     description: 'Normal: <14 ng/L; elevated in MI, heart failure',
   );
 
-  static const LoincCode bnp = LoincCode(
+  static final LoincCode bnp = LoincCode(
     code: '33762-6',
     displayName: 'Natriuretic peptide B [Mass/volume] in Serum or Plasma',
     component: 'BNP',
@@ -1000,7 +1003,7 @@ class LoincCommonLabs {
     description: 'Normal <100 pg/mL; Heart failure: >400 pg/mL',
   );
 
-  static const LoincCode ntProbnp = LoincCode(
+  static final LoincCode ntProbnp = LoincCode(
     code: '33762-6',
     displayName: 'Natriuretic peptide B NTpro [Mass/volume] in Serum or Plasma',
     component: 'NT-proBNP',
@@ -1009,7 +1012,7 @@ class LoincCommonLabs {
     description: 'Normal <125 pg/mL (<75y); Heart failure >2000 pg/mL',
   );
 
-  static const LoincCode ckTotal = LoincCode(
+  static final LoincCode ckTotal = LoincCode(
     code: '2157-6',
     displayName: 'Creatine kinase [Enzymatic activity/volume] in Serum or Plasma',
     component: 'Total CK',
@@ -1018,7 +1021,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 39-308, Female 26-192 U/L (muscle damage)',
   );
 
-  static const LoincCode ckMb = LoincCode(
+  static final LoincCode ckMb = LoincCode(
     code: '6777-7',
     displayName: 'Creatine kinase MB isoenzyme [Enzymatic activity/volume] in Serum or Plasma',
     component: 'CK-MB',
@@ -1027,7 +1030,7 @@ class LoincCommonLabs {
     description: 'Normal: 0-6% of total (cardiac specific when elevated)',
   );
 
-  static const LoincCode myoglobin = LoincCode(
+  static final LoincCode myoglobin = LoincCode(
     code: '2601-2',
     displayName: 'Myoglobin [Mass/volume] in Serum or Plasma',
     component: 'Myoglobin',
@@ -1036,7 +1039,7 @@ class LoincCommonLabs {
     description: 'Normal: Male 25-72, Female 25-58 ng/mL (early MI marker)',
   );
 
-  static const LoincCode ldlCholesterolDirect = LoincCode(
+  static final LoincCode ldlCholesterolDirect = LoincCode(
     code: '18263-4',
     displayName: 'Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct measurement',
     component: 'LDL Direct',
@@ -1046,7 +1049,7 @@ class LoincCommonLabs {
   );
 
   // ==================== ALL LABS ====================
-  static const List<LoincCode> all = [
+  static final List<LoincCode> all = [
     // CBC
     hemoglobin, hematocrit, whiteBloodCellCount, plateletCount,
     rbcCount, mcv, mch, mchc, rdw, neutrophilsAbsolute, lymphocytesAbsolute,

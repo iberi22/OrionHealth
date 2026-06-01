@@ -2,6 +2,7 @@ import '../../domain/entities/medical_query.dart';
 import '../../domain/entities/medical_insight.dart';
 import '../../domain/entities/ai_response.dart';
 import '../../domain/services/medical_analysis_service.dart';
+import 'medical_response_generator.dart';
 
 /// Adapter for medical LLM API integration.
 ///

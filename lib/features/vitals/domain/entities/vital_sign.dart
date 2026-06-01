@@ -8,6 +8,10 @@ enum VitalSignType {
   bloodPressureSystolic,
   bloodPressureDiastolic,
   spO2,
+  steps,
+  sleep,
+  bloodGlucose,
+  oxygenSaturation,
 }
 
 @collection
@@ -21,12 +25,16 @@ class VitalSign {
 
   late DateTime dateTime;
 
+  String? unit;
+  String? source;
   String? notes;
 
   VitalSign({
     required this.type,
     required this.value,
     required this.dateTime,
+    this.unit,
+    this.source,
     this.notes,
   });
 
@@ -41,7 +49,14 @@ class VitalSign {
       case VitalSignType.bloodPressureDiastolic:
         return '${value.toInt()} mmHg';
       case VitalSignType.spO2:
+      case VitalSignType.oxygenSaturation:
         return '${value.toInt()}%';
+      case VitalSignType.steps:
+        return '${value.toInt()} steps';
+      case VitalSignType.sleep:
+        return '${value.toInt()} min';
+      case VitalSignType.bloodGlucose:
+        return '${value.toInt()} mg/dL';
     }
   }
 }
