@@ -5,7 +5,7 @@
   "signIn": "Iniciar Sesión",
   "signUp": "Registrarse",
   "email": "Correo electrónico",
-  "password": "Contraseña",
+  "password": "***",
   "confirmPassword": "Confirmar Contraseña",
   "forgotPassword": "¿Olvidaste tu contraseña?",
   "fullName": "Nombre Completo",
@@ -61,5 +61,26 @@
   "about": "Acerca de",
   "privacyPolicy": "Política de Privacidad",
   "termsOfService": "Términos de Servicio",
-  "version": "Versión"
+  "version": "Versión",
+
+  "home": "Inicio",
+  "reports": "Reportes",
+  "records": "Registros",
+
+  "homeTitle": "Inicio",
+  "homeSubtitle": "Gestiona tu salud y consulta con tu asistente IA",
+  "syncingStandards": "Sincronizando estándares médicos...",
+  "syncError": "Error al sincronizar estándares médicos",
+  "syncCompleted": "Estándares médicos actualizados",
+
+  "recentInsights": "Información Reciente",
+  "analyzingData": "Analizando tus datos de salud...",
+  "noAnomaliesDetected": "Sin anomalías detectadas",
+  "waitProcessing": "Esperando a que se complete el procesamiento",
+  "recordMoreVitals": "Registra más signos vitales para obtener información",
+
+  "privacy100Local": "100% Local y Privado",
+  "consultAssistant": "Consulta a tu Asistente IA",
+  "assistantDescription": "Tu asistente médico personal funciona completamente en este dispositivo. Haz preguntas sobre tus registros de salud, medicamentos y recibe información personalizada.",
+  "startConsultation": "Iniciar Consulta"
 }

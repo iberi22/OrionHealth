@@ -29,4 +29,19 @@ class VitalSign {
     required this.dateTime,
     this.notes,
   });
+
+  /// Formatted value string for display purposes.
+  String get formattedValue {
+    switch (type) {
+      case VitalSignType.heartRate:
+        return '${value.toInt()} bpm';
+      case VitalSignType.temperature:
+        return '${value.toStringAsFixed(1)}°C';
+      case VitalSignType.bloodPressureSystolic:
+      case VitalSignType.bloodPressureDiastolic:
+        return '${value.toInt()} mmHg';
+      case VitalSignType.spO2:
+        return '${value.toInt()}%';
+    }
+  }
 }

@@ -5,7 +5,7 @@
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "email": "Email",
-  "password": "Password",
+  "password": "***",
   "confirmPassword": "Confirm Password",
   "forgotPassword": "Forgot Password?",
   "fullName": "Full Name",
@@ -61,5 +61,26 @@
   "about": "About",
   "privacyPolicy": "Privacy Policy",
   "termsOfService": "Terms of Service",
-  "version": "Version"
+  "version": "Version",
+
+  "home": "Home",
+  "reports": "Reports",
+  "records": "Records",
+
+  "homeTitle": "Home",
+  "homeSubtitle": "Manage your health and consult with your AI assistant",
+  "syncingStandards": "Syncing medical standards...",
+  "syncError": "Error syncing medical standards",
+  "syncCompleted": "Medical standards up to date",
+
+  "recentInsights": "Recent Insights",
+  "analyzingData": "Analyzing your health data...",
+  "noAnomaliesDetected": "No anomalies detected",
+  "waitProcessing": "Waiting for processing to complete",
+  "recordMoreVitals": "Record more vitals to get insights",
+
+  "privacy100Local": "100% Local & Private",
+  "consultAssistant": "Consult your AI Assistant",
+  "assistantDescription": "Your personal medical AI runs entirely on this device. Ask questions about your health records, medications, and receive personalized insights.",
+  "startConsultation": "Start Consultation"
 }

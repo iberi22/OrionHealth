@@ -24,7 +24,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get email => 'Correo electrónico';
 
   @override
-  String get password => 'Contraseña';
+  String get password => '***';
 
   @override
   String get confirmPassword => 'Confirmar Contraseña';
@@ -193,4 +193,57 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get version => 'Versión';
+
+  @override
+  String get home => 'Inicio';
+
+  @override
+  String get reports => 'Reportes';
+
+  @override
+  String get records => 'Registros';
+
+  @override
+  String get homeTitle => 'Inicio';
+
+  @override
+  String get homeSubtitle => 'Gestiona tu salud y consulta con tu asistente IA';
+
+  @override
+  String get syncingStandards => 'Sincronizando estándares médicos...';
+
+  @override
+  String get syncError => 'Error al sincronizar estándares médicos';
+
+  @override
+  String get syncCompleted => 'Estándares médicos actualizados';
+
+  @override
+  String get recentInsights => 'Información Reciente';
+
+  @override
+  String get analyzingData => 'Analizando tus datos de salud...';
+
+  @override
+  String get noAnomaliesDetected => 'Sin anomalías detectadas';
+
+  @override
+  String get waitProcessing => 'Esperando a que se complete el procesamiento';
+
+  @override
+  String get recordMoreVitals =>
+      'Registra más signos vitales para obtener información';
+
+  @override
+  String get privacy100Local => '100% Local y Privado';
+
+  @override
+  String get consultAssistant => 'Consulta a tu Asistente IA';
+
+  @override
+  String get assistantDescription =>
+      'Tu asistente médico personal funciona completamente en este dispositivo. Haz preguntas sobre tus registros de salud, medicamentos y recibe información personalizada.';
+
+  @override
+  String get startConsultation => 'Iniciar Consulta';
 }

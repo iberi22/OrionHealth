@@ -12,18 +12,24 @@ import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
 import 'app_localizations_hi.dart';
+import 'app_localizations_id.dart';
 import 'app_localizations_it.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_jv.dart';
 import 'app_localizations_ko.dart';
+import 'app_localizations_mr.dart';
 import 'app_localizations_pa.dart';
+import 'app_localizations_pcm.dart';
 import 'app_localizations_pl.dart';
 import 'app_localizations_pt.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_ta.dart';
+import 'app_localizations_te.dart';
 import 'app_localizations_tr.dart';
 import 'app_localizations_uk.dart';
+import 'app_localizations_ur.dart';
 import 'app_localizations_vi.dart';
+import 'app_localizations_yue.dart';
 import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
@@ -119,18 +125,24 @@ abstract class AppLocalizations {
     Locale('es'),
     Locale('fr'),
     Locale('hi'),
+    Locale('id'),
     Locale('it'),
     Locale('ja'),
     Locale('jv'),
     Locale('ko'),
+    Locale('mr'),
     Locale('pa'),
+    Locale('pcm'),
     Locale('pl'),
     Locale('pt'),
     Locale('ru'),
     Locale('ta'),
+    Locale('te'),
     Locale('tr'),
     Locale('uk'),
+    Locale('ur'),
     Locale('vi'),
+    Locale('yue'),
     Locale('zh'),
   ];
 
@@ -167,7 +179,7 @@ abstract class AppLocalizations {
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
-  /// **'Password'**
+  /// **'***'**
   String get password;
 
   /// No description provided for @confirmPassword.
@@ -505,6 +517,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version'**
   String get version;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @reports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get reports;
+
+  /// No description provided for @records.
+  ///
+  /// In en, this message translates to:
+  /// **'Records'**
+  String get records;
+
+  /// No description provided for @homeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get homeTitle;
+
+  /// No description provided for @homeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your health and consult with your AI assistant'**
+  String get homeSubtitle;
+
+  /// No description provided for @syncingStandards.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing medical standards...'**
+  String get syncingStandards;
+
+  /// No description provided for @syncError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error syncing medical standards'**
+  String get syncError;
+
+  /// No description provided for @syncCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical standards up to date'**
+  String get syncCompleted;
+
+  /// No description provided for @recentInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Insights'**
+  String get recentInsights;
+
+  /// No description provided for @analyzingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing your health data...'**
+  String get analyzingData;
+
+  /// No description provided for @noAnomaliesDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'No anomalies detected'**
+  String get noAnomaliesDetected;
+
+  /// No description provided for @waitProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for processing to complete'**
+  String get waitProcessing;
+
+  /// No description provided for @recordMoreVitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Record more vitals to get insights'**
+  String get recordMoreVitals;
+
+  /// No description provided for @privacy100Local.
+  ///
+  /// In en, this message translates to:
+  /// **'100% Local & Private'**
+  String get privacy100Local;
+
+  /// No description provided for @consultAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Consult your AI Assistant'**
+  String get consultAssistant;
+
+  /// No description provided for @assistantDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your personal medical AI runs entirely on this device. Ask questions about your health records, medications, and receive personalized insights.'**
+  String get assistantDescription;
+
+  /// No description provided for @startConsultation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Consultation'**
+  String get startConsultation;
 }
 
 class _AppLocalizationsDelegate
@@ -525,18 +639,24 @@ class _AppLocalizationsDelegate
     'es',
     'fr',
     'hi',
+    'id',
     'it',
     'ja',
     'jv',
     'ko',
+    'mr',
     'pa',
+    'pcm',
     'pl',
     'pt',
     'ru',
     'ta',
+    'te',
     'tr',
     'uk',
+    'ur',
     'vi',
+    'yue',
     'zh',
   ].contains(locale.languageCode);
 
@@ -561,6 +681,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsFr();
     case 'hi':
       return AppLocalizationsHi();
+    case 'id':
+      return AppLocalizationsId();
     case 'it':
       return AppLocalizationsIt();
     case 'ja':
@@ -569,8 +691,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsJv();
     case 'ko':
       return AppLocalizationsKo();
+    case 'mr':
+      return AppLocalizationsMr();
     case 'pa':
       return AppLocalizationsPa();
+    case 'pcm':
+      return AppLocalizationsPcm();
     case 'pl':
       return AppLocalizationsPl();
     case 'pt':
@@ -579,12 +705,18 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsRu();
     case 'ta':
       return AppLocalizationsTa();
+    case 'te':
+      return AppLocalizationsTe();
     case 'tr':
       return AppLocalizationsTr();
     case 'uk':
       return AppLocalizationsUk();
+    case 'ur':
+      return AppLocalizationsUr();
     case 'vi':
       return AppLocalizationsVi();
+    case 'yue':
+      return AppLocalizationsYue();
     case 'zh':
       return AppLocalizationsZh();
   }
