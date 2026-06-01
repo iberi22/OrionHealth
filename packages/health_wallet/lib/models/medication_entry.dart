@@ -6,11 +6,12 @@ part 'medication_entry.g.dart';
 
 /// Medication entry with dosage, frequency, start/end dates.
 /// Sensitive: medication name and dosage are encrypted.
-@Collection(accessor: 'medicationEntries')
+@collection
 @JsonSerializable()
-class MedicationEntry {
+class MedicationEntry  {
   MedicationEntry({
-    required this.id,
+    this.id = Isar.autoIncrement,
+    required this.remoteId,
     required this.rxNormCode,
     required this.medicationName,
     required this.dosage,
@@ -32,9 +33,8 @@ class MedicationEntry {
   });
 
   @Index(unique: true)
-  final String id;
-
-  Id get isarId => fastHash(id);
+  Id id;
+  final String remoteId;
 
   /// RxNorm code for the medication (e.g. "311354" for Metformin 500mg).
   @Index()
@@ -64,26 +64,25 @@ class MedicationEntry {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  String? prescribedBy;
-  String? pharmacy;
-  int? refillsRemaining;
-  String? notes;
+  final String? prescribedBy;
+  final String? pharmacy;
+  final int? refillsRemaining;
+  final String? notes;
 
   @Enumerated(EnumType.name)
   final DataSource source;
 
   @Enumerated(EnumType.name)
   @Index()
-  SyncStatus syncStatus;
+  final SyncStatus syncStatus;
 
   /// Encrypted medication name (base64).
-  String? encryptedName;
+  final String? encryptedName;
 
   /// Encrypted dosage string (base64).
-  String? encryptedDosage;
+  final String? encryptedDosage;
 
   /// Whether this medication is currently active.
-  @ignore
   bool get isActive {
     final now = DateTime.now();
     if (endDate != null && endDate!.isBefore(now)) return false;
@@ -91,7 +90,6 @@ class MedicationEntry {
   }
 
   /// Common medication routes.
-  @ignore
   static const commonRoutes = [
     'oral',
     'topical',
@@ -104,7 +102,8 @@ class MedicationEntry {
   ];
 
   MedicationEntry copyWith({
-    String? id,
+    Id? id,
+    String? remoteId,
     String? rxNormCode,
     String? medicationName,
     String? dosage,
@@ -125,6 +124,7 @@ class MedicationEntry {
     String? encryptedDosage,
   }) {
     return MedicationEntry(
+      remoteId: remoteId ?? this.remoteId,
       id: id ?? this.id,
       rxNormCode: rxNormCode ?? this.rxNormCode,
       medicationName: medicationName ?? this.medicationName,

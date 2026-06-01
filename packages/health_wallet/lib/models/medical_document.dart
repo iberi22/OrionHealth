@@ -27,9 +27,10 @@ enum DocumentType {
 /// Medical document reference (PDF, image, etc.).
 @collection
 @JsonSerializable()
-class MedicalDocument {
+class MedicalDocument  {
   MedicalDocument({
-    required this.id,
+    this.id = Isar.autoIncrement,
+    required this.remoteId,
     required this.title,
     required this.documentType,
     required this.filePath,
@@ -48,9 +49,8 @@ class MedicalDocument {
   });
 
   @Index(unique: true)
-  final String id;
-
-  Id get isarId => fastHash(id);
+  Id id;
+  final String remoteId;
 
   final String title;
 
@@ -71,24 +71,23 @@ class MedicalDocument {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  String? provider; // physician name
-  String? facility; // hospital/clinic name
-  List<String>? icd10Codes; // diagnoses coded
-  List<String>? loincCodes; // associated LOINC tests
-  String? notes;
+  final String? provider; // physician name
+  final String? facility; // hospital/clinic name
+  final List<String>? icd10Codes; // diagnoses coded
+  final List<String>? loincCodes; // associated LOINC tests
+  final String? notes;
 
   @Enumerated(EnumType.name)
   final DataSource source;
 
   @Enumerated(EnumType.name)
   @Index()
-  SyncStatus syncStatus;
+  final SyncStatus syncStatus;
 
   /// Encrypted document metadata (base64).
-  String? encryptedMetadata;
+  final String? encryptedMetadata;
 
   /// File extension derived from mime type.
-  @ignore
   String get fileExtension {
     switch (mimeType) {
       case 'application/pdf':
@@ -105,7 +104,8 @@ class MedicalDocument {
   }
 
   MedicalDocument copyWith({
-    String? id,
+    Id? id,
+    String? remoteId,
     String? title,
     DocumentType? documentType,
     String? filePath,
@@ -123,6 +123,7 @@ class MedicalDocument {
     String? encryptedMetadata,
   }) {
     return MedicalDocument(
+      remoteId: remoteId ?? this.remoteId,
       id: id ?? this.id,
       title: title ?? this.title,
       documentType: documentType ?? this.documentType,
