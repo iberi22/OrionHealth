@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:orionhealth_health/main.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_cubit.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_state.dart';
 import 'package:orionhealth_health/features/auth/presentation/auth_gate.dart';
