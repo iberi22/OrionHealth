@@ -17,6 +17,14 @@ class VitalSignRepositoryImpl implements VitalSignRepository {
   }
 
   @override
+  Future<void> saveVitalSigns(List<VitalSign> vitalSigns) async {
+    if (vitalSigns.isEmpty) return;
+    await _isar.writeTxn(() async {
+      await _isar.vitalSigns.putAll(vitalSigns);
+    });
+  }
+
+  @override
   Future<List<VitalSign>> getAllVitalSigns() async {
     return await _isar.vitalSigns.where().sortByDateTimeDesc().findAll();
   }

@@ -134,16 +134,15 @@ class IsarHealthContextService implements HealthContextService {
         return 'diastolic';
       case VitalSignType.temperature:
         return 'temperature';
+      case VitalSignType.spO2:
       case VitalSignType.oxygenSaturation:
         return 'oxygenSaturation';
-      case VitalSignType.respiratoryRate:
-        return 'respiratoryRate';
-      case VitalSignType.bloodGlucose:
-        return 'glucose';
       case VitalSignType.steps:
         return 'steps';
       case VitalSignType.sleep:
         return 'sleep';
+      case VitalSignType.bloodGlucose:
+        return 'bloodGlucose';
     }
   }
 }

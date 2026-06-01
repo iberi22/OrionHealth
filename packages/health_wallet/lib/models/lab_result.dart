@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 
@@ -24,10 +23,22 @@ enum SyncStatus {
   conflict,
 }
 
+int fastHash(String string) {
+  var hash = 0xcbf29ce484222325;
+  var i = 0;
+  while (i < string.length) {
+    final codeUnit = string.codeUnitAt(i++);
+    hash ^= codeUnit;
+    hash *= 0x100000001b3;
+  }
+  return hash;
+}
+
 /// Lab result with LOINC code reference.
 /// Sensitive: result value may be encrypted.
 @collection
-class LabResult extends Equatable {
+@JsonSerializable()
+class LabResult {
   LabResult({
     required this.id,
     required this.loincCode,
@@ -46,6 +57,8 @@ class LabResult extends Equatable {
 
   @Index(unique: true)
   final String id;
+
+  Id get isarId => fastHash(id);
 
   /// LOINC code for the lab test (e.g. "2339-0" for Glucose).
   @Index()
@@ -125,20 +138,4 @@ class LabResult extends Equatable {
   factory LabResult.fromJson(Map<String, dynamic> json) => _$LabResultFromJson(json);
   Map<String, dynamic> toJson() => _$LabResultToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        loincCode,
-        testName,
-        resultValue,
-        unit,
-        referenceRangeLow,
-        referenceRangeHigh,
-        collectedAt,
-        createdAt,
-        updatedAt,
-        source,
-        syncStatus,
-        encryptedValue,
-      ];
 }

@@ -53,45 +53,50 @@ const MedicalDocumentSchema = CollectionSchema(
       name: r'icd10Codes',
       type: IsarType.stringList,
     ),
-    r'loincCodes': PropertySchema(
+    r'id': PropertySchema(
       id: 7,
+      name: r'id',
+      type: IsarType.string,
+    ),
+    r'loincCodes': PropertySchema(
+      id: 8,
       name: r'loincCodes',
       type: IsarType.stringList,
     ),
     r'mimeType': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'mimeType',
       type: IsarType.string,
     ),
     r'notes': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'notes',
       type: IsarType.string,
     ),
     r'provider': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'provider',
       type: IsarType.string,
     ),
     r'source': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'source',
       type: IsarType.string,
       enumMap: _MedicalDocumentsourceEnumValueMap,
     ),
     r'syncStatus': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _MedicalDocumentsyncStatusEnumValueMap,
     ),
     r'title': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'title',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -100,8 +105,21 @@ const MedicalDocumentSchema = CollectionSchema(
   serialize: _medicalDocumentSerialize,
   deserialize: _medicalDocumentDeserialize,
   deserializeProp: _medicalDocumentDeserializeProp,
-  idName: r'id',
+  idName: r'isarId',
   indexes: {
+    r'id': IndexSchema(
+      id: -3268401673993471357,
+      name: r'id',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'id',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
     r'documentType': IndexSchema(
       id: -7718089256159393876,
       name: r'documentType',
@@ -182,6 +200,7 @@ int _medicalDocumentEstimateSize(
       }
     }
   }
+  bytesCount += 3 + object.id.length * 3;
   {
     final list = object.loincCodes;
     if (list != null) {
@@ -226,14 +245,15 @@ void _medicalDocumentSerialize(
   writer.writeString(offsets[4], object.facility);
   writer.writeString(offsets[5], object.filePath);
   writer.writeStringList(offsets[6], object.icd10Codes);
-  writer.writeStringList(offsets[7], object.loincCodes);
-  writer.writeString(offsets[8], object.mimeType);
-  writer.writeString(offsets[9], object.notes);
-  writer.writeString(offsets[10], object.provider);
-  writer.writeString(offsets[11], object.source.name);
-  writer.writeString(offsets[12], object.syncStatus.name);
-  writer.writeString(offsets[13], object.title);
-  writer.writeDateTime(offsets[14], object.updatedAt);
+  writer.writeString(offsets[7], object.id);
+  writer.writeStringList(offsets[8], object.loincCodes);
+  writer.writeString(offsets[9], object.mimeType);
+  writer.writeString(offsets[10], object.notes);
+  writer.writeString(offsets[11], object.provider);
+  writer.writeString(offsets[12], object.source.name);
+  writer.writeString(offsets[13], object.syncStatus.name);
+  writer.writeString(offsets[14], object.title);
+  writer.writeDateTime(offsets[15], object.updatedAt);
 }
 
 MedicalDocument _medicalDocumentDeserialize(
@@ -252,19 +272,19 @@ MedicalDocument _medicalDocumentDeserialize(
     facility: reader.readStringOrNull(offsets[4]),
     filePath: reader.readString(offsets[5]),
     icd10Codes: reader.readStringList(offsets[6]),
-    id: id,
-    loincCodes: reader.readStringList(offsets[7]),
-    mimeType: reader.readString(offsets[8]),
-    notes: reader.readStringOrNull(offsets[9]),
-    provider: reader.readStringOrNull(offsets[10]),
+    id: reader.readString(offsets[7]),
+    loincCodes: reader.readStringList(offsets[8]),
+    mimeType: reader.readString(offsets[9]),
+    notes: reader.readStringOrNull(offsets[10]),
+    provider: reader.readStringOrNull(offsets[11]),
     source: _MedicalDocumentsourceValueEnumMap[
-            reader.readStringOrNull(offsets[11])] ??
+            reader.readStringOrNull(offsets[12])] ??
         DataSource.manual,
     syncStatus: _MedicalDocumentsyncStatusValueEnumMap[
-            reader.readStringOrNull(offsets[12])] ??
+            reader.readStringOrNull(offsets[13])] ??
         SyncStatus.pending,
-    title: reader.readString(offsets[13]),
-    updatedAt: reader.readDateTime(offsets[14]),
+    title: reader.readString(offsets[14]),
+    updatedAt: reader.readDateTime(offsets[15]),
   );
   return object;
 }
@@ -293,24 +313,26 @@ P _medicalDocumentDeserializeProp<P>(
     case 6:
       return (reader.readStringList(offset)) as P;
     case 7:
-      return (reader.readStringList(offset)) as P;
-    case 8:
       return (reader.readString(offset)) as P;
+    case 8:
+      return (reader.readStringList(offset)) as P;
     case 9:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 10:
       return (reader.readStringOrNull(offset)) as P;
     case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
       return (_MedicalDocumentsourceValueEnumMap[
               reader.readStringOrNull(offset)] ??
           DataSource.manual) as P;
-    case 12:
+    case 13:
       return (_MedicalDocumentsyncStatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SyncStatus.pending) as P;
-    case 13:
-      return (reader.readString(offset)) as P;
     case 14:
+      return (reader.readString(offset)) as P;
+    case 15:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -359,7 +381,7 @@ const _MedicalDocumentsyncStatusValueEnumMap = {
 };
 
 Id _medicalDocumentGetId(MedicalDocument object) {
-  return object.id;
+  return object.isarId;
 }
 
 List<IsarLinkBase<dynamic>> _medicalDocumentGetLinks(MedicalDocument object) {
@@ -367,13 +389,66 @@ List<IsarLinkBase<dynamic>> _medicalDocumentGetLinks(MedicalDocument object) {
 }
 
 void _medicalDocumentAttach(
-    IsarCollection<dynamic> col, Id id, MedicalDocument object) {
-  object.id = id;
+    IsarCollection<dynamic> col, Id id, MedicalDocument object) {}
+
+extension MedicalDocumentByIndex on IsarCollection<MedicalDocument> {
+  Future<MedicalDocument?> getById(String id) {
+    return getByIndex(r'id', [id]);
+  }
+
+  MedicalDocument? getByIdSync(String id) {
+    return getByIndexSync(r'id', [id]);
+  }
+
+  Future<bool> deleteById(String id) {
+    return deleteByIndex(r'id', [id]);
+  }
+
+  bool deleteByIdSync(String id) {
+    return deleteByIndexSync(r'id', [id]);
+  }
+
+  Future<List<MedicalDocument?>> getAllById(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return getAllByIndex(r'id', values);
+  }
+
+  List<MedicalDocument?> getAllByIdSync(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'id', values);
+  }
+
+  Future<int> deleteAllById(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'id', values);
+  }
+
+  int deleteAllByIdSync(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'id', values);
+  }
+
+  Future<Id> putById(MedicalDocument object) {
+    return putByIndex(r'id', object);
+  }
+
+  Id putByIdSync(MedicalDocument object, {bool saveLinks = true}) {
+    return putByIndexSync(r'id', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllById(List<MedicalDocument> objects) {
+    return putAllByIndex(r'id', objects);
+  }
+
+  List<Id> putAllByIdSync(List<MedicalDocument> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
+  }
 }
 
 extension MedicalDocumentQueryWhereSort
     on QueryBuilder<MedicalDocument, MedicalDocument, QWhere> {
-  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhere> anyId() {
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -391,71 +466,116 @@ extension MedicalDocumentQueryWhereSort
 
 extension MedicalDocumentQueryWhere
     on QueryBuilder<MedicalDocument, MedicalDocument, QWhereClause> {
-  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause> idEqualTo(
-      Id id) {
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause>
+      isarIdEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
+        lower: isarId,
+        upper: isarId,
       ));
     });
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+      isarIdNotEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             );
       }
     });
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+      isarIdGreaterThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id, includeLower: include),
+        IdWhereClause.greaterThan(lower: isarId, includeLower: include),
       );
     });
   }
 
-  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause> idLessThan(
-      Id id,
-      {bool include = false}) {
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause>
+      isarIdLessThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id, includeUpper: include),
+        IdWhereClause.lessThan(upper: isarId, includeUpper: include),
       );
     });
   }
 
-  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause> idBetween(
-    Id lowerId,
-    Id upperId, {
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause>
+      isarIdBetween(
+    Id lowerIsarId,
+    Id upperIsarId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
+        lower: lowerIsarId,
         includeLower: includeLower,
-        upper: upperId,
+        upper: upperIsarId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause> idEqualTo(
+      String id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id',
+        value: [id],
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterWhereClause>
+      idNotEqualTo(String id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [],
+              upper: [id],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [id],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [id],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [],
+              upper: [id],
+              includeUpper: false,
+            ));
+      }
     });
   }
 
@@ -1621,45 +1741,181 @@ extension MedicalDocumentQueryFilter
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
-      idEqualTo(Id value) {
+      idEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
       idGreaterThan(
-    Id value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
       idLessThan(
-    Id value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
       idBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      idStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      idEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      idContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      idMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'id',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      idIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      idIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'id',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      isarIdEqualTo(Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      isarIdGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      isarIdLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -1667,7 +1923,7 @@ extension MedicalDocumentQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
+        property: r'isarId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -2920,6 +3176,18 @@ extension MedicalDocumentQuerySortBy
     });
   }
 
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy> sortById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy> sortByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
       sortByMimeType() {
     return QueryBuilder.apply(this, (query) {
@@ -3114,6 +3382,19 @@ extension MedicalDocumentQuerySortThenBy
     });
   }
 
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy> thenByIsarId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      thenByIsarIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.desc);
+    });
+  }
+
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
       thenByMimeType() {
     return QueryBuilder.apply(this, (query) {
@@ -3262,6 +3543,13 @@ extension MedicalDocumentQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MedicalDocument, MedicalDocument, QDistinct> distinctById(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<MedicalDocument, MedicalDocument, QDistinct>
       distinctByLoincCodes() {
     return QueryBuilder.apply(this, (query) {
@@ -3321,9 +3609,9 @@ extension MedicalDocumentQueryWhereDistinct
 
 extension MedicalDocumentQueryProperty
     on QueryBuilder<MedicalDocument, MedicalDocument, QQueryProperty> {
-  QueryBuilder<MedicalDocument, int, QQueryOperations> idProperty() {
+  QueryBuilder<MedicalDocument, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addPropertyName(r'isarId');
     });
   }
 
@@ -3371,6 +3659,12 @@ extension MedicalDocumentQueryProperty
       icd10CodesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'icd10Codes');
+    });
+  }
+
+  QueryBuilder<MedicalDocument, String, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
     });
   }
 
@@ -3432,7 +3726,7 @@ extension MedicalDocumentQueryProperty
 
 MedicalDocument _$MedicalDocumentFromJson(Map<String, dynamic> json) =>
     MedicalDocument(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as String,
       title: json['title'] as String,
       documentType: $enumDecode(_$DocumentTypeEnumMap, json['documentType']),
       filePath: json['filePath'] as String,

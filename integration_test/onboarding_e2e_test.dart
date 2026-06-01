@@ -145,8 +145,8 @@ void main() {
       await _captureScreenshot(tester, '05_allergies_selected');
 
       // Verificar que se pueden seleccionar múltiples
-      final penicilinaChip = tester.widget<Chip>(
-        find.widgetWithText(Chip, 'Penicilina'),
+      final penicilinaChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Penicilina'),
       );
       expect(penicilinaChip.selected, isTrue);
     });

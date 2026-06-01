@@ -1,16 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'package:medical_standards/medical_standards.dart';
 
-import '../../domain/entities/medical_query.dart';
-import '../../domain/entities/medical_insight.dart';
-import '../../domain/entities/ai_response.dart';
-import '../../domain/services/medical_analysis_service.dart';
-import '../../infrastructure/llm/medical_llm_adapter.dart';
-import '../../infrastructure/analysis/lab_interpreter.dart';
-import '../../infrastructure/analysis/vital_sign_analyzer.dart';
-import '../../infrastructure/analysis/risk_calculator.dart';
+import '../domain/entities/medical_query.dart';
+import '../domain/entities/medical_insight.dart';
+import '../domain/entities/ai_response.dart';
+import '../domain/services/medical_analysis_service.dart';
+import '../infrastructure/llm/medical_llm_adapter.dart';
+import '../infrastructure/analysis/lab_interpreter.dart';
+import '../infrastructure/analysis/vital_sign_analyzer.dart';
+import '../infrastructure/analysis/risk_calculator.dart';
 
 // States
 abstract class MedicalAssistantState extends Equatable {
@@ -59,21 +58,17 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   final LabInterpreter _labInterpreter;
   final VitalSignAnalyzer _vitalAnalyzer;
   final RiskCalculator _riskCalculator;
-  final IsarAgentMemory? _memory;
-
   MedicalAssistantCubit({
     MedicalLlmAdapter? llmAdapter,
     MedicalAnalysisService? analysisService,
     LabInterpreter? labInterpreter,
     VitalSignAnalyzer? vitalAnalyzer,
     RiskCalculator? riskCalculator,
-    IsarAgentMemory? memory,
   })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(),
         _analysisService = analysisService ?? MedicalAnalysisService(),
         _labInterpreter = labInterpreter ?? LabInterpreter(),
         _vitalAnalyzer = vitalAnalyzer ?? VitalSignAnalyzer(),
         _riskCalculator = riskCalculator ?? RiskCalculator(),
-        _memory = memory,
         super(const MedicalAssistantIdle());
 
   /// Submit a medical query with STRICT confidence enforcement.
@@ -157,7 +152,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
       final confidenceLevel = ConfidenceThreshold.getLevel(confidence);
 
       // If confidence is very low and no insights, add data request
-      if (confidence < ConfidenceThreshold.lowConfidence && allInsights.isEmpty) {
+      if (confidence < 0.5 && allInsights.isEmpty) {
         final enhancedResponse = _addDataRequest(response, question);
         emit(MedicalAssistantResponse(
           response: enhancedResponse,
@@ -248,11 +243,11 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   }
 
   Future<Map<String, dynamic>> _getUserContext(String? userId) async {
-    if (_memory == null || userId == null) {
+    if (userId == null) {
       return {};
     }
 
-    // Stub: would query isar_agent_memory for user health data
+    // Stub: would query user health data from local repositories
     return {
       'conditions': <Icd10Code>[],
       'labs': <String, double>{},

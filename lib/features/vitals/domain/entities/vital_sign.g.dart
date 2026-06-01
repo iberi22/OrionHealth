@@ -22,19 +22,34 @@ const VitalSignSchema = CollectionSchema(
       name: r'dateTime',
       type: IsarType.dateTime,
     ),
-    r'notes': PropertySchema(
+    r'formattedValue': PropertySchema(
       id: 1,
+      name: r'formattedValue',
+      type: IsarType.string,
+    ),
+    r'notes': PropertySchema(
+      id: 2,
       name: r'notes',
       type: IsarType.string,
     ),
+    r'source': PropertySchema(
+      id: 3,
+      name: r'source',
+      type: IsarType.string,
+    ),
     r'type': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'type',
       type: IsarType.string,
       enumMap: _VitalSigntypeEnumValueMap,
     ),
+    r'unit': PropertySchema(
+      id: 5,
+      name: r'unit',
+      type: IsarType.string,
+    ),
     r'value': PropertySchema(
-      id: 3,
+      id: 6,
       name: r'value',
       type: IsarType.double,
     )
@@ -59,13 +74,26 @@ int _vitalSignEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.formattedValue.length * 3;
   {
     final value = object.notes;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.source;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.type.name.length * 3;
+  {
+    final value = object.unit;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -76,9 +104,12 @@ void _vitalSignSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.dateTime);
-  writer.writeString(offsets[1], object.notes);
-  writer.writeString(offsets[2], object.type.name);
-  writer.writeDouble(offsets[3], object.value);
+  writer.writeString(offsets[1], object.formattedValue);
+  writer.writeString(offsets[2], object.notes);
+  writer.writeString(offsets[3], object.source);
+  writer.writeString(offsets[4], object.type.name);
+  writer.writeString(offsets[5], object.unit);
+  writer.writeDouble(offsets[6], object.value);
 }
 
 VitalSign _vitalSignDeserialize(
@@ -89,10 +120,12 @@ VitalSign _vitalSignDeserialize(
 ) {
   final object = VitalSign(
     dateTime: reader.readDateTime(offsets[0]),
-    notes: reader.readStringOrNull(offsets[1]),
-    type: _VitalSigntypeValueEnumMap[reader.readStringOrNull(offsets[2])] ??
+    notes: reader.readStringOrNull(offsets[2]),
+    source: reader.readStringOrNull(offsets[3]),
+    type: _VitalSigntypeValueEnumMap[reader.readStringOrNull(offsets[4])] ??
         VitalSignType.heartRate,
-    value: reader.readDouble(offsets[3]),
+    unit: reader.readStringOrNull(offsets[5]),
+    value: reader.readDouble(offsets[6]),
   );
   object.id = id;
   return object;
@@ -108,11 +141,17 @@ P _vitalSignDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
+      return (reader.readStringOrNull(offset)) as P;
+    case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    case 4:
       return (_VitalSigntypeValueEnumMap[reader.readStringOrNull(offset)] ??
           VitalSignType.heartRate) as P;
-    case 3:
+    case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -125,6 +164,10 @@ const _VitalSigntypeEnumValueMap = {
   r'bloodPressureSystolic': r'bloodPressureSystolic',
   r'bloodPressureDiastolic': r'bloodPressureDiastolic',
   r'spO2': r'spO2',
+  r'steps': r'steps',
+  r'sleep': r'sleep',
+  r'bloodGlucose': r'bloodGlucose',
+  r'oxygenSaturation': r'oxygenSaturation',
 };
 const _VitalSigntypeValueEnumMap = {
   r'heartRate': VitalSignType.heartRate,
@@ -132,6 +175,10 @@ const _VitalSigntypeValueEnumMap = {
   r'bloodPressureSystolic': VitalSignType.bloodPressureSystolic,
   r'bloodPressureDiastolic': VitalSignType.bloodPressureDiastolic,
   r'spO2': VitalSignType.spO2,
+  r'steps': VitalSignType.steps,
+  r'sleep': VitalSignType.sleep,
+  r'bloodGlucose': VitalSignType.bloodGlucose,
+  r'oxygenSaturation': VitalSignType.oxygenSaturation,
 };
 
 Id _vitalSignGetId(VitalSign object) {
@@ -274,6 +321,142 @@ extension VitalSignQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'formattedValue',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'formattedValue',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'formattedValue',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'formattedValue',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'formattedValue',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'formattedValue',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'formattedValue',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'formattedValue',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'formattedValue',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      formattedValueIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'formattedValue',
+        value: '',
       ));
     });
   }
@@ -477,6 +660,152 @@ extension VitalSignQueryFilter
     });
   }
 
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'source',
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'source',
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'source',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'source',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'source',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'source',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'source',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'source',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'source',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'source',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'source',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> sourceIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'source',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> typeEqualTo(
     VitalSignType value, {
     bool caseSensitive = true,
@@ -607,6 +936,152 @@ extension VitalSignQueryFilter
     });
   }
 
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'unit',
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'unit',
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'unit',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'unit',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'unit',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'unit',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'unit',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'unit',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'unit',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'unit',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'unit',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> unitIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'unit',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> valueEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -689,6 +1164,18 @@ extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
     });
   }
 
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByFormattedValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedValue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByFormattedValueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedValue', Sort.desc);
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
@@ -701,6 +1188,18 @@ extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
     });
   }
 
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortBySource() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'source', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortBySourceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'source', Sort.desc);
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -710,6 +1209,18 @@ extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByUnit() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'unit', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByUnitDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'unit', Sort.desc);
     });
   }
 
@@ -740,6 +1251,18 @@ extension VitalSignQuerySortThenBy
     });
   }
 
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByFormattedValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedValue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByFormattedValueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedValue', Sort.desc);
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -764,6 +1287,18 @@ extension VitalSignQuerySortThenBy
     });
   }
 
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenBySource() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'source', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenBySourceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'source', Sort.desc);
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -773,6 +1308,18 @@ extension VitalSignQuerySortThenBy
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByUnit() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'unit', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByUnitDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'unit', Sort.desc);
     });
   }
 
@@ -797,6 +1344,14 @@ extension VitalSignQueryWhereDistinct
     });
   }
 
+  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByFormattedValue(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'formattedValue',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByNotes(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -804,10 +1359,24 @@ extension VitalSignQueryWhereDistinct
     });
   }
 
+  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctBySource(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'source', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByType(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'type', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByUnit(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'unit', caseSensitive: caseSensitive);
     });
   }
 
@@ -832,15 +1401,33 @@ extension VitalSignQueryProperty
     });
   }
 
+  QueryBuilder<VitalSign, String, QQueryOperations> formattedValueProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'formattedValue');
+    });
+  }
+
   QueryBuilder<VitalSign, String?, QQueryOperations> notesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'notes');
     });
   }
 
+  QueryBuilder<VitalSign, String?, QQueryOperations> sourceProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'source');
+    });
+  }
+
   QueryBuilder<VitalSign, VitalSignType, QQueryOperations> typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
+    });
+  }
+
+  QueryBuilder<VitalSign, String?, QQueryOperations> unitProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'unit');
     });
   }
 

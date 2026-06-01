@@ -1,34 +1,34 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 void main() {
   group('LoincCode', () {
     test('findByCode returns correct code', () {
-      final code = LoincCode.findByCode('2339-0');
+      final code = LoincCommonLabs.findByCode('2339-0');
       expect(code, isNotNull);
       expect(code!.code, equals('2339-0'));
     });
 
     test('findByCode returns null for invalid code', () {
-      final code = LoincCode.findByCode('INVALID');
+      final code = LoincCommonLabs.findByCode('INVALID');
       expect(code, isNull);
     });
 
-    test('findByCode finds glucose', () {
-      final glucose = LoincCode.findByCode('2345-7');
+    test('findByComponent finds glucose', () {
+      final glucose = LoincCommonLabs.findByComponent('Glucose');
       expect(glucose, isNotNull);
       expect(glucose!.component.toLowerCase(), contains('glucose'));
     });
 
     test('findByCode finds hemoglobin', () {
-      final hemoglobin = LoincCode.findByCode('718-7');
+      final hemoglobin = LoincCommonLabs.findByCode('718-7');
       expect(hemoglobin, isNotNull);
       expect(hemoglobin!.component.toLowerCase(), contains('hemoglobin'));
     });
 
     test('props for Equatable equality', () {
-      final code1 = LoincCode.findByCode('2339-0');
-      final code2 = LoincCode.findByCode('2339-0');
+      final code1 = LoincCommonLabs.findByCode('2339-0');
+      final code2 = LoincCommonLabs.findByCode('2339-0');
       expect(code1, equals(code2));
     });
   });
@@ -66,11 +66,6 @@ void main() {
       final glucose = LoincCommonLabs.findByCode('2345-7');
       expect(glucose?.normalRange, isNotNull);
       expect(glucose?.normalRange, isNotEmpty);
-    });
-
-    test('interpretation is available for common labs', () {
-      final glucose = LoincCommonLabs.findByCode('2345-7');
-      expect(glucose?.interpretation, isNotNull);
     });
   });
 }

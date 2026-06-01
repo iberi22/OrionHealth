@@ -42,7 +42,7 @@ class WalletService {
 
   Future<void> updateLabSyncStatus(String id, SyncStatus status) async {
     await _isar.writeTxn(() async {
-      final lab = await _isar.labResults.get(id);
+      final lab = await _isar.labResults.get(fastHash(id));
       if (lab != null) {
         await _isar.labResults.put(lab.copyWith(syncStatus: status));
       }
@@ -118,11 +118,14 @@ class WalletService {
   }
 
   Future<List<MedicalEvent>> getTimeline({DateTime? from, DateTime? to}) async {
-    var query = _isar.medicalEvents.filter();
     if (from != null && to != null) {
-      return query.eventDateBetween(from, to).sortByEventDateDesc().findAll();
+      return _isar.medicalEvents
+          .filter()
+          .eventDateBetween(from, to)
+          .sortByEventDateDesc()
+          .findAll();
     }
-    return query.sortByEventDateDesc().findAll();
+    return _isar.medicalEvents.where().sortByEventDateDesc().findAll();
   }
 
   // ─── Documents ────────────────────────────────────────────────────────────

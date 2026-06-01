@@ -1,4 +1,4 @@
-﻿/// SNOMED CT (Clinical Terms) mappings.
+/// SNOMED CT (Clinical Terms) mappings.
 ///
 /// SNOMED CT is a standardized medical vocabulary used for
 /// clinical documentation. This module maps SNOMED codes to
@@ -20,7 +20,7 @@ class SnomedConcept extends MedicalConcept {
   final List<String> icd10Mappings;
   final List<String> loincMappings;
 
-  const SnomedConcept({
+  SnomedConcept({
     required this.code,
     required this.displayName,
     this.description,
@@ -37,7 +37,7 @@ class SnomedConcept extends MedicalConcept {
 /// Comprehensive SNOMED CT concepts
 class SnomedCommonConcepts {
   // ==================== ENDOCRINE / DIABETES ====================
-  static const SnomedConcept diabetesType1 = SnomedConcept(
+  static final SnomedConcept diabetesType1 = SnomedConcept(
     code: '76684001',
     displayName: 'Diabetes mellitus type 1',
     fullySpecifiedName: 'Diabetes mellitus type 1 (disorder)',
@@ -46,7 +46,7 @@ class SnomedCommonConcepts {
     description: 'Autoimmune destruction of pancreatic beta cells',
   );
 
-  static const SnomedConcept diabetesType2 = SnomedConcept(
+  static final SnomedConcept diabetesType2 = SnomedConcept(
     code: '44054006',
     displayName: 'Diabetes mellitus type 2',
     fullySpecifiedName: 'Diabetes mellitus type 2 (disorder)',
@@ -55,7 +55,7 @@ class SnomedCommonConcepts {
     description: 'Insulin resistance with relative insulin deficiency',
   );
 
-  static const SnomedConcept gestationalDiabetes = SnomedConcept(
+  static final SnomedConcept gestationalDiabetes = SnomedConcept(
     code: '11687002',
     displayName: 'Gestational diabetes mellitus',
     fullySpecifiedName: 'Gestational diabetes mellitus (disorder)',
@@ -64,7 +64,7 @@ class SnomedCommonConcepts {
     description: 'Glucose intolerance first recognized during pregnancy',
   );
 
-  static const SnomedConcept diabeticKetoacidosis = SnomedConcept(
+  static final SnomedConcept diabeticKetoacidosis = SnomedConcept(
     code: '420719005',
     displayName: 'Diabetic ketoacidosis',
     fullySpecifiedName: 'Diabetic ketoacidosis (disorder)',
@@ -72,7 +72,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E10.1'],
   );
 
-  static const SnomedConcept diabeticNephropathy = SnomedConcept(
+  static final SnomedConcept diabeticNephropathy = SnomedConcept(
     code: '127013001',
     displayName: 'Diabetic renal disease',
     fullySpecifiedName: 'Diabetic nephropathy (disorder)',
@@ -80,7 +80,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E11.21'],
   );
 
-  static const SnomedConcept diabeticRetinopathy = SnomedConcept(
+  static final SnomedConcept diabeticRetinopathy = SnomedConcept(
     code: '425048006',
     displayName: 'Diabetic retinopathy',
     fullySpecifiedName: 'Diabetic retinopathy (disorder)',
@@ -88,7 +88,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E11.31'],
   );
 
-  static const SnomedConcept diabeticNeuropathy = SnomedConcept(
+  static final SnomedConcept diabeticNeuropathy = SnomedConcept(
     code: '126663001',
     displayName: 'Diabetic neuropathy',
     fullySpecifiedName: 'Diabetic neuropathy (disorder)',
@@ -97,7 +97,7 @@ class SnomedCommonConcepts {
   );
 
   // Thyroid
-  static const SnomedConcept hyperthyroidism = SnomedConcept(
+  static final SnomedConcept hyperthyroidism = SnomedConcept(
     code: '34486009',
     displayName: 'Hyperthyroidism',
     fullySpecifiedName: 'Hyperthyroidism (disorder)',
@@ -105,7 +105,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E05.90'],
   );
 
-  static const SnomedConcept hypothyroidism = SnomedConcept(
+  static final SnomedConcept hypothyroidism = SnomedConcept(
     code: '8410007',
     displayName: 'Hypothyroidism',
     fullySpecifiedName: 'Hypothyroidism (disorder)',
@@ -113,7 +113,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E03.9'],
   );
 
-  static const SnomedConcept hashimotoThyroiditis = SnomedConcept(
+  static final SnomedConcept hashimotoThyroiditis = SnomedConcept(
     code: '733941003',
     displayName: 'Hashimoto thyroiditis',
     fullySpecifiedName: 'Hashimoto thyroiditis (disorder)',
@@ -121,7 +121,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E06.3'],
   );
 
-  static const SnomedConcept gravesDisease = SnomedConcept(
+  static final SnomedConcept gravesDisease = SnomedConcept(
     code: '34486009',
     displayName: "Graves' disease",
     fullySpecifiedName: "Graves' disease (disorder)",
@@ -130,7 +130,7 @@ class SnomedCommonConcepts {
   );
 
   // Metabolic
-  static const SnomedConcept obesity = SnomedConcept(
+  static final SnomedConcept obesity = SnomedConcept(
     code: '414916001',
     displayName: 'Obesity',
     fullySpecifiedName: 'Obesity (disorder)',
@@ -138,7 +138,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E66.9'],
   );
 
-  static const SnomedConcept metabolicSyndrome = SnomedConcept(
+  static final SnomedConcept metabolicSyndrome = SnomedConcept(
     code: '237605009',
     displayName: 'Metabolic syndrome',
     fullySpecifiedName: 'Metabolic syndrome (disorder)',
@@ -146,7 +146,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E88.81'],
   );
 
-  static const SnomedConcept hypercholesterolemia = SnomedConcept(
+  static final SnomedConcept hypercholesterolemia = SnomedConcept(
     code: '13644009',
     displayName: 'Hypercholesterolemia',
     fullySpecifiedName: 'Hypercholesterolemia (disorder)',
@@ -154,7 +154,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E78.0'],
   );
 
-  static const SnomedConcept hypertriglyceridemia = SnomedConcept(
+  static final SnomedConcept hypertriglyceridemia = SnomedConcept(
     code: '302870006',
     displayName: 'Hypertriglyceridemia',
     fullySpecifiedName: 'Hypertriglyceridemia (disorder)',
@@ -162,7 +162,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E78.1'],
   );
 
-  static const SnomedConcept hyperuricemia = SnomedConcept(
+  static final SnomedConcept hyperuricemia = SnomedConcept(
     code: '35858006',
     displayName: 'Hyperuricemia',
     fullySpecifiedName: 'Hyperuricemia (disorder)',
@@ -170,7 +170,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['E79.0'],
   );
 
-  static const SnomedConcept adrenalInsufficiency = SnomedConcept(
+  static final SnomedConcept adrenalInsufficiency = SnomedConcept(
     code: '363686003',
     displayName: 'Adrenal insufficiency',
     fullySpecifiedName: 'Adrenal insufficiency (disorder)',
@@ -179,7 +179,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== CARDIOVASCULAR ====================
-  static const SnomedConcept hypertension = SnomedConcept(
+  static final SnomedConcept hypertension = SnomedConcept(
     code: '38341003',
     displayName: 'Hypertensive disorder',
     fullySpecifiedName: 'Hypertensive disorder, systemic arterial (disorder)',
@@ -188,7 +188,7 @@ class SnomedCommonConcepts {
     description: 'Sustained elevation of systemic arterial blood pressure',
   );
 
-  static const SnomedConcept atrialFibrillation = SnomedConcept(
+  static final SnomedConcept atrialFibrillation = SnomedConcept(
     code: '49436004',
     displayName: 'Atrial fibrillation',
     fullySpecifiedName: 'Atrial fibrillation (disorder)',
@@ -196,7 +196,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I48.91'],
   );
 
-  static const SnomedConcept atrialFlutter = SnomedConcept(
+  static final SnomedConcept atrialFlutter = SnomedConcept(
     code: '5370000',
     displayName: 'Atrial flutter',
     fullySpecifiedName: 'Atrial flutter (disorder)',
@@ -204,7 +204,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I48.3'],
   );
 
-  static const SnomedConcept heartFailure = SnomedConcept(
+  static final SnomedConcept heartFailure = SnomedConcept(
     code: '84114007',
     displayName: 'Heart failure',
     fullySpecifiedName: 'Heart failure (disorder)',
@@ -212,7 +212,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I50.9'],
   );
 
-  static const SnomedConcept heartFailureReducedEF = SnomedConcept(
+  static final SnomedConcept heartFailureReducedEF = SnomedConcept(
     code: '99530004',
     displayName: 'Heart failure with reduced ejection fraction',
     fullySpecifiedName: 'Heart failure with reduced ejection fraction (disorder)',
@@ -220,7 +220,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I50.22'],
   );
 
-  static const SnomedConcept acuteMI = SnomedConcept(
+  static final SnomedConcept acuteMI = SnomedConcept(
     code: '57054005',
     displayName: 'Acute myocardial infarction',
     fullySpecifiedName: 'Acute myocardial infarction (disorder)',
@@ -228,7 +228,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I21.9'],
   );
 
-  static const SnomedConcept stableAngina = SnomedConcept(
+  static final SnomedConcept stableAngina = SnomedConcept(
     code: '21899001',
     displayName: 'Stable angina',
     fullySpecifiedName: 'Angina pectoris (disorder)',
@@ -236,7 +236,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I25.10'],
   );
 
-  static const SnomedConcept coronaryArteryDisease = SnomedConcept(
+  static final SnomedConcept coronaryArteryDisease = SnomedConcept(
     code: '56265001',
     displayName: 'Coronary artery disease',
     fullySpecifiedName: 'Coronary artery disease (disorder)',
@@ -244,7 +244,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I25.9'],
   );
 
-  static const SnomedConcept peripheralArteryDisease = SnomedConcept(
+  static final SnomedConcept peripheralArteryDisease = SnomedConcept(
     code: '399957001',
     displayName: 'Peripheral arterial disease',
     fullySpecifiedName: 'Peripheral arterial disease (disorder)',
@@ -252,7 +252,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I73.9'],
   );
 
-  static const SnomedConcept carotidStenosis = SnomedConcept(
+  static final SnomedConcept carotidStenosis = SnomedConcept(
     code: '429577009',
     displayName: 'Carotid artery stenosis',
     fullySpecifiedName: 'Carotid artery stenosis (disorder)',
@@ -260,7 +260,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I65.29'],
   );
 
-  static const SnomedConcept aorticAneurysm = SnomedConcept(
+  static final SnomedConcept aorticAneurysm = SnomedConcept(
     code: '233985008',
     displayName: 'Aortic aneurysm',
     fullySpecifiedName: 'Aortic aneurysm (disorder)',
@@ -268,7 +268,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I71.9'],
   );
 
-  static const SnomedConcept dvt = SnomedConcept(
+  static final SnomedConcept dvt = SnomedConcept(
     code: '128053003',
     displayName: 'Deep vein thrombosis',
     fullySpecifiedName: 'Deep vein thrombosis (disorder)',
@@ -276,7 +276,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I82.409'],
   );
 
-  static const SnomedConcept pulmonaryEmbolism = SnomedConcept(
+  static final SnomedConcept pulmonaryEmbolism = SnomedConcept(
     code: '5929000',
     displayName: 'Pulmonary embolism',
     fullySpecifiedName: 'Pulmonary embolism (disorder)',
@@ -284,7 +284,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I26.99'],
   );
 
-  static const SnomedConcept varicoseVeins = SnomedConcept(
+  static final SnomedConcept varicoseVeins = SnomedConcept(
     code: '80004',
     displayName: 'Varicose veins',
     fullySpecifiedName: 'Varicose veins (disorder)',
@@ -293,7 +293,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== RESPIRATORY ====================
-  static const SnomedConcept asthma = SnomedConcept(
+  static final SnomedConcept asthma = SnomedConcept(
     code: '195967001',
     displayName: 'Asthma',
     fullySpecifiedName: 'Asthma (disorder)',
@@ -301,7 +301,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['J45.909'],
   );
 
-  static const SnomedConcept copd = SnomedConcept(
+  static final SnomedConcept copd = SnomedConcept(
     code: '13645005',
     displayName: 'Chronic obstructive pulmonary disease',
     fullySpecifiedName: 'Chronic obstructive pulmonary disease (disorder)',
@@ -309,7 +309,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['J44.9'],
   );
 
-  static const SnomedConcept chronicBronchitis = SnomedConcept(
+  static final SnomedConcept chronicBronchitis = SnomedConcept(
     code: '6335009',
     displayName: 'Chronic bronchitis',
     fullySpecifiedName: 'Chronic bronchitis (disorder)',
@@ -317,7 +317,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['J42'],
   );
 
-  static const SnomedConcept emphysema = SnomedConcept(
+  static final SnomedConcept emphysema = SnomedConcept(
     code: '87433001',
     displayName: 'Pulmonary emphysema',
     fullySpecifiedName: 'Pulmonary emphysema (disorder)',
@@ -325,7 +325,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['J43.9'],
   );
 
-  static const SnomedConcept bronchiectasis = SnomedConcept(
+  static final SnomedConcept bronchiectasis = SnomedConcept(
     code: '122965006',
     displayName: 'Bronchiectasis',
     fullySpecifiedName: 'Bronchiectasis (disorder)',
@@ -333,7 +333,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['J47.9'],
   );
 
-  static const SnomedConcept respiratoryFailure = SnomedConcept(
+  static final SnomedConcept respiratoryFailure = SnomedConcept(
     code: '6571008',
     displayName: 'Respiratory failure',
     fullySpecifiedName: 'Respiratory failure (disorder)',
@@ -341,7 +341,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['J96.90'],
   );
 
-  static const SnomedConcept ards = SnomedConcept(
+  static final SnomedConcept ards = SnomedConcept(
     code: '67782004',
     displayName: 'Acute respiratory distress syndrome',
     fullySpecifiedName: 'Acute respiratory distress syndrome (disorder)',
@@ -349,7 +349,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['J80'],
   );
 
-  static const SnomedConcept pneumonia = SnomedConcept(
+  static final SnomedConcept pneumonia = SnomedConcept(
     code: '233604007',
     displayName: 'Pneumonia',
     fullySpecifiedName: 'Pneumonia (disorder)',
@@ -357,7 +357,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['J18.9'],
   );
 
-  static const SnomedConcept pleuralEffusion = SnomedConcept(
+  static final SnomedConcept pleuralEffusion = SnomedConcept(
     code: '4378000',
     displayName: 'Pleural effusion',
     fullySpecifiedName: 'Pleural effusion (disorder)',
@@ -366,7 +366,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== RENAL / KIDNEY ====================
-  static const SnomedConcept acuteKidneyInjury = SnomedConcept(
+  static final SnomedConcept acuteKidneyInjury = SnomedConcept(
     code: '14677001',
     displayName: 'Acute kidney injury',
     fullySpecifiedName: 'Acute kidney injury (disorder)',
@@ -374,7 +374,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N17.9'],
   );
 
-  static const SnomedConcept chronicKidneyDisease = SnomedConcept(
+  static final SnomedConcept chronicKidneyDisease = SnomedConcept(
     code: '709044004',
     displayName: 'Chronic kidney disease',
     fullySpecifiedName: 'Chronic kidney disease (disorder)',
@@ -382,7 +382,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N18.9'],
   );
 
-  static const SnomedConcept ckdStage3 = SnomedConcept(
+  static final SnomedConcept ckdStage3 = SnomedConcept(
     code: '431857006',
     displayName: 'Chronic kidney disease stage 3',
     fullySpecifiedName: 'Chronic kidney disease stage 3 (disorder)',
@@ -390,7 +390,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N18.3'],
   );
 
-  static const SnomedConcept ckdStage4 = SnomedConcept(
+  static final SnomedConcept ckdStage4 = SnomedConcept(
     code: '431858001',
     displayName: 'Chronic kidney disease stage 4',
     fullySpecifiedName: 'Chronic kidney disease stage 4 (disorder)',
@@ -398,7 +398,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N18.4'],
   );
 
-  static const SnomedConcept ckdStage5 = SnomedConcept(
+  static final SnomedConcept ckdStage5 = SnomedConcept(
     code: '433951005',
     displayName: 'Chronic kidney disease stage 5',
     fullySpecifiedName: 'Chronic kidney disease stage 5 (disorder)',
@@ -406,7 +406,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N18.5'],
   );
 
-  static const SnomedConcept endStageRenalDisease = SnomedConcept(
+  static final SnomedConcept endStageRenalDisease = SnomedConcept(
     code: '46177005',
     displayName: 'End stage renal disease',
     fullySpecifiedName: 'End stage renal disease (disorder)',
@@ -414,7 +414,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N18.6'],
   );
 
-  static const SnomedConcept nephroticSyndrome = SnomedConcept(
+  static final SnomedConcept nephroticSyndrome = SnomedConcept(
     code: '5624001',
     displayName: 'Nephrotic syndrome',
     fullySpecifiedName: 'Nephrotic syndrome (disorder)',
@@ -422,7 +422,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N04.9'],
   );
 
-  static const SnomedConcept glomerulonephritis = SnomedConcept(
+  static final SnomedConcept glomerulonephritis = SnomedConcept(
     code: '69618006',
     displayName: 'Glomerulonephritis',
     fullySpecifiedName: 'Glomerulonephritis (disorder)',
@@ -430,7 +430,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N05.9'],
   );
 
-  static const SnomedConcept urinaryTractInfection = SnomedConcept(
+  static final SnomedConcept urinaryTractInfection = SnomedConcept(
     code: '68566003',
     displayName: 'Urinary tract infection',
     fullySpecifiedName: 'Urinary tract infection (disorder)',
@@ -438,7 +438,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N39.0'],
   );
 
-  static const SnomedConcept benignProstaticHyperplasia = SnomedConcept(
+  static final SnomedConcept benignProstaticHyperplasia = SnomedConcept(
     code: '19978001',
     displayName: 'Benign prostatic hyperplasia',
     fullySpecifiedName: 'Benign prostatic hyperplasia (disorder)',
@@ -446,7 +446,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['N40.1'],
   );
 
-  static const SnomedConcept kidneyStone = SnomedConcept(
+  static final SnomedConcept kidneyStone = SnomedConcept(
     code: '20365006',
     displayName: 'Kidney stone',
     fullySpecifiedName: 'Kidney stone (disorder)',
@@ -455,7 +455,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== LIVER ====================
-  static const SnomedConcept alcoholicLiverDisease = SnomedConcept(
+  static final SnomedConcept alcoholicLiverDisease = SnomedConcept(
     code: '235887005',
     displayName: 'Alcoholic liver disease',
     fullySpecifiedName: 'Alcoholic liver disease (disorder)',
@@ -463,7 +463,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K70.30'],
   );
 
-  static const SnomedConcept hepaticFailure = SnomedConcept(
+  static final SnomedConcept hepaticFailure = SnomedConcept(
     code: '37367000',
     displayName: 'Hepatic failure',
     fullySpecifiedName: 'Hepatic failure (disorder)',
@@ -471,7 +471,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K72.90'],
   );
 
-  static const SnomedConcept hepaticEncephalopathy = SnomedConcept(
+  static final SnomedConcept hepaticEncephalopathy = SnomedConcept(
     code: '27463000',
     displayName: 'Hepatic encephalopathy',
     fullySpecifiedName: 'Hepatic encephalopathy (disorder)',
@@ -479,7 +479,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K72.91'],
   );
 
-  static const SnomedConcept nafld = SnomedConcept(
+  static final SnomedConcept nafld = SnomedConcept(
     code: '197275002',
     displayName: 'Non-alcoholic fatty liver disease',
     fullySpecifiedName: 'Non-alcoholic fatty liver disease (disorder)',
@@ -487,7 +487,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K76.0'],
   );
 
-  static const SnomedConcept nash = SnomedConcept(
+  static final SnomedConcept nash = SnomedConcept(
     code: '443761001',
     displayName: 'Non-alcoholic steatohepatitis',
     fullySpecifiedName: 'Non-alcoholic steatohepatitis (disorder)',
@@ -495,7 +495,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K76.0'],
   );
 
-  static const SnomedConcept hepatitisB = SnomedConcept(
+  static final SnomedConcept hepatitisB = SnomedConcept(
     code: '66099002',
     displayName: 'Hepatitis B',
     fullySpecifiedName: 'Hepatitis B (disorder)',
@@ -503,7 +503,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['B18.1'],
   );
 
-  static const SnomedConcept hepatitisC = SnomedConcept(
+  static final SnomedConcept hepatitisC = SnomedConcept(
     code: '235935006',
     displayName: 'Hepatitis C',
     fullySpecifiedName: 'Hepatitis C (disorder)',
@@ -511,7 +511,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['B18.2'],
   );
 
-  static const SnomedConcept liverCirrhosis = SnomedConcept(
+  static final SnomedConcept liverCirrhosis = SnomedConcept(
     code: '19943007',
     displayName: 'Cirrhosis of liver',
     fullySpecifiedName: 'Cirrhosis of liver (disorder)',
@@ -519,7 +519,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K74.60'],
   );
 
-  static const SnomedConcept portalHypertension = SnomedConcept(
+  static final SnomedConcept portalHypertension = SnomedConcept(
     code: '281757004',
     displayName: 'Portal hypertension',
     fullySpecifiedName: 'Portal hypertension (disorder)',
@@ -527,7 +527,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K76.6'],
   );
 
-  static const SnomedConcept cholecystitis = SnomedConcept(
+  static final SnomedConcept cholecystitis = SnomedConcept(
     code: '47605003',
     displayName: 'Cholecystitis',
     fullySpecifiedName: 'Cholecystitis (disorder)',
@@ -535,7 +535,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K81.0'],
   );
 
-  static const SnomedConcept cholelithiasis = SnomedConcept(
+  static final SnomedConcept cholelithiasis = SnomedConcept(
     code: '14806000',
     displayName: 'Cholelithiasis',
     fullySpecifiedName: 'Cholelithiasis (disorder)',
@@ -544,7 +544,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== BLOOD / HEMATOLOGY ====================
-  static const SnomedConcept ironDeficiencyAnemia = SnomedConcept(
+  static final SnomedConcept ironDeficiencyAnemia = SnomedConcept(
     code: '87532002',
     displayName: 'Iron deficiency anemia',
     fullySpecifiedName: 'Iron deficiency anemia (disorder)',
@@ -552,7 +552,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D50.9'],
   );
 
-  static const SnomedConcept vitaminB12Deficiency = SnomedConcept(
+  static final SnomedConcept vitaminB12Deficiency = SnomedConcept(
     code: '40108008',
     displayName: 'Vitamin B12 deficiency anemia',
     fullySpecifiedName: 'Vitamin B12 deficiency anemia (disorder)',
@@ -560,7 +560,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D51.9'],
   );
 
-  static const SnomedConcept folateDeficiencyAnemia = SnomedConcept(
+  static final SnomedConcept folateDeficiencyAnemia = SnomedConcept(
     code: '63434000',
     displayName: 'Folate deficiency anemia',
     fullySpecifiedName: 'Folate deficiency anemia (disorder)',
@@ -568,7 +568,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D52.9'],
   );
 
-  static const SnomedConcept hemolyticAnemia = SnomedConcept(
+  static final SnomedConcept hemolyticAnemia = SnomedConcept(
     code: '53711006',
     displayName: 'Hemolytic anemia',
     fullySpecifiedName: 'Hemolytic anemia (disorder)',
@@ -576,7 +576,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D59.9'],
   );
 
-  static const SnomedConcept sickleCellDisease = SnomedConcept(
+  static final SnomedConcept sickleCellDisease = SnomedConcept(
     code: '127654009',
     displayName: 'Sickle cell disease',
     fullySpecifiedName: 'Sickle cell disease (disorder)',
@@ -584,7 +584,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D57.00'],
   );
 
-  static const SnomedConcept thalassemia = SnomedConcept(
+  static final SnomedConcept thalassemia = SnomedConcept(
     code: '111324002',
     displayName: 'Thalassemia',
     fullySpecifiedName: 'Thalassemia (disorder)',
@@ -592,7 +592,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D56.9'],
   );
 
-  static const SnomedConcept aplasticAnemia = SnomedConcept(
+  static final SnomedConcept aplasticAnemia = SnomedConcept(
     code: '14203004',
     displayName: 'Aplastic anemia',
     fullySpecifiedName: 'Aplastic anemia (disorder)',
@@ -600,7 +600,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D61.9'],
   );
 
-  static const SnomedConcept anemiaOfChronicDisease = SnomedConcept(
+  static final SnomedConcept anemiaOfChronicDisease = SnomedConcept(
     code: '191309006',
     displayName: 'Anemia of chronic disease',
     fullySpecifiedName: 'Anemia of chronic disease (disorder)',
@@ -608,7 +608,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D63.1'],
   );
 
-  static const SnomedConcept neutropenia = SnomedConcept(
+  static final SnomedConcept neutropenia = SnomedConcept(
     code: '131114000',
     displayName: 'Neutropenia',
     fullySpecifiedName: 'Neutropenia (disorder)',
@@ -616,7 +616,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D70.9'],
   );
 
-  static const SnomedConcept thrombocytopenia = SnomedConcept(
+  static final SnomedConcept thrombocytopenia = SnomedConcept(
     code: '28929008',
     displayName: 'Thrombocytopenia',
     fullySpecifiedName: 'Thrombocytopenia (disorder)',
@@ -624,7 +624,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D69.6'],
   );
 
-  static const SnomedConcept hemophilia = SnomedConcept(
+  static final SnomedConcept hemophilia = SnomedConcept(
     code: '127035006',
     displayName: 'Hemophilia',
     fullySpecifiedName: 'Hemophilia (disorder)',
@@ -632,7 +632,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D66'],
   );
 
-  static const SnomedConcept vonWillebrandDisease = SnomedConcept(
+  static final SnomedConcept vonWillebrandDisease = SnomedConcept(
     code: '86406008',
     displayName: "Von Willebrand's disease",
     fullySpecifiedName: "Von Willebrand's disease (disorder)",
@@ -640,7 +640,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['D68.0'],
   );
 
-  static const SnomedConcept polycythemiaVera = SnomedConcept(
+  static final SnomedConcept polycythemiaVera = SnomedConcept(
     code: '56727007',
     displayName: 'Polycythemia vera',
     fullySpecifiedName: 'Polycythemia vera (disorder)',
@@ -649,7 +649,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== CANCER ====================
-  static const SnomedConcept lungCancer = SnomedConcept(
+  static final SnomedConcept lungCancer = SnomedConcept(
     code: '363358000',
     displayName: 'Malignant tumor of lung',
     fullySpecifiedName: 'Malignant tumor of lung (disorder)',
@@ -657,7 +657,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['C34.90'],
   );
 
-  static const SnomedConcept breastCancer = SnomedConcept(
+  static final SnomedConcept breastCancer = SnomedConcept(
     code: '254837004',
     displayName: 'Malignant tumor of breast',
     fullySpecifiedName: 'Malignant tumor of breast (disorder)',
@@ -665,7 +665,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['C50.919'],
   );
 
-  static const SnomedConcept colonCancer = SnomedConcept(
+  static final SnomedConcept colonCancer = SnomedConcept(
     code: '363406005',
     displayName: 'Malignant tumor of colon',
     fullySpecifiedName: 'Malignant tumor of colon (disorder)',
@@ -673,7 +673,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['C18.9'],
   );
 
-  static const SnomedConcept prostateCancer = SnomedConcept(
+  static final SnomedConcept prostateCancer = SnomedConcept(
     code: '254900004',
     displayName: 'Malignant tumor of prostate',
     fullySpecifiedName: 'Malignant tumor of prostate (disorder)',
@@ -681,7 +681,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['C61'],
   );
 
-  static const SnomedConcept pancreaticCancer = SnomedConcept(
+  static final SnomedConcept pancreaticCancer = SnomedConcept(
     code: '367498001',
     displayName: 'Malignant tumor of pancreas',
     fullySpecifiedName: 'Malignant tumor of pancreas (disorder)',
@@ -689,7 +689,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['C25.9'],
   );
 
-  static const SnomedConcept leukemia = SnomedConcept(
+  static final SnomedConcept leukemia = SnomedConcept(
     code: '88807004',
     displayName: 'Leukemia',
     fullySpecifiedName: 'Leukemia (disorder)',
@@ -697,7 +697,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['C95.90'],
   );
 
-  static const SnomedConcept multipleMyeloma = SnomedConcept(
+  static final SnomedConcept multipleMyeloma = SnomedConcept(
     code: '109989006',
     displayName: 'Multiple myeloma',
     fullySpecifiedName: 'Multiple myeloma (disorder)',
@@ -705,7 +705,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['C90.00'],
   );
 
-  static const SnomedConcept lymphoma = SnomedConcept(
+  static final SnomedConcept lymphoma = SnomedConcept(
     code: '118600007',
     displayName: 'Non-Hodgkin lymphoma',
     fullySpecifiedName: 'Non-Hodgkin lymphoma (disorder)',
@@ -713,7 +713,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['C85.90'],
   );
 
-  static const SnomedConcept melanoma = SnomedConcept(
+  static final SnomedConcept melanoma = SnomedConcept(
     code: '254715000',
     displayName: 'Malignant melanoma',
     fullySpecifiedName: 'Malignant melanoma (disorder)',
@@ -722,7 +722,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== MENTAL HEALTH ====================
-  static const SnomedConcept majorDepression = SnomedConcept(
+  static final SnomedConcept majorDepression = SnomedConcept(
     code: '398044002',
     displayName: 'Major depression',
     fullySpecifiedName: 'Major depression disorder (disorder)',
@@ -730,7 +730,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F32.9'],
   );
 
-  static const SnomedConcept majorDepressionRecurrent = SnomedConcept(
+  static final SnomedConcept majorDepressionRecurrent = SnomedConcept(
     code: '19485003',
     displayName: 'Major depressive disorder, recurrent',
     fullySpecifiedName: 'Major depressive disorder, recurrent (disorder)',
@@ -738,7 +738,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F33.9'],
   );
 
-  static const SnomedConcept dysthymia = SnomedConcept(
+  static final SnomedConcept dysthymia = SnomedConcept(
     code: '31095003',
     displayName: 'Dysthymia',
     fullySpecifiedName: 'Dysthymia (disorder)',
@@ -746,7 +746,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F34.1'],
   );
 
-  static const SnomedConcept bipolarDisorder = SnomedConcept(
+  static final SnomedConcept bipolarDisorder = SnomedConcept(
     code: '49083000',
     displayName: 'Bipolar disorder',
     fullySpecifiedName: 'Bipolar disorder (disorder)',
@@ -754,7 +754,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F31.9'],
   );
 
-  static const SnomedConcept generalizedAnxiety = SnomedConcept(
+  static final SnomedConcept generalizedAnxiety = SnomedConcept(
     code: '48694002',
     displayName: 'Generalized anxiety disorder',
     fullySpecifiedName: 'Generalized anxiety disorder (disorder)',
@@ -762,7 +762,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F41.1'],
   );
 
-  static const SnomedConcept panicDisorder = SnomedConcept(
+  static final SnomedConcept panicDisorder = SnomedConcept(
     code: '57676003',
     displayName: 'Panic disorder',
     fullySpecifiedName: 'Panic disorder (disorder)',
@@ -770,7 +770,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F41.0'],
   );
 
-  static const SnomedConcept socialAnxiety = SnomedConcept(
+  static final SnomedConcept socialAnxiety = SnomedConcept(
     code: '367498001',
     displayName: 'Social anxiety disorder',
     fullySpecifiedName: 'Social anxiety disorder (disorder)',
@@ -778,7 +778,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F40.10'],
   );
 
-  static const SnomedConcept ptsd = SnomedConcept(
+  static final SnomedConcept ptsd = SnomedConcept(
     code: '47505003',
     displayName: 'Post-traumatic stress disorder',
     fullySpecifiedName: 'Post-traumatic stress disorder (disorder)',
@@ -786,7 +786,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F43.10'],
   );
 
-  static const SnomedConcept ocd = SnomedConcept(
+  static final SnomedConcept ocd = SnomedConcept(
     code: '33449004',
     displayName: 'Obsessive-compulsive disorder',
     fullySpecifiedName: 'Obsessive-compulsive disorder (disorder)',
@@ -794,7 +794,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F42.9'],
   );
 
-  static const SnomedConcept adjustmentDisorder = SnomedConcept(
+  static final SnomedConcept adjustmentDisorder = SnomedConcept(
     code: '30608005',
     displayName: 'Adjustment disorder',
     fullySpecifiedName: 'Adjustment disorder (disorder)',
@@ -802,7 +802,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F43.9'],
   );
 
-  static const SnomedConcept schizophrenia = SnomedConcept(
+  static final SnomedConcept schizophrenia = SnomedConcept(
     code: '58214004',
     displayName: 'Schizophrenia',
     fullySpecifiedName: 'Schizophrenia (disorder)',
@@ -810,7 +810,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F20.9'],
   );
 
-  static const SnomedConcept alcoholUseDisorder = SnomedConcept(
+  static final SnomedConcept alcoholUseDisorder = SnomedConcept(
     code: '7200002',
     displayName: 'Alcohol use disorder',
     fullySpecifiedName: 'Alcohol use disorder (disorder)',
@@ -818,7 +818,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F10.20'],
   );
 
-  static const SnomedConcept opioidUseDisorder = SnomedConcept(
+  static final SnomedConcept opioidUseDisorder = SnomedConcept(
     code: '231450006',
     displayName: 'Opioid use disorder',
     fullySpecifiedName: 'Opioid use disorder (disorder)',
@@ -826,7 +826,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F11.20'],
   );
 
-  static const SnomedConcept autismSpectrumDisorder = SnomedConcept(
+  static final SnomedConcept autismSpectrumDisorder = SnomedConcept(
     code: '408856003',
     displayName: 'Autism spectrum disorder',
     fullySpecifiedName: 'Autism spectrum disorder (disorder)',
@@ -834,7 +834,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F84.0'],
   );
 
-  static const SnomedConcept adhd = SnomedConcept(
+  static final SnomedConcept adhd = SnomedConcept(
     code: '406506008',
     displayName: 'Attention deficit hyperactivity disorder',
     fullySpecifiedName: 'Attention deficit hyperactivity disorder (disorder)',
@@ -842,7 +842,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F90.9'],
   );
 
-  static const SnomedConcept dementia = SnomedConcept(
+  static final SnomedConcept dementia = SnomedConcept(
     code: '52448006',
     displayName: 'Dementia',
     fullySpecifiedName: 'Dementia (disorder)',
@@ -850,7 +850,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['F03.90'],
   );
 
-  static const SnomedConcept mildCognitiveImpairment = SnomedConcept(
+  static final SnomedConcept mildCognitiveImpairment = SnomedConcept(
     code: '391318001',
     displayName: 'Mild cognitive impairment',
     fullySpecifiedName: 'Mild cognitive impairment (finding)',
@@ -859,7 +859,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== NEUROLOGICAL ====================
-  static const SnomedConcept stroke = SnomedConcept(
+  static final SnomedConcept stroke = SnomedConcept(
     code: '230690007',
     displayName: 'Stroke',
     fullySpecifiedName: 'Cerebrovascular accident (disorder)',
@@ -867,7 +867,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['I64'],
   );
 
-  static const SnomedConcept tia = SnomedConcept(
+  static final SnomedConcept tia = SnomedConcept(
     code: '282825008',
     displayName: 'Transient ischemic attack',
     fullySpecifiedName: 'Transient ischemic attack (disorder)',
@@ -875,7 +875,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['G45.9'],
   );
 
-  static const SnomedConcept parkinsonDisease = SnomedConcept(
+  static final SnomedConcept parkinsonDisease = SnomedConcept(
     code: '49049000',
     displayName: "Parkinson's disease",
     fullySpecifiedName: "Parkinson's disease (disorder)",
@@ -883,7 +883,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['G20'],
   );
 
-  static const SnomedConcept alzheimerDisease = SnomedConcept(
+  static final SnomedConcept alzheimerDisease = SnomedConcept(
     code: '26929004',
     displayName: "Alzheimer's disease",
     fullySpecifiedName: "Alzheimer's disease (disorder)",
@@ -891,7 +891,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['G30.9'],
   );
 
-  static const SnomedConcept epilepsy = SnomedConcept(
+  static final SnomedConcept epilepsy = SnomedConcept(
     code: '84757009',
     displayName: 'Epilepsy',
     fullySpecifiedName: 'Epilepsy (disorder)',
@@ -899,7 +899,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['G40.909'],
   );
 
-  static const SnomedConcept peripheralNeuropathy = SnomedConcept(
+  static final SnomedConcept peripheralNeuropathy = SnomedConcept(
     code: '3920002',
     displayName: 'Peripheral neuropathy',
     fullySpecifiedName: 'Peripheral neuropathy (disorder)',
@@ -907,7 +907,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['G62.9'],
   );
 
-  static const SnomedConcept migraine = SnomedConcept(
+  static final SnomedConcept migraine = SnomedConcept(
     code: '37796009',
     displayName: 'Migraine',
     fullySpecifiedName: 'Migraine (disorder)',
@@ -916,7 +916,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== PAIN CONDITIONS ====================
-  static const SnomedConcept abdominalPain = SnomedConcept(
+  static final SnomedConcept abdominalPain = SnomedConcept(
     code: '21522001',
     displayName: 'Abdominal pain',
     fullySpecifiedName: 'Abdominal pain (finding)',
@@ -924,7 +924,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R10.9'],
   );
 
-  static const SnomedConcept chestPain = SnomedConcept(
+  static final SnomedConcept chestPain = SnomedConcept(
     code: '29857009',
     displayName: 'Chest pain',
     fullySpecifiedName: 'Chest pain (finding)',
@@ -932,7 +932,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R07.9'],
   );
 
-  static const SnomedConcept headache = SnomedConcept(
+  static final SnomedConcept headache = SnomedConcept(
     code: '25064002',
     displayName: 'Headache',
     fullySpecifiedName: 'Headache (finding)',
@@ -940,7 +940,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R51.9'],
   );
 
-  static const SnomedConcept lowBackPain = SnomedConcept(
+  static final SnomedConcept lowBackPain = SnomedConcept(
     code: '279039007',
     displayName: 'Low back pain',
     fullySpecifiedName: 'Low back pain (finding)',
@@ -948,7 +948,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['M54.5'],
   );
 
-  static const SnomedConcept chronicPain = SnomedConcept(
+  static final SnomedConcept chronicPain = SnomedConcept(
     code: '82423001',
     displayName: 'Chronic pain',
     fullySpecifiedName: 'Chronic pain (finding)',
@@ -957,7 +957,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== GASTROINTESTINAL ====================
-  static const SnomedConcept gerd = SnomedConcept(
+  static final SnomedConcept gerd = SnomedConcept(
     code: '396275008',
     displayName: 'Gastro-esophageal reflux disease',
     fullySpecifiedName: 'Gastro-esophageal reflux disease (disorder)',
@@ -965,7 +965,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K21.0'],
   );
 
-  static const SnomedConcept gastritis = SnomedConcept(
+  static final SnomedConcept gastritis = SnomedConcept(
     code: '45305002',
 
     displayName: 'Gastritis',
@@ -974,7 +974,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K29.70'],
   );
 
-  static const SnomedConcept pepticUlcer = SnomedConcept(
+  static final SnomedConcept pepticUlcer = SnomedConcept(
     code: '13200003',
     displayName: 'Peptic ulcer',
     fullySpecifiedName: 'Peptic ulcer (disorder)',
@@ -982,7 +982,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K27.9'],
   );
 
-  static const SnomedConcept irritableBowelSyndrome = SnomedConcept(
+  static final SnomedConcept irritableBowelSyndrome = SnomedConcept(
     code: '10743008',
     displayName: 'Irritable bowel syndrome',
     fullySpecifiedName: 'Irritable bowel syndrome (disorder)',
@@ -990,7 +990,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K58.9'],
   );
 
-  static const SnomedConcept inflammatoryBowelDisease = SnomedConcept(
+  static final SnomedConcept inflammatoryBowelDisease = SnomedConcept(
     code: '192630005',
     displayName: 'Crohn disease',
     fullySpecifiedName: 'Crohn disease (disorder)',
@@ -998,7 +998,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K50.90'],
   );
 
-  static const SnomedConcept ulcerativeColitis = SnomedConcept(
+  static final SnomedConcept ulcerativeColitis = SnomedConcept(
     code: '64766004',
     displayName: 'Ulcerative colitis',
     fullySpecifiedName: 'Ulcerative colitis (disorder)',
@@ -1006,7 +1006,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K51.90'],
   );
 
-  static const SnomedConcept pancreatitis = SnomedConcept(
+  static final SnomedConcept pancreatitis = SnomedConcept(
     code: '75694006',
     displayName: 'Pancreatitis',
     fullySpecifiedName: 'Pancreatitis (disorder)',
@@ -1014,7 +1014,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['K85.90'],
   );
 
-  static const SnomedConcept diverticulosis = SnomedConcept(
+  static final SnomedConcept diverticulosis = SnomedConcept(
     code: '259018006',
     displayName: 'Diverticular disease',
     fullySpecifiedName: 'Diverticular disease (disorder)',
@@ -1023,7 +1023,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== MUSCULOSKELETAL ====================
-  static const SnomedConcept osteoarthritis = SnomedConcept(
+  static final SnomedConcept osteoarthritis = SnomedConcept(
     code: '396275006',
     displayName: 'Osteoarthritis',
     fullySpecifiedName: 'Osteoarthritis (disorder)',
@@ -1031,7 +1031,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['M19.90'],
   );
 
-  static const SnomedConcept rheumatoidArthritis = SnomedConcept(
+  static final SnomedConcept rheumatoidArthritis = SnomedConcept(
     code: '3723001',
     displayName: 'Rheumatoid arthritis',
     fullySpecifiedName: 'Rheumatoid arthritis (disorder)',
@@ -1039,7 +1039,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['M06.9'],
   );
 
-  static const SnomedConcept lupus = SnomedConcept(
+  static final SnomedConcept lupus = SnomedConcept(
     code: '55464009',
     displayName: 'Systemic lupus erythematosus',
     fullySpecifiedName: 'Systemic lupus erythematosus (disorder)',
@@ -1047,7 +1047,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['M32.9'],
   );
 
-  static const SnomedConcept fibromyalgia = SnomedConcept(
+  static final SnomedConcept fibromyalgia = SnomedConcept(
     code: '95417006',
     displayName: 'Fibromyalgia',
     fullySpecifiedName: 'Fibromyalgia (disorder)',
@@ -1055,7 +1055,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['M79.7'],
   );
 
-  static const SnomedConcept osteoporosis = SnomedConcept(
+  static final SnomedConcept osteoporosis = SnomedConcept(
     code: '282026002',
     displayName: 'Osteoporosis',
     fullySpecifiedName: 'Osteoporosis (disorder)',
@@ -1063,7 +1063,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['M81.0'],
   );
 
-  static const SnomedConcept gout = SnomedConcept(
+  static final SnomedConcept gout = SnomedConcept(
     code: '90560007',
     displayName: 'Gout',
     fullySpecifiedName: 'Gout (disorder)',
@@ -1072,7 +1072,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== SYMPTOMS / FINDINGS ====================
-  static const SnomedConcept fatigue = SnomedConcept(
+  static final SnomedConcept fatigue = SnomedConcept(
     code: '84229001',
     displayName: 'Fatigue',
     fullySpecifiedName: 'Fatigue (finding)',
@@ -1080,7 +1080,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R53.83'],
   );
 
-  static const SnomedConcept dizziness = SnomedConcept(
+  static final SnomedConcept dizziness = SnomedConcept(
     code: '404640003',
     displayName: 'Dizziness',
     fullySpecifiedName: 'Dizziness (finding)',
@@ -1088,7 +1088,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R42'],
   );
 
-  static const SnomedConcept insomnia = SnomedConcept(
+  static final SnomedConcept insomnia = SnomedConcept(
     code: '193462001',
     displayName: 'Insomnia',
     fullySpecifiedName: 'Insomnia (disorder)',
@@ -1096,7 +1096,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['G47.00'],
   );
 
-  static const SnomedConcept dyspnea = SnomedConcept(
+  static final SnomedConcept dyspnea = SnomedConcept(
     code: '267036007',
     displayName: 'Dyspnea',
     fullySpecifiedName: 'Dyspnea (finding)',
@@ -1104,7 +1104,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R06.02'],
   );
 
-  static const SnomedConcept cough = SnomedConcept(
+  static final SnomedConcept cough = SnomedConcept(
     code: '49727002',
     displayName: 'Cough',
     fullySpecifiedName: 'Cough (finding)',
@@ -1112,7 +1112,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R05.9'],
   );
 
-  static const SnomedConcept nausea = SnomedConcept(
+  static final SnomedConcept nausea = SnomedConcept(
     code: '422587007',
     displayName: 'Nausea',
     fullySpecifiedName: 'Nausea (finding)',
@@ -1120,7 +1120,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R11.0'],
   );
 
-  static const SnomedConcept fever = SnomedConcept(
+  static final SnomedConcept fever = SnomedConcept(
     code: '386661006',
     displayName: 'Fever',
     fullySpecifiedName: 'Fever (finding)',
@@ -1128,7 +1128,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R50.9'],
   );
 
-  static const SnomedConcept jaundice = SnomedConcept(
+  static final SnomedConcept jaundice = SnomedConcept(
     code: '18121001',
     displayName: 'Jaundice',
     fullySpecifiedName: 'Jaundice (finding)',
@@ -1136,7 +1136,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R17'],
   );
 
-  static const SnomedConcept weightLoss = SnomedConcept(
+  static final SnomedConcept weightLoss = SnomedConcept(
     code: '39447000',
     displayName: 'Weight loss',
     fullySpecifiedName: 'Weight loss (finding)',
@@ -1144,7 +1144,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R63.4'],
   );
 
-  static const SnomedConcept confusion = SnomedConcept(
+  static final SnomedConcept confusion = SnomedConcept(
     code: '40917000',
     displayName: 'Confusion',
     fullySpecifiedName: 'Confusion (finding)',
@@ -1152,7 +1152,7 @@ class SnomedCommonConcepts {
     icd10Mappings: ['R41.0'],
   );
 
-  static const SnomedConcept syncope = SnomedConcept(
+  static final SnomedConcept syncope = SnomedConcept(
     code: '271595007',
     displayName: 'Syncope',
     fullySpecifiedName: 'Syncope (finding)',
@@ -1161,7 +1161,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== LAB OBSERVATIONS ====================
-  static const SnomedConcept hemoglobinA1c = SnomedConcept(
+  static final SnomedConcept hemoglobinA1c = SnomedConcept(
     code: '43396008',
     displayName: 'Hemoglobin A1c',
     fullySpecifiedName: 'Hemoglobin A1c (substance)',
@@ -1169,7 +1169,7 @@ class SnomedCommonConcepts {
     loincMappings: ['4548-4'],
   );
 
-  static const SnomedConcept glucoseMeasurement = SnomedConcept(
+  static final SnomedConcept glucoseMeasurement = SnomedConcept(
     code: '33489001',
     displayName: 'Glucose measurement',
     fullySpecifiedName: 'Glucose measurement (procedure)',
@@ -1177,7 +1177,7 @@ class SnomedCommonConcepts {
     loincMappings: ['2345-7'],
   );
 
-  static const SnomedConcept egfrMeasurement = SnomedConcept(
+  static final SnomedConcept egfrMeasurement = SnomedConcept(
     code: '447842003',
     displayName: 'Glomerular filtration rate measurement',
     fullySpecifiedName: 'Glomerular filtration rate measurement (procedure)',
@@ -1185,7 +1185,7 @@ class SnomedCommonConcepts {
     loincMappings: ['69405-6'],
   );
 
-  static const SnomedConcept altMeasurement = SnomedConcept(
+  static final SnomedConcept altMeasurement = SnomedConcept(
     code: '89381001',
     displayName: 'Alanine aminotransferase measurement',
     fullySpecifiedName: 'Alanine aminotransferase measurement (procedure)',
@@ -1193,7 +1193,7 @@ class SnomedCommonConcepts {
     loincMappings: ['1742-6'],
   );
 
-  static const SnomedConcept astMeasurement = SnomedConcept(
+  static final SnomedConcept astMeasurement = SnomedConcept(
     code: '89640001',
     displayName: 'Aspartate aminotransferase measurement',
     fullySpecifiedName: 'Aspartate aminotransferase measurement (procedure)',
@@ -1201,7 +1201,7 @@ class SnomedCommonConcepts {
     loincMappings: ['1920-8'],
   );
 
-  static const SnomedConcept tshMeasurement = SnomedConcept(
+  static final SnomedConcept tshMeasurement = SnomedConcept(
     code: '301665001',
     displayName: 'Thyroid stimulating hormone measurement',
     fullySpecifiedName: 'Thyroid stimulating hormone measurement (procedure)',
@@ -1209,7 +1209,7 @@ class SnomedCommonConcepts {
     loincMappings: ['3016-3'],
   );
 
-  static const SnomedConcept crpMeasurement = SnomedConcept(
+  static final SnomedConcept crpMeasurement = SnomedConcept(
     code: '313790008',
     displayName: 'C-reactive protein measurement',
     fullySpecifiedName: 'C-reactive protein measurement (procedure)',
@@ -1217,7 +1217,7 @@ class SnomedCommonConcepts {
     loincMappings: ['1988-5'],
   );
 
-  static const SnomedConcept vitaminDMeasurement = SnomedConcept(
+  static final SnomedConcept vitaminDMeasurement = SnomedConcept(
     code: '313814000',
     displayName: 'Vitamin D measurement',
     fullySpecifiedName: 'Vitamin D measurement (procedure)',
@@ -1225,7 +1225,7 @@ class SnomedCommonConcepts {
     loincMappings: ['1989-3'],
   );
 
-  static const SnomedConcept troponinMeasurement = SnomedConcept(
+  static final SnomedConcept troponinMeasurement = SnomedConcept(
     code: '33747003',
     displayName: 'Troponin measurement',
     fullySpecifiedName: 'Troponin measurement (procedure)',
@@ -1234,7 +1234,7 @@ class SnomedCommonConcepts {
   );
 
   // ==================== ALL ====================
-  static const List<SnomedConcept> all = [
+  static final List<SnomedConcept> all = [
     // Endocrine
     diabetesType1, diabetesType2, gestationalDiabetes, diabeticKetoacidosis,
     diabeticNephropathy, diabeticRetinopathy, diabeticNeuropathy,
