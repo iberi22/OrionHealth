@@ -69,6 +69,13 @@ dependencies:
   openai_dart: ^6.0.0
   google_mlkit_text_recognition: ^0.15.1
   flutter_blue_plus: ^2.3.4
+  hex: ^0.2.0
+  http: ^1.6.0
+  crypto: ^3.0.7
+  pointycastle: ^3.9.1
+  device_info_plus: ^12.4.0
+  google_generative_ai: ^0.4.7
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +93,7 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   mockito: ^5.4.4
+  mocktail: ^1.0.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
