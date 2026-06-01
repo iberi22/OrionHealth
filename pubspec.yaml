@@ -76,6 +76,7 @@ dependencies:
   pointycastle: ^3.9.1
   google_generative_ai: ^0.4.7
   path: ^1.9.1
+  device_calendar: ^4.3.3
 
 dev_dependencies:
   flutter_test:

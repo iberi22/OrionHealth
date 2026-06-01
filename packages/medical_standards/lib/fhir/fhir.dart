@@ -89,6 +89,55 @@ class FhirObservation {
   };
 }
 
+/// FHIR Appointment status
+enum FhirAppointmentStatus {
+  proposed,
+  pending,
+  booked,
+  arrived,
+  fulfilled,
+  cancelled,
+  noshow,
+  enteredInError,
+  checkedIn,
+  waitlist,
+}
+
+/// FHIR Appointment builder
+class FhirAppointment {
+  final String id;
+  final String status;
+  final DateTime start;
+  final DateTime? end;
+  final String description;
+  final String? participantActorDisplay;
+
+  FhirAppointment({
+    required this.id,
+    required this.status,
+    required this.start,
+    this.end,
+    required this.description,
+    this.participantActorDisplay,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'resourceType': 'Appointment',
+        'id': id,
+        'status': status,
+        'start': start.toIso8601String(),
+        if (end != null) 'end': end!.toIso8601String(),
+        'description': description,
+        if (participantActorDisplay != null)
+          'participant': [
+            {
+              'actor': {'display': participantActorDisplay},
+              'status': 'accepted'
+            }
+          ],
+      };
+}
+
 /// FHIR Condition builder
 class FhirCondition {
   final String id;
