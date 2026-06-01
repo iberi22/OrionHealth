@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>OrionHealth necesita acceso a su calendario para importar citas médicas.</string>
 </dict>
 </plist>

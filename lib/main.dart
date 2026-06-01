@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'dart:async';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -481,6 +482,7 @@ class _LocalAgentPromo extends StatelessWidget {
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    tz.initializeTimeZones();
 
     // Global error handlers
     FlutterError.onError = (details) {
