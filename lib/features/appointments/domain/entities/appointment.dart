@@ -16,6 +16,7 @@ class Appointment {
   late String specialty;
   late DateTime dateTime;
   String? notes;
+  String? source;
 
   @Enumerated(EnumType.name)
   late AppointmentStatus status;
@@ -26,6 +27,7 @@ class Appointment {
     required this.specialty,
     required this.dateTime,
     this.notes,
+    this.source,
     required this.status,
   });
 }

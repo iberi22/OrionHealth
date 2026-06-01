@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../email-citas/presentation/email_connect_page.dart';
 import '../../domain/entities/appointment.dart';
 import '../../domain/repositories/appointment_repository.dart';
 
@@ -61,6 +62,13 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
       appBar: AppBar(
         title: const Text('Citas'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.email_outlined),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const EmailConnectPage()),
+            ).then((_) => _loadAppointments()),
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () => _showAppointmentForm(),
@@ -297,6 +305,15 @@ class _AppointmentCard extends StatelessWidget {
                             DateFormat('dd MMM, hh:mm a', 'es').format(appointment.dateTime),
                             style: const TextStyle(color: CyberTheme.secondary, fontSize: 12),
                           ),
+                          if (appointment.source != null) ...[
+                            const SizedBox(width: 12),
+                            const Icon(Icons.email_outlined, size: 14, color: Colors.white54),
+                            const SizedBox(width: 4),
+                            Text(
+                              appointment.source!,
+                              style: const TextStyle(color: Colors.white54, fontSize: 12),
+                            ),
+                          ],
                         ],
                       ),
                     ],
