@@ -19,6 +19,8 @@ class UserProfile extends Equatable {
   final int onboardingStep;
   final bool onboardingCompleted;
   final String? locale;
+  final bool isEpsConnected;
+  final String? epsPatientId;
 
   const UserProfile({
     this.id = 0,
@@ -37,6 +39,8 @@ class UserProfile extends Equatable {
     this.onboardingStep = 0,
     this.onboardingCompleted = false,
     this.locale,
+    this.isEpsConnected = false,
+    this.epsPatientId,
   });
 
   int? get age {
@@ -67,6 +71,8 @@ class UserProfile extends Equatable {
     int? onboardingStep,
     bool? onboardingCompleted,
     String? locale,
+    bool? isEpsConnected,
+    String? epsPatientId,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -85,6 +91,8 @@ class UserProfile extends Equatable {
       onboardingStep: onboardingStep ?? this.onboardingStep,
       onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
       locale: locale ?? this.locale,
+      isEpsConnected: isEpsConnected ?? this.isEpsConnected,
+      epsPatientId: epsPatientId ?? this.epsPatientId,
     );
   }
 
@@ -105,6 +113,8 @@ class UserProfile extends Equatable {
         'onboardingStep': onboardingStep,
         'onboardingCompleted': onboardingCompleted,
         'locale': locale,
+        'isEpsConnected': isEpsConnected,
+        'epsPatientId': epsPatientId,
       };
 
   factory UserProfile.fromJson(Map<String, dynamic> json) => UserProfile(
@@ -126,6 +136,8 @@ class UserProfile extends Equatable {
         onboardingStep: json['onboardingStep'] ?? 0,
         onboardingCompleted: json['onboardingCompleted'] ?? false,
         locale: json['locale'],
+        isEpsConnected: json['isEpsConnected'] ?? false,
+        epsPatientId: json['epsPatientId'],
       );
 
   @override
@@ -146,5 +158,7 @@ class UserProfile extends Equatable {
         onboardingStep,
         onboardingCompleted,
         locale,
+        isEpsConnected,
+        epsPatientId,
       ];
 }

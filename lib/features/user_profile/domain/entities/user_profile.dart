@@ -72,6 +72,12 @@ class UserProfile {
   /// History of steroid use
   bool? hasSteroidUse;
 
+  /// EPS connection status
+  bool isEpsConnected = false;
+
+  /// FHIR Patient ID from EPS
+  String? epsPatientId;
+
   /// Ethnicity for risk calculations
   String? ethnicity;
 
@@ -105,6 +111,8 @@ class UserProfile {
     this.hasHypertension,
     this.hasCardiovascularDisease,
     this.hasSteroidUse,
+    this.isEpsConnected = false,
+    this.epsPatientId,
     this.ethnicity,
   });
 
@@ -138,6 +146,8 @@ class UserProfile {
     bool? hasHypertension,
     bool? hasCardiovascularDisease,
     bool? hasSteroidUse,
+    bool? isEpsConnected,
+    String? epsPatientId,
     String? ethnicity,
   }) {
     return UserProfile(
@@ -170,6 +180,8 @@ class UserProfile {
       hasHypertension: hasHypertension ?? this.hasHypertension,
       hasCardiovascularDisease: hasCardiovascularDisease ?? this.hasCardiovascularDisease,
       hasSteroidUse: hasSteroidUse ?? this.hasSteroidUse,
+      isEpsConnected: isEpsConnected ?? this.isEpsConnected,
+      epsPatientId: epsPatientId ?? this.epsPatientId,
       ethnicity: ethnicity ?? this.ethnicity,
     )..id = id;
   }
