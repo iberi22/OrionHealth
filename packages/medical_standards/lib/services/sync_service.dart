@@ -1,11 +1,11 @@
-// Sync service for downloading and caching full medical standards datasets.
-//
-// This service handles background synchronization of medical standards
-// from GitHub releases or raw file sources. Sync is for UPDATES only —
-// AI inference runs entirely from local cached data.
-//
-// Key insight: AI inference happens locally with full context.
-// Sync is for updates, not for runtime.
+/// Sync service for downloading and caching full medical standards datasets.
+///
+/// This service handles background synchronization of medical standards
+/// from GitHub releases or raw file sources. Sync is for UPDATES only —
+/// AI inference runs entirely from local cached data.
+///
+/// Key insight: AI inference happens locally with full context.
+/// Sync is for updates, not for runtime.
 
 import 'dart:convert';
 import 'dart:io';
@@ -124,24 +124,6 @@ class SyncService {
       githubRepo: 'iberi22/OrionHealth',
       version: '2024-03-04',
     ),
-    SyncConfig(
-      datasetName: 'rxnorm_interactions',
-      localFileName: 'rxnorm_interactions.json',
-      githubRepo: 'iberi22/OrionHealth',
-      version: '1.0',
-    ),
-    SyncConfig(
-      datasetName: 'symptoms_mapping',
-      localFileName: 'symptoms_mapping.json',
-      githubRepo: 'iberi22/OrionHealth',
-      version: '1.0',
-    ),
-    SyncConfig(
-      datasetName: 'clinical_guidelines',
-      localFileName: 'clinical_guidelines.json',
-      githubRepo: 'iberi22/OrionHealth',
-      version: '1.0',
-    ),
   ];
 
   /// Cache directory for this package.
@@ -256,12 +238,18 @@ class SyncService {
   /// Returns a [SyncResult] indicating success/failure and whether
   /// the dataset was updated.
   Future<SyncResult> syncDataset(SyncConfig config) async {
-    final cacheDir = await _getCacheDir();
-    final cachedFile = File(p.join(cacheDir.path, config.localFileName));
-    final fileExists = await cachedFile.exists();
+    // Validate local file exists
+    final localFile = File(config.localPath);
+    if (!await localFile.exists()) {
+      return SyncResult(
+        success: false,
+        datasetName: config.datasetName,
+        error: 'Local file not found: ${config.localPath}',
+      );
+    }
 
     // Check for newer version on GitHub
-    final hasUpdate = !fileExists || await _hasNewerVersion(config);
+    final hasUpdate = await _hasNewerVersion(config);
     if (!hasUpdate) {
       // Cache current version
       await _saveVersion(DatasetVersion(
@@ -280,10 +268,10 @@ class SyncService {
       );
     }
 
-    // Download newer version from GitHub raw files
+    // Download newer version from GitHub releases or raw files
     try {
       final downloadUrl =
-          'https://raw.githubusercontent.com/${config.githubRepo}/main/medical-standards/${config.datasetName}.json';
+          'https://raw.githubusercontent.com/${config.githubRepo}/main/packages/medical_standards/${config.localPath}';
       final content = await _downloadDataset(downloadUrl);
 
       if (content != null) {

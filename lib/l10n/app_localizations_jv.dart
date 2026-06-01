@@ -1,0 +1,196 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Javanese (`jv`).
+class AppLocalizationsJv extends AppLocalizations {
+  AppLocalizationsJv([String locale = 'jv']) : super(locale);
+
+  @override
+  String get appTitle => 'OrionHealth';
+
+  @override
+  String get welcome => 'Sugeng rawuh';
+
+  @override
+  String get signIn => 'Mlebu';
+
+  @override
+  String get signUp => 'Daftar';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Sandi';
+
+  @override
+  String get confirmPassword => 'Konfirmasi Sandi';
+
+  @override
+  String get forgotPassword => 'Lupa sandi?';
+
+  @override
+  String get fullName => 'Jeneng lengkap';
+
+  @override
+  String get phone => 'Telepon';
+
+  @override
+  String get dateOfBirth => 'Tanggal lair';
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get settings => 'Setelan';
+
+  @override
+  String get language => 'Basa';
+
+  @override
+  String get darkMode => 'Mode peteng';
+
+  @override
+  String get notifications => 'Pemberitahuan';
+
+  @override
+  String get healthRecords => 'Cathetan sehat';
+
+  @override
+  String get addRecord => 'Tambah cathetan';
+
+  @override
+  String get medicalHistory => 'Sejarah medis';
+
+  @override
+  String get allergies => 'Alergi';
+
+  @override
+  String get medications => 'Obat';
+
+  @override
+  String get appointments => 'Jadwal';
+
+  @override
+  String get vitals => 'Tanda vital';
+
+  @override
+  String get bloodPressure => 'Tekanan darah';
+
+  @override
+  String get heartRate => 'Detak jantung';
+
+  @override
+  String get temperature => 'Suhu';
+
+  @override
+  String get oxygenSaturation => 'Saturasi oksigen';
+
+  @override
+  String get weight => 'Bobot';
+
+  @override
+  String get height => 'Dhuwur';
+
+  @override
+  String get bmi => 'BMI';
+
+  @override
+  String get save => 'Simpen';
+
+  @override
+  String get cancel => 'Batal';
+
+  @override
+  String get delete => 'Busak';
+
+  @override
+  String get edit => 'Ganti';
+
+  @override
+  String get search => 'Cari';
+
+  @override
+  String get loading => 'Ml loaded...';
+
+  @override
+  String get error => 'Kesalahan';
+
+  @override
+  String get success => 'Berhasil';
+
+  @override
+  String get retry => 'Coba maneh';
+
+  @override
+  String get next => 'Sabanjure';
+
+  @override
+  String get back => 'Bali';
+
+  @override
+  String get done => 'Rampung';
+
+  @override
+  String get continueBtn => 'Terusake';
+
+  @override
+  String get skip => 'Lewati';
+
+  @override
+  String get logout => 'Metu';
+
+  @override
+  String get onboarding => 'Sugeng rawuh';
+
+  @override
+  String get getStarted => 'Mulai';
+
+  @override
+  String get readMore => 'Wacan more';
+
+  @override
+  String get viewAll => 'Deleng kabeh';
+
+  @override
+  String get noData => 'Ora ana data';
+
+  @override
+  String get addPhoto => 'Tambah foto';
+
+  @override
+  String get takePhoto => 'Jupuk foto';
+
+  @override
+  String get chooseFromGallery => 'Pilih saka galeri';
+
+  @override
+  String get uploadPdf => 'Unggah PDF';
+
+  @override
+  String get documents => 'Dokumen';
+
+  @override
+  String get aiAssistant => 'Asisten AI';
+
+  @override
+  String get smartSearch => 'Pencarian cerdas';
+
+  @override
+  String get help => 'Bantuan';
+
+  @override
+  String get about => 'Tentang';
+
+  @override
+  String get privacyPolicy => 'Kebijakan privasi';
+
+  @override
+  String get termsOfService => 'Syarat layanan';
+
+  @override
+  String get version => 'Versi';
+}

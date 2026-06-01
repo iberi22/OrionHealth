@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 /// E2E Tests para Health Sharing (BLE/NFC/WiFi) de OrionHealth
-///
+/// 
 /// Ejecutar con:
 /// flutter test integration_test/health_sharing_e2e_test.dart
 
@@ -325,16 +325,12 @@ class _MockSharePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Card(
-              child: RadioGroup<int>(
-                groupValue: -1,
-                onChanged: (_) {},
-                child: Column(
-                  children: [
-                    RadioListTile<int>(title: Text('NFC'), subtitle: Text('Tap phones to share'), value: 0),
-                    RadioListTile<int>(title: Text('Bluetooth'), subtitle: Text('Nearby device'), value: 1),
-                    RadioListTile<int>(title: Text('WiFi Direct'), subtitle: Text('Same network'), value: 2),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  RadioListTile(title: Text('NFC'), subtitle: Text('Tap phones to share'), value: 0, groupValue: -1, onChanged: (_) {}),
+                  RadioListTile(title: Text('Bluetooth'), subtitle: Text('Nearby device'), value: 1, groupValue: -1, onChanged: (_) {}),
+                  RadioListTile(title: Text('WiFi Direct'), subtitle: Text('Same network'), value: 2, groupValue: -1, onChanged: (_) {}),
+                ],
               ),
             ),
           ],
@@ -397,16 +393,30 @@ class _MockSharePageWithStateState extends State<_MockSharePageWithState> {
             ),
             const SizedBox(height: 16),
             Card(
-              child: RadioGroup<int>(
-                groupValue: _selectedMethod,
-                onChanged: (v) => setState(() => _selectedMethod = v ?? 0),
-                child: Column(
-                  children: [
-                    RadioListTile<int>(title: Text('NFC'), subtitle: Text('Tap phones to share'), value: 0),
-                    RadioListTile<int>(title: Text('Bluetooth'), subtitle: Text('Nearby device'), value: 1),
-                    RadioListTile<int>(title: Text('WiFi Direct'), subtitle: Text('Same network'), value: 2),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  RadioListTile(
+                    title: Text('NFC'),
+                    subtitle: Text('Tap phones to share'),
+                    value: 0,
+                    groupValue: _selectedMethod,
+                    onChanged: (v) => setState(() => _selectedMethod = v ?? 0),
+                  ),
+                  RadioListTile(
+                    title: Text('Bluetooth'),
+                    subtitle: Text('Nearby device'),
+                    value: 1,
+                    groupValue: _selectedMethod,
+                    onChanged: (v) => setState(() => _selectedMethod = v ?? 0),
+                  ),
+                  RadioListTile(
+                    title: Text('WiFi Direct'),
+                    subtitle: Text('Same network'),
+                    value: 2,
+                    groupValue: _selectedMethod,
+                    onChanged: (v) => setState(() => _selectedMethod = v ?? 0),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
@@ -415,7 +425,7 @@ class _MockSharePageWithStateState extends State<_MockSharePageWithState> {
               child: ElevatedButton(
                 onPressed: _selectedCategories.isEmpty ? null : () {},
                 child: Text(
-                  _selectedCategories.isEmpty
+                  _selectedCategories.isEmpty 
                       ? 'Selecciona al menos una categoría'
                       : 'Compartir',
                 ),
@@ -469,7 +479,7 @@ class _MockReceivePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
-                color: Colors.blue.withValues(alpha: 0.1),
+                color: Colors.blue.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.nfc, size: 80, color: Colors.blue),

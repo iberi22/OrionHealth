@@ -1,14 +1,18 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
+import 'vital_sign.dart';
+import 'medication_entry.dart';
+import 'medical_document.dart';
+import 'medical_event.dart';
 
 part 'health_record.g.dart';
 
 /// Aggregated patient health record model.
 /// Contains references to all health data sub-collections.
 @collection
-@JsonSerializable()
-class HealthRecord {
+class HealthRecord extends Equatable {
   HealthRecord({
     required this.id,
     required this.patientId,
@@ -27,7 +31,9 @@ class HealthRecord {
     this.syncStatus = SyncStatus.pending,
     this.encryptedSensitiveFields,
   });
-  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  final String id;
 
   /// External patient identifier.
   @Index()
@@ -44,27 +50,27 @@ class HealthRecord {
   final DateTime updatedAt;
 
   /// Known allergies (e.g. ["Penicillin", "Peanuts"]).
-  final List<String>? allergies;
+  List<String>? allergies;
 
   /// Active conditions/diagnoses (stored as ICD-10 codes).
-  final List<String>? conditions;
+  List<String>? conditions;
 
   /// Blood type (e.g. "A+", "O-").
-  final String? bloodType;
+  String? bloodType;
 
-  final bool? organDonor;
+  bool? organDonor;
 
-  final String? emergencyContactName;
-  final String? emergencyContactPhone;
-  final String? primaryPhysician;
+  String? emergencyContactName;
+  String? emergencyContactPhone;
+  String? primaryPhysician;
 
   @Enumerated(EnumType.name)
   @Index()
-  final SyncStatus syncStatus;
+  SyncStatus syncStatus;
 
   /// AES-256-GCM encrypted bundle of sensitive fields (base64).
   /// Contains: firstName, lastName, dateOfBirth, allergies, conditions.
-  final String? encryptedSensitiveFields;
+  String? encryptedSensitiveFields;
 
   /// Computed full name.
   @ignore
@@ -87,7 +93,7 @@ class HealthRecord {
   }
 
   HealthRecord copyWith({
-    int? id,
+    String? id,
     String? patientId,
     String? firstName,
     String? lastName,
@@ -128,4 +134,23 @@ class HealthRecord {
       _$HealthRecordFromJson(json);
   Map<String, dynamic> toJson() => _$HealthRecordToJson(this);
 
+  @override
+  List<Object?> get props => [
+        id,
+        patientId,
+        firstName,
+        lastName,
+        dateOfBirth,
+        createdAt,
+        updatedAt,
+        allergies,
+        conditions,
+        bloodType,
+        organDonor,
+        emergencyContactName,
+        emergencyContactPhone,
+        primaryPhysician,
+        syncStatus,
+        encryptedSensitiveFields,
+      ];
 }

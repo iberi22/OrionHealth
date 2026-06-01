@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 /// E2E Tests para Medical Assistant de OrionHealth
-///
+/// 
 /// Ejecutar con:
 /// flutter test integration_test/medical_assistant_e2e_test.dart
 

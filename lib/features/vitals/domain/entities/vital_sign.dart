@@ -4,94 +4,29 @@ part 'vital_sign.g.dart';
 
 enum VitalSignType {
   heartRate,
+  temperature,
   bloodPressureSystolic,
   bloodPressureDiastolic,
-  temperature,
-  oxygenSaturation,
-  respiratoryRate,
-  bloodGlucose,
-  steps,
-  sleep,
+  spO2,
 }
 
 @collection
 class VitalSign {
   Id id = Isar.autoIncrement;
 
-  @enumerated
-  VitalSignType type = VitalSignType.heartRate;
+  @Enumerated(EnumType.name)
+  late VitalSignType type;
 
-  double? value;
+  late double value;
 
-  String? unit;
-
-  DateTime? recordedAt;
-
-  String? source; // "manual", "health_connect", "apple_health", etc.
+  late DateTime dateTime;
 
   String? notes;
 
   VitalSign({
-    this.type = VitalSignType.heartRate,
-    this.value,
-    this.unit,
-    this.recordedAt,
-    this.source,
+    required this.type,
+    required this.value,
+    required this.dateTime,
     this.notes,
   });
-
-  VitalSign copyWith({
-    VitalSignType? type,
-    double? value,
-    String? unit,
-    DateTime? recordedAt,
-    String? source,
-    String? notes,
-  }) {
-    return VitalSign(
-      type: type ?? this.type,
-      value: value ?? this.value,
-      unit: unit ?? this.unit,
-      recordedAt: recordedAt ?? this.recordedAt,
-      source: source ?? this.source,
-      notes: notes ?? this.notes,
-    )..id = id;
-  }
-
-  /// Get display label for the vital sign type
-  String get typeLabel {
-    switch (type) {
-      case VitalSignType.heartRate:
-        return 'Pulso';
-      case VitalSignType.bloodPressureSystolic:
-        return 'Presión Sistólica';
-      case VitalSignType.bloodPressureDiastolic:
-        return 'Presión Diastólica';
-      case VitalSignType.temperature:
-        return 'Temperatura';
-      case VitalSignType.oxygenSaturation:
-        return 'Saturación O₂';
-      case VitalSignType.respiratoryRate:
-        return 'Frecuencia Respiratoria';
-      case VitalSignType.bloodGlucose:
-        return 'Glucosa';
-      case VitalSignType.steps:
-        return 'Pasos';
-      case VitalSignType.sleep:
-        return 'Sueño';
-    }
-  }
-
-  /// Get formatted value with unit
-  String get formattedValue {
-    if (value == null) return '--';
-    final unitStr = unit ?? '';
-    return '${value!.toStringAsFixed(value! == value!.roundToDouble() ? 0 : 1)} $unitStr'
-        .trim();
-  }
-
-  @override
-  String toString() {
-    return 'VitalSign(id: $id, type: $type, value: $value, unit: $unit, recordedAt: $recordedAt)';
-  }
 }

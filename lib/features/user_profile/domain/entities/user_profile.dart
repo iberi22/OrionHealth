@@ -26,6 +26,24 @@ class UserProfile {
 
   bool allowCloudApi;
 
+  bool onboardingCompleted = false;
+
+  DateTime? birthDate;
+
+  String? sex;
+
+  int? systolicBP;
+
+  int? diastolicBP;
+
+  int? heartRate;
+
+  String? allergyName;
+
+  String? allergySeverity;
+
+  String? allergyNotes;
+
   String? llmProvider;
 
   String? localModelName;
@@ -68,6 +86,15 @@ class UserProfile {
     this.email,
     this.phoneNumber,
     this.allowCloudApi = true,
+    this.onboardingCompleted = false,
+    this.birthDate,
+    this.sex,
+    this.systolicBP,
+    this.diastolicBP,
+    this.heartRate,
+    this.allergyName,
+    this.allergySeverity,
+    this.allergyNotes,
     this.llmProvider,
     this.localModelName,
     this.medicalConditions = const [],
@@ -92,6 +119,15 @@ class UserProfile {
     String? email,
     String? phoneNumber,
     bool? allowCloudApi,
+    bool? onboardingCompleted,
+    DateTime? birthDate,
+    String? sex,
+    int? systolicBP,
+    int? diastolicBP,
+    int? heartRate,
+    String? allergyName,
+    String? allergySeverity,
+    String? allergyNotes,
     String? llmProvider,
     String? localModelName,
     List<String>? medicalConditions,
@@ -115,6 +151,15 @@ class UserProfile {
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       allowCloudApi: allowCloudApi ?? this.allowCloudApi,
+      onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+      birthDate: birthDate ?? this.birthDate,
+      sex: sex ?? this.sex,
+      systolicBP: systolicBP ?? this.systolicBP,
+      diastolicBP: diastolicBP ?? this.diastolicBP,
+      heartRate: heartRate ?? this.heartRate,
+      allergyName: allergyName ?? this.allergyName,
+      allergySeverity: allergySeverity ?? this.allergySeverity,
+      allergyNotes: allergyNotes ?? this.allergyNotes,
       llmProvider: llmProvider ?? this.llmProvider,
       localModelName: localModelName ?? this.localModelName,
       medicalConditions: medicalConditions ?? this.medicalConditions,
@@ -131,6 +176,6 @@ class UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType, uniqueId: $uniqueId)';
+    return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType, uniqueId: $uniqueId, sex: $sex, birthDate: $birthDate, onboardingCompleted: $onboardingCompleted)';
   }
 }

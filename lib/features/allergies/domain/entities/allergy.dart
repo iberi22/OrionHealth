@@ -2,54 +2,27 @@ import 'package:isar/isar.dart';
 
 part 'allergy.g.dart';
 
-enum AllergySeverity { mild, moderate, severe, lifeThreatening }
+enum AllergySeverity {
+  mild,
+  moderate,
+  severe,
+}
 
 @collection
 class Allergy {
   Id id = Isar.autoIncrement;
 
-  String? name;
+  String? allergen;
 
-  @enumerated
-  AllergySeverity severity = AllergySeverity.moderate;
-
-  String? reaction; // Description of the allergic reaction
-
-  DateTime? confirmedDate;
+  @Enumerated(EnumType.name)
+  late AllergySeverity severity;
 
   String? notes;
 
-  bool isCritical = false;
-
   Allergy({
-    this.name,
-    this.severity = AllergySeverity.moderate,
-    this.reaction,
-    this.confirmedDate,
+    this.id = Isar.autoIncrement,
+    this.allergen,
+    this.severity = AllergySeverity.mild,
     this.notes,
-    this.isCritical = false,
   });
-
-  Allergy copyWith({
-    String? name,
-    AllergySeverity? severity,
-    String? reaction,
-    DateTime? confirmedDate,
-    String? notes,
-    bool? isCritical,
-  }) {
-    return Allergy(
-      name: name ?? this.name,
-      severity: severity ?? this.severity,
-      reaction: reaction ?? this.reaction,
-      confirmedDate: confirmedDate ?? this.confirmedDate,
-      notes: notes ?? this.notes,
-      isCritical: isCritical ?? this.isCritical,
-    )..id = id;
-  }
-
-  @override
-  String toString() {
-    return 'Allergy(id: $id, name: $name, severity: $severity, isCritical: $isCritical)';
-  }
 }

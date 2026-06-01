@@ -35,6 +35,15 @@ class HealthRecordFilePicked extends HealthRecordState {
 
 class HealthRecordSaved extends HealthRecordState {}
 
+class HealthRecordLoaded extends HealthRecordState {
+  final List<MedicalRecord> records;
+
+  const HealthRecordLoaded(this.records);
+
+  @override
+  List<Object?> get props => [records];
+}
+
 class HealthRecordError extends HealthRecordState {
   final String message;
 

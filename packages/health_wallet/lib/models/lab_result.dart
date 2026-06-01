@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 
@@ -26,8 +27,7 @@ enum SyncStatus {
 /// Lab result with LOINC code reference.
 /// Sensitive: result value may be encrypted.
 @collection
-@JsonSerializable()
-class LabResult {
+class LabResult extends Equatable {
   LabResult({
     required this.id,
     required this.loincCode,
@@ -43,7 +43,9 @@ class LabResult {
     this.syncStatus = SyncStatus.pending,
     this.encryptedValue,
   });
-  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  final String id;
 
   /// LOINC code for the lab test (e.g. "2339-0" for Glucose).
   @Index()
@@ -70,11 +72,11 @@ class LabResult {
 
   @Enumerated(EnumType.name)
   @Index()
-  final SyncStatus syncStatus;
+  SyncStatus syncStatus;
 
   /// AES-256-GCM encrypted result value (base64).
   /// Populated by EncryptionService when resultValue contains sensitive data.
-  final String? encryptedValue;
+  String? encryptedValue;
 
   /// Whether this lab result contains sensitive data requiring encryption.
   @ignore
@@ -89,7 +91,7 @@ class LabResult {
   }
 
   LabResult copyWith({
-    int? id,
+    String? id,
     String? loincCode,
     String? testName,
     String? resultValue,
@@ -123,4 +125,20 @@ class LabResult {
   factory LabResult.fromJson(Map<String, dynamic> json) => _$LabResultFromJson(json);
   Map<String, dynamic> toJson() => _$LabResultToJson(this);
 
+  @override
+  List<Object?> get props => [
+        id,
+        loincCode,
+        testName,
+        resultValue,
+        unit,
+        referenceRangeLow,
+        referenceRangeHigh,
+        collectedAt,
+        createdAt,
+        updatedAt,
+        source,
+        syncStatus,
+        encryptedValue,
+      ];
 }
