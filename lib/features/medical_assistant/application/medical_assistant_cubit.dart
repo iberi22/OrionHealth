@@ -5,6 +5,7 @@ import 'package:medical_standards/medical_standards.dart';
 import '../domain/entities/medical_query.dart';
 import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
+import '../domain/entities/analysis_response.dart';
 import '../domain/services/medical_analysis_service.dart';
 import '../infrastructure/llm/medical_llm_adapter.dart';
 import '../infrastructure/analysis/lab_interpreter.dart';
