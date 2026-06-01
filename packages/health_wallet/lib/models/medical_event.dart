@@ -1,8 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
-
-part 'medical_event.g.dart';
 
 /// Event type for classification.
 enum EventType {
@@ -26,8 +25,7 @@ enum EventType {
 
 /// Generic medical event (appointment, procedure, hospital visit).
 @collection
-@JsonSerializable()
-class MedicalEvent {
+class MedicalEvent extends Equatable {
   MedicalEvent({
     required this.id,
     required this.eventType,
@@ -46,7 +44,9 @@ class MedicalEvent {
     this.syncStatus = SyncStatus.pending,
     this.encryptedNotes,
   });
-  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  final String id;
 
   @Enumerated(EnumType.name)
   @Index()
@@ -64,22 +64,22 @@ class MedicalEvent {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  final String? provider; // physician name
-  final String? facility; // hospital/clinic name
-  final List<String>? icd10Codes; // ICD-10 diagnosis codes
-  final List<String>? cptCodes; // CPT procedure codes
-  final List<String>? loincCodes; // associated lab tests
-  final String? notes;
+  String? provider; // physician name
+  String? facility; // hospital/clinic name
+  List<String>? icd10Codes; // ICD-10 diagnosis codes
+  List<String>? cptCodes; // CPT procedure codes
+  List<String>? loincCodes; // associated lab tests
+  String? notes;
 
   @Enumerated(EnumType.name)
   final DataSource source;
 
   @Enumerated(EnumType.name)
   @Index()
-  final SyncStatus syncStatus;
+  SyncStatus syncStatus;
 
   /// Encrypted notes field (base64).
-  final String? encryptedNotes;
+  String? encryptedNotes;
 
   /// Whether the event has ended (for procedures/hospitalizations).
   @ignore
@@ -93,7 +93,7 @@ class MedicalEvent {
   }
 
   MedicalEvent copyWith({
-    int? id,
+    String? id,
     EventType? eventType,
     String? description,
     DateTime? eventDate,
@@ -134,4 +134,23 @@ class MedicalEvent {
       _$MedicalEventFromJson(json);
   Map<String, dynamic> toJson() => _$MedicalEventToJson(this);
 
+  @override
+  List<Object?> get props => [
+        id,
+        eventType,
+        description,
+        eventDate,
+        endDate,
+        createdAt,
+        updatedAt,
+        provider,
+        facility,
+        icd10Codes,
+        cptCodes,
+        loincCodes,
+        notes,
+        source,
+        syncStatus,
+        encryptedNotes,
+      ];
 }

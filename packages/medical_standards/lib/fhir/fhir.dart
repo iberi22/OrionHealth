@@ -1,7 +1,9 @@
-// FHIR R4 resource builders.
-//
-// FHIR (Fast Healthcare Interoperability Resources) is a standard
-// for exchanging healthcare information electronically.
+/// FHIR R4 resource builders.
+///
+/// FHIR (Fast Healthcare Interoperability Resources) is a standard
+/// for exchanging healthcare information electronically.
+
+import '../medical_standards.dart';
 
 /// FHIR Resource Type
 enum FhirResourceType {

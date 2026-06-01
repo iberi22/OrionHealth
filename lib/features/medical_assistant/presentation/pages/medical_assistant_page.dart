@@ -7,8 +7,6 @@ import '../../domain/entities/ai_response.dart';
 import '../widgets/query_input.dart';
 import '../widgets/insight_card.dart';
 import '../widgets/lab_result_card.dart';
-import '../../../onboarding/application/sync_cubit.dart';
-import '../../../../core/di/injection.dart';
 
 /// Main page for the AI Medical Assistant
 class MedicalAssistantPage extends StatelessWidget {
@@ -16,75 +14,27 @@ class MedicalAssistantPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => MedicalAssistantCubit()),
-        BlocProvider(create: (_) => getIt<SyncCubit>()),
-      ],
+    return BlocProvider(
+      create: (_) => MedicalAssistantCubit(),
       child: const _MedicalAssistantView(),
     );
   }
 }
 
-class _MedicalAssistantView extends StatefulWidget {
+class _MedicalAssistantView extends StatelessWidget {
   const _MedicalAssistantView();
-
-  @override
-  State<_MedicalAssistantView> createState() => _MedicalAssistantViewState();
-}
-
-class _MedicalAssistantViewState extends State<_MedicalAssistantView> {
-  final _queryController = TextEditingController();
-
-  @override
-  void dispose() {
-    _queryController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Asistente Médico Orion'),
+        title: const Text('AI Medical Assistant'),
         centerTitle: true,
         actions: [
-          BlocConsumer<SyncCubit, SyncState>(
-            listener: (context, state) {
-              if (state is SyncSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Sincronización exitosa')),
-                );
-              } else if (state is SyncFailure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error: ${state.error}')),
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state is SyncInProgress) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  ),
-                );
-              }
-              return IconButton(
-                icon: const Icon(Icons.sync),
-                onPressed: () => context.read<SyncCubit>().syncMedicalStandards(),
-                tooltip: 'Sincronizar estándares',
-              );
-            },
-          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => context.read<MedicalAssistantCubit>().reset(),
-            tooltip: 'Nueva consulta',
+            tooltip: 'New query',
           ),
         ],
       ),
@@ -103,11 +53,6 @@ class _MedicalAssistantViewState extends State<_MedicalAssistantView> {
                       response: state.response,
                       query: state.query,
                     );
-                  } else if (state is MedicalAssistantNeedsMoreInfo) {
-                    return _NeedsMoreInfoContent(
-                      state: state,
-                      controller: _queryController,
-                    );
                   } else if (state is MedicalAssistantError) {
                     return _ErrorContent(message: state.message);
                   }
@@ -119,7 +64,6 @@ class _MedicalAssistantViewState extends State<_MedicalAssistantView> {
               builder: (context, state) {
                 final isLoading = state is MedicalAssistantLoading;
                 return QueryInput(
-                  controller: _queryController,
                   enabled: !isLoading,
                   onSubmit: (question) {
                     context.read<MedicalAssistantCubit>().submitQuery(question);
@@ -151,20 +95,20 @@ class _IdleContent extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            '¿Cómo puedo ayudarte con tu salud hoy?',
+            'How can I help with your health today?',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 12),
           Text(
-            'Puedo analizar tus resultados de laboratorio, signos vitales y proporcionarte '
-            'información de salud basada en guías clínicas.',
+            'I can analyze your lab results, vital signs, and provide '
+            'health insights based on clinical guidelines.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: Colors.grey[600],
             ),
           ),
           const SizedBox(height: 24),
           const Text(
-            'Prueba preguntando sobre:',
+            'Try asking about:',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
@@ -172,10 +116,10 @@ class _IdleContent extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              _QuickQueryChip('Niveles de glucosa'),
-              _QuickQueryChip('Presión arterial'),
-              _QuickQueryChip('Análisis de colesterol'),
-              _QuickQueryChip('Interacciones de medicamentos'),
+              _QuickQueryChip('Glucose levels'),
+              _QuickQueryChip('Blood pressure'),
+              _QuickQueryChip('Cholesterol analysis'),
+              _QuickQueryChip('Medication interactions'),
             ],
           ),
         ],
@@ -193,8 +137,6 @@ class _QuickQueryChip extends StatelessWidget {
     return ActionChip(
       label: Text(label),
       onPressed: () {
-        // Find the controller from the view state if needed, or pass it down
-        // For simplicity in _IdleContent, we'll keep direct submit or update if required
         context.read<MedicalAssistantCubit>().submitQuery(label);
       },
     );
@@ -268,7 +210,7 @@ class _ResponseContent extends StatelessWidget {
                       const Spacer(),
                       if (response.confidence != null)
                         Text(
-                          '${(response.confidence! * 100).toInt()}% de confianza',
+                          '${(response.confidence! * 100).toInt()}% confidence',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 12,
@@ -287,37 +229,10 @@ class _ResponseContent extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Citations section
-          if (response.metadata != null && response.metadata!.containsKey('citations')) ...[
-            const Text(
-              'Referencias y Estándares',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: (response.metadata!['citations'] as List<dynamic>).map((citation) {
-                return Chip(
-                  avatar: const Icon(Icons.bookmark_outline, size: 16, color: Colors.teal),
-                  label: Text(
-                    citation.toString(),
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  backgroundColor: Colors.teal.withValues(alpha: 0.05),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-          ],
-
           // Insights section
           if (response.insights.isNotEmpty) ...[
             const Text(
-              'Hallazgos Médicos',
+              'Medical Insights',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -334,7 +249,7 @@ class _ResponseContent extends StatelessWidget {
           if (labInsights.isNotEmpty) ...[
             const SizedBox(height: 16),
             const Text(
-              'Resultados de Laboratorio',
+              'Lab Results',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -353,83 +268,6 @@ class _ResponseContent extends StatelessWidget {
                   );
                 },
               ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _NeedsMoreInfoContent extends StatelessWidget {
-  final MedicalAssistantNeedsMoreInfo state;
-  final TextEditingController controller;
-
-  const _NeedsMoreInfoContent({
-    required this.state,
-    required this.controller,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Robot icon + message
-          const Icon(Icons.help_outline, size: 48, color: Colors.amber),
-          const SizedBox(height: 16),
-          Text(state.message, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 24),
-          // Questions as chips
-          const Text('Para ayudarte mejor, cuéntame:',
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: state.questions
-                .map((q) => ActionChip(
-                      label: Text(q),
-                      onPressed: () {
-                        controller.text = q;
-                      },
-                    ))
-                .toList(),
-          ),
-
-          const SizedBox(height: 32),
-          Center(
-            child: TextButton.icon(
-              onPressed: () {
-                // Submit the last question but with force=true
-                final lastQuery = state.partialAnswer != null
-                    ? 'Continuar con el análisis disponible'
-                    : 'Continuar sin más datos';
-                context
-                    .read<MedicalAssistantCubit>()
-                    .submitQuery(lastQuery, force: true);
-              },
-              icon: const Icon(Icons.arrow_forward),
-              label: const Text('Continuar sin más datos'),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey[700],
-              ),
-            ),
-          ),
-
-          // Optional partial answer
-          if (state.partialAnswer != null) ...[
-            const SizedBox(height: 24),
-            ExpansionTile(
-              title: const Text('Ver análisis parcial disponible'),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(state.partialAnswer!),
-                )
-              ],
             ),
           ],
         ],
