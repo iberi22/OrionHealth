@@ -14,7 +14,14 @@ class MedicalStandardsServiceImpl implements MedicalStandardsService {
       await _medicalContextProvider.initialize();
     }
     final results = _medicalContextProvider.searchIcd10(diagnosis);
-    return results.isNotEmpty ? results.first : null;
+    if (results.isEmpty) return null;
+    final entry = results.first;
+    return Icd10Code(
+      code: entry.code,
+      displayName: entry.displayName,
+      category: entry.category,
+      synonyms: entry.synonyms,
+    );
   }
 
   @override
@@ -23,7 +30,17 @@ class MedicalStandardsServiceImpl implements MedicalStandardsService {
       await _medicalContextProvider.initialize();
     }
     final results = _medicalContextProvider.searchSnomed(term);
-    return results.isNotEmpty ? results.first : null;
+    if (results.isEmpty) return null;
+    final entry = results.first;
+    return SnomedConcept(
+      code: entry.code,
+      displayName: entry.displayName,
+      fullySpecifiedName: entry.fullySpecifiedName,
+      semanticTag: entry.semanticTag,
+      icd10Mappings: entry.icd10Mappings,
+      loincMappings: entry.loincMappings,
+      description: entry.description,
+    );
   }
 
   @override

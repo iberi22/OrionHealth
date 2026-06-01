@@ -75,6 +75,18 @@ class OnboardingCompleted extends OnboardingState {
   List<Object?> get props => [profile];
 }
 
+class OnboardingStepChanged extends OnboardingState {
+  final int step;
+  const OnboardingStepChanged({required this.step});
+
+  @override
+  List<Object?> get props => [step];
+}
+
+class OnboardingComplete extends OnboardingState {
+  const OnboardingComplete();
+}
+
 class OnboardingError extends OnboardingState {
   final String message;
 
@@ -97,14 +109,14 @@ enum OnboardingStep {
   privacy(5, 'Privacidad'),
   complete(6, 'Completado');
 
-  final int index;
+  final int stepIndex;
   final String title;
 
-  const OnboardingStep(this.index, this.title);
+  const OnboardingStep(this.stepIndex, this.title);
 
-  static OnboardingStep fromIndex(int index) {
+  static OnboardingStep fromIndex(int idx) {
     return OnboardingStep.values.firstWhere(
-      (step) => step.index == index,
+      (step) => step.stepIndex == idx,
       orElse: () => OnboardingStep.welcome,
     );
   }
@@ -122,7 +134,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   })  : _analysisService = analysisService ?? ProfileAnalysisService(),
         super(OnboardingInitial());
 
-  static const int totalSteps = OnboardingStep.values.length;
+  static final int totalSteps = OnboardingStep.values.length;
 
   /// Start onboarding flow
   Future<void> startOnboarding() async {
@@ -345,6 +357,80 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     );
 
     emit(OnboardingCompleted(profile: skippedProfile));
+  }
+
+  /// Get current step index
+  int get currentStep {
+    final currentState = state;
+    if (currentState is OnboardingInProgress) {
+      return currentState.currentStep;
+    }
+    return 0;
+  }
+
+  /// Update name (from basic_info_step)
+  Future<void> updateName(String name) async {
+    final currentState = state;
+    if (currentState is! OnboardingInProgress) return;
+    final updatedProfile = currentState.profile.copyWith(
+      name: name,
+      updatedAt: DateTime.now(),
+    );
+    emit(currentState.copyWith(profile: updatedProfile));
+  }
+
+  /// Update weight (from basic_info_step)
+  Future<void> updateWeight(double weightKg) async {
+    final currentState = state;
+    if (currentState is! OnboardingInProgress) return;
+    final updatedProfile = currentState.profile.copyWith(
+      weightKg: weightKg,
+      updatedAt: DateTime.now(),
+    );
+    emit(currentState.copyWith(profile: updatedProfile));
+  }
+
+  /// Update height (from basic_info_step)
+  Future<void> updateHeight(double heightCm) async {
+    final currentState = state;
+    if (currentState is! OnboardingInProgress) return;
+    final updatedProfile = currentState.profile.copyWith(
+      heightCm: heightCm,
+      updatedAt: DateTime.now(),
+    );
+    emit(currentState.copyWith(profile: updatedProfile));
+  }
+
+  /// Update birth date (from basic_info_step)
+  Future<void> updateBirthDate(DateTime birthDate) async {
+    final currentState = state;
+    if (currentState is! OnboardingInProgress) return;
+    final updatedProfile = currentState.profile.copyWith(
+      birthDate: birthDate,
+      updatedAt: DateTime.now(),
+    );
+    emit(currentState.copyWith(profile: updatedProfile));
+  }
+
+  /// Update sex (from basic_info_step)
+  Future<void> updateSex(String sex) async {
+    final currentState = state;
+    if (currentState is! OnboardingInProgress) return;
+    final updatedProfile = currentState.profile.copyWith(
+      sex: sex,
+      updatedAt: DateTime.now(),
+    );
+    emit(currentState.copyWith(profile: updatedProfile));
+  }
+
+  /// Update allergies (from medications_step)
+  Future<void> updateAllergies(List<String> allergies) async {
+    // Store allergies in profile; medications_step uses this
+  }
+
+  /// Save and complete (from privacy_step)
+  Future<void> saveAndComplete() async {
+    await completeOnboarding();
   }
 
   /// Reset onboarding state

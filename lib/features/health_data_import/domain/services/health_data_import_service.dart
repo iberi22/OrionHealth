@@ -151,7 +151,7 @@ class HealthDataImportService {
           type: VitalSignType.steps,
           value: value,
           unit: 'steps',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
         );
 
@@ -161,7 +161,7 @@ class HealthDataImportService {
           type: VitalSignType.steps,
           value: value / 1000, // Convert to km
           unit: 'km',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
           notes: 'Distance walked/run',
         );
@@ -171,7 +171,7 @@ class HealthDataImportService {
           type: VitalSignType.heartRate,
           value: value,
           unit: 'bpm',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
         );
 
@@ -180,7 +180,7 @@ class HealthDataImportService {
           type: VitalSignType.sleep,
           value: value,
           unit: 'min',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
         );
 
@@ -189,7 +189,7 @@ class HealthDataImportService {
           type: VitalSignType.bloodGlucose,
           value: value,
           unit: 'mg/dL',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
         );
 
@@ -198,7 +198,7 @@ class HealthDataImportService {
           type: VitalSignType.bloodPressureSystolic,
           value: value,
           unit: 'mmHg',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
         );
 
@@ -207,7 +207,7 @@ class HealthDataImportService {
           type: VitalSignType.bloodPressureDiastolic,
           value: value,
           unit: 'mmHg',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
         );
 
@@ -217,7 +217,7 @@ class HealthDataImportService {
           type: VitalSignType.temperature,
           value: value * 100,
           unit: 'cm',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
           notes: 'Height',
         );
@@ -227,7 +227,7 @@ class HealthDataImportService {
           type: VitalSignType.temperature,
           value: value,
           unit: 'kg',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
           notes: 'Weight',
         );
@@ -237,7 +237,7 @@ class HealthDataImportService {
           type: VitalSignType.oxygenSaturation,
           value: value,
           unit: '%',
-          recordedAt: data.dateFrom,
+          dateTime: data.dateFrom,
           source: sourceString,
         );
 

@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:orionhealth_health/core/theme/cyber_theme.dart';
-import 'package:orionhealth_health/features/local_agent/infrastructure/rag_llm_service.dart';
-import 'package:orionhealth_health/features/local_agent/infrastructure/services/model_download_service.dart';
-import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
-import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
+import '../../../../core/theme/cyber_theme.dart';
+import '../../infrastructure/services/model_download_service.dart';
+
+enum LlmProvider {
+  mock('Mock'),
+  gemini('Gemini'),
+  local('Local LLM');
+
+  final String name;
+  const LlmProvider(this.name);
+
+  static LlmProvider fromName(String? name) {
+    return LlmProvider.values.firstWhere(
+      (e) => e.name == name,
+      orElse: () => LlmProvider.mock,
+    );
+  }
+}
 
 class LlmSettingsPage extends StatefulWidget {
   const LlmSettingsPage({super.key});
@@ -16,12 +29,10 @@ class LlmSettingsPage extends StatefulWidget {
 
 class _LlmSettingsPageState extends State<LlmSettingsPage> {
   final _secureStorage = const FlutterSecureStorage();
-  final _userProfileRepository = GetIt.I<UserProfileRepository>();
   final _modelDownloadService = GetIt.I<ModelDownloadService>();
 
   LlmProvider _selectedProvider = LlmProvider.mock;
   final _geminiApiKeyController = TextEditingController();
-  UserProfile? _profile;
   List<ModelInfo> _downloadedModels = [];
   bool _isLoading = true;
 
@@ -33,14 +44,11 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
 
   Future<void> _loadSettings() async {
     setState(() => _isLoading = true);
-    _profile = await _userProfileRepository.getUserProfile();
     final apiKey = await _secureStorage.read(key: 'gemini_api_key');
+    final savedProvider = await _secureStorage.read(key: 'llm_provider');
 
-    if (_profile?.llmProvider != null) {
-      _selectedProvider = LlmProvider.values.firstWhere(
-        (e) => e.name == _profile!.llmProvider,
-        orElse: () => LlmProvider.mock,
-      );
+    if (savedProvider != null) {
+      _selectedProvider = LlmProvider.fromName(savedProvider);
     }
 
     _geminiApiKeyController.text = apiKey ?? '';
@@ -50,9 +58,7 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
   }
 
   Future<void> _saveProvider(LlmProvider provider) async {
-    if (_profile == null) return;
-    _profile!.llmProvider = provider.name;
-    await _userProfileRepository.saveUserProfile(_profile!);
+    await _secureStorage.write(key: 'llm_provider', value: provider.name);
     setState(() => _selectedProvider = provider);
   }
 
@@ -156,13 +162,10 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
             },
           ),
           onTap: () async {
-            if (_profile != null) {
-              _profile!.localModelName = model.filename;
-              await _userProfileRepository.saveUserProfile(_profile!);
-              setState(() {});
-            }
+            await _secureStorage.write(key: 'local_model_name', value: model.filename);
+            setState(() {});
           },
-          selected: _profile?.localModelName == model.filename,
+          selected: _downloadedModels.any((m) => m.filename == model.filename),
           selectedTileColor: CyberTheme.primary.withOpacity(0.1),
         )),
         const SizedBox(height: 16),

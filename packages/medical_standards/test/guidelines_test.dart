@@ -1,11 +1,11 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 void main() {
   group('ClinicalGuidelineReference', () {
     test('guideline has required fields', () {
       expect(ClinicalGuidelines.ahaHypertension.code, isNotEmpty);
-      expect(ClinicalGuidelines.ahaHypertension.title, isNotEmpty);
+      expect(ClinicalGuidelines.ahaHypertension.displayName, isNotEmpty);
       expect(ClinicalGuidelines.ahaHypertension.url, isNotEmpty);
     });
 
@@ -26,7 +26,7 @@ void main() {
       expect(guideline, isNull);
     });
 
-    test('findForCondition returns guidelines for diabetes', () {
+    test('findForCondition returns guidelines for E11', () {
       final guidelines = ClinicalGuidelines.findForCondition('E11');
       expect(guidelines, isNotEmpty);
     });
@@ -42,18 +42,18 @@ void main() {
 
     test('labReferenceRanges guideline exists', () {
       expect(ClinicalGuidelines.labReferenceRanges.code, equals('LAB-REF'));
-      expect(ClinicalGuidelines.labReferenceRanges.title, isNotEmpty);
+      expect(ClinicalGuidelines.labReferenceRanges.displayName, isNotEmpty);
     });
 
     test('accAhaRiskCalculator guideline exists', () {
       expect(ClinicalGuidelines.accAhaRiskCalculator.code, equals('ASCVD'));
-      expect(ClinicalGuidelines.accAhaRiskCalculator.title, isNotEmpty);
+      expect(ClinicalGuidelines.accAhaRiskCalculator.displayName, isNotEmpty);
     });
 
     test('guideline references have valid structure', () {
       for (final guideline in ClinicalGuidelines.all) {
         expect(guideline.code, isNotEmpty);
-        expect(guideline.title, isNotEmpty);
+        expect(guideline.displayName, isNotEmpty);
         expect(guideline.url, isNotEmpty);
         expect(guideline.description, isNotEmpty);
       }

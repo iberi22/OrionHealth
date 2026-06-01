@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
-import 'package:orionhealth_health/core/theme/cyber_theme.dart';
-import 'package:orionhealth_health/core/widgets/glassmorphic_card.dart';
-import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
-import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart';
-import 'package:orionhealth_health/features/health_report/presentation/pages/reports_page.dart';
-import 'package:orionhealth_health/features/vitals/presentation/pages/vitals_page.dart';
-import 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart';
+import '../../../../../core/di/injection.dart';
+import '../../../../../core/theme/cyber_theme.dart';
+import '../../../../../core/widgets/glassmorphic_card.dart';
+import '../../../local_agent/infrastructure/llm_service.dart';
+import '../../../local_agent/presentation/chat_page.dart';
+import '../../../vitals/presentation/pages/vitals_page.dart';
+import '../../../medications/presentation/pages/medications_page.dart';
+import '../../../reports/presentation/pages/reports_page.dart';
 
 class HomeDashboardPage extends StatelessWidget {
   const HomeDashboardPage({super.key});

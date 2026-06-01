@@ -32,50 +32,55 @@ const LabResultSchema = CollectionSchema(
       name: r'encryptedValue',
       type: IsarType.string,
     ),
-    r'loincCode': PropertySchema(
+    r'id': PropertySchema(
       id: 3,
+      name: r'id',
+      type: IsarType.string,
+    ),
+    r'loincCode': PropertySchema(
+      id: 4,
       name: r'loincCode',
       type: IsarType.string,
     ),
     r'referenceRangeHigh': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'referenceRangeHigh',
       type: IsarType.double,
     ),
     r'referenceRangeLow': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'referenceRangeLow',
       type: IsarType.double,
     ),
     r'resultValue': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'resultValue',
       type: IsarType.string,
     ),
     r'source': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'source',
       type: IsarType.string,
       enumMap: _LabResultsourceEnumValueMap,
     ),
     r'syncStatus': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _LabResultsyncStatusEnumValueMap,
     ),
     r'testName': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'testName',
       type: IsarType.string,
     ),
     r'unit': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'unit',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -84,8 +89,21 @@ const LabResultSchema = CollectionSchema(
   serialize: _labResultSerialize,
   deserialize: _labResultDeserialize,
   deserializeProp: _labResultDeserializeProp,
-  idName: r'id',
+  idName: r'isarId',
   indexes: {
+    r'id': IndexSchema(
+      id: -3268401673993471357,
+      name: r'id',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'id',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
     r'loincCode': IndexSchema(
       id: 8326644141241462849,
       name: r'loincCode',
@@ -146,6 +164,7 @@ int _labResultEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.loincCode.length * 3;
   bytesCount += 3 + object.resultValue.length * 3;
   bytesCount += 3 + object.source.name.length * 3;
@@ -164,15 +183,16 @@ void _labResultSerialize(
   writer.writeDateTime(offsets[0], object.collectedAt);
   writer.writeDateTime(offsets[1], object.createdAt);
   writer.writeString(offsets[2], object.encryptedValue);
-  writer.writeString(offsets[3], object.loincCode);
-  writer.writeDouble(offsets[4], object.referenceRangeHigh);
-  writer.writeDouble(offsets[5], object.referenceRangeLow);
-  writer.writeString(offsets[6], object.resultValue);
-  writer.writeString(offsets[7], object.source.name);
-  writer.writeString(offsets[8], object.syncStatus.name);
-  writer.writeString(offsets[9], object.testName);
-  writer.writeString(offsets[10], object.unit);
-  writer.writeDateTime(offsets[11], object.updatedAt);
+  writer.writeString(offsets[3], object.id);
+  writer.writeString(offsets[4], object.loincCode);
+  writer.writeDouble(offsets[5], object.referenceRangeHigh);
+  writer.writeDouble(offsets[6], object.referenceRangeLow);
+  writer.writeString(offsets[7], object.resultValue);
+  writer.writeString(offsets[8], object.source.name);
+  writer.writeString(offsets[9], object.syncStatus.name);
+  writer.writeString(offsets[10], object.testName);
+  writer.writeString(offsets[11], object.unit);
+  writer.writeDateTime(offsets[12], object.updatedAt);
 }
 
 LabResult _labResultDeserialize(
@@ -185,19 +205,19 @@ LabResult _labResultDeserialize(
     collectedAt: reader.readDateTime(offsets[0]),
     createdAt: reader.readDateTime(offsets[1]),
     encryptedValue: reader.readStringOrNull(offsets[2]),
-    id: id,
-    loincCode: reader.readString(offsets[3]),
-    referenceRangeHigh: reader.readDouble(offsets[4]),
-    referenceRangeLow: reader.readDouble(offsets[5]),
-    resultValue: reader.readString(offsets[6]),
-    source: _LabResultsourceValueEnumMap[reader.readStringOrNull(offsets[7])] ??
+    id: reader.readString(offsets[3]),
+    loincCode: reader.readString(offsets[4]),
+    referenceRangeHigh: reader.readDouble(offsets[5]),
+    referenceRangeLow: reader.readDouble(offsets[6]),
+    resultValue: reader.readString(offsets[7]),
+    source: _LabResultsourceValueEnumMap[reader.readStringOrNull(offsets[8])] ??
         DataSource.manual,
     syncStatus:
-        _LabResultsyncStatusValueEnumMap[reader.readStringOrNull(offsets[8])] ??
+        _LabResultsyncStatusValueEnumMap[reader.readStringOrNull(offsets[9])] ??
             SyncStatus.pending,
-    testName: reader.readString(offsets[9]),
-    unit: reader.readString(offsets[10]),
-    updatedAt: reader.readDateTime(offsets[11]),
+    testName: reader.readString(offsets[10]),
+    unit: reader.readString(offsets[11]),
+    updatedAt: reader.readDateTime(offsets[12]),
   );
   return object;
 }
@@ -218,23 +238,25 @@ P _labResultDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 5:
       return (reader.readDouble(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 7:
+      return (reader.readString(offset)) as P;
+    case 8:
       return (_LabResultsourceValueEnumMap[reader.readStringOrNull(offset)] ??
           DataSource.manual) as P;
-    case 8:
+    case 9:
       return (_LabResultsyncStatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SyncStatus.pending) as P;
-    case 9:
-      return (reader.readString(offset)) as P;
     case 10:
       return (reader.readString(offset)) as P;
     case 11:
+      return (reader.readString(offset)) as P;
+    case 12:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -263,20 +285,72 @@ const _LabResultsyncStatusValueEnumMap = {
 };
 
 Id _labResultGetId(LabResult object) {
-  return object.id;
+  return object.isarId;
 }
 
 List<IsarLinkBase<dynamic>> _labResultGetLinks(LabResult object) {
   return [];
 }
 
-void _labResultAttach(IsarCollection<dynamic> col, Id id, LabResult object) {
-  object.id = id;
+void _labResultAttach(IsarCollection<dynamic> col, Id id, LabResult object) {}
+
+extension LabResultByIndex on IsarCollection<LabResult> {
+  Future<LabResult?> getById(String id) {
+    return getByIndex(r'id', [id]);
+  }
+
+  LabResult? getByIdSync(String id) {
+    return getByIndexSync(r'id', [id]);
+  }
+
+  Future<bool> deleteById(String id) {
+    return deleteByIndex(r'id', [id]);
+  }
+
+  bool deleteByIdSync(String id) {
+    return deleteByIndexSync(r'id', [id]);
+  }
+
+  Future<List<LabResult?>> getAllById(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return getAllByIndex(r'id', values);
+  }
+
+  List<LabResult?> getAllByIdSync(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'id', values);
+  }
+
+  Future<int> deleteAllById(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'id', values);
+  }
+
+  int deleteAllByIdSync(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'id', values);
+  }
+
+  Future<Id> putById(LabResult object) {
+    return putByIndex(r'id', object);
+  }
+
+  Id putByIdSync(LabResult object, {bool saveLinks = true}) {
+    return putByIndexSync(r'id', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllById(List<LabResult> objects) {
+    return putAllByIndex(r'id', objects);
+  }
+
+  List<Id> putAllByIdSync(List<LabResult> objects, {bool saveLinks = true}) {
+    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
+  }
 }
 
 extension LabResultQueryWhereSort
     on QueryBuilder<LabResult, LabResult, QWhere> {
-  QueryBuilder<LabResult, LabResult, QAfterWhere> anyId() {
+  QueryBuilder<LabResult, LabResult, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -293,68 +367,116 @@ extension LabResultQueryWhereSort
 
 extension LabResultQueryWhere
     on QueryBuilder<LabResult, LabResult, QWhereClause> {
-  QueryBuilder<LabResult, LabResult, QAfterWhereClause> idEqualTo(Id id) {
+  QueryBuilder<LabResult, LabResult, QAfterWhereClause> isarIdEqualTo(
+      Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
+        lower: isarId,
+        upper: isarId,
       ));
     });
   }
 
-  QueryBuilder<LabResult, LabResult, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<LabResult, LabResult, QAfterWhereClause> isarIdNotEqualTo(
+      Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             );
       }
     });
   }
 
-  QueryBuilder<LabResult, LabResult, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<LabResult, LabResult, QAfterWhereClause> isarIdGreaterThan(
+      Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id, includeLower: include),
+        IdWhereClause.greaterThan(lower: isarId, includeLower: include),
       );
     });
   }
 
-  QueryBuilder<LabResult, LabResult, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<LabResult, LabResult, QAfterWhereClause> isarIdLessThan(
+      Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id, includeUpper: include),
+        IdWhereClause.lessThan(upper: isarId, includeUpper: include),
       );
     });
   }
 
-  QueryBuilder<LabResult, LabResult, QAfterWhereClause> idBetween(
-    Id lowerId,
-    Id upperId, {
+  QueryBuilder<LabResult, LabResult, QAfterWhereClause> isarIdBetween(
+    Id lowerIsarId,
+    Id upperIsarId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
+        lower: lowerIsarId,
         includeLower: includeLower,
-        upper: upperId,
+        upper: upperIsarId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterWhereClause> idEqualTo(String id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id',
+        value: [id],
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterWhereClause> idNotEqualTo(
+      String id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [],
+              upper: [id],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [id],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [id],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [],
+              upper: [id],
+              includeUpper: false,
+            ));
+      }
     });
   }
 
@@ -804,42 +926,172 @@ extension LabResultQueryFilter
   }
 
   QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idEqualTo(
-      Id value) {
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idGreaterThan(
-    Id value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idLessThan(
-    Id value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'id',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> idIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'id',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> isarIdEqualTo(
+      Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> isarIdGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> isarIdLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -847,7 +1099,7 @@ extension LabResultQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
+        property: r'isarId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1877,6 +2129,18 @@ extension LabResultQuerySortBy on QueryBuilder<LabResult, LabResult, QSortBy> {
     });
   }
 
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> sortById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
   QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByLoincCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'loincCode', Sort.asc);
@@ -2038,6 +2302,18 @@ extension LabResultQuerySortThenBy
     });
   }
 
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByIsarId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByIsarIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.desc);
+    });
+  }
+
   QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByLoincCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'loincCode', Sort.asc);
@@ -2171,6 +2447,13 @@ extension LabResultQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LabResult, LabResult, QDistinct> distinctById(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<LabResult, LabResult, QDistinct> distinctByLoincCode(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2234,9 +2517,9 @@ extension LabResultQueryWhereDistinct
 
 extension LabResultQueryProperty
     on QueryBuilder<LabResult, LabResult, QQueryProperty> {
-  QueryBuilder<LabResult, int, QQueryOperations> idProperty() {
+  QueryBuilder<LabResult, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addPropertyName(r'isarId');
     });
   }
 
@@ -2255,6 +2538,12 @@ extension LabResultQueryProperty
   QueryBuilder<LabResult, String?, QQueryOperations> encryptedValueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'encryptedValue');
+    });
+  }
+
+  QueryBuilder<LabResult, String, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
     });
   }
 
@@ -2320,7 +2609,7 @@ extension LabResultQueryProperty
 // **************************************************************************
 
 LabResult _$LabResultFromJson(Map<String, dynamic> json) => LabResult(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as String,
       loincCode: json['loincCode'] as String,
       testName: json['testName'] as String,
       resultValue: json['resultValue'] as String,

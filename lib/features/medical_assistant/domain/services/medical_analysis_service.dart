@@ -79,7 +79,7 @@ class SafeAnalysisResponse {
     }
     
     answer += '\n\n⚕️ $doctorRecommendation\n\n';
-    answer += '─'.repeat(50) + '\n';
+    answer += '─' * 50 + '\n';
     answer += '🔒 $disclaimer\n';
     answer += '📊 CONFIANZA: ${(confidence * 100).toStringAsFixed(0)}% ($confidenceLevel)';
 

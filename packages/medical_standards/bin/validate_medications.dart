@@ -19,13 +19,12 @@ void main() async {
   final content = await file.readAsString();
 
   // Extract all MedicationReference entries
-  // Match pattern: static const MedicationReference name = MedicationReference(
+  // Match pattern: static (const|final) MedicationReference name = MedicationReference(
   //   code: 'XXX',
   //   ...
   // );
   final medPattern = RegExp(
-    r'static\s+const\s+MedicationReference\s+(\w+)\s*=\s*MedicationReference\s*\(\s*code:\s*\'([^\']+)\'',
-    multiLine: true,
+    r"static\s+(?:const|final)\s+MedicationReference\s+(\w+)\s*=\s*MedicationReference\s*\(\s*code:\s*'([^']+)'"
   );
 
   final matches = medPattern.allMatches(content);

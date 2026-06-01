@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medical_standards/medical_standards.dart';
+import '../domain/services/icd10_catalog.dart';
 import '../../vitals/domain/repositories/vital_sign_repository.dart';
 import '../../vitals/domain/entities/vital_sign.dart' as entity;
 import '../../local_agent/infrastructure/services/medical_indexing_service.dart';
@@ -82,10 +83,8 @@ class HomeCubit extends Cubit<HomeState> {
       final userProfile = await _userProfileRepository.getUserProfile();
       final chronicConditions = <Icd10Code>[];
       if (userProfile != null && userProfile.medicalConditions.isNotEmpty) {
-        final codes = await Future.wait(
-          userProfile.medicalConditions.map((s) => Icd10Catalog.findByCode(s)),
-        );
-        for (final code in codes) {
+        for (final s in userProfile.medicalConditions) {
+          final code = Icd10Catalog.findByCode(s);
           if (code != null) chronicConditions.add(code);
         }
       }

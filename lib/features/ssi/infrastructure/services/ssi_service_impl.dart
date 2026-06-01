@@ -348,8 +348,8 @@ class SsiServiceImpl implements SsiService {
     ));
 
     final pair = keyGen.generateKeyPair();
-    final publicKey = pair.publicKey;
-    final privateKey = pair.privateKey;
+    final publicKey = pair.publicKey as ECPublicKey;
+    final privateKey = pair.privateKey as ECPrivateKey;
 
     final xBigInt = publicKey.Q!.x!.toBigInteger()!;
     final yBigInt = publicKey.Q!.y!.toBigInteger()!;
