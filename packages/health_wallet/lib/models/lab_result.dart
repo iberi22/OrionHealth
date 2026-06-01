@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 
@@ -27,9 +26,11 @@ enum SyncStatus {
 /// Lab result with LOINC code reference.
 /// Sensitive: result value may be encrypted.
 @collection
-class LabResult extends Equatable {
+@JsonSerializable()
+class LabResult  {
   LabResult({
-    required this.id,
+    this.id = Isar.autoIncrement,
+    required this.remoteId,
     required this.loincCode,
     required this.testName,
     required this.resultValue,
@@ -45,7 +46,8 @@ class LabResult extends Equatable {
   });
 
   @Index(unique: true)
-  final String id;
+  Id id;
+  final String remoteId;
 
   /// LOINC code for the lab test (e.g. "2339-0" for Glucose).
   @Index()
@@ -72,18 +74,16 @@ class LabResult extends Equatable {
 
   @Enumerated(EnumType.name)
   @Index()
-  SyncStatus syncStatus;
+  final SyncStatus syncStatus;
 
   /// AES-256-GCM encrypted result value (base64).
   /// Populated by EncryptionService when resultValue contains sensitive data.
-  String? encryptedValue;
+  final String? encryptedValue;
 
   /// Whether this lab result contains sensitive data requiring encryption.
-  @ignore
   bool get isSensitive => loincCode.isNotEmpty; // extend with sensitive code list
 
   /// Returns true if result is outside reference range.
-  @ignore
   bool get isAbnormal {
     final value = double.tryParse(resultValue);
     if (value == null) return false;
@@ -91,7 +91,8 @@ class LabResult extends Equatable {
   }
 
   LabResult copyWith({
-    String? id,
+    Id? id,
+    String? remoteId,
     String? loincCode,
     String? testName,
     String? resultValue,
@@ -106,6 +107,7 @@ class LabResult extends Equatable {
     String? encryptedValue,
   }) {
     return LabResult(
+      remoteId: remoteId ?? this.remoteId,
       id: id ?? this.id,
       loincCode: loincCode ?? this.loincCode,
       testName: testName ?? this.testName,
@@ -125,20 +127,4 @@ class LabResult extends Equatable {
   factory LabResult.fromJson(Map<String, dynamic> json) => _$LabResultFromJson(json);
   Map<String, dynamic> toJson() => _$LabResultToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        loincCode,
-        testName,
-        resultValue,
-        unit,
-        referenceRangeLow,
-        referenceRangeHigh,
-        collectedAt,
-        createdAt,
-        updatedAt,
-        source,
-        syncStatus,
-        encryptedValue,
-      ];
 }

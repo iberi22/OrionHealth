@@ -1,20 +1,17 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
-import 'vital_sign.dart';
-import 'medication_entry.dart';
-import 'medical_document.dart';
-import 'medical_event.dart';
 
 part 'health_record.g.dart';
 
 /// Aggregated patient health record model.
 /// Contains references to all health data sub-collections.
 @collection
-class HealthRecord extends Equatable {
+@JsonSerializable()
+class HealthRecord  {
   HealthRecord({
-    required this.id,
+    this.id = Isar.autoIncrement,
+    required this.remoteId,
     required this.patientId,
     required this.firstName,
     required this.lastName,
@@ -33,7 +30,8 @@ class HealthRecord extends Equatable {
   });
 
   @Index(unique: true)
-  final String id;
+  Id id;
+  final String remoteId;
 
   /// External patient identifier.
   @Index()
@@ -50,34 +48,32 @@ class HealthRecord extends Equatable {
   final DateTime updatedAt;
 
   /// Known allergies (e.g. ["Penicillin", "Peanuts"]).
-  List<String>? allergies;
+  final List<String>? allergies;
 
   /// Active conditions/diagnoses (stored as ICD-10 codes).
-  List<String>? conditions;
+  final List<String>? conditions;
 
   /// Blood type (e.g. "A+", "O-").
-  String? bloodType;
+  final String? bloodType;
 
-  bool? organDonor;
+  final bool? organDonor;
 
-  String? emergencyContactName;
-  String? emergencyContactPhone;
-  String? primaryPhysician;
+  final String? emergencyContactName;
+  final String? emergencyContactPhone;
+  final String? primaryPhysician;
 
   @Enumerated(EnumType.name)
   @Index()
-  SyncStatus syncStatus;
+  final SyncStatus syncStatus;
 
   /// AES-256-GCM encrypted bundle of sensitive fields (base64).
   /// Contains: firstName, lastName, dateOfBirth, allergies, conditions.
-  String? encryptedSensitiveFields;
+  final String? encryptedSensitiveFields;
 
   /// Computed full name.
-  @ignore
   String get fullName => '$firstName $lastName';
 
   /// Compute approximate age from dateOfBirth.
-  @ignore
   int get approximateAge {
     final parts = dateOfBirth.split('-');
     if (parts.length != 3) return 0;
@@ -93,7 +89,8 @@ class HealthRecord extends Equatable {
   }
 
   HealthRecord copyWith({
-    String? id,
+    Id? id,
+    String? remoteId,
     String? patientId,
     String? firstName,
     String? lastName,
@@ -111,6 +108,7 @@ class HealthRecord extends Equatable {
     String? encryptedSensitiveFields,
   }) {
     return HealthRecord(
+      remoteId: remoteId ?? this.remoteId,
       id: id ?? this.id,
       patientId: patientId ?? this.patientId,
       firstName: firstName ?? this.firstName,
@@ -134,23 +132,4 @@ class HealthRecord extends Equatable {
       _$HealthRecordFromJson(json);
   Map<String, dynamic> toJson() => _$HealthRecordToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        patientId,
-        firstName,
-        lastName,
-        dateOfBirth,
-        createdAt,
-        updatedAt,
-        allergies,
-        conditions,
-        bloodType,
-        organDonor,
-        emergencyContactName,
-        emergencyContactPhone,
-        primaryPhysician,
-        syncStatus,
-        encryptedSensitiveFields,
-      ];
 }

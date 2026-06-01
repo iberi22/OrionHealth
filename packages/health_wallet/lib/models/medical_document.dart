@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
@@ -27,9 +26,11 @@ enum DocumentType {
 
 /// Medical document reference (PDF, image, etc.).
 @collection
-class MedicalDocument extends Equatable {
+@JsonSerializable()
+class MedicalDocument  {
   MedicalDocument({
-    required this.id,
+    this.id = Isar.autoIncrement,
+    required this.remoteId,
     required this.title,
     required this.documentType,
     required this.filePath,
@@ -48,7 +49,8 @@ class MedicalDocument extends Equatable {
   });
 
   @Index(unique: true)
-  final String id;
+  Id id;
+  final String remoteId;
 
   final String title;
 
@@ -69,24 +71,23 @@ class MedicalDocument extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  String? provider; // physician name
-  String? facility; // hospital/clinic name
-  List<String>? icd10Codes; // diagnoses coded
-  List<String>? loincCodes; // associated LOINC tests
-  String? notes;
+  final String? provider; // physician name
+  final String? facility; // hospital/clinic name
+  final List<String>? icd10Codes; // diagnoses coded
+  final List<String>? loincCodes; // associated LOINC tests
+  final String? notes;
 
   @Enumerated(EnumType.name)
   final DataSource source;
 
   @Enumerated(EnumType.name)
   @Index()
-  SyncStatus syncStatus;
+  final SyncStatus syncStatus;
 
   /// Encrypted document metadata (base64).
-  String? encryptedMetadata;
+  final String? encryptedMetadata;
 
   /// File extension derived from mime type.
-  @ignore
   String get fileExtension {
     switch (mimeType) {
       case 'application/pdf':
@@ -103,7 +104,8 @@ class MedicalDocument extends Equatable {
   }
 
   MedicalDocument copyWith({
-    String? id,
+    Id? id,
+    String? remoteId,
     String? title,
     DocumentType? documentType,
     String? filePath,
@@ -121,6 +123,7 @@ class MedicalDocument extends Equatable {
     String? encryptedMetadata,
   }) {
     return MedicalDocument(
+      remoteId: remoteId ?? this.remoteId,
       id: id ?? this.id,
       title: title ?? this.title,
       documentType: documentType ?? this.documentType,
@@ -144,23 +147,4 @@ class MedicalDocument extends Equatable {
       _$MedicalDocumentFromJson(json);
   Map<String, dynamic> toJson() => _$MedicalDocumentToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        title,
-        documentType,
-        filePath,
-        mimeType,
-        documentDate,
-        createdAt,
-        updatedAt,
-        provider,
-        facility,
-        icd10Codes,
-        loincCodes,
-        notes,
-        source,
-        syncStatus,
-        encryptedMetadata,
-      ];
 }

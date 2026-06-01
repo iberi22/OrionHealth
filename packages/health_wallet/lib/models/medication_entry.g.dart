@@ -52,60 +52,70 @@ const MedicationEntrySchema = CollectionSchema(
       name: r'frequency',
       type: IsarType.string,
     ),
-    r'medicationName': PropertySchema(
+    r'isActive': PropertySchema(
       id: 7,
+      name: r'isActive',
+      type: IsarType.bool,
+    ),
+    r'medicationName': PropertySchema(
+      id: 8,
       name: r'medicationName',
       type: IsarType.string,
     ),
     r'notes': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'notes',
       type: IsarType.string,
     ),
     r'pharmacy': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'pharmacy',
       type: IsarType.string,
     ),
     r'prescribedBy': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'prescribedBy',
       type: IsarType.string,
     ),
     r'refillsRemaining': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'refillsRemaining',
       type: IsarType.long,
     ),
+    r'remoteId': PropertySchema(
+      id: 13,
+      name: r'remoteId',
+      type: IsarType.string,
+    ),
     r'route': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'route',
       type: IsarType.string,
     ),
     r'rxNormCode': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'rxNormCode',
       type: IsarType.string,
     ),
     r'source': PropertySchema(
-      id: 14,
+      id: 16,
       name: r'source',
       type: IsarType.string,
       enumMap: _MedicationEntrysourceEnumValueMap,
     ),
     r'startDate': PropertySchema(
-      id: 15,
+      id: 17,
       name: r'startDate',
       type: IsarType.dateTime,
     ),
     r'syncStatus': PropertySchema(
-      id: 16,
+      id: 18,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _MedicationEntrysyncStatusEnumValueMap,
     ),
     r'updatedAt': PropertySchema(
-      id: 17,
+      id: 19,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -204,6 +214,7 @@ int _medicationEntryEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.remoteId.length * 3;
   bytesCount += 3 + object.route.length * 3;
   bytesCount += 3 + object.rxNormCode.length * 3;
   bytesCount += 3 + object.source.name.length * 3;
@@ -224,17 +235,19 @@ void _medicationEntrySerialize(
   writer.writeString(offsets[4], object.encryptedName);
   writer.writeDateTime(offsets[5], object.endDate);
   writer.writeString(offsets[6], object.frequency);
-  writer.writeString(offsets[7], object.medicationName);
-  writer.writeString(offsets[8], object.notes);
-  writer.writeString(offsets[9], object.pharmacy);
-  writer.writeString(offsets[10], object.prescribedBy);
-  writer.writeLong(offsets[11], object.refillsRemaining);
-  writer.writeString(offsets[12], object.route);
-  writer.writeString(offsets[13], object.rxNormCode);
-  writer.writeString(offsets[14], object.source.name);
-  writer.writeDateTime(offsets[15], object.startDate);
-  writer.writeString(offsets[16], object.syncStatus.name);
-  writer.writeDateTime(offsets[17], object.updatedAt);
+  writer.writeBool(offsets[7], object.isActive);
+  writer.writeString(offsets[8], object.medicationName);
+  writer.writeString(offsets[9], object.notes);
+  writer.writeString(offsets[10], object.pharmacy);
+  writer.writeString(offsets[11], object.prescribedBy);
+  writer.writeLong(offsets[12], object.refillsRemaining);
+  writer.writeString(offsets[13], object.remoteId);
+  writer.writeString(offsets[14], object.route);
+  writer.writeString(offsets[15], object.rxNormCode);
+  writer.writeString(offsets[16], object.source.name);
+  writer.writeDateTime(offsets[17], object.startDate);
+  writer.writeString(offsets[18], object.syncStatus.name);
+  writer.writeDateTime(offsets[19], object.updatedAt);
 }
 
 MedicationEntry _medicationEntryDeserialize(
@@ -252,21 +265,22 @@ MedicationEntry _medicationEntryDeserialize(
     endDate: reader.readDateTimeOrNull(offsets[5]),
     frequency: reader.readString(offsets[6]),
     id: id,
-    medicationName: reader.readString(offsets[7]),
-    notes: reader.readStringOrNull(offsets[8]),
-    pharmacy: reader.readStringOrNull(offsets[9]),
-    prescribedBy: reader.readStringOrNull(offsets[10]),
-    refillsRemaining: reader.readLongOrNull(offsets[11]),
-    route: reader.readString(offsets[12]),
-    rxNormCode: reader.readString(offsets[13]),
+    medicationName: reader.readString(offsets[8]),
+    notes: reader.readStringOrNull(offsets[9]),
+    pharmacy: reader.readStringOrNull(offsets[10]),
+    prescribedBy: reader.readStringOrNull(offsets[11]),
+    refillsRemaining: reader.readLongOrNull(offsets[12]),
+    remoteId: reader.readString(offsets[13]),
+    route: reader.readString(offsets[14]),
+    rxNormCode: reader.readString(offsets[15]),
     source: _MedicationEntrysourceValueEnumMap[
-            reader.readStringOrNull(offsets[14])] ??
-        DataSource.manual,
-    startDate: reader.readDateTime(offsets[15]),
-    syncStatus: _MedicationEntrysyncStatusValueEnumMap[
             reader.readStringOrNull(offsets[16])] ??
+        DataSource.manual,
+    startDate: reader.readDateTime(offsets[17]),
+    syncStatus: _MedicationEntrysyncStatusValueEnumMap[
+            reader.readStringOrNull(offsets[18])] ??
         SyncStatus.pending,
-    updatedAt: reader.readDateTime(offsets[17]),
+    updatedAt: reader.readDateTime(offsets[19]),
   );
   return object;
 }
@@ -293,30 +307,34 @@ P _medicationEntryDeserializeProp<P>(
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 9:
       return (reader.readStringOrNull(offset)) as P;
     case 10:
       return (reader.readStringOrNull(offset)) as P;
     case 11:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 12:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 13:
       return (reader.readString(offset)) as P;
     case 14:
+      return (reader.readString(offset)) as P;
+    case 15:
+      return (reader.readString(offset)) as P;
+    case 16:
       return (_MedicationEntrysourceValueEnumMap[
               reader.readStringOrNull(offset)] ??
           DataSource.manual) as P;
-    case 15:
+    case 17:
       return (reader.readDateTime(offset)) as P;
-    case 16:
+    case 18:
       return (_MedicationEntrysyncStatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SyncStatus.pending) as P;
-    case 17:
+    case 19:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1533,6 +1551,16 @@ extension MedicationEntryQueryFilter
   }
 
   QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      isActiveEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isActive',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
       medicationNameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -2200,6 +2228,142 @@ extension MedicationEntryQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remoteId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'remoteId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterFilterCondition>
+      remoteIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'remoteId',
+        value: '',
       ));
     });
   }
@@ -2966,6 +3130,20 @@ extension MedicationEntryQuerySortBy
   }
 
   QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
+      sortByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
+      sortByIsActiveDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
       sortByMedicationName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'medicationName', Sort.asc);
@@ -3031,6 +3209,20 @@ extension MedicationEntryQuerySortBy
       sortByRefillsRemainingDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'refillsRemaining', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
+      sortByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
+      sortByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -3228,6 +3420,20 @@ extension MedicationEntryQuerySortThenBy
   }
 
   QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
+      thenByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
+      thenByIsActiveDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isActive', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
       thenByMedicationName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'medicationName', Sort.asc);
@@ -3293,6 +3499,20 @@ extension MedicationEntryQuerySortThenBy
       thenByRefillsRemainingDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'refillsRemaining', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
+      thenByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QAfterSortBy>
+      thenByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -3433,6 +3653,13 @@ extension MedicationEntryQueryWhereDistinct
   }
 
   QueryBuilder<MedicationEntry, MedicationEntry, QDistinct>
+      distinctByIsActive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isActive');
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QDistinct>
       distinctByMedicationName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'medicationName',
@@ -3465,6 +3692,13 @@ extension MedicationEntryQueryWhereDistinct
       distinctByRefillsRemaining() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'refillsRemaining');
+    });
+  }
+
+  QueryBuilder<MedicationEntry, MedicationEntry, QDistinct> distinctByRemoteId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remoteId', caseSensitive: caseSensitive);
     });
   }
 
@@ -3564,6 +3798,12 @@ extension MedicationEntryQueryProperty
     });
   }
 
+  QueryBuilder<MedicationEntry, bool, QQueryOperations> isActiveProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isActive');
+    });
+  }
+
   QueryBuilder<MedicationEntry, String, QQueryOperations>
       medicationNameProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -3594,6 +3834,12 @@ extension MedicationEntryQueryProperty
       refillsRemainingProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'refillsRemaining');
+    });
+  }
+
+  QueryBuilder<MedicationEntry, String, QQueryOperations> remoteIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remoteId');
     });
   }
 
@@ -3643,7 +3889,8 @@ extension MedicationEntryQueryProperty
 
 MedicationEntry _$MedicationEntryFromJson(Map<String, dynamic> json) =>
     MedicationEntry(
-      id: (json['id'] as num).toInt(),
+      id: (json['id'] as num?)?.toInt() ?? Isar.autoIncrement,
+      remoteId: json['remoteId'] as String,
       rxNormCode: json['rxNormCode'] as String,
       medicationName: json['medicationName'] as String,
       dosage: json['dosage'] as String,
@@ -3672,6 +3919,7 @@ MedicationEntry _$MedicationEntryFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MedicationEntryToJson(MedicationEntry instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'remoteId': instance.remoteId,
       'rxNormCode': instance.rxNormCode,
       'medicationName': instance.medicationName,
       'dosage': instance.dosage,
