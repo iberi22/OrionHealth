@@ -32,10 +32,10 @@ const VitalSignSchema = CollectionSchema(
       name: r'encryptedValue',
       type: IsarType.string,
     ),
-    r'id': PropertySchema(
+    r'isAbnormal': PropertySchema(
       id: 3,
-      name: r'id',
-      type: IsarType.string,
+      name: r'isAbnormal',
+      type: IsarType.bool,
     ),
     r'loincCode': PropertySchema(
       id: 4,
@@ -52,30 +52,35 @@ const VitalSignSchema = CollectionSchema(
       name: r'recordedAt',
       type: IsarType.dateTime,
     ),
-    r'source': PropertySchema(
+    r'remoteId': PropertySchema(
       id: 7,
+      name: r'remoteId',
+      type: IsarType.string,
+    ),
+    r'source': PropertySchema(
+      id: 8,
       name: r'source',
       type: IsarType.string,
       enumMap: _VitalSignsourceEnumValueMap,
     ),
     r'syncStatus': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _VitalSignsyncStatusEnumValueMap,
     ),
     r'unit': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'unit',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
     r'value': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'value',
       type: IsarType.string,
     )
@@ -84,21 +89,8 @@ const VitalSignSchema = CollectionSchema(
   serialize: _vitalSignSerialize,
   deserialize: _vitalSignDeserialize,
   deserializeProp: _vitalSignDeserializeProp,
-  idName: r'isarId',
+  idName: r'id',
   indexes: {
-    r'id': IndexSchema(
-      id: -3268401673993471357,
-      name: r'id',
-      unique: true,
-      replace: false,
-      properties: [
-        IndexPropertySchema(
-          name: r'id',
-          type: IndexType.hash,
-          caseSensitive: true,
-        )
-      ],
-    ),
     r'loincCode': IndexSchema(
       id: 8326644141241462849,
       name: r'loincCode',
@@ -160,7 +152,6 @@ int _vitalSignEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.loincCode.length * 3;
   {
     final value = object.notes;
@@ -168,6 +159,7 @@ int _vitalSignEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.remoteId.length * 3;
   bytesCount += 3 + object.source.name.length * 3;
   bytesCount += 3 + object.syncStatus.name.length * 3;
   bytesCount += 3 + object.unit.length * 3;
@@ -184,15 +176,16 @@ void _vitalSignSerialize(
   writer.writeString(offsets[0], object.componentName);
   writer.writeDateTime(offsets[1], object.createdAt);
   writer.writeString(offsets[2], object.encryptedValue);
-  writer.writeString(offsets[3], object.id);
+  writer.writeBool(offsets[3], object.isAbnormal);
   writer.writeString(offsets[4], object.loincCode);
   writer.writeString(offsets[5], object.notes);
   writer.writeDateTime(offsets[6], object.recordedAt);
-  writer.writeString(offsets[7], object.source.name);
-  writer.writeString(offsets[8], object.syncStatus.name);
-  writer.writeString(offsets[9], object.unit);
-  writer.writeDateTime(offsets[10], object.updatedAt);
-  writer.writeString(offsets[11], object.value);
+  writer.writeString(offsets[7], object.remoteId);
+  writer.writeString(offsets[8], object.source.name);
+  writer.writeString(offsets[9], object.syncStatus.name);
+  writer.writeString(offsets[10], object.unit);
+  writer.writeDateTime(offsets[11], object.updatedAt);
+  writer.writeString(offsets[12], object.value);
 }
 
 VitalSign _vitalSignDeserialize(
@@ -205,18 +198,19 @@ VitalSign _vitalSignDeserialize(
     componentName: reader.readString(offsets[0]),
     createdAt: reader.readDateTime(offsets[1]),
     encryptedValue: reader.readStringOrNull(offsets[2]),
-    id: reader.readString(offsets[3]),
+    id: id,
     loincCode: reader.readString(offsets[4]),
     notes: reader.readStringOrNull(offsets[5]),
     recordedAt: reader.readDateTime(offsets[6]),
-    source: _VitalSignsourceValueEnumMap[reader.readStringOrNull(offsets[7])] ??
+    remoteId: reader.readString(offsets[7]),
+    source: _VitalSignsourceValueEnumMap[reader.readStringOrNull(offsets[8])] ??
         DataSource.manual,
     syncStatus:
-        _VitalSignsyncStatusValueEnumMap[reader.readStringOrNull(offsets[8])] ??
+        _VitalSignsyncStatusValueEnumMap[reader.readStringOrNull(offsets[9])] ??
             SyncStatus.pending,
-    unit: reader.readString(offsets[9]),
-    updatedAt: reader.readDateTime(offsets[10]),
-    value: reader.readString(offsets[11]),
+    unit: reader.readString(offsets[10]),
+    updatedAt: reader.readDateTime(offsets[11]),
+    value: reader.readString(offsets[12]),
   );
   return object;
 }
@@ -235,7 +229,7 @@ P _vitalSignDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
@@ -243,17 +237,19 @@ P _vitalSignDeserializeProp<P>(
     case 6:
       return (reader.readDateTime(offset)) as P;
     case 7:
+      return (reader.readString(offset)) as P;
+    case 8:
       return (_VitalSignsourceValueEnumMap[reader.readStringOrNull(offset)] ??
           DataSource.manual) as P;
-    case 8:
+    case 9:
       return (_VitalSignsyncStatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SyncStatus.pending) as P;
-    case 9:
-      return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 11:
+      return (reader.readDateTime(offset)) as P;
+    case 12:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -282,72 +278,20 @@ const _VitalSignsyncStatusValueEnumMap = {
 };
 
 Id _vitalSignGetId(VitalSign object) {
-  return object.isarId;
+  return object.id;
 }
 
 List<IsarLinkBase<dynamic>> _vitalSignGetLinks(VitalSign object) {
   return [];
 }
 
-void _vitalSignAttach(IsarCollection<dynamic> col, Id id, VitalSign object) {}
-
-extension VitalSignByIndex on IsarCollection<VitalSign> {
-  Future<VitalSign?> getById(String id) {
-    return getByIndex(r'id', [id]);
-  }
-
-  VitalSign? getByIdSync(String id) {
-    return getByIndexSync(r'id', [id]);
-  }
-
-  Future<bool> deleteById(String id) {
-    return deleteByIndex(r'id', [id]);
-  }
-
-  bool deleteByIdSync(String id) {
-    return deleteByIndexSync(r'id', [id]);
-  }
-
-  Future<List<VitalSign?>> getAllById(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndex(r'id', values);
-  }
-
-  List<VitalSign?> getAllByIdSync(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'id', values);
-  }
-
-  Future<int> deleteAllById(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'id', values);
-  }
-
-  int deleteAllByIdSync(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'id', values);
-  }
-
-  Future<Id> putById(VitalSign object) {
-    return putByIndex(r'id', object);
-  }
-
-  Id putByIdSync(VitalSign object, {bool saveLinks = true}) {
-    return putByIndexSync(r'id', object, saveLinks: saveLinks);
-  }
-
-  Future<List<Id>> putAllById(List<VitalSign> objects) {
-    return putAllByIndex(r'id', objects);
-  }
-
-  List<Id> putAllByIdSync(List<VitalSign> objects, {bool saveLinks = true}) {
-    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
-  }
+void _vitalSignAttach(IsarCollection<dynamic> col, Id id, VitalSign object) {
+  object.id = id;
 }
 
 extension VitalSignQueryWhereSort
     on QueryBuilder<VitalSign, VitalSign, QWhere> {
-  QueryBuilder<VitalSign, VitalSign, QAfterWhere> anyIsarId() {
+  QueryBuilder<VitalSign, VitalSign, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -364,116 +308,68 @@ extension VitalSignQueryWhereSort
 
 extension VitalSignQueryWhere
     on QueryBuilder<VitalSign, VitalSign, QWhereClause> {
-  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> isarIdEqualTo(
-      Id isarId) {
+  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: isarId,
-        upper: isarId,
+        lower: id,
+        upper: id,
       ));
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> isarIdNotEqualTo(
-      Id isarId) {
+  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             );
       }
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> isarIdGreaterThan(
-      Id isarId,
+  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: isarId, includeLower: include),
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
       );
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> isarIdLessThan(
-      Id isarId,
+  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: isarId, includeUpper: include),
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
       );
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> isarIdBetween(
-    Id lowerIsarId,
-    Id upperIsarId, {
+  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerIsarId,
+        lower: lowerId,
         includeLower: includeLower,
-        upper: upperIsarId,
+        upper: upperId,
         includeUpper: includeUpper,
       ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> idEqualTo(String id) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'id',
-        value: [id],
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterWhereClause> idNotEqualTo(
-      String id) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [],
-              upper: [id],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [id],
-              includeLower: false,
-              upper: [],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [id],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [],
-              upper: [id],
-              includeUpper: false,
-            ));
-      }
     });
   }
 
@@ -1005,172 +901,42 @@ extension VitalSignQueryFilter
   }
 
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idGreaterThan(
-    String value, {
+    Id value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'id',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idLessThan(
-    String value, {
+    Id value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'id',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'id',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> idIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'id',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> isarIdEqualTo(
-      Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> isarIdGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'isarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> isarIdLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'isarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -1178,11 +944,21 @@ extension VitalSignQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'isarId',
+        property: r'id',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> isAbnormalEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isAbnormal',
+        value: value,
       ));
     });
   }
@@ -1515,6 +1291,137 @@ extension VitalSignQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remoteId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'remoteId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition> remoteIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterFilterCondition>
+      remoteIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'remoteId',
+        value: '',
       ));
     });
   }
@@ -2141,15 +2048,15 @@ extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortById() {
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByIsAbnormal() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
+      return query.addSortBy(r'isAbnormal', Sort.asc);
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByIdDesc() {
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByIsAbnormalDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
+      return query.addSortBy(r'isAbnormal', Sort.desc);
     });
   }
 
@@ -2186,6 +2093,18 @@ extension VitalSignQuerySortBy on QueryBuilder<VitalSign, VitalSign, QSortBy> {
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByRecordedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'recordedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> sortByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -2300,15 +2219,15 @@ extension VitalSignQuerySortThenBy
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByIsarId() {
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByIsAbnormal() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isarId', Sort.asc);
+      return query.addSortBy(r'isAbnormal', Sort.asc);
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByIsarIdDesc() {
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByIsAbnormalDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isarId', Sort.desc);
+      return query.addSortBy(r'isAbnormal', Sort.desc);
     });
   }
 
@@ -2345,6 +2264,18 @@ extension VitalSignQuerySortThenBy
   QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByRecordedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'recordedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QAfterSortBy> thenByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -2433,10 +2364,9 @@ extension VitalSignQueryWhereDistinct
     });
   }
 
-  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctById(
-      {bool caseSensitive = true}) {
+  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByIsAbnormal() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'isAbnormal');
     });
   }
 
@@ -2457,6 +2387,13 @@ extension VitalSignQueryWhereDistinct
   QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByRecordedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'recordedAt');
+    });
+  }
+
+  QueryBuilder<VitalSign, VitalSign, QDistinct> distinctByRemoteId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remoteId', caseSensitive: caseSensitive);
     });
   }
 
@@ -2497,9 +2434,9 @@ extension VitalSignQueryWhereDistinct
 
 extension VitalSignQueryProperty
     on QueryBuilder<VitalSign, VitalSign, QQueryProperty> {
-  QueryBuilder<VitalSign, int, QQueryOperations> isarIdProperty() {
+  QueryBuilder<VitalSign, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isarId');
+      return query.addPropertyName(r'id');
     });
   }
 
@@ -2521,9 +2458,9 @@ extension VitalSignQueryProperty
     });
   }
 
-  QueryBuilder<VitalSign, String, QQueryOperations> idProperty() {
+  QueryBuilder<VitalSign, bool, QQueryOperations> isAbnormalProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addPropertyName(r'isAbnormal');
     });
   }
 
@@ -2542,6 +2479,12 @@ extension VitalSignQueryProperty
   QueryBuilder<VitalSign, DateTime, QQueryOperations> recordedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'recordedAt');
+    });
+  }
+
+  QueryBuilder<VitalSign, String, QQueryOperations> remoteIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remoteId');
     });
   }
 
@@ -2581,7 +2524,8 @@ extension VitalSignQueryProperty
 // **************************************************************************
 
 VitalSign _$VitalSignFromJson(Map<String, dynamic> json) => VitalSign(
-      id: json['id'] as String,
+      id: (json['id'] as num?)?.toInt() ?? Isar.autoIncrement,
+      remoteId: json['remoteId'] as String,
       loincCode: json['loincCode'] as String,
       componentName: json['componentName'] as String,
       value: json['value'] as String,
@@ -2600,6 +2544,7 @@ VitalSign _$VitalSignFromJson(Map<String, dynamic> json) => VitalSign(
 
 Map<String, dynamic> _$VitalSignToJson(VitalSign instance) => <String, dynamic>{
       'id': instance.id,
+      'remoteId': instance.remoteId,
       'loincCode': instance.loincCode,
       'componentName': instance.componentName,
       'value': instance.value,

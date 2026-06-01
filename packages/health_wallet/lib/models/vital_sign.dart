@@ -8,9 +8,10 @@ part 'vital_sign.g.dart';
 /// Sensitive: vital values are encrypted at rest.
 @collection
 @JsonSerializable()
-class VitalSign {
+class VitalSign  {
   VitalSign({
-    required this.id,
+    this.id = Isar.autoIncrement,
+    required this.remoteId,
     required this.loincCode,
     required this.componentName,
     required this.value,
@@ -25,9 +26,8 @@ class VitalSign {
   });
 
   @Index(unique: true)
-  final String id;
-
-  Id get isarId => fastHash(id);
+  Id id;
+  final String remoteId;
 
   /// LOINC code for this vital sign (e.g. "8867-4" for Heart rate).
   @Index()
@@ -48,12 +48,12 @@ class VitalSign {
 
   @Enumerated(EnumType.name)
   @Index()
-  SyncStatus syncStatus;
+  final SyncStatus syncStatus;
 
   /// AES-256-GCM encrypted vital value (base64).
-  String? encryptedValue;
+  final String? encryptedValue;
 
-  String? notes;
+  final String? notes;
 
   /// Common vital LOINC codes for reference:
   /// - 8867-4: Heart rate
@@ -64,7 +64,6 @@ class VitalSign {
   /// - 29463-7: Body weight
   /// - 2710-2: Body height
   /// - 39156-5: BMI
-  @ignore
   static const commonLoincCodes = {
     '8867-4': 'Heart rate',
     '8310-5': 'Body temperature',
@@ -77,7 +76,6 @@ class VitalSign {
   };
 
   /// Check if this vital sign is in normal range (simplified).
-  @ignore
   bool get isAbnormal {
     final v = double.tryParse(value);
     if (v == null) return false;
@@ -92,7 +90,8 @@ class VitalSign {
   }
 
   VitalSign copyWith({
-    String? id,
+    Id? id,
+    String? remoteId,
     String? loincCode,
     String? componentName,
     String? value,
@@ -106,6 +105,7 @@ class VitalSign {
     String? notes,
   }) {
     return VitalSign(
+      remoteId: remoteId ?? this.remoteId,
       id: id ?? this.id,
       loincCode: loincCode ?? this.loincCode,
       componentName: componentName ?? this.componentName,
@@ -123,4 +123,5 @@ class VitalSign {
 
   factory VitalSign.fromJson(Map<String, dynamic> json) => _$VitalSignFromJson(json);
   Map<String, dynamic> toJson() => _$VitalSignToJson(this);
+
 }

@@ -32,71 +32,81 @@ const MedicalEventSchema = CollectionSchema(
       name: r'description',
       type: IsarType.string,
     ),
-    r'encryptedNotes': PropertySchema(
+    r'durationHours': PropertySchema(
       id: 3,
+      name: r'durationHours',
+      type: IsarType.double,
+    ),
+    r'encryptedNotes': PropertySchema(
+      id: 4,
       name: r'encryptedNotes',
       type: IsarType.string,
     ),
     r'endDate': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'endDate',
       type: IsarType.dateTime,
     ),
     r'eventDate': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'eventDate',
       type: IsarType.dateTime,
     ),
     r'eventType': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'eventType',
       type: IsarType.string,
       enumMap: _MedicalEventeventTypeEnumValueMap,
     ),
     r'facility': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'facility',
       type: IsarType.string,
     ),
+    r'hasEnded': PropertySchema(
+      id: 9,
+      name: r'hasEnded',
+      type: IsarType.bool,
+    ),
     r'icd10Codes': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'icd10Codes',
       type: IsarType.stringList,
     ),
-    r'id': PropertySchema(
-      id: 9,
-      name: r'id',
-      type: IsarType.string,
-    ),
     r'loincCodes': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'loincCodes',
       type: IsarType.stringList,
     ),
     r'notes': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'notes',
       type: IsarType.string,
     ),
     r'provider': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'provider',
       type: IsarType.string,
     ),
+    r'remoteId': PropertySchema(
+      id: 14,
+      name: r'remoteId',
+      type: IsarType.string,
+    ),
     r'source': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'source',
       type: IsarType.string,
       enumMap: _MedicalEventsourceEnumValueMap,
     ),
     r'syncStatus': PropertySchema(
-      id: 14,
+      id: 16,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _MedicalEventsyncStatusEnumValueMap,
     ),
     r'updatedAt': PropertySchema(
-      id: 15,
+      id: 17,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -105,21 +115,8 @@ const MedicalEventSchema = CollectionSchema(
   serialize: _medicalEventSerialize,
   deserialize: _medicalEventDeserialize,
   deserializeProp: _medicalEventDeserializeProp,
-  idName: r'isarId',
+  idName: r'id',
   indexes: {
-    r'id': IndexSchema(
-      id: -3268401673993471357,
-      name: r'id',
-      unique: true,
-      replace: false,
-      properties: [
-        IndexPropertySchema(
-          name: r'id',
-          type: IndexType.hash,
-          caseSensitive: true,
-        )
-      ],
-    ),
     r'eventType': IndexSchema(
       id: -3849237371187389498,
       name: r'eventType',
@@ -212,7 +209,6 @@ int _medicalEventEstimateSize(
       }
     }
   }
-  bytesCount += 3 + object.id.length * 3;
   {
     final list = object.loincCodes;
     if (list != null) {
@@ -237,6 +233,7 @@ int _medicalEventEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.remoteId.length * 3;
   bytesCount += 3 + object.source.name.length * 3;
   bytesCount += 3 + object.syncStatus.name.length * 3;
   return bytesCount;
@@ -251,19 +248,21 @@ void _medicalEventSerialize(
   writer.writeStringList(offsets[0], object.cptCodes);
   writer.writeDateTime(offsets[1], object.createdAt);
   writer.writeString(offsets[2], object.description);
-  writer.writeString(offsets[3], object.encryptedNotes);
-  writer.writeDateTime(offsets[4], object.endDate);
-  writer.writeDateTime(offsets[5], object.eventDate);
-  writer.writeString(offsets[6], object.eventType.name);
-  writer.writeString(offsets[7], object.facility);
-  writer.writeStringList(offsets[8], object.icd10Codes);
-  writer.writeString(offsets[9], object.id);
-  writer.writeStringList(offsets[10], object.loincCodes);
-  writer.writeString(offsets[11], object.notes);
-  writer.writeString(offsets[12], object.provider);
-  writer.writeString(offsets[13], object.source.name);
-  writer.writeString(offsets[14], object.syncStatus.name);
-  writer.writeDateTime(offsets[15], object.updatedAt);
+  writer.writeDouble(offsets[3], object.durationHours);
+  writer.writeString(offsets[4], object.encryptedNotes);
+  writer.writeDateTime(offsets[5], object.endDate);
+  writer.writeDateTime(offsets[6], object.eventDate);
+  writer.writeString(offsets[7], object.eventType.name);
+  writer.writeString(offsets[8], object.facility);
+  writer.writeBool(offsets[9], object.hasEnded);
+  writer.writeStringList(offsets[10], object.icd10Codes);
+  writer.writeStringList(offsets[11], object.loincCodes);
+  writer.writeString(offsets[12], object.notes);
+  writer.writeString(offsets[13], object.provider);
+  writer.writeString(offsets[14], object.remoteId);
+  writer.writeString(offsets[15], object.source.name);
+  writer.writeString(offsets[16], object.syncStatus.name);
+  writer.writeDateTime(offsets[17], object.updatedAt);
 }
 
 MedicalEvent _medicalEventDeserialize(
@@ -276,25 +275,26 @@ MedicalEvent _medicalEventDeserialize(
     cptCodes: reader.readStringList(offsets[0]),
     createdAt: reader.readDateTime(offsets[1]),
     description: reader.readString(offsets[2]),
-    encryptedNotes: reader.readStringOrNull(offsets[3]),
-    endDate: reader.readDateTimeOrNull(offsets[4]),
-    eventDate: reader.readDateTime(offsets[5]),
+    encryptedNotes: reader.readStringOrNull(offsets[4]),
+    endDate: reader.readDateTimeOrNull(offsets[5]),
+    eventDate: reader.readDateTime(offsets[6]),
     eventType: _MedicalEventeventTypeValueEnumMap[
-            reader.readStringOrNull(offsets[6])] ??
+            reader.readStringOrNull(offsets[7])] ??
         EventType.appointment,
-    facility: reader.readStringOrNull(offsets[7]),
-    icd10Codes: reader.readStringList(offsets[8]),
-    id: reader.readString(offsets[9]),
-    loincCodes: reader.readStringList(offsets[10]),
-    notes: reader.readStringOrNull(offsets[11]),
-    provider: reader.readStringOrNull(offsets[12]),
+    facility: reader.readStringOrNull(offsets[8]),
+    icd10Codes: reader.readStringList(offsets[10]),
+    id: id,
+    loincCodes: reader.readStringList(offsets[11]),
+    notes: reader.readStringOrNull(offsets[12]),
+    provider: reader.readStringOrNull(offsets[13]),
+    remoteId: reader.readString(offsets[14]),
     source:
-        _MedicalEventsourceValueEnumMap[reader.readStringOrNull(offsets[13])] ??
+        _MedicalEventsourceValueEnumMap[reader.readStringOrNull(offsets[15])] ??
             DataSource.manual,
     syncStatus: _MedicalEventsyncStatusValueEnumMap[
-            reader.readStringOrNull(offsets[14])] ??
+            reader.readStringOrNull(offsets[16])] ??
         SyncStatus.pending,
-    updatedAt: reader.readDateTime(offsets[15]),
+    updatedAt: reader.readDateTime(offsets[17]),
   );
   return object;
 }
@@ -313,36 +313,40 @@ P _medicalEventDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 4:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 6:
+      return (reader.readDateTime(offset)) as P;
+    case 7:
       return (_MedicalEventeventTypeValueEnumMap[
               reader.readStringOrNull(offset)] ??
           EventType.appointment) as P;
-    case 7:
-      return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 10:
       return (reader.readStringList(offset)) as P;
     case 11:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 12:
       return (reader.readStringOrNull(offset)) as P;
     case 13:
+      return (reader.readStringOrNull(offset)) as P;
+    case 14:
+      return (reader.readString(offset)) as P;
+    case 15:
       return (_MedicalEventsourceValueEnumMap[
               reader.readStringOrNull(offset)] ??
           DataSource.manual) as P;
-    case 14:
+    case 16:
       return (_MedicalEventsyncStatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SyncStatus.pending) as P;
-    case 15:
+    case 17:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -391,7 +395,7 @@ const _MedicalEventsyncStatusValueEnumMap = {
 };
 
 Id _medicalEventGetId(MedicalEvent object) {
-  return object.isarId;
+  return object.id;
 }
 
 List<IsarLinkBase<dynamic>> _medicalEventGetLinks(MedicalEvent object) {
@@ -399,65 +403,13 @@ List<IsarLinkBase<dynamic>> _medicalEventGetLinks(MedicalEvent object) {
 }
 
 void _medicalEventAttach(
-    IsarCollection<dynamic> col, Id id, MedicalEvent object) {}
-
-extension MedicalEventByIndex on IsarCollection<MedicalEvent> {
-  Future<MedicalEvent?> getById(String id) {
-    return getByIndex(r'id', [id]);
-  }
-
-  MedicalEvent? getByIdSync(String id) {
-    return getByIndexSync(r'id', [id]);
-  }
-
-  Future<bool> deleteById(String id) {
-    return deleteByIndex(r'id', [id]);
-  }
-
-  bool deleteByIdSync(String id) {
-    return deleteByIndexSync(r'id', [id]);
-  }
-
-  Future<List<MedicalEvent?>> getAllById(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndex(r'id', values);
-  }
-
-  List<MedicalEvent?> getAllByIdSync(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'id', values);
-  }
-
-  Future<int> deleteAllById(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'id', values);
-  }
-
-  int deleteAllByIdSync(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'id', values);
-  }
-
-  Future<Id> putById(MedicalEvent object) {
-    return putByIndex(r'id', object);
-  }
-
-  Id putByIdSync(MedicalEvent object, {bool saveLinks = true}) {
-    return putByIndexSync(r'id', object, saveLinks: saveLinks);
-  }
-
-  Future<List<Id>> putAllById(List<MedicalEvent> objects) {
-    return putAllByIndex(r'id', objects);
-  }
-
-  List<Id> putAllByIdSync(List<MedicalEvent> objects, {bool saveLinks = true}) {
-    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
-  }
+    IsarCollection<dynamic> col, Id id, MedicalEvent object) {
+  object.id = id;
 }
 
 extension MedicalEventQueryWhereSort
     on QueryBuilder<MedicalEvent, MedicalEvent, QWhere> {
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhere> anyIsarId() {
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -474,117 +426,70 @@ extension MedicalEventQueryWhereSort
 
 extension MedicalEventQueryWhere
     on QueryBuilder<MedicalEvent, MedicalEvent, QWhereClause> {
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> isarIdEqualTo(
-      Id isarId) {
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: isarId,
-        upper: isarId,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> isarIdNotEqualTo(
-      Id isarId) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
-            )
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
-            );
-      } else {
-        return query
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
-            )
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
-            );
-      }
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> isarIdGreaterThan(
-      Id isarId,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: isarId, includeLower: include),
-      );
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> isarIdLessThan(
-      Id isarId,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.lessThan(upper: isarId, includeUpper: include),
-      );
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> isarIdBetween(
-    Id lowerIsarId,
-    Id upperIsarId, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerIsarId,
-        includeLower: includeLower,
-        upper: upperIsarId,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> idEqualTo(
-      String id) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'id',
-        value: [id],
+        lower: id,
+        upper: id,
       ));
     });
   }
 
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> idNotEqualTo(
-      String id) {
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [],
-              upper: [id],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [id],
-              includeLower: false,
-              upper: [],
-            ));
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            )
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            );
       } else {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [id],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [],
-              upper: [id],
-              includeUpper: false,
-            ));
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            )
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            );
       }
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> idGreaterThan(
+      Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
+      );
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> idLessThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
+      );
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
@@ -1208,6 +1113,90 @@ extension MedicalEventQueryFilter
   }
 
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      durationHoursIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'durationHours',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      durationHoursIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'durationHours',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      durationHoursEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'durationHours',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      durationHoursGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'durationHours',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      durationHoursLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'durationHours',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      durationHoursBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'durationHours',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
       encryptedNotesIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1782,6 +1771,16 @@ extension MedicalEventQueryFilter
   }
 
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      hasEndedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hasEnded',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
       icd10CodesIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2025,175 +2024,42 @@ extension MedicalEventQueryFilter
   }
 
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idGreaterThan(
-    String value, {
+    Id value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'id',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idLessThan(
-    String value, {
+    Id value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'id',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'id',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'id',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> idIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
-      idIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'id',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> isarIdEqualTo(
-      Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
-      isarIdGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'isarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
-      isarIdLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'isarId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -2201,7 +2067,7 @@ extension MedicalEventQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'isarId',
+        property: r'id',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -2759,6 +2625,142 @@ extension MedicalEventQueryFilter
     });
   }
 
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remoteId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'remoteId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition>
+      remoteIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterFilterCondition> sourceEqualTo(
     DataSource value, {
     bool caseSensitive = true,
@@ -3120,6 +3122,19 @@ extension MedicalEventQuerySortBy
     });
   }
 
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> sortByDurationHours() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationHours', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy>
+      sortByDurationHoursDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationHours', Sort.desc);
+    });
+  }
+
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy>
       sortByEncryptedNotes() {
     return QueryBuilder.apply(this, (query) {
@@ -3182,15 +3197,15 @@ extension MedicalEventQuerySortBy
     });
   }
 
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> sortById() {
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> sortByHasEnded() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
+      return query.addSortBy(r'hasEnded', Sort.asc);
     });
   }
 
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> sortByIdDesc() {
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> sortByHasEndedDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
+      return query.addSortBy(r'hasEnded', Sort.desc);
     });
   }
 
@@ -3215,6 +3230,18 @@ extension MedicalEventQuerySortBy
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> sortByProviderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'provider', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> sortByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> sortByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -3283,6 +3310,19 @@ extension MedicalEventQuerySortThenBy
     });
   }
 
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByDurationHours() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationHours', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy>
+      thenByDurationHoursDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationHours', Sort.desc);
+    });
+  }
+
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy>
       thenByEncryptedNotes() {
     return QueryBuilder.apply(this, (query) {
@@ -3345,6 +3385,18 @@ extension MedicalEventQuerySortThenBy
     });
   }
 
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByHasEnded() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasEnded', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByHasEndedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasEnded', Sort.desc);
+    });
+  }
+
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -3354,18 +3406,6 @@ extension MedicalEventQuerySortThenBy
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByIsarId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isarId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByIsarIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isarId', Sort.desc);
     });
   }
 
@@ -3390,6 +3430,18 @@ extension MedicalEventQuerySortThenBy
   QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByProviderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'provider', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QAfterSortBy> thenByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -3452,6 +3504,13 @@ extension MedicalEventQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MedicalEvent, MedicalEvent, QDistinct>
+      distinctByDurationHours() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'durationHours');
+    });
+  }
+
   QueryBuilder<MedicalEvent, MedicalEvent, QDistinct> distinctByEncryptedNotes(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3486,16 +3545,15 @@ extension MedicalEventQueryWhereDistinct
     });
   }
 
-  QueryBuilder<MedicalEvent, MedicalEvent, QDistinct> distinctByIcd10Codes() {
+  QueryBuilder<MedicalEvent, MedicalEvent, QDistinct> distinctByHasEnded() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'icd10Codes');
+      return query.addDistinctBy(r'hasEnded');
     });
   }
 
-  QueryBuilder<MedicalEvent, MedicalEvent, QDistinct> distinctById(
-      {bool caseSensitive = true}) {
+  QueryBuilder<MedicalEvent, MedicalEvent, QDistinct> distinctByIcd10Codes() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'icd10Codes');
     });
   }
 
@@ -3516,6 +3574,13 @@ extension MedicalEventQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'provider', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<MedicalEvent, MedicalEvent, QDistinct> distinctByRemoteId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remoteId', caseSensitive: caseSensitive);
     });
   }
 
@@ -3542,9 +3607,9 @@ extension MedicalEventQueryWhereDistinct
 
 extension MedicalEventQueryProperty
     on QueryBuilder<MedicalEvent, MedicalEvent, QQueryProperty> {
-  QueryBuilder<MedicalEvent, int, QQueryOperations> isarIdProperty() {
+  QueryBuilder<MedicalEvent, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isarId');
+      return query.addPropertyName(r'id');
     });
   }
 
@@ -3564,6 +3629,13 @@ extension MedicalEventQueryProperty
   QueryBuilder<MedicalEvent, String, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'description');
+    });
+  }
+
+  QueryBuilder<MedicalEvent, double?, QQueryOperations>
+      durationHoursProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'durationHours');
     });
   }
 
@@ -3598,16 +3670,16 @@ extension MedicalEventQueryProperty
     });
   }
 
+  QueryBuilder<MedicalEvent, bool, QQueryOperations> hasEndedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hasEnded');
+    });
+  }
+
   QueryBuilder<MedicalEvent, List<String>?, QQueryOperations>
       icd10CodesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'icd10Codes');
-    });
-  }
-
-  QueryBuilder<MedicalEvent, String, QQueryOperations> idProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
     });
   }
 
@@ -3627,6 +3699,12 @@ extension MedicalEventQueryProperty
   QueryBuilder<MedicalEvent, String?, QQueryOperations> providerProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'provider');
+    });
+  }
+
+  QueryBuilder<MedicalEvent, String, QQueryOperations> remoteIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remoteId');
     });
   }
 
@@ -3655,7 +3733,8 @@ extension MedicalEventQueryProperty
 // **************************************************************************
 
 MedicalEvent _$MedicalEventFromJson(Map<String, dynamic> json) => MedicalEvent(
-      id: json['id'] as String,
+      id: (json['id'] as num?)?.toInt() ?? Isar.autoIncrement,
+      remoteId: json['remoteId'] as String,
       eventType: $enumDecode(_$EventTypeEnumMap, json['eventType']),
       description: json['description'] as String,
       eventDate: DateTime.parse(json['eventDate'] as String),
@@ -3687,6 +3766,7 @@ MedicalEvent _$MedicalEventFromJson(Map<String, dynamic> json) => MedicalEvent(
 Map<String, dynamic> _$MedicalEventToJson(MedicalEvent instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'remoteId': instance.remoteId,
       'eventType': _$EventTypeEnumMap[instance.eventType]!,
       'description': instance.description,
       'eventDate': instance.eventDate.toIso8601String(),

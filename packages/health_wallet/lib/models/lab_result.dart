@@ -23,24 +23,14 @@ enum SyncStatus {
   conflict,
 }
 
-int fastHash(String string) {
-  var hash = 0xcbf29ce484222325;
-  var i = 0;
-  while (i < string.length) {
-    final codeUnit = string.codeUnitAt(i++);
-    hash ^= codeUnit;
-    hash *= 0x100000001b3;
-  }
-  return hash;
-}
-
 /// Lab result with LOINC code reference.
 /// Sensitive: result value may be encrypted.
 @collection
 @JsonSerializable()
-class LabResult {
+class LabResult  {
   LabResult({
-    required this.id,
+    this.id = Isar.autoIncrement,
+    required this.remoteId,
     required this.loincCode,
     required this.testName,
     required this.resultValue,
@@ -56,9 +46,8 @@ class LabResult {
   });
 
   @Index(unique: true)
-  final String id;
-
-  Id get isarId => fastHash(id);
+  Id id;
+  final String remoteId;
 
   /// LOINC code for the lab test (e.g. "2339-0" for Glucose).
   @Index()
@@ -85,18 +74,16 @@ class LabResult {
 
   @Enumerated(EnumType.name)
   @Index()
-  SyncStatus syncStatus;
+  final SyncStatus syncStatus;
 
   /// AES-256-GCM encrypted result value (base64).
   /// Populated by EncryptionService when resultValue contains sensitive data.
-  String? encryptedValue;
+  final String? encryptedValue;
 
   /// Whether this lab result contains sensitive data requiring encryption.
-  @ignore
   bool get isSensitive => loincCode.isNotEmpty; // extend with sensitive code list
 
   /// Returns true if result is outside reference range.
-  @ignore
   bool get isAbnormal {
     final value = double.tryParse(resultValue);
     if (value == null) return false;
@@ -104,7 +91,8 @@ class LabResult {
   }
 
   LabResult copyWith({
-    String? id,
+    Id? id,
+    String? remoteId,
     String? loincCode,
     String? testName,
     String? resultValue,
@@ -119,6 +107,7 @@ class LabResult {
     String? encryptedValue,
   }) {
     return LabResult(
+      remoteId: remoteId ?? this.remoteId,
       id: id ?? this.id,
       loincCode: loincCode ?? this.loincCode,
       testName: testName ?? this.testName,
