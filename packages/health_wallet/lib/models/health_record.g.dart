@@ -62,34 +62,39 @@ const HealthRecordSchema = CollectionSchema(
       name: r'firstName',
       type: IsarType.string,
     ),
-    r'lastName': PropertySchema(
+    r'id': PropertySchema(
       id: 9,
+      name: r'id',
+      type: IsarType.string,
+    ),
+    r'lastName': PropertySchema(
+      id: 10,
       name: r'lastName',
       type: IsarType.string,
     ),
     r'organDonor': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'organDonor',
       type: IsarType.bool,
     ),
     r'patientId': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'patientId',
       type: IsarType.string,
     ),
     r'primaryPhysician': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'primaryPhysician',
       type: IsarType.string,
     ),
     r'syncStatus': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _HealthRecordsyncStatusEnumValueMap,
     ),
     r'updatedAt': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -98,8 +103,21 @@ const HealthRecordSchema = CollectionSchema(
   serialize: _healthRecordSerialize,
   deserialize: _healthRecordDeserialize,
   deserializeProp: _healthRecordDeserializeProp,
-  idName: r'id',
+  idName: r'isarId',
   indexes: {
+    r'id': IndexSchema(
+      id: -3268401673993471357,
+      name: r'id',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'id',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
     r'patientId': IndexSchema(
       id: 403389457658259617,
       name: r'patientId',
@@ -204,6 +222,7 @@ int _healthRecordEstimateSize(
     }
   }
   bytesCount += 3 + object.firstName.length * 3;
+  bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.lastName.length * 3;
   bytesCount += 3 + object.patientId.length * 3;
   {
@@ -231,12 +250,13 @@ void _healthRecordSerialize(
   writer.writeString(offsets[6], object.emergencyContactPhone);
   writer.writeString(offsets[7], object.encryptedSensitiveFields);
   writer.writeString(offsets[8], object.firstName);
-  writer.writeString(offsets[9], object.lastName);
-  writer.writeBool(offsets[10], object.organDonor);
-  writer.writeString(offsets[11], object.patientId);
-  writer.writeString(offsets[12], object.primaryPhysician);
-  writer.writeString(offsets[13], object.syncStatus.name);
-  writer.writeDateTime(offsets[14], object.updatedAt);
+  writer.writeString(offsets[9], object.id);
+  writer.writeString(offsets[10], object.lastName);
+  writer.writeBool(offsets[11], object.organDonor);
+  writer.writeString(offsets[12], object.patientId);
+  writer.writeString(offsets[13], object.primaryPhysician);
+  writer.writeString(offsets[14], object.syncStatus.name);
+  writer.writeDateTime(offsets[15], object.updatedAt);
 }
 
 HealthRecord _healthRecordDeserialize(
@@ -255,15 +275,15 @@ HealthRecord _healthRecordDeserialize(
     emergencyContactPhone: reader.readStringOrNull(offsets[6]),
     encryptedSensitiveFields: reader.readStringOrNull(offsets[7]),
     firstName: reader.readString(offsets[8]),
-    id: id,
-    lastName: reader.readString(offsets[9]),
-    organDonor: reader.readBoolOrNull(offsets[10]),
-    patientId: reader.readString(offsets[11]),
-    primaryPhysician: reader.readStringOrNull(offsets[12]),
+    id: reader.readString(offsets[9]),
+    lastName: reader.readString(offsets[10]),
+    organDonor: reader.readBoolOrNull(offsets[11]),
+    patientId: reader.readString(offsets[12]),
+    primaryPhysician: reader.readStringOrNull(offsets[13]),
     syncStatus: _HealthRecordsyncStatusValueEnumMap[
-            reader.readStringOrNull(offsets[13])] ??
+            reader.readStringOrNull(offsets[14])] ??
         SyncStatus.pending,
-    updatedAt: reader.readDateTime(offsets[14]),
+    updatedAt: reader.readDateTime(offsets[15]),
   );
   return object;
 }
@@ -296,16 +316,18 @@ P _healthRecordDeserializeProp<P>(
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 11:
       return (reader.readString(offset)) as P;
+    case 11:
+      return (reader.readBoolOrNull(offset)) as P;
     case 12:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 13:
+      return (reader.readStringOrNull(offset)) as P;
+    case 14:
       return (_HealthRecordsyncStatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SyncStatus.pending) as P;
-    case 14:
+    case 15:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -324,7 +346,7 @@ const _HealthRecordsyncStatusValueEnumMap = {
 };
 
 Id _healthRecordGetId(HealthRecord object) {
-  return object.id;
+  return object.isarId;
 }
 
 List<IsarLinkBase<dynamic>> _healthRecordGetLinks(HealthRecord object) {
@@ -332,13 +354,65 @@ List<IsarLinkBase<dynamic>> _healthRecordGetLinks(HealthRecord object) {
 }
 
 void _healthRecordAttach(
-    IsarCollection<dynamic> col, Id id, HealthRecord object) {
-  object.id = id;
+    IsarCollection<dynamic> col, Id id, HealthRecord object) {}
+
+extension HealthRecordByIndex on IsarCollection<HealthRecord> {
+  Future<HealthRecord?> getById(String id) {
+    return getByIndex(r'id', [id]);
+  }
+
+  HealthRecord? getByIdSync(String id) {
+    return getByIndexSync(r'id', [id]);
+  }
+
+  Future<bool> deleteById(String id) {
+    return deleteByIndex(r'id', [id]);
+  }
+
+  bool deleteByIdSync(String id) {
+    return deleteByIndexSync(r'id', [id]);
+  }
+
+  Future<List<HealthRecord?>> getAllById(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return getAllByIndex(r'id', values);
+  }
+
+  List<HealthRecord?> getAllByIdSync(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'id', values);
+  }
+
+  Future<int> deleteAllById(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'id', values);
+  }
+
+  int deleteAllByIdSync(List<String> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'id', values);
+  }
+
+  Future<Id> putById(HealthRecord object) {
+    return putByIndex(r'id', object);
+  }
+
+  Id putByIdSync(HealthRecord object, {bool saveLinks = true}) {
+    return putByIndexSync(r'id', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllById(List<HealthRecord> objects) {
+    return putAllByIndex(r'id', objects);
+  }
+
+  List<Id> putAllByIdSync(List<HealthRecord> objects, {bool saveLinks = true}) {
+    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
+  }
 }
 
 extension HealthRecordQueryWhereSort
     on QueryBuilder<HealthRecord, HealthRecord, QWhere> {
-  QueryBuilder<HealthRecord, HealthRecord, QAfterWhere> anyId() {
+  QueryBuilder<HealthRecord, HealthRecord, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -347,70 +421,117 @@ extension HealthRecordQueryWhereSort
 
 extension HealthRecordQueryWhere
     on QueryBuilder<HealthRecord, HealthRecord, QWhereClause> {
-  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> idEqualTo(Id id) {
+  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> isarIdEqualTo(
+      Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
+        lower: isarId,
+        upper: isarId,
       ));
     });
   }
 
-  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> idNotEqualTo(
-      Id id) {
+  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> isarIdNotEqualTo(
+      Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             );
       }
     });
   }
 
-  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> idGreaterThan(
-      Id id,
+  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> isarIdGreaterThan(
+      Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id, includeLower: include),
+        IdWhereClause.greaterThan(lower: isarId, includeLower: include),
       );
     });
   }
 
-  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> isarIdLessThan(
+      Id isarId,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id, includeUpper: include),
+        IdWhereClause.lessThan(upper: isarId, includeUpper: include),
       );
     });
   }
 
-  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> idBetween(
-    Id lowerId,
-    Id upperId, {
+  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> isarIdBetween(
+    Id lowerIsarId,
+    Id upperIsarId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
+        lower: lowerIsarId,
         includeLower: includeLower,
-        upper: upperId,
+        upper: upperIsarId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> idEqualTo(
+      String id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id',
+        value: [id],
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterWhereClause> idNotEqualTo(
+      String id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [],
+              upper: [id],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [id],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [id],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [],
+              upper: [id],
+              includeUpper: false,
+            ));
+      }
     });
   }
 
@@ -1986,42 +2107,175 @@ extension HealthRecordQueryFilter
   }
 
   QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idEqualTo(
-      Id value) {
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idGreaterThan(
-    Id value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idLessThan(
-    Id value, {
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'id',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'id',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      idIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'id',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> isarIdEqualTo(
+      Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      isarIdGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      isarIdLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -2029,7 +2283,7 @@ extension HealthRecordQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
+        property: r'isarId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -2784,6 +3038,18 @@ extension HealthRecordQuerySortBy
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortByLastName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.asc);
@@ -2966,6 +3232,18 @@ extension HealthRecordQuerySortThenBy
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenByIsarId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenByIsarIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.desc);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenByLastName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.asc);
@@ -3108,6 +3386,13 @@ extension HealthRecordQueryWhereDistinct
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QDistinct> distinctById(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QDistinct> distinctByLastName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3152,9 +3437,9 @@ extension HealthRecordQueryWhereDistinct
 
 extension HealthRecordQueryProperty
     on QueryBuilder<HealthRecord, HealthRecord, QQueryProperty> {
-  QueryBuilder<HealthRecord, int, QQueryOperations> idProperty() {
+  QueryBuilder<HealthRecord, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addPropertyName(r'isarId');
     });
   }
 
@@ -3217,6 +3502,12 @@ extension HealthRecordQueryProperty
     });
   }
 
+  QueryBuilder<HealthRecord, String, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
   QueryBuilder<HealthRecord, String, QQueryOperations> lastNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastName');
@@ -3261,7 +3552,7 @@ extension HealthRecordQueryProperty
 // **************************************************************************
 
 HealthRecord _$HealthRecordFromJson(Map<String, dynamic> json) => HealthRecord(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as String,
       patientId: json['patientId'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,

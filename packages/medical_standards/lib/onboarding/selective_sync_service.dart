@@ -216,7 +216,7 @@ class SelectiveSyncService {
     final classes = CategoryMedications.forCategory(cat);
     for (final med in MedicationCatalog.all) {
       if (med.drugClass != null && classes.any((c) => med.drugClass!.contains(c))) {
-        medMap[med.rxnormCode] = med;
+        medMap[med.code] = med;
       }
     }
 
@@ -239,8 +239,6 @@ class SelectiveSyncService {
   /// Try to match an ICD-10 code string to a static Icd10Code object.
   /// Uses code prefix matching (E10 → E10, E10.1, etc.)
   Icd10Code? _findIcd10ByCode(String codeStr) {
-    // Use the static catalog from Icd10ChronicConditions
-    final catalog = Icd10ChronicConditions();
     // Match via reflection-like lookup — static maps are final
     final allCodes = _staticIcd10Map();
     // Direct or prefix match
@@ -458,7 +456,7 @@ class _CategorySyncResult {
   Map<String, dynamic> toJson() => {
         'icd10': icd10.map((k, v) => MapEntry(k, v.code)),
         'loinc': loinc.map((k, v) => MapEntry(k, v.code)),
-        'meds': meds.map((k, v) => MapEntry(k, v.rxnormCode)),
+        'meds': meds.map((k, v) => MapEntry(k, v.code)),
         'guidelines': guidelines.map((k, v) => MapEntry(k, v.code)),
       };
 

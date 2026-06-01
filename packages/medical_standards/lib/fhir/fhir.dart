@@ -3,8 +3,6 @@
 /// FHIR (Fast Healthcare Interoperability Resources) is a standard
 /// for exchanging healthcare information electronically.
 
-import '../medical_standards.dart';
-
 /// FHIR Resource Type
 enum FhirResourceType {
   patient,
@@ -43,7 +41,7 @@ class FhirObservation {
   final String? interpretation;
   final String? note;
 
-  const FhirObservation({
+  FhirObservation({
     required this.id,
     required this.status,
     required this.code,
@@ -102,7 +100,7 @@ class FhirCondition {
   final DateTime recordedDate;
   final String? note;
 
-  const FhirCondition({
+  FhirCondition({
     required this.id,
     required this.code,
     required this.codeDisplay,
@@ -156,7 +154,7 @@ class FhirBundle {
   final DateTime timestamp;
   final List<Map<String, dynamic>> entries;
 
-  const FhirBundle({
+  FhirBundle({
     required this.id,
     this.type = 'collection',
     required this.timestamp,
@@ -220,7 +218,7 @@ class FhirAllergyIntolerance {
   final DateTime recordedDate;
   final String? note;
 
-  const FhirAllergyIntolerance({
+  FhirAllergyIntolerance({
     required this.id,
     required this.code,
     required this.codeDisplay,

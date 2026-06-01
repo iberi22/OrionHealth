@@ -246,4 +246,79 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get startConsultation => 'Iniciar Consulta';
+
+  @override
+  String get profileTitle => 'Perfil';
+
+  @override
+  String get personalInfo => 'Información Personal';
+
+  @override
+  String get birthDate => 'Fecha de Nacimiento';
+
+  @override
+  String get contactNumber => 'Número de Contacto';
+
+  @override
+  String get medicalInformation => 'Información Médica';
+
+  @override
+  String get bleDataExchange => 'Intercambio de Datos BLE';
+
+  @override
+  String get shareMyData => 'Compartir Mis Datos';
+
+  @override
+  String get sendHistoryToDoctor => 'Enviar historial médico a su médico';
+
+  @override
+  String get receiveData => 'Recibir Datos';
+
+  @override
+  String get receiverMode => 'Recibir datos médicos de dispositivos';
+
+  @override
+  String get appPreferences => 'Preferencias de la App';
+
+  @override
+  String get pushNotifications => 'Notificaciones Push';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get llmSettings => 'Configuración LLM';
+
+  @override
+  String get aiModelPreferences => 'Preferencias del modelo de IA';
+
+  @override
+  String get aboutOrionHealth => 'Acerca de OrionHealth';
+
+  @override
+  String get ourMissionVision => 'Nuestra misión y visión';
+
+  @override
+  String get privacySecurity => 'Privacidad y Seguridad';
+
+  @override
+  String get biometricAuth => 'Autenticación Biométrica';
+
+  @override
+  String get allowCloudApi => 'Permitir API en la Nube';
+
+  @override
+  String get anonymizationActive => 'Anonimización activa';
+
+  @override
+  String get changePassword => 'Cambiar Contraseña';
+
+  @override
+  String get profileSaved => 'Perfil guardado';
+
+  @override
+  String get saveChanges => 'Guardar Cambios';
+
+  @override
+  String get logOut => 'Cerrar Sesión';
 }

@@ -246,4 +246,79 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get startConsultation => 'Start Consultation';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get personalInfo => 'Personal Information';
+
+  @override
+  String get birthDate => 'Birth Date';
+
+  @override
+  String get contactNumber => 'Contact Number';
+
+  @override
+  String get medicalInformation => 'Medical Information';
+
+  @override
+  String get bleDataExchange => 'BLE Data Exchange';
+
+  @override
+  String get shareMyData => 'Share My Data';
+
+  @override
+  String get sendHistoryToDoctor => 'Send medical history to your doctor';
+
+  @override
+  String get receiveData => 'Receive Data';
+
+  @override
+  String get receiverMode => 'Receive medical data from devices';
+
+  @override
+  String get appPreferences => 'App Preferences';
+
+  @override
+  String get pushNotifications => 'Push Notifications';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get llmSettings => 'LLM Settings';
+
+  @override
+  String get aiModelPreferences => 'AI model preferences';
+
+  @override
+  String get aboutOrionHealth => 'About OrionHealth';
+
+  @override
+  String get ourMissionVision => 'Our mission & vision';
+
+  @override
+  String get privacySecurity => 'Privacy & Security';
+
+  @override
+  String get biometricAuth => 'Biometric Authentication';
+
+  @override
+  String get allowCloudApi => 'Allow Cloud API';
+
+  @override
+  String get anonymizationActive => 'Anonymization active';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get profileSaved => 'Profile saved';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get logOut => 'Log Out';
 }

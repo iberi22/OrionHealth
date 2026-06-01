@@ -55,6 +55,8 @@ dependencies:
     path: packages/isar_agent_memory
   medical_standards:
     path: packages/medical_standards
+  health_wallet:
+    path: packages/health_wallet
   onnxruntime: ^1.4.1
   permission_handler: ^12.0.1
   health: ^13.2.1
@@ -64,6 +66,9 @@ dependencies:
   cryptography: ^2.7.0
   argon2: ^1.0.1
   shared_preferences: ^2.3.4
+  openai_dart: ^6.0.0
+  google_mlkit_text_recognition: ^0.15.1
+  flutter_blue_plus: ^2.3.4
 
 dev_dependencies:
   flutter_test:

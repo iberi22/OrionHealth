@@ -226,6 +226,14 @@ class _VitalsPageState extends State<VitalsPage> {
         return 'Presión (Diast.)';
       case VitalSignType.spO2:
         return 'SpO2';
+      case VitalSignType.steps:
+        return 'Pasos';
+      case VitalSignType.sleep:
+        return 'Sueño';
+      case VitalSignType.bloodGlucose:
+        return 'Glucosa';
+      case VitalSignType.oxygenSaturation:
+        return 'Saturación Oxígeno';
     }
   }
 
@@ -239,7 +247,14 @@ class _VitalsPageState extends State<VitalsPage> {
       case VitalSignType.bloodPressureDiastolic:
         return Icons.speed;
       case VitalSignType.spO2:
+      case VitalSignType.oxygenSaturation:
         return Icons.bloodtype;
+      case VitalSignType.steps:
+        return Icons.directions_walk;
+      case VitalSignType.sleep:
+        return Icons.bedtime;
+      case VitalSignType.bloodGlucose:
+        return Icons.opacity;
     }
   }
 
@@ -396,6 +411,14 @@ class _AddVitalBottomSheetState extends State<_AddVitalBottomSheet> {
         return 'Presión (Diast.)';
       case VitalSignType.spO2:
         return 'SpO2';
+      case VitalSignType.steps:
+        return 'Pasos';
+      case VitalSignType.sleep:
+        return 'Sueño';
+      case VitalSignType.bloodGlucose:
+        return 'Glucosa';
+      case VitalSignType.oxygenSaturation:
+        return 'Saturación Oxígeno';
     }
   }
 
@@ -409,7 +432,14 @@ class _AddVitalBottomSheetState extends State<_AddVitalBottomSheet> {
       case VitalSignType.bloodPressureDiastolic:
         return 'mmHg';
       case VitalSignType.spO2:
+      case VitalSignType.oxygenSaturation:
         return '%';
+      case VitalSignType.steps:
+        return 'pasos';
+      case VitalSignType.sleep:
+        return 'min';
+      case VitalSignType.bloodGlucose:
+        return 'mg/dL';
     }
   }
 }

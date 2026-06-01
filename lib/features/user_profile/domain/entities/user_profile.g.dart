@@ -22,103 +22,148 @@ const UserProfileSchema = CollectionSchema(
       name: r'age',
       type: IsarType.long,
     ),
-    r'allowCloudApi': PropertySchema(
+    r'allergyName': PropertySchema(
       id: 1,
+      name: r'allergyName',
+      type: IsarType.string,
+    ),
+    r'allergyNotes': PropertySchema(
+      id: 2,
+      name: r'allergyNotes',
+      type: IsarType.string,
+    ),
+    r'allergySeverity': PropertySchema(
+      id: 3,
+      name: r'allergySeverity',
+      type: IsarType.string,
+    ),
+    r'allowCloudApi': PropertySchema(
+      id: 4,
       name: r'allowCloudApi',
       type: IsarType.bool,
     ),
     r'avatarUrl': PropertySchema(
-      id: 2,
+      id: 5,
       name: r'avatarUrl',
       type: IsarType.string,
     ),
+    r'birthDate': PropertySchema(
+      id: 6,
+      name: r'birthDate',
+      type: IsarType.dateTime,
+    ),
     r'bloodType': PropertySchema(
-      id: 3,
+      id: 7,
       name: r'bloodType',
       type: IsarType.string,
     ),
     r'currentMedications': PropertySchema(
-      id: 4,
+      id: 8,
       name: r'currentMedications',
       type: IsarType.stringList,
     ),
+    r'diastolicBP': PropertySchema(
+      id: 9,
+      name: r'diastolicBP',
+      type: IsarType.long,
+    ),
     r'email': PropertySchema(
-      id: 5,
+      id: 10,
       name: r'email',
       type: IsarType.string,
     ),
     r'ethnicity': PropertySchema(
-      id: 6,
+      id: 11,
       name: r'ethnicity',
       type: IsarType.string,
     ),
     r'familyHistoryCvd': PropertySchema(
-      id: 7,
+      id: 12,
       name: r'familyHistoryCvd',
       type: IsarType.bool,
     ),
     r'familyHistoryDiabetes': PropertySchema(
-      id: 8,
+      id: 13,
       name: r'familyHistoryDiabetes',
       type: IsarType.bool,
     ),
     r'hasCardiovascularDisease': PropertySchema(
-      id: 9,
+      id: 14,
       name: r'hasCardiovascularDisease',
       type: IsarType.bool,
     ),
     r'hasHypertension': PropertySchema(
-      id: 10,
+      id: 15,
       name: r'hasHypertension',
       type: IsarType.bool,
     ),
     r'hasSteroidUse': PropertySchema(
-      id: 11,
+      id: 16,
       name: r'hasSteroidUse',
       type: IsarType.bool,
     ),
+    r'heartRate': PropertySchema(
+      id: 17,
+      name: r'heartRate',
+      type: IsarType.long,
+    ),
     r'height': PropertySchema(
-      id: 12,
+      id: 18,
       name: r'height',
       type: IsarType.double,
     ),
     r'llmProvider': PropertySchema(
-      id: 13,
+      id: 19,
       name: r'llmProvider',
       type: IsarType.string,
     ),
     r'localModelName': PropertySchema(
-      id: 14,
+      id: 20,
       name: r'localModelName',
       type: IsarType.string,
     ),
     r'medicalConditions': PropertySchema(
-      id: 15,
+      id: 21,
       name: r'medicalConditions',
       type: IsarType.stringList,
     ),
     r'name': PropertySchema(
-      id: 16,
+      id: 22,
       name: r'name',
       type: IsarType.string,
     ),
+    r'onboardingCompleted': PropertySchema(
+      id: 23,
+      name: r'onboardingCompleted',
+      type: IsarType.bool,
+    ),
     r'phoneNumber': PropertySchema(
-      id: 17,
+      id: 24,
       name: r'phoneNumber',
       type: IsarType.string,
     ),
+    r'sex': PropertySchema(
+      id: 25,
+      name: r'sex',
+      type: IsarType.string,
+    ),
     r'smokingStatus': PropertySchema(
-      id: 18,
+      id: 26,
       name: r'smokingStatus',
       type: IsarType.string,
     ),
+    r'systolicBP': PropertySchema(
+      id: 27,
+      name: r'systolicBP',
+      type: IsarType.long,
+    ),
     r'uniqueId': PropertySchema(
-      id: 19,
+      id: 28,
       name: r'uniqueId',
       type: IsarType.string,
     ),
     r'weight': PropertySchema(
-      id: 20,
+      id: 29,
       name: r'weight',
       type: IsarType.double,
     )
@@ -143,6 +188,24 @@ int _userProfileEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.allergyName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.allergyNotes;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.allergySeverity;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final value = object.avatarUrl;
     if (value != null) {
@@ -206,6 +269,12 @@ int _userProfileEstimateSize(
     }
   }
   {
+    final value = object.sex;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.smokingStatus;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -227,26 +296,35 @@ void _userProfileSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.age);
-  writer.writeBool(offsets[1], object.allowCloudApi);
-  writer.writeString(offsets[2], object.avatarUrl);
-  writer.writeString(offsets[3], object.bloodType);
-  writer.writeStringList(offsets[4], object.currentMedications);
-  writer.writeString(offsets[5], object.email);
-  writer.writeString(offsets[6], object.ethnicity);
-  writer.writeBool(offsets[7], object.familyHistoryCvd);
-  writer.writeBool(offsets[8], object.familyHistoryDiabetes);
-  writer.writeBool(offsets[9], object.hasCardiovascularDisease);
-  writer.writeBool(offsets[10], object.hasHypertension);
-  writer.writeBool(offsets[11], object.hasSteroidUse);
-  writer.writeDouble(offsets[12], object.height);
-  writer.writeString(offsets[13], object.llmProvider);
-  writer.writeString(offsets[14], object.localModelName);
-  writer.writeStringList(offsets[15], object.medicalConditions);
-  writer.writeString(offsets[16], object.name);
-  writer.writeString(offsets[17], object.phoneNumber);
-  writer.writeString(offsets[18], object.smokingStatus);
-  writer.writeString(offsets[19], object.uniqueId);
-  writer.writeDouble(offsets[20], object.weight);
+  writer.writeString(offsets[1], object.allergyName);
+  writer.writeString(offsets[2], object.allergyNotes);
+  writer.writeString(offsets[3], object.allergySeverity);
+  writer.writeBool(offsets[4], object.allowCloudApi);
+  writer.writeString(offsets[5], object.avatarUrl);
+  writer.writeDateTime(offsets[6], object.birthDate);
+  writer.writeString(offsets[7], object.bloodType);
+  writer.writeStringList(offsets[8], object.currentMedications);
+  writer.writeLong(offsets[9], object.diastolicBP);
+  writer.writeString(offsets[10], object.email);
+  writer.writeString(offsets[11], object.ethnicity);
+  writer.writeBool(offsets[12], object.familyHistoryCvd);
+  writer.writeBool(offsets[13], object.familyHistoryDiabetes);
+  writer.writeBool(offsets[14], object.hasCardiovascularDisease);
+  writer.writeBool(offsets[15], object.hasHypertension);
+  writer.writeBool(offsets[16], object.hasSteroidUse);
+  writer.writeLong(offsets[17], object.heartRate);
+  writer.writeDouble(offsets[18], object.height);
+  writer.writeString(offsets[19], object.llmProvider);
+  writer.writeString(offsets[20], object.localModelName);
+  writer.writeStringList(offsets[21], object.medicalConditions);
+  writer.writeString(offsets[22], object.name);
+  writer.writeBool(offsets[23], object.onboardingCompleted);
+  writer.writeString(offsets[24], object.phoneNumber);
+  writer.writeString(offsets[25], object.sex);
+  writer.writeString(offsets[26], object.smokingStatus);
+  writer.writeLong(offsets[27], object.systolicBP);
+  writer.writeString(offsets[28], object.uniqueId);
+  writer.writeDouble(offsets[29], object.weight);
 }
 
 UserProfile _userProfileDeserialize(
@@ -257,26 +335,35 @@ UserProfile _userProfileDeserialize(
 ) {
   final object = UserProfile(
     age: reader.readLongOrNull(offsets[0]),
-    allowCloudApi: reader.readBoolOrNull(offsets[1]) ?? true,
-    avatarUrl: reader.readStringOrNull(offsets[2]),
-    bloodType: reader.readStringOrNull(offsets[3]),
-    currentMedications: reader.readStringList(offsets[4]) ?? const [],
-    email: reader.readStringOrNull(offsets[5]),
-    ethnicity: reader.readStringOrNull(offsets[6]),
-    familyHistoryCvd: reader.readBoolOrNull(offsets[7]),
-    familyHistoryDiabetes: reader.readBoolOrNull(offsets[8]),
-    hasCardiovascularDisease: reader.readBoolOrNull(offsets[9]),
-    hasHypertension: reader.readBoolOrNull(offsets[10]),
-    hasSteroidUse: reader.readBoolOrNull(offsets[11]),
-    height: reader.readDoubleOrNull(offsets[12]),
-    llmProvider: reader.readStringOrNull(offsets[13]),
-    localModelName: reader.readStringOrNull(offsets[14]),
-    medicalConditions: reader.readStringList(offsets[15]) ?? const [],
-    name: reader.readStringOrNull(offsets[16]),
-    phoneNumber: reader.readStringOrNull(offsets[17]),
-    smokingStatus: reader.readStringOrNull(offsets[18]),
-    uniqueId: reader.readStringOrNull(offsets[19]),
-    weight: reader.readDoubleOrNull(offsets[20]),
+    allergyName: reader.readStringOrNull(offsets[1]),
+    allergyNotes: reader.readStringOrNull(offsets[2]),
+    allergySeverity: reader.readStringOrNull(offsets[3]),
+    allowCloudApi: reader.readBoolOrNull(offsets[4]) ?? true,
+    avatarUrl: reader.readStringOrNull(offsets[5]),
+    birthDate: reader.readDateTimeOrNull(offsets[6]),
+    bloodType: reader.readStringOrNull(offsets[7]),
+    currentMedications: reader.readStringList(offsets[8]) ?? const [],
+    diastolicBP: reader.readLongOrNull(offsets[9]),
+    email: reader.readStringOrNull(offsets[10]),
+    ethnicity: reader.readStringOrNull(offsets[11]),
+    familyHistoryCvd: reader.readBoolOrNull(offsets[12]),
+    familyHistoryDiabetes: reader.readBoolOrNull(offsets[13]),
+    hasCardiovascularDisease: reader.readBoolOrNull(offsets[14]),
+    hasHypertension: reader.readBoolOrNull(offsets[15]),
+    hasSteroidUse: reader.readBoolOrNull(offsets[16]),
+    heartRate: reader.readLongOrNull(offsets[17]),
+    height: reader.readDoubleOrNull(offsets[18]),
+    llmProvider: reader.readStringOrNull(offsets[19]),
+    localModelName: reader.readStringOrNull(offsets[20]),
+    medicalConditions: reader.readStringList(offsets[21]) ?? const [],
+    name: reader.readStringOrNull(offsets[22]),
+    onboardingCompleted: reader.readBoolOrNull(offsets[23]) ?? false,
+    phoneNumber: reader.readStringOrNull(offsets[24]),
+    sex: reader.readStringOrNull(offsets[25]),
+    smokingStatus: reader.readStringOrNull(offsets[26]),
+    systolicBP: reader.readLongOrNull(offsets[27]),
+    uniqueId: reader.readStringOrNull(offsets[28]),
+    weight: reader.readDoubleOrNull(offsets[29]),
   );
   object.id = id;
   return object;
@@ -292,44 +379,62 @@ P _userProfileDeserializeProp<P>(
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readStringList(offset) ?? const []) as P;
+      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 7:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 9:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 10:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 11:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 12:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 13:
-      return (reader.readStringOrNull(offset)) as P;
-    case 14:
-      return (reader.readStringOrNull(offset)) as P;
-    case 15:
       return (reader.readStringList(offset) ?? const []) as P;
+    case 9:
+      return (reader.readLongOrNull(offset)) as P;
+    case 10:
+      return (reader.readStringOrNull(offset)) as P;
+    case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 13:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 14:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 15:
+      return (reader.readBoolOrNull(offset)) as P;
     case 16:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 17:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 18:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 19:
       return (reader.readStringOrNull(offset)) as P;
     case 20:
+      return (reader.readStringOrNull(offset)) as P;
+    case 21:
+      return (reader.readStringList(offset) ?? const []) as P;
+    case 22:
+      return (reader.readStringOrNull(offset)) as P;
+    case 23:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 24:
+      return (reader.readStringOrNull(offset)) as P;
+    case 25:
+      return (reader.readStringOrNull(offset)) as P;
+    case 26:
+      return (reader.readStringOrNull(offset)) as P;
+    case 27:
+      return (reader.readLongOrNull(offset)) as P;
+    case 28:
+      return (reader.readStringOrNull(offset)) as P;
+    case 29:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -499,6 +604,468 @@ extension UserProfileQueryFilter
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'allergyName',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'allergyName',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'allergyName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'allergyName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'allergyName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'allergyName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'allergyName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'allergyName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'allergyName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'allergyName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'allergyName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'allergyName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'allergyNotes',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'allergyNotes',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'allergyNotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'allergyNotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'allergyNotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'allergyNotes',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'allergyNotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'allergyNotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'allergyNotes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'allergyNotes',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'allergyNotes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergyNotesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'allergyNotes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'allergySeverity',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'allergySeverity',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'allergySeverity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'allergySeverity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'allergySeverity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'allergySeverity',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'allergySeverity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'allergySeverity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'allergySeverity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'allergySeverity',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'allergySeverity',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      allergySeverityIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'allergySeverity',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
       allowCloudApiEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -658,6 +1225,80 @@ extension UserProfileQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'avatarUrl',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'birthDate',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'birthDate',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'birthDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'birthDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'birthDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      birthDateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'birthDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -1040,6 +1681,80 @@ extension UserProfileQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      diastolicBPIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'diastolicBP',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      diastolicBPIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'diastolicBP',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      diastolicBPEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'diastolicBP',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      diastolicBPGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'diastolicBP',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      diastolicBPLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'diastolicBP',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      diastolicBPBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'diastolicBP',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
@@ -1482,6 +2197,80 @@ extension UserProfileQueryFilter
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'hasSteroidUse',
         value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      heartRateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'heartRate',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      heartRateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'heartRate',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      heartRateEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'heartRate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      heartRateGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'heartRate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      heartRateLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'heartRate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      heartRateBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'heartRate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -2303,6 +3092,16 @@ extension UserProfileQueryFilter
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      onboardingCompletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'onboardingCompleted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
       phoneNumberIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2451,6 +3250,153 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'phoneNumber',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'sex',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'sex',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'sex',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'sex',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'sex',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'sex',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'sex',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'sex',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'sex',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'sex',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> sexIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'sex',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      sexIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'sex',
         value: '',
       ));
     });
@@ -2606,6 +3552,80 @@ extension UserProfileQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'smokingStatus',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      systolicBPIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'systolicBP',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      systolicBPIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'systolicBP',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      systolicBPEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'systolicBP',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      systolicBPGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'systolicBP',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      systolicBPLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'systolicBP',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      systolicBPBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'systolicBP',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -2864,6 +3884,44 @@ extension UserProfileQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByAllergyName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergyName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByAllergyNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergyName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByAllergyNotes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergyNotes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByAllergyNotesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergyNotes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByAllergySeverity() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergySeverity', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByAllergySeverityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergySeverity', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByAllowCloudApi() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'allowCloudApi', Sort.asc);
@@ -2889,6 +3947,18 @@ extension UserProfileQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByBirthDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'birthDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByBirthDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'birthDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByBloodType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bloodType', Sort.asc);
@@ -2898,6 +3968,18 @@ extension UserProfileQuerySortBy
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByBloodTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bloodType', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByDiastolicBP() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'diastolicBP', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByDiastolicBPDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'diastolicBP', Sort.desc);
     });
   }
 
@@ -2993,6 +4075,18 @@ extension UserProfileQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByHeartRate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'heartRate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByHeartRateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'heartRate', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'height', Sort.asc);
@@ -3042,6 +4136,20 @@ extension UserProfileQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByOnboardingCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'onboardingCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByOnboardingCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'onboardingCompleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByPhoneNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phoneNumber', Sort.asc);
@@ -3051,6 +4159,18 @@ extension UserProfileQuerySortBy
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phoneNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortBySex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sex', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortBySexDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sex', Sort.desc);
     });
   }
 
@@ -3064,6 +4184,18 @@ extension UserProfileQuerySortBy
       sortBySmokingStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'smokingStatus', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortBySystolicBP() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'systolicBP', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortBySystolicBPDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'systolicBP', Sort.desc);
     });
   }
 
@@ -3106,6 +4238,44 @@ extension UserProfileQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByAllergyName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergyName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByAllergyNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergyName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByAllergyNotes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergyNotes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByAllergyNotesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergyNotes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByAllergySeverity() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergySeverity', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByAllergySeverityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allergySeverity', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByAllowCloudApi() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'allowCloudApi', Sort.asc);
@@ -3131,6 +4301,18 @@ extension UserProfileQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByBirthDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'birthDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByBirthDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'birthDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByBloodType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bloodType', Sort.asc);
@@ -3140,6 +4322,18 @@ extension UserProfileQuerySortThenBy
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByBloodTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bloodType', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByDiastolicBP() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'diastolicBP', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByDiastolicBPDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'diastolicBP', Sort.desc);
     });
   }
 
@@ -3235,6 +4429,18 @@ extension UserProfileQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByHeartRate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'heartRate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByHeartRateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'heartRate', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'height', Sort.asc);
@@ -3296,6 +4502,20 @@ extension UserProfileQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByOnboardingCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'onboardingCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByOnboardingCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'onboardingCompleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByPhoneNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phoneNumber', Sort.asc);
@@ -3305,6 +4525,18 @@ extension UserProfileQuerySortThenBy
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByPhoneNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phoneNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenBySex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sex', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenBySexDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'sex', Sort.desc);
     });
   }
 
@@ -3318,6 +4550,18 @@ extension UserProfileQuerySortThenBy
       thenBySmokingStatusDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'smokingStatus', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenBySystolicBP() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'systolicBP', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenBySystolicBPDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'systolicBP', Sort.desc);
     });
   }
 
@@ -3354,6 +4598,28 @@ extension UserProfileQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByAllergyName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'allergyName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByAllergyNotes(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'allergyNotes', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByAllergySeverity(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'allergySeverity',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByAllowCloudApi() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'allowCloudApi');
@@ -3364,6 +4630,12 @@ extension UserProfileQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'avatarUrl', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByBirthDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'birthDate');
     });
   }
 
@@ -3378,6 +4650,12 @@ extension UserProfileQueryWhereDistinct
       distinctByCurrentMedications() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'currentMedications');
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByDiastolicBP() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'diastolicBP');
     });
   }
 
@@ -3429,6 +4707,12 @@ extension UserProfileQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByHeartRate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'heartRate');
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'height');
@@ -3464,10 +4748,24 @@ extension UserProfileQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QDistinct>
+      distinctByOnboardingCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'onboardingCompleted');
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByPhoneNumber(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'phoneNumber', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctBySex(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'sex', caseSensitive: caseSensitive);
     });
   }
 
@@ -3476,6 +4774,12 @@ extension UserProfileQueryWhereDistinct
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'smokingStatus',
           caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctBySystolicBP() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'systolicBP');
     });
   }
 
@@ -3507,6 +4811,25 @@ extension UserProfileQueryProperty
     });
   }
 
+  QueryBuilder<UserProfile, String?, QQueryOperations> allergyNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'allergyName');
+    });
+  }
+
+  QueryBuilder<UserProfile, String?, QQueryOperations> allergyNotesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'allergyNotes');
+    });
+  }
+
+  QueryBuilder<UserProfile, String?, QQueryOperations>
+      allergySeverityProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'allergySeverity');
+    });
+  }
+
   QueryBuilder<UserProfile, bool, QQueryOperations> allowCloudApiProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'allowCloudApi');
@@ -3516,6 +4839,12 @@ extension UserProfileQueryProperty
   QueryBuilder<UserProfile, String?, QQueryOperations> avatarUrlProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'avatarUrl');
+    });
+  }
+
+  QueryBuilder<UserProfile, DateTime?, QQueryOperations> birthDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'birthDate');
     });
   }
 
@@ -3529,6 +4858,12 @@ extension UserProfileQueryProperty
       currentMedicationsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'currentMedications');
+    });
+  }
+
+  QueryBuilder<UserProfile, int?, QQueryOperations> diastolicBPProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'diastolicBP');
     });
   }
 
@@ -3577,6 +4912,12 @@ extension UserProfileQueryProperty
     });
   }
 
+  QueryBuilder<UserProfile, int?, QQueryOperations> heartRateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'heartRate');
+    });
+  }
+
   QueryBuilder<UserProfile, double?, QQueryOperations> heightProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'height');
@@ -3609,15 +4950,34 @@ extension UserProfileQueryProperty
     });
   }
 
+  QueryBuilder<UserProfile, bool, QQueryOperations>
+      onboardingCompletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'onboardingCompleted');
+    });
+  }
+
   QueryBuilder<UserProfile, String?, QQueryOperations> phoneNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'phoneNumber');
     });
   }
 
+  QueryBuilder<UserProfile, String?, QQueryOperations> sexProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'sex');
+    });
+  }
+
   QueryBuilder<UserProfile, String?, QQueryOperations> smokingStatusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'smokingStatus');
+    });
+  }
+
+  QueryBuilder<UserProfile, int?, QQueryOperations> systolicBPProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'systolicBP');
     });
   }
 

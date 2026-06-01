@@ -141,8 +141,8 @@ class PatientContextIndexer {
     try {
       final allergies = await _allergyRepo.getAllergies();
       for (final allergy in allergies) {
-        final confirmedStr = allergy.confirmedDate?.toIso8601String() ?? '';
-        final text = 'Alergia: ${allergy.name ?? 'Desconocida'} - Severidad: ${allergy.severity.name} - Reacción: ${allergy.reaction ?? 'N/A'} - Notas: ${allergy.notes ?? 'N/A'} - Confirmada: ${confirmedStr.isEmpty ? 'N/A' : confirmedStr}';
+        final allergen = allergy.allergen ?? 'Desconocida';
+        final text = 'Alergia: $allergen - Severidad: ${allergy.severity.name} - Notas: ${allergy.notes ?? 'N/A'}';
 
         await _vectorStore.addDocument(
           'patient:allergy:${allergy.id}',
@@ -150,7 +150,6 @@ class PatientContextIndexer {
           {
             'type': 'patient_record',
             'source': 'allergy',
-            'date': confirmedStr,
             'id': allergy.id,
           },
         );
@@ -164,8 +163,8 @@ class PatientContextIndexer {
     try {
       final vitals = await _vitalRepo.getAllVitalSigns();
       for (final vital in vitals) {
-        final recordedStr = vital.recordedAt?.toIso8601String() ?? '';
-        final text = 'Signo Vital: ${vital.typeLabel} - Valor: ${vital.formattedValue} - Fecha: ${recordedStr.isEmpty ? 'N/A' : recordedStr} - Notas: ${vital.notes ?? 'N/A'}';
+        final dateStr = vital.dateTime.toIso8601String();
+        final text = 'Signo Vital: ${vital.type.name} - Valor: ${vital.formattedValue} - Fecha: ${dateStr.isEmpty ? 'N/A' : dateStr} - Notas: ${vital.notes ?? 'N/A'}';
 
         await _vectorStore.addDocument(
           'patient:vital_sign:${vital.id}',
@@ -173,7 +172,7 @@ class PatientContextIndexer {
           {
             'type': 'patient_record',
             'source': 'vital_sign',
-            'date': recordedStr,
+            'date': dateStr,
             'id': vital.id,
           },
         );
@@ -187,8 +186,9 @@ class PatientContextIndexer {
     try {
       final appointments = await _appointmentRepo.getAllAppointments();
       for (final appt in appointments) {
-        final dateStr = appt.dateTime?.toIso8601String() ?? '';
-        final text = 'Cita: ${appt.typeLabel} - Doctor: ${appt.doctorName ?? 'N/A'} - Especialidad: ${appt.specialty ?? 'N/A'} - Fecha: ${dateStr.isEmpty ? 'N/A' : dateStr} - Estado: ${appt.statusLabel} - Ubicación: ${appt.location ?? 'N/A'} - Notas: ${appt.notes ?? 'N/A'}';
+        final dateStr = appt.dateTime.toIso8601String();
+        final typeLabel = appt.doctorName.isNotEmpty ? 'Consulta con ${appt.doctorName}' : 'Cita';
+        final text = 'Cita: $typeLabel - Doctor: ${appt.doctorName} - Especialidad: ${appt.specialty} - Fecha: ${dateStr.isEmpty ? 'N/A' : dateStr} - Estado: ${appt.status.name} - Notas: ${appt.notes ?? 'N/A'}';
 
         await _vectorStore.addDocument(
           'patient:appointment:${appt.id}',
