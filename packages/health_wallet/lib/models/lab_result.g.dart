@@ -32,50 +32,65 @@ const LabResultSchema = CollectionSchema(
       name: r'encryptedValue',
       type: IsarType.string,
     ),
-    r'loincCode': PropertySchema(
+    r'isAbnormal': PropertySchema(
       id: 3,
+      name: r'isAbnormal',
+      type: IsarType.bool,
+    ),
+    r'isSensitive': PropertySchema(
+      id: 4,
+      name: r'isSensitive',
+      type: IsarType.bool,
+    ),
+    r'loincCode': PropertySchema(
+      id: 5,
       name: r'loincCode',
       type: IsarType.string,
     ),
     r'referenceRangeHigh': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'referenceRangeHigh',
       type: IsarType.double,
     ),
     r'referenceRangeLow': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'referenceRangeLow',
       type: IsarType.double,
     ),
+    r'remoteId': PropertySchema(
+      id: 8,
+      name: r'remoteId',
+      type: IsarType.string,
+    ),
     r'resultValue': PropertySchema(
-      id: 6,
+      id: 9,
       name: r'resultValue',
       type: IsarType.string,
     ),
     r'source': PropertySchema(
-      id: 7,
+      id: 10,
       name: r'source',
       type: IsarType.string,
       enumMap: _LabResultsourceEnumValueMap,
     ),
     r'syncStatus': PropertySchema(
-      id: 8,
+      id: 11,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _LabResultsyncStatusEnumValueMap,
     ),
     r'testName': PropertySchema(
-      id: 9,
+      id: 12,
       name: r'testName',
       type: IsarType.string,
     ),
     r'unit': PropertySchema(
-      id: 10,
+      id: 13,
       name: r'unit',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 11,
+      id: 14,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -147,6 +162,7 @@ int _labResultEstimateSize(
     }
   }
   bytesCount += 3 + object.loincCode.length * 3;
+  bytesCount += 3 + object.remoteId.length * 3;
   bytesCount += 3 + object.resultValue.length * 3;
   bytesCount += 3 + object.source.name.length * 3;
   bytesCount += 3 + object.syncStatus.name.length * 3;
@@ -164,15 +180,18 @@ void _labResultSerialize(
   writer.writeDateTime(offsets[0], object.collectedAt);
   writer.writeDateTime(offsets[1], object.createdAt);
   writer.writeString(offsets[2], object.encryptedValue);
-  writer.writeString(offsets[3], object.loincCode);
-  writer.writeDouble(offsets[4], object.referenceRangeHigh);
-  writer.writeDouble(offsets[5], object.referenceRangeLow);
-  writer.writeString(offsets[6], object.resultValue);
-  writer.writeString(offsets[7], object.source.name);
-  writer.writeString(offsets[8], object.syncStatus.name);
-  writer.writeString(offsets[9], object.testName);
-  writer.writeString(offsets[10], object.unit);
-  writer.writeDateTime(offsets[11], object.updatedAt);
+  writer.writeBool(offsets[3], object.isAbnormal);
+  writer.writeBool(offsets[4], object.isSensitive);
+  writer.writeString(offsets[5], object.loincCode);
+  writer.writeDouble(offsets[6], object.referenceRangeHigh);
+  writer.writeDouble(offsets[7], object.referenceRangeLow);
+  writer.writeString(offsets[8], object.remoteId);
+  writer.writeString(offsets[9], object.resultValue);
+  writer.writeString(offsets[10], object.source.name);
+  writer.writeString(offsets[11], object.syncStatus.name);
+  writer.writeString(offsets[12], object.testName);
+  writer.writeString(offsets[13], object.unit);
+  writer.writeDateTime(offsets[14], object.updatedAt);
 }
 
 LabResult _labResultDeserialize(
@@ -186,18 +205,20 @@ LabResult _labResultDeserialize(
     createdAt: reader.readDateTime(offsets[1]),
     encryptedValue: reader.readStringOrNull(offsets[2]),
     id: id,
-    loincCode: reader.readString(offsets[3]),
-    referenceRangeHigh: reader.readDouble(offsets[4]),
-    referenceRangeLow: reader.readDouble(offsets[5]),
-    resultValue: reader.readString(offsets[6]),
-    source: _LabResultsourceValueEnumMap[reader.readStringOrNull(offsets[7])] ??
-        DataSource.manual,
-    syncStatus:
-        _LabResultsyncStatusValueEnumMap[reader.readStringOrNull(offsets[8])] ??
-            SyncStatus.pending,
-    testName: reader.readString(offsets[9]),
-    unit: reader.readString(offsets[10]),
-    updatedAt: reader.readDateTime(offsets[11]),
+    loincCode: reader.readString(offsets[5]),
+    referenceRangeHigh: reader.readDouble(offsets[6]),
+    referenceRangeLow: reader.readDouble(offsets[7]),
+    remoteId: reader.readString(offsets[8]),
+    resultValue: reader.readString(offsets[9]),
+    source:
+        _LabResultsourceValueEnumMap[reader.readStringOrNull(offsets[10])] ??
+            DataSource.manual,
+    syncStatus: _LabResultsyncStatusValueEnumMap[
+            reader.readStringOrNull(offsets[11])] ??
+        SyncStatus.pending,
+    testName: reader.readString(offsets[12]),
+    unit: reader.readString(offsets[13]),
+    updatedAt: reader.readDateTime(offsets[14]),
   );
   return object;
 }
@@ -216,25 +237,31 @@ P _labResultDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 4:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 5:
-      return (reader.readDouble(offset)) as P;
-    case 6:
       return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readDouble(offset)) as P;
     case 7:
-      return (_LabResultsourceValueEnumMap[reader.readStringOrNull(offset)] ??
-          DataSource.manual) as P;
+      return (reader.readDouble(offset)) as P;
     case 8:
-      return (_LabResultsyncStatusValueEnumMap[
-              reader.readStringOrNull(offset)] ??
-          SyncStatus.pending) as P;
+      return (reader.readString(offset)) as P;
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
+      return (_LabResultsourceValueEnumMap[reader.readStringOrNull(offset)] ??
+          DataSource.manual) as P;
     case 11:
+      return (_LabResultsyncStatusValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          SyncStatus.pending) as P;
+    case 12:
+      return (reader.readString(offset)) as P;
+    case 13:
+      return (reader.readString(offset)) as P;
+    case 14:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -856,6 +883,26 @@ extension LabResultQueryFilter
     });
   }
 
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> isAbnormalEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isAbnormal',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> isSensitiveEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isSensitive',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<LabResult, LabResult, QAfterFilterCondition> loincCodeEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1116,6 +1163,137 @@ extension LabResultQueryFilter
         upper: upper,
         includeUpper: includeUpper,
         epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remoteId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'remoteId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition> remoteIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterFilterCondition>
+      remoteIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'remoteId',
+        value: '',
       ));
     });
   }
@@ -1877,6 +2055,30 @@ extension LabResultQuerySortBy on QueryBuilder<LabResult, LabResult, QSortBy> {
     });
   }
 
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByIsAbnormal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isAbnormal', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByIsAbnormalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isAbnormal', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByIsSensitive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSensitive', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByIsSensitiveDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSensitive', Sort.desc);
+    });
+  }
+
   QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByLoincCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'loincCode', Sort.asc);
@@ -1912,6 +2114,18 @@ extension LabResultQuerySortBy on QueryBuilder<LabResult, LabResult, QSortBy> {
       sortByReferenceRangeLowDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'referenceRangeLow', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> sortByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -2038,6 +2252,30 @@ extension LabResultQuerySortThenBy
     });
   }
 
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByIsAbnormal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isAbnormal', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByIsAbnormalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isAbnormal', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByIsSensitive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSensitive', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByIsSensitiveDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSensitive', Sort.desc);
+    });
+  }
+
   QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByLoincCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'loincCode', Sort.asc);
@@ -2073,6 +2311,18 @@ extension LabResultQuerySortThenBy
       thenByReferenceRangeLowDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'referenceRangeLow', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QAfterSortBy> thenByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -2171,6 +2421,18 @@ extension LabResultQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LabResult, LabResult, QDistinct> distinctByIsAbnormal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isAbnormal');
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QDistinct> distinctByIsSensitive() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isSensitive');
+    });
+  }
+
   QueryBuilder<LabResult, LabResult, QDistinct> distinctByLoincCode(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2187,6 +2449,13 @@ extension LabResultQueryWhereDistinct
   QueryBuilder<LabResult, LabResult, QDistinct> distinctByReferenceRangeLow() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'referenceRangeLow');
+    });
+  }
+
+  QueryBuilder<LabResult, LabResult, QDistinct> distinctByRemoteId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remoteId', caseSensitive: caseSensitive);
     });
   }
 
@@ -2258,6 +2527,18 @@ extension LabResultQueryProperty
     });
   }
 
+  QueryBuilder<LabResult, bool, QQueryOperations> isAbnormalProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isAbnormal');
+    });
+  }
+
+  QueryBuilder<LabResult, bool, QQueryOperations> isSensitiveProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isSensitive');
+    });
+  }
+
   QueryBuilder<LabResult, String, QQueryOperations> loincCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'loincCode');
@@ -2275,6 +2556,12 @@ extension LabResultQueryProperty
       referenceRangeLowProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'referenceRangeLow');
+    });
+  }
+
+  QueryBuilder<LabResult, String, QQueryOperations> remoteIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remoteId');
     });
   }
 
@@ -2320,7 +2607,8 @@ extension LabResultQueryProperty
 // **************************************************************************
 
 LabResult _$LabResultFromJson(Map<String, dynamic> json) => LabResult(
-      id: (json['id'] as num).toInt(),
+      id: (json['id'] as num?)?.toInt() ?? Isar.autoIncrement,
+      remoteId: json['remoteId'] as String,
       loincCode: json['loincCode'] as String,
       testName: json['testName'] as String,
       resultValue: json['resultValue'] as String,
@@ -2340,6 +2628,7 @@ LabResult _$LabResultFromJson(Map<String, dynamic> json) => LabResult(
 
 Map<String, dynamic> _$LabResultToJson(LabResult instance) => <String, dynamic>{
       'id': instance.id,
+      'remoteId': instance.remoteId,
       'loincCode': instance.loincCode,
       'testName': instance.testName,
       'resultValue': instance.resultValue,

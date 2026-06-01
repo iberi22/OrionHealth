@@ -22,74 +22,89 @@ const HealthRecordSchema = CollectionSchema(
       name: r'allergies',
       type: IsarType.stringList,
     ),
-    r'bloodType': PropertySchema(
+    r'approximateAge': PropertySchema(
       id: 1,
+      name: r'approximateAge',
+      type: IsarType.long,
+    ),
+    r'bloodType': PropertySchema(
+      id: 2,
       name: r'bloodType',
       type: IsarType.string,
     ),
     r'conditions': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'conditions',
       type: IsarType.stringList,
     ),
     r'createdAt': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
     r'dateOfBirth': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'dateOfBirth',
       type: IsarType.string,
     ),
     r'emergencyContactName': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'emergencyContactName',
       type: IsarType.string,
     ),
     r'emergencyContactPhone': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'emergencyContactPhone',
       type: IsarType.string,
     ),
     r'encryptedSensitiveFields': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'encryptedSensitiveFields',
       type: IsarType.string,
     ),
     r'firstName': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'firstName',
       type: IsarType.string,
     ),
+    r'fullName': PropertySchema(
+      id: 10,
+      name: r'fullName',
+      type: IsarType.string,
+    ),
     r'lastName': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'lastName',
       type: IsarType.string,
     ),
     r'organDonor': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'organDonor',
       type: IsarType.bool,
     ),
     r'patientId': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'patientId',
       type: IsarType.string,
     ),
     r'primaryPhysician': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'primaryPhysician',
       type: IsarType.string,
     ),
+    r'remoteId': PropertySchema(
+      id: 15,
+      name: r'remoteId',
+      type: IsarType.string,
+    ),
     r'syncStatus': PropertySchema(
-      id: 13,
+      id: 16,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _HealthRecordsyncStatusEnumValueMap,
     ),
     r'updatedAt': PropertySchema(
-      id: 14,
+      id: 17,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -204,6 +219,7 @@ int _healthRecordEstimateSize(
     }
   }
   bytesCount += 3 + object.firstName.length * 3;
+  bytesCount += 3 + object.fullName.length * 3;
   bytesCount += 3 + object.lastName.length * 3;
   bytesCount += 3 + object.patientId.length * 3;
   {
@@ -212,6 +228,7 @@ int _healthRecordEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.remoteId.length * 3;
   bytesCount += 3 + object.syncStatus.name.length * 3;
   return bytesCount;
 }
@@ -223,20 +240,23 @@ void _healthRecordSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeStringList(offsets[0], object.allergies);
-  writer.writeString(offsets[1], object.bloodType);
-  writer.writeStringList(offsets[2], object.conditions);
-  writer.writeDateTime(offsets[3], object.createdAt);
-  writer.writeString(offsets[4], object.dateOfBirth);
-  writer.writeString(offsets[5], object.emergencyContactName);
-  writer.writeString(offsets[6], object.emergencyContactPhone);
-  writer.writeString(offsets[7], object.encryptedSensitiveFields);
-  writer.writeString(offsets[8], object.firstName);
-  writer.writeString(offsets[9], object.lastName);
-  writer.writeBool(offsets[10], object.organDonor);
-  writer.writeString(offsets[11], object.patientId);
-  writer.writeString(offsets[12], object.primaryPhysician);
-  writer.writeString(offsets[13], object.syncStatus.name);
-  writer.writeDateTime(offsets[14], object.updatedAt);
+  writer.writeLong(offsets[1], object.approximateAge);
+  writer.writeString(offsets[2], object.bloodType);
+  writer.writeStringList(offsets[3], object.conditions);
+  writer.writeDateTime(offsets[4], object.createdAt);
+  writer.writeString(offsets[5], object.dateOfBirth);
+  writer.writeString(offsets[6], object.emergencyContactName);
+  writer.writeString(offsets[7], object.emergencyContactPhone);
+  writer.writeString(offsets[8], object.encryptedSensitiveFields);
+  writer.writeString(offsets[9], object.firstName);
+  writer.writeString(offsets[10], object.fullName);
+  writer.writeString(offsets[11], object.lastName);
+  writer.writeBool(offsets[12], object.organDonor);
+  writer.writeString(offsets[13], object.patientId);
+  writer.writeString(offsets[14], object.primaryPhysician);
+  writer.writeString(offsets[15], object.remoteId);
+  writer.writeString(offsets[16], object.syncStatus.name);
+  writer.writeDateTime(offsets[17], object.updatedAt);
 }
 
 HealthRecord _healthRecordDeserialize(
@@ -247,23 +267,24 @@ HealthRecord _healthRecordDeserialize(
 ) {
   final object = HealthRecord(
     allergies: reader.readStringList(offsets[0]),
-    bloodType: reader.readStringOrNull(offsets[1]),
-    conditions: reader.readStringList(offsets[2]),
-    createdAt: reader.readDateTime(offsets[3]),
-    dateOfBirth: reader.readString(offsets[4]),
-    emergencyContactName: reader.readStringOrNull(offsets[5]),
-    emergencyContactPhone: reader.readStringOrNull(offsets[6]),
-    encryptedSensitiveFields: reader.readStringOrNull(offsets[7]),
-    firstName: reader.readString(offsets[8]),
+    bloodType: reader.readStringOrNull(offsets[2]),
+    conditions: reader.readStringList(offsets[3]),
+    createdAt: reader.readDateTime(offsets[4]),
+    dateOfBirth: reader.readString(offsets[5]),
+    emergencyContactName: reader.readStringOrNull(offsets[6]),
+    emergencyContactPhone: reader.readStringOrNull(offsets[7]),
+    encryptedSensitiveFields: reader.readStringOrNull(offsets[8]),
+    firstName: reader.readString(offsets[9]),
     id: id,
-    lastName: reader.readString(offsets[9]),
-    organDonor: reader.readBoolOrNull(offsets[10]),
-    patientId: reader.readString(offsets[11]),
-    primaryPhysician: reader.readStringOrNull(offsets[12]),
+    lastName: reader.readString(offsets[11]),
+    organDonor: reader.readBoolOrNull(offsets[12]),
+    patientId: reader.readString(offsets[13]),
+    primaryPhysician: reader.readStringOrNull(offsets[14]),
+    remoteId: reader.readString(offsets[15]),
     syncStatus: _HealthRecordsyncStatusValueEnumMap[
-            reader.readStringOrNull(offsets[13])] ??
+            reader.readStringOrNull(offsets[16])] ??
         SyncStatus.pending,
-    updatedAt: reader.readDateTime(offsets[14]),
+    updatedAt: reader.readDateTime(offsets[17]),
   );
   return object;
 }
@@ -278,34 +299,40 @@ P _healthRecordDeserializeProp<P>(
     case 0:
       return (reader.readStringList(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readStringList(offset)) as P;
-    case 3:
-      return (reader.readDateTime(offset)) as P;
-    case 4:
-      return (reader.readString(offset)) as P;
-    case 5:
       return (reader.readStringOrNull(offset)) as P;
+    case 3:
+      return (reader.readStringList(offset)) as P;
+    case 4:
+      return (reader.readDateTime(offset)) as P;
+    case 5:
+      return (reader.readString(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 11:
       return (reader.readString(offset)) as P;
     case 12:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 13:
+      return (reader.readString(offset)) as P;
+    case 14:
+      return (reader.readStringOrNull(offset)) as P;
+    case 15:
+      return (reader.readString(offset)) as P;
+    case 16:
       return (_HealthRecordsyncStatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SyncStatus.pending) as P;
-    case 14:
+    case 17:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -792,6 +819,62 @@ extension HealthRecordQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      approximateAgeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'approximateAge',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      approximateAgeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'approximateAge',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      approximateAgeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'approximateAge',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      approximateAgeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'approximateAge',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
@@ -1985,6 +2068,142 @@ extension HealthRecordQueryFilter
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fullName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'fullName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'fullName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'fullName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'fullName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'fullName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'fullName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'fullName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fullName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      fullNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'fullName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -2493,6 +2712,142 @@ extension HealthRecordQueryFilter
   }
 
   QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remoteId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'remoteId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
+      remoteIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterFilterCondition>
       syncStatusEqualTo(
     SyncStatus value, {
     bool caseSensitive = true,
@@ -2693,6 +3048,20 @@ extension HealthRecordQueryLinks
 
 extension HealthRecordQuerySortBy
     on QueryBuilder<HealthRecord, HealthRecord, QSortBy> {
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy>
+      sortByApproximateAge() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'approximateAge', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy>
+      sortByApproximateAgeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'approximateAge', Sort.desc);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortByBloodType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bloodType', Sort.asc);
@@ -2784,6 +3153,18 @@ extension HealthRecordQuerySortBy
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortByFullName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fullName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortByFullNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fullName', Sort.desc);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortByLastName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lastName', Sort.asc);
@@ -2835,6 +3216,18 @@ extension HealthRecordQuerySortBy
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> sortBySyncStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'syncStatus', Sort.asc);
@@ -2863,6 +3256,20 @@ extension HealthRecordQuerySortBy
 
 extension HealthRecordQuerySortThenBy
     on QueryBuilder<HealthRecord, HealthRecord, QSortThenBy> {
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy>
+      thenByApproximateAge() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'approximateAge', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy>
+      thenByApproximateAgeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'approximateAge', Sort.desc);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenByBloodType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bloodType', Sort.asc);
@@ -2954,6 +3361,18 @@ extension HealthRecordQuerySortThenBy
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenByFullName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fullName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenByFullNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fullName', Sort.desc);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -3017,6 +3436,18 @@ extension HealthRecordQuerySortThenBy
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QAfterSortBy> thenBySyncStatus() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'syncStatus', Sort.asc);
@@ -3048,6 +3479,13 @@ extension HealthRecordQueryWhereDistinct
   QueryBuilder<HealthRecord, HealthRecord, QDistinct> distinctByAllergies() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'allergies');
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QDistinct>
+      distinctByApproximateAge() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'approximateAge');
     });
   }
 
@@ -3108,6 +3546,13 @@ extension HealthRecordQueryWhereDistinct
     });
   }
 
+  QueryBuilder<HealthRecord, HealthRecord, QDistinct> distinctByFullName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fullName', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<HealthRecord, HealthRecord, QDistinct> distinctByLastName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3133,6 +3578,13 @@ extension HealthRecordQueryWhereDistinct
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'primaryPhysician',
           caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<HealthRecord, HealthRecord, QDistinct> distinctByRemoteId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remoteId', caseSensitive: caseSensitive);
     });
   }
 
@@ -3162,6 +3614,12 @@ extension HealthRecordQueryProperty
       allergiesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'allergies');
+    });
+  }
+
+  QueryBuilder<HealthRecord, int, QQueryOperations> approximateAgeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'approximateAge');
     });
   }
 
@@ -3217,6 +3675,12 @@ extension HealthRecordQueryProperty
     });
   }
 
+  QueryBuilder<HealthRecord, String, QQueryOperations> fullNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fullName');
+    });
+  }
+
   QueryBuilder<HealthRecord, String, QQueryOperations> lastNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastName');
@@ -3242,6 +3706,12 @@ extension HealthRecordQueryProperty
     });
   }
 
+  QueryBuilder<HealthRecord, String, QQueryOperations> remoteIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remoteId');
+    });
+  }
+
   QueryBuilder<HealthRecord, SyncStatus, QQueryOperations>
       syncStatusProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -3261,7 +3731,8 @@ extension HealthRecordQueryProperty
 // **************************************************************************
 
 HealthRecord _$HealthRecordFromJson(Map<String, dynamic> json) => HealthRecord(
-      id: (json['id'] as num).toInt(),
+      id: (json['id'] as num?)?.toInt() ?? Isar.autoIncrement,
+      remoteId: json['remoteId'] as String,
       patientId: json['patientId'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
@@ -3288,6 +3759,7 @@ HealthRecord _$HealthRecordFromJson(Map<String, dynamic> json) => HealthRecord(
 Map<String, dynamic> _$HealthRecordToJson(HealthRecord instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'remoteId': instance.remoteId,
       'patientId': instance.patientId,
       'firstName': instance.firstName,
       'lastName': instance.lastName,

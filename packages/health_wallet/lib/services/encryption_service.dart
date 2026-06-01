@@ -56,8 +56,7 @@ class EncryptionService {
 
   /// Generate a random 256-bit master key for first-time setup.
   Future<SecretKey> generateMasterKey() async {
-    final algorithm = AesGcm.with256bits();
-    return algorithm.newSecretKey();
+    return SecretKeyData.random(length: 32);
   }
 
   /// Encrypt a JSON-serializable map of fields for transfer.
@@ -95,12 +94,12 @@ class EncryptionService {
   Future<String> signPackage(Map<String, dynamic> data) async {
     final algorithm = Hmac.sha256();
     final json = jsonEncode(data);
-    final key = await algorithm.newSecretKey();
-    final signature = await algorithm.sign(
+    final key = await SecretKeyData.random(length: 32);
+    final mac = await algorithm.calculateMac(
       utf8.encode(json),
       secretKey: key,
     );
-    return hexEncode(signature.bytes);
+    return hexEncode(mac.bytes);
   }
 
   /// Verify a signature produced by [signPackage].
@@ -111,8 +110,8 @@ class EncryptionService {
     try {
       final algorithm = Hmac.sha256();
       final json = jsonEncode(data);
-      final key = await algorithm.newSecretKey();
-      final expected = await algorithm.sign(
+      final key = await SecretKeyData.random(length: 32);
+      final expected = await algorithm.calculateMac(
         utf8.encode(json),
         secretKey: key,
       );

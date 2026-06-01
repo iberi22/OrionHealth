@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
+
+part 'medical_event.g.dart';
 
 /// Event type for classification.
 enum EventType {
@@ -25,9 +26,11 @@ enum EventType {
 
 /// Generic medical event (appointment, procedure, hospital visit).
 @collection
-class MedicalEvent extends Equatable {
+@JsonSerializable()
+class MedicalEvent  {
   MedicalEvent({
-    required this.id,
+    this.id = Isar.autoIncrement,
+    required this.remoteId,
     required this.eventType,
     required this.description,
     required this.eventDate,
@@ -46,7 +49,8 @@ class MedicalEvent extends Equatable {
   });
 
   @Index(unique: true)
-  final String id;
+  Id id;
+  final String remoteId;
 
   @Enumerated(EnumType.name)
   @Index()
@@ -64,36 +68,35 @@ class MedicalEvent extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  String? provider; // physician name
-  String? facility; // hospital/clinic name
-  List<String>? icd10Codes; // ICD-10 diagnosis codes
-  List<String>? cptCodes; // CPT procedure codes
-  List<String>? loincCodes; // associated lab tests
-  String? notes;
+  final String? provider; // physician name
+  final String? facility; // hospital/clinic name
+  final List<String>? icd10Codes; // ICD-10 diagnosis codes
+  final List<String>? cptCodes; // CPT procedure codes
+  final List<String>? loincCodes; // associated lab tests
+  final String? notes;
 
   @Enumerated(EnumType.name)
   final DataSource source;
 
   @Enumerated(EnumType.name)
   @Index()
-  SyncStatus syncStatus;
+  final SyncStatus syncStatus;
 
   /// Encrypted notes field (base64).
-  String? encryptedNotes;
+  final String? encryptedNotes;
 
   /// Whether the event has ended (for procedures/hospitalizations).
-  @ignore
   bool get hasEnded => endDate != null;
 
   /// Duration in hours (if endDate is set).
-  @ignore
   double? get durationHours {
     if (endDate == null) return null;
     return endDate!.difference(eventDate).inMinutes / 60.0;
   }
 
   MedicalEvent copyWith({
-    String? id,
+    Id? id,
+    String? remoteId,
     EventType? eventType,
     String? description,
     DateTime? eventDate,
@@ -111,6 +114,7 @@ class MedicalEvent extends Equatable {
     String? encryptedNotes,
   }) {
     return MedicalEvent(
+      remoteId: remoteId ?? this.remoteId,
       id: id ?? this.id,
       eventType: eventType ?? this.eventType,
       description: description ?? this.description,
@@ -134,23 +138,4 @@ class MedicalEvent extends Equatable {
       _$MedicalEventFromJson(json);
   Map<String, dynamic> toJson() => _$MedicalEventToJson(this);
 
-  @override
-  List<Object?> get props => [
-        id,
-        eventType,
-        description,
-        eventDate,
-        endDate,
-        createdAt,
-        updatedAt,
-        provider,
-        facility,
-        icd10Codes,
-        cptCodes,
-        loincCodes,
-        notes,
-        source,
-        syncStatus,
-        encryptedNotes,
-      ];
 }

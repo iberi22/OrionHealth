@@ -43,55 +43,65 @@ const MedicalDocumentSchema = CollectionSchema(
       name: r'facility',
       type: IsarType.string,
     ),
-    r'filePath': PropertySchema(
+    r'fileExtension': PropertySchema(
       id: 5,
+      name: r'fileExtension',
+      type: IsarType.string,
+    ),
+    r'filePath': PropertySchema(
+      id: 6,
       name: r'filePath',
       type: IsarType.string,
     ),
     r'icd10Codes': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'icd10Codes',
       type: IsarType.stringList,
     ),
     r'loincCodes': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'loincCodes',
       type: IsarType.stringList,
     ),
     r'mimeType': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'mimeType',
       type: IsarType.string,
     ),
     r'notes': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'notes',
       type: IsarType.string,
     ),
     r'provider': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'provider',
       type: IsarType.string,
     ),
+    r'remoteId': PropertySchema(
+      id: 12,
+      name: r'remoteId',
+      type: IsarType.string,
+    ),
     r'source': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'source',
       type: IsarType.string,
       enumMap: _MedicalDocumentsourceEnumValueMap,
     ),
     r'syncStatus': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'syncStatus',
       type: IsarType.string,
       enumMap: _MedicalDocumentsyncStatusEnumValueMap,
     ),
     r'title': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'title',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 14,
+      id: 16,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -169,6 +179,7 @@ int _medicalDocumentEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.fileExtension.length * 3;
   bytesCount += 3 + object.filePath.length * 3;
   {
     final list = object.icd10Codes;
@@ -207,6 +218,7 @@ int _medicalDocumentEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.remoteId.length * 3;
   bytesCount += 3 + object.source.name.length * 3;
   bytesCount += 3 + object.syncStatus.name.length * 3;
   bytesCount += 3 + object.title.length * 3;
@@ -224,16 +236,18 @@ void _medicalDocumentSerialize(
   writer.writeString(offsets[2], object.documentType.name);
   writer.writeString(offsets[3], object.encryptedMetadata);
   writer.writeString(offsets[4], object.facility);
-  writer.writeString(offsets[5], object.filePath);
-  writer.writeStringList(offsets[6], object.icd10Codes);
-  writer.writeStringList(offsets[7], object.loincCodes);
-  writer.writeString(offsets[8], object.mimeType);
-  writer.writeString(offsets[9], object.notes);
-  writer.writeString(offsets[10], object.provider);
-  writer.writeString(offsets[11], object.source.name);
-  writer.writeString(offsets[12], object.syncStatus.name);
-  writer.writeString(offsets[13], object.title);
-  writer.writeDateTime(offsets[14], object.updatedAt);
+  writer.writeString(offsets[5], object.fileExtension);
+  writer.writeString(offsets[6], object.filePath);
+  writer.writeStringList(offsets[7], object.icd10Codes);
+  writer.writeStringList(offsets[8], object.loincCodes);
+  writer.writeString(offsets[9], object.mimeType);
+  writer.writeString(offsets[10], object.notes);
+  writer.writeString(offsets[11], object.provider);
+  writer.writeString(offsets[12], object.remoteId);
+  writer.writeString(offsets[13], object.source.name);
+  writer.writeString(offsets[14], object.syncStatus.name);
+  writer.writeString(offsets[15], object.title);
+  writer.writeDateTime(offsets[16], object.updatedAt);
 }
 
 MedicalDocument _medicalDocumentDeserialize(
@@ -250,21 +264,22 @@ MedicalDocument _medicalDocumentDeserialize(
         DocumentType.labReport,
     encryptedMetadata: reader.readStringOrNull(offsets[3]),
     facility: reader.readStringOrNull(offsets[4]),
-    filePath: reader.readString(offsets[5]),
-    icd10Codes: reader.readStringList(offsets[6]),
+    filePath: reader.readString(offsets[6]),
+    icd10Codes: reader.readStringList(offsets[7]),
     id: id,
-    loincCodes: reader.readStringList(offsets[7]),
-    mimeType: reader.readString(offsets[8]),
-    notes: reader.readStringOrNull(offsets[9]),
-    provider: reader.readStringOrNull(offsets[10]),
+    loincCodes: reader.readStringList(offsets[8]),
+    mimeType: reader.readString(offsets[9]),
+    notes: reader.readStringOrNull(offsets[10]),
+    provider: reader.readStringOrNull(offsets[11]),
+    remoteId: reader.readString(offsets[12]),
     source: _MedicalDocumentsourceValueEnumMap[
-            reader.readStringOrNull(offsets[11])] ??
+            reader.readStringOrNull(offsets[13])] ??
         DataSource.manual,
     syncStatus: _MedicalDocumentsyncStatusValueEnumMap[
-            reader.readStringOrNull(offsets[12])] ??
+            reader.readStringOrNull(offsets[14])] ??
         SyncStatus.pending,
-    title: reader.readString(offsets[13]),
-    updatedAt: reader.readDateTime(offsets[14]),
+    title: reader.readString(offsets[15]),
+    updatedAt: reader.readDateTime(offsets[16]),
   );
   return object;
 }
@@ -291,26 +306,30 @@ P _medicalDocumentDeserializeProp<P>(
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 7:
       return (reader.readStringList(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 9:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 10:
       return (reader.readStringOrNull(offset)) as P;
     case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
+      return (reader.readString(offset)) as P;
+    case 13:
       return (_MedicalDocumentsourceValueEnumMap[
               reader.readStringOrNull(offset)] ??
           DataSource.manual) as P;
-    case 12:
+    case 14:
       return (_MedicalDocumentsyncStatusValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SyncStatus.pending) as P;
-    case 13:
+    case 15:
       return (reader.readString(offset)) as P;
-    case 14:
+    case 16:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1236,6 +1255,142 @@ extension MedicalDocumentQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'facility',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileExtension',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'fileExtension',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'fileExtension',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'fileExtension',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'fileExtension',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'fileExtension',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'fileExtension',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'fileExtension',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileExtension',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      fileExtensionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'fileExtension',
         value: '',
       ));
     });
@@ -2364,6 +2519,142 @@ extension MedicalDocumentQueryFilter
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remoteId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'remoteId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'remoteId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
+      remoteIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'remoteId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterFilterCondition>
       sourceEqualTo(
     DataSource value, {
     bool caseSensitive = true,
@@ -2907,6 +3198,20 @@ extension MedicalDocumentQuerySortBy
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      sortByFileExtension() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileExtension', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      sortByFileExtensionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileExtension', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
       sortByFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filePath', Sort.asc);
@@ -2958,6 +3263,20 @@ extension MedicalDocumentQuerySortBy
       sortByProviderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'provider', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      sortByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      sortByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -3089,6 +3408,20 @@ extension MedicalDocumentQuerySortThenBy
   }
 
   QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      thenByFileExtension() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileExtension', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      thenByFileExtensionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileExtension', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
       thenByFilePath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filePath', Sort.asc);
@@ -3152,6 +3485,20 @@ extension MedicalDocumentQuerySortThenBy
       thenByProviderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'provider', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      thenByRemoteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QAfterSortBy>
+      thenByRemoteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remoteId', Sort.desc);
     });
   }
 
@@ -3248,6 +3595,14 @@ extension MedicalDocumentQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MedicalDocument, MedicalDocument, QDistinct>
+      distinctByFileExtension({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fileExtension',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<MedicalDocument, MedicalDocument, QDistinct> distinctByFilePath(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3287,6 +3642,13 @@ extension MedicalDocumentQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'provider', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<MedicalDocument, MedicalDocument, QDistinct> distinctByRemoteId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remoteId', caseSensitive: caseSensitive);
     });
   }
 
@@ -3361,6 +3723,13 @@ extension MedicalDocumentQueryProperty
     });
   }
 
+  QueryBuilder<MedicalDocument, String, QQueryOperations>
+      fileExtensionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fileExtension');
+    });
+  }
+
   QueryBuilder<MedicalDocument, String, QQueryOperations> filePathProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'filePath');
@@ -3399,6 +3768,12 @@ extension MedicalDocumentQueryProperty
     });
   }
 
+  QueryBuilder<MedicalDocument, String, QQueryOperations> remoteIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remoteId');
+    });
+  }
+
   QueryBuilder<MedicalDocument, DataSource, QQueryOperations> sourceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'source');
@@ -3432,7 +3807,8 @@ extension MedicalDocumentQueryProperty
 
 MedicalDocument _$MedicalDocumentFromJson(Map<String, dynamic> json) =>
     MedicalDocument(
-      id: (json['id'] as num).toInt(),
+      id: (json['id'] as num?)?.toInt() ?? Isar.autoIncrement,
+      remoteId: json['remoteId'] as String,
       title: json['title'] as String,
       documentType: $enumDecode(_$DocumentTypeEnumMap, json['documentType']),
       filePath: json['filePath'] as String,
@@ -3462,6 +3838,7 @@ MedicalDocument _$MedicalDocumentFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MedicalDocumentToJson(MedicalDocument instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'remoteId': instance.remoteId,
       'title': instance.title,
       'documentType': _$DocumentTypeEnumMap[instance.documentType]!,
       'filePath': instance.filePath,
