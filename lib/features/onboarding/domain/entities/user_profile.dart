@@ -1,14 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
 
-part 'user_profile.g.dart';
-
-/// User profile entity for onboarding
-@collection
+/// User profile entity for onboarding (plain Dart model, NOT Isar collection)
 class UserProfile extends Equatable {
-  Id get isarId => id;
-
-  @override
   final int id;
 
   final String? name;
