@@ -1,0 +1,26 @@
+{
+  "name": "ihce-gateway-backend",
+  "version": "1.0.0",
+  "description": "Gateway for IHCE Colombia (FHIR R4 + OAuth 2.0)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "connect-redis": "^9.0.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.19.0",
+    "fhirclient": "^2.5.0",
+    "node-oauth": "^0.3.0",
+    "open": "^9.1.0",
+    "redis": "^6.0.0",
+    "session-file-store": "^1.5.0",
+    "uuid": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
