@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 class QueryInput extends StatefulWidget {
   final bool enabled;
   final void Function(String question) onSubmit;
-  final TextEditingController? controller;
 
   const QueryInput({
     super.key,
     this.enabled = true,
     required this.onSubmit,
-    this.controller,
   });
 
   @override
@@ -18,20 +16,12 @@ class QueryInput extends StatefulWidget {
 }
 
 class _QueryInputState extends State<QueryInput> {
-  late final TextEditingController _controller;
+  final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
   @override
-  void initState() {
-    super.initState();
-    _controller = widget.controller ?? TextEditingController();
-  }
-
-  @override
   void dispose() {
-    if (widget.controller == null) {
-      _controller.dispose();
-    }
+    _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -76,8 +66,8 @@ class _QueryInputState extends State<QueryInput> {
               onSubmitted: (_) => _handleSubmit(),
               decoration: InputDecoration(
                 hintText: widget.enabled
-                    ? 'Pregunta sobre tu salud...'
-                    : 'Procesando...',
+                    ? 'Ask about your health...'
+                    : 'Processing...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                   borderSide: BorderSide.none,

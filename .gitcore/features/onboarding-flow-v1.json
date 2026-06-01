@@ -1,0 +1,60 @@
+{
+  "name": "onboarding-flow",
+  "version": "1.0.0",
+  "status": "implemented",
+  "created": "2026-04-15",
+  "author": "SWAL Agent System",
+  
+  "description": "Complete onboarding flow for OrionHealth with 7 pages, selective sync, and privacy consent",
+  
+  "files": {
+    "lib/features/onboarding/": {
+      "main_preview.dart": "Entry point preview",
+      "presentation/pages/": {
+        "onboarding_main_page.dart": "Main page controller",
+        "onboarding_welcome_page.dart": "Page 1: Welcome + language",
+        "onboarding_profile_page.dart": "Page 2: Basic info",
+        "onboarding_allergies_page.dart": "Page 3: Allergies/conditions",
+        "onboarding_vitals_page.dart": "Page 4: Vitals input",
+        "onboarding_complete_page.dart": "Page 7: Completion"
+      }
+    },
+    "integration_test/onboarding_e2e_test.dart": "E2E tests"
+  },
+  
+  "dependencies": {
+    "packages/medical_standards": "selective sync",
+    "packages/health_wallet": "encrypted storage"
+  },
+  
+  "standards": {
+    "icd10": ["E10-E14", "I10", "J45", "F32", "N18"],
+    "rxnorm": "medication autocomplete",
+    "loinc": "vital signs"
+  },
+  
+  "testing": {
+    "e2e": "integration_test/onboarding_e2e_test.dart",
+    "unit": "test/onboarding_cubit_test.dart (pending)"
+  },
+  
+  "metrics": {
+    "completion_target": "80%",
+    "avg_time_minutes": 5,
+    "abandon_rate_max": "20%"
+  },
+  
+  "roadmap": {
+    "phase1": "7-page basic flow ✅",
+    "phase2": "Selective sync 🔄",
+    "phase3": "Voice input 📋",
+    "phase4": "QR import 📋"
+  },
+  
+  "decisions": [
+    "Linear flow (no branching)",
+    "PIN required for security",
+    "20 language support",
+    "No skip option"
+  ]
+}

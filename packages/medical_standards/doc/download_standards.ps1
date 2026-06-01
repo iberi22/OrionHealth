@@ -141,20 +141,20 @@ if ($SkipLicensed) {
     Write-Host @"
 
   *** SNOMED CT REQUIRES A LICENSE AGREEMENT ***
-
+  
   SNOMED CT is not public domain. To obtain:
-
+  
   1. Go to: https://www.snomed.org/get-snomed
   2. Accept the SNOMED CT License Agreement
   3. Choose your national extension (US, UK, etc.) or international edition
   4. Download the RF2 release (Snapshot or Full)
-
+  
   Note: IHTSDO/SNOMED International holds copyright.
         A license is required but often free for non-commercial
         and low-resource settings.
-
+  
   License: https://www.snomed.org/snomed-ct/get-snomed-ct/snomed-ct-license-faq
-
+  
   After download, convert RF2 to JSON and place in:
     $DataDir/full_snomed.json
 

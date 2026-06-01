@@ -23,16 +23,18 @@ subprojects {
                 val android = project.extensions.getByName("android")
                 val setNamespace = android.javaClass.getMethod("setNamespace", String::class.java)
                 setNamespace.invoke(android, "dev.isar.isar_flutter_libs")
-            } catch (e: Exception) {
-                println("Failed to set namespace for isar_flutter_libs: ${e.message}")
-            }
-            // Disable resource verification tasks for isar_flutter_libs
-            listOf("verifyReleaseResources", "verifyDebugResources").forEach { taskName ->
-                val task = project.tasks.findByName(taskName)
-                if (task != null) {
-                    println("Disabling task: $taskName for isar_flutter_libs")
-                    task.setEnabled(false)
+
+                val setCompileSdkVersion = android.javaClass.getMethod("compileSdkVersion", Int::class.java)
+                setCompileSdkVersion.invoke(android, 34)
+
+                // Disable resource verification task for isar_flutter_libs
+                tasks.matching {
+                    it.name.contains("VerifyReleaseResources") || it.name.contains("VerifyLibraryResources")
+                }.forEach {
+                    it.enabled = false
                 }
+            } catch (e: Exception) {
+                println("Failed to set namespace or compileSdk for isar_flutter_libs: ${e.message}")
             }
         }
     }

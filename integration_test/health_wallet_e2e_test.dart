@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 /// E2E Tests para Health Wallet de OrionHealth
-///
+/// 
 /// Ejecutar con:
 /// flutter test integration_test/health_wallet_e2e_test.dart
 
@@ -432,7 +432,7 @@ class _MockEventsTimeline extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
-        leading: CircleAvatar(backgroundColor: Colors.teal.withValues(alpha: 0.2), child: Icon(icon, color: Colors.teal)),
+        leading: CircleAvatar(backgroundColor: Colors.teal.withOpacity(0.2), child: Icon(icon, color: Colors.teal)),
         title: Text(title),
         subtitle: Text(date),
         trailing: const Icon(Icons.chevron_right),
@@ -579,7 +579,7 @@ class _MockStatsPage extends StatelessWidget {
 
   Widget _buildStatTile(String label, String count, Color color) {
     return Card(
-      color: color.withValues(alpha: 0.1),
+      color: color.withOpacity(0.1),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

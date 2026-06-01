@@ -2,63 +2,61 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'encryption_service.dart';
 
-/// Sync status
-enum SyncState {
-  idle,
-  syncing,
-  success,
-  error,
-  offline,
-}
+/// Sync state machine.
+enum SyncState { idle, syncing, success, error, offline }
 
-/// Sync result
+/// Result of a sync operation.
 class SyncResult {
-  final bool success;
-  final String? error;
-  final DateTime syncedAt;
-  final int recordsSynced;
-
   SyncResult({
     required this.success,
     this.error,
     required this.syncedAt,
     required this.recordsSynced,
   });
+
+  final bool success;
+  final String? error;
+  final DateTime syncedAt;
+  final int recordsSynced;
 }
 
-/// Service for syncing encrypted health data between nodes
+/// Service for syncing encrypted health data between Orion nodes.
 class SyncService {
-  final EncryptionService _encryption;
-  final Dio _dio;
-
-  // Node discovery endpoint (could be IPFS, libp2p, or centralized)
-  static const String _defaultDiscoveryEndpoint =
-      'https://orion-network.io/api/v1/nodes';
-
-  // Sync protocol version
-  static const String _protocolVersion = '1.0';
-
   SyncService(this._encryption) : _dio = Dio(BaseOptions(
     connectTimeout: const Duration(seconds: 30),
     receiveTimeout: const Duration(minutes: 5),
   ));
 
-  /// Sync health data to a receiving Orion node
-  Future<SyncResult> syncToNode({
+  final EncryptionService _encryption;
+  final Dio _dio;
+
+  static const String _defaultDiscoveryEndpoint =
+      'https://orion-network.io/api/v1/nodes';
+  static const String _protocolVersion = '1.0';
+
+  /// Push encrypted health data to a target Orion node.
+  Future<SyncResult> pushToNode({
     required String targetNodeId,
-    required Map<String, dynamic> encryptedData,
+    required Map<String, dynamic> healthData,
     required String senderNodeId,
     String? pin,
   }) async {
     try {
-      // In real implementation, would connect via NFC/BLE/WiFi directly
-      // or through a relay server if both nodes are online
+      final encrypted = await _encryption.encryptPayload(healthData, pin);
+      final package = {
+        'version': _protocolVersion,
+        'senderNodeId': senderNodeId,
+        'targetNodeId': targetNodeId,
+        'timestamp': DateTime.now().toIso8601String(),
+        'payload': encrypted,
+      };
 
-      // For now, simulate successful sync
+      // Real implementation: send via NFC/BLE/WiFi direct or relay server
+      // For now simulate success
       return SyncResult(
         success: true,
         syncedAt: DateTime.now(),
-        recordsSynced: _countRecords(encryptedData),
+        recordsSynced: _countRecords(healthData),
       );
     } catch (e) {
       return SyncResult(
@@ -70,30 +68,25 @@ class SyncService {
     }
   }
 
-  /// Receive sync package from another Orion node
-  Future<Map<String, dynamic>?> receivePackage(
-    String packageJson, {
+  /// Pull encrypted data from a remote node and decrypt it.
+  Future<Map<String, dynamic>?> pullFromNode({
+    required String packageJson,
     required String pin,
   }) async {
     try {
       final package = jsonDecode(packageJson) as Map<String, dynamic>;
-
-      // Verify protocol version
       if (package['version'] != _protocolVersion) {
         throw Exception('Incompatible sync protocol version');
       }
 
-      // Decrypt payload
-      final encryptedPayload = package['encryptedPayload'] as Map<String, dynamic>;
-      final decrypted = await _encryption.decryptPayload(encryptedPayload, pin);
-
-      return decrypted;
+      final encrypted = package['payload'] as Map<String, dynamic>;
+      return _encryption.decryptPayload(encrypted, pin);
     } catch (e) {
       return null;
     }
   }
 
-  /// Create encrypted package for transfer
+  /// Create an encrypted transfer package for one-time sharing.
   Future<String> createTransferPackage({
     required Map<String, dynamic> healthData,
     required String senderNodeId,
@@ -101,8 +94,8 @@ class SyncService {
     String? pin,
     Duration? expiresIn,
   }) async {
-    // Encrypt the health data
     final encrypted = await _encryption.encryptPayload(healthData, pin);
+    final signature = await _encryption.signPackage(healthData);
 
     final package = {
       'header': {
@@ -116,49 +109,30 @@ class SyncService {
             : null,
       },
       'payload': encrypted,
-      'signature': await _encryption.signPackage(healthData),
+      'signature': signature,
     };
 
     return jsonEncode(package);
   }
 
-  /// Sync medical standards from network (public data)
-  Future<Map<String, dynamic>> syncMedicalStandards({
+  /// Download public medical standards (ICD-10, LOINC, RxNorm).
+  Future<void> syncMedicalStandards({
     void Function(double progress)? onProgress,
   }) async {
-    // This is for syncing PUBLIC standards, not private health data
-    final standards = <String, dynamic>{};
-
     try {
-      // In real implementation, would download from GitHub releases
-      // or from a distributed cache
-
       onProgress?.call(0.1);
-
-      // Sync would happen here - for now return empty
-      // Real implementation would download:
+      // Real: download from GitHub releases / distributed cache
       // - ICD-10 full dataset
       // - SNOMED CT subset
       // - LOINC full dataset
       // - RxNorm full dataset
-      // - Clinical guidelines
-
       onProgress?.call(1.0);
-
-      return standards;
     } catch (e) {
       rethrow;
     }
   }
 
-  /// Check for updates to synced data
-  Future<bool> checkForUpdates(String lastSyncHash) async {
-    // In real implementation, would check a hash/checksum
-    // of the latest available data vs local
-    return false;
-  }
-
-  /// Get peer nodes for sync
+  /// Discover peer nodes on the Orion network.
   Future<List<Map<String, dynamic>>> discoverPeerNodes() async {
     try {
       final response = await _dio.get(_defaultDiscoveryEndpoint);
@@ -166,17 +140,21 @@ class SyncService {
         return List<Map<String, dynamic>>.from(response.data['nodes'] ?? []);
       }
       return [];
-    } catch (e) {
+    } catch (_) {
       return [];
     }
   }
 
+  /// Check whether remote data has changed since last sync.
+  Future<bool> hasRemoteUpdates(String lastSyncHash) async {
+    // Real: compare merkle root or content hash
+    return false;
+  }
+
   int _countRecords(Map<String, dynamic> data) {
     int count = 0;
-    for (final key in data.keys) {
-      if (data[key] is List) {
-        count += (data[key] as List).length;
-      }
+    for (final value in data.values) {
+      if (value is List) count += value.length;
     }
     return count;
   }

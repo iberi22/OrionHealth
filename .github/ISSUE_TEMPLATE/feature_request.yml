@@ -1,0 +1,83 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for OrionHealth
+title: "[Feature] "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Feature Request
+
+        Thank you for suggesting a new feature! Please provide as much detail as possible about what you'd like to see.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      placeholder: A clear and concise description of the feature.
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      placeholder: Describe the problem or use case this feature would solve.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      placeholder: Describe your proposed solution or approach.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      placeholder: Any alternative solutions you've considered.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Clinical Features
+        - User Interface
+        - Performance
+        - Data Management
+        - Security
+        - Integration
+        - Documentation
+        - Testing
+        - Other
+
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: Requirements
+      options:
+        - label: Must be HIPAA compliant
+          value: hipaa
+        - label: Must work offline
+          value: offline
+        - label: Requires FDA clearance
+          value: fda
+        - label: Multi-tenant support needed
+          value: multi-tenant

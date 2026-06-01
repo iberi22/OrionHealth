@@ -4,13 +4,13 @@ import '../../domain/entities/medical_insight.dart';
 /// Analyzes vital signs against clinical guidelines
 class VitalSignAnalyzer {
   /// Analyze blood pressure reading
-  Future<VitalSignInterpretation> analyzeBloodPressure({
+  VitalSignInterpretation analyzeBloodPressure({
     required double systolic,
     required double diastolic,
     int? age,
-  }) async {
-    BpCategory category = BpCategory.normal;
-    InsightSeverity severity = InsightSeverity.info;
+  }) {
+    BpCategory category;
+    InsightSeverity severity;
     final recommendations = <String>[];
 
     if (systolic >= 180 || diastolic >= 120) {
@@ -41,8 +41,6 @@ class VitalSignAnalyzer {
       recommendations.add('Blood pressure within normal range');
     }
 
-    final guideline = await ClinicalGuidelines.findByCode('AHA-2017');
-
     return VitalSignInterpretation(
       vitalType: 'blood_pressure',
       value: '$systolic/$diastolic',
@@ -50,7 +48,7 @@ class VitalSignAnalyzer {
       category: category.name,
       severity: severity,
       recommendations: recommendations,
-      guideline: guideline,
+      guideline: ClinicalGuidelines.ahaHypertension,
     );
   }
 
@@ -59,8 +57,8 @@ class VitalSignAnalyzer {
     required double rate,
     bool isResting = true,
   }) {
-    InsightSeverity severity = InsightSeverity.info;
-    String category = 'normal';
+    InsightSeverity severity;
+    String category;
 
     if (isResting) {
       if (rate < 40) {

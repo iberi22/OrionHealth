@@ -1,14 +1,12 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:isar/isar.dart';
 import 'lab_result.dart';
 
-part 'medication_entry.g.dart';
-
 /// Medication entry with dosage, frequency, start/end dates.
 /// Sensitive: medication name and dosage are encrypted.
 @collection
-@JsonSerializable()
-class MedicationEntry {
+class MedicationEntry extends Equatable {
   MedicationEntry({
     required this.id,
     required this.rxNormCode,
@@ -30,7 +28,9 @@ class MedicationEntry {
     this.encryptedName,
     this.encryptedDosage,
   });
-  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  final String id;
 
   /// RxNorm code for the medication (e.g. "311354" for Metformin 500mg).
   @Index()
@@ -60,23 +60,23 @@ class MedicationEntry {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  final String? prescribedBy;
-  final String? pharmacy;
-  final int? refillsRemaining;
-  final String? notes;
+  String? prescribedBy;
+  String? pharmacy;
+  int? refillsRemaining;
+  String? notes;
 
   @Enumerated(EnumType.name)
   final DataSource source;
 
   @Enumerated(EnumType.name)
   @Index()
-  final SyncStatus syncStatus;
+  SyncStatus syncStatus;
 
   /// Encrypted medication name (base64).
-  final String? encryptedName;
+  String? encryptedName;
 
   /// Encrypted dosage string (base64).
-  final String? encryptedDosage;
+  String? encryptedDosage;
 
   /// Whether this medication is currently active.
   @ignore
@@ -100,7 +100,7 @@ class MedicationEntry {
   ];
 
   MedicationEntry copyWith({
-    int? id,
+    String? id,
     String? rxNormCode,
     String? medicationName,
     String? dosage,
@@ -147,4 +147,26 @@ class MedicationEntry {
       _$MedicationEntryFromJson(json);
   Map<String, dynamic> toJson() => _$MedicationEntryToJson(this);
 
+  @override
+  List<Object?> get props => [
+        id,
+        rxNormCode,
+        medicationName,
+        dosage,
+        dosageUnit,
+        frequency,
+        route,
+        startDate,
+        endDate,
+        createdAt,
+        updatedAt,
+        prescribedBy,
+        pharmacy,
+        refillsRemaining,
+        notes,
+        source,
+        syncStatus,
+        encryptedName,
+        encryptedDosage,
+      ];
 }
