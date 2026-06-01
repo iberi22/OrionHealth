@@ -102,12 +102,12 @@ class LocalMedicalContext {
     }
 
     for (final med in medications.values) {
-      addToIndex(med.displayName, 'med:${med.rxnormCode}');
+      addToIndex(med.displayName, 'med:${med.code}');
       if (med.genericName != null) {
-        addToIndex(med.genericName!, 'med:${med.rxnormCode}');
+        addToIndex(med.genericName!, 'med:${med.code}');
       }
       if (med.drugClass != null) {
-        addToIndex(med.drugClass!, 'med:${med.rxnormCode}');
+        addToIndex(med.drugClass!, 'med:${med.code}');
       }
     }
 

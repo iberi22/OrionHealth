@@ -19,7 +19,7 @@ class ClinicalGuidelineReference extends MedicalConcept {
   final String? version;
   final List<String> applicableConditions;
 
-  const ClinicalGuidelineReference({
+  ClinicalGuidelineReference({
     required this.code,
     required this.displayName,
     this.description,
@@ -37,7 +37,7 @@ class ClinicalGuidelineReference extends MedicalConcept {
 /// Comprehensive clinical guidelines
 class ClinicalGuidelines {
   // ==================== DIABETES ====================
-  static const ClinicalGuidelineReference adaStandards = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference adaStandards = ClinicalGuidelineReference(
     code: 'ADA-2024',
     displayName: 'Standards of Care in Diabetes',
     organization: 'American Diabetes Association',
@@ -48,7 +48,7 @@ class ClinicalGuidelines {
     description: 'Comprehensive guidelines for diabetes diagnosis and treatment',
   );
 
-  static const ClinicalGuidelineReference adaA1cTarget = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference adaA1cTarget = ClinicalGuidelineReference(
     code: 'ADA-A1C',
     displayName: 'A1C Targets for Glycemic Control',
     organization: 'American Diabetes Association',
@@ -58,7 +58,7 @@ class ClinicalGuidelines {
     description: 'A1C target <7% for most adults with diabetes; <6.5% if achievable without hypoglycemia',
   );
 
-  static const ClinicalGuidelineReference adaHypertensionInDiabetes = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference adaHypertensionInDiabetes = ClinicalGuidelineReference(
     code: 'ADA-HTN-2024',
     displayName: 'Diabetes and Hypertension Management',
     organization: 'American Diabetes Association',
@@ -68,7 +68,7 @@ class ClinicalGuidelines {
     description: 'BP target <130/80 mmHg for diabetics with hypertension',
   );
 
-  static const ClinicalGuidelineReference adaStatin = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference adaStatin = ClinicalGuidelineReference(
     code: 'ADA-STATIN-2024',
     displayName: 'Diabetes and Cholesterol Management',
     organization: 'American Diabetes Association',
@@ -78,7 +78,7 @@ class ClinicalGuidelines {
     description: 'Statin therapy for diabetics aged 40-75: moderate intensity; high intensity if ASCVD risk >20%',
   );
 
-  static const ClinicalGuidelineReference whoDiabetes = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference whoDiabetes = ClinicalGuidelineReference(
     code: 'WHO-DM-2016',
     displayName: 'Global Report on Diabetes',
     organization: 'World Health Organization',
@@ -89,7 +89,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== CARDIOVASCULAR / HTN ====================
-  static const ClinicalGuidelineReference ahaHypertension = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference ahaHypertension = ClinicalGuidelineReference(
     code: 'AHA-2017',
     displayName: 'High Blood Pressure Clinical Practice Guideline',
     organization: 'American Heart Association',
@@ -100,7 +100,7 @@ class ClinicalGuidelines {
     description: 'BP >=130/80 mmHg = Stage 1 HTN; BP target <130/80 for most adults',
   );
 
-  static const ClinicalGuidelineReference ahaCholesterol = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference ahaCholesterol = ClinicalGuidelineReference(
     code: 'AHA-2018',
     displayName: 'Cholesterol Management Guideline',
     organization: 'American Heart Association',
@@ -110,7 +110,7 @@ class ClinicalGuidelines {
     description: 'Statin therapy recommendations by ASCVD risk category',
   );
 
-  static const ClinicalGuidelineReference accAhaRiskCalculator = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference accAhaRiskCalculator = ClinicalGuidelineReference(
     code: 'ACC-AHA-ASCVD',
     displayName: 'ASCVD Risk Calculator',
     organization: 'ACC/AHA',
@@ -120,7 +120,7 @@ class ClinicalGuidelines {
     description: '10-year ASCVD risk prediction tool for primary prevention',
   );
 
-  static const ClinicalGuidelineReference whoHypertension = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference whoHypertension = ClinicalGuidelineReference(
     code: 'WHO-2023',
     displayName: 'Hypertension Diagnosis and Management',
     organization: 'World Health Organization',
@@ -130,7 +130,7 @@ class ClinicalGuidelines {
     description: 'WHO guidelines for hypertension management in primary care',
   );
 
-  static const ClinicalGuidelineReference accHeartFailure = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference accHeartFailure = ClinicalGuidelineReference(
     code: 'ACC-AHA-HF-2022',
     displayName: 'Guideline for the Management of Heart Failure',
     organization: 'ACC/AHA',
@@ -140,7 +140,7 @@ class ClinicalGuidelines {
     description: 'Comprehensive heart failure management: HFrEF (EF<=40%) and HFpEF (EF>=50%)',
   );
 
-  static const ClinicalGuidelineReference escHeartFailure = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference escHeartFailure = ClinicalGuidelineReference(
     code: 'ESC-HF-2021',
     displayName: 'ESC Guidelines for Heart Failure',
     organization: 'European Society of Cardiology',
@@ -150,7 +150,7 @@ class ClinicalGuidelines {
     description: 'ESC heart failure guidelines with HFrEF device therapy and pharmacotherapy',
   );
 
-  static const ClinicalGuidelineReference afibAHA = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference afibAHA = ClinicalGuidelineReference(
     code: 'AHA-AFIB-2023',
     displayName: 'Management of Atrial Fibrillation',
     organization: 'AHA/ACC/HRS',
@@ -160,7 +160,7 @@ class ClinicalGuidelines {
     description: 'AFib management: rate/rhythm control, anticoagulation (CHA2DS2-VASc), ablation',
   );
 
-  static const ClinicalGuidelineReference stableIschemicHeartDisease = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference stableIschemicHeartDisease = ClinicalGuidelineReference(
     code: 'ACC-AHA-SIHD-2012',
     displayName: 'Management of Stable Ischemic Heart Disease',
     organization: 'ACC/AHA',
@@ -171,7 +171,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== KIDNEY / CKD ====================
-  static const ClinicalGuidelineReference kdigoCkd = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference kdigoCkd = ClinicalGuidelineReference(
     code: 'KDIGO-CKD-2012',
     displayName: 'KDIGO Clinical Practice Guideline for CKD Evaluation',
     organization: 'Kidney Disease: Improving Global Outcomes',
@@ -181,7 +181,7 @@ class ClinicalGuidelines {
     description: 'CKD definition, staging, and management based on GFR and albuminuria',
   );
 
-  static const ClinicalGuidelineReference kdigoDiabetesCkd = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference kdigoDiabetesCkd = ClinicalGuidelineReference(
     code: 'KDIGO-DM-CKD-2022',
     displayName: 'KDIGO Clinical Practice Guideline for Diabetes and CKD',
     organization: 'Kidney Disease: Improving Global Outcomes',
@@ -191,7 +191,7 @@ class ClinicalGuidelines {
     description: 'Integrated management of diabetes and CKD: glycemic control, BP, lipids',
   );
 
-  static const ClinicalGuidelineReference adaCkdManagement = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference adaCkdManagement = ClinicalGuidelineReference(
     code: 'ADA-CKD-2024',
     displayName: 'Diabetes and CKD Management',
     organization: 'American Diabetes Association',
@@ -202,7 +202,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== LIVER ====================
-  static const ClinicalGuidelineReference aasldHepatitisB = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference aasldHepatitisB = ClinicalGuidelineReference(
     code: 'AASLD-HBV-2018',
     displayName: 'Hepatitis B Guidance',
     organization: 'American Association for the Study of Liver Diseases',
@@ -212,7 +212,7 @@ class ClinicalGuidelines {
     description: 'HBV screening, treatment, and monitoring recommendations',
   );
 
-  static const ClinicalGuidelineReference aasldHepatitisC = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference aasldHepatitisC = ClinicalGuidelineReference(
     code: 'AASLD-HCV-2020',
     displayName: 'Hepatitis C Guidance',
     organization: 'American Association for the Study of Liver Diseases',
@@ -222,7 +222,7 @@ class ClinicalGuidelines {
     description: 'HCV screening, DAA treatment, and cure monitoring',
   );
 
-  static const ClinicalGuidelineReference aasldNafld = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference aasldNafld = ClinicalGuidelineReference(
     code: 'AASLD-NAFLD-2017',
     displayName: 'NAFLD Diagnosis and Management',
     organization: 'American Association for the Study of Liver Diseases',
@@ -232,7 +232,7 @@ class ClinicalGuidelines {
     description: 'NAFLD/NASH diagnosis, risk stratification, and treatment',
   );
 
-  static const ClinicalGuidelineReference easlNafld = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference easlNafld = ClinicalGuidelineReference(
     code: 'EASL-NAFLD-2021',
     displayName: 'EASL Guidelines for NAFLD/NASH',
     organization: 'European Association for the Study of the Liver',
@@ -243,7 +243,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== LIPIDS ====================
-  static const ClinicalGuidelineReference accAhaPrimaryPrevention = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference accAhaPrimaryPrevention = ClinicalGuidelineReference(
     code: 'ACC-AHA-PRIMARY-2019',
     displayName: 'Primary Prevention of ASCVD',
     organization: 'ACC/AHA',
@@ -253,7 +253,7 @@ class ClinicalGuidelines {
     description: 'Lifestyle and pharmacological primary prevention of ASCVD',
   );
 
-  static const ClinicalGuidelineReference eccEasMalnutrition = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference eccEasMalnutrition = ClinicalGuidelineReference(
     code: 'GLIM-Malnutrition-2019',
     displayName: 'GLIM Consensus on Malnutrition',
     organization: 'GLIM Working Group',
@@ -264,7 +264,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== THYROID ====================
-  static const ClinicalGuidelineReference ataThyroid = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference ataThyroid = ClinicalGuidelineReference(
     code: 'ATA-2014',
     displayName: 'Thyroid Disease in Pregnancy',
     organization: 'American Thyroid Association',
@@ -274,7 +274,7 @@ class ClinicalGuidelines {
     description: 'Guidelines for thyroid disease management in pregnancy',
   );
 
-  static const ClinicalGuidelineReference ataHypothyroidism = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference ataHypothyroidism = ClinicalGuidelineReference(
     code: 'ATA-HYPOTHYROIDISM-2014',
     displayName: 'Hypothyroidism Guidelines',
     organization: 'American Thyroid Association',
@@ -284,7 +284,7 @@ class ClinicalGuidelines {
     description: 'Diagnosis and management of hypothyroidism',
   );
 
-  static const ClinicalGuidelineReference ataHyperthyroidism = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference ataHyperthyroidism = ClinicalGuidelineReference(
     code: 'ATA-HYPERTHYROIDISM-2016',
     displayName: 'Hyperthyroidism and Other Causes of Thyrotoxicosis',
     organization: 'American Thyroid Association',
@@ -295,7 +295,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== MENTAL HEALTH ====================
-  static const ClinicalGuidelineReference apaDepression = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference apaDepression = ClinicalGuidelineReference(
     code: 'APA-DEP-2021',
     displayName: 'Practice Guideline for Treatment of Depression',
     organization: 'American Psychiatric Association',
@@ -305,7 +305,7 @@ class ClinicalGuidelines {
     description: 'Evidence-based treatment recommendations for major depressive disorder',
   );
 
-  static const ClinicalGuidelineReference apaBipolar = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference apaBipolar = ClinicalGuidelineReference(
     code: 'APA-BIPOLAR-2020',
     displayName: 'Practice Guideline for Bipolar Disorder',
     organization: 'American Psychiatric Association',
@@ -315,7 +315,7 @@ class ClinicalGuidelines {
     description: 'Bipolar disorder diagnosis and treatment',
   );
 
-  static const ClinicalGuidelineReference adaDiabetesMentalHealth = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference adaDiabetesMentalHealth = ClinicalGuidelineReference(
     code: 'ADA-MH-2024',
     displayName: 'Psychosocial Care for People with Diabetes',
     organization: 'American Diabetes Association',
@@ -325,7 +325,7 @@ class ClinicalGuidelines {
     description: 'Mental health screening and care for diabetics',
   );
 
-  static const ClinicalGuidelineReference niceDepression = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference niceDepression = ClinicalGuidelineReference(
     code: 'NICE-DEP-2009',
     displayName: 'Depression in Adults',
     organization: 'National Institute for Health and Care Excellence (UK)',
@@ -336,7 +336,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== RESPIRATORY ====================
-  static const ClinicalGuidelineReference ginaAsthma = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference ginaAsthma = ClinicalGuidelineReference(
     code: 'GINA-2024',
     displayName: 'Global Strategy for Asthma Management',
     organization: 'GINA',
@@ -346,7 +346,7 @@ class ClinicalGuidelines {
     description: 'Stepwise asthma management; emphasizes ICS-containing therapy',
   );
 
-  static const ClinicalGuidelineReference goldCopd = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference goldCopd = ClinicalGuidelineReference(
     code: 'GOLD-2024',
     displayName: 'Global Strategy for COPD Diagnosis and Management',
     organization: 'GOLD',
@@ -356,7 +356,7 @@ class ClinicalGuidelines {
     description: 'COPD assessment, pharmacological and non-pharmacological treatment',
   );
 
-  static const ClinicalGuidelineReference idsaPneumonia = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference idsaPneumonia = ClinicalGuidelineReference(
     code: 'IDSA-ATS-PNA-2019',
     displayName: 'Community-Acquired Pneumonia Guidelines',
     organization: 'IDSA/ATS',
@@ -367,7 +367,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== PAIN ====================
-  static const ClinicalGuidelineReference cdcOpioidPain = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference cdcOpioidPain = ClinicalGuidelineReference(
     code: 'CDC-OPIOID-2022',
     displayName: 'Clinical Practice Guideline for Opioid Therapy for Chronic Pain',
     organization: 'CDC',
@@ -377,7 +377,7 @@ class ClinicalGuidelines {
     description: 'Opioid prescribing for chronic pain; non-opioid first; risk assessment',
   );
 
-  static const ClinicalGuidelineReference whoAnalgesicLadder = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference whoAnalgesicLadder = ClinicalGuidelineReference(
     code: 'WHO-PAIN-1986',
     displayName: 'WHO Analgesic Ladder for Cancer Pain',
     organization: 'World Health Organization',
@@ -387,7 +387,7 @@ class ClinicalGuidelines {
     description: 'Three-step analgesic ladder: non-opioid -> weak opioid -> strong opioid',
   );
 
-  static const ClinicalGuidelineReference lowBackPainApt = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference lowBackPainApt = ClinicalGuidelineReference(
     code: 'ACP-LOWBACK-2017',
     displayName: 'Noninvasive Treatments for Acute/Chronic Low Back Pain',
     organization: 'American College of Physicians',
@@ -398,7 +398,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== CANCER SCREENING ====================
-  static const ClinicalGuidelineReference acsCancerScreening = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference acsCancerScreening = ClinicalGuidelineReference(
     code: 'ACS-SCREENING-2023',
     displayName: 'Cancer Screening Guidelines',
     organization: 'American Cancer Society',
@@ -409,7 +409,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== ANEMIA / HEMATOLOGY ====================
-  static const ClinicalGuidelineReference asahAnemia = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference asahAnemia = ClinicalGuidelineReference(
     code: 'ASH-ANEMIA-2020',
     displayName: 'Management of Anemia and Iron Deficiency',
     organization: 'American Society of Hematology',
@@ -419,7 +419,7 @@ class ClinicalGuidelines {
     description: 'Diagnosis and management of various anemias',
   );
 
-  static const ClinicalGuidelineReference kdigoAnemiaCkd = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference kdigoAnemiaCkd = ClinicalGuidelineReference(
     code: 'KDIGO-ANEMIA-2012',
     displayName: 'CKD-Anemia Guidelines',
     organization: 'Kidney Disease: Improving Global Outcomes',
@@ -430,7 +430,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== LAB REFERENCE ====================
-  static const ClinicalGuidelineReference labReferenceRanges = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference labReferenceRanges = ClinicalGuidelineReference(
     code: 'CLSI-2017',
     displayName: 'Reference intervals for Laboratory Tests',
     organization: 'Clinical and Laboratory Standards Institute',
@@ -439,7 +439,7 @@ class ClinicalGuidelines {
     description: 'Reference intervals for common laboratory tests',
   );
 
-  static const ClinicalGuidelineReference adaStandardsMedicalCare = ClinicalGuidelineReference(
+  static final ClinicalGuidelineReference adaStandardsMedicalCare = ClinicalGuidelineReference(
     code: 'ADA-MC-2024',
     displayName: 'Standards of Medical Care in Diabetes',
     organization: 'American Diabetes Association',
@@ -450,7 +450,7 @@ class ClinicalGuidelines {
   );
 
   // ==================== ALL GUIDELINES ====================
-  static const List<ClinicalGuidelineReference> all = [
+  static final List<ClinicalGuidelineReference> all = [
     // Diabetes
     adaStandards, adaA1cTarget, adaHypertensionInDiabetes, adaStatin, whoDiabetes,
     adaDiabetesMentalHealth, adaCkdManagement, adaStandardsMedicalCare,

@@ -5,8 +5,21 @@
 
 import 'package:equatable/equatable.dart';
 
+/// Standard export
+export 'icd10/icd10.dart';
+export 'snomed/snomed.dart';
+export 'loinc/loinc.dart';
+export 'fhir/fhir.dart';
+export 'medications/medications.dart';
+export 'guidelines/guidelines.dart';
+export 'onboarding/onboarding.dart';
+export 'services/sync_service.dart';
+export 'services/medical_context_provider.dart';
+
 /// Base interface for all medical concepts
 abstract class MedicalConcept extends Equatable {
+  const MedicalConcept();
+
   /// Unique code in the standard
   String get code;
 
@@ -77,7 +90,7 @@ class LabTest extends Equatable {
 
 /// Medication reference
 class Medication extends Equatable {
-  final String rxnormCode;
+  final String code;
   final String displayName;
   final String? genericName;
   final String? drugClass;
@@ -85,7 +98,7 @@ class Medication extends Equatable {
   final List<String> dosages;
 
   const Medication({
-    required this.rxnormCode,
+    required this.code,
     required this.displayName,
     this.genericName,
     this.drugClass,
@@ -94,7 +107,7 @@ class Medication extends Equatable {
   });
 
   @override
-  List<Object?> get props => [rxnormCode, displayName];
+  List<Object?> get props => [code, displayName];
 }
 
 /// Clinical guideline reference
@@ -106,7 +119,7 @@ class ClinicalGuideline extends Equatable {
   final DateTime lastUpdated;
   final List<String> applicableConditions;
 
-  const ClinicalGuideline({
+  ClinicalGuideline({
     required this.id,
     required this.title,
     required this.organization,
@@ -118,14 +131,3 @@ class ClinicalGuideline extends Equatable {
   @override
   List<Object?> get props => [id, title, organization];
 }
-
-/// Standard export
-export 'icd10/icd10.dart';
-export 'snomed/snomed.dart';
-export 'loinc/loinc.dart';
-export 'fhir/fhir.dart';
-export 'medications/medications.dart';
-export 'guidelines/guidelines.dart';
-export 'onboarding/onboarding.dart';
-export 'services/sync_service.dart';
-export 'services/medical_context_provider.dart';

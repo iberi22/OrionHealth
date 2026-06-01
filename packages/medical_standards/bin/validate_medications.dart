@@ -24,7 +24,7 @@ void main() async {
   //   ...
   // );
   final medPattern = RegExp(
-    r'static\s+const\s+MedicationReference\s+(\w+)\s*=\s*MedicationReference\s*\(\s*code:\s*\'([^\']+)\'',
+    r"static\s+const\s+MedicationReference\s+(\w+)\s*=\s*MedicationReference\s*\(\s*code:\s*'([^']+)'",
     multiLine: true,
   );
 
@@ -48,7 +48,8 @@ void main() async {
     // Check for duplicates
     final existing = rxnormCodes[code];
     if (existing != null) {
-      issues.add('DUPLICATE RxNorm code: $code (medications: ${existing.join(", ")}, $medName)');
+      existing.add(medName);
+      issues.add('DUPLICATE RxNorm code: $code (medications: ${existing.join(", ")})');
     } else {
       rxnormCodes[code] = {medName};
     }

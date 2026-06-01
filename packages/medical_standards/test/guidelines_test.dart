@@ -5,7 +5,7 @@ void main() {
   group('ClinicalGuidelineReference', () {
     test('guideline has required fields', () {
       expect(ClinicalGuidelines.ahaHypertension.code, isNotEmpty);
-      expect(ClinicalGuidelines.ahaHypertension.title, isNotEmpty);
+      expect(ClinicalGuidelines.ahaHypertension.displayName, isNotEmpty);
       expect(ClinicalGuidelines.ahaHypertension.url, isNotEmpty);
     });
 
@@ -16,9 +16,9 @@ void main() {
 
   group('ClinicalGuidelines', () {
     test('findByCode returns correct guideline', () {
-      final guideline = ClinicalGuidelines.findByCode('AHA-2017');
+      final guideline = ClinicalGuidelines.findByCode('ADA-2024');
       expect(guideline, isNotNull);
-      expect(guideline!.code, equals('AHA-2017'));
+      expect(guideline!.code, equals('ADA-2024'));
     });
 
     test('findByCode returns null for invalid code', () {
@@ -41,19 +41,19 @@ void main() {
     });
 
     test('labReferenceRanges guideline exists', () {
-      expect(ClinicalGuidelines.labReferenceRanges.code, equals('LAB-REF'));
-      expect(ClinicalGuidelines.labReferenceRanges.title, isNotEmpty);
+      expect(ClinicalGuidelines.labReferenceRanges.code, equals('CLSI-2017'));
+      expect(ClinicalGuidelines.labReferenceRanges.displayName, isNotEmpty);
     });
 
     test('accAhaRiskCalculator guideline exists', () {
-      expect(ClinicalGuidelines.accAhaRiskCalculator.code, equals('ASCVD'));
-      expect(ClinicalGuidelines.accAhaRiskCalculator.title, isNotEmpty);
+      expect(ClinicalGuidelines.accAhaRiskCalculator.code, equals('ACC-AHA-ASCVD'));
+      expect(ClinicalGuidelines.accAhaRiskCalculator.displayName, isNotEmpty);
     });
 
     test('guideline references have valid structure', () {
       for (final guideline in ClinicalGuidelines.all) {
         expect(guideline.code, isNotEmpty);
-        expect(guideline.title, isNotEmpty);
+        expect(guideline.displayName, isNotEmpty);
         expect(guideline.url, isNotEmpty);
         expect(guideline.description, isNotEmpty);
       }
