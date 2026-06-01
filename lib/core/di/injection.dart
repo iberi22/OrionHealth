@@ -13,5 +13,5 @@ final getIt = GetIt.instance;
   asExtension: true, // default
 )
 Future<void> configureDependencies() async {
-  await getIt.init();
+  await getIt.init(environment: 'mobile');
 }

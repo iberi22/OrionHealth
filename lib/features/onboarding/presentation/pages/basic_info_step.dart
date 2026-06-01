@@ -98,9 +98,12 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.white.withAlpha(179)),
+          labelStyle: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w500),
+          floatingLabelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           prefixIcon: Icon(icon, color: AppColors.primary),
           border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.black.withAlpha(40),
         ),
       ),
     );

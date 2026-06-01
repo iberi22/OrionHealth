@@ -4,8 +4,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
+import 'dart:typed_data' as _i7;
 
-import 'package:local_auth/local_auth.dart' as _i8;
+import 'package:local_auth/local_auth.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:orionhealth_health/features/auth/domain/entities/auth_credentials.dart'
@@ -13,7 +14,7 @@ import 'package:orionhealth_health/features/auth/domain/entities/auth_credential
 import 'package:orionhealth_health/features/auth/domain/repositories/auth_repository.dart'
     as _i2;
 import 'package:orionhealth_health/features/auth/infrastructure/services/biometric_service.dart'
-    as _i7;
+    as _i8;
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart'
     as _i5;
 
@@ -121,10 +122,40 @@ class MockEncryptionService extends _i1.Mock implements _i5.EncryptionService {
       ) as _i3.Future<String>);
 
   @override
-  _i3.Future<String> encrypt(
-    String? data,
+  _i3.Future<void> initialize() => (super.noSuchMethod(
+        Invocation.method(
+          #initialize,
+          [],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<_i7.Uint8List> encryptBytes(_i7.Uint8List? plainBytes) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #encryptBytes,
+          [plainBytes],
+        ),
+        returnValue: _i3.Future<_i7.Uint8List>.value(_i7.Uint8List(0)),
+      ) as _i3.Future<_i7.Uint8List>);
+
+  @override
+  _i3.Future<_i7.Uint8List> decryptBytes(_i7.Uint8List? encryptedBytes) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #decryptBytes,
+          [encryptedBytes],
+        ),
+        returnValue: _i3.Future<_i7.Uint8List>.value(_i7.Uint8List(0)),
+      ) as _i3.Future<_i7.Uint8List>);
+
+  @override
+  _i3.Future<dynamic> encrypt(
+    String? data, [
     String? key,
-  ) =>
+  ]) =>
       (super.noSuchMethod(
         Invocation.method(
           #encrypt,
@@ -133,17 +164,8 @@ class MockEncryptionService extends _i1.Mock implements _i5.EncryptionService {
             key,
           ],
         ),
-        returnValue: _i3.Future<String>.value(_i6.dummyValue<String>(
-          this,
-          Invocation.method(
-            #encrypt,
-            [
-              data,
-              key,
-            ],
-          ),
-        )),
-      ) as _i3.Future<String>);
+        returnValue: _i3.Future<dynamic>.value(),
+      ) as _i3.Future<dynamic>);
 
   @override
   _i3.Future<String> decrypt(
@@ -169,12 +191,45 @@ class MockEncryptionService extends _i1.Mock implements _i5.EncryptionService {
           ),
         )),
       ) as _i3.Future<String>);
+
+  @override
+  _i3.Future<String> generatePinSalt() => (super.noSuchMethod(
+        Invocation.method(
+          #generatePinSalt,
+          [],
+        ),
+        returnValue: _i3.Future<String>.value(_i6.dummyValue<String>(
+          this,
+          Invocation.method(
+            #generatePinSalt,
+            [],
+          ),
+        )),
+      ) as _i3.Future<String>);
+
+  @override
+  _i3.Future<bool> verifyPin(
+    String? pin,
+    String? storedHash,
+    String? salt,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #verifyPin,
+          [
+            pin,
+            storedHash,
+            salt,
+          ],
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 }
 
 /// A class which mocks [BiometricService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockBiometricService extends _i1.Mock implements _i7.BiometricService {
+class MockBiometricService extends _i1.Mock implements _i8.BiometricService {
   MockBiometricService() {
     _i1.throwOnMissingStub(this);
   }
@@ -189,15 +244,15 @@ class MockBiometricService extends _i1.Mock implements _i7.BiometricService {
       ) as _i3.Future<bool>);
 
   @override
-  _i3.Future<List<_i8.BiometricType>> getAvailableBiometrics() =>
+  _i3.Future<List<_i9.BiometricType>> getAvailableBiometrics() =>
       (super.noSuchMethod(
         Invocation.method(
           #getAvailableBiometrics,
           [],
         ),
         returnValue:
-            _i3.Future<List<_i8.BiometricType>>.value(<_i8.BiometricType>[]),
-      ) as _i3.Future<List<_i8.BiometricType>>);
+            _i3.Future<List<_i9.BiometricType>>.value(<_i9.BiometricType>[]),
+      ) as _i3.Future<List<_i9.BiometricType>>);
 
   @override
   _i3.Future<bool> authenticate({required String? localizedReason}) =>

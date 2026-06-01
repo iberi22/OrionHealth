@@ -97,15 +97,45 @@ class _PrivacyStepState extends State<PrivacyStep> {
                   ],
                 ),
                 const SizedBox(height: 14),
-                _buildPrivacyPoint(Icons.storage, 'Datos almacenados de forma segura en tu dispositivo.'),
+                _buildPrivacyPoint(Icons.storage, 'Base de datos en formato binario, 100% local.'),
                 const SizedBox(height: 8),
-                _buildPrivacyPoint(Icons.share_outlined, 'No compartimos tu información con terceros.'),
+                _buildPrivacyPoint(Icons.security, 'Solo tu nodo de Orion puede abrir y leer tus datos.'),
                 const SizedBox(height: 8),
-                _buildPrivacyPoint(Icons.delete_outline, 'Puedes eliminar tus datos cuando quieras.'),
+                _buildPrivacyPoint(Icons.lock, 'Encriptación total, sin puertas traseras.'),
                 const SizedBox(height: 8),
-                _buildPrivacyPoint(Icons.lock, 'Usamos encriptación de grado médico.'),
+                _buildPrivacyPoint(Icons.delete_outline, 'Control total: borra tus datos cuando quieras.'),
                 const SizedBox(height: 8),
                 _buildPrivacyPoint(Icons.pin, 'Acceso protegido por PIN y biometría.'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // --- App Gratuita y Apoyo ---
+          GlassmorphicCard(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.favorite, color: Colors.pinkAccent, size: 22),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Proyecto Libre y Gratuito',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Orion siempre será una aplicación 100% gratuita. Nuestro desarrollo '
+                  'se sostiene gracias al apoyo en forma de donaciones para el '
+                  'laboratorio Southwest AI Labs (SWAL).',
+                  style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 13, height: 1.4),
+                ),
               ],
             ),
           ),
@@ -131,9 +161,9 @@ class _PrivacyStepState extends State<PrivacyStep> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Autorizo a OrionHealth a procesar mis datos de salud para brindarme '
-                  'servicios personalizados de seguimiento médico, recordatorios de '
-                  'medicamentos y generación de reportes.',
+                  'Entiendo que Orion procesa mis datos de salud de forma estrictamente '
+                  'local en mi dispositivo, para generar seguimientos médicos y recordatorios. '
+                  'Ningún dato sale de mi nodo de Orion hacia internet.',
                   style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 13, height: 1.4),
                 ),
                 const SizedBox(height: 12),
