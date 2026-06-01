@@ -5,4 +5,5 @@ abstract class AuthRepository {
   Future<void> saveCredentials(AuthCredentials credentials);
   Future<void> deleteCredentials();
   Future<bool> hasPinSet();
+  Future<bool> isBiometricsEnabled();
 }
