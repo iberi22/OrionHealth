@@ -72,98 +72,108 @@ const UserProfileSchema = CollectionSchema(
       name: r'email',
       type: IsarType.string,
     ),
-    r'ethnicity': PropertySchema(
+    r'epsPatientId': PropertySchema(
       id: 11,
+      name: r'epsPatientId',
+      type: IsarType.string,
+    ),
+    r'ethnicity': PropertySchema(
+      id: 12,
       name: r'ethnicity',
       type: IsarType.string,
     ),
     r'familyHistoryCvd': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'familyHistoryCvd',
       type: IsarType.bool,
     ),
     r'familyHistoryDiabetes': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'familyHistoryDiabetes',
       type: IsarType.bool,
     ),
     r'hasCardiovascularDisease': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'hasCardiovascularDisease',
       type: IsarType.bool,
     ),
     r'hasHypertension': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'hasHypertension',
       type: IsarType.bool,
     ),
     r'hasSteroidUse': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'hasSteroidUse',
       type: IsarType.bool,
     ),
     r'heartRate': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'heartRate',
       type: IsarType.long,
     ),
     r'height': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'height',
       type: IsarType.double,
     ),
+    r'isEpsConnected': PropertySchema(
+      id: 20,
+      name: r'isEpsConnected',
+      type: IsarType.bool,
+    ),
     r'llmProvider': PropertySchema(
-      id: 19,
+      id: 21,
       name: r'llmProvider',
       type: IsarType.string,
     ),
     r'localModelName': PropertySchema(
-      id: 20,
+      id: 22,
       name: r'localModelName',
       type: IsarType.string,
     ),
     r'medicalConditions': PropertySchema(
-      id: 21,
+      id: 23,
       name: r'medicalConditions',
       type: IsarType.stringList,
     ),
     r'name': PropertySchema(
-      id: 22,
+      id: 24,
       name: r'name',
       type: IsarType.string,
     ),
     r'onboardingCompleted': PropertySchema(
-      id: 23,
+      id: 25,
       name: r'onboardingCompleted',
       type: IsarType.bool,
     ),
     r'phoneNumber': PropertySchema(
-      id: 24,
+      id: 26,
       name: r'phoneNumber',
       type: IsarType.string,
     ),
     r'sex': PropertySchema(
-      id: 25,
+      id: 27,
       name: r'sex',
       type: IsarType.string,
     ),
     r'smokingStatus': PropertySchema(
-      id: 26,
+      id: 28,
       name: r'smokingStatus',
       type: IsarType.string,
     ),
     r'systolicBP': PropertySchema(
-      id: 27,
+      id: 29,
       name: r'systolicBP',
       type: IsarType.long,
     ),
     r'uniqueId': PropertySchema(
-      id: 28,
+      id: 30,
       name: r'uniqueId',
       type: IsarType.string,
     ),
     r'weight': PropertySchema(
-      id: 29,
+      id: 31,
       name: r'weight',
       type: IsarType.double,
     )
@@ -227,6 +237,12 @@ int _userProfileEstimateSize(
   }
   {
     final value = object.email;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.epsPatientId;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -306,25 +322,27 @@ void _userProfileSerialize(
   writer.writeStringList(offsets[8], object.currentMedications);
   writer.writeLong(offsets[9], object.diastolicBP);
   writer.writeString(offsets[10], object.email);
-  writer.writeString(offsets[11], object.ethnicity);
-  writer.writeBool(offsets[12], object.familyHistoryCvd);
-  writer.writeBool(offsets[13], object.familyHistoryDiabetes);
-  writer.writeBool(offsets[14], object.hasCardiovascularDisease);
-  writer.writeBool(offsets[15], object.hasHypertension);
-  writer.writeBool(offsets[16], object.hasSteroidUse);
-  writer.writeLong(offsets[17], object.heartRate);
-  writer.writeDouble(offsets[18], object.height);
-  writer.writeString(offsets[19], object.llmProvider);
-  writer.writeString(offsets[20], object.localModelName);
-  writer.writeStringList(offsets[21], object.medicalConditions);
-  writer.writeString(offsets[22], object.name);
-  writer.writeBool(offsets[23], object.onboardingCompleted);
-  writer.writeString(offsets[24], object.phoneNumber);
-  writer.writeString(offsets[25], object.sex);
-  writer.writeString(offsets[26], object.smokingStatus);
-  writer.writeLong(offsets[27], object.systolicBP);
-  writer.writeString(offsets[28], object.uniqueId);
-  writer.writeDouble(offsets[29], object.weight);
+  writer.writeString(offsets[11], object.epsPatientId);
+  writer.writeString(offsets[12], object.ethnicity);
+  writer.writeBool(offsets[13], object.familyHistoryCvd);
+  writer.writeBool(offsets[14], object.familyHistoryDiabetes);
+  writer.writeBool(offsets[15], object.hasCardiovascularDisease);
+  writer.writeBool(offsets[16], object.hasHypertension);
+  writer.writeBool(offsets[17], object.hasSteroidUse);
+  writer.writeLong(offsets[18], object.heartRate);
+  writer.writeDouble(offsets[19], object.height);
+  writer.writeBool(offsets[20], object.isEpsConnected);
+  writer.writeString(offsets[21], object.llmProvider);
+  writer.writeString(offsets[22], object.localModelName);
+  writer.writeStringList(offsets[23], object.medicalConditions);
+  writer.writeString(offsets[24], object.name);
+  writer.writeBool(offsets[25], object.onboardingCompleted);
+  writer.writeString(offsets[26], object.phoneNumber);
+  writer.writeString(offsets[27], object.sex);
+  writer.writeString(offsets[28], object.smokingStatus);
+  writer.writeLong(offsets[29], object.systolicBP);
+  writer.writeString(offsets[30], object.uniqueId);
+  writer.writeDouble(offsets[31], object.weight);
 }
 
 UserProfile _userProfileDeserialize(
@@ -345,25 +363,27 @@ UserProfile _userProfileDeserialize(
     currentMedications: reader.readStringList(offsets[8]) ?? const [],
     diastolicBP: reader.readLongOrNull(offsets[9]),
     email: reader.readStringOrNull(offsets[10]),
-    ethnicity: reader.readStringOrNull(offsets[11]),
-    familyHistoryCvd: reader.readBoolOrNull(offsets[12]),
-    familyHistoryDiabetes: reader.readBoolOrNull(offsets[13]),
-    hasCardiovascularDisease: reader.readBoolOrNull(offsets[14]),
-    hasHypertension: reader.readBoolOrNull(offsets[15]),
-    hasSteroidUse: reader.readBoolOrNull(offsets[16]),
-    heartRate: reader.readLongOrNull(offsets[17]),
-    height: reader.readDoubleOrNull(offsets[18]),
-    llmProvider: reader.readStringOrNull(offsets[19]),
-    localModelName: reader.readStringOrNull(offsets[20]),
-    medicalConditions: reader.readStringList(offsets[21]) ?? const [],
-    name: reader.readStringOrNull(offsets[22]),
-    onboardingCompleted: reader.readBoolOrNull(offsets[23]) ?? false,
-    phoneNumber: reader.readStringOrNull(offsets[24]),
-    sex: reader.readStringOrNull(offsets[25]),
-    smokingStatus: reader.readStringOrNull(offsets[26]),
-    systolicBP: reader.readLongOrNull(offsets[27]),
-    uniqueId: reader.readStringOrNull(offsets[28]),
-    weight: reader.readDoubleOrNull(offsets[29]),
+    epsPatientId: reader.readStringOrNull(offsets[11]),
+    ethnicity: reader.readStringOrNull(offsets[12]),
+    familyHistoryCvd: reader.readBoolOrNull(offsets[13]),
+    familyHistoryDiabetes: reader.readBoolOrNull(offsets[14]),
+    hasCardiovascularDisease: reader.readBoolOrNull(offsets[15]),
+    hasHypertension: reader.readBoolOrNull(offsets[16]),
+    hasSteroidUse: reader.readBoolOrNull(offsets[17]),
+    heartRate: reader.readLongOrNull(offsets[18]),
+    height: reader.readDoubleOrNull(offsets[19]),
+    isEpsConnected: reader.readBoolOrNull(offsets[20]) ?? false,
+    llmProvider: reader.readStringOrNull(offsets[21]),
+    localModelName: reader.readStringOrNull(offsets[22]),
+    medicalConditions: reader.readStringList(offsets[23]) ?? const [],
+    name: reader.readStringOrNull(offsets[24]),
+    onboardingCompleted: reader.readBoolOrNull(offsets[25]) ?? false,
+    phoneNumber: reader.readStringOrNull(offsets[26]),
+    sex: reader.readStringOrNull(offsets[27]),
+    smokingStatus: reader.readStringOrNull(offsets[28]),
+    systolicBP: reader.readLongOrNull(offsets[29]),
+    uniqueId: reader.readStringOrNull(offsets[30]),
+    weight: reader.readDoubleOrNull(offsets[31]),
   );
   object.id = id;
   return object;
@@ -401,7 +421,7 @@ P _userProfileDeserializeProp<P>(
     case 11:
       return (reader.readStringOrNull(offset)) as P;
     case 12:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 13:
       return (reader.readBoolOrNull(offset)) as P;
     case 14:
@@ -411,30 +431,34 @@ P _userProfileDeserializeProp<P>(
     case 16:
       return (reader.readBoolOrNull(offset)) as P;
     case 17:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 18:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 19:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 20:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 21:
-      return (reader.readStringList(offset) ?? const []) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 22:
       return (reader.readStringOrNull(offset)) as P;
     case 23:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 24:
       return (reader.readStringOrNull(offset)) as P;
     case 25:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 26:
       return (reader.readStringOrNull(offset)) as P;
     case 27:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 28:
       return (reader.readStringOrNull(offset)) as P;
     case 29:
+      return (reader.readLongOrNull(offset)) as P;
+    case 30:
+      return (reader.readStringOrNull(offset)) as P;
+    case 31:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1908,6 +1932,160 @@ extension UserProfileQueryFilter
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'epsPatientId',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'epsPatientId',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'epsPatientId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'epsPatientId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'epsPatientId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'epsPatientId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'epsPatientId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'epsPatientId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'epsPatientId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'epsPatientId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'epsPatientId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      epsPatientIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'epsPatientId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
       ethnicityIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2404,6 +2582,16 @@ extension UserProfileQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      isEpsConnectedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isEpsConnected',
+        value: value,
       ));
     });
   }
@@ -3995,6 +4183,19 @@ extension UserProfileQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByEpsPatientId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'epsPatientId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByEpsPatientIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'epsPatientId', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByEthnicity() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ethnicity', Sort.asc);
@@ -4096,6 +4297,19 @@ extension UserProfileQuerySortBy
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByHeightDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'height', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByIsEpsConnected() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isEpsConnected', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      sortByIsEpsConnectedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isEpsConnected', Sort.desc);
     });
   }
 
@@ -4349,6 +4563,19 @@ extension UserProfileQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByEpsPatientId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'epsPatientId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByEpsPatientIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'epsPatientId', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByEthnicity() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'ethnicity', Sort.asc);
@@ -4462,6 +4689,19 @@ extension UserProfileQuerySortThenBy
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByIsEpsConnected() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isEpsConnected', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy>
+      thenByIsEpsConnectedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isEpsConnected', Sort.desc);
     });
   }
 
@@ -4666,6 +4906,13 @@ extension UserProfileQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByEpsPatientId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'epsPatientId', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByEthnicity(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -4716,6 +4963,12 @@ extension UserProfileQueryWhereDistinct
   QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByHeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'height');
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QDistinct> distinctByIsEpsConnected() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isEpsConnected');
     });
   }
 
@@ -4873,6 +5126,12 @@ extension UserProfileQueryProperty
     });
   }
 
+  QueryBuilder<UserProfile, String?, QQueryOperations> epsPatientIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'epsPatientId');
+    });
+  }
+
   QueryBuilder<UserProfile, String?, QQueryOperations> ethnicityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'ethnicity');
@@ -4921,6 +5180,12 @@ extension UserProfileQueryProperty
   QueryBuilder<UserProfile, double?, QQueryOperations> heightProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'height');
+    });
+  }
+
+  QueryBuilder<UserProfile, bool, QQueryOperations> isEpsConnectedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isEpsConnected');
     });
   }
 

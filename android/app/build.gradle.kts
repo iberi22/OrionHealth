@@ -21,6 +21,7 @@ android {
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["appAuthRedirectScheme"] = "com.orionhealth.app"
     }
     buildTypes {
         release {
