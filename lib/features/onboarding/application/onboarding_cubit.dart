@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 import '../domain/entities/user_profile.dart';
 import '../domain/services/profile_analysis_service.dart';
 
@@ -126,12 +127,12 @@ enum OnboardingStep {
 // CUBIT
 // ============================================================================
 
+@injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
   final ProfileAnalysisService _analysisService;
 
-  OnboardingCubit({
-    ProfileAnalysisService? analysisService,
-  })  : _analysisService = analysisService ?? ProfileAnalysisService(),
+  OnboardingCubit()
+      : _analysisService = ProfileAnalysisService(),
         super(OnboardingInitial());
 
   static final int totalSteps = OnboardingStep.values.length;
