@@ -1,15 +1,10 @@
-import 'dart:math' as dart_math;
-
 import 'package:medical_standards/medical_standards.dart';
 import '../../domain/entities/medical_insight.dart';
 
 /// Calculates various health risk scores
 class RiskCalculator {
   /// Calculate 10-year ASCVD risk (American College of Cardiology/AHA)
-  /// Uses the Pooled Cohort Equations per ACC/AHA 2013 guideline.
-  ///
-  /// [race] should be 'white' or 'african_american'.  Defaults to 'white'.
-  /// For other races the 'white' equation is used as a conservative estimate.
+  /// Uses the Pooled Cohort Equations
   AscvdRisk calculateAscvdRisk({
     required int age,
     required String gender,
@@ -19,7 +14,6 @@ class RiskCalculator {
     required bool onBpMedication,
     required bool hasDiabetes,
     required bool isSmoker,
-    String race = 'white',
   }) {
     double risk;
 
@@ -32,7 +26,6 @@ class RiskCalculator {
         onBpMeds: onBpMedication,
         hasDiabetes: hasDiabetes,
         isSmoker: isSmoker,
-        race: race,
       );
     } else {
       risk = _calculateFemaleAscvd(
@@ -43,7 +36,6 @@ class RiskCalculator {
         onBpMeds: onBpMedication,
         hasDiabetes: hasDiabetes,
         isSmoker: isSmoker,
-        race: race,
       );
     }
 
@@ -54,17 +46,6 @@ class RiskCalculator {
     );
   }
 
-  // ──────────────────────────────────────────────
-  // ACC/AHA 2013 Pooled Cohort Equations
-  //
-  //   Risk = 1 − S₀ ^ exp(Σ − mean_sum)
-  //
-  // where S₀ = baseline 10-year survival,
-  //       Σ  = sum of (coefficient × ln(factor)) for continuous variables
-  //            + coefficients for categorical ones,
-  //   mean_sum = race/sex‑specific mean of Σ.
-  // ──────────────────────────────────────────────
-
   double _calculateMaleAscvd({
     required int age,
     required double totalCholesterol,
@@ -73,44 +54,29 @@ class RiskCalculator {
     required bool onBpMeds,
     required bool hasDiabetes,
     required bool isSmoker,
-    required String race,
   }) {
-    final lnAge = dart_math.log(age);
-    final lnTc = dart_math.log(totalCholesterol);
-    final lnHdl = dart_math.log(hdlCholesterol);
-    final lnSbp = dart_math.log(systolicBp);
+    final lnAge = Math.log(age.toDouble());
+    final dblAgeLn = Math.log(age.toDouble() * age.toDouble());
 
-    double sum;
+    // Clamp to physiological ranges
+    final tc = totalCholesterol < 130 ? 130 : (totalCholesterol > 320 ? 320 : totalCholesterol);
+    final hdl = hdlCholesterol < 20 ? 20 : (hdlCholesterol > 100 ? 100 : hdlCholesterol);
+    final sbp = systolicBp < 90 ? 90 : (systolicBp > 200 ? 200 : systolicBp);
 
-    if (race == 'african_american') {
-      // African‑American male coefficients (ACC/AHA 2013)
-      sum = 2.469 * lnAge
-          + 0.302 * lnTc
-          - 0.307 * lnHdl
-          + 1.809 * lnSbp
-          + (onBpMeds ? 0.549 : 0.0)
-          + (hasDiabetes ? 0.645 : 0.0)
-          + (isSmoker ? 0.549 : 0.0)
-          - 19.543;
+    // Pooled Cohort Equations linear predictor (ACC/AHA 2013)
+    final sum = 12.344
+        + 2.76889 * lnAge
+        + 0.940 * dblAgeLn
+        + 0.05486 * age.toDouble()
+        + 0.04826 * (tc - 170) / 30
+        - 0.6534 * (hdl - 50) / 20
+        + (onBpMeds ? 0.01499 * (sbp - 120) : 0.01876 * (sbp - 120))
+        + (hasDiabetes ? 0.69196 : 0.0)
+        + (isSmoker ? 0.65484 : 0.0);
 
-      final baselineSurvival = 0.8954; // S₀ for AA males
-      final meanSum = -19.543; // mean for AA males (simplified)
-      return _pooledCohortRisk(sum, baselineSurvival, meanSum);
-    } else {
-      // White / other male coefficients (ACC/AHA 2013)
-      sum = 12.344 * lnAge
-          + 11.853 * lnTc
-          - 7.990 * lnHdl
-          + 1.764 * lnSbp
-          + (onBpMeds ? 1.797 : 0.0)
-          + (hasDiabetes ? 0.658 : 0.0)
-          + (isSmoker ? 7.837 : 0.0)
-          - 61.180;
-
-      final baselineSurvival = 0.9144; // S₀ for white males
-      final meanSum = -29.18167; // mean for white males
-      return _pooledCohortRisk(sum, baselineSurvival, meanSum);
-    }
+    // Mean baseline survival at 10 years for males
+    const baselineSurvival = 0.9144;
+    return (1 - Math.pow(baselineSurvival, Math.exp(sum))) * 100;
   }
 
   double _calculateFemaleAscvd({
@@ -121,53 +87,27 @@ class RiskCalculator {
     required bool onBpMeds,
     required bool hasDiabetes,
     required bool isSmoker,
-    required String race,
   }) {
-    final lnAge = dart_math.log(age);
-    final lnTc = dart_math.log(totalCholesterol);
-    final lnHdl = dart_math.log(hdlCholesterol);
-    final lnSbp = dart_math.log(systolicBp);
+    final lnAge = Math.log(age.toDouble());
 
-    double sum;
+    // Clamp to physiological ranges
+    final tc = totalCholesterol < 130 ? 130 : (totalCholesterol > 320 ? 320 : totalCholesterol);
+    final hdl = hdlCholesterol < 20 ? 20 : (hdlCholesterol > 100 ? 100 : hdlCholesterol);
+    final sbp = systolicBp < 90 ? 90 : (systolicBp > 200 ? 200 : systolicBp);
 
-    if (race == 'african_american') {
-      // African‑American female coefficients (ACC/AHA 2013)
-      sum = 17.114 * lnAge
-          + 0.940 * lnTc
-          - 18.920 * lnHdl
-          + 4.475 * lnSbp
-          + (onBpMeds ? 29.291 : 0.0)
-          + (hasDiabetes ? 0.691 : 0.0)
-          + (isSmoker ? 0.874 : 0.0)
-          - 86.608;
+    final sum = -29.799
+        + 4.884 * lnAge
+        + 13.540 * Math.log(age.toDouble() * age.toDouble())
+        + 0.05486 * age.toDouble()
+        + 4.47264 * Math.log(tc / 200)
+        - 16.1869 * Math.log(hdl / 50)
+        + (onBpMeds ? 2.54890 * Math.log(sbp / 90) : 2.78956 * Math.log(sbp / 90))
+        + (hasDiabetes ? 0.87682 : 0.0)
+        + (isSmoker ? 0.69196 : 0.0);
 
-      final baselineSurvival = 0.9533; // S₀ for AA females
-      final meanSum = -86.608; // mean for AA females
-      return _pooledCohortRisk(sum, baselineSurvival, meanSum);
-    } else {
-      // White / other female coefficients (ACC/AHA 2013)
-      sum = -29.799 * lnAge
-          + 4.884 * lnTc
-          + 13.540 * lnHdl
-          + 1.022 * lnSbp
-          + (onBpMeds ? 1.344 : 0.0)
-          + (hasDiabetes ? 0.661 : 0.0)
-          + (isSmoker ? 7.837 : 0.0)
-          + 29.180;
-
-      final baselineSurvival = 0.9665; // S₀ for white females
-      final meanSum = 29.180; // mean for white females
-      return _pooledCohortRisk(sum, baselineSurvival, meanSum);
-    }
-  }
-
-  /// Compute risk from the pooled cohort equation:
-  ///   Risk = 1 − S₀ ^ exp(Σ − mean_sum)
-  double _pooledCohortRisk(double sum, double baselineSurvival, double meanSum) {
-    final exponent = dart_math.exp(sum - meanSum);
-    final risk = 1 - dart_math.pow(baselineSurvival, exponent).toDouble();
-    // Clamp to [0, 100] and return as percentage
-    return (risk * 100).clamp(0, 100);
+    // Mean baseline survival at 10 years for females
+    const baselineSurvival = 0.9665;
+    return (1 - Math.pow(baselineSurvival, Math.exp(sum))) * 100;
   }
 
   String _ascvdCategory(double risk) {
@@ -252,8 +192,8 @@ class RiskCalculator {
         id: 'ascvd-${DateTime.now().millisecondsSinceEpoch}',
         title: '10-Year Cardiovascular Risk (ASCVD)',
         description: 'Your 10-year ASCVD risk is ${ascvd.score.toStringAsFixed(1)}% — ${ascvd.category}',
-        severity: ascvd.score >= 20
-            ? InsightSeverity.alert
+        severity: ascvd.score >= 20 
+            ? InsightSeverity.alert 
             : (ascvd.score >= 7.5 ? InsightSeverity.warning : InsightSeverity.info),
         category: InsightCategory.riskAssessment,
         guidelineReference: ascvd.guideline.code,
@@ -268,8 +208,8 @@ class RiskCalculator {
         id: 'diabetes-risk-${DateTime.now().millisecondsSinceEpoch}',
         title: 'Diabetes Risk Assessment',
         description: 'Estimated diabetes risk: ${diabetes.category}',
-        severity: diabetes.category == 'High'
-            ? InsightSeverity.warning
+        severity: diabetes.category == 'High' 
+            ? InsightSeverity.warning 
             : InsightSeverity.info,
         category: InsightCategory.riskAssessment,
         guidelineReference: diabetes.guideline.code,
@@ -283,8 +223,8 @@ class RiskCalculator {
         id: 'htn-risk-${DateTime.now().millisecondsSinceEpoch}',
         title: 'Hypertension Risk',
         description: 'Hypertension risk: ${hypertension.category}',
-        severity: hypertension.category == 'High'
-            ? InsightSeverity.warning
+        severity: hypertension.category == 'High' 
+            ? InsightSeverity.warning 
             : InsightSeverity.info,
         category: InsightCategory.riskAssessment,
         guidelineReference: hypertension.guideline.code,
@@ -373,4 +313,53 @@ class HypertensionRisk {
     required this.category,
     required this.guideline,
   });
+}
+
+// Math helpers for risk calculations
+class Math {
+  static double exp(double x) => _exp(x);
+  static double log(double x) => _ln(x);
+
+  static double pow(double x, double y) => _exp(y * _ln(x));
+
+  static double _exp(double x) {
+    if (x > 700) return double.maxFinite;
+    if (x < -700) return 0;
+    double result = 1.0;
+    double term = 1.0;
+    for (int i = 1; i < 100; i++) {
+      term *= x / i;
+      result += term;
+      if (term.abs() < 1e-15) break;
+    }
+    return result;
+  }
+
+  static double _ln(double x) {
+    if (x <= 0) return double.negativeInfinity;
+    if (x == 1) return 0;
+    // Use Newton's method
+    double y = x - 1;
+    if (y.abs() < 0.5) {
+      // Taylor series for ln(1+y)
+      double result = 0;
+      double term = y;
+      for (int i = 1; i < 100; i++) {
+        result += term / i;
+        term *= -y;
+        if (term.abs() < 1e-15) break;
+      }
+      return result;
+    }
+    // For larger values, use log10 approximation
+    return _log10(x) * 2.302585092994046;
+  }
+
+  static double _log10(double x) {
+    int exp = 0;
+    while (x >= 10) { x /= 10; exp++; }
+    while (x < 1) { x *= 10; exp--; }
+    // Approximate log10 using natural log
+    return exp + (x - 1) / (x + 1) * 2; // Simple approximation
+  }
 }
