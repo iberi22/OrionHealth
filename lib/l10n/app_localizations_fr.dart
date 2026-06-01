@@ -193,4 +193,57 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get version => 'Version';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get reports => 'Reports';
+
+  @override
+  String get records => 'Records';
+
+  @override
+  String get homeTitle => 'Home';
+
+  @override
+  String get homeSubtitle =>
+      'Manage your health and consult with your AI assistant';
+
+  @override
+  String get syncingStandards => 'Syncing medical standards...';
+
+  @override
+  String get syncError => 'Error syncing medical standards';
+
+  @override
+  String get syncCompleted => 'Medical standards up to date';
+
+  @override
+  String get recentInsights => 'Recent Insights';
+
+  @override
+  String get analyzingData => 'Analyzing your health data...';
+
+  @override
+  String get noAnomaliesDetected => 'No anomalies detected';
+
+  @override
+  String get waitProcessing => 'Waiting for processing to complete';
+
+  @override
+  String get recordMoreVitals => 'Record more vitals to get insights';
+
+  @override
+  String get privacy100Local => '100% Local & Private';
+
+  @override
+  String get consultAssistant => 'Consult your AI Assistant';
+
+  @override
+  String get assistantDescription =>
+      'Your personal medical AI runs entirely on this device. Ask questions about your health records, medications, and receive personalized insights.';
+
+  @override
+  String get startConsultation => 'Start Consultation';
 }

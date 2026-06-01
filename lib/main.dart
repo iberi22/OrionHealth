@@ -245,7 +245,7 @@ class _HealthStatusGrid extends StatelessWidget {
             _StatusCard(
               icon: Icons.water_drop,
               label: l10n.oxygenSaturation,
-              value: vitals[VitalSignType.oxygenSaturation]?.formattedValue ?? l10n.noData,
+              value: vitals[VitalSignType.spO2]?.formattedValue ?? l10n.noData,
               color: Colors.cyanAccent,
               onTap: () => Navigator.push(
                 context,
@@ -260,7 +260,7 @@ class _HealthStatusGrid extends StatelessWidget {
 
     String _formatBloodPressure(VitalSign? systolic, VitalSign? diastolic, AppLocalizations l10n) {
     if (systolic == null || diastolic == null) return l10n.noData;
-    return '${systolic.value?.toInt()}/${diastolic.value?.toInt()}';
+    return '${systolic.value.toInt()}/${diastolic.value.toInt()}';
   }
 }
 
@@ -357,7 +357,6 @@ class _RecentInsightsSection extends StatelessWidget {
         severityIcon = Icons.info_outline_rounded;
         break;
       case InsightSeverity.info:
-      default:
         severityColor = Colors.greenAccent;
         severityIcon = Icons.auto_awesome;
         break;
