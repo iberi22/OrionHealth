@@ -100,6 +100,7 @@ const Map<String, MedicalContextCategory> _conditionPatterns =
   'substance abuse': MedicalContextCategory.mentalHealth,
   'alcohol': MedicalContextCategory.mentalHealth,
   'addiction': MedicalContextCategory.mentalHealth,
+  'nicotine': MedicalContextCategory.mentalHealth,
   // Infectious
   'infection': MedicalContextCategory.infectious,
   'sepsis': MedicalContextCategory.infectious,

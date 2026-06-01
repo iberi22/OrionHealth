@@ -4,7 +4,7 @@ import 'package:medical_standards/medical_standards.dart';
 void main() {
   group('Integration: Medical Standards Cross-Reference', () {
     test('ICD-10 links to SNOMED and Guidelines', () {
-      final icd10 = Icd10Code.findByCode('E11');
+      final icd10 = Icd10ChronicConditions.findByCode('E11');
       expect(icd10, isNotNull);
 
       final guidelines = ClinicalGuidelines.findForCondition('E11');
@@ -12,7 +12,7 @@ void main() {
 
       // Should have related SNOMED concept
       final snomed = SnomedCommonConcepts.all.firstWhere(
-        (s) => s.fsn.toLowerCase().contains('diabetes'),
+        (s) => s.displayName.toLowerCase().contains('diabetes'),
         orElse: () => SnomedCommonConcepts.all.first,
       );
       expect(snomed, isNotNull);
@@ -21,15 +21,14 @@ void main() {
     test('LOINC links to Lab Reference Ranges', () {
       final glucose = LoincCommonLabs.findByCode('2345-7');
       expect(glucose, isNotNull);
-      expect(glucose!.normalRange, isNotNull);
-      expect(glucose.interpretation, isNotNull);
+      expect(glucose!.description, isNotNull);
 
-      final guideline = ClinicalGuidelines.findByCode('LAB-REF');
+      final guideline = ClinicalGuidelines.findByCode('CLSI-2017');
       expect(guideline, isNotNull);
     });
 
     test('Medication links to Conditions and Guidelines', () {
-      final metformin = MedicationReference.findByRxNormCode('311354');
+      final metformin = MedicationCatalog.findByCode('6809');
       expect(metformin, isNotNull);
 
       // Metformin used for diabetes
@@ -37,37 +36,26 @@ void main() {
       expect(diabetesGuideline, isNotEmpty);
     });
 
-    test('ProfileAnalyzer uses all standard types', () {
-      final analyzer = ProfileAnalyzer();
+    test('ProfileAnalyzer uses all standard types', () async {
+      const analyzer = ProfileAnalyzer();
 
-      final profile = UserProfile(
+      final result = await analyzer.analyzeProfile(
         age: 55,
-        gender: 'male',
-        weightKg: 85,
-        heightCm: 175,
-        conditions: [
-          Icd10Code.findByCode('E11')!,
-          Icd10Code.findByCode('I10')!,
-        ],
-        medications: [MedicationReference.findByRxNormCode('311354')!],
-        allergies: [],
+        sex: 'male',
+        currentConditions: ['Type 2 diabetes', 'Hypertension'],
+        currentMedications: ['metformin'],
         familyHistory: ['diabetes'],
-        smokingStatus: SmokingStatus.currentSmoker,
-        alcoholConsumption: AlcoholConsumption.daily,
       );
 
-      final result = analyzer.analyzeProfile(profile);
-
       expect(result, isNotNull);
-      expect(result.riskCategories, isNotEmpty);
-      expect(result.relevantStandards, isNotNull);
+      expect(result.categories, isNotEmpty);
+      expect(result.categories, contains(MedicalContextCategory.diabetes));
     });
 
     test('ChronicConditions has consistent data', () {
       for (final condition in Icd10ChronicConditions.all) {
-        final fromFind = Icd10Code.findByCode(condition.code);
+        final fromFind = Icd10ChronicConditions.findByCode(condition.code);
         expect(fromFind, isNotNull, reason: 'Code ${condition.code} should be findable');
-        expect(condition.isChronic, isTrue);
       }
     });
 
@@ -81,53 +69,33 @@ void main() {
   });
 
   group('Integration: User Profile Lifecycle', () {
-    test('Young healthy adult gets minimal standards', () {
-      final analyzer = ProfileAnalyzer();
-      final profile = UserProfile(
+    test('Young healthy adult gets minimal standards', () async {
+      const analyzer = ProfileAnalyzer();
+      final result = await analyzer.analyzeProfile(
         age: 25,
-        gender: 'female',
-        weightKg: 55,
-        heightCm: 165,
-        conditions: [],
-        medications: [],
-        allergies: [],
+        sex: 'female',
+        currentConditions: [],
+        currentMedications: [],
         familyHistory: [],
-        smokingStatus: SmokingStatus.nonSmoker,
-        alcoholConsumption: AlcoholConsumption.occasional,
       );
 
-      final result = analyzer.analyzeProfile(profile);
-
-      expect(result.bmi, closeTo(20.2, 0.1));
-      expect(result.relevantStandards, isNotNull);
+      expect(result.categories, contains(MedicalContextCategory.preventive));
     });
 
-    test('Complex patient gets comprehensive standards', () {
-      final analyzer = ProfileAnalyzer();
-      final profile = UserProfile(
+    test('Complex patient gets comprehensive standards', () async {
+      const analyzer = ProfileAnalyzer();
+      final result = await analyzer.analyzeProfile(
         age: 70,
-        gender: 'male',
-        weightKg: 95,
-        heightCm: 170,
-        conditions: [
-          Icd10Code.findByCode('E11')!,
-          Icd10Code.findByCode('I10')!,
-          Icd10Code.findByCode('N18.3')!, // CKD
-        ],
-        medications: [
-          MedicationReference.findByRxNormCode('311354')!,
-        ],
-        allergies: [Icd10Code.findByCode('J30.1')!], // Allergic rhinitis
+        sex: 'male',
+        currentConditions: ['Type 2 diabetes', 'Hypertension', 'CKD'],
+        currentMedications: ['metformin'],
         familyHistory: ['stroke', 'heart attack'],
-        smokingStatus: SmokingStatus.currentSmoker,
-        alcoholConsumption: AlcoholConsumption.daily,
       );
 
-      final result = analyzer.analyzeProfile(profile);
-
       expect(result, isNotNull);
-      expect(result.riskCategories, isNotEmpty);
-      expect(result.relevantStandards, isNotNull);
+      expect(result.categories, isNotEmpty);
+      expect(result.categories, contains(MedicalContextCategory.diabetes));
+      expect(result.categories, contains(MedicalContextCategory.cardiovascular));
     });
   });
 }

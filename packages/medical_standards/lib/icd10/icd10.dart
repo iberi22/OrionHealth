@@ -1626,13 +1626,6 @@ class Icd10ChronicConditions {
     synonyms: ['Septicemia', 'Blood poisoning'],
   );
 
-  static const Icd10Code urinaryTractInfection = Icd10Code(
-    code: 'N39.0',
-    displayName: 'Urinary tract infection, site not specified',
-    category: 'Infectious',
-    synonyms: ['UTI', 'Cystitis'],
-  );
-
   static const Icd10Code covid19 = Icd10Code(
     code: 'U07.1',
     displayName: 'COVID-19',
@@ -1719,7 +1712,7 @@ class Icd10ChronicConditions {
     // Derm
     eczema, psoriasis, acne, rosacea, urticaria, herpesZoster, cellulitis,
     // Infectious
-    influenza, tuberculosis, hiv, sepsis, urinaryTractInfection, covid19,
+    influenza, tuberculosis, hiv, sepsis, covid19,
   ];
 
   /// Find by code
