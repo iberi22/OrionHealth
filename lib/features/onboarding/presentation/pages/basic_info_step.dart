@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../eps_connection/presentation/eps_connect_button.dart';
+import '../../../eps_connection/domain/eps_connection_cubit.dart';
+import '../../../../core/di/injection.dart';
 
 class BasicInfoStep extends StatefulWidget {
   const BasicInfoStep({super.key});
@@ -75,6 +78,16 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 32),
+          const Text(
+            'Conexión Institucional',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          const SizedBox(height: 12),
+          BlocProvider(
+            create: (context) => getIt<EpsConnectionCubit>(),
+            child: const EpsConnectButton(),
           ),
           const SizedBox(height: 48),
           _buildNavigationButtons(context),
