@@ -13,6 +13,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/bloc/user_profile_cubit.dart';
 import '../../domain/entities/user_profile.dart';
+import '../../../sync/presentation/sync_status_widget.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -65,6 +66,7 @@ class _UserProfileView extends StatelessWidget {
               [
                 const SizedBox(height: 24),
                 _ProfileHeader(userProfile: userProfile),
+                const SyncStatusWidget(),
                 const SizedBox(height: 32),
                 _Section(
                   title: AppLocalizations.of(context)!.personalInfo,
