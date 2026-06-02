@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class OAuthRepository {
-  Future<TokenResponse?> login();
+  Future<AuthorizationTokenResponse?> login();
   Future<void> logout();
   Future<String?> getAccessToken();
   Future<String?> getIdToken();
@@ -24,7 +24,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
   static const String _refreshTokenKey = 'oauth_refresh_token';
 
   @override
-  Future<TokenResponse?> login() async {
+  Future<AuthorizationTokenResponse?> login() async {
     try {
       final result = await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(

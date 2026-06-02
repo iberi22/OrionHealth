@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../core/di/injection.dart';
+import '../../../core/di/injection.dart';
 import '../domain/sync_cubit.dart';
 
 class SyncStatusWidget extends StatelessWidget {
@@ -9,8 +9,9 @@ class SyncStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<FhirSyncCubit>(),
+    final cubit = getIt<FhirSyncCubit>();
+    return BlocProvider.value(
+      value: cubit,
       child: const _SyncStatusView(),
     );
   }
