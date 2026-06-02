@@ -1,19 +1,30 @@
 {
   "name": "ihce-gateway-backend",
   "version": "1.0.0",
-  "description": "Gateway for IHCE Colombia (FHIR R4 + OAuth 2.0)",
+  "description": "Gateway para IHCE Colombia (FHIR R4 + OAuth 2.0) + Email Citas Parser",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": ["ihce", "fhir", "colombia", "salud", "email-citas"],
+  "author": "iberi22",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
+    "@microsoft/microsoft-graph-client": "^3.0.7",
     "axios": "^1.6.0",
+    "body-parser": "^2.2.2",
     "connect-redis": "^9.0.0",
+    "cors": "^2.8.6",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "express": "^5.2.1",
     "express-session": "^1.19.0",
     "fhirclient": "^2.5.0",
+    "googleapis": "^173.0.0",
+    "imapflow": "^1.3.5",
+    "mailparser": "^3.9.9",
     "node-oauth": "^0.3.0",
     "open": "^9.1.0",
     "redis": "^6.0.0",
