@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/responsive/responsive_layout.dart';
@@ -29,6 +30,25 @@ import 'features/vitals/presentation/pages/vitals_monitor_page.dart';
 import 'features/medical_assistant/domain/services/medical_analysis_service.dart';
 import 'features/medical_assistant/domain/entities/medical_insight.dart';
 import 'features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'features/sync/data/sync_repository.dart';
+
+// ─────────────────────────────────────────────
+// BACKGROUND SYNC
+// ─────────────────────────────────────────────
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      await configureDependencies();
+      final syncRepository = getIt<SyncRepository>();
+      await syncRepository.syncAll();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+}
 
 // ─────────────────────────────────────────────
 // HOME PAGE
@@ -481,6 +501,20 @@ class _LocalAgentPromo extends StatelessWidget {
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    await Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: false,
+    );
+
+    await Workmanager().registerPeriodicTask(
+      "fhir-sync-task",
+      "fhirSyncTask",
+      frequency: const Duration(hours: 6),
+      constraints: Constraints(
+        networkType: NetworkType.connected,
+      ),
+    );
 
     // Global error handlers
     FlutterError.onError = (details) {
