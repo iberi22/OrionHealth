@@ -5,6 +5,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../../email-citas/presentation/email_connect_page.dart';
+import '../../../calendar_import/presentation/calendar_import_page.dart';
 import '../../domain/entities/appointment.dart';
 import '../../domain/repositories/appointment_repository.dart';
 
@@ -64,10 +65,24 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.email_outlined),
+            tooltip: 'Importar desde correo',
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const EmailConnectPage()),
             ).then((_) => _loadAppointments()),
+          ),
+          IconButton(
+            icon: const Icon(Icons.calendar_month),
+            tooltip: 'Importar desde calendario',
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CalendarImportPage()),
+              );
+              if (result == true) {
+                _loadAppointments();
+              }
+            },
           ),
           IconButton(
             icon: const Icon(Icons.add),
