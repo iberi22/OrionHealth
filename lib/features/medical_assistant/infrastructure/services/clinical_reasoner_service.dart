@@ -1,5 +1,6 @@
 
 import 'package:injectable/injectable.dart';
+import '../../../../core/services/privacy_anonymizer.dart';
 import '../../../local_agent/domain/entities/medical_code.dart';
 import '../../../local_agent/domain/repositories/medical_knowledge_repository.dart';
 import '../../domain/services/clinical_reasoner_service.dart';
@@ -7,8 +8,9 @@ import '../../domain/services/clinical_reasoner_service.dart';
 @LazySingleton(as: ClinicalReasonerService)
 class SymphonyClinicalReasonerService implements ClinicalReasonerService {
   final MedicalKnowledgeRepository _repository;
+  final PromptScrubber _scrubber;
 
-  SymphonyClinicalReasonerService(this._repository);
+  SymphonyClinicalReasonerService(this._repository, this._scrubber);
 
   int _levenshteinDistance(String s1, String s2) {
     if (s1 == s2) return 0;
@@ -83,10 +85,12 @@ class SymphonyClinicalReasonerService implements ClinicalReasonerService {
 
   @override
   Future<List<DiagnosticMatch>> analyzeSymptoms(String text) async {
+    final scrubbedText = await _scrubber.scrub(text, apiName: 'clinical-reasoner');
+
     final matches = <DiagnosticMatch>[];
     final mappings = _repository.getSymptomMappings();
-    final lowerText = text.toLowerCase();
-    final normalizedText = _normalize(text);
+    final lowerText = scrubbedText.toLowerCase();
+    final normalizedText = _normalize(scrubbedText);
 
     // Tokenize the input text with their start indices
     final tokens = <_SymptomToken>[];

@@ -1,18 +1,26 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/core/services/privacy_anonymizer.dart';
 import 'package:orionhealth_health/features/local_agent/domain/entities/medical_code.dart';
 import 'package:orionhealth_health/features/local_agent/domain/repositories/medical_knowledge_repository.dart';
 import 'package:orionhealth_health/features/medical_assistant/infrastructure/services/clinical_reasoner_service.dart';
 
 class MockMedicalKnowledgeRepository extends Mock implements MedicalKnowledgeRepository {}
+class MockPromptScrubber extends Mock implements PromptScrubber {}
 
 void main() {
   late MockMedicalKnowledgeRepository mockRepo;
+  late MockPromptScrubber mockScrubber;
   late SymphonyClinicalReasonerService reasoner;
 
   setUp(() {
     mockRepo = MockMedicalKnowledgeRepository();
-    reasoner = SymphonyClinicalReasonerService(mockRepo);
+    mockScrubber = MockPromptScrubber();
+    reasoner = SymphonyClinicalReasonerService(mockRepo, mockScrubber);
+
+    // Default scrubber behavior (no-op)
+    when(() => mockScrubber.scrub(any(), apiName: any(named: 'apiName')))
+        .thenAnswer((invocation) async => invocation.positionalArguments[0] as String);
   });
 
   group('ClinicalReasonerService', () {
@@ -277,6 +285,36 @@ void main() {
 
       expect(results.isNotEmpty, true);
       expect(results.first.code.code, 'J45');
+    });
+
+    test('analyzeSymptoms scrubs PII from input before processing', () async {
+      // Arrange
+      final piiInput = 'Mi correo es test@example.com y tengo fiebre';
+      final scrubbedInput = 'Mi correo es [EMAIL] y tengo fiebre';
+
+      when(() => mockScrubber.scrub(piiInput, apiName: 'clinical-reasoner'))
+          .thenAnswer((_) async => scrubbedInput);
+
+      final symptomsMapping = [
+        {
+          "symptom": "Fiebre",
+          "matches": [
+            {"code": "R50.9", "score": 0.7, "reason": "Temperatura alta"}
+          ]
+        }
+      ];
+
+      when(() => mockRepo.getSymptomMappings()).thenReturn(symptomsMapping);
+      when(() => mockRepo.searchByCode('R50.9')).thenAnswer((_) async =>
+        MedicalCode(code: 'R50.9', displayName: 'Fiebre', category: 'Symptom', standard: 'ICD-10'));
+
+      // Act
+      final results = await reasoner.analyzeSymptoms(piiInput);
+
+      // Assert
+      verify(() => mockScrubber.scrub(piiInput, apiName: 'clinical-reasoner')).called(1);
+      expect(results.isNotEmpty, true);
+      expect(results.first.code.code, 'R50.9');
     });
   });
 }
