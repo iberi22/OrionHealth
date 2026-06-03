@@ -149,9 +149,6 @@ class BleSharingService {
       // Simulate chunked transfer
       const chunkSize = 512;
       for (int i = 0; i < bytes.length; i += chunkSize) {
-        // In production, write chunk to characteristic:
-        // final chunk = bytes.sublist(i, i + chunkSize > bytes.length ? bytes.length : i + chunkSize);
-        // await characteristic.write(chunk);
         await Future.delayed(const Duration(milliseconds: 50));
       }
 
