@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
 
 import '../domain/entities/medical_query.dart';
@@ -7,6 +8,7 @@ import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
 import '../domain/entities/analysis_response.dart';
 import '../domain/services/medical_analysis_service.dart';
+import '../domain/services/health_context_service.dart';
 import '../infrastructure/llm/medical_llm_adapter.dart';
 import '../infrastructure/analysis/lab_interpreter.dart';
 import '../infrastructure/analysis/vital_sign_analyzer.dart';
@@ -53,20 +55,24 @@ class MedicalAssistantError extends MedicalAssistantState {
 }
 
 // Cubit
+@injectable
 class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   final MedicalLlmAdapter _llmAdapter;
   final MedicalAnalysisService _analysisService;
+  final HealthContextService _healthContextService;
   final LabInterpreter _labInterpreter;
   final VitalSignAnalyzer _vitalAnalyzer;
   final RiskCalculator _riskCalculator;
   MedicalAssistantCubit({
     MedicalLlmAdapter? llmAdapter,
     MedicalAnalysisService? analysisService,
+    required HealthContextService healthContextService,
     LabInterpreter? labInterpreter,
     VitalSignAnalyzer? vitalAnalyzer,
     RiskCalculator? riskCalculator,
   })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(),
         _analysisService = analysisService ?? MedicalAnalysisService(),
+        _healthContextService = healthContextService,
         _labInterpreter = labInterpreter ?? LabInterpreter(),
         _vitalAnalyzer = vitalAnalyzer ?? VitalSignAnalyzer(),
         _riskCalculator = riskCalculator ?? RiskCalculator(),
@@ -94,12 +100,12 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
       );
 
       // Gather user context from memory
-      final userContext = await _getUserContext(userId);
-      final chronicConditions =
-          userContext['conditions'] as List<Icd10Code>? ?? [];
-      final labValues =
-          userContext['labs'] as Map<String, double>? ?? {};
-      final vitals = userContext['vitals'] as Map<String, double>? ?? {};
+      final healthContext = await _healthContextService.getContextForUser(userId ?? 'default');
+      final userContext = healthContext.toContextMap();
+
+      final chronicConditions = healthContext.conditions;
+      final labValues = healthContext.labValues;
+      final vitals = healthContext.vitals;
 
       // ---- Lab Analysis ----
       emit(const MedicalAssistantLoading(message: 'Analizando laboratorios...'));
@@ -243,17 +249,4 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
     return tags;
   }
 
-  Future<Map<String, dynamic>> _getUserContext(String? userId) async {
-    if (userId == null) {
-      return {};
-    }
-
-    // Stub: would query user health data from local repositories
-    return {
-      'conditions': <Icd10Code>[],
-      'labs': <String, double>{},
-      'vitals': <String, double>{},
-      'medications': <String>[],
-    };
-  }
 }

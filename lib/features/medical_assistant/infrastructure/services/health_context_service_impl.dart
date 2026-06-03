@@ -1,10 +1,13 @@
 import 'package:injectable/injectable.dart';
+import 'package:isar/isar.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'package:medical_standards/medical_standards.dart' show Icd10Code;
+import 'package:health_wallet/health_wallet.dart' show LabResult;
 
 import '../../../vitals/domain/repositories/vital_sign_repository.dart';
 import '../../../vitals/domain/entities/vital_sign.dart';
 import '../../../medications/domain/repositories/medication_repository.dart';
+import '../../../user_profile/domain/repositories/user_profile_repository.dart';
 import '../../domain/services/health_context_service.dart';
 import '../../../../core/services/app_logger.dart';
 
@@ -13,7 +16,8 @@ import '../../../../core/services/app_logger.dart';
 /// Strategy (Option A — Typed Repos + MemoryGraph for notes):
 /// - Structured vitals → [VitalSignRepository.getLatestVitals()]
 /// - Active medications → [MedicationRepository.getAllMedications()]
-/// - Conditions → derived from VitalSign notes + memory tags
+/// - Conditions → from [UserProfileRepository]
+/// - Labs → from Isar [LabResult] collection
 /// - Episodic notes → [MemoryGraph.hybridSearch] with user tag
 ///
 /// All reads are non-blocking. Failures are gracefully caught and logged.
@@ -24,11 +28,13 @@ class IsarHealthContextService implements HealthContextService {
 
   final VitalSignRepository _vitalRepo;
   final MedicationRepository _medicationRepo;
+  final UserProfileRepository _userProfileRepo;
   final MemoryGraph _memoryGraph;
 
   IsarHealthContextService(
     this._vitalRepo,
     this._medicationRepo,
+    this._userProfileRepo,
     this._memoryGraph,
   );
 
@@ -40,16 +46,20 @@ class IsarHealthContextService implements HealthContextService {
       // 1. Latest vitals → Map<String, double>
       final vitalsMap = await _loadVitals();
 
-      // 2. Active medications → List<String> (names for now, RxNorm lookup optional)
+      // 2. Active medications → List<String>
       final medications = await _loadMedications();
 
-      // 3. Conditions — currently no dedicated repo; derive from memory tags
-      final conditions = <Icd10Code>[];
+      // 3. Conditions from UserProfile
+      final conditions = await _loadConditions();
 
-      // 4. Episodic notes from MemoryGraph (free-text health notes)
+      // 4. Lab results from Isar
+      final labs = await _loadLabs();
+
+      // 5. Episodic notes from MemoryGraph (free-text health notes)
       final notes = await _loadEpisodicNotes(userId);
 
       final ctx = HealthContext(
+        labValues: labs,
         vitals: vitalsMap,
         conditions: conditions,
         medications: medications,
@@ -57,7 +67,7 @@ class IsarHealthContextService implements HealthContextService {
       );
 
       AppLogger.i(_tag,
-          'Context ready: ${vitalsMap.length} vitals, ${medications.length} meds, ${notes.length} notes');
+          'Context ready: ${labs.length} labs, ${vitalsMap.length} vitals, ${medications.length} meds, ${notes.length} notes');
       return ctx;
     } catch (e, st) {
       AppLogger.e(_tag, 'Failed to load context — returning empty', error: e, stackTrace: st);
@@ -121,6 +131,38 @@ class IsarHealthContextService implements HealthContextService {
     } catch (e) {
       AppLogger.w(_tag, 'Memory search failed for notes: $e');
       return [];
+    }
+  }
+
+  Future<List<Icd10Code>> _loadConditions() async {
+    try {
+      final profile = await _userProfileRepo.getUserProfile();
+      if (profile == null) return [];
+
+      return profile.medicalConditions
+          .map((code) => Icd10Code.findByCode(code))
+          .whereType<Icd10Code>()
+          .toList();
+    } catch (e) {
+      AppLogger.e(_tag, 'Failed to load conditions', error: e);
+      return [];
+    }
+  }
+
+  Future<Map<String, double>> _loadLabs() async {
+    try {
+      final labs = await _memoryGraph.isar.labResults.where().findAll();
+      final Map<String, double> result = {};
+      for (final lab in labs) {
+        final val = double.tryParse(lab.resultValue);
+        if (val != null) {
+          result[lab.loincCode] = val;
+        }
+      }
+      return result;
+    } catch (e) {
+      AppLogger.e(_tag, 'Failed to load labs', error: e);
+      return {};
     }
   }
 

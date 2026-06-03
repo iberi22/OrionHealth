@@ -1,9 +1,11 @@
+import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
 import '../entities/medical_insight.dart';
 import '../entities/ai_response.dart';
 import '../entities/analysis_response.dart';
 
 /// Domain service for medical analysis orchestration
+@injectable
 /// 
 /// IMPORTANT: All analysis follows strict confidence rules:
 /// - AI NEVER says "you have X" unless 90%+ confidence

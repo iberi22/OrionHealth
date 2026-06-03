@@ -1,7 +1,9 @@
+import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
 import '../../domain/entities/medical_insight.dart';
 
 /// Calculates various health risk scores
+@injectable
 class RiskCalculator {
   /// Calculate 10-year ASCVD risk (American College of Cardiology/AHA)
   /// Uses the Pooled Cohort Equations
