@@ -33,7 +33,6 @@ class BleSharingService {
   BluetoothCharacteristic? _txCharacteristic;
   BluetoothCharacteristic? _rxCharacteristic;
   StreamSubscription? _rxSubscription;
-  StreamSubscription<List<ScanResult>>? _scanSubscription;
 
   // Completer for receiving data (signals when a full package is received)
   Completer<MedicalSharePackage?>? _receiveCompleter;
@@ -59,7 +58,6 @@ class BleSharingService {
     stopAdvertising();
     disconnect();
     _rxSubscription?.cancel();
-    _scanSubscription?.cancel();
     _stateController.close();
     _dataController.close();
   }
@@ -86,7 +84,7 @@ class BleSharingService {
     );
 
     final completer = Completer<void>();
-    _scanSubscription = FlutterBluePlus.scanResults.listen((scanResults) {
+    final scanSubscription = FlutterBluePlus.scanResults.listen((scanResults) {
       for (final r in scanResults) {
         final deviceId = r.device.remoteId.str;
         // Cache the BluetoothDevice reference for later connect()
@@ -108,8 +106,7 @@ class BleSharingService {
     });
 
     await completer.future.timeout(timeout, onTimeout: () {});
-    await _scanSubscription?.cancel();
-    _scanSubscription = null;
+    await scanSubscription.cancel();
     await FlutterBluePlus.stopScan();
 
     _stateController.add(BleServiceState.ready());
