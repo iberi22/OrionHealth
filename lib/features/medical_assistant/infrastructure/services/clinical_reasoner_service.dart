@@ -1,4 +1,5 @@
 
+import 'dart:math';
 import 'package:injectable/injectable.dart';
 import '../../../local_agent/domain/entities/medical_code.dart';
 import '../../../local_agent/domain/repositories/medical_knowledge_repository.dart';
@@ -7,8 +8,65 @@ import '../../domain/services/clinical_reasoner_service.dart';
 @LazySingleton(as: ClinicalReasonerService)
 class SymphonyClinicalReasonerService implements ClinicalReasonerService {
   final MedicalKnowledgeRepository _repository;
+  _SymptomIndex? _symptomIndex;
+  List<Map<String, dynamic>>? _cachedMappings;
 
   SymphonyClinicalReasonerService(this._repository);
+
+  void _ensureSymptomIndex(List<Map<String, dynamic>> mappings) {
+    if (_symptomIndex != null && _cachedMappings == mappings) {
+      return;
+    }
+
+    final invertedIndex = <String, Map<int, int>>{};
+    final docLengths = <int>[];
+    final tokenPattern = RegExp(r'[\wáéíóúüñ]+');
+
+    for (int i = 0; i < mappings.length; i++) {
+      final mapping = mappings[i];
+      final symptom = _normalize(mapping['symptom'] as String);
+      final searchTerms =
+          (mapping['searchTerms'] as List<dynamic>?)?.map((e) => _normalize(e.toString())) ?? [];
+
+      final allTermsStr = [symptom, ...searchTerms].join(' ');
+      final allTokens = tokenPattern.allMatches(allTermsStr).map((m) => m.group(0)!).toList();
+
+      final tfs = <String, int>{};
+      for (final token in allTokens) {
+        tfs[token] = (tfs[token] ?? 0) + 1;
+      }
+
+      for (final entry in tfs.entries) {
+        invertedIndex.putIfAbsent(entry.key, () => {})[i] = entry.value;
+      }
+      docLengths.add(allTokens.length);
+    }
+
+    final numDocs = mappings.length;
+    final idf = <String, double>{};
+    for (final entry in invertedIndex.entries) {
+      final df = entry.value.length;
+      idf[entry.key] = log((numDocs - df + 0.5) / (df + 0.5) + 1.0);
+    }
+
+    final avgdl = docLengths.isEmpty ? 0.0 : docLengths.reduce((a, b) => a + b) / numDocs;
+
+    _symptomIndex = _SymptomIndex(
+      invertedIndex: invertedIndex,
+      idf: idf,
+      docLengths: docLengths,
+      avgdl: avgdl,
+    );
+    _cachedMappings = mappings;
+  }
+
+  bool _isClose(String s1, String s2) {
+    if (s1 == s2) return true;
+    final lenDiff = (s1.length - s2.length).abs();
+    if (lenDiff > 1) return false;
+    if (s1.length < 3 || s2.length < 3) return false;
+    return _levenshteinDistance(s1, s2) <= 1;
+  }
 
   int _levenshteinDistance(String s1, String s2) {
     if (s1 == s2) return 0;
@@ -83,8 +141,13 @@ class SymphonyClinicalReasonerService implements ClinicalReasonerService {
 
   @override
   Future<List<DiagnosticMatch>> analyzeSymptoms(String text) async {
-    final matches = <DiagnosticMatch>[];
     final mappings = _repository.getSymptomMappings();
+    if (mappings.isEmpty) return [];
+
+    _ensureSymptomIndex(mappings);
+    final index = _symptomIndex!;
+
+    final matches = <DiagnosticMatch>[];
     final lowerText = text.toLowerCase();
     final normalizedText = _normalize(text);
 
@@ -97,7 +160,50 @@ class SymphonyClinicalReasonerService implements ClinicalReasonerService {
 
     if (tokens.isEmpty) return [];
 
-    for (final mapping in mappings) {
+    // Candidate selection using BM25
+    final queryTokens = tokens.map((t) => t.text).toSet();
+    final candidateScores = <int, double>{};
+    const k1 = 1.5;
+    const b = 0.75;
+
+    for (final qToken in queryTokens) {
+      final matchingTokens = <String>[];
+      if (index.invertedIndex.containsKey(qToken)) {
+        matchingTokens.add(qToken);
+      } else if (qToken.length >= 3) {
+        // Fuzzy match tokens to handle typos in candidate selection
+        for (final idxToken in index.invertedIndex.keys) {
+          if (_isClose(qToken, idxToken)) {
+            matchingTokens.add(idxToken);
+          }
+        }
+      }
+
+      for (final matchedToken in matchingTokens) {
+        final docs = index.invertedIndex[matchedToken]!;
+        final idf = index.idf[matchedToken]!;
+        for (final entry in docs.entries) {
+          final docIdx = entry.key;
+          final tf = entry.value;
+
+          final score = idf *
+              (tf * (k1 + 1)) /
+              (tf + k1 * (1 - b + b * (index.docLengths[docIdx] / index.avgdl)));
+          // If multiple query tokens match the same document, we sum their BM25 scores
+          candidateScores[docIdx] = (candidateScores[docIdx] ?? 0) + score;
+        }
+      }
+    }
+
+    // Sort candidates by BM25 score and take top N for expensive fuzzy matching
+    final sortedCandidates = candidateScores.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    // Increase candidate pool to 50 for better recall while maintaining O(1) feel
+    final topCandidates = sortedCandidates.take(50).map((e) => e.key).toList();
+
+    for (final mappingIdx in topCandidates) {
+      final mapping = mappings[mappingIdx];
       final symptom = _normalize(mapping['symptom'] as String);
       final searchTerms =
           (mapping['searchTerms'] as List<dynamic>?)?.map((e) => _normalize(e.toString())) ?? [];
@@ -222,4 +328,18 @@ class _SymptomToken {
   final String text;
   final int index;
   _SymptomToken(this.text, this.index);
+}
+
+class _SymptomIndex {
+  final Map<String, Map<int, int>> invertedIndex; // token -> { docIdx -> tf }
+  final Map<String, double> idf;
+  final List<int> docLengths;
+  final double avgdl;
+
+  _SymptomIndex({
+    required this.invertedIndex,
+    required this.idf,
+    required this.docLengths,
+    required this.avgdl,
+  });
 }
