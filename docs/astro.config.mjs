@@ -5,7 +5,9 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   site: 'https://iberi22.github.io',
   base: '/OrionHealth',
-  integrations: [tailwind()],
+  integrations: [tailwind({
+    applyBaseStyles: false,
+  })],
   build: {
     assets: '_astro'
   },

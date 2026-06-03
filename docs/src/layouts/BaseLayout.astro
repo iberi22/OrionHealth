@@ -11,10 +11,6 @@ const {
 	lang = "en",
 } = Astro.props;
 const isRTL = lang === "ar";
-
-const analyticsDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN || "orionhealth.app";
-const analyticsUrl = import.meta.env.PUBLIC_PLAUSIBLE_URL || "https://plausible.io/js/script.js";
-const showAnalytics = import.meta.env.PROD;
 ---
 
 <!DOCTYPE html>
@@ -313,9 +309,7 @@ const showAnalytics = import.meta.env.PROD;
   </style>
 
   <!-- Plausible Analytics -->
-  {showAnalytics && (
-    <script defer data-domain={analyticsDomain} src={analyticsUrl}></script>
-  )}
+  <script defer data-domain="orionhealth.app" src="https://plausible.io/js/script.js"></script>
 </head>
 
 <body class="min-h-screen bg-background text-bone antialiased overflow-x-hidden">
