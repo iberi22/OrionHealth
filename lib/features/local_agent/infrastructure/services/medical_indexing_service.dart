@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io' show stderr;
 
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/services/app_logger.dart';
 import '../../domain/entities/medical_code.dart';
 import '../../domain/repositories/medical_knowledge_repository.dart';
 import '../../domain/services/vector_store_service.dart';
@@ -84,7 +84,7 @@ class MedicalIndexingService {
         indexed++;
       } catch (e) {
         errors++;
-        stderr.writeln('[MedicalIndexing] Error indexing ${code.code}: $e');
+        AppLogger.e('MedicalIndexing', 'Error indexing ${code.code}: $e');
       }
     }
 
