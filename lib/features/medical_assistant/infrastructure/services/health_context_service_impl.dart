@@ -93,11 +93,11 @@ class IsarHealthContextService implements HealthContextService {
 
     for (final entry in latestVitals.entries) {
       final vital = entry.value;
-      if (vital?.value == null) continue;
+      if (vital == null) continue;
 
       // Map VitalSignType enum to string keys expected by the clinical engine
       final key = _vitalTypeToKey(entry.key);
-      result[key] = vital!.value!;
+      result[key] = vital.value;
     }
     return result;
   }
