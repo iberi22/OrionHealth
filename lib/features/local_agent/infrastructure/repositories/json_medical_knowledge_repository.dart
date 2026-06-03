@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'dart:io' show File, stderr;
+import 'dart:io' show File;
 
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../../../core/services/app_logger.dart';
 import '../../domain/entities/medical_code.dart';
 import '../../domain/repositories/medical_knowledge_repository.dart';
 
@@ -104,7 +105,7 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
 
           allCodes.addAll(codes);
         } catch (e) {
-          stderr.writeln('Warning: Failed to parse $standard: $e');
+          AppLogger.w('MedicalKnowledgeRepo', 'Failed to parse $standard: $e');
         }
       }
     }
@@ -131,7 +132,7 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
         _interactions = List<Map<String, dynamic>>.from(decoded['interactions'] ?? []);
         _classInteractions = List<Map<String, dynamic>>.from(decoded['classInteractions'] ?? []);
       } catch (e) {
-        stderr.writeln('Warning: Failed to parse interactions: $e');
+        AppLogger.w('MedicalKnowledgeRepo', 'Failed to parse interactions: $e');
       }
     }
 
@@ -156,7 +157,7 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
         final decoded = jsonDecode(symptomsJson) as Map<String, dynamic>;
         _symptomMappings = List<Map<String, dynamic>>.from(decoded['data'] ?? []);
       } catch (e) {
-        stderr.writeln('Warning: Failed to parse symptoms: $e');
+        AppLogger.w('MedicalKnowledgeRepo', 'Failed to parse symptoms: $e');
       }
     }
 
@@ -165,9 +166,9 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
     _initialized = true;
 
     stopwatch.stop();
-    // ignore: avoid_print
-    print(
-      '[MedicalKnowledgeRepo] Loaded ${allCodes.length} codes in ${stopwatch.elapsedMilliseconds}ms',
+    AppLogger.i(
+      'MedicalKnowledgeRepo',
+      'Loaded ${allCodes.length} codes in ${stopwatch.elapsedMilliseconds}ms',
     );
   }
 
