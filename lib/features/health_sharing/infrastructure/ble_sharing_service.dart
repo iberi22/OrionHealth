@@ -1,6 +1,5 @@
 ﻿import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import '../domain/entities/shared_health_package.dart';
 
 /// BLE Service UUID for OrionHealth sharing
@@ -150,10 +149,6 @@ class BleSharingService {
       // Simulate chunked transfer
       const chunkSize = 512;
       for (int i = 0; i < bytes.length; i += chunkSize) {
-        final chunk = bytes.sublist(
-          i,
-          i + chunkSize > bytes.length ? bytes.length : i + chunkSize,
-        );
         await Future.delayed(const Duration(milliseconds: 50));
       }
 
