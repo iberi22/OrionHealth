@@ -114,10 +114,22 @@ void main() {
       expect(cubit.state, isA<MedicalAssistantIdle>());
     });
 
-    test('submitQuery emits loading and response sequence', () async {
-      await cubit.submitQuery('tengo dolor de cabeza');
+    test('submitQuery emits full loading sequence and response', () async {
+      final expectation = expectLater(
+        cubit.stream,
+        emitsInOrder([
+          const MedicalAssistantLoading(message: 'Analizando tu pregunta...'),
+          const MedicalAssistantLoading(message: 'Analizando laboratorios...'),
+          const MedicalAssistantLoading(message: 'Analizando signos vitales...'),
+          const MedicalAssistantLoading(message: 'Calculando riesgos...'),
+          const MedicalAssistantLoading(message: 'Generando respuesta...'),
+          isA<MedicalAssistantResponse>(),
+        ]),
+      );
 
-      expect(cubit.state, isA<MedicalAssistantResponse>());
+      await cubit.submitQuery('tengo dolor de cabeza');
+      await expectation;
+
       final state = cubit.state as MedicalAssistantResponse;
       expect(state.response.answer, equals('Respuesta de prueba.'));
     });
