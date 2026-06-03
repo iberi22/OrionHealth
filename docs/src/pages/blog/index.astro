@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const posts = await getCollection('blog');
+const sortedPosts = [...posts].sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout
+  title="Blog - OrionHealth"
+  description="Latest updates and articles on health, privacy, and medical advances"
+>
+  <Header />
+
+  <main class="pt-24 md:pt-32 pb-16 px-4 safe-area-top">
+    <div class="container-custom">
+      <!-- Blog Header -->
+      <header class="max-w-4xl mx-auto text-center mb-16">
+        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-accent mb-4 block">
+          Latest Updates
+        </span>
+        <h1 class="section-title font-bold tracking-tighter uppercase mb-6">
+          OrionHealth <span class="text-accent">Blog</span>
+        </h1>
+        <p class="text-base md:text-xl text-bone-dark max-w-2xl mx-auto leading-relaxed">
+          Insights on privacy-first healthcare, on-device AI, and the future of patient-owned medical data.
+        </p>
+      </header>
+
+      <!-- Posts Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+        {sortedPosts.map((post) => (
+          <a href={`${base}/blog/${post.id}`} class="flashlight-card glass rounded-xl overflow-hidden group transition-all duration-500 hover:scale-[1.02]">
+            <div class="p-6 md:p-8">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="text-[10px] text-accent uppercase tracking-widest font-bold">
+                  {post.data.pubDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </span>
+                <span class="w-1 h-1 rounded-full bg-bone-dark/20"></span>
+                <span class="text-[10px] text-bone-dark uppercase tracking-widest">
+                  {post.data.author}
+                </span>
+              </div>
+
+              <h2 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-accent transition-colors duration-500 uppercase tracking-tight">
+                {post.data.title}
+              </h2>
+
+              <p class="text-sm text-bone-dark opacity-70 mb-6 line-clamp-3 leading-relaxed">
+                {post.data.description}
+              </p>
+
+              <div class="flex items-center justify-between mt-auto">
+                <span class="text-xs font-bold uppercase tracking-wider group-hover:translate-x-1 transition-transform duration-500">
+                  Read Article <span class="text-accent">→</span>
+                </span>
+
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <span class="text-[10px] px-2 py-1 rounded bg-white/5 border border-white/10 text-bone-dark opacity-60">
+                    #{post.data.tags[0]}
+                  </span>
+                )}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {sortedPosts.length === 0 && (
+        <div class="text-center py-20 glass rounded-2xl max-w-2xl mx-auto">
+          <p class="text-bone-dark">No posts found yet. Check back soon!</p>
+        </div>
+      )}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
