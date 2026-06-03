@@ -5,6 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 
+import '../../../../core/services/app_logger.dart';
 import '../../domain/entities/medical_code.dart';
 import '../../domain/repositories/medical_knowledge_repository.dart';
 
@@ -70,8 +71,7 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
         allCodes.addAll(codes);
       } catch (e) {
         // Asset not found — will fall back to empty
-        // ignore: avoid_print
-        print('[AssetMedicalRepo] Warning: Failed to load $assetPath: $e');
+        AppLogger.w('AssetMedicalRepo', 'Failed to load $assetPath: $e');
       }
     }
 
@@ -84,16 +84,14 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
       final decoded = jsonDecode(symptomsJson) as Map<String, dynamic>;
       _symptomMappings = List<Map<String, dynamic>>.from(decoded['data'] ?? []);
     } catch (e) {
-      // ignore: avoid_print
-      print('[AssetMedicalRepo] Warning: Failed to load symptom_checker.json: $e');
+      AppLogger.w('AssetMedicalRepo', 'Failed to load symptom_checker.json: $e');
     }
 
     _buildIndexes();
     _initialized = true;
 
     stopwatch.stop();
-    // ignore: avoid_print
-    print('[AssetMedicalRepo] Loaded ${allCodes.length} codes in ${stopwatch.elapsedMilliseconds}ms');
+    AppLogger.i('AssetMedicalRepo', 'Loaded ${allCodes.length} codes in ${stopwatch.elapsedMilliseconds}ms');
   }
 
   void _buildIndexes() {
