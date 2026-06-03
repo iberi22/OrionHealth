@@ -1,7 +1,9 @@
+import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
 import '../../domain/entities/medical_insight.dart';
 
 /// Interprets laboratory results using LOINC codes and clinical guidelines
+@injectable
 class LabInterpreter {
   /// Interpret a single lab value
   LabInterpretation interpret({
