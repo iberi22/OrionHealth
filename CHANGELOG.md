@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.8.1-beta] — 2026-06-04
+
+### Added
+- **SchemaRegistry**: VitalSigns (5) and LabResult (5) medical schemas with local validation
+- **ZKP indicator**: Lock/badge icons in FieldSelector for fields supporting zero-knowledge proofs
+- **AnonCreds salted commitments**: Cryptographic security with per-claim 256-bit random salts
+- **BBS+/BLS12-381 evaluation**: Technical feasibility document for future ZKP migration
+- **FUNDING.yml**: GitHub Sponsors and Open Collective links
+- **PULL_REQUEST_TEMPLATE.md**: Standardized PR checklist
+- **Repository description**: Professional OSS description added
+
+### Changed
+- **CI/CD workflows**: Fixed `actions/checkout@v6` → `@v4`, `upload-artifact@v7` → `@v4`, `download-artifact@v8` → `@v4`
+- **README badges**: Updated CI badge, added SSI, Docs, and Stars badges
+- **README status**: Updated to reflect current test count and features
+- **HealthContextService**: `conditions` type changed to `List<String>` for Isar compatibility
+- **DrugInteractionChecker**: Uses `MedicationReference.displayName` instead of removed `name` field
+
+### Fixed
+- **Issue #198**: Replaced raw sha256 commitments with salted cryptographic commitments
+- **Issue #347**: Created and implemented SchemaRegistry directly
+- **Issue #348**: Created and implemented ZKP indicator UI
+- **Build errors**: `JsonEncoder` import, `hybridSearch` for lab data, `Icd10Code` → `String` migration
+
+---
+
 ## [0.8.0-beta] — 2026-05-10
 
 ### Added
