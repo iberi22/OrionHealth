@@ -67,7 +67,7 @@ dependencies:
   cryptography: ^2.7.0
   argon2: ^1.0.1
   shared_preferences: ^2.3.4
-  openai_dart: ^6.0.0
+  openai_dart: ^6.1.0
   google_mlkit_text_recognition: ^0.15.1
   flutter_blue_plus: ^2.3.5
   hex: ^0.2.0
