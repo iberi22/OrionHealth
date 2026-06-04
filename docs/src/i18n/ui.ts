@@ -9,6 +9,7 @@ export const ui = {
 		vision: "Vision",
 		mission: "Mission",
 		blog: "Blog",
+		research: "Research",
 		contribute: "Contribute",
 		medicalStandards: "Medical Standards",
 
@@ -71,6 +72,7 @@ export const ui = {
 		vision: "Visión",
 		mission: "Misión",
 		blog: "Blog",
+		research: "Investigación",
 		contribute: "Contribuir",
 		medicalStandards: "Estándares Médicos",
 
