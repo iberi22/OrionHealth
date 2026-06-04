@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:medical_standards/medical_standards.dart' show Icd10Code;
 
 /// Immutable value object representing a user's consolidated health context.
 ///
@@ -14,8 +13,8 @@ class HealthContext extends Equatable {
   /// Example: {'systolic': 130, 'heartRate': 78}
   final Map<String, double> vitals;
 
-  /// Known chronic conditions as ICD-10 codes.
-  final List<Icd10Code> conditions;
+  /// Known chronic conditions as ICD-10 codes (raw strings).
+  final List<String> conditions;
 
   /// Active medication names (from user's medication list).
   final List<String> medications;

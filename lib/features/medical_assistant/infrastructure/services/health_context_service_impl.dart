@@ -1,8 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:isar/isar.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
-import 'package:medical_standards/medical_standards.dart' show Icd10Code;
-import 'package:health_wallet/health_wallet.dart' show LabResult;
 
 import '../../../vitals/domain/repositories/vital_sign_repository.dart';
 import '../../../vitals/domain/entities/vital_sign.dart';
@@ -134,15 +131,13 @@ class IsarHealthContextService implements HealthContextService {
     }
   }
 
-  Future<List<Icd10Code>> _loadConditions() async {
+  Future<List<String>> _loadConditions() async {
     try {
       final profile = await _userProfileRepo.getUserProfile();
       if (profile == null) return [];
 
-      return profile.medicalConditions
-          .map((code) => Icd10Code.findByCode(code))
-          .whereType<Icd10Code>()
-          .toList();
+      // medicalConditions is a List<String> of ICD-10 codes
+      return List<String>.from(profile.medicalConditions);
     } catch (e) {
       AppLogger.e(_tag, 'Failed to load conditions', error: e);
       return [];
@@ -151,12 +146,17 @@ class IsarHealthContextService implements HealthContextService {
 
   Future<Map<String, double>> _loadLabs() async {
     try {
-      final labs = await _memoryGraph.isar.labResults.where().findAll();
+      // Labs stored as memory nodes with type 'lab_result'
+      final results = await _memoryGraph.hybridSearch('lab result', topK: 50, alpha: 0.5);
+      final nodes = results.map((r) => r.node).where((n) => n.type == 'lab_result').toList();
       final Map<String, double> result = {};
-      for (final lab in labs) {
-        final val = double.tryParse(lab.resultValue);
-        if (val != null) {
-          result[lab.loincCode] = val;
+      for (final node in nodes) {
+        final parts = node.content.split('|');
+        if (parts.length >= 2) {
+          final val = double.tryParse(parts[1].trim());
+          if (val != null) {
+            result[parts[0].trim()] = val;
+          }
         }
       }
       return result;
