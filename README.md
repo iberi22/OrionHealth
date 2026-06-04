@@ -4,16 +4,17 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Flutter](https://img.shields.io/badge/Flutter-3.7+-blue?logo=flutter)](https://flutter.dev)
-[![CI](https://github.com/iberi22/OrionHealth/actions/workflows/android_build.yml/badge.svg)](https://github.com/iberi22/OrionHealth/actions/workflows/android_build.yml)
-[![Issues](https://img.shields.io/github/issues/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/issues)
+[![CI](https://github.com/iberi22/OrionHealth/actions/workflows/ci.yml/badge.svg)](https://github.com/iberi22/OrionHealth/actions/workflows/ci.yml)
+[![Stars](https://img.shields.io/github/stars/iberi22/OrionHealth?style=social)](https://github.com/iberi22/OrionHealth/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/commits/main)
 [![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/OrionHealth)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://iberi22.github.io/OrionHealth/)
 
 ---
 
 ## 📊 Project Status
 
-**0.8.0-beta — Flutter analyze: 0 issues • 41/41 tests passing • BLE medical sharing • Real ML Kit OCR • Drug Interaction Checker • Risk Calculator (ASCVD+QDiabetes+HTN) • GemmaLlmService with streaming • VectorStore HiRAG re-ranking • ReportGenerationService with Gemma/Gemini**
+**v0.8.0-beta** — Production code `0 errors` ✅ | Tests `146/162 passing` (90%) ✅ | SSI (AnonCreds + DID + VCs) ✅ | Clinical AI (Symphony Reasoner) ✅ | Drug Interaction Checker ✅ | Offline Medical Standards (ICD-10, LOINC, RxNorm, SNOMED CT) ✅ | Offline Health Wallet ✅ | BLE Medical Sharing ✅
 
 ---
 

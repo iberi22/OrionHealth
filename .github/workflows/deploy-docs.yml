@@ -2,7 +2,7 @@ name: Deploy Astro Site to GitHub Pages
 
 on:
   push:
-    branches: [ main, git-core-v2 ]
+    branches: [ main ]
     paths:
       - 'docs/**'
   workflow_dispatch:
@@ -14,37 +14,23 @@ permissions:
 
 env:
   NODE_VERSION: '22'
-  GIT_CORE_VERSION: '2'
 
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  validate-git-core:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - name: Validate Git-Core Protocol
-        run: |
-          if [ -f ".gitcore/version" ]; then
-            echo "Git-Core Protocol v$(cat .gitcore/version) detected"
-          else
-            echo "Skipping: .gitcore not present (open-source build)"
-          fi
-
   build:
-#    needs: validate-git-core
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./docs
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
 
@@ -70,4 +56,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4
