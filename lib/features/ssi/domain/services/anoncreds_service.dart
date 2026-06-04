@@ -103,6 +103,10 @@ class AnonCredsPresentation {
   /// Fields disclosed to the verifier.
   final Map<String, dynamic> disclosedFields;
 
+  /// Salts for the disclosed fields, allowing the verifier
+  /// to reconstruct the original cryptographic commitments.
+  final Map<String, String> disclosedSalts;
+
   /// Cryptographic commitments for non-disclosed fields.
   final Map<String, String> hiddenCommitments;
 
@@ -115,6 +119,7 @@ class AnonCredsPresentation {
   const AnonCredsPresentation({
     required this.credential,
     required this.disclosedFields,
+    required this.disclosedSalts,
     required this.hiddenCommitments,
     required this.issuerSignature,
     required this.createdAt,
@@ -123,6 +128,7 @@ class AnonCredsPresentation {
   Map<String, dynamic> toJson() => {
         'credential': credential.toJson(),
         'disclosedFields': disclosedFields,
+        'disclosedSalts': disclosedSalts,
         'hiddenCommitments': hiddenCommitments,
         'issuerSignature': issuerSignature,
         'createdAt': createdAt.toIso8601String(),
@@ -130,9 +136,12 @@ class AnonCredsPresentation {
 
   factory AnonCredsPresentation.fromJson(Map<String, dynamic> json) {
     return AnonCredsPresentation(
-      credential: VerifiableCredential.fromJson(json['credential'] as Map<String, dynamic>),
+      credential:
+          VerifiableCredential.fromJson(json['credential'] as Map<String, dynamic>),
       disclosedFields: json['disclosedFields'] as Map<String, dynamic>,
-      hiddenCommitments: Map<String, String>.from(json['hiddenCommitments'] as Map),
+      disclosedSalts: Map<String, String>.from(json['disclosedSalts'] as Map? ?? {}),
+      hiddenCommitments:
+          Map<String, String>.from(json['hiddenCommitments'] as Map),
       issuerSignature: json['issuerSignature'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );

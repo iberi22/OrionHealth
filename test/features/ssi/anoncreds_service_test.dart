@@ -148,6 +148,131 @@ void main() {
       expect(isValid, true);
     });
 
+    test('verifyPresentation fails if salt is tampered', () async {
+      final issuerKeys = await service.generateIssuerKeys();
+      final vc = await service.issueCredential(
+        credential: _createBaseVC('vc:1'),
+        issuerKeys: issuerKeys,
+      );
+
+      final presentation = await service.createPresentation(
+        credential: vc,
+        disclosedFields: ['name'],
+      );
+
+      // Tamper with salt for 'name'
+      final tamperedSalts = Map<String, String>.from(presentation.disclosedSalts);
+      tamperedSalts['name'] = 'tampered-salt';
+
+      final tamperedPresentation = AnonCredsPresentation(
+        credential: presentation.credential,
+        disclosedFields: presentation.disclosedFields,
+        disclosedSalts: tamperedSalts,
+        hiddenCommitments: presentation.hiddenCommitments,
+        issuerSignature: presentation.issuerSignature,
+        createdAt: presentation.createdAt,
+      );
+
+      final isValid = await service.verifyPresentation(tamperedPresentation);
+      expect(isValid, false);
+    });
+
+    test('verifyPresentation fails if hidden commitment is tampered', () async {
+      final issuerKeys = await service.generateIssuerKeys();
+      final vc = await service.issueCredential(
+        credential: VerifiableCredential(
+          id: 'vc:2',
+          issuer: 'did:orion:issuer',
+          subject: 'did:orion:subject',
+          type: 'TestCredential',
+          schemaId: 'test:v1',
+          claims: {'name': 'Alice', 'age': '30'},
+          issuanceDate: DateTime.now(),
+        ),
+        issuerKeys: issuerKeys,
+      );
+
+      final presentation = await service.createPresentation(
+        credential: vc,
+        disclosedFields: ['name'], // 'age' is hidden
+      );
+
+      // Tamper with hidden commitment for 'age'
+      final tamperedHidden = Map<String, String>.from(presentation.hiddenCommitments);
+      tamperedHidden['age'] = '0' * 64; // Fake hash
+
+      final tamperedPresentation = AnonCredsPresentation(
+        credential: presentation.credential,
+        disclosedFields: presentation.disclosedFields,
+        disclosedSalts: presentation.disclosedSalts,
+        hiddenCommitments: tamperedHidden,
+        issuerSignature: presentation.issuerSignature,
+        createdAt: presentation.createdAt,
+      );
+
+      final isValid = await service.verifyPresentation(tamperedPresentation);
+      expect(isValid, false);
+    });
+
+    test('verifyPresentation fails if link secret is missing but required', () async {
+      final issuerKeys = await service.generateIssuerKeys();
+      final vc = await service.issueCredential(
+        credential: _createBaseVC('vc:1'),
+        issuerKeys: issuerKeys,
+        linkSecret: 'secret123',
+      );
+
+      final presentation = await service.createPresentation(
+        credential: vc,
+        disclosedFields: ['name'],
+        linkSecret: 'secret123',
+      );
+
+      final isValid = await service.verifyPresentation(presentation);
+      expect(isValid, false);
+    });
+
+    test('verifyPresentation fails if link secret is incorrect', () async {
+      final issuerKeys = await service.generateIssuerKeys();
+      final vc = await service.issueCredential(
+        credential: _createBaseVC('vc:1'),
+        issuerKeys: issuerKeys,
+        linkSecret: 'secret123',
+      );
+
+      final presentation = await service.createPresentation(
+        credential: vc,
+        disclosedFields: ['name'],
+        linkSecret: 'secret123',
+      );
+
+      final isValid = await service.verifyPresentation(
+        presentation,
+        expectedLinkSecret: 'wrong-secret',
+      );
+      expect(isValid, false);
+    });
+
+    test('createPresentation redacts all salts from credential proof', () async {
+      final issuerKeys = await service.generateIssuerKeys();
+      final vc = await service.issueCredential(
+        credential: _createBaseVC('vc:1'),
+        issuerKeys: issuerKeys,
+      );
+
+      final presentation = await service.createPresentation(
+        credential: vc,
+        disclosedFields: ['name'],
+      );
+
+      final proof = jsonDecode(presentation.credential.proof!);
+      final salts = proof['salts'] as Map;
+
+      expect(salts, isEmpty,
+          reason:
+              'Salts must be redacted from credential proof to prevent leakage');
+    });
+
     test('verifyPresentation fails if issuance date is tampered', () async {
       final issuerKeys = await service.generateIssuerKeys();
       final vc = await service.issueCredential(
