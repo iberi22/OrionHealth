@@ -117,7 +117,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
           value: entry.value,
           unit: null,
           patientCondition: chronicConditions.isNotEmpty
-              ? chronicConditions.first.code
+              ? chronicConditions.first
               : null,
         );
         labInsights.addAll(response.insights);
@@ -141,7 +141,7 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
       final riskInsights = await _analysisService.calculateRisks(
         labValues: labValues,
         vitals: vitals,
-        conditions: chronicConditions,
+        conditions: chronicConditions.map((c) => Icd10Code(code: c, displayName: c, category: 'Unknown')).toList(),
       );
 
       final allInsights = [...labInsights, ...vitalInsights, ...riskInsights];

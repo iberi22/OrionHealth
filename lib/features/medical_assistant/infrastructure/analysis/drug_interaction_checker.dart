@@ -65,8 +65,8 @@ class DrugInteractionChecker {
       ),
     };
 
-    final key1 = '${med1.rxnormCode}-${med2.rxnormCode}';
-    final key2 = '${med2.rxnormCode}-${med1.rxnormCode}';
+    final key1 = '${med1.displayName.toLowerCase()}-${med2.displayName.toLowerCase()}';
+    final key2 = '${med2.displayName.toLowerCase()}-${med1.displayName.toLowerCase()}';
     
     return pairs[key1] ?? pairs[key2];
   }
@@ -93,7 +93,7 @@ class DrugInteractionChecker {
   DrugConditionWarning? _checkContraindication(Medication med, Icd10Code condition) {
     // Stub - would use comprehensive database
     // Example contraindications
-    if (condition.code == 'I50.9' && med.rxnormCode.contains('NSAID')) {
+    if (condition.code == 'I50.9' && med.displayName.toLowerCase().contains('nsaid')) {
       return DrugConditionWarning(
         drug: med.displayName,
         condition: condition.displayName,
@@ -103,7 +103,7 @@ class DrugInteractionChecker {
       );
     }
 
-    if (condition.code == 'E11' && med.rxnormCode.contains('thiazide')) {
+    if (condition.code == 'E11' && med.displayName.toLowerCase().contains('thiazide')) {
       return DrugConditionWarning(
         drug: med.displayName,
         condition: condition.displayName,
