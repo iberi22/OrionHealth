@@ -50,6 +50,57 @@ class CredentialSchema {
     attributes: ['medicationName', 'dosage', 'frequency', 'prescribingDoctor', 'pharmacy', 'datePrescribed'],
   );
 
+  /// Composite Vital Signs credential bundling multiple vital readings
+  /// into a single verifiable credential. Includes common vitals such as
+  /// heart rate, blood pressure, temperature, SpO₂, and respiratory rate
+  /// for holistic sharing in clinical contexts.
+  static const vitalSignsCredential = CredentialSchema(
+    id: 'orion:schemas:VitalSignsCredential:v1',
+    name: 'Vital Signs Credential',
+    version: '1.0.0',
+    attributes: [
+      'heartRate',
+      'systolic',
+      'diastolic',
+      'bodyTemperature',
+      'temperatureSite',
+      'spo2',
+      'respiratoryRate',
+      'recordedAt',
+      'patientPosition',
+    ],
+    attributeTypes: {
+      'heartRate': 'number',
+      'systolic': 'number',
+      'diastolic': 'number',
+      'bodyTemperature': 'number',
+      'spo2': 'number',
+      'respiratoryRate': 'number',
+    },
+  );
+
+  /// Composite Lab Result credential bundling multiple lab test readings
+  /// into a single verifiable credential. Supports common lab panels
+  /// such as basic metabolic panel, lipid panel, and complete blood count.
+  static const labResultCredentialV2 = CredentialSchema(
+    id: 'orion:schemas:LabResultCredential:v2',
+    name: 'Lab Result Credential (Composite)',
+    version: '2.0.0',
+    attributes: [
+      'testName',
+      'resultValue',
+      'referenceRange',
+      'testDate',
+      'labName',
+      'interpretation',
+      'specimenType',
+      'performingProvider',
+    ],
+    attributeTypes: {
+      'resultValue': 'number',
+    },
+  );
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,

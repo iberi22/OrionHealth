@@ -326,6 +326,21 @@ void main() {
       expect(CredentialSchema.prescriptionCredential.attributes, contains('medicationName'));
       expect(CredentialSchema.prescriptionCredential.attributes, contains('dosage'));
     });
+
+    test('vitalSignsCredential composite schema has correct attributes', () {
+      expect(CredentialSchema.vitalSignsCredential.attributes, contains('heartRate'));
+      expect(CredentialSchema.vitalSignsCredential.attributes, contains('systolic'));
+      expect(CredentialSchema.vitalSignsCredential.attributes, contains('diastolic'));
+      expect(CredentialSchema.vitalSignsCredential.attributes, contains('spo2'));
+      expect(CredentialSchema.vitalSignsCredential.attributes, contains('recordedAt'));
+    });
+
+    test('labResultCredentialV2 composite schema has correct attributes', () {
+      expect(CredentialSchema.labResultCredentialV2.attributes, contains('testName'));
+      expect(CredentialSchema.labResultCredentialV2.attributes, contains('resultValue'));
+      expect(CredentialSchema.labResultCredentialV2.attributes, contains('specimenType'));
+      expect(CredentialSchema.labResultCredentialV2.attributes, contains('performingProvider'));
+    });
   });
   });
 }

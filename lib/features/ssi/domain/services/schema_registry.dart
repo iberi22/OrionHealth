@@ -16,9 +16,15 @@ class SchemaRegistry {
     CredentialSchema.labResultCredential.id: CredentialSchema.labResultCredential,
     CredentialSchema.prescriptionCredential.id: CredentialSchema.prescriptionCredential,
 
-    // ── Vital Signs schemas ────────────────────────────────────────
+    // ── Composite Vital Signs schema (bundled) ─────────────────────
+    CredentialSchema.vitalSignsCredential.id: CredentialSchema.vitalSignsCredential,
+
+    // ── Composite Lab Result schema (v2 with specimen info) ────────
+    CredentialSchema.labResultCredentialV2.id: CredentialSchema.labResultCredentialV2,
+
+    // ── Vital Signs sub-schemas (individual measurements) ──────────
     ..._vitalSignSchemas,
-    // ── Lab Result schemas ─────────────────────────────────────────
+    // ── Lab Result sub-schemas (individual tests) ──────────────────
     ..._labResultSchemas,
   };
 
