@@ -196,6 +196,9 @@ class _ShareCredentialPageState extends State<ShareCredentialPage> {
                       Icons.event,
                       'Exp: ${widget.credential.expirationDate!.toLocal().toString().substring(0, 10)}',
                     ),
+                  const Spacer(),
+                  // ZKP protection badge
+                  _zkpBadge(context),
                 ],
               ),
             ],
@@ -315,19 +318,37 @@ class _ShareCredentialPageState extends State<ShareCredentialPage> {
                 decoration: BoxDecoration(
                   color: isDisclosed
                       ? Theme.of(context).colorScheme.primaryContainer
-                      : Theme.of(context).colorScheme.surfaceContainerHighest,
+                      : Theme.of(context).colorScheme.tertiaryContainer,
                   borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  isDisclosed ? 'DISCLOSED' : 'ZKP',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
+                  border: Border.all(
                     color: isDisclosed
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.outline,
+                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)
+                        : Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.5),
+                    width: 0.5,
                   ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!isDisclosed)
+                      Icon(
+                        Icons.shield,
+                        size: 10,
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    if (!isDisclosed) const SizedBox(width: 3),
+                    Text(
+                      isDisclosed ? 'DISCLOSED' : 'ZKP',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        color: isDisclosed
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -353,6 +374,42 @@ class _ShareCredentialPageState extends State<ShareCredentialPage> {
             text.length > 20 ? '${text.substring(0, 18)}...' : text,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontSize: 10,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// ZKP protection badge for the credential header card.
+  /// Shows the overall protection level of the share.
+  Widget _zkpBadge(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.tertiaryContainer.withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.4),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.shield,
+            size: 12,
+            color: Theme.of(context).colorScheme.tertiary,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            'ZKP Protected',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                  color: Theme.of(context).colorScheme.tertiary,
                 ),
           ),
         ],

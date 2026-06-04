@@ -1,5 +1,56 @@
 import 'package:flutter/material.dart';
 
+/// A badge widget that shows whether a field is ZKP-protected or plaintext.
+class _ZkpBadge extends StatelessWidget {
+  final bool isZkpProtected;
+
+  const _ZkpBadge({required this.isZkpProtected});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: isZkpProtected
+            ? colorScheme.tertiaryContainer
+            : colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: isZkpProtected
+              ? colorScheme.tertiary.withValues(alpha: 0.5)
+              : colorScheme.outline.withValues(alpha: 0.3),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isZkpProtected ? Icons.shield : Icons.public,
+            size: 11,
+            color: isZkpProtected
+                ? colorScheme.tertiary
+                : colorScheme.outline,
+          ),
+          const SizedBox(width: 3),
+          Text(
+            isZkpProtected ? 'ZKP' : 'PLAIN',
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+              color: isZkpProtected
+                  ? colorScheme.tertiary
+                  : colorScheme.outline,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// Widget for selective disclosure — allows user to choose which fields to reveal.
 class FieldSelector extends StatefulWidget {
   final Map<String, dynamic> fields;
@@ -86,7 +137,7 @@ class _FieldSelectorState extends State<FieldSelector> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header
+        // Header with ZKP summary badge
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
@@ -109,6 +160,11 @@ class _FieldSelectorState extends State<FieldSelector> {
                       ),
                 ),
               ),
+              // ZKP protection summary badge
+              if (widget.zkpEnabledFields.isNotEmpty) ...[                const SizedBox(width: 8),
+                _ZkpBadge(isZkpProtected: widget.zkpEnabledFields.length == widget.fields.length),
+              ],
+              const SizedBox(width: 8),
               Text(
                 '${_selected.length}/${entries.length}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -178,8 +234,8 @@ class _FieldSelectorState extends State<FieldSelector> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
-                    _buildSecurityIndicator(context, entry.key),
+                    const SizedBox(height: 4),
+                    _buildZkpFieldBadge(context, entry.key),
                   ],
                 ),
                 controlAffinity: ListTileControlAffinity.trailing,
@@ -192,29 +248,12 @@ class _FieldSelectorState extends State<FieldSelector> {
     );
   }
 
-  Widget _buildSecurityIndicator(BuildContext context, String fieldKey) {
+
+
+  /// Build a ZKP badge for an individual field row.
+  Widget _buildZkpFieldBadge(BuildContext context, String fieldKey) {
     final isZkp = widget.zkpEnabledFields.contains(fieldKey);
-    return Row(
-      children: [
-        Icon(
-          isZkp ? Icons.lock_outline : Icons.public,
-          size: 10,
-          color: isZkp
-              ? Theme.of(context).colorScheme.tertiary
-              : Theme.of(context).colorScheme.outline,
-        ),
-        const SizedBox(width: 4),
-        Text(
-          isZkp ? 'ZKP-enabled' : 'Plain text',
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: isZkp
-                    ? Theme.of(context).colorScheme.tertiary
-                    : Theme.of(context).colorScheme.outline,
-                fontSize: 9,
-              ),
-        ),
-      ],
-    );
+    return _ZkpBadge(isZkpProtected: isZkp);
   }
 
   String _formatFieldName(String key) {
