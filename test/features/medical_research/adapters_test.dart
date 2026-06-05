@@ -61,7 +61,34 @@ void main() {
 
       expect(results, isEmpty);
     });
-   group('FdaAdapter', () {
+
+    test('search handles malformed JSON response', () async {
+      when(() => mockDio.get(any(), queryParameters: any(named: 'queryParameters')))
+          .thenAnswer((_) async => Response(
+                data: 'Not JSON',
+                statusCode: 200,
+                requestOptions: RequestOptions(path: ''),
+              ));
+
+      final results = await pubMedAdapter.search('diabetes');
+      expect(results, isEmpty);
+    });
+
+    test('search handles empty ID list', () async {
+      when(() => mockDio.get(any(), queryParameters: any(named: 'queryParameters')))
+          .thenAnswer((_) async => Response(
+                data: {
+                  'esearchresult': {'idlist': []}
+                },
+                statusCode: 200,
+                requestOptions: RequestOptions(path: ''),
+              ));
+
+      final results = await pubMedAdapter.search('diabetes');
+      expect(results, isEmpty);
+    });
+
+    group('FdaAdapter', () {
     test('search returns results on success', () async {
       when(() => mockDio.get(any(), queryParameters: any(named: 'queryParameters')))
           .thenAnswer((_) async => Response(
@@ -82,6 +109,36 @@ void main() {
       expect(results.length, 1);
       expect(results[0].title, 'Tylenol');
       expect(results[0].source, 'FDA (openFDA)');
+    });
+
+    test('search returns empty list on failure', () async {
+      when(() => mockDio.get(any(), queryParameters: any(named: 'queryParameters')))
+          .thenThrow(DioException(requestOptions: RequestOptions(path: '')));
+
+      final results = await fdaAdapter.search('aspirin');
+
+      expect(results, isEmpty);
+    });
+
+    test('search handles missing results field', () async {
+      when(() => mockDio.get(any(), queryParameters: any(named: 'queryParameters')))
+          .thenAnswer((_) async => Response(
+                data: {'error': 'not found'},
+                statusCode: 404,
+                requestOptions: RequestOptions(path: ''),
+              ));
+
+      final results = await fdaAdapter.search('unknown');
+      expect(results, isEmpty);
+    });
+  });
+
+  group('WhoAdapter', () {
+    test('search returns placeholder results', () async {
+      final whoAdapter = WhoAdapter(mockDio);
+      final results = await whoAdapter.search('covid');
+      expect(results, isNotEmpty);
+      expect(results.first.source, 'WHO');
     });
   });
 });
