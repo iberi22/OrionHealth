@@ -106,13 +106,17 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
       children: [
         const Text('LLM Provider', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: CyberTheme.primary)),
         const SizedBox(height: 16),
-        ...LlmProvider.values.map((provider) => RadioListTile<LlmProvider>(
-          title: Text(provider.name.toUpperCase()),
-          value: provider,
+        RadioGroup<LlmProvider>(
           groupValue: _selectedProvider,
           onChanged: (val) => val != null ? _saveProvider(val) : null,
-          activeColor: CyberTheme.primary,
-        )),
+          child: Column(
+            children: LlmProvider.values.map((provider) => RadioListTile<LlmProvider>(
+              title: Text(provider.name.toUpperCase()),
+              value: provider,
+              activeColor: CyberTheme.primary,
+            )).toList(),
+          ),
+        ),
       ],
     );
   }

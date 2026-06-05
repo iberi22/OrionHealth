@@ -325,12 +325,16 @@ class _MockSharePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Card(
-              child: Column(
-                children: [
-                  RadioListTile(title: Text('NFC'), subtitle: Text('Tap phones to share'), value: 0, groupValue: -1, onChanged: (_) {}),
-                  RadioListTile(title: Text('Bluetooth'), subtitle: Text('Nearby device'), value: 1, groupValue: -1, onChanged: (_) {}),
-                  RadioListTile(title: Text('WiFi Direct'), subtitle: Text('Same network'), value: 2, groupValue: -1, onChanged: (_) {}),
-                ],
+              child: RadioGroup<int>(
+                groupValue: -1,
+                onChanged: (_) {},
+                child: Column(
+                  children: const [
+                    RadioListTile(title: Text('NFC'), subtitle: Text('Tap phones to share'), value: 0),
+                    RadioListTile(title: Text('Bluetooth'), subtitle: Text('Nearby device'), value: 1),
+                    RadioListTile(title: Text('WiFi Direct'), subtitle: Text('Same network'), value: 2),
+                  ],
+                ),
               ),
             ),
           ],
@@ -393,30 +397,28 @@ class _MockSharePageWithStateState extends State<_MockSharePageWithState> {
             ),
             const SizedBox(height: 16),
             Card(
-              child: Column(
-                children: [
-                  RadioListTile(
-                    title: Text('NFC'),
-                    subtitle: Text('Tap phones to share'),
-                    value: 0,
-                    groupValue: _selectedMethod,
-                    onChanged: (v) => setState(() => _selectedMethod = v ?? 0),
-                  ),
-                  RadioListTile(
-                    title: Text('Bluetooth'),
-                    subtitle: Text('Nearby device'),
-                    value: 1,
-                    groupValue: _selectedMethod,
-                    onChanged: (v) => setState(() => _selectedMethod = v ?? 0),
-                  ),
-                  RadioListTile(
-                    title: Text('WiFi Direct'),
-                    subtitle: Text('Same network'),
-                    value: 2,
-                    groupValue: _selectedMethod,
-                    onChanged: (v) => setState(() => _selectedMethod = v ?? 0),
-                  ),
-                ],
+              child: RadioGroup<int>(
+                groupValue: _selectedMethod,
+                onChanged: (v) => setState(() => _selectedMethod = v ?? 0),
+                child: Column(
+                  children: const [
+                    RadioListTile(
+                      title: Text('NFC'),
+                      subtitle: Text('Tap phones to share'),
+                      value: 0,
+                    ),
+                    RadioListTile(
+                      title: Text('Bluetooth'),
+                      subtitle: Text('Nearby device'),
+                      value: 1,
+                    ),
+                    RadioListTile(
+                      title: Text('WiFi Direct'),
+                      subtitle: Text('Same network'),
+                      value: 2,
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 16),

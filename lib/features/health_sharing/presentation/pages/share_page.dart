@@ -127,19 +127,23 @@ class _SharePageContentState extends State<_SharePageContent> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            ...TransferMethod.values.map((method) {
-              return RadioListTile<TransferMethod>(
-                title: Text(method.displayName),
-                subtitle: Text(method.description),
-                value: method,
-                groupValue: _selectedMethod,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedMethod = value);
-                  }
-                },
-              );
-            }),
+            RadioGroup<TransferMethod>(
+              groupValue: _selectedMethod,
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() => _selectedMethod = value);
+                }
+              },
+              child: Column(
+                children: TransferMethod.values.map((method) {
+                  return RadioListTile<TransferMethod>(
+                    title: Text(method.displayName),
+                    subtitle: Text(method.description),
+                    value: method,
+                  );
+                }).toList(),
+              ),
+            ),
           ],
         ),
       ),
