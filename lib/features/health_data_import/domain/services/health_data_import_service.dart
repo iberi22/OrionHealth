@@ -127,6 +127,26 @@ class HealthDataImportService {
     return vitalSigns;
   }
 
+  /// Identifies duplicates in the imported data by comparing them with existing records.
+  /// Two records are considered duplicates if they have the same type, value, unit, and timestamp.
+  /// Optimized for performance using a Set of keys.
+  List<VitalSign> findDuplicates(
+    List<VitalSign> importedData,
+    List<VitalSign> existingData,
+  ) {
+    if (importedData.isEmpty || existingData.isEmpty) return [];
+
+    final existingKeys = existingData.map(_getVitalSignKey).toSet();
+    return importedData.where((imported) => existingKeys.contains(_getVitalSignKey(imported))).toList();
+  }
+
+  /// Generates a unique key for a [VitalSign] to facilitate duplicate detection.
+  String _getVitalSignKey(VitalSign vital) {
+    // Round value to 3 decimal places to handle floating point precision
+    final roundedValue = (vital.value * 1000).round() / 1000;
+    return '${vital.type.name}_${roundedValue}_${vital.unit ?? ''}_${vital.dateTime.millisecondsSinceEpoch}';
+  }
+
   VitalSign? _mapHealthDataToVitalSign(
     HealthDataPoint data,
     HealthDataSource source,
