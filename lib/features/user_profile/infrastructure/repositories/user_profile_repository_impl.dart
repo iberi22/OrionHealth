@@ -20,4 +20,11 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
       await _isar.userProfiles.put(profile);
     });
   }
+
+  @override
+  Future<void> deleteUserProfile() async {
+    await _isar.writeTxn(() async {
+      await _isar.userProfiles.clear();
+    });
+  }
 }
