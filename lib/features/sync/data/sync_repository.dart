@@ -138,16 +138,46 @@ class SyncRepository {
         }
       }
 
-      // Save all to Isar
+      // Save all to Isar with deduplication
       await _isar.writeTxn(() async {
         if (medications.isNotEmpty) {
-          await _isar.medications.putAll(medications);
+          for (final med in medications) {
+            final existing = await _isar.medications
+                .filter()
+                .nameEqualTo(med.name)
+                .startDateEqualTo(med.startDate)
+                .findFirst();
+            if (existing != null) {
+              med.id = existing.id; // Update existing
+            }
+            await _isar.medications.put(med);
+          }
         }
         if (allergies.isNotEmpty) {
-          await _isar.allergys.putAll(allergies);
+          for (final allergy in allergies) {
+            final existing = await _isar.allergys
+                .filter()
+                .allergenEqualTo(allergy.allergen)
+                .findFirst();
+            if (existing != null) {
+              allergy.id = existing.id; // Update existing
+            }
+            await _isar.allergys.put(allergy);
+          }
         }
         if (vitals.isNotEmpty) {
-          await _isar.vitalSigns.putAll(vitals);
+          for (final vital in vitals) {
+            final existing = await _isar.vitalSigns
+                .filter()
+                .typeEqualTo(vital.type)
+                .dateTimeEqualTo(vital.dateTime)
+                .findFirst();
+            if (existing != null) {
+              // Only update if value is different or to ensure we have the latest
+              vital.id = existing.id;
+            }
+            await _isar.vitalSigns.put(vital);
+          }
         }
         if (conditions.isNotEmpty) {
           final profile = await _isar.userProfiles.where().findFirst();
