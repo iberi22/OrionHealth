@@ -32,6 +32,7 @@ class MockRiskCalculator extends Mock implements RiskCalculator {}
 void main() {
   late MockMedicalLlmAdapter mockAdapter;
   late MockMedicalAnalysisService mockAnalysis;
+  late MockHealthContextService mockHealthContext;
   late MedicalAssistantCubit cubit;
 
   setUpAll(() {
@@ -47,6 +48,7 @@ void main() {
   setUp(() {
     mockAdapter = MockMedicalLlmAdapter();
     mockAnalysis = MockMedicalAnalysisService();
+    mockHealthContext = MockHealthContextService();
 
     // Default stubs
     when(() => mockAnalysis.analyzeLabWithConfidence(
@@ -101,10 +103,15 @@ void main() {
       );
     });
 
+    // Default stub for HealthContextService — returns empty context
+    when(() => mockHealthContext.getContextForUser(any())).thenAnswer(
+        (_) async => HealthContext.empty(),
+    );
+
     cubit = MedicalAssistantCubit(
       llmAdapter: mockAdapter,
       analysisService: mockAnalysis,
-      healthContextService: MockHealthContextService(),
+      healthContextService: mockHealthContext,
     );
   });
 

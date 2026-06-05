@@ -32,8 +32,8 @@ void main() {
       final warfarin = LocalRxnormEntry(code: '855332', displayName: 'Warfarin', drugClass: 'Anticoagulant');
       final aspirin = LocalRxnormEntry(code: '1191', displayName: 'Aspirin', drugClass: 'NSAID');
 
-      when(() => mockProvider.searchMedications('warfarin')).thenReturn([warfarin]);
-      when(() => mockProvider.searchMedications('aspirin')).thenReturn([aspirin]);
+      when(() => mockProvider.getRxnormForCode('855332')).thenReturn(warfarin);
+      when(() => mockProvider.getRxnormForCode('1191')).thenReturn(aspirin);
 
       final interactions = await standardsService.checkDrugInteractions(['855332', '1191']);
 
@@ -44,8 +44,8 @@ void main() {
       final fluoxetine = LocalRxnormEntry(code: '1', displayName: 'Fluoxetine', drugClass: 'SSRI');
       final phenelzine = LocalRxnormEntry(code: '2', displayName: 'Phenelzine', drugClass: 'MAOI');
 
-      when(() => mockProvider.searchMedications('fluoxetine')).thenReturn([fluoxetine]);
-      when(() => mockProvider.searchMedications('phenelzine')).thenReturn([phenelzine]);
+      when(() => mockProvider.getRxnormForCode('1')).thenReturn(fluoxetine);
+      when(() => mockProvider.getRxnormForCode('2')).thenReturn(phenelzine);
 
       final interactions = await standardsService.checkDrugInteractions(['1', '2']);
 

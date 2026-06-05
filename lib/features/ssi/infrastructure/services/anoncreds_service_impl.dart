@@ -394,6 +394,7 @@ class AnonCredsServiceImpl implements AnonCredsService {
 
     final fullMessage =
         '${credential.id}|${credential.issuer}|${credential.type}|${credential.schemaId}|'
+        '${credential.issuanceDate.millisecondsSinceEpoch}|'
         '${canonical}';
     return Uint8List.fromList(utf8.encode(fullMessage));
   }

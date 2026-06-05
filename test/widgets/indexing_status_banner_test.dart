@@ -1,10 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/home/application/home_cubit.dart';
 import 'package:orionhealth_health/features/home/application/home_state.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'package:orionhealth_health/main.dart';
 
 class MockHomeCubit extends Mock implements HomeCubit {}
@@ -28,6 +30,9 @@ void main() {
 
   Widget createWidgetUnderTest() {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('es'),
       home: Scaffold(
         body: BlocProvider<HomeCubit>.value(
           value: mockHomeCubit,
@@ -59,7 +64,7 @@ void main() {
 
     await tester.pump(); // Start animation/rebuild
 
-    expect(find.text('Sincronización completada'), findsOneWidget);
+    expect(find.text('Estándares médicos actualizados'), findsOneWidget);
     expect(find.byIcon(Icons.check_circle), findsOneWidget);
 
     // Drain timer to avoid pending timer error
@@ -77,12 +82,12 @@ void main() {
     stateController.add(const HomeState(isIndexing: false));
 
     await tester.pump();
-    expect(find.text('Sincronización completada'), findsOneWidget);
+    expect(find.text('Estándares médicos actualizados'), findsOneWidget);
 
     // Wait for 3 seconds + some buffer
     await tester.pump(const Duration(seconds: 3));
 
-    expect(find.text('Sincronización completada'), findsNothing);
+    expect(find.text('Estándares médicos actualizados'), findsNothing);
     expect(find.byType(Container), findsNothing); // Should be SizedBox.shrink()
   });
 
@@ -91,7 +96,7 @@ void main() {
 
     await tester.pumpWidget(createWidgetUnderTest());
 
-    expect(find.text('Error sincronizando estándares médicos'), findsOneWidget);
+    expect(find.text('Error al sincronizar estándares médicos'), findsOneWidget);
     expect(find.byIcon(Icons.error_outline), findsOneWidget);
     expect(find.text('Reintentar'), findsOneWidget);
   });

@@ -68,7 +68,10 @@ class MedicalStandardsServiceImpl implements MedicalStandardsService {
     // In a production app, this would call a dedicated Drug Interaction API (like DrugBank)
     // or use a local cross-reference table.
 
-    final meds = rxnormCodes.map((code) => _medicalContextProvider.getRxnormForCode(code)).whereType<MedicationReference>().toList();
+    final meds = rxnormCodes
+        .map((code) => _medicalContextProvider.getRxnormForCode(code))
+        .whereType<LocalRxnormEntry>()
+        .toList();
 
     for (int i = 0; i < meds.length; i++) {
       for (int j = i + 1; j < meds.length; j++) {
@@ -85,7 +88,7 @@ class MedicalStandardsServiceImpl implements MedicalStandardsService {
     return interactions;
   }
 
-  String? _getKnownInteraction(MedicationReference m1, MedicationReference m2) {
+  String? _getKnownInteraction(LocalRxnormEntry m1, LocalRxnormEntry m2) {
     final names = {m1.displayName.toLowerCase(), m2.displayName.toLowerCase()};
 
     if (names.contains('warfarin') && names.contains('aspirin')) {
