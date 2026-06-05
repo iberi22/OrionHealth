@@ -188,6 +188,28 @@ class UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType, uniqueId: $uniqueId, sex: $sex, birthDate: $birthDate, onboardingCompleted: $onboardingCompleted)';
+    return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType, uniqueId: $uniqueId, sex: $sex, systolicBP: $systolicBP, diastolicBP: $diastolicBP, heartRate: $heartRate, birthDate: $birthDate, onboardingCompleted: $onboardingCompleted)';
+  }
+
+  /// Validates the profile data
+  bool validate() {
+    if (age != null && (age! < 0 || age! > 150)) return false;
+    if (weight != null && weight! <= 0) return false;
+    if (height != null && height! <= 0) return false;
+    if (systolicBP != null && (systolicBP! < 50 || systolicBP! > 250)) return false;
+    if (diastolicBP != null && (diastolicBP! < 30 || diastolicBP! > 150)) return false;
+    if (heartRate != null && (heartRate! < 30 || heartRate! > 220)) return false;
+
+    if (bloodType != null) {
+      const validBloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+      if (!validBloodTypes.contains(bloodType)) return false;
+    }
+
+    if (sex != null) {
+      const validSex = ['M', 'F', 'O'];
+      if (!validSex.contains(sex)) return false;
+    }
+
+    return true;
   }
 }
