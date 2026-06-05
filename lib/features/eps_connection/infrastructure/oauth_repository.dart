@@ -11,8 +11,14 @@ abstract class OAuthRepository {
 
 @LazySingleton(as: OAuthRepository)
 class OAuthRepositoryImpl implements OAuthRepository {
-  final FlutterAppAuth _appAuth = const FlutterAppAuth();
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  final FlutterAppAuth _appAuth;
+  final FlutterSecureStorage _secureStorage;
+
+  OAuthRepositoryImpl({
+    FlutterAppAuth appAuth = const FlutterAppAuth(),
+    FlutterSecureStorage secureStorage = const FlutterSecureStorage(),
+  })  : _appAuth = appAuth,
+        _secureStorage = secureStorage;
 
   static const String _clientId = 'orion-health-app';
   static const String _redirectUrl = 'com.orionhealth.app://oauth-callback';
