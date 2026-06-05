@@ -392,9 +392,9 @@ class _RealisticProfilePage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    _ConditionChip(theme, 'Diabetes Tipo 2', Icons.warning_amber, Colors.orange),
-                    _ConditionChip(theme, 'Hipertensión Controlada', Icons.favorite, Colors.red),
-                    _ConditionChip(theme, 'Hipotiroidismo', Icons.biotech, Colors.purple),
+                    _conditionChip(theme, 'Diabetes Tipo 2', Icons.warning_amber, Colors.orange),
+                    _conditionChip(theme, 'Hipertensión Controlada', Icons.favorite, Colors.red),
+                    _conditionChip(theme, 'Hipotiroidismo', Icons.biotech, Colors.purple),
                   ],
                 ),
               ),
@@ -487,7 +487,7 @@ class _QuickStatCard extends StatelessWidget {
   }
 }
 
-Widget _ConditionChip(ThemeData theme, String name, IconData icon, Color color) {
+Widget _conditionChip(ThemeData theme, String name, IconData icon, Color color) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8),
     child: Row(
