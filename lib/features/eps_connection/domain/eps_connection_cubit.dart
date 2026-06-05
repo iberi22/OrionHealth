@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
-import '../data/oauth_repository.dart';
+import '../infrastructure/oauth_repository.dart';
 import '../../user_profile/domain/repositories/user_profile_repository.dart';
 
 abstract class EpsConnectionState extends Equatable {
@@ -11,9 +11,13 @@ abstract class EpsConnectionState extends Equatable {
   List<Object?> get props => [];
 }
 
-class EpsConnectionInitial extends EpsConnectionState {}
+class EpsConnectionInitial extends EpsConnectionState {
+  const EpsConnectionInitial();
+}
 
-class EpsConnectionLoading extends EpsConnectionState {}
+class EpsConnectionLoading extends EpsConnectionState {
+  const EpsConnectionLoading();
+}
 
 class EpsConnectionConnected extends EpsConnectionState {
   final String patientId;
@@ -23,7 +27,9 @@ class EpsConnectionConnected extends EpsConnectionState {
   List<Object?> get props => [patientId];
 }
 
-class EpsConnectionDisconnected extends EpsConnectionState {}
+class EpsConnectionDisconnected extends EpsConnectionState {
+  const EpsConnectionDisconnected();
+}
 
 class EpsConnectionError extends EpsConnectionState {
   final String message;
@@ -39,21 +45,22 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
   final UserProfileRepository _userProfileRepository;
 
   EpsConnectionCubit(this._oauthRepository, this._userProfileRepository)
-      : super(EpsConnectionInitial()) {
+      : super(const EpsConnectionInitial()) {
     _checkInitialState();
   }
 
   Future<void> _checkInitialState() async {
     final profile = await _userProfileRepository.getUserProfile();
+    if (state is! EpsConnectionInitial) return;
     if (profile != null && profile.isEpsConnected && profile.epsPatientId != null) {
       emit(EpsConnectionConnected(profile.epsPatientId!));
     } else {
-      emit(EpsConnectionDisconnected());
+      emit(const EpsConnectionDisconnected());
     }
   }
 
   Future<void> connect() async {
-    emit(EpsConnectionLoading());
+    emit(const EpsConnectionLoading());
     try {
       final response = await _oauthRepository.login();
       if (response != null) {
@@ -78,7 +85,7 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
           emit(const EpsConnectionError('No se pudo obtener el ID del paciente desde IHCE.'));
         }
       } else {
-        emit(EpsConnectionDisconnected());
+        emit(const EpsConnectionDisconnected());
       }
     } catch (e) {
       emit(EpsConnectionError('Error al conectar con la EPS: ${e.toString()}'));
@@ -86,7 +93,7 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
   }
 
   Future<void> disconnect() async {
-    emit(EpsConnectionLoading());
+    emit(const EpsConnectionLoading());
     try {
       await _oauthRepository.logout();
       final profile = await _userProfileRepository.getUserProfile();
@@ -97,7 +104,7 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
         );
         await _userProfileRepository.saveUserProfile(updatedProfile);
       }
-      emit(EpsConnectionDisconnected());
+      emit(const EpsConnectionDisconnected());
     } catch (e) {
       emit(EpsConnectionError('Error al desconectar: ${e.toString()}'));
     }
