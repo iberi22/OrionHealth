@@ -7,9 +7,15 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:cryptography/cryptography.dart';
+import 'ble_wrapper.dart';
 
 @lazySingleton
 class BleSharingService {
+  final BleWrapper _bleWrapper;
+
+  BleSharingService({BleWrapper? bleWrapper})
+      : _bleWrapper = bleWrapper ?? BleWrapper();
+
   // Standard GATT Service UUIDs
   static const String heartRateServiceUuid = '180d';
   static const String glucoseServiceUuid = '1808';
@@ -48,7 +54,7 @@ class BleSharingService {
 
   Future<void> initialize() async {
     if (_isInitialized) return;
-    if (await FlutterBluePlus.isSupported == false) {
+    if (await _bleWrapper.isSupported == false) {
       throw Exception('Bluetooth not supported on this device');
     }
     _isInitialized = true;
@@ -73,7 +79,7 @@ class BleSharingService {
     _scannedDevices.clear();
     _stateController.add(BleServiceState.scanning());
 
-    await FlutterBluePlus.startScan(
+    await _bleWrapper.startScan(
       timeout: timeout,
       withServices: [
         Guid(heartRateServiceUuid),
@@ -84,7 +90,7 @@ class BleSharingService {
     );
 
     final completer = Completer<void>();
-    final scanSubscription = FlutterBluePlus.scanResults.listen((scanResults) {
+    final scanSubscription = _bleWrapper.scanResults.listen((scanResults) {
       for (final r in scanResults) {
         final deviceId = r.device.remoteId.str;
         // Cache the BluetoothDevice reference for later connect()
@@ -107,7 +113,7 @@ class BleSharingService {
 
     await completer.future.timeout(timeout, onTimeout: () {});
     await scanSubscription.cancel();
-    await FlutterBluePlus.stopScan();
+    await _bleWrapper.stopScan();
 
     _stateController.add(BleServiceState.ready());
     return results.toSet().toList();
@@ -135,7 +141,7 @@ class BleSharingService {
       device = _scannedDevices[deviceId]!;
     } else {
       // Fallback: create from ID (only works on Android with cached devices)
-      device = BluetoothDevice.fromId(deviceId);
+      device = _bleWrapper.deviceFromId(deviceId);
     }
 
     _stateController.add(BleServiceState.connecting(deviceId));
