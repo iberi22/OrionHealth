@@ -315,6 +315,39 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     final currentState = state;
     if (currentState is! OnboardingInProgress) return;
 
+    // Validation logic per step
+    final currentStepEnum = OnboardingStep.fromIndex(currentState.currentStep);
+
+    switch (currentStepEnum) {
+      case OnboardingStep.basicInfo:
+        if (currentState.profile.name == null || currentState.profile.name!.isEmpty) {
+          emit(const OnboardingError(message: 'Por favor ingresa tu nombre'));
+          emit(currentState); // Return to progress state
+          return;
+        }
+        if (currentState.profile.birthDate == null) {
+          emit(const OnboardingError(message: 'Por favor selecciona tu fecha de nacimiento'));
+          emit(currentState);
+          return;
+        }
+        if (currentState.profile.sex == null) {
+          emit(const OnboardingError(message: 'Por favor selecciona tu sexo'));
+          emit(currentState);
+          return;
+        }
+        break;
+      case OnboardingStep.privacy:
+        if (!currentState.profile.privacyConsent) {
+          emit(const OnboardingError(message: 'Debes aceptar el consentimiento de privacidad para continuar'));
+          emit(currentState);
+          return;
+        }
+        break;
+      default:
+        // No specific validation for other steps
+        break;
+    }
+
     if (currentState.currentStep < totalSteps - 1) {
       final updatedProfile = currentState.profile.copyWith(
         onboardingStep: currentState.currentStep + 1,
