@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/services/privacy_anonymizer.dart';
 import '../../../../features/user_profile/domain/repositories/user_profile_repository.dart';
 import '../../domain/services/llm_adapter.dart';
+import 'gemini_model_wrapper.dart';
 
 /// Gemini-based LLM Adapter for HiRAG Phase 2 integration
 ///
@@ -14,18 +16,25 @@ import '../../domain/services/llm_adapter.dart';
 class GeminiLlmAdapter implements LlmAdapter {
   final PromptScrubber _scrubber;
   final UserProfileRepository _userProfileRepository;
+  final GeminiModelWrapper? _testWrapper;
 
   GeminiLlmAdapter({
     required PromptScrubber scrubber,
     required UserProfileRepository userProfileRepository,
+    @visibleForTesting GeminiModelWrapper? modelWrapper,
   })  : _scrubber = scrubber,
-        _userProfileRepository = userProfileRepository;
+        _userProfileRepository = userProfileRepository,
+        _testWrapper = modelWrapper;
 
   String get _apiKey => Platform.environment['GEMINI_API_KEY'] ?? '';
 
-  GenerativeModel? get _model => _apiKey.isNotEmpty
-      ? GenerativeModel(model: 'gemini-pro', apiKey: _apiKey)
-      : null;
+  GeminiModelWrapper? get _model {
+    if (_testWrapper != null) return _testWrapper;
+    if (_apiKey.isEmpty) return null;
+    return GeminiModelWrapper(
+      GenerativeModel(model: 'gemini-pro', apiKey: _apiKey),
+    );
+  }
 
   @override
   String get modelName => 'gemini-pro';
@@ -57,8 +66,8 @@ class GeminiLlmAdapter implements LlmAdapter {
 
     try {
       final scrubbedPrompt = await _scrubber.scrub(prompt, apiName: 'gemini');
-      final response = await model.generateContent([Content.text(scrubbedPrompt)]);
-      return response.text ?? '';
+      final responseText = await model.generateContent(scrubbedPrompt);
+      return responseText ?? '';
     } catch (e) {
       throw Exception('Failed to generate summary: $e');
     }
