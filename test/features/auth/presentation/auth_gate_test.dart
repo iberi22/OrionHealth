@@ -66,7 +66,7 @@ void main() {
 
     testWidgets('shows LoginPage when state is AuthLocked', (tester) async {
       await tester.pumpWidget(
-        buildTestWidget(const AuthLocked(DateTime(2026, 6, 1, 12, 0))),
+        buildTestWidget(AuthLocked(DateTime(2026, 6, 1, 12, 0))),
       );
       await tester.pump();
 
@@ -88,11 +88,11 @@ void main() {
     testWidgets('shows MainNavigationPage when state is AuthAuthenticated',
         (tester) async {
       when(mockAuthCubit.state).thenReturn(
-        const AuthAuthenticated(DateTime(2026, 6, 1, 12, 15)),
+        AuthAuthenticated(DateTime(2026, 6, 1, 12, 15)),
       );
 
       await tester.pumpWidget(
-        buildTestWidget(const AuthAuthenticated(DateTime(2026, 6, 1, 12, 15))),
+        buildTestWidget(AuthAuthenticated(DateTime(2026, 6, 1, 12, 15))),
       );
       await tester.pump();
 
@@ -127,11 +127,11 @@ void main() {
         (tester) async {
       when(mockAuthCubit.stream).thenAnswer(
         (_) => Stream.value(
-          const AuthAuthenticated(DateTime(2026, 6, 1, 12, 15)),
+          AuthAuthenticated(DateTime(2026, 6, 1, 12, 15)),
         ),
       );
       when(mockAuthCubit.state).thenReturn(
-        const AuthAuthenticated(DateTime(2026, 6, 1, 12, 15)),
+        AuthAuthenticated(DateTime(2026, 6, 1, 12, 15)),
       );
 
       await tester.pumpWidget(MaterialApp(
@@ -170,11 +170,11 @@ void main() {
     testWidgets('shows lock screen when account is locked', (tester) async {
       when(mockAuthCubit.stream).thenAnswer(
         (_) => Stream.value(
-          const AuthLocked(DateTime(2026, 6, 1, 12, 30)),
+          AuthLocked(DateTime(2026, 6, 1, 12, 30)),
         ),
       );
       when(mockAuthCubit.state).thenReturn(
-        const AuthLocked(DateTime(2026, 6, 1, 12, 30)),
+        AuthLocked(DateTime(2026, 6, 1, 12, 30)),
       );
 
       await tester.pumpWidget(MaterialApp(
@@ -199,7 +199,7 @@ void main() {
         const AuthLoading(),
         const AuthNotSetup(),
         const AuthUnauthenticated(),
-        const AuthLocked(DateTime(2026, 6, 1, 12, 0)),
+        AuthLocked(DateTime(2026, 6, 1, 12, 0)),
       ];
 
       for (final state in bypassStates) {

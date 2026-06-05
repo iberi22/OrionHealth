@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:medical_standards/medical_standards.dart';
@@ -16,52 +14,8 @@ void main() {
   late MockUserProfileRepository mockRepo;
   late RiskCalculator calculator;
 
-  const guidelinesJson = {
-    "data": [
-      {
-        "code": "ACC-AHA-PRIMARY-2019",
-        "displayName": "ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease",
-        "organization": "ACC/AHA",
-        "url": "https://example.com",
-        "lastUpdated": "2019-03-17T00:00:00Z",
-        "applicableConditions": ["I10", "I25"]
-      },
-      {
-        "code": "ADA-MC-2024",
-        "displayName": "ADA Standards of Care in Diabetes",
-        "organization": "ADA",
-        "url": "https://example.com",
-        "lastUpdated": "2024-01-01T00:00:00Z",
-        "applicableConditions": ["E10", "E11"]
-      },
-      {
-        "code": "WHO-2023",
-        "displayName": "WHO Hypertension Guideline",
-        "organization": "WHO",
-        "url": "https://example.com",
-        "lastUpdated": "2023-12-01T00:00:00Z",
-        "applicableConditions": ["I10"]
-      },
-      {
-        "code": "WHO-DIABETES-2022",
-        "displayName": "WHO Global Diabetes Report",
-        "organization": "WHO",
-        "url": "https://example.com",
-        "lastUpdated": "2022-01-01T00:00:00Z",
-        "applicableConditions": ["E10", "E11"]
-      }
-    ]
-  };
-
   setUpAll(() async {
-    // Mock root bundle to load guidelines
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(SystemChannels.platform, (_) => null);
-
-    // Set up a mock for rootBundle.loadString so ClinicalGuidelines.init works
-    final json = jsonEncode(guidelinesJson);
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(SystemChannels.platform, (_) => null);
+    // No rootBundle mocking needed — RiskCalculator is stateless
   });
 
   setUp(() {
