@@ -7,9 +7,13 @@ sealed class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-class AuthInitial extends AuthState {}
+class AuthInitial extends AuthState {
+  const AuthInitial();
+}
 
-class AuthNotSetup extends AuthState {}
+class AuthNotSetup extends AuthState {
+  const AuthNotSetup();
+}
 
 class AuthLocked extends AuthState {
   final DateTime lockoutUntil;
@@ -36,4 +40,6 @@ class AuthAuthenticated extends AuthState {
   List<Object?> get props => [sessionExpiry];
 }
 
-class AuthLoading extends AuthState {}
+class AuthLoading extends AuthState {
+  const AuthLoading();
+}

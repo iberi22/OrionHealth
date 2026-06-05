@@ -19,20 +19,21 @@ void main() {
 
   group('MedicalStandardsService', () {
     test('lookupIcd10 returns result if found', () async {
-      const code = Icd10Code(code: 'E11', displayName: 'Diabetes', category: 'Endocrine');
-      when(() => mockProvider.searchIcd10('diabetes')).thenReturn([code]);
+      final entry = LocalIcd10Entry(code: 'E11', displayName: 'Diabetes', category: 'Endocrine', synonyms: const []);
+      when(() => mockProvider.searchIcd10('diabetes')).thenReturn([entry]);
 
       final result = await standardsService.lookupIcd10('diabetes');
 
-      expect(result, equals(code));
+      expect(result.code, equals('E11'));
+      expect(result.displayName, equals('Diabetes'));
     });
 
     test('checkDrugInteractions detects Warfarin + Aspirin', () async {
-      const warfarin = MedicationReference(code: '855332', displayName: 'Warfarin', drugClass: 'Anticoagulant');
-      const aspirin = MedicationReference(code: '1191', displayName: 'Aspirin', drugClass: 'NSAID');
+      final warfarin = LocalRxnormEntry(code: '855332', displayName: 'Warfarin', drugClass: 'Anticoagulant', synonyms: const []);
+      final aspirin = LocalRxnormEntry(code: '1191', displayName: 'Aspirin', drugClass: 'NSAID', synonyms: const []);
 
-      when(() => mockProvider.getRxnormForCode('855332')).thenReturn(warfarin);
-      when(() => mockProvider.getRxnormForCode('1191')).thenReturn(aspirin);
+      when(() => mockProvider.searchMedications('warfarin')).thenReturn([warfarin]);
+      when(() => mockProvider.searchMedications('aspirin')).thenReturn([aspirin]);
 
       final interactions = await standardsService.checkDrugInteractions(['855332', '1191']);
 
@@ -40,11 +41,11 @@ void main() {
     });
 
     test('checkDrugInteractions detects class-based interaction (SSRI + MAOI)', () async {
-      const fluoxetine = MedicationReference(code: '1', displayName: 'Fluoxetine', drugClass: 'SSRI');
-      const phenelzine = MedicationReference(code: '2', displayName: 'Phenelzine', drugClass: 'MAOI');
+      final fluoxetine = LocalRxnormEntry(code: '1', displayName: 'Fluoxetine', drugClass: 'SSRI', synonyms: const []);
+      final phenelzine = LocalRxnormEntry(code: '2', displayName: 'Phenelzine', drugClass: 'MAOI', synonyms: const []);
 
-      when(() => mockProvider.getRxnormForCode('1')).thenReturn(fluoxetine);
-      when(() => mockProvider.getRxnormForCode('2')).thenReturn(phenelzine);
+      when(() => mockProvider.searchMedications('fluoxetine')).thenReturn([fluoxetine]);
+      when(() => mockProvider.searchMedications('phenelzine')).thenReturn([phenelzine]);
 
       final interactions = await standardsService.checkDrugInteractions(['1', '2']);
 
@@ -52,8 +53,8 @@ void main() {
     });
    group('searchGuidelines', () {
     test('calls getGuidelinesForCondition when ICD-10 is found', () async {
-      const icd10 = Icd10Code(code: 'E11', displayName: 'Diabetes', category: 'Endocrine');
-      when(() => mockProvider.searchIcd10('diabetes')).thenReturn([icd10]);
+      final entry = LocalIcd10Entry(code: 'E11', displayName: 'Diabetes', category: 'Endocrine', synonyms: const []);
+      when(() => mockProvider.searchIcd10('diabetes')).thenReturn([entry]);
       when(() => mockProvider.getGuidelinesForCondition('E11')).thenReturn([]);
 
       await standardsService.searchGuidelines('diabetes');

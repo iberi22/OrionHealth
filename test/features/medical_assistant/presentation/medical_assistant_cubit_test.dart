@@ -5,6 +5,7 @@ import 'package:medical_standards/medical_standards.dart';
 import 'package:orionhealth_health/features/medical_assistant/application/medical_assistant_cubit.dart';
 import 'package:orionhealth_health/features/medical_assistant/infrastructure/llm/medical_llm_adapter.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/services/medical_analysis_service.dart';
+import 'package:orionhealth_health/features/medical_assistant/domain/services/health_context_service.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/ai_response.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/analysis_response.dart';
 import 'package:orionhealth_health/features/medical_assistant/domain/entities/medical_insight.dart';
@@ -19,6 +20,7 @@ import 'package:orionhealth_health/features/medical_assistant/infrastructure/ana
 
 class MockMedicalLlmAdapter extends Mock implements MedicalLlmAdapter {}
 class MockMedicalAnalysisService extends Mock implements MedicalAnalysisService {}
+class MockHealthContextService extends Mock implements HealthContextService {}
 class MockLabInterpreter extends Mock implements LabInterpreter {}
 class MockVitalSignAnalyzer extends Mock implements VitalSignAnalyzer {}
 class MockRiskCalculator extends Mock implements RiskCalculator {}
@@ -102,6 +104,7 @@ void main() {
     cubit = MedicalAssistantCubit(
       llmAdapter: mockAdapter,
       analysisService: mockAnalysis,
+      healthContextService: MockHealthContextService(),
     );
   });
 

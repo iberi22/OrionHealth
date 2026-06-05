@@ -1,18 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/core/services/privacy_anonymizer.dart';
 import 'package:orionhealth_health/features/local_agent/domain/entities/medical_code.dart';
 import 'package:orionhealth_health/features/local_agent/domain/repositories/medical_knowledge_repository.dart';
 import 'package:orionhealth_health/features/medical_assistant/infrastructure/services/clinical_reasoner_service.dart';
 
 class MockMedicalKnowledgeRepository extends Mock implements MedicalKnowledgeRepository {}
+class MockScrubber extends Mock implements PromptScrubber {}
 
 void main() {
   late MockMedicalKnowledgeRepository mockRepo;
+  late MockScrubber mockScrubber;
   late SymphonyClinicalReasonerService reasoner;
 
   setUp(() {
     mockRepo = MockMedicalKnowledgeRepository();
-    reasoner = SymphonyClinicalReasonerService(mockRepo);
+    mockScrubber = MockScrubber();
+    reasoner = SymphonyClinicalReasonerService(mockRepo, mockScrubber);
   });
 
   test('Benchmark analyzeSymptoms with large number of mappings', () async {
