@@ -22,7 +22,7 @@ class SyncResult {
 
 /// Service for syncing encrypted health data between Orion nodes.
 class SyncService {
-  SyncService(this._encryption) : _dio = Dio(BaseOptions(
+  SyncService(this._encryption, {Dio? dio}) : _dio = dio ?? Dio(BaseOptions(
     connectTimeout: const Duration(seconds: 30),
     receiveTimeout: const Duration(minutes: 5),
   ));
