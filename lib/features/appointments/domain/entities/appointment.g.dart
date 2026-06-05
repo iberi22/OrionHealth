@@ -27,23 +27,38 @@ const AppointmentSchema = CollectionSchema(
       name: r'doctorName',
       type: IsarType.string,
     ),
-    r'notes': PropertySchema(
+    r'durationInMinutes': PropertySchema(
       id: 2,
+      name: r'durationInMinutes',
+      type: IsarType.long,
+    ),
+    r'isPast': PropertySchema(
+      id: 3,
+      name: r'isPast',
+      type: IsarType.bool,
+    ),
+    r'notes': PropertySchema(
+      id: 4,
       name: r'notes',
       type: IsarType.string,
     ),
+    r'recurrenceRule': PropertySchema(
+      id: 5,
+      name: r'recurrenceRule',
+      type: IsarType.string,
+    ),
     r'source': PropertySchema(
-      id: 3,
+      id: 6,
       name: r'source',
       type: IsarType.string,
     ),
     r'specialty': PropertySchema(
-      id: 4,
+      id: 7,
       name: r'specialty',
       type: IsarType.string,
     ),
     r'status': PropertySchema(
-      id: 5,
+      id: 8,
       name: r'status',
       type: IsarType.string,
       enumMap: _AppointmentstatusEnumValueMap,
@@ -77,6 +92,12 @@ int _appointmentEstimateSize(
     }
   }
   {
+    final value = object.recurrenceRule;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.source;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -95,10 +116,13 @@ void _appointmentSerialize(
 ) {
   writer.writeDateTime(offsets[0], object.dateTime);
   writer.writeString(offsets[1], object.doctorName);
-  writer.writeString(offsets[2], object.notes);
-  writer.writeString(offsets[3], object.source);
-  writer.writeString(offsets[4], object.specialty);
-  writer.writeString(offsets[5], object.status.name);
+  writer.writeLong(offsets[2], object.durationInMinutes);
+  writer.writeBool(offsets[3], object.isPast);
+  writer.writeString(offsets[4], object.notes);
+  writer.writeString(offsets[5], object.recurrenceRule);
+  writer.writeString(offsets[6], object.source);
+  writer.writeString(offsets[7], object.specialty);
+  writer.writeString(offsets[8], object.status.name);
 }
 
 Appointment _appointmentDeserialize(
@@ -110,12 +134,14 @@ Appointment _appointmentDeserialize(
   final object = Appointment(
     dateTime: reader.readDateTime(offsets[0]),
     doctorName: reader.readString(offsets[1]),
+    durationInMinutes: reader.readLongOrNull(offsets[2]) ?? 30,
     id: id,
-    notes: reader.readStringOrNull(offsets[2]),
-    source: reader.readStringOrNull(offsets[3]),
-    specialty: reader.readString(offsets[4]),
+    notes: reader.readStringOrNull(offsets[4]),
+    recurrenceRule: reader.readStringOrNull(offsets[5]),
+    source: reader.readStringOrNull(offsets[6]),
+    specialty: reader.readString(offsets[7]),
     status:
-        _AppointmentstatusValueEnumMap[reader.readStringOrNull(offsets[5])] ??
+        _AppointmentstatusValueEnumMap[reader.readStringOrNull(offsets[8])] ??
             AppointmentStatus.upcoming,
   );
   return object;
@@ -133,12 +159,18 @@ P _appointmentDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 30) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (reader.readString(offset)) as P;
+    case 8:
       return (_AppointmentstatusValueEnumMap[reader.readStringOrNull(offset)] ??
           AppointmentStatus.upcoming) as P;
     default:
@@ -441,6 +473,62 @@ extension AppointmentQueryFilter
     });
   }
 
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      durationInMinutesEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'durationInMinutes',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      durationInMinutesGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'durationInMinutes',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      durationInMinutesLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'durationInMinutes',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      durationInMinutesBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'durationInMinutes',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Appointment, Appointment, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -490,6 +578,16 @@ extension AppointmentQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition> isPastEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isPast',
+        value: value,
       ));
     });
   }
@@ -638,6 +736,160 @@ extension AppointmentQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'notes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'recurrenceRule',
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'recurrenceRule',
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'recurrenceRule',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'recurrenceRule',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'recurrenceRule',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'recurrenceRule',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'recurrenceRule',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'recurrenceRule',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'recurrenceRule',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'recurrenceRule',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'recurrenceRule',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterFilterCondition>
+      recurrenceRuleIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'recurrenceRule',
         value: '',
       ));
     });
@@ -1097,6 +1349,32 @@ extension AppointmentQuerySortBy
     });
   }
 
+  QueryBuilder<Appointment, Appointment, QAfterSortBy>
+      sortByDurationInMinutes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationInMinutes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy>
+      sortByDurationInMinutesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationInMinutes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy> sortByIsPast() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isPast', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy> sortByIsPastDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isPast', Sort.desc);
+    });
+  }
+
   QueryBuilder<Appointment, Appointment, QAfterSortBy> sortByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
@@ -1106,6 +1384,19 @@ extension AppointmentQuerySortBy
   QueryBuilder<Appointment, Appointment, QAfterSortBy> sortByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy> sortByRecurrenceRule() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'recurrenceRule', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy>
+      sortByRecurrenceRuleDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'recurrenceRule', Sort.desc);
     });
   }
 
@@ -1172,6 +1463,20 @@ extension AppointmentQuerySortThenBy
     });
   }
 
+  QueryBuilder<Appointment, Appointment, QAfterSortBy>
+      thenByDurationInMinutes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationInMinutes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy>
+      thenByDurationInMinutesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationInMinutes', Sort.desc);
+    });
+  }
+
   QueryBuilder<Appointment, Appointment, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1184,6 +1489,18 @@ extension AppointmentQuerySortThenBy
     });
   }
 
+  QueryBuilder<Appointment, Appointment, QAfterSortBy> thenByIsPast() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isPast', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy> thenByIsPastDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isPast', Sort.desc);
+    });
+  }
+
   QueryBuilder<Appointment, Appointment, QAfterSortBy> thenByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
@@ -1193,6 +1510,19 @@ extension AppointmentQuerySortThenBy
   QueryBuilder<Appointment, Appointment, QAfterSortBy> thenByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy> thenByRecurrenceRule() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'recurrenceRule', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QAfterSortBy>
+      thenByRecurrenceRuleDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'recurrenceRule', Sort.desc);
     });
   }
 
@@ -1248,10 +1578,31 @@ extension AppointmentQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Appointment, Appointment, QDistinct>
+      distinctByDurationInMinutes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'durationInMinutes');
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QDistinct> distinctByIsPast() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isPast');
+    });
+  }
+
   QueryBuilder<Appointment, Appointment, QDistinct> distinctByNotes(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'notes', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Appointment, Appointment, QDistinct> distinctByRecurrenceRule(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'recurrenceRule',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -1297,9 +1648,28 @@ extension AppointmentQueryProperty
     });
   }
 
+  QueryBuilder<Appointment, int, QQueryOperations> durationInMinutesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'durationInMinutes');
+    });
+  }
+
+  QueryBuilder<Appointment, bool, QQueryOperations> isPastProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isPast');
+    });
+  }
+
   QueryBuilder<Appointment, String?, QQueryOperations> notesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'notes');
+    });
+  }
+
+  QueryBuilder<Appointment, String?, QQueryOperations>
+      recurrenceRuleProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'recurrenceRule');
     });
   }
 
