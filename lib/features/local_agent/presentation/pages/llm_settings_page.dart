@@ -166,7 +166,7 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
             setState(() {});
           },
           selected: _downloadedModels.any((m) => m.filename == model.filename),
-          selectedTileColor: CyberTheme.primary.withOpacity(0.1),
+          selectedTileColor: CyberTheme.primary.withValues(alpha: 0.1),
         )),
         const SizedBox(height: 16),
         ElevatedButton.icon(
