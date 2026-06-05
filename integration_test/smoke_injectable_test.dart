@@ -1,13 +1,13 @@
-/// REAL End-to-End Smoke Test — Sin mocks
-///
-/// Prueba ORIONHEALTH completo en dispositivo real:
-/// 1. Inicialización sin crash de DI
-/// 2. Onboarding con labels correctos (Peso, Nombre, etc.)
-/// 3. Navegación a pantalla de Citas (con botones Email + Calendario)
-/// 4. Conexión EPS (pantalla, no login real)
-/// 5. Estado de sincronización FHIR
-///
-/// Ejecutar: flutter test integration_test/smoke_injectable_test.dart
+// REAL End-to-End Smoke Test — Sin mocks
+//
+// Prueba ORIONHEALTH completo en dispositivo real:
+// 1. Inicialización sin crash de DI
+// 2. Onboarding con labels correctos (Peso, Nombre, etc.)
+// 3. Navegación a pantalla de Citas (con botones Email + Calendario)
+// 4. Conexión EPS (pantalla, no login real)
+// 5. Estado de sincronización FHIR
+//
+// Ejecutar: flutter test integration_test/smoke_injectable_test.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,14 +36,14 @@ void main() {
       FlutterError.onError = originalHandler;
 
       final widgetCount = tester.allWidgets.length;
-      print('🔍 Widgets renderizados: $widgetCount');
+      debugPrint('🔍 Widgets renderizados: $widgetCount');
 
       // Assert: sin error de DI
       if (flutterError != null) {
         if (flutterError!.contains('GetIt') || flutterError!.contains('not registered')) {
           fail('❌ CRASH DE DI: $flutterError');
         }
-        print('⚠️ Otro error Flutter: $flutterError');
+        debugPrint('⚠️ Otro error Flutter: $flutterError');
       }
 
       expect(find.text('Error de Inicialización'), findsNothing,
@@ -68,25 +68,25 @@ void main() {
           (w) => w is Text && w.data != null && w.data!.toLowerCase().contains('nombre'),
         ),
       );
-      print('🔍 Campos de texto encontrados: ${find.byType(TextField).evaluate().length}');
+      debugPrint('🔍 Campos de texto encontrados: ${find.byType(TextField).evaluate().length}');
 
       // Buscar label "Peso"
       final pesoLabels = find.text('Peso (kg)');
-      print('🔍 Label "Peso (kg)" encontrado: ${pesoLabels.evaluate().isNotEmpty}');
+      debugPrint('🔍 Label "Peso (kg)" encontrado: ${pesoLabels.evaluate().isNotEmpty}');
 
       // Buscar label "Nombre"
       final nombreLabels = find.text('Nombre completo');
-      print('🔍 Label "Nombre completo" encontrado: ${nombreLabels.evaluate().isNotEmpty}');
+      debugPrint('🔍 Label "Nombre completo" encontrado: ${nombreLabels.evaluate().isNotEmpty}');
 
       // Verificar contraste - si los labels existen, deben ser legibles
       if (pesoLabels.evaluate().isNotEmpty) {
         final pesoWidget = pesoLabels.evaluate().first.widget as Text;
         final style = pesoWidget.style;
         if (style != null) {
-          print('🔍 Color label Peso: ${style.color} (alpha: ${style.color?.alpha})');
+          debugPrint('🔍 Color label Peso: ${style.color} (alpha: ${style.color?.alpha})');
           // Alpha debe ser > 200 para ser legible
           if (style.color != null && style.color!.alpha < 150) {
-            print('⚠️ ADVERTENCIA: Label Peso tiene alpha bajo (${style.color!.alpha})');
+            debugPrint('⚠️ ADVERTENCIA: Label Peso tiene alpha bajo (${style.color!.alpha})');
           }
         }
       }
@@ -102,10 +102,10 @@ void main() {
       final emailIcon = find.byIcon(Icons.email_outlined);
 
       if (calendarIcon.evaluate().isNotEmpty) {
-        print('✅ Botón calendario (Icons.calendar_month) encontrado');
+        debugPrint('✅ Botón calendario (Icons.calendar_month) encontrado');
       }
       if (emailIcon.evaluate().isNotEmpty) {
-        print('✅ Botón email (Icons.email_outlined) encontrado');
+        debugPrint('✅ Botón email (Icons.email_outlined) encontrado');
       }
 
       // También buscar en NavigationBar
@@ -113,14 +113,14 @@ void main() {
       if (navBar.evaluate().isNotEmpty) {
         final destinations = find.byType(NavigationDestination);
         final destCount = destinations.evaluate().length;
-        print('🔍 Destinos de navegación: $destCount');
+        debugPrint('🔍 Destinos de navegación: $destCount');
 
         if (destCount > 1) {
           // Tocar cada destino para verificar que no crashea
           for (int i = 0; i < destCount; i++) {
             await tester.tap(destinations.at(i));
             await tester.pumpAndSettle(const Duration(seconds: 2));
-            print('✅ Destino $i navegado sin crash');
+            debugPrint('✅ Destino $i navegado sin crash');
           }
         }
       }
@@ -136,7 +136,7 @@ void main() {
       final conectarBtns = find.text('Conectar con mi EPS');
       final epsBtns = find.text('Conectar con IHCE');
 
-      print('🔍 Botones de conexión: Conectar=${connectarBtns.evaluate().length}, EPS=${
+      debugPrint('🔍 Botones de conexión: Conectar=${connectarBtns.evaluate().length}, EPS=${
         conectarBtns.evaluate().length}, IHCE=${epsBtns.evaluate().length}');
 
       // Si hay algún botón de EPS, asegurarse que no crashea al tocarlo
@@ -151,7 +151,7 @@ void main() {
       );
 
       if (epsRelatedBtns.evaluate().isNotEmpty) {
-        print('✅ Botón de conexión EPS visible');
+        debugPrint('✅ Botón de conexión EPS visible');
       }
     });
 
@@ -164,7 +164,7 @@ void main() {
       if (exc != null) {
         fail('❌ Excepción no capturada: $exc');
       }
-      print('✅ Sin excepciones no capturadas');
+      debugPrint('✅ Sin excepciones no capturadas');
     });
   });
 }
