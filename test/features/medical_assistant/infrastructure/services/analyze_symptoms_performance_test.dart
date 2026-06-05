@@ -30,6 +30,7 @@ void main() {
     });
 
     when(() => mockRepo.getSymptomMappings()).thenReturn(mappings);
+    when(() => mockScrubber.scrub(any(), apiName: any(named: 'apiName'))).thenAnswer((_) async => 'scrubbed text');
     when(() => mockRepo.searchByCode(any())).thenAnswer((invocation) async {
       final code = invocation.positionalArguments[0] as String;
       return MedicalCode(code: code, displayName: 'Test $code', category: 'Symptom', standard: 'ICD-10');

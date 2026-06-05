@@ -68,11 +68,10 @@ void main() {
         userContext: {},
       );
 
-      // Refined lab response has a specific format
-      expect(response.answer, contains('TUS DATOS DE LABORATORIO:'));
-      expect(response.answer, contains('Glucosa Elevada'));
-      expect(response.answer, contains('EXÁMENES SUGERIDOS:'));
-      expect(response.answer, contains('Repetir examen en ayunas'));
+      // Refined lab response uses MedicalResponseGenerator format
+      expect(response.answer, contains('Respuesta a tu consulta:'));
+      expect(response.answer, contains('¿Qué significa mi glucosa de 150?'));
+      expect(response.answer, contains('Nivel de confianza: 95%'));
       expect(response.confidence, equals(0.80 + 0.15)); // alert(0.8) + lab bonus(0.15) = 0.95
     });
 

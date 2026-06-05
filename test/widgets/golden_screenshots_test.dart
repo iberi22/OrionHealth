@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// ignore: invalid_annotation_target
-@Tags(['golden'])
+// Golden screenshot tests — run separately with:
+//   flutter test test/widgets/golden_screenshots_test.dart
 void main() {
   final screenshotsDir = Directory('integration_test/screenshots/actual');
   if (!screenshotsDir.existsSync()) {
