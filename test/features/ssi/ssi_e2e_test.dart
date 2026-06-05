@@ -79,7 +79,7 @@ class FakeEncryptionService extends Mock implements EncryptionService {
   }
 
   @override
-  Future<Uint8List> encrypt(String plaintext) async {
+  Future<dynamic> encrypt(String plaintext, [String? key]) async {
     return Uint8List.fromList(utf8.encode(plaintext));
   }
 }
