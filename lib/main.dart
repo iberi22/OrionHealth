@@ -705,7 +705,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                     _currentIndex = index;
                   });
                 },
-                labelType: MediaQuery.of(context).size.width > 900 ? NavigationRailLabelType.none : NavigationRailLabelType.all,
+                labelType: MediaQuery.of(context).size.width > 900 ? NavigationRailLabelType.all : NavigationRailLabelType.all,
                 destinations: destinations.map((d) => NavigationRailDestination(
                   icon: Icon(d.icon),
                   selectedIcon: Icon(d.activeIcon),
@@ -730,7 +730,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           body: Row(
             children: [
               NavigationRail(
-                extended: true,
+                extended: false,
                 selectedIndex: _currentIndex,
                 onDestinationSelected: (index) {
                   setState(() {
