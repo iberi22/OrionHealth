@@ -41,8 +41,8 @@ void main() {
     });
 
     test('checkDrugInteractions detects class-based interaction (SSRI + MAOI)', () async {
-      final fluoxetine = LocalRxnormEntry(code: '1', displayName: 'Fluoxetine', drugClass: 'SSRI', synonyms: const []);
-      final phenelzine = LocalRxnormEntry(code: '2', displayName: 'Phenelzine', drugClass: 'MAOI', synonyms: const []);
+      final fluoxetine = LocalRxnormEntry(code: '1', displayName: 'Fluoxetine', drugClass: 'SSRI');
+      final phenelzine = LocalRxnormEntry(code: '2', displayName: 'Phenelzine', drugClass: 'MAOI');
 
       when(() => mockProvider.searchMedications('fluoxetine')).thenReturn([fluoxetine]);
       when(() => mockProvider.searchMedications('phenelzine')).thenReturn([phenelzine]);

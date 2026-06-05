@@ -163,6 +163,7 @@ void main() {
         age: 25,
         bmi: 22,
         hasFamilyHistory: false,
+        sodiumUrineExcretion: null,
       );
 
       expect(result.category, 'Low');
