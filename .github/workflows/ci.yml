@@ -25,7 +25,7 @@ jobs:
           channel: stable
           flutter-version: ${{ env.FLUTTER_VERSION }}
       - run: flutter pub get
-      - run: dart analyze --no-fatal-infos --no-fatal-warnings
+      - run: flutter analyze --no-fatal-infos --no-fatal-warnings
         continue-on-error: false
 
   test:
