@@ -1,0 +1,80 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:orionhealth_health/features/onboarding/domain/entities/user_profile.dart';
+import 'package:orionhealth_health/features/onboarding/domain/services/profile_analysis_service.dart';
+
+void main() {
+  late ProfileAnalysisService service;
+
+  setUp(() {
+    service = ProfileAnalysisService();
+  });
+
+  group('ProfileAnalysisService', () {
+    test('analyzeProfile returns correct standards for diabetes', () {
+      final profile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        conditions: const ['Diabetes Type 2'],
+      );
+
+      final standards = service.analyzeProfile(profile);
+
+      expect(standards.icd10Codes, contains('E11'));
+      expect(standards.loincCodes, contains('2345-7')); // Glucose
+      expect(standards.guidelineIds, contains('ADA-2024'));
+      expect(standards.medicationClasses, contains('metformin'));
+    });
+
+    test('analyzeProfile returns correct standards for hypertension', () {
+      final profile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        conditions: const ['Hypertension'],
+      );
+
+      final standards = service.analyzeProfile(profile);
+
+      expect(standards.icd10Codes, contains('I10'));
+      expect(standards.loincCodes, contains('8480-6')); // Systolic BP
+      expect(standards.guidelineIds, contains('JNC-8'));
+    });
+
+    test('analyzeProfile returns correct standards for medications', () {
+      final profile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        medications: const ['Lisinopril 10mg'],
+      );
+
+      final standards = service.analyzeProfile(profile);
+
+      expect(standards.medicationClasses, contains('ace_inhibitors'));
+    });
+
+    test('estimateStorageSizeMb returns non-zero for medical profile', () {
+      final profile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        conditions: const ['Diabetes'],
+      );
+
+      final size = service.estimateStorageSizeMb(profile);
+      expect(size, greaterThan(0));
+    });
+
+    test('analyzeProfile returns empty for healthy profile', () {
+      final profile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final standards = service.analyzeProfile(profile);
+
+      expect(standards.icd10Codes, isEmpty);
+      expect(standards.loincCodes, isEmpty);
+      expect(standards.guidelineIds, isEmpty);
+      expect(standards.medicationClasses, isEmpty);
+      expect(standards.estimatedSizeMB, 0);
+    });
+  });
+}
