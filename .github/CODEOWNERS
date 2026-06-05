@@ -1,0 +1,17 @@
+# Default owners for the entire repository
+* @iberi22
+
+# Documentation site
+docs/ @iberi22
+
+# CI/CD workflows
+.github/workflows/ @iberi22
+
+# Core packages
+packages/ @iberi22
+
+# Feature code
+lib/features/ @iberi22
+
+# Tests
+test/ @iberi22
