@@ -201,7 +201,7 @@ class _VitalsPageState extends State<VitalsPage> {
   Widget _buildVitalListTile(VitalSign vital) {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      color: Colors.white.withOpacity(0.05),
+      color: Colors.white.withValues(alpha: 0.05),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: Icon(_getVitalIcon(vital.type), color: CyberTheme.secondary),
