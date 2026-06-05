@@ -24,13 +24,13 @@ void main() {
 
       final result = await standardsService.lookupIcd10('diabetes');
 
-      expect(result.code, equals('E11'));
-      expect(result.displayName, equals('Diabetes'));
+      expect(result!.code, equals('E11'));
+      expect(result!.displayName, equals('Diabetes'));
     });
 
     test('checkDrugInteractions detects Warfarin + Aspirin', () async {
-      final warfarin = LocalRxnormEntry(code: '855332', displayName: 'Warfarin', drugClass: 'Anticoagulant', synonyms: const []);
-      final aspirin = LocalRxnormEntry(code: '1191', displayName: 'Aspirin', drugClass: 'NSAID', synonyms: const []);
+      final warfarin = LocalRxnormEntry(code: '855332', displayName: 'Warfarin', drugClass: 'Anticoagulant');
+      final aspirin = LocalRxnormEntry(code: '1191', displayName: 'Aspirin', drugClass: 'NSAID');
 
       when(() => mockProvider.searchMedications('warfarin')).thenReturn([warfarin]);
       when(() => mockProvider.searchMedications('aspirin')).thenReturn([aspirin]);
