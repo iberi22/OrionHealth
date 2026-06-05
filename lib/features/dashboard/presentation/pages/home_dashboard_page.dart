@@ -223,13 +223,13 @@ class _ActivityTile extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: CyberTheme.secondary.withOpacity(0.1),
+            color: CyberTheme.secondary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: CyberTheme.secondary),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(time, style: TextStyle(color: Colors.white.withOpacity(0.6))),
+        subtitle: Text(time, style: TextStyle(color: Colors.white.withValues(alpha: 0.6))),
         trailing: const Icon(Icons.chevron_right, color: Colors.white54),
       ),
     );

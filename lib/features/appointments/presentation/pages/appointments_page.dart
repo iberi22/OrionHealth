@@ -218,9 +218,9 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: isSelected ? CyberTheme.primary.withOpacity(0.2) : null,
+                      color: isSelected ? CyberTheme.primary.withValues(alpha: 0.2) : null,
                       borderRadius: BorderRadius.circular(8),
-                      border: isSelected ? Border.all(color: CyberTheme.primary) : (isToday ? Border.all(color: CyberTheme.secondary.withOpacity(0.5)) : null),
+                      border: isSelected ? Border.all(color: CyberTheme.primary) : (isToday ? Border.all(color: CyberTheme.secondary.withValues(alpha: 0.5)) : null),
                     ),
                     child: Stack(
                       alignment: Alignment.center,
@@ -337,9 +337,9 @@ class _AppointmentCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: color.withOpacity(0.5)),
+                    border: Border.all(color: color.withValues(alpha: 0.5)),
                   ),
                   child: Text(
                     appointment.status.name.toUpperCase(),
