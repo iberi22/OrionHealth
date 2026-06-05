@@ -4,8 +4,10 @@ import 'package:flutter_gemma/flutter_gemma.dart' hide ModelType;
 import 'package:flutter_gemma/flutter_gemma.dart' as gemma;
 import 'package:injectable/injectable.dart';
 
+import 'package:flutter/foundation.dart';
 import '../../domain/services/llm_adapter.dart';
 import '../../domain/entities/local_model_descriptor.dart';
+import 'flutter_gemma_wrapper.dart';
 
 
 /// flutter_gemma adapter for on-device LLM inference.
@@ -19,11 +21,14 @@ import '../../domain/entities/local_model_descriptor.dart';
 /// 3. [generate] — run inference on the active model.
 @LazySingleton(as: LlmAdapter)
 @Named('gemma')
-@LazySingleton(as: LlmAdapter)
-@Named('gemma')
 class FlutterGemmaAdapter implements LlmAdapter {
+  final FlutterGemmaWrapper _wrapper;
   InferenceModel? _activeModel;
   bool _initialized = false;
+
+  FlutterGemmaAdapter({
+    @visibleForTesting FlutterGemmaWrapper? wrapper,
+  }) : _wrapper = wrapper ?? FlutterGemmaWrapper();
 
   // ── LlmAdapter interface ──
 
@@ -38,7 +43,7 @@ class FlutterGemmaAdapter implements LlmAdapter {
   Future<bool> isAvailable() async {
     try {
       await _ensureInitialized();
-      return FlutterGemma.hasActiveModel() && _activeModel != null;
+      return _wrapper.hasActiveModel() && _activeModel != null;
     } catch (_) {
       return false;
     }
@@ -65,15 +70,14 @@ class FlutterGemmaAdapter implements LlmAdapter {
   // ── Public API ──
 
   /// The active [ModelSpec], if any.
-  ModelSpec? get _activeSpec =>
-      FlutterGemmaPlugin.instance.modelManager.activeInferenceModel;
+  ModelSpec? get _activeSpec => _wrapper.activeInferenceModel;
 
   /// Initialize flutter_gemma. Must be called once before any other method.
   Future<void> initialize({
     String? huggingFaceToken,
     int maxDownloadRetries = 10,
   }) async {
-    await FlutterGemma.initialize(
+    await _wrapper.initialize(
       huggingFaceToken: huggingFaceToken,
       maxDownloadRetries: maxDownloadRetries,
     );
@@ -97,7 +101,8 @@ class FlutterGemmaAdapter implements LlmAdapter {
 
     final controller = StreamController<int>.broadcast();
     final gemmaModelType = _mapModelType(descriptor.modelType);
-    final builder = FlutterGemma.installModel(modelType: gemmaModelType)
+    final builder = _wrapper
+        .installModel(gemmaModelType)
         .fromNetwork(url, token: authToken)
         .withProgress((p) => controller.add(p));
 
@@ -112,18 +117,17 @@ class FlutterGemmaAdapter implements LlmAdapter {
 
   /// Check whether a model (by its file identifier) is installed.
   @override
-  Future<bool> isModelInstalled(String modelId) =>
-      FlutterGemma.isModelInstalled(modelId);
+  Future<bool> isModelInstalled(String modelId) async =>
+      _wrapper.isModelInstalled(modelId);
 
   /// List all installed model file identifiers.
   @override
-  Future<List<String>> listInstalledModels() =>
-      FlutterGemma.listInstalledModels();
+  Future<List<String>> listInstalledModels() => _wrapper.listInstalledModels();
 
   /// Uninstall (delete) a model from disk.
   @override
   Future<void> uninstallModel(String modelId) async {
-    await FlutterGemma.uninstallModel(modelId);
+    await _wrapper.uninstallModel(modelId);
     if (_activeModel != null) {
       final active = _activeSpec;
       if (active != null && active.name == modelId) {
@@ -142,8 +146,8 @@ class FlutterGemmaAdapter implements LlmAdapter {
   /// Force reload the active [InferenceModel] from the current spec.
   /// Useful after installing a new model or on error recovery.
   Future<void> reloadActiveModel({int maxTokens = 4096}) async {
-    if (FlutterGemma.hasActiveModel()) {
-      _activeModel = await FlutterGemma.getActiveModel(maxTokens: maxTokens);
+    if (_wrapper.hasActiveModel()) {
+      _activeModel = await _wrapper.getActiveModel(maxTokens: maxTokens);
     } else {
       _activeModel = null;
     }
@@ -170,12 +174,12 @@ class FlutterGemmaAdapter implements LlmAdapter {
 
   Future<InferenceModel> _resolveActiveModel() async {
     if (_activeModel != null) return _activeModel!;
-    if (!FlutterGemma.hasActiveModel()) {
+    if (!_wrapper.hasActiveModel()) {
       throw StateError(
         'No active model. Install one first via installModel().',
       );
     }
-    _activeModel = await FlutterGemma.getActiveModel(maxTokens: 4096);
+    _activeModel = await _wrapper.getActiveModel(maxTokens: 4096);
     return _activeModel!;
   }
 }
