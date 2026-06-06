@@ -62,13 +62,30 @@ void main() {
       verify(() => mockSecureStorage.write(key: 'oauth_refresh_token', value: refreshToken)).called(1);
     });
 
-    test('login exception returns null', () async {
+    test('login exception returns null and does not store tokens', () async {
       when(() => mockAppAuth.authorizeAndExchangeCode(any()))
           .thenThrow(Exception('Auth error'));
 
       final result = await repository.login();
 
       expect(result, isNull);
+      verifyNever(() => mockSecureStorage.write(
+            key: any(named: 'key'),
+            value: any(named: 'value'),
+          ));
+    });
+
+    test('login returns null when authorization is cancelled', () async {
+      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
+          .thenAnswer((_) async => null as dynamic);
+
+      final result = await repository.login();
+
+      expect(result, isNull);
+      verifyNever(() => mockSecureStorage.write(
+            key: any(named: 'key'),
+            value: any(named: 'value'),
+          ));
     });
 
     test('logout deletes tokens', () async {
@@ -98,6 +115,24 @@ void main() {
       final result = await repository.getIdToken();
 
       expect(result, equals(idToken));
+    });
+
+    test('getAccessToken returns null if not stored', () async {
+      when(() => mockSecureStorage.read(key: 'oauth_access_token'))
+          .thenAnswer((_) async => null);
+
+      final result = await repository.getAccessToken();
+
+      expect(result, isNull);
+    });
+
+    test('getIdToken returns null if not stored', () async {
+      when(() => mockSecureStorage.read(key: 'oauth_id_token'))
+          .thenAnswer((_) async => null);
+
+      final result = await repository.getIdToken();
+
+      expect(result, isNull);
     });
   });
 }
