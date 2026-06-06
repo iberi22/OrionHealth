@@ -68,6 +68,29 @@ void main() {
       expect(proof2['credentialIndex'], 2);
     });
 
+    test('issueCredential maintains separate indices for different issuers', () async {
+      final issuerKeys1 = await service.generateIssuerKeys();
+      final issuerKeys2 = await service.generateIssuerKeys();
+
+      final vc1 = await service.issueCredential(
+        credential: _createBaseVC('vc:1'),
+        issuerKeys: issuerKeys1,
+      );
+
+      when(() => mockRepository.getCredentials()).thenAnswer((_) async => [vc1]);
+
+      final vc2 = await service.issueCredential(
+        credential: _createBaseVC('vc:2'),
+        issuerKeys: issuerKeys2,
+      );
+
+      final proof1 = service.parseProofForTest(vc1.proof);
+      final proof2 = service.parseProofForTest(vc2.proof);
+
+      expect(proof1['credentialIndex'], 1);
+      expect(proof2['credentialIndex'], 1); // Should be 1 for the new issuer
+    });
+
     test('revokeCredential creates and saves a signed revocation entry', () async {
       final issuerKeys = await service.generateIssuerKeys();
       final vc = await service.issueCredential(
@@ -271,6 +294,194 @@ void main() {
       expect(salts, isEmpty,
           reason:
               'Salts must be redacted from credential proof to prevent leakage');
+    });
+
+    group('Selective Disclosure Edge Cases', () {
+      test('createPresentation with 0 fields disclosed is valid', () async {
+        final issuerKeys = await service.generateIssuerKeys();
+        final vc = await service.issueCredential(
+          credential: _createBaseVC('vc:1'),
+          issuerKeys: issuerKeys,
+        );
+
+        final presentation = await service.createPresentation(
+          credential: vc,
+          disclosedFields: [],
+        );
+
+        expect(presentation.disclosedFields, isEmpty);
+        expect(presentation.hiddenCommitments, hasLength(1)); // 'name' is hidden
+
+        final isValid = await service.verifyPresentation(presentation);
+        expect(isValid, true);
+      });
+
+      test('createPresentation with all fields disclosed is valid', () async {
+        final issuerKeys = await service.generateIssuerKeys();
+        final vc = await service.issueCredential(
+          credential: VerifiableCredential(
+            id: 'vc:1',
+            issuer: 'did:orion:issuer',
+            subject: 'did:orion:subject',
+            type: 'TestCredential',
+            schemaId: 'test:v1',
+            claims: {'name': 'Alice', 'age': '30', 'city': 'Wonderland'},
+            issuanceDate: DateTime.now(),
+          ),
+          issuerKeys: issuerKeys,
+        );
+
+        final presentation = await service.createPresentation(
+          credential: vc,
+          disclosedFields: ['name', 'age', 'city'],
+        );
+
+        expect(presentation.disclosedFields, hasLength(3));
+        expect(presentation.hiddenCommitments, isEmpty);
+
+        final isValid = await service.verifyPresentation(presentation);
+        expect(isValid, true);
+      });
+
+      test('createPresentation ignores non-existent fields requested', () async {
+        final issuerKeys = await service.generateIssuerKeys();
+        final vc = await service.issueCredential(
+          credential: _createBaseVC('vc:1'),
+          issuerKeys: issuerKeys,
+        );
+
+        final presentation = await service.createPresentation(
+          credential: vc,
+          disclosedFields: ['name', 'nonExistent'],
+        );
+
+        expect(presentation.disclosedFields, hasLength(1));
+        expect(presentation.disclosedFields.containsKey('nonExistent'), false);
+        expect(presentation.hiddenCommitments, isEmpty);
+
+        final isValid = await service.verifyPresentation(presentation);
+        expect(isValid, true);
+      });
+    });
+
+    test('isCredentialRevoked returns false for non-existent index', () async {
+      final issuerKeys = await service.generateIssuerKeys();
+
+      when(() => mockRepository.getRevocationEntry(any(), any()))
+          .thenAnswer((_) async => null);
+
+      final isRevoked = await service.isCredentialRevoked(issuerKeys.publicKey, 999);
+      expect(isRevoked, false);
+    });
+
+    group('ZKP Verification Failure Scenarios', () {
+      test('verifyPresentation fails if issuerSignature is tampered', () async {
+        final issuerKeys = await service.generateIssuerKeys();
+        final vc = await service.issueCredential(
+          credential: _createBaseVC('vc:1'),
+          issuerKeys: issuerKeys,
+        );
+
+        final presentation = await service.createPresentation(
+          credential: vc,
+          disclosedFields: ['name'],
+        );
+
+        final proof = jsonDecode(presentation.credential.proof!);
+        final tamperedProof = jsonEncode({
+          ...proof,
+          'signatureValue': base64Url.encode(List.generate(64, (_) => 0)),
+        });
+
+        final tamperedVC = VerifiableCredential(
+          id: presentation.credential.id,
+          issuer: presentation.credential.issuer,
+          subject: presentation.credential.subject,
+          type: presentation.credential.type,
+          schemaId: presentation.credential.schemaId,
+          claims: presentation.credential.claims,
+          issuanceDate: presentation.credential.issuanceDate,
+          proof: tamperedProof,
+        );
+
+        final tamperedPresentation = AnonCredsPresentation(
+          credential: tamperedVC,
+          disclosedFields: presentation.disclosedFields,
+          disclosedSalts: presentation.disclosedSalts,
+          hiddenCommitments: presentation.hiddenCommitments,
+          issuerSignature: 'ignored-by-implementation',
+          createdAt: presentation.createdAt,
+        );
+
+        final isValid = await service.verifyPresentation(tamperedPresentation);
+        expect(isValid, false);
+      });
+
+      test('verifyPresentation fails if a disclosed field value is tampered',
+          () async {
+        final issuerKeys = await service.generateIssuerKeys();
+        final vc = await service.issueCredential(
+          credential: _createBaseVC('vc:1'),
+          issuerKeys: issuerKeys,
+        );
+
+        final presentation = await service.createPresentation(
+          credential: vc,
+          disclosedFields: ['name'],
+        );
+
+        final tamperedFields = Map<String, dynamic>.from(presentation.disclosedFields);
+        tamperedFields['name'] = 'Eve';
+
+        final tamperedPresentation = AnonCredsPresentation(
+          credential: presentation.credential,
+          disclosedFields: tamperedFields,
+          disclosedSalts: presentation.disclosedSalts,
+          hiddenCommitments: presentation.hiddenCommitments,
+          issuerSignature: presentation.issuerSignature,
+          createdAt: presentation.createdAt,
+        );
+
+        final isValid = await service.verifyPresentation(tamperedPresentation);
+        expect(isValid, false);
+      });
+
+      test('verifyPresentation fails if credentialId in presentation is tampered',
+          () async {
+        final issuerKeys = await service.generateIssuerKeys();
+        final vc = await service.issueCredential(
+          credential: _createBaseVC('vc:1'),
+          issuerKeys: issuerKeys,
+        );
+
+        final presentation = await service.createPresentation(
+          credential: vc,
+          disclosedFields: ['name'],
+        );
+
+        final tamperedVC = VerifiableCredential(
+          id: 'vc:TAMPERED',
+          issuer: presentation.credential.issuer,
+          subject: presentation.credential.subject,
+          type: presentation.credential.type,
+          schemaId: presentation.credential.schemaId,
+          claims: presentation.credential.claims,
+          issuanceDate: presentation.credential.issuanceDate,
+          proof: presentation.credential.proof,
+        );
+
+        final tamperedPresentation = AnonCredsPresentation(
+          credential: tamperedVC,
+          disclosedFields: presentation.disclosedFields,
+          disclosedSalts: presentation.disclosedSalts,
+          hiddenCommitments: presentation.hiddenCommitments,
+          issuerSignature: presentation.issuerSignature,
+          createdAt: presentation.createdAt,
+        );
+
+        final isValid = await service.verifyPresentation(tamperedPresentation);
+        expect(isValid, false);
+      });
     });
 
     test('verifyPresentation fails if issuance date is tampered', () async {
