@@ -28,13 +28,23 @@ const MedicalRecordSchema = CollectionSchema(
       name: r'date',
       type: IsarType.dateTime,
     ),
-    r'summary': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 2,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'isValid': PropertySchema(
+      id: 3,
+      name: r'isValid',
+      type: IsarType.bool,
+    ),
+    r'summary': PropertySchema(
+      id: 4,
       name: r'summary',
       type: IsarType.string,
     ),
     r'type': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'type',
       type: IsarType.string,
       enumMap: _MedicalRecordtypeEnumValueMap,
@@ -92,8 +102,10 @@ void _medicalRecordSerialize(
     object.attachments,
   );
   writer.writeDateTime(offsets[1], object.date);
-  writer.writeString(offsets[2], object.summary);
-  writer.writeString(offsets[3], object.type.name);
+  writer.writeLong(offsets[2], object.hashCode);
+  writer.writeBool(offsets[3], object.isValid);
+  writer.writeString(offsets[4], object.summary);
+  writer.writeString(offsets[5], object.type.name);
 }
 
 MedicalRecord _medicalRecordDeserialize(
@@ -111,8 +123,8 @@ MedicalRecord _medicalRecordDeserialize(
         ) ??
         const [],
     date: reader.readDateTimeOrNull(offsets[1]),
-    summary: reader.readStringOrNull(offsets[2]),
-    type: _MedicalRecordtypeValueEnumMap[reader.readStringOrNull(offsets[3])] ??
+    summary: reader.readStringOrNull(offsets[4]),
+    type: _MedicalRecordtypeValueEnumMap[reader.readStringOrNull(offsets[5])] ??
         RecordType.other,
   );
   object.id = id;
@@ -137,8 +149,12 @@ P _medicalRecordDeserializeProp<P>(
     case 1:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
+      return (reader.readBool(offset)) as P;
+    case 4:
+      return (reader.readStringOrNull(offset)) as P;
+    case 5:
       return (_MedicalRecordtypeValueEnumMap[reader.readStringOrNull(offset)] ??
           RecordType.other) as P;
     default:
@@ -417,6 +433,62 @@ extension MedicalRecordQueryFilter
     });
   }
 
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterFilterCondition>
+      hashCodeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterFilterCondition>
+      hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterFilterCondition>
+      hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterFilterCondition>
+      hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<MedicalRecord, MedicalRecord, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -467,6 +539,16 @@ extension MedicalRecordQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterFilterCondition>
+      isValidEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isValid',
+        value: value,
       ));
     });
   }
@@ -788,6 +870,31 @@ extension MedicalRecordQuerySortBy
     });
   }
 
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> sortByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy>
+      sortByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> sortByIsValid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isValid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> sortByIsValidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isValid', Sort.desc);
+    });
+  }
+
   QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> sortBySummary() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'summary', Sort.asc);
@@ -827,6 +934,19 @@ extension MedicalRecordQuerySortThenBy
     });
   }
 
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> thenByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy>
+      thenByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
   QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -836,6 +956,18 @@ extension MedicalRecordQuerySortThenBy
   QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> thenByIsValid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isValid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QAfterSortBy> thenByIsValidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isValid', Sort.desc);
     });
   }
 
@@ -872,6 +1004,18 @@ extension MedicalRecordQueryWhereDistinct
     });
   }
 
+  QueryBuilder<MedicalRecord, MedicalRecord, QDistinct> distinctByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hashCode');
+    });
+  }
+
+  QueryBuilder<MedicalRecord, MedicalRecord, QDistinct> distinctByIsValid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isValid');
+    });
+  }
+
   QueryBuilder<MedicalRecord, MedicalRecord, QDistinct> distinctBySummary(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -905,6 +1049,18 @@ extension MedicalRecordQueryProperty
   QueryBuilder<MedicalRecord, DateTime?, QQueryOperations> dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
+    });
+  }
+
+  QueryBuilder<MedicalRecord, int, QQueryOperations> hashCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hashCode');
+    });
+  }
+
+  QueryBuilder<MedicalRecord, bool, QQueryOperations> isValidProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isValid');
     });
   }
 

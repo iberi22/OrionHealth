@@ -1,10 +1,9 @@
-import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
 
 part 'medical_attachment.g.dart';
 
 @embedded
-class MedicalAttachment with EquatableMixin {
+class MedicalAttachment {
   String? localPath;
   String? mimeType;
   String? extractedText;
@@ -14,9 +13,6 @@ class MedicalAttachment with EquatableMixin {
     this.mimeType,
     this.extractedText,
   });
-
-  @override
-  List<Object?> get props => [localPath, mimeType, extractedText];
 
   Map<String, dynamic> toJson() => {
         'localPath': localPath,
@@ -33,4 +29,16 @@ class MedicalAttachment with EquatableMixin {
   }
 
   bool get isValid => localPath != null && localPath!.isNotEmpty;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MedicalAttachment &&
+          runtimeType == other.runtimeType &&
+          localPath == other.localPath &&
+          mimeType == other.mimeType &&
+          extractedText == other.extractedText;
+
+  @override
+  int get hashCode => localPath.hashCode ^ mimeType.hashCode ^ extractedText.hashCode;
 }

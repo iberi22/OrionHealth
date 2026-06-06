@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
-import 'package:orionhealth_health/main.dart';
+import 'package:orionhealth_health/features/home/presentation/pages/home_page.dart';
 import 'package:orionhealth_health/features/home/application/home_cubit.dart';
 import 'package:orionhealth_health/features/home/application/home_state.dart';
 import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
@@ -35,12 +35,23 @@ void main() {
     getIt.registerLazySingleton<MedicalIndexingService>(() => mockMedicalIndexingService);
     getIt.registerLazySingleton<MedicalAnalysisService>(() => mockMedicalAnalysisService);
     getIt.registerLazySingleton<UserProfileRepository>(() => mockUserProfileRepository);
+  });
 
-    // Default mock behavior
+  setUp(() {
+    // Default mock behavior for each test
     when(() => mockMedicalIndexingService.hasIndexed).thenReturn(true);
     when(() => mockMedicalIndexingService.statusStream).thenAnswer((_) => const Stream.empty());
     when(() => mockVitalSignRepository.getLatestVitals()).thenAnswer((_) async => {});
     when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => null);
+    when(() => mockMedicalAnalysisService.analyzeVitals(
+      vitals: any(named: 'vitals'),
+      chronicConditions: any(named: 'chronicConditions'),
+    )).thenAnswer((_) async => []);
+    when(() => mockMedicalAnalysisService.calculateRisks(
+      labValues: any(named: 'labValues'),
+      vitals: any(named: 'vitals'),
+      conditions: any(named: 'conditions'),
+    )).thenAnswer((_) async => []);
   });
 
   tearDownAll(() {
@@ -90,5 +101,72 @@ void main() {
 
     // In Spanish 'Iniciar Consulta' is used for the button label
     expect(find.text('Iniciar Consulta'), findsOneWidget);
+  });
+
+  testWidgets('IndexingStatusBanner shows syncing state', (WidgetTester tester) async {
+    final controller = StreamController<bool>();
+    when(() => mockMedicalIndexingService.hasIndexed).thenReturn(false);
+    when(() => mockMedicalIndexingService.statusStream).thenAnswer((_) => controller.stream);
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pump();
+
+    // HomeCubit listens to statusStream. If it emits false, isIndexing becomes true.
+    controller.add(false);
+    await tester.pump();
+
+    expect(find.text('Sincronizando estándares médicos...'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    controller.close();
+  });
+
+  testWidgets('IndexingStatusBanner shows error state and retry works', (WidgetTester tester) async {
+    when(() => mockMedicalIndexingService.hasIndexed).thenReturn(false);
+    when(() => mockMedicalIndexingService.statusStream).thenAnswer((_) => Stream.value(false));
+    when(() => mockMedicalIndexingService.indexAll(force: true)).thenAnswer((_) async => const IndexingResult(total: 0, indexed: 0, errors: 1));
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pump();
+
+    // Trigger retry to get to error state
+    final finder = find.byType(IndexingStatusBanner);
+    final HomeCubit cubit = tester.state<State<IndexingStatusBanner>>(finder).context.read<HomeCubit>();
+    cubit.retryIndexing();
+
+    await tester.pump(); // Start retry
+    await tester.pump(); // Finish retry
+
+    expect(find.text('Error al sincronizar estándares médicos'), findsOneWidget);
+    // Button text in Spanish for retry is "Reintentar"
+    expect(find.text('Reintentar'), findsOneWidget);
+
+    await tester.tap(find.text('Reintentar'));
+    verify(() => mockMedicalIndexingService.indexAll(force: true)).called(2); // once from our manual call, once from tap
+  });
+
+  testWidgets('IndexingStatusBanner shows success state then disappears', (WidgetTester tester) async {
+    final controller = StreamController<bool>();
+    when(() => mockMedicalIndexingService.hasIndexed).thenReturn(false);
+    when(() => mockMedicalIndexingService.statusStream).thenAnswer((_) => controller.stream);
+
+    await tester.pumpWidget(createWidgetUnderTest());
+
+    // Transition to indexing (not done)
+    controller.add(false);
+    await tester.pump();
+    expect(find.text('Sincronizando estándares médicos...'), findsOneWidget);
+
+    // Transition to idle (done)
+    controller.add(true);
+    await tester.pump();
+
+    expect(find.text('Estándares médicos actualizados'), findsOneWidget);
+
+    // Wait for timer (3 seconds)
+    await tester.pump(const Duration(seconds: 4));
+    expect(find.text('Estándares médicos actualizados'), findsNothing);
+
+    controller.close();
   });
 }
