@@ -42,6 +42,15 @@ void main() {
       verify(() => mockRepository.saveUserProfile(tProfile)).called(1);
     });
 
+    test('updateProfile should save empty profile (default is valid)', () async {
+      final emptyProfile = UserProfile();
+      when(() => mockRepository.saveUserProfile(any())).thenAnswer((_) async {});
+
+      await service.updateProfile(emptyProfile);
+
+      verify(() => mockRepository.saveUserProfile(emptyProfile)).called(1);
+    });
+
     test('updateProfile should throw exception when profile is invalid', () async {
       final invalidProfile = UserProfile(age: -1);
 
