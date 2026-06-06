@@ -11,7 +11,10 @@ void main() {
   late String testDir;
 
   setUpAll(() async {
-    testDir = p.join(Directory.current.path, 'test_db_allergies');
+    testDir = p.join(Directory.current.path, 'test_db_allergies_enhanced');
+    if (await Directory(testDir).exists()) {
+      await Directory(testDir).delete(recursive: true);
+    }
     await Directory(testDir).create(recursive: true);
 
     await Isar.initializeIsarCore(download: true);
@@ -34,6 +37,11 @@ void main() {
   });
 
   group('IsarAllergyRepository', () {
+    test('Should return an empty list when no allergies exist', () async {
+      final allergies = await repository.getAllergies();
+      expect(allergies, isEmpty);
+    });
+
     test('Should save and retrieve an allergy', () async {
       final allergy = Allergy(
         allergen: 'Peanuts',
@@ -50,10 +58,11 @@ void main() {
       expect(allergies.first.notes, 'Strict avoidance');
     });
 
-    test('Should update an existing allergy', () async {
+    test('Should update an existing allergy and persist all fields', () async {
       final allergy = Allergy(
         allergen: 'Pollen',
         severity: AllergySeverity.mild,
+        notes: 'Initial note',
       );
 
       await repository.saveAllergy(allergy);
@@ -61,16 +70,18 @@ void main() {
       final savedAllergies = await repository.getAllergies();
       final savedAllergy = savedAllergies.first;
 
+      savedAllergy.allergen = 'Updated Pollen';
       savedAllergy.severity = AllergySeverity.moderate;
-      savedAllergy.notes = 'Getting worse';
+      savedAllergy.notes = 'Updated note';
 
       await repository.saveAllergy(savedAllergy);
 
       final updatedAllergies = await repository.getAllergies();
       expect(updatedAllergies.length, 1);
       expect(updatedAllergies.first.id, savedAllergy.id);
+      expect(updatedAllergies.first.allergen, 'Updated Pollen');
       expect(updatedAllergies.first.severity, AllergySeverity.moderate);
-      expect(updatedAllergies.first.notes, 'Getting worse');
+      expect(updatedAllergies.first.notes, 'Updated note');
     });
 
     test('Should delete an allergy', () async {
@@ -88,15 +99,26 @@ void main() {
       expect(allergies.isEmpty, true);
     });
 
-    test('Should return multiple allergies', () async {
-      await repository.saveAllergy(Allergy(allergen: 'A1'));
-      await repository.saveAllergy(Allergy(allergen: 'A2'));
-      await repository.saveAllergy(Allergy(allergen: 'A3'));
+    test('Should not fail when deleting a non-existent allergy ID', () async {
+      await expectLater(repository.deleteAllergy(999), completes);
+    });
+
+    test('Should return multiple allergies and maintain their order/data', () async {
+      await repository.saveAllergy(Allergy(allergen: 'A1', severity: AllergySeverity.mild));
+      await repository.saveAllergy(Allergy(allergen: 'A2', severity: AllergySeverity.moderate));
+      await repository.saveAllergy(Allergy(allergen: 'A3', severity: AllergySeverity.severe));
 
       final allergies = await repository.getAllergies();
       expect(allergies.length, 3);
-      final names = allergies.map((a) => a.allergen).toList();
-      expect(names, containsAll(['A1', 'A2', 'A3']));
+
+      final a1 = allergies.firstWhere((a) => a.allergen == 'A1');
+      expect(a1.severity, AllergySeverity.mild);
+
+      final a2 = allergies.firstWhere((a) => a.allergen == 'A2');
+      expect(a2.severity, AllergySeverity.moderate);
+
+      final a3 = allergies.firstWhere((a) => a.allergen == 'A3');
+      expect(a3.severity, AllergySeverity.severe);
     });
   });
 }
