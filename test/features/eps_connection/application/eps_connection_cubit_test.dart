@@ -87,15 +87,15 @@ void main() {
       ))).called(1);
     });
 
-    test('connect failure (no patient ID) emits Error', () async {
+    test('connect failure (no patient ID in map) emits Error', () async {
       when(() => mockUserProfileRepository.getUserProfile())
           .thenAnswer((_) async => testProfile);
       await buildCubit();
 
       final response = AuthorizationTokenResponse(
         'access', 'refresh', DateTime.now(), 'id', 'type', null,
-        {},
-        null, // No patient ID
+        {}, // Empty map
+        null,
       );
 
       when(() => mockOAuthRepository.login()).thenAnswer((_) async => response);
@@ -103,6 +103,52 @@ void main() {
       final expectation = [
         const EpsConnectionLoading(),
         const EpsConnectionError('No se pudo obtener el ID del paciente desde IHCE.'),
+      ];
+
+      expectLater(cubit.stream, emitsInOrder(expectation));
+
+      await cubit.connect();
+    });
+
+    test('connect failure (getUserProfile throws during connect) emits Error', () async {
+      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => testProfile);
+      await buildCubit();
+
+      final response = AuthorizationTokenResponse(
+        'access', 'refresh', DateTime.now(), 'id', 'type', null,
+        {'patient': 'PT-123'},
+        null,
+      );
+
+      when(() => mockOAuthRepository.login()).thenAnswer((_) async => response);
+      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => throw Exception('Fetch error during connect'));
+
+      final expectation = [
+        const EpsConnectionLoading(),
+        isA<EpsConnectionError>().having((e) => e.message, 'message', contains('Fetch error during connect')),
+      ];
+
+      expectLater(cubit.stream, emitsInOrder(expectation));
+
+      await cubit.connect();
+    });
+
+    test('connect failure (patient ID is not a string) emits Error', () async {
+      when(() => mockUserProfileRepository.getUserProfile())
+          .thenAnswer((_) async => testProfile);
+      await buildCubit();
+
+      final response = AuthorizationTokenResponse(
+        'access', 'refresh', DateTime.now(), 'id', 'type', null,
+        {'patient': 123}, // Int instead of String
+        null,
+      );
+
+      when(() => mockOAuthRepository.login()).thenAnswer((_) async => response);
+
+      final expectation = [
+        const EpsConnectionLoading(),
+        isA<EpsConnectionError>().having((e) => e.message, 'message', contains('is not a subtype of type')),
       ];
 
       expectLater(cubit.stream, emitsInOrder(expectation));
@@ -218,5 +264,31 @@ void main() {
 
       await cubit.disconnect();
     });
+
+    test('connect failure (saveUserProfile throws) emits Error', () async {
+      when(() => mockUserProfileRepository.getUserProfile())
+          .thenAnswer((_) async => testProfile);
+      await buildCubit();
+
+      final response = AuthorizationTokenResponse(
+        'access', 'refresh', DateTime.now(), 'id', 'type', null,
+        {'patient': 'PT-123'},
+        null,
+      );
+
+      when(() => mockOAuthRepository.login()).thenAnswer((_) async => response);
+      when(() => mockUserProfileRepository.saveUserProfile(any()))
+          .thenThrow(Exception('Database error'));
+
+      final expectation = [
+        const EpsConnectionLoading(),
+        isA<EpsConnectionError>().having((e) => e.message, 'message', contains('Database error')),
+      ];
+
+      expectLater(cubit.stream, emitsInOrder(expectation));
+
+      await cubit.connect();
+    });
+
   });
 }
