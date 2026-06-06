@@ -47,14 +47,38 @@ void main() {
         final allergy = Allergy(allergen: 'Peanuts');
         expect(allergy.isValid, isTrue);
       });
+
+      test('should return true for allergen with special characters', () {
+        final allergy = Allergy(allergen: 'Pollen-123!');
+        expect(allergy.isValid, isTrue);
+      });
+
+      test('should return true for very long allergen name', () {
+        final allergy = Allergy(allergen: 'a' * 1000);
+        expect(allergy.isValid, isTrue);
+      });
+
+      test('should return false for allergen with only tabs and newlines', () {
+        final allergy = Allergy(allergen: '\t\n  ');
+        expect(allergy.isValid, isFalse);
+      });
     });
-   group('AllergySeverity Enum', () {
+
+    group('AllergySeverity Enum', () {
       test('AllergySeverity should have correct values', () {
         expect(AllergySeverity.values.length, 3);
         expect(AllergySeverity.mild.index, 0);
         expect(AllergySeverity.moderate.index, 1);
         expect(AllergySeverity.severe.index, 2);
       });
+    });
+
+    test('should support equality by reference (default Isar behavior)', () {
+      final allergy1 = Allergy(id: 1, allergen: 'Dust');
+      final allergy2 = Allergy(id: 1, allergen: 'Dust');
+
+      // Not using Equatable, so they should not be equal by value
+      expect(allergy1, isNot(equals(allergy2)));
     });
   });
 }
