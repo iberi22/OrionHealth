@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../main.dart';
+import '../../../home/presentation/pages/main_navigation_page.dart';
 import 'welcome_step.dart';
 import 'basic_info_step.dart';
 import 'conditions_step.dart';

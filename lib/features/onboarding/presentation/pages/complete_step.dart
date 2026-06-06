@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
-import '../../../../main.dart';
+import '../../../home/presentation/pages/main_navigation_page.dart';
 
 class CompleteStep extends StatelessWidget {
   const CompleteStep({super.key});
