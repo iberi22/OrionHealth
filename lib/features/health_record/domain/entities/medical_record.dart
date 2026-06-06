@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
 import 'medical_attachment.dart';
 
@@ -12,7 +11,7 @@ enum RecordType {
 }
 
 @collection
-class MedicalRecord with EquatableMixin {
+class MedicalRecord {
   Id id = Isar.autoIncrement;
 
   DateTime? date;
@@ -30,9 +29,6 @@ class MedicalRecord with EquatableMixin {
     this.summary,
     this.attachments = const [],
   });
-
-  @override
-  List<Object?> get props => [id, date, type, summary, attachments];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -55,4 +51,27 @@ class MedicalRecord with EquatableMixin {
   }
 
   bool get isValid => attachments.every((a) => a.isValid);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MedicalRecord &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          date == other.date &&
+          type == other.type &&
+          summary == other.summary &&
+          _listEquals(attachments, other.attachments);
+
+  @override
+  int get hashCode =>
+      id.hashCode ^ date.hashCode ^ type.hashCode ^ summary.hashCode ^ attachments.hashCode;
+
+  bool _listEquals(List<MedicalAttachment> a, List<MedicalAttachment> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }

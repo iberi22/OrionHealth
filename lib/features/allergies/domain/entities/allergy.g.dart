@@ -22,13 +22,18 @@ const AllergySchema = CollectionSchema(
       name: r'allergen',
       type: IsarType.string,
     ),
-    r'notes': PropertySchema(
+    r'isValid': PropertySchema(
       id: 1,
+      name: r'isValid',
+      type: IsarType.bool,
+    ),
+    r'notes': PropertySchema(
+      id: 2,
       name: r'notes',
       type: IsarType.string,
     ),
     r'severity': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'severity',
       type: IsarType.string,
       enumMap: _AllergyseverityEnumValueMap,
@@ -77,8 +82,9 @@ void _allergySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.allergen);
-  writer.writeString(offsets[1], object.notes);
-  writer.writeString(offsets[2], object.severity.name);
+  writer.writeBool(offsets[1], object.isValid);
+  writer.writeString(offsets[2], object.notes);
+  writer.writeString(offsets[3], object.severity.name);
 }
 
 Allergy _allergyDeserialize(
@@ -90,9 +96,9 @@ Allergy _allergyDeserialize(
   final object = Allergy(
     allergen: reader.readStringOrNull(offsets[0]),
     id: id,
-    notes: reader.readStringOrNull(offsets[1]),
+    notes: reader.readStringOrNull(offsets[2]),
     severity:
-        _AllergyseverityValueEnumMap[reader.readStringOrNull(offsets[2])] ??
+        _AllergyseverityValueEnumMap[reader.readStringOrNull(offsets[3])] ??
             AllergySeverity.mild,
   );
   return object;
@@ -108,8 +114,10 @@ P _allergyDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 2:
+      return (reader.readStringOrNull(offset)) as P;
+    case 3:
       return (_AllergyseverityValueEnumMap[reader.readStringOrNull(offset)] ??
           AllergySeverity.mild) as P;
     default:
@@ -415,6 +423,16 @@ extension AllergyQueryFilter
     });
   }
 
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> isValidEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isValid',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Allergy, Allergy, QAfterFilterCondition> notesIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -711,6 +729,18 @@ extension AllergyQuerySortBy on QueryBuilder<Allergy, Allergy, QSortBy> {
     });
   }
 
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByIsValid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isValid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByIsValidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isValid', Sort.desc);
+    });
+  }
+
   QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
@@ -762,6 +792,18 @@ extension AllergyQuerySortThenBy
     });
   }
 
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByIsValid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isValid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByIsValidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isValid', Sort.desc);
+    });
+  }
+
   QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.asc);
@@ -796,6 +838,12 @@ extension AllergyQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Allergy, Allergy, QDistinct> distinctByIsValid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isValid');
+    });
+  }
+
   QueryBuilder<Allergy, Allergy, QDistinct> distinctByNotes(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -822,6 +870,12 @@ extension AllergyQueryProperty
   QueryBuilder<Allergy, String?, QQueryOperations> allergenProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'allergen');
+    });
+  }
+
+  QueryBuilder<Allergy, bool, QQueryOperations> isValidProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isValid');
     });
   }
 
