@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
-import 'package:isar_agent_memory/isar_agent_memory.dart';
+import 'package:isar_agent_memory/src/embeddings_adapter.dart';
+import 'package:isar_agent_memory/src/vector_index.dart';
 
 class MockEmbeddingsAdapter implements EmbeddingsAdapter {
   final int _dimension;

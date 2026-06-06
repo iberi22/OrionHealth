@@ -3,7 +3,11 @@ import 'dart:typed_data';
 import 'package:test/test.dart';
 import 'package:isar/isar.dart';
 import 'package:path/path.dart' as p;
-import 'package:isar_agent_memory/isar_agent_memory.dart';
+import 'package:isar_agent_memory/src/memory_graph.dart';
+import 'package:isar_agent_memory/src/models/memory_node.dart';
+import 'package:isar_agent_memory/src/models/memory_edge.dart';
+import 'package:isar_agent_memory/src/models/memory_embedding.dart';
+import 'package:isar_agent_memory/src/rerankers/recency_reranker.dart';
 import 'test_utils.dart';
 
 void main() {
