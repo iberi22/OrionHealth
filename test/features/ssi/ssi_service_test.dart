@@ -94,6 +94,48 @@ void main() {
         final doc = await service.resolveDid('did:orion:unknown');
         expect(doc, isNull);
       });
+
+      test('returns null for malformed DID', () async {
+        final doc = await service.resolveDid('invalid-did');
+        expect(doc, isNull);
+      });
+
+      test('resolves long-form DID from repository', () async {
+        final did = Did(
+          did: 'did:orion:123',
+          longForm: 'did:orion:123;initial-state=abc',
+          createdAt: DateTime.now(),
+        );
+        final didDoc = {'id': did.did, 'verificationMethod': []};
+
+        when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+        when(() => mockRepository.getDidDocument(did.did)).thenAnswer((_) async => didDoc);
+
+        // Resolve using the longForm DID string
+        final doc = await service.resolveDid(did.longForm);
+
+        expect(doc, isNotNull);
+        expect(doc!['id'], did.did);
+      });
+
+      test('resolves short-form DID via long-form mapping', () async {
+        final did = Did(
+          did: 'did:orion:123',
+          shortForm: 'did:ion:EiD3...',
+          longForm: 'did:orion:123;initial-state=abc',
+          createdAt: DateTime.now(),
+        );
+        final didDoc = {'id': did.did, 'verificationMethod': []};
+
+        when(() => mockRepository.getDids()).thenAnswer((_) async => [did]);
+        when(() => mockRepository.getDidDocument(did.did)).thenAnswer((_) async => didDoc);
+
+        // Resolve using the shortForm DID string
+        final doc = await service.resolveDid(did.shortForm!);
+
+        expect(doc, isNotNull);
+        expect(doc!['id'], did.did);
+      });
     });
 
     group('issueCredential', () {
