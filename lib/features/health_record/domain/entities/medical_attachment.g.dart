@@ -18,13 +18,23 @@ const MedicalAttachmentSchema = Schema(
       name: r'extractedText',
       type: IsarType.string,
     ),
-    r'localPath': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 1,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'isValid': PropertySchema(
+      id: 2,
+      name: r'isValid',
+      type: IsarType.bool,
+    ),
+    r'localPath': PropertySchema(
+      id: 3,
       name: r'localPath',
       type: IsarType.string,
     ),
     r'mimeType': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'mimeType',
       type: IsarType.string,
     )
@@ -69,8 +79,10 @@ void _medicalAttachmentSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.extractedText);
-  writer.writeString(offsets[1], object.localPath);
-  writer.writeString(offsets[2], object.mimeType);
+  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeBool(offsets[2], object.isValid);
+  writer.writeString(offsets[3], object.localPath);
+  writer.writeString(offsets[4], object.mimeType);
 }
 
 MedicalAttachment _medicalAttachmentDeserialize(
@@ -81,8 +93,8 @@ MedicalAttachment _medicalAttachmentDeserialize(
 ) {
   final object = MedicalAttachment(
     extractedText: reader.readStringOrNull(offsets[0]),
-    localPath: reader.readStringOrNull(offsets[1]),
-    mimeType: reader.readStringOrNull(offsets[2]),
+    localPath: reader.readStringOrNull(offsets[3]),
+    mimeType: reader.readStringOrNull(offsets[4]),
   );
   return object;
 }
@@ -97,8 +109,12 @@ P _medicalAttachmentDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
+      return (reader.readBool(offset)) as P;
+    case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    case 4:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -257,6 +273,72 @@ extension MedicalAttachmentQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'extractedText',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalAttachment, MedicalAttachment, QAfterFilterCondition>
+      hashCodeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalAttachment, MedicalAttachment, QAfterFilterCondition>
+      hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalAttachment, MedicalAttachment, QAfterFilterCondition>
+      hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalAttachment, MedicalAttachment, QAfterFilterCondition>
+      hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<MedicalAttachment, MedicalAttachment, QAfterFilterCondition>
+      isValidEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isValid',
+        value: value,
       ));
     });
   }

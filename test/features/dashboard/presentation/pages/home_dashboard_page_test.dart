@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/dashboard/presentation/pages/home_dashboard_page.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
+import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 
 class MockLlmService extends Mock implements LlmService {}
@@ -66,5 +67,17 @@ void main() {
     expect(find.byIcon(Icons.favorite), findsOneWidget);
     expect(find.byIcon(Icons.bar_chart), findsOneWidget);
     expect(find.byIcon(Icons.medication), findsOneWidget);
+  });
+
+  testWidgets('Quick action card triggers navigation', (WidgetTester tester) async {
+    await tester.pumpWidget(createWidgetUnderTest());
+
+    // Tap on AI Assistant card
+    await tester.tap(find.text('AI Assistant'));
+    await tester.pumpAndSettle();
+
+    // Verify navigation to ChatPage (by checking for its content or type if possible)
+    // ChatPage takes llmService, so we expect it to be rendered
+    expect(find.byType(ChatPage), findsOneWidget);
   });
 }
