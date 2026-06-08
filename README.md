@@ -265,6 +265,29 @@ Built with:
 - [ONNX Runtime](https://onnxruntime.ai) - AI inference
 - [Health Package](https://pub.dev/packages/health) - Sensor integration
 
+## 🙏 External Open-Source Contributions
+
+OrionHealth incorporates code ported from the following open-source projects. We thank their authors for making their work available under permissive licenses.
+
+### [OpenMed](https://github.com/maziyarpanahi/openmed) — Apache 2.0
+
+PII/PHI detection engine ported from OpenMed's Python source code into pure Dart for on-device execution. Specifically:
+- `core/labels.py` → `lib/core/medical/pii_labels.dart` (PII entity taxonomy, 50+ types)
+- `core/pii_entity_merger.py` → `lib/core/medical/pii_detector.dart` (30+ regex patterns with context-aware scoring and Luhn/SSN/NPI validation)
+- `core/decoding/spans.py` → `lib/core/medical/pii_entity.dart` (entity data models)
+- `processing/text.py` → `lib/core/medical/text_processor.dart` (medical text cleaning)
+- `swift/OpenMedKit/Sources/OpenMedKit/PostProcessing.swift` integrated into PII detection engine
+
+> OpenMed is the first comprehensive, open-source Healthcare AI library providing tools for PII/PHI de-identification, medical NER, data processing, and secure data management. [Apache 2.0 License](https://github.com/maziyarpanahi/openmed/blob/master/LICENSE).
+> Visit: [github.com/maziyarpanahi/openmed](https://github.com/maziyarpanahi/openmed) — 1449★
+
+### [PubMed Landscape](https://github.com/maziyarpanahi/pubmed-landscape) — MIT
+
+Reference architecture for medical literature analysis using PubMedBERT embeddings, informing OrionHealth's medical research feature design.
+
+> PubMed Landscape provides analysis of 20M+ PubMed abstracts with PubMedBERT + t-SNE for biomedical literature exploration. [MIT License](https://github.com/berenslab/pubmed-landscape/blob/main/LICENSE) (fork of berenslab/pubmed-landscape).
+> Visit: [github.com/maziyarpanahi/pubmed-landscape](https://github.com/maziyarpanahi/pubmed-landscape)
+
 Special thanks to the open-source health tech community for making privacy-first healthcare tools possible.
 
 ---
