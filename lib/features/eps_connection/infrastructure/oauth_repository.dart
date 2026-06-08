@@ -7,6 +7,7 @@ abstract class OAuthRepository {
   Future<void> logout();
   Future<String?> getAccessToken();
   Future<String?> getIdToken();
+  Future<TokenResponse?> refreshToken();
 }
 
 @LazySingleton(as: OAuthRepository)
@@ -68,5 +69,33 @@ class OAuthRepositoryImpl implements OAuthRepository {
   @override
   Future<String?> getIdToken() async {
     return await _secureStorage.read(key: _idTokenKey);
+  }
+
+  @override
+  Future<TokenResponse?> refreshToken() async {
+    try {
+      final refreshToken = await _secureStorage.read(key: _refreshTokenKey);
+      if (refreshToken == null) return null;
+
+      final result = await _appAuth.token(
+        TokenRequest(
+          _clientId,
+          _redirectUrl,
+          discoveryUrl: _discoveryUrl,
+          refreshToken: refreshToken,
+          scopes: _scopes,
+        ),
+      );
+
+      if (result != null) {
+        await _secureStorage.write(key: _accessTokenKey, value: result.accessToken);
+        await _secureStorage.write(key: _idTokenKey, value: result.idToken);
+        await _secureStorage.write(key: _refreshTokenKey, value: result.refreshToken);
+      }
+
+      return result;
+    } catch (e) {
+      return null;
+    }
   }
 }
