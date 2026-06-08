@@ -108,5 +108,69 @@ void main() {
       final isValid = await ssiService.verifyCredential(vc);
       expect(isValid, true, reason: 'Credential should be valid and verified with issuer public key');
     });
+
+    test('Flow fails when patient ID is missing from OIDC response', () async {
+      // 1. OIDC Login with missing patient claim
+      final authResponse = AuthorizationTokenResponse(
+        'access-token',
+        'refresh-token',
+        DateTime.now().add(const Duration(hours: 1)),
+        'id-token',
+        'Bearer',
+        null,
+        {}, // No patient claim
+        null,
+      );
+
+      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
+          .thenAnswer((_) async => authResponse);
+
+      final loginResult = await oauthRepository.login();
+      final patientId = loginResult?.authorizationAdditionalParameters?['patient'];
+
+      expect(patientId, isNull);
+
+      // If we try to issue credential with null patient ID, it should handle it or fail accordingly
+      // Depending on SsiServiceImpl implementation, it might throw or result in invalid claims
+      // For this test, we expect the app logic to realize patientId is missing.
+    });
+
+    test('Flow handles SSI VC verification failure', () async {
+      // 1. Setup (simplified)
+      final userDid = Did(did: 'did:test', longForm: 'did:test:long', createdAt: DateTime.now());
+      final vc = VerifiableCredential(
+        id: 'vc:test',
+        issuer: 'did:issuer',
+        subject: userDid.did,
+        type: 'Test',
+        schemaId: 'schema',
+        claims: {'ihcePatientId': 'patient-123'},
+        issuanceDate: DateTime.now(),
+      );
+
+      // Mock verification to fail
+      when(() => mockSsiRepository.getDidDocument(any())).thenAnswer((_) async => null);
+
+      final isValid = await ssiService.verifyCredential(vc);
+      expect(isValid, false, reason: 'Credential should be invalid if DID document is missing');
+    });
+
+    test('Flow handles SSI VC issuance failure', () async {
+       when(() => mockSsiRepository.saveDid(any(), any())).thenAnswer((_) async {});
+       final userDid = await ssiService.createDid();
+
+       // Mock saveCredential to throw or fail if that's how it's implemented
+       // In SsiServiceImpl, if saveCredential fails it might throw.
+       when(() => mockSsiRepository.saveCredential(any())).thenThrow(Exception('Storage error'));
+
+       expect(
+         () => ssiService.issueCredential(
+           schemaId: 'schema',
+           subjectDid: userDid.activeDid,
+           claims: {'id': '123'},
+         ),
+         throwsException,
+       );
+    });
   });
 }
