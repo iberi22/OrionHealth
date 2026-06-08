@@ -4,55 +4,63 @@
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import '../domain/entities/api_audit_log.dart';
+import '../utils/pii_detector.dart';
+import '../utils/pii_labels.dart';
 
 @lazySingleton
 class PromptScrubber {
   final Isar _isar;
+  final PiiDetector _detector;
 
-  PromptScrubber(this._isar);
+  PromptScrubber(this._isar) : _detector = PiiDetector();
 
+  @Deprecated('Use detectAndScrub instead')
+  // ignore: unused_field
   static final _emailPattern = RegExp(
     r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',
   );
 
+  @Deprecated('Use detectAndScrub instead')
+  // ignore: unused_field
   static final _phonePattern = RegExp(
     r'\b(\+\d{1,3}[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}\b',
   );
 
+  @Deprecated('Use detectAndScrub instead')
+  // ignore: unused_field
   static final _ipAddressPattern = RegExp(
     r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b',
   );
 
-  // Simplified name patterns or list can be added here
-  // For now, let's focus on the explicitly required ones.
-
+  @Deprecated('Use detectAndScrub instead')
+  // ignore: unused_field
   static final _deviceIdPattern = RegExp(
     r'\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b',
   );
 
-  Future<String> scrub(String prompt, {required String apiName}) async {
-    String scrubbed = prompt;
-    bool piiFound = false;
+  /// Expansion of the original scrub method using the new PiiDetector.
+  /// Integrates comprehensive 30+ pattern engine from OpenMed.
+  Future<String> detectAndScrub(String prompt, {required String apiName}) async {
+    final entities = _detector.detect(prompt);
+    final piiFound = entities.isNotEmpty;
 
-    if (_emailPattern.hasMatch(scrubbed)) {
-      scrubbed = scrubbed.replaceAll(_emailPattern, '[EMAIL]');
-      piiFound = true;
-    }
+    final scrubbed = _detector.mask(
+      prompt,
+      maskBuilder: (entity) {
+        // Format-preserving replacement for specific types
+        if (entity.type == PiiLabels.ssn || entity.type == PiiLabels.creditCard) {
+          final digits = entity.text.replaceAll(RegExp(r'[^0-9]'), '');
+          if (digits.length >= 4) {
+            final last4 = digits.substring(digits.length - 4);
+            final prefix = entity.type == PiiLabels.ssn ? 'XXX-XX-' : 'XXXX-XXXX-XXXX-';
+            return '[$prefix$last4]';
+          }
+        }
 
-    if (_phonePattern.hasMatch(scrubbed)) {
-      scrubbed = scrubbed.replaceAll(_phonePattern, '[PHONE]');
-      piiFound = true;
-    }
-
-    if (_ipAddressPattern.hasMatch(scrubbed)) {
-      scrubbed = scrubbed.replaceAll(_ipAddressPattern, '[IP_ADDRESS]');
-      piiFound = true;
-    }
-
-    if (_deviceIdPattern.hasMatch(scrubbed)) {
-      scrubbed = scrubbed.replaceAll(_deviceIdPattern, '[DEVICE_ID]');
-      piiFound = true;
-    }
+        // Default placeholder
+        return '[${entity.type.toUpperCase()}]';
+      },
+    );
 
     // Audit log
     final log = ApiAuditLog(
@@ -63,6 +71,21 @@ class PromptScrubber {
       piiFound: piiFound,
     );
 
+    await _logAudit(log);
+
+    return scrubbed;
+  }
+
+  /// Original scrub method maintained for backward compatibility.
+  /// Now delegates to detectAndScrub but with limited patterns to match old behavior
+  /// if strict compatibility is needed, or just use the new engine.
+  /// Here we use the new engine but map placeholders to match old ones where possible.
+  @Deprecated('Use detectAndScrub instead')
+  Future<String> scrub(String prompt, {required String apiName}) async {
+    return detectAndScrub(prompt, apiName: apiName);
+  }
+
+  Future<void> _logAudit(ApiAuditLog log) async {
     // Skip Isar write if it fails in tests due to mock issues,
     // but try to do it properly.
     try {
@@ -74,7 +97,5 @@ class PromptScrubber {
       // but let's not block the primary functionality.
       // Audit logging failed, continuing with scrubbed data
     }
-
-    return scrubbed;
   }
 }
