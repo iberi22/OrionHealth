@@ -73,17 +73,17 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i23;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i67;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
-    as _i24;
-import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i25;
-import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i94;
-import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
-    as _i95;
-import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i93;
-import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
+import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i26;
+import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
+    as _i93;
+import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
+    as _i94;
+import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
+    as _i95;
+import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
+    as _i24;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
     as _i98;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i97;
@@ -208,9 +208,9 @@ import 'fhir_module.dart' as _i114;
 import 'memory_module.dart' as _i116;
 import 'network_module.dart' as _i115;
 
+const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
-const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -258,12 +258,12 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i21.LabAnalysisStrategy>(() => _i21.LabAnalysisStrategy());
     gh.factory<_i22.LabInterpreter>(() => _i22.LabInterpreter());
     gh.lazySingleton<_i23.LlmAdapter>(
-      () => _i24.FlutterGemmaAdapter(wrapper: gh<_i25.FlutterGemmaWrapper>()),
-      instanceName: 'gemma',
+      () => _i24.OpenaiCompatibleAdapter(),
+      instanceName: 'openai',
     );
     gh.lazySingleton<_i23.LlmAdapter>(
-      () => _i26.OpenaiCompatibleAdapter(),
-      instanceName: 'openai',
+      () => _i25.FlutterGemmaAdapter(wrapper: gh<_i26.FlutterGemmaWrapper>()),
+      instanceName: 'gemma',
     );
     gh.lazySingleton<_i27.LlmSettingsRepository>(
         () => _i28.LlmSettingsRepositoryImpl(gh<_i20.Isar>()));
@@ -396,17 +396,17 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.lazySingleton<_i91.HealthRecordRepository>(
         () => _i92.HealthRecordRepositoryImpl(gh<_i20.Isar>()));
-    gh.factory<_i23.LlmAdapter>(
-      () => _i93.MockLlmAdapter(gh<_i52.PromptScrubber>()),
-      instanceName: 'mock',
-    );
     gh.lazySingleton<_i23.LlmAdapter>(
-      () => _i94.GeminiLlmAdapter(
+      () => _i93.GeminiLlmAdapter(
         scrubber: gh<_i52.PromptScrubber>(),
         userProfileRepository: gh<_i64.UserProfileRepository>(),
-        modelWrapper: gh<_i95.GeminiModelWrapper>(),
+        modelWrapper: gh<_i94.GeminiModelWrapper>(),
       ),
       instanceName: 'gemini',
+    );
+    gh.factory<_i23.LlmAdapter>(
+      () => _i95.MockLlmAdapter(gh<_i52.PromptScrubber>()),
+      instanceName: 'mock',
     );
     gh.lazySingleton<_i96.LlmAdapterFactory>(
         () => _i96.LlmAdapterFactory(gh<_i27.LlmSettingsRepository>()));

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/di/injection.dart';
 import '../../user_profile/domain/repositories/user_profile_repository.dart';
 import '../../onboarding/presentation/pages/onboarding_main_page.dart';
-import '../../../main.dart'; // To access MainNavigationPage
+import '../../home/presentation/pages/main_navigation_page.dart';
 import '../application/bloc/auth_cubit.dart';
 import '../application/bloc/auth_state.dart';
 import 'login_page.dart';
