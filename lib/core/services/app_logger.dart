@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
-library app_logger;
-
 /// Thin logging wrapper for OrionHealth.
 ///
 /// - In debug/profile mode: calls [debugPrint] with a tag prefix.

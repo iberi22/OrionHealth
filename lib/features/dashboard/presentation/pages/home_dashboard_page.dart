@@ -56,7 +56,7 @@ class HomeDashboardPage extends StatelessWidget {
     return const Row(
       children: [
         Icon(Icons.flash_on, color: CyberTheme.secondary, size: 20),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           'ACCIONES RÁPIDAS',
           style: TextStyle(
@@ -130,7 +130,7 @@ class HomeDashboardPage extends StatelessWidget {
     return const Row(
       children: [
         Icon(Icons.history, color: CyberTheme.secondary, size: 20),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           'ACTIVIDAD RECIENTE',
           style: TextStyle(

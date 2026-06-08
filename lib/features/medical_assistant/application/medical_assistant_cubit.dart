@@ -6,13 +6,9 @@ import 'package:medical_standards/medical_standards.dart';
 import '../domain/entities/medical_query.dart';
 import '../domain/entities/medical_insight.dart';
 import '../domain/entities/ai_response.dart';
-import '../domain/entities/analysis_response.dart';
 import '../domain/services/medical_analysis_service.dart';
 import '../domain/services/health_context_service.dart';
 import '../infrastructure/llm/medical_llm_adapter.dart';
-import '../infrastructure/analysis/lab_interpreter.dart';
-import '../infrastructure/analysis/vital_sign_analyzer.dart';
-import '../infrastructure/analysis/risk_calculator.dart';
 
 // States
 abstract class MedicalAssistantState extends Equatable {
@@ -60,22 +56,16 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   final MedicalLlmAdapter _llmAdapter;
   final MedicalAnalysisService _analysisService;
   final HealthContextService _healthContextService;
-  final LabInterpreter _labInterpreter;
-  final VitalSignAnalyzer _vitalAnalyzer;
-  final RiskCalculator _riskCalculator;
   MedicalAssistantCubit({
     MedicalLlmAdapter? llmAdapter,
     MedicalAnalysisService? analysisService,
     required HealthContextService healthContextService,
-    LabInterpreter? labInterpreter,
-    VitalSignAnalyzer? vitalAnalyzer,
-    RiskCalculator? riskCalculator,
+    dynamic labInterpreter,
+    dynamic vitalAnalyzer,
+    dynamic riskCalculator,
   })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(),
         _analysisService = analysisService ?? MedicalAnalysisService(),
         _healthContextService = healthContextService,
-        _labInterpreter = labInterpreter ?? LabInterpreter(),
-        _vitalAnalyzer = vitalAnalyzer ?? VitalSignAnalyzer(),
-        _riskCalculator = riskCalculator ?? RiskCalculator(),
         super(const MedicalAssistantIdle());
 
   /// Submit a medical query with STRICT confidence enforcement.

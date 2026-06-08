@@ -4,7 +4,6 @@ import 'package:flutter_gemma/flutter_gemma.dart' hide ModelType;
 import 'package:flutter_gemma/flutter_gemma.dart' as gemma;
 import 'package:injectable/injectable.dart';
 
-import 'package:flutter/foundation.dart';
 import '../../domain/services/llm_adapter.dart';
 import '../../domain/entities/local_model_descriptor.dart';
 import 'flutter_gemma_wrapper.dart';
@@ -27,7 +26,7 @@ class FlutterGemmaAdapter implements LlmAdapter {
   bool _initialized = false;
 
   FlutterGemmaAdapter({
-    @visibleForTesting FlutterGemmaWrapper? wrapper,
+    FlutterGemmaWrapper? wrapper,
   }) : _wrapper = wrapper ?? FlutterGemmaWrapper();
 
   // ── LlmAdapter interface ──
