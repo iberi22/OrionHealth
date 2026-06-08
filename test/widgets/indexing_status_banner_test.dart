@@ -7,7 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/home/application/home_cubit.dart';
 import 'package:orionhealth_health/features/home/application/home_state.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
-import 'package:orionhealth_health/main.dart';
+import 'package:orionhealth_health/features/home/presentation/pages/home_page.dart';
 
 class MockHomeCubit extends Mock implements HomeCubit {}
 

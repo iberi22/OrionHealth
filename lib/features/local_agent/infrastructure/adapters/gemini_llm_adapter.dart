@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/services/privacy_anonymizer.dart';
@@ -21,7 +20,7 @@ class GeminiLlmAdapter implements LlmAdapter {
   GeminiLlmAdapter({
     required PromptScrubber scrubber,
     required UserProfileRepository userProfileRepository,
-    @visibleForTesting GeminiModelWrapper? modelWrapper,
+    GeminiModelWrapper? modelWrapper,
   })  : _scrubber = scrubber,
         _userProfileRepository = userProfileRepository,
         _testWrapper = modelWrapper;

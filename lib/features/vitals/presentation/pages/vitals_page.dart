@@ -97,7 +97,7 @@ class _VitalsPageState extends State<VitalsPage> {
                         ),
                       ],
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),
@@ -146,7 +146,7 @@ class _VitalsPageState extends State<VitalsPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              vital != null ? '${vital.value.toStringAsFixed(1)}' : '--',
+              vital != null ? vital.value.toStringAsFixed(1) : '--',
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -174,7 +174,7 @@ class _VitalsPageState extends State<VitalsPage> {
             const Row(
               children: [
                 Icon(Icons.speed, size: 16, color: CyberTheme.secondary),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text('Presión',
                     style: TextStyle(fontSize: 12, color: Colors.grey)),
               ],
@@ -269,7 +269,9 @@ class _VitalsPageState extends State<VitalsPage> {
       builder: (context) => _AddVitalBottomSheet(
         onSave: (vital) async {
           await _repository.saveVitalSign(vital);
-          _loadData();
+          if (context.mounted) {
+            _loadData();
+          }
         },
       ),
     );

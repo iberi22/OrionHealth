@@ -62,12 +62,6 @@ void main() {
       // Los labels en TextField aparecen como texto auxiliar o placeholder
 
       // Si hay un campo de nombre
-      final nameField = find.ancestor(
-        of: find.byType(TextField),
-        matching: find.byWidgetPredicate(
-          (w) => w is Text && w.data != null && w.data!.toLowerCase().contains('nombre'),
-        ),
-      );
       debugPrint('🔍 Campos de texto encontrados: ${find.byType(TextField).evaluate().length}');
 
       // Buscar label "Peso"
@@ -83,10 +77,11 @@ void main() {
         final pesoWidget = pesoLabels.evaluate().first.widget as Text;
         final style = pesoWidget.style;
         if (style != null) {
-          debugPrint('🔍 Color label Peso: ${style.color} (alpha: ${style.color?.alpha})');
+          final alpha = (style.color?.a ?? 0.0) * 255.0;
+          debugPrint('🔍 Color label Peso: ${style.color} (alpha: $alpha)');
           // Alpha debe ser > 200 para ser legible
-          if (style.color != null && style.color!.alpha < 150) {
-            debugPrint('⚠️ ADVERTENCIA: Label Peso tiene alpha bajo (${style.color!.alpha})');
+          if (style.color != null && alpha < 150) {
+            debugPrint('⚠️ ADVERTENCIA: Label Peso tiene alpha bajo ($alpha)');
           }
         }
       }

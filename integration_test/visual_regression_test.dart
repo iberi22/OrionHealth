@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:orionhealth_health/features/auth/presentation/auth_gate.dart';
 import 'package:orionhealth_health/features/home/presentation/pages/home_page.dart';
 import 'package:orionhealth_health/features/sync/presentation/sync_status_widget.dart';
 import 'package:orionhealth_health/main.dart' as app;
