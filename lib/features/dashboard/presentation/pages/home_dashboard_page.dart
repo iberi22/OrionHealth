@@ -151,13 +151,13 @@ class HomeDashboardPage extends StatelessWidget {
           time: 'Hace 2 horas',
           icon: Icons.monitor_heart,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _ActivityTile(
           title: 'Medicamento: Vitamina C',
           time: 'Hace 5 horas',
           icon: Icons.done,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _ActivityTile(
           title: 'Informe semanal generado',
           time: 'Ayer',

@@ -149,7 +149,7 @@ class BleSharingService {
     try {
       // Real BLE connection
       await device.connect(
-        license: License.free,
+        license: License.nonprofit,
         timeout: const Duration(seconds: 35),
         mtu: 512,
         autoConnect: false,

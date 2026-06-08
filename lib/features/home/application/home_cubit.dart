@@ -6,7 +6,6 @@ import '../../vitals/domain/repositories/vital_sign_repository.dart';
 import '../../vitals/domain/entities/vital_sign.dart' as entity;
 import '../../local_agent/infrastructure/services/medical_indexing_service.dart';
 import '../../medical_assistant/domain/services/medical_analysis_service.dart';
-import '../../medical_assistant/domain/entities/medical_insight.dart';
 import '../../user_profile/domain/repositories/user_profile_repository.dart';
 import 'home_state.dart';
 
@@ -59,24 +58,24 @@ class HomeCubit extends Cubit<HomeState> {
       // Convert latest vitals to a map suitable for MedicalAnalysisService
       final vitalsMap = <String, double>{};
       final hr = vitals[entity.VitalSignType.heartRate];
-      if (hr != null && hr.value != null) {
-        vitalsMap['heartRate'] = hr.value!;
+      if (hr != null) {
+        vitalsMap['heartRate'] = hr.value;
       }
       final systolic = vitals[entity.VitalSignType.bloodPressureSystolic];
-      if (systolic != null && systolic.value != null) {
-        vitalsMap['systolic'] = systolic.value!;
+      if (systolic != null) {
+        vitalsMap['systolic'] = systolic.value;
       }
       final diastolic = vitals[entity.VitalSignType.bloodPressureDiastolic];
-      if (diastolic != null && diastolic.value != null) {
-        vitalsMap['diastolic'] = diastolic.value!;
+      if (diastolic != null) {
+        vitalsMap['diastolic'] = diastolic.value;
       }
       final temp = vitals[entity.VitalSignType.temperature];
-      if (temp != null && temp.value != null) {
-        vitalsMap['temperature'] = temp.value!;
+      if (temp != null) {
+        vitalsMap['temperature'] = temp.value;
       }
       final spo2 = vitals[entity.VitalSignType.oxygenSaturation];
-      if (spo2 != null && spo2.value != null) {
-        vitalsMap['oxygenSaturation'] = spo2.value!;
+      if (spo2 != null) {
+        vitalsMap['oxygenSaturation'] = spo2.value;
       }
 
       // Load chronic conditions from user profile (parallelized)

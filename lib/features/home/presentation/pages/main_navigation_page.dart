@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../core/responsive/responsive_layout.dart';
-import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/floating_assistant_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../health_record/presentation/pages/health_record_staging_page.dart';

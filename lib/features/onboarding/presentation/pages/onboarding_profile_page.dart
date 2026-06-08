@@ -120,7 +120,7 @@ class _OnboardingProfilePageState extends State<OnboardingProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     DropdownButtonFormField<String>(
-                      value: _selectedSex,
+                      initialValue: _selectedSex,
                       decoration: const InputDecoration(
                         labelText: 'Sex',
                         prefixIcon: Icon(Icons.wc, color: CyberTheme.secondary),
@@ -133,7 +133,7 @@ class _OnboardingProfilePageState extends State<OnboardingProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     DropdownButtonFormField<String>(
-                      value: _selectedBloodType,
+                      initialValue: _selectedBloodType,
                       decoration: const InputDecoration(
                         labelText: 'Blood Type',
                         prefixIcon: Icon(Icons.bloodtype, color: CyberTheme.secondary),

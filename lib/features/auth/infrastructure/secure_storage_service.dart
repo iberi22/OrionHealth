@@ -14,7 +14,6 @@ class SecureStorageServiceImpl implements SecureStorageService {
   SecureStorageServiceImpl({FlutterSecureStorage? storage})
       : _storage = storage ?? const FlutterSecureStorage(
           aOptions: AndroidOptions(
-            encryptedSharedPreferences: true,
           ),
           iOptions: IOSOptions(
             accessibility: KeychainAccessibility.first_unlock_this_device,

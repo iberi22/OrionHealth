@@ -31,7 +31,7 @@ class VitalAnalysisStrategy {
 
       explanation = 'PRESIÓN ARTERIAL: $systolic/$diastolic mmHg\n\n';
 
-      final bpGuideline = await ClinicalGuidelines.findByCode('AHA-2017');
+      final bpGuideline = ClinicalGuidelines.findByCode('AHA-2017');
 
       if (systolic >= 180 || diastolic >= 120) {
         explanation += '⚠️ Esta presión arterial está en rango de HIPERTENSIÓN CRISIS.\n';

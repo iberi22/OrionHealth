@@ -311,7 +311,7 @@ class _AddVitalBottomSheetState extends State<_AddVitalBottomSheet> {
           ),
           const SizedBox(height: 20),
           DropdownButtonFormField<VitalSignType>(
-            value: _selectedType,
+            initialValue: _selectedType,
             items: VitalSignType.values.map((type) {
               return DropdownMenuItem(
                 value: type,

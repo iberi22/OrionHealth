@@ -33,8 +33,9 @@ class EmailService {
     // In a real implementation, this would call an API
     // For now, we simulate success/failure
     try {
-      final body = interpolate(template.body, appointment);
-      final subject = interpolate(template.subject, appointment);
+      // Interpolate template with appointment data
+      // final body = interpolate(template.body, appointment);
+      // final subject = interpolate(template.subject, appointment);
 
       // Simulate network delay
       await Future.delayed(const Duration(milliseconds: 100));

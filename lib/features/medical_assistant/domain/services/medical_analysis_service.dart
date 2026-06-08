@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
 import '../entities/medical_insight.dart';
-import '../entities/ai_response.dart';
 import '../entities/analysis_response.dart';
 
 /// Domain service for medical analysis orchestration
@@ -62,7 +61,7 @@ class MedicalAnalysisService {
                 'INTERPRETACIÓN (con alta confianza):\n'
                 'Este valor elevado podría estar relacionado con ${_getPossibleCondition(loinc, patientCondition)}.\n\n'
                 'BASADO EN:\n'
-                '• Tu resultado: $value ${unit}\n'
+                '• Tu resultado: $value $unit\n'
                 '• Guideline de referencia: ${loinc.component}\n'
                 '• Condición conocida: ${patientCondition ?? "no especificada"}\n\n'
                 'NOTA: Esta interpretación se basa en datos objetivos y guías clínicas, '
@@ -94,7 +93,7 @@ class MedicalAnalysisService {
           confidence = 0.85; // High confidence it's normal
           possibleInterpretation = 
               'INTERPRETACIÓN:\n'
-              'Tu valor de ${loinc.component} ($value ${unit}) está dentro '
+              'Tu valor de ${loinc.component} ($value $unit) está dentro '
               'de los rangos normales de referencia.\n\n'
               'Continúa con tus chequeos regulares.';
         }
@@ -332,7 +331,7 @@ class MedicalAnalysisService {
       
       confidence = 0.40;
       possibleInterpretation = 
-          'El cansancio persistente tiene muchas causas posibles.\n\n'
+          'El cansancio persistente tiene many causas posibles.\n\n'
           'MIS RECOMENDACIONES:\n'
           '1. Consulta con tu médico para una evaluación completa\n'
           '2. Considera hacerte los siguientes exámenes:\n'
