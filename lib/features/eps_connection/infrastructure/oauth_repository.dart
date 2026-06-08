@@ -14,21 +14,33 @@ abstract class OAuthRepository {
 class OAuthRepositoryImpl implements OAuthRepository {
   final FlutterAppAuth _appAuth;
   final FlutterSecureStorage _secureStorage;
+  final String _clientId;
+  final String _redirectUrl;
+  final String _discoveryUrl;
+  final List<String> _scopes;
+  final String _accessTokenKey;
+  final String _idTokenKey;
+  final String _refreshTokenKey;
 
   OAuthRepositoryImpl({
     FlutterAppAuth appAuth = const FlutterAppAuth(),
     FlutterSecureStorage secureStorage = const FlutterSecureStorage(),
+    String clientId = 'orion-health-app',
+    String redirectUrl = 'com.orionhealth.app://oauth-callback',
+    String discoveryUrl = 'https://ihce.example.com/.well-known/openid-configuration',
+    List<String> scopes = const ['openid', 'profile', 'email', 'patient/*.read'],
+    String accessTokenKey = 'oauth_access_token',
+    String idTokenKey = 'oauth_id_token',
+    String refreshTokenKey = 'oauth_refresh_token',
   })  : _appAuth = appAuth,
-        _secureStorage = secureStorage;
-
-  static const String _clientId = 'orion-health-app';
-  static const String _redirectUrl = 'com.orionhealth.app://oauth-callback';
-  static const String _discoveryUrl = 'https://ihce.example.com/.well-known/openid-configuration';
-  static const List<String> _scopes = ['openid', 'profile', 'email', 'patient/*.read'];
-
-  static const String _accessTokenKey = 'oauth_access_token';
-  static const String _idTokenKey = 'oauth_id_token';
-  static const String _refreshTokenKey = 'oauth_refresh_token';
+        _secureStorage = secureStorage,
+        _clientId = clientId,
+        _redirectUrl = redirectUrl,
+        _discoveryUrl = discoveryUrl,
+        _scopes = scopes,
+        _accessTokenKey = accessTokenKey,
+        _idTokenKey = idTokenKey,
+        _refreshTokenKey = refreshTokenKey;
 
   @override
   Future<AuthorizationTokenResponse?> login() async {
