@@ -68,6 +68,56 @@ void main() {
       verify(() => mockSecureStorage.write(key: 'oauth_refresh_token', value: refreshToken)).called(1);
     });
 
+    test('login success but missing patient claim in additional parameters', () async {
+      final response = AuthorizationTokenResponse(
+        accessToken,
+        refreshToken,
+        DateTime.now().add(const Duration(hours: 1)),
+        idToken,
+        'tokenType',
+        null,
+        {}, // empty additional parameters
+        null,
+      );
+
+      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
+          .thenAnswer((_) async => response);
+      when(() => mockSecureStorage.write(
+            key: any(named: 'key'),
+            value: any(named: 'value'),
+          )).thenAnswer((_) async => {});
+
+      final result = await repository.login();
+
+      expect(result, equals(response));
+      expect(result?.authorizationAdditionalParameters?['patient'], isNull);
+    });
+
+    test('login success with empty tokens', () async {
+      final response = AuthorizationTokenResponse(
+        '',
+        '',
+        DateTime.now().add(const Duration(hours: 1)),
+        '',
+        'tokenType',
+        null,
+        null,
+        null,
+      );
+
+      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
+          .thenAnswer((_) async => response);
+      when(() => mockSecureStorage.write(
+            key: any(named: 'key'),
+            value: any(named: 'value'),
+          )).thenAnswer((_) async => {});
+
+      final result = await repository.login();
+
+      expect(result, equals(response));
+      expect(result?.accessToken, isEmpty);
+    });
+
     test('login exception (e.g. 404, timeout) returns null', () async {
       when(() => mockAppAuth.authorizeAndExchangeCode(any()))
           .thenThrow(PlatformException(code: 'network_error', message: '404 Not Found'));
@@ -123,6 +173,28 @@ void main() {
 
       when(() => mockAppAuth.token(any()))
           .thenThrow(PlatformException(code: 'invalid_grant', message: 'Token expired'));
+
+      final result = await repository.refreshToken();
+
+      expect(result, isNull);
+    });
+
+    test('refreshToken returns null if refresh token is missing in storage', () async {
+      when(() => mockSecureStorage.read(key: 'oauth_refresh_token'))
+          .thenAnswer((_) async => null);
+
+      final result = await repository.refreshToken();
+
+      expect(result, isNull);
+      verifyNever(() => mockAppAuth.token(any()));
+    });
+
+    test('refreshToken returns null on network exception', () async {
+      when(() => mockSecureStorage.read(key: 'oauth_refresh_token'))
+          .thenAnswer((_) async => 'some_refresh_token');
+
+      when(() => mockAppAuth.token(any()))
+          .thenThrow(PlatformException(code: 'network_error', message: 'Timeout'));
 
       final result = await repository.refreshToken();
 
