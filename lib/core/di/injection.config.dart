@@ -73,9 +73,9 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i23;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i67;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
-    as _i25;
+    as _i24;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
-    as _i26;
+    as _i25;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
     as _i93;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
@@ -83,16 +83,16 @@ import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
     as _i95;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
-    as _i24;
+    as _i26;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
     as _i98;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i97;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i111;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i34;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i35;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i34;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i68;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -172,7 +172,7 @@ import '../../features/settings/application/llm_settings_cubit.dart' as _i99;
 import '../../features/settings/domain/repositories/llm_settings_repository.dart'
     as _i27;
 import '../../features/settings/domain/services/device_capability_service.dart'
-    as _i12;
+    as _i11;
 import '../../features/settings/infrastructure/repositories/llm_settings_repository_impl.dart'
     as _i28;
 import '../../features/ssi/domain/repositories/ssi_repository.dart' as _i58;
@@ -201,16 +201,16 @@ import '../../features/vitals/domain/repositories/vital_sign_repository.dart'
     as _i71;
 import '../../features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart'
     as _i72;
-import '../services/device_capability_service.dart' as _i11;
+import '../services/device_capability_service.dart' as _i12;
 import '../services/privacy_anonymizer.dart' as _i52;
 import 'database_module.dart' as _i117;
 import 'fhir_module.dart' as _i114;
 import 'memory_module.dart' as _i116;
 import 'network_module.dart' as _i115;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -258,12 +258,12 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i21.LabAnalysisStrategy>(() => _i21.LabAnalysisStrategy());
     gh.factory<_i22.LabInterpreter>(() => _i22.LabInterpreter());
     gh.lazySingleton<_i23.LlmAdapter>(
-      () => _i24.OpenaiCompatibleAdapter(),
-      instanceName: 'openai',
+      () => _i24.FlutterGemmaAdapter(wrapper: gh<_i25.FlutterGemmaWrapper>()),
+      instanceName: 'gemma',
     );
     gh.lazySingleton<_i23.LlmAdapter>(
-      () => _i25.FlutterGemmaAdapter(wrapper: gh<_i26.FlutterGemmaWrapper>()),
-      instanceName: 'gemma',
+      () => _i26.OpenaiCompatibleAdapter(),
+      instanceName: 'openai',
     );
     gh.lazySingleton<_i27.LlmSettingsRepository>(
         () => _i28.LlmSettingsRepositoryImpl(gh<_i20.Isar>()));
@@ -275,15 +275,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i32.MedicalGuidelinesService>(
         () => _i32.MedicalGuidelinesService());
     gh.factory<_i33.MedicalKnowledgeRepository>(
-      () => _i34.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
-    );
-    gh.factory<_i33.MedicalKnowledgeRepository>(
-      () => _i35.JsonMedicalKnowledgeRepository(),
+      () => _i34.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
+    );
+    gh.factory<_i33.MedicalKnowledgeRepository>(
+      () => _i35.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
     );
     gh.factory<_i36.MedicalLlmAdapter>(() => _i36.MedicalLlmAdapter());
     gh.lazySingleton<_i37.MedicalScraperService>(
@@ -313,6 +313,13 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i47.OAuthRepository>(() => _i47.OAuthRepositoryImpl(
           appAuth: gh<_i48.FlutterAppAuth>(),
           secureStorage: gh<_i49.FlutterSecureStorage>(),
+          clientId: gh<String>(),
+          redirectUrl: gh<String>(),
+          discoveryUrl: gh<String>(),
+          scopes: gh<List<String>>(),
+          accessTokenKey: gh<String>(),
+          idTokenKey: gh<String>(),
+          refreshTokenKey: gh<String>(),
         ));
     gh.lazySingleton<_i50.OcrService>(() => _i50.MlKitOcrService());
     gh.factory<_i51.OnboardingCubit>(() => _i51.OnboardingCubit());
@@ -417,16 +424,13 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i99.LlmSettingsCubit>(() => _i99.LlmSettingsCubit(
           gh<_i27.LlmSettingsRepository>(),
-          gh<_i12.DeviceCapabilityService>(),
+          gh<_i11.DeviceCapabilityService>(),
           gh<_i23.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.factory<_i100.MedicalAssistantCubit>(() => _i100.MedicalAssistantCubit(
           llmAdapter: gh<_i36.MedicalLlmAdapter>(),
           analysisService: gh<_i30.MedicalAnalysisService>(),
           healthContextService: gh<_i88.HealthContextService>(),
-          labInterpreter: gh<_i22.LabInterpreter>(),
-          vitalAnalyzer: gh<_i70.VitalSignAnalyzer>(),
-          riskCalculator: gh<_i55.RiskCalculator>(),
         ));
     gh.lazySingleton<_i101.MedicalResearchService>(
         () => _i101.MedicalResearchService(

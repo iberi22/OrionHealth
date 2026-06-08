@@ -116,7 +116,6 @@ class SharingCubit extends Cubit<SharingState> {
   StreamSubscription? _wifiSubscription;
 
   TransferMethod? _currentMethod;
-  SharedHealthPackage? _pendingPackage;
 
   SharingCubit({
     BleSharingService? bleService,
@@ -250,7 +249,6 @@ class SharingCubit extends Cubit<SharingState> {
     required TransferMethod method,
     required SharedHealthPackage package,
   }) async {
-    _pendingPackage = package;
     _currentMethod = method;
 
     switch (method) {
@@ -299,7 +297,6 @@ class SharingCubit extends Cubit<SharingState> {
     await _nfcService.stopListening();
     await _wifiService.stop();
 
-    _pendingPackage = null;
     _currentMethod = null;
 
     emit(SharingReady());
