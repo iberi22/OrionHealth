@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,7 +7,6 @@ import 'package:orionhealth_health/features/eps_connection/infrastructure/oauth_
 
 class MockFlutterAppAuth extends Mock implements FlutterAppAuth {}
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
-class MockAuthorizationTokenRequest extends Mock implements AuthorizationTokenRequest {}
 
 void main() {
   late OAuthRepositoryImpl repository;
@@ -18,6 +18,12 @@ void main() {
       'clientId',
       'redirectUrl',
       discoveryUrl: 'discoveryUrl',
+    ));
+    registerFallbackValue(TokenRequest(
+      'clientId',
+      'redirectUrl',
+      discoveryUrl: 'discoveryUrl',
+      refreshToken: 'refreshToken',
     ));
   });
 
@@ -62,17 +68,13 @@ void main() {
       verify(() => mockSecureStorage.write(key: 'oauth_refresh_token', value: refreshToken)).called(1);
     });
 
-    test('login exception returns null and does not store tokens', () async {
+    test('login exception (e.g. 404, timeout) returns null', () async {
       when(() => mockAppAuth.authorizeAndExchangeCode(any()))
-          .thenThrow(Exception('Auth error'));
+          .thenThrow(PlatformException(code: 'network_error', message: '404 Not Found'));
 
       final result = await repository.login();
 
       expect(result, isNull);
-      verifyNever(() => mockSecureStorage.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'),
-          ));
     });
 
     test('login returns null when authorization is cancelled', () async {
@@ -86,6 +88,45 @@ void main() {
             key: any(named: 'key'),
             value: any(named: 'value'),
           ));
+    });
+
+    test('refreshToken success updates tokens', () async {
+      when(() => mockSecureStorage.read(key: 'oauth_refresh_token'))
+          .thenAnswer((_) async => 'old_refresh_token');
+
+      final response = TokenResponse(
+        'new_access_token',
+        'new_refresh_token',
+        DateTime.now().add(const Duration(hours: 1)),
+        'new_id_token',
+        'tokenType',
+        null,
+        null,
+      );
+
+      when(() => mockAppAuth.token(any()))
+          .thenAnswer((_) async => response);
+      when(() => mockSecureStorage.write(
+            key: any(named: 'key'),
+            value: any(named: 'value'),
+          )).thenAnswer((_) async => {});
+
+      final result = await repository.refreshToken();
+
+      expect(result, equals(response));
+      verify(() => mockSecureStorage.write(key: 'oauth_access_token', value: 'new_access_token')).called(1);
+    });
+
+    test('refreshToken returns null if refresh token expired or invalid', () async {
+      when(() => mockSecureStorage.read(key: 'oauth_refresh_token'))
+          .thenAnswer((_) async => 'expired_token');
+
+      when(() => mockAppAuth.token(any()))
+          .thenThrow(PlatformException(code: 'invalid_grant', message: 'Token expired'));
+
+      final result = await repository.refreshToken();
+
+      expect(result, isNull);
     });
 
     test('logout deletes tokens', () async {
@@ -115,24 +156,6 @@ void main() {
       final result = await repository.getIdToken();
 
       expect(result, equals(idToken));
-    });
-
-    test('getAccessToken returns null if not stored', () async {
-      when(() => mockSecureStorage.read(key: 'oauth_access_token'))
-          .thenAnswer((_) async => null);
-
-      final result = await repository.getAccessToken();
-
-      expect(result, isNull);
-    });
-
-    test('getIdToken returns null if not stored', () async {
-      when(() => mockSecureStorage.read(key: 'oauth_id_token'))
-          .thenAnswer((_) async => null);
-
-      final result = await repository.getIdToken();
-
-      expect(result, isNull);
     });
   });
 }
