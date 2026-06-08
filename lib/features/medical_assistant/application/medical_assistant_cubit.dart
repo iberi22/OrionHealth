@@ -156,7 +156,6 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
 
       // ---- Enforce confidence rules in metadata ----
       final confidence = response.confidence ?? 0.0;
-      final confidenceLevel = ConfidenceThreshold.getLevel(confidence);
 
       // If confidence is very low and no insights, add data request
       if (confidence < 0.5 && allInsights.isEmpty) {

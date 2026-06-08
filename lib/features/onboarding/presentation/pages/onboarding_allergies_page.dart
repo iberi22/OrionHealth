@@ -75,7 +75,7 @@ class _OnboardingAllergiesPageState extends State<OnboardingAllergiesPage> {
                     ),
                     const SizedBox(height: 20),
                     DropdownButtonFormField<String>(
-                      value: _selectedSeverity,
+                      initialValue: _selectedSeverity,
                       decoration: const InputDecoration(
                         labelText: 'Severity',
                         prefixIcon: Icon(Icons.error_outline, color: CyberTheme.secondary),

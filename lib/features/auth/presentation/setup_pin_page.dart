@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../application/bloc/auth_cubit.dart';
-import '../application/bloc/auth_state.dart';
 
 class SetupPinPage extends StatefulWidget {
   const SetupPinPage({super.key});

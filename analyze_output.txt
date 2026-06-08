@@ -1,0 +1,709 @@
+Resolving dependencies...
+Downloading packages...
+  _fe_analyzer_shared 61.0.0 (101.0.0 available)
+  _flutterfire_internals 1.3.71 (1.3.72 available)
+  analyzer 5.13.0 (13.1.0 available)
+  app_links 7.0.0 (7.1.1 available)
+  async 2.13.0 (2.13.1 available)
+  background_downloader 9.5.4 (9.5.5 available)
+  bloc 9.1.0 (9.2.1 available)
+  build 2.4.1 (4.0.6 available)
+  build_config 1.1.2 (1.3.0 available)
+  build_resolvers 2.4.2 (3.0.4 available)
+  build_runner 2.4.13 (2.15.0 available)
+  build_runner_core 7.3.2 (9.3.2 available)
+  built_value 8.12.1 (8.12.6 available)
+  code_builder 4.11.0 (4.11.1 available)
+  cross_file 0.3.5+1 (0.3.5+2 available)
+  cupertino_icons 1.0.8 (1.0.9 available)
+  dart_style 2.3.2 (3.1.9 available)
+  dbus 0.7.11 (0.7.14 available)
+  device_info_plus 12.4.0 (13.1.0 available)
+  device_info_plus_platform_interface 7.0.3 (8.1.0 available)
+  equatable 2.0.7 (2.0.8 available)
+  ffi 2.1.4 (2.2.0 available)
+  file_picker 10.3.7 (11.0.2 available)
+  firebase_core 4.9.0 (4.10.0 available)
+  firebase_core_web 3.7.0 (3.8.0 available)
+  firebase_database 12.4.1 (12.4.2 available)
+  firebase_database_platform_interface 0.4.0+1 (0.4.0+2 available)
+  firebase_database_web 0.2.7+8 (0.2.7+9 available)
+  flat_buffers 23.5.26 (25.9.23 available)
+  flutter_blue_plus 2.3.5 (2.3.8 available)
+  flutter_blue_plus_android 9.0.1 (9.0.2 available)
+  flutter_blue_plus_darwin 9.0.0 (9.0.2 available)
+  flutter_blue_plus_linux 9.0.0 (9.0.2 available)
+  flutter_blue_plus_platform_interface 9.0.0 (9.0.2 available)
+  flutter_blue_plus_web 9.0.0 (9.0.2 available)
+  flutter_gemma 0.12.6 (0.16.4 available)
+  flutter_markdown 0.7.7+1 (discontinued replaced by flutter_markdown_plus)
+  flutter_plugin_android_lifecycle 2.0.33 (2.0.35 available)
+  flutter_secure_storage_darwin 0.3.2 (0.4.0 available)
+  flutter_secure_storage_windows 4.1.0 (4.2.2 available)
+  get_it 9.1.0 (9.2.1 available)
+  googleai_dart 1.1.0 (8.0.0 available)
+  googleapis 15.0.0 (16.0.0 available)
+  googleapis_auth 2.0.0 (2.3.1 available)
+  image_picker 1.2.1 (1.2.2 available)
+  image_picker_android 0.8.13+10 (0.8.13+19 available)
+  image_picker_ios 0.8.13+2 (0.8.13+6 available)
+  injectable 2.7.1+4 (3.0.0 available)
+  injectable_generator 2.4.2 (3.0.2 available)
+  js 0.6.7 (0.7.2 available)
+  json_annotation 4.9.0 (4.12.0 available)
+  langchain 0.8.0+1 (0.8.1 available)
+  langchain_core 0.4.0+1 (0.4.1 available)
+  langchain_google 0.7.0+1 (0.7.1+2 available)
+  large_file_handler 0.3.1 (0.4.0 available)
+  lints 6.0.0 (6.1.0 available)
+  local_auth 2.3.0 (3.0.1 available)
+  local_auth_android 1.0.56 (2.0.9 available)
+  local_auth_darwin 1.6.1 (2.0.3 available)
+  local_auth_windows 1.0.11 (2.0.1 available)
+  markdown 7.3.0 (7.3.1 available)
+  matcher 0.12.18 (0.12.20 available)
+  meta 1.17.0 (1.18.3 available)
+  mockito 5.4.4 (5.7.0 available)
+  objectbox 5.0.2 (5.3.2 available)
+  objectbox_flutter_libs 5.0.2 (5.3.2 available)
+  openai_dart 6.1.0 (6.2.0 available)
+  path_provider_android 2.2.22 (2.3.1 available)
+  path_provider_foundation 2.4.4 (2.6.0 available)
+  permission_handler 12.0.1 (12.0.3 available)
+  permission_handler_apple 9.4.7 (9.4.9 available)
+  petitparser 7.0.1 (7.0.2 available)
+  pointycastle 3.9.1 (4.0.0 available)
+  shared_preferences_android 2.4.23 (2.4.25 available)
+  shelf_web_socket 2.0.1 (3.0.0 available)
+  source_gen 1.5.0 (4.2.3 available)
+  source_span 1.10.1 (1.10.2 available)
+  test_api 0.7.9 (0.7.12 available)
+  time 2.1.5 (2.1.6 available)
+  timezone 0.9.4 (0.11.0 available)
+  url_launcher_android 6.3.30 (6.3.32 available)
+  uuid 4.5.2 (4.5.3 available)
+  vector_math 2.2.0 (2.4.0 available)
+  vertex_ai 0.2.0+1 (0.2.4 available)
+  vm_service 15.0.2 (15.2.0 available)
+  watcher 1.1.4 (1.2.1 available)
+  web_socket_channel 2.4.0 (3.0.3 available)
+  win32 5.15.0 (6.3.0 available)
+  win32_registry 2.1.0 (3.0.3 available)
+  xml 6.6.1 (7.0.1 available)
+Got dependencies!
+1 package is discontinued.
+89 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing app...
+
+warning • The value of the local variable 'nameField' isn't used • integration_test/smoke_injectable_test.dart:65:13 • unused_local_variable
+   info • 'alpha' is deprecated and shouldn't be used. Use (*.a * 255.0).round().clamp(0, 255) • integration_test/smoke_injectable_test.dart:86:82 • deprecated_member_use
+   info • 'alpha' is deprecated and shouldn't be used. Use (*.a * 255.0).round().clamp(0, 255) • integration_test/smoke_injectable_test.dart:88:51 • deprecated_member_use
+   info • 'alpha' is deprecated and shouldn't be used. Use (*.a * 255.0).round().clamp(0, 255) • integration_test/smoke_injectable_test.dart:89:85 • deprecated_member_use
+warning • The member 'wrapper' can only be used within 'package:orionhealth_health/features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart' or a test • lib/core/di/injection.config.dart:265:38 • invalid_use_of_visible_for_testing_member
+warning • The member 'modelWrapper' can only be used within 'package:orionhealth_health/features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart' or a test • lib/core/di/injection.config.dart:403:9 • invalid_use_of_visible_for_testing_member
+   info • Library names are not necessary • lib/core/services/app_logger.dart:4:9 • unnecessary_library_name
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/allergies/presentation/pages/allergies_page.dart:196:38 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/allergies/presentation/pages/allergies_page.dart:202:44 • use_build_context_synchronously
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/appointments/presentation/pages/appointments_page.dart:456:15 • deprecated_member_use
+   info • 'encryptedSharedPreferences' is deprecated and shouldn't be used. EncryptedSharedPreferences is deprecated and will be removed in v11. The Jetpack Security library is deprecated by Google. Your data will be automatically migrated to custom ciphers on first access. Remove this parameter - it will be ignored • lib/features/auth/infrastructure/secure_storage_service.dart:17:13 • deprecated_member_use
+   info • Constructors for public widgets should have a named 'key' parameter • lib/features/auth/presentation/auth_gate.dart:54:9 • use_key_in_widget_constructors
+warning • Unused import: '../application/bloc/auth_state.dart' • lib/features/auth/presentation/setup_pin_page.dart:4:8 • unused_import
+   info • 'free' is deprecated and shouldn't be used. Use License.nonprofit instead • lib/features/ble_sharing/domain/ble_sharing_service.dart:152:26 • deprecated_member_use
+   info • Unnecessary 'const' keyword • lib/features/dashboard/presentation/pages/home_dashboard_page.dart:59:9 • unnecessary_const
+   info • Unnecessary 'const' keyword • lib/features/dashboard/presentation/pages/home_dashboard_page.dart:133:9 • unnecessary_const
+   info • Unnecessary 'const' keyword • lib/features/dashboard/presentation/pages/home_dashboard_page.dart:154:9 • unnecessary_const
+   info • Unnecessary 'const' keyword • lib/features/dashboard/presentation/pages/home_dashboard_page.dart:160:9 • unnecessary_const
+   info • The imported package 'timezone' isn't a dependency of the importing package • lib/features/email-citas/data/email_repository.dart:4:8 • depend_on_referenced_packages
+warning • The value of the local variable 'body' isn't used • lib/features/email-citas/domain/services/email_service.dart:36:13 • unused_local_variable
+warning • The value of the local variable 'subject' isn't used • lib/features/email-citas/domain/services/email_service.dart:37:13 • unused_local_variable
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/eps_connection/infrastructure/oauth_repository.dart:45:18 • unnecessary_null_comparison
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/eps_connection/infrastructure/oauth_repository.dart:90:18 • unnecessary_null_comparison
+warning • The value of the field '_pendingPackage' isn't used • lib/features/health_sharing/application/sharing_cubit.dart:119:24 • unused_field
+warning • Unused import: 'dart:convert' • lib/features/health_sharing/infrastructure/nfc_sharing_service.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/foundation.dart' • lib/features/health_sharing/infrastructure/wifi_direct_service.dart:4:8 • unused_import
+warning • Unused import: '../../medical_assistant/domain/entities/medical_insight.dart' • lib/features/home/application/home_cubit.dart:9:8 • unused_import
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/home/application/home_cubit.dart:62:34 • unnecessary_null_comparison
+warning • The '!' will have no effect because the receiver can't be null • lib/features/home/application/home_cubit.dart:63:42 • unnecessary_non_null_assertion
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/home/application/home_cubit.dart:66:46 • unnecessary_null_comparison
+warning • The '!' will have no effect because the receiver can't be null • lib/features/home/application/home_cubit.dart:67:47 • unnecessary_non_null_assertion
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/home/application/home_cubit.dart:70:48 • unnecessary_null_comparison
+warning • The '!' will have no effect because the receiver can't be null • lib/features/home/application/home_cubit.dart:71:49 • unnecessary_non_null_assertion
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/home/application/home_cubit.dart:74:38 • unnecessary_null_comparison
+warning • The '!' will have no effect because the receiver can't be null • lib/features/home/application/home_cubit.dart:75:46 • unnecessary_non_null_assertion
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/home/application/home_cubit.dart:78:38 • unnecessary_null_comparison
+warning • The '!' will have no effect because the receiver can't be null • lib/features/home/application/home_cubit.dart:79:51 • unnecessary_non_null_assertion
+warning • Unused import: '../../../../core/theme/app_theme.dart' • lib/features/home/presentation/pages/main_navigation_page.dart:3:8 • unused_import
+warning • The value of the field '_labInterpreter' isn't used • lib/features/medical_assistant/application/medical_assistant_cubit.dart:63:24 • unused_field
+warning • The value of the field '_vitalAnalyzer' isn't used • lib/features/medical_assistant/application/medical_assistant_cubit.dart:64:27 • unused_field
+warning • The value of the field '_riskCalculator' isn't used • lib/features/medical_assistant/application/medical_assistant_cubit.dart:65:24 • unused_field
+warning • The value of the local variable 'confidenceLevel' isn't used • lib/features/medical_assistant/application/medical_assistant_cubit.dart:159:13 • unused_local_variable
+   info • Uses 'await' on an instance of 'LoincCode', which is not a subtype of 'Future' • lib/features/medical_assistant/domain/services/analysis/lab_analysis_strategy.dart:14:19 • await_only_futures
+   info • Uses 'await' on an instance of 'ClinicalGuidelineReference', which is not a subtype of 'Future' • lib/features/medical_assistant/domain/services/analysis/lab_analysis_strategy.dart:92:25 • await_only_futures
+   info • Uses 'await' on an instance of 'ClinicalGuidelineReference', which is not a subtype of 'Future' • lib/features/medical_assistant/domain/services/analysis/symptom_analysis_strategy.dart:83:25 • await_only_futures
+   info • Uses 'await' on an instance of 'ClinicalGuidelineReference', which is not a subtype of 'Future' • lib/features/medical_assistant/domain/services/analysis/vital_analysis_strategy.dart:34:27 • await_only_futures
+warning • Unused import: '../entities/ai_response.dart' • lib/features/medical_assistant/domain/services/medical_analysis_service.dart:4:8 • unused_import
+   info • Unnecessary braces in a string interpolation • lib/features/medical_assistant/domain/services/medical_analysis_service.dart:65:41 • unnecessary_brace_in_string_interps
+   info • Unnecessary braces in a string interpolation • lib/features/medical_assistant/domain/services/medical_analysis_service.dart:97:55 • unnecessary_brace_in_string_interps
+   info • Don't invoke 'print' in production code • lib/features/onboarding/main_preview.dart:24:11 • avoid_print
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/onboarding/presentation/pages/onboarding_allergies_page.dart:78:23 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/onboarding/presentation/pages/onboarding_profile_page.dart:123:23 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/onboarding/presentation/pages/onboarding_profile_page.dart:136:23 • deprecated_member_use
+   info • Unnecessary braces in a string interpolation • lib/features/ssi/infrastructure/services/anoncreds_service_impl.dart:398:10 • unnecessary_brace_in_string_interps
+warning • The value of the local variable 'credentialType' isn't used • lib/features/ssi/presentation/pages/share_credential_page.dart:91:11 • unused_local_variable
+warning • Unused import: 'package:flutter/foundation.dart' • lib/features/sync/data/fhir_client.dart:8:8 • unused_import
+warning • Unused import: '../../../features/appointments/domain/entities/appointment.dart' • lib/features/sync/data/fhir_mapper.dart:5:8 • unused_import
+   info • Don't invoke 'print' in production code • lib/features/sync/data/sync_repository.dart:91:7 • avoid_print
+warning • Dead code • lib/features/sync/data/sync_repository.dart:185:56 • dead_code
+warning • The left operand can't be null, so the right operand is never executed • lib/features/sync/data/sync_repository.dart:185:59 • dead_null_aware_expression
+   info • Don't invoke 'print' in production code • lib/features/sync/data/sync_repository.dart:194:7 • avoid_print
+   info • Unnecessary use of 'toList' in a spread • lib/features/vitals/presentation/pages/vitals_page.dart:100:22 • unnecessary_to_list_in_spreads
+   info • Unnecessary use of string interpolation • lib/features/vitals/presentation/pages/vitals_page.dart:149:31 • unnecessary_string_interpolations
+   info • Unnecessary 'const' keyword • lib/features/vitals/presentation/pages/vitals_page.dart:177:17 • unnecessary_const
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/vitals/presentation/pages/vitals_page.dart:314:13 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/vitals/presentation/pages/vitals_page.dart:351:19 • use_build_context_synchronously
+  error • Target of URI doesn't exist: 'app_localizations_id.dart' • lib/l10n/app_localizations.dart:15:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: 'app_localizations_mr.dart' • lib/l10n/app_localizations.dart:20:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: 'app_localizations_pcm.dart' • lib/l10n/app_localizations.dart:22:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: 'app_localizations_te.dart' • lib/l10n/app_localizations.dart:27:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: 'app_localizations_ur.dart' • lib/l10n/app_localizations.dart:30:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: 'app_localizations_yue.dart' • lib/l10n/app_localizations.dart:32:8 • uri_does_not_exist
+  error • The function 'AppLocalizationsId' isn't defined • lib/l10n/app_localizations.dart:835:14 • undefined_function
+  error • The function 'AppLocalizationsMr' isn't defined • lib/l10n/app_localizations.dart:845:14 • undefined_function
+  error • The function 'AppLocalizationsPcm' isn't defined • lib/l10n/app_localizations.dart:849:14 • undefined_function
+  error • The function 'AppLocalizationsTe' isn't defined • lib/l10n/app_localizations.dart:859:14 • undefined_function
+  error • The function 'AppLocalizationsUr' isn't defined • lib/l10n/app_localizations.dart:865:14 • undefined_function
+  error • The function 'AppLocalizationsYue' isn't defined • lib/l10n/app_localizations.dart:869:14 • undefined_function
+   info • The imported package 'timezone' isn't a dependency of the importing package • lib/main.dart:5:8 • depend_on_referenced_packages
+   info • 'isInDebugMode' is deprecated and shouldn't be used. Use WorkmanagerDebug handlers instead. This parameter has no effect • lib/main.dart:50:7 • deprecated_member_use
+   info • Library names are not necessary • packages/health_wallet/lib/health_wallet.dart:7:9 • unnecessary_library_name
+   info • Uses 'await' on an instance of 'SecretKeyData', which is not a subtype of 'Future' • packages/health_wallet/lib/services/encryption_service.dart:97:17 • await_only_futures
+   info • Uses 'await' on an instance of 'SecretKeyData', which is not a subtype of 'Future' • packages/health_wallet/lib/services/encryption_service.dart:113:19 • await_only_futures
+warning • The value of the local variable 'package' isn't used • packages/health_wallet/lib/services/sync_service.dart:46:13 • unused_local_variable
+warning • The value of the field '_encryption' isn't used • packages/health_wallet/lib/services/wallet_service.dart:16:27 • unused_field
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/health_wallet/test/encryption_service_test.dart:3:8 • uri_does_not_exist
+  error • The function 'setUp' isn't defined • packages/health_wallet/test/encryption_service_test.dart:10:3 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/encryption_service_test.dart:14:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:15:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:18:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:21:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:26:7 • undefined_function
+  error • The function 'isNot' isn't defined • packages/health_wallet/test/encryption_service_test.dart:26:25 • undefined_function
+  error • The function 'equals' isn't defined • packages/health_wallet/test/encryption_service_test.dart:26:31 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:29:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/health_wallet/test/encryption_service_test.dart:29:25 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:32:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:36:7 • undefined_function
+  error • The function 'throwsA' isn't defined • packages/health_wallet/test/encryption_service_test.dart:38:9 • undefined_function
+  error • The function 'isA' isn't defined • packages/health_wallet/test/encryption_service_test.dart:38:17 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/encryption_service_test.dart:42:5 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:49:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:52:9 • undefined_function
+  error • Undefined name 'isFalse' • packages/health_wallet/test/encryption_service_test.dart:52:41 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:53:9 • undefined_function
+  error • The function 'equals' isn't defined • packages/health_wallet/test/encryption_service_test.dart:53:33 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:56:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:60:9 • undefined_function
+  error • Undefined name 'isTrue' • packages/health_wallet/test/encryption_service_test.dart:60:41 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:61:9 • undefined_function
+  error • The function 'isA' isn't defined • packages/health_wallet/test/encryption_service_test.dart:61:42 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:64:9 • undefined_function
+  error • The function 'equals' isn't defined • packages/health_wallet/test/encryption_service_test.dart:64:27 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:67:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:72:9 • undefined_function
+  error • Undefined name 'throwsException' • packages/health_wallet/test/encryption_service_test.dart:74:11 • undefined_identifier
+  error • The function 'group' isn't defined • packages/health_wallet/test/encryption_service_test.dart:79:5 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:82:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:84:9 • undefined_function
+  error • The function 'matches' isn't defined • packages/health_wallet/test/encryption_service_test.dart:84:27 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:89:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:94:9 • undefined_function
+  error • The function 'isA' isn't defined • packages/health_wallet/test/encryption_service_test.dart:94:25 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:98:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:108:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/health_wallet/test/encryption_service_test.dart:108:25 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/encryption_service_test.dart:111:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/encryption_service_test.dart:118:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/health_wallet/test/encryption_service_test.dart:118:25 • undefined_function
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/health_wallet/test/sync_service_test.dart:2:8 • uri_does_not_exist
+  error • The function 'setUp' isn't defined • packages/health_wallet/test/sync_service_test.dart:16:3 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/sync_service_test.dart:22:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:25:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:35:7 • undefined_function
+  error • Undefined name 'isTrue' • packages/health_wallet/test/sync_service_test.dart:35:30 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:36:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:39:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:49:7 • undefined_function
+  error • Undefined name 'isFalse' • packages/health_wallet/test/sync_service_test.dart:49:30 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:50:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/health_wallet/test/sync_service_test.dart:50:28 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:53:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:68:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/health_wallet/test/sync_service_test.dart:68:22 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:71:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:83:7 • undefined_function
+  error • Undefined name 'isNull' • packages/health_wallet/test/sync_service_test.dart:83:22 • undefined_identifier
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:86:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:100:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:101:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:102:7 • undefined_function
+  error • Undefined name 'isTrue' • packages/health_wallet/test/sync_service_test.dart:102:50 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:103:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:106:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:109:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:112:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:121:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/health_wallet/test/sync_service_test.dart:121:22 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:124:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:131:7 • undefined_function
+  error • Undefined name 'isEmpty' • packages/health_wallet/test/sync_service_test.dart:131:22 • undefined_identifier
+  error • The function 'test' isn't defined • packages/health_wallet/test/sync_service_test.dart:134:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/sync_service_test.dart:136:7 • undefined_function
+  error • Undefined name 'isFalse' • packages/health_wallet/test/sync_service_test.dart:136:26 • undefined_identifier
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/health_wallet/test/wallet_service_test.dart:2:8 • uri_does_not_exist
+   info • The imported package 'path' isn't a dependency of the importing package • packages/health_wallet/test/wallet_service_test.dart:4:8 • depend_on_referenced_packages
+  error • The function 'setUpAll' isn't defined • packages/health_wallet/test/wallet_service_test.dart:16:3 • undefined_function
+  error • The function 'tearDownAll' isn't defined • packages/health_wallet/test/wallet_service_test.dart:34:3 • undefined_function
+  error • The function 'setUp' isn't defined • packages/health_wallet/test/wallet_service_test.dart:41:3 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/wallet_service_test.dart:54:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:55:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:72:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:73:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:76:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:107:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:108:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:111:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:130:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:133:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:150:7 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/wallet_service_test.dart:154:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:155:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:170:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:171:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:174:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:205:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:206:7 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/wallet_service_test.dart:210:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:211:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:228:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:229:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:232:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:263:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:264:7 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/wallet_service_test.dart:268:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:269:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:282:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:283:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:286:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:300:7 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/wallet_service_test.dart:304:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:305:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:320:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:321:7 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/wallet_service_test.dart:325:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:326:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:340:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/health_wallet/test/wallet_service_test.dart:340:25 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:341:7 • undefined_function
+  error • The function 'group' isn't defined • packages/health_wallet/test/wallet_service_test.dart:345:3 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:346:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:354:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:355:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:358:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:366:7 • undefined_function
+  error • The function 'isA' isn't defined • packages/health_wallet/test/wallet_service_test.dart:366:30 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:367:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:368:7 • undefined_function
+  error • The function 'test' isn't defined • packages/health_wallet/test/wallet_service_test.dart:371:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:381:7 • undefined_function
+  error • The function 'expect' isn't defined • packages/health_wallet/test/wallet_service_test.dart:384:7 • undefined_function
+   info • Dangling library doc comment • packages/medical_standards/bin/validate_icd10.dart:2:1 • dangling_library_doc_comments
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:20:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:48:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:49:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:52:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:54:7 • avoid_print
+   info • Dangling library doc comment • packages/medical_standards/bin/validate_loinc.dart:2:1 • dangling_library_doc_comments
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:18:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:46:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:47:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:50:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:52:7 • avoid_print
+   info • Dangling library doc comment • packages/medical_standards/bin/validate_medications.dart:2:1 • dangling_library_doc_comments
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:15:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:34:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:59:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:60:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:61:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:64:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:66:7 • avoid_print
+   info • Dangling library doc comment • packages/medical_standards/bin/validate_snomed.dart:2:1 • dangling_library_doc_comments
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:18:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:46:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:47:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:50:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:52:7 • avoid_print
+   info • Dangling library doc comment • packages/medical_standards/lib/fhir/fhir.dart:4:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/guidelines/guidelines.dart:1:1 • dangling_library_doc_comments
+   info • Constructors in '@immutable' classes should be declared as 'const' • packages/medical_standards/lib/guidelines/guidelines.dart:22:3 • prefer_const_constructors_in_immutables
+   info • Dangling library doc comment • packages/medical_standards/lib/icd10/icd10.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/loinc/loinc.dart:1:1 • dangling_library_doc_comments
+   info • Constructors in '@immutable' classes should be declared as 'const' • packages/medical_standards/lib/loinc/loinc.dart:21:3 • prefer_const_constructors_in_immutables
+   info • Dangling library doc comment • packages/medical_standards/lib/medical_standards.dart:1:1 • dangling_library_doc_comments
+   info • Constructors in '@immutable' classes should be declared as 'const' • packages/medical_standards/lib/medical_standards.dart:122:3 • prefer_const_constructors_in_immutables
+   info • Dangling library doc comment • packages/medical_standards/lib/medications/medications.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/onboarding/local_medical_context.dart:1:1 • dangling_library_doc_comments
+   info • Unnecessary braces in a string interpolation • packages/medical_standards/lib/onboarding/local_medical_context.dart:230:8 • unnecessary_brace_in_string_interps
+   info • Dangling library doc comment • packages/medical_standards/lib/onboarding/medical_context_categories.dart:5:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/onboarding/onboarding.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/onboarding/profile_analyzer.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/onboarding/selective_sync_service.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/services/medical_context_provider.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/services/sync_service.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment • packages/medical_standards/lib/snomed/snomed.dart:1:1 • dangling_library_doc_comments
+   info • Constructors in '@immutable' classes should be declared as 'const' • packages/medical_standards/lib/snomed/snomed.dart:23:3 • prefer_const_constructors_in_immutables
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/medical_standards/test/guidelines_test.dart:1:8 • uri_does_not_exist
+  error • The function 'group' isn't defined • packages/medical_standards/test/guidelines_test.dart:5:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:6:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:7:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:7:55 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:8:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:8:62 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:9:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:9:54 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:12:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:13:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/guidelines_test.dart:13:54 • undefined_function
+  error • The function 'group' isn't defined • packages/medical_standards/test/guidelines_test.dart:17:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:18:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:20:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/guidelines_test.dart:20:25 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:21:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/guidelines_test.dart:21:31 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:24:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:26:7 • undefined_function
+  error • Undefined name 'isNull' • packages/medical_standards/test/guidelines_test.dart:26:25 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:29:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:31:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:31:26 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:34:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:36:7 • undefined_function
+  error • Undefined name 'isEmpty' • packages/medical_standards/test/guidelines_test.dart:36:26 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:39:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:40:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:40:38 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:43:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:44:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/guidelines_test.dart:44:58 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:45:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:45:65 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:48:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:49:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/guidelines_test.dart:49:60 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:50:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:50:67 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/guidelines_test.dart:53:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:55:9 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:55:32 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:56:9 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:56:39 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:57:9 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:57:31 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/guidelines_test.dart:58:9 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/guidelines_test.dart:58:39 • undefined_identifier
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/medical_standards/test/icd10_test.dart:1:8 • uri_does_not_exist
+  error • The function 'group' isn't defined • packages/medical_standards/test/icd10_test.dart:5:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:6:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:8:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/icd10_test.dart:8:20 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:9:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/icd10_test.dart:9:26 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:12:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:14:7 • undefined_function
+  error • Undefined name 'isNull' • packages/medical_standards/test/icd10_test.dart:14:20 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:17:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:19:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/icd10_test.dart:19:21 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:20:7 • undefined_function
+  error • Undefined name 'isTrue' • packages/medical_standards/test/icd10_test.dart:20:61 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:23:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:25:7 • undefined_function
+  error • Undefined name 'isEmpty' • packages/medical_standards/test/icd10_test.dart:25:21 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:28:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:31:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/icd10_test.dart:31:21 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:32:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/icd10_test.dart:32:28 • undefined_function
+  error • The function 'group' isn't defined • packages/medical_standards/test/icd10_test.dart:36:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:37:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:38:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/icd10_test.dart:38:42 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:41:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:44:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/icd10_test.dart:44:24 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:45:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/icd10_test.dart:45:24 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:46:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/icd10_test.dart:46:24 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:49:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:51:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/icd10_test.dart:51:20 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:52:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/icd10_test.dart:52:26 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/icd10_test.dart:55:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:57:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/icd10_test.dart:57:20 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/icd10_test.dart:58:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/icd10_test.dart:58:26 • undefined_function
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/medical_standards/test/loinc_test.dart:1:8 • uri_does_not_exist
+  error • The function 'group' isn't defined • packages/medical_standards/test/loinc_test.dart:5:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:6:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:8:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/loinc_test.dart:8:20 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:9:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/loinc_test.dart:9:26 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:12:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:14:7 • undefined_function
+  error • Undefined name 'isNull' • packages/medical_standards/test/loinc_test.dart:14:20 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:17:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:19:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/loinc_test.dart:19:23 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:20:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/loinc_test.dart:20:48 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:23:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:25:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/loinc_test.dart:25:26 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:26:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/loinc_test.dart:26:51 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:29:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:32:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/loinc_test.dart:32:21 • undefined_function
+  error • The function 'group' isn't defined • packages/medical_standards/test/loinc_test.dart:36:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:37:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:39:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/loinc_test.dart:39:19 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:40:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/loinc_test.dart:40:25 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:41:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/loinc_test.dart:41:43 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:44:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:46:7 • undefined_function
+  error • Undefined name 'isNull' • packages/medical_standards/test/loinc_test.dart:46:19 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:49:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:51:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/loinc_test.dart:51:21 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:52:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/loinc_test.dart:52:32 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:55:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:57:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/loinc_test.dart:57:19 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:58:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/loinc_test.dart:58:44 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:61:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:62:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/loinc_test.dart:62:35 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/loinc_test.dart:65:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:67:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/loinc_test.dart:67:36 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/loinc_test.dart:68:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/loinc_test.dart:68:36 • undefined_identifier
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/medical_standards/test/medications_test.dart:1:8 • uri_does_not_exist
+  error • The function 'group' isn't defined • packages/medical_standards/test/medications_test.dart:5:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:6:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:8:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/medications_test.dart:8:19 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:9:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/medications_test.dart:9:25 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:12:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:14:7 • undefined_function
+  error • Undefined name 'isNull' • packages/medical_standards/test/medications_test.dart:14:19 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:17:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:19:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/medications_test.dart:19:25 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:20:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/medications_test.dart:20:52 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:23:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:26:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/medications_test.dart:26:18 • undefined_function
+  error • The function 'group' isn't defined • packages/medical_standards/test/medications_test.dart:30:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:31:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:32:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/medications_test.dart:32:37 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:35:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:37:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/medications_test.dart:37:19 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:38:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/medications_test.dart:38:25 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:41:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:43:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/medications_test.dart:43:19 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:44:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/medications_test.dart:44:46 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:47:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:50:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/medications_test.dart:50:20 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:51:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/medications_test.dart:51:20 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:52:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/medications_test.dart:52:33 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:55:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:57:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/medications_test.dart:57:20 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:60:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:62:7 • undefined_function
+  error • Undefined name 'isEmpty' • packages/medical_standards/test/medications_test.dart:62:20 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/medications_test.dart:65:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/medications_test.dart:67:7 • undefined_function
+  error • Undefined name 'isNull' • packages/medical_standards/test/medications_test.dart:67:19 • undefined_identifier
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/medical_standards/test/onboarding_test.dart:1:8 • uri_does_not_exist
+  error • The function 'group' isn't defined • packages/medical_standards/test/onboarding_test.dart:5:3 • undefined_function
+  error • The function 'setUp' isn't defined • packages/medical_standards/test/onboarding_test.dart:8:5 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/onboarding_test.dart:12:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:21:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/onboarding_test.dart:21:22 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:22:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/onboarding_test.dart:22:33 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:23:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/onboarding_test.dart:23:28 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/onboarding_test.dart:26:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:34:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/onboarding_test.dart:34:22 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:35:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/onboarding_test.dart:35:33 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:36:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/onboarding_test.dart:36:33 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:37:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/onboarding_test.dart:37:33 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/onboarding_test.dart:40:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:48:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/onboarding_test.dart:48:22 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:49:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/onboarding_test.dart:49:33 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:50:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/onboarding_test.dart:50:28 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/onboarding_test.dart:53:5 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/onboarding_test.dart:59:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/onboarding_test.dart:66:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/onboarding_test.dart:66:33 • undefined_function
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/medical_standards/test/snomed_test.dart:1:8 • uri_does_not_exist
+  error • The function 'group' isn't defined • packages/medical_standards/test/snomed_test.dart:5:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/snomed_test.dart:6:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:8:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/snomed_test.dart:8:23 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:9:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/snomed_test.dart:9:29 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/snomed_test.dart:12:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:14:7 • undefined_function
+  error • Undefined name 'isNull' • packages/medical_standards/test/snomed_test.dart:14:23 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/snomed_test.dart:17:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:19:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/snomed_test.dart:19:24 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:20:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/snomed_test.dart:20:51 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/snomed_test.dart:23:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:26:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/snomed_test.dart:26:24 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:27:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/snomed_test.dart:27:24 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:28:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/snomed_test.dart:28:30 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/snomed_test.dart:31:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:34:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/snomed_test.dart:34:18 • undefined_function
+  error • The function 'group' isn't defined • packages/medical_standards/test/snomed_test.dart:38:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/snomed_test.dart:39:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:40:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/snomed_test.dart:40:40 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/snomed_test.dart:43:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:46:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/snomed_test.dart:46:21 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/snomed_test.dart:49:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:51:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/snomed_test.dart:51:23 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/snomed_test.dart:52:7 • undefined_function
+  error • The function 'equals' isn't defined • packages/medical_standards/test/snomed_test.dart:52:29 • undefined_function
+  error • Target of URI doesn't exist: 'package:test/test.dart' • packages/medical_standards/test/standards_test.dart:1:8 • uri_does_not_exist
+  error • The function 'group' isn't defined • packages/medical_standards/test/standards_test.dart:5:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/standards_test.dart:6:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:8:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:8:21 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:11:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/standards_test.dart:11:26 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:18:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:18:22 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/standards_test.dart:21:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:23:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:23:23 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:24:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:24:36 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:27:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:27:25 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/standards_test.dart:30:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:32:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:32:25 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:36:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/standards_test.dart:36:33 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/standards_test.dart:39:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:50:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:50:22 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:51:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/standards_test.dart:51:33 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:52:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/standards_test.dart:52:33 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/standards_test.dart:55:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:58:9 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:58:26 • undefined_identifier
+  error • The function 'test' isn't defined • packages/medical_standards/test/standards_test.dart:62:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:64:9 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/standards_test.dart:64:32 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:65:9 • undefined_function
+  error • The function 'startsWith' isn't defined • packages/medical_standards/test/standards_test.dart:65:31 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:66:9 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/standards_test.dart:66:39 • undefined_identifier
+  error • The function 'group' isn't defined • packages/medical_standards/test/standards_test.dart:71:3 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/standards_test.dart:72:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:82:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/standards_test.dart:82:33 • undefined_function
+  error • The function 'test' isn't defined • packages/medical_standards/test/standards_test.dart:85:5 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:95:7 • undefined_function
+  error • Undefined name 'isNotNull' • packages/medical_standards/test/standards_test.dart:95:22 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:96:7 • undefined_function
+  error • Undefined name 'isNotEmpty' • packages/medical_standards/test/standards_test.dart:96:33 • undefined_identifier
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:97:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/standards_test.dart:97:33 • undefined_function
+  error • The function 'expect' isn't defined • packages/medical_standards/test/standards_test.dart:98:7 • undefined_function
+  error • The function 'contains' isn't defined • packages/medical_standards/test/standards_test.dart:98:33 • undefined_function
+warning • Unused import: 'dart:typed_data' • test/features/auth/presentation/auth_gate_test.dart:2:8 • unused_import
+warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/auth/presentation/auth_gate_test.dart:4:8 • unused_import
+warning • Unused import: 'package:local_auth/local_auth.dart' • test/features/auth/presentation/auth_gate_test.dart:7:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/auth/application/bloc/auth_state.dart' • test/features/auth/presentation/auth_gate_test.dart:11:8 • unused_import
+warning • Unused import: 'dart:convert' • test/features/ble_sharing/domain/ble_sharing_service_test.dart:2:8 • unused_import
+   info • 'free' is deprecated and shouldn't be used. Use License.nonprofit instead • test/features/ble_sharing/domain/ble_sharing_service_test.dart:32:35 • deprecated_member_use
+   info • 'free' is deprecated and shouldn't be used. Use License.nonprofit instead • test/features/ble_sharing/domain/ble_sharing_service_test.dart:121:26 • deprecated_member_use
+warning • The value of the local variable 'testPackage' isn't used • test/features/ble_sharing/domain/ble_sharing_service_test.dart:139:30 • unused_local_variable
+warning • Unused import: 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart' • test/features/calendar_import/data/calendar_parser_test.dart:3:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart' • test/features/email-citas/email_repository_test.dart:3:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/home/application/home_state.dart' • test/features/home/presentation/pages/home_page_test.dart:9:8 • unused_import
+warning • Unused import: 'dart:async' • test/features/local_agent/infrastructure/services/patient_context_indexer_test.dart:1:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/medications/domain/entities/medication.dart' • test/features/local_agent/infrastructure/services/patient_context_indexer_test.dart:12:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/health_record/domain/entities/medical_record.dart' • test/features/local_agent/infrastructure/services/patient_context_indexer_test.dart:13:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart' • test/features/local_agent/infrastructure/services/patient_context_indexer_test.dart:14:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart' • test/features/local_agent/infrastructure/services/patient_context_indexer_test.dart:15:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart' • test/features/local_agent/infrastructure/services/patient_context_indexer_test.dart:16:8 • unused_import
+warning • Unused import: 'package:medical_standards/medical_standards.dart' • test/features/medical_assistant/domain/services/medical_analysis_service_test.dart:3:8 • unused_import
+   info • Uses 'await' on an instance of 'SafeAnalysisResponse', which is not a subtype of 'Future' • test/features/medical_assistant/domain/services/medical_analysis_service_test.dart:16:24 • await_only_futures
+   info • Uses 'await' on an instance of 'SafeAnalysisResponse', which is not a subtype of 'Future' • test/features/medical_assistant/domain/services/medical_analysis_service_test.dart:27:24 • await_only_futures
+   info • Uses 'await' on an instance of 'SafeAnalysisResponse', which is not a subtype of 'Future' • test/features/medical_assistant/domain/services/medical_analysis_service_test.dart:39:24 • await_only_futures
+   info • Uses 'await' on an instance of 'SafeAnalysisResponse', which is not a subtype of 'Future' • test/features/medical_assistant/domain/services/medical_analysis_service_test.dart:51:24 • await_only_futures
+warning • Unused import: 'package:medical_standards/medical_standards.dart' • test/features/medical_assistant/domain/services/medical_guidelines_service_test.dart:3:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/medical_assistant/infrastructure/analysis/risk_calculator.dart' • test/features/medical_assistant/domain/services/risk_calculator_service_test.dart:3:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/medical_assistant/domain/entities/medical_query.dart' • test/features/medical_assistant/infrastructure/llm/medical_response_generator_test.dart:2:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/medical_assistant/domain/entities/analysis_response.dart' • test/features/medical_assistant/infrastructure/medical_llm_adapter_test.dart:5:8 • unused_import
+   info • Don't invoke 'print' in production code • test/features/medical_assistant/infrastructure/services/analyze_symptoms_performance_test.dart:44:5 • avoid_print
+warning • Unused import: 'package:medical_standards/medical_standards.dart' • test/features/medical_assistant/presentation/medical_assistant_cubit_test.dart:3:8 • unused_import
+warning • The '!' will have no effect because the receiver can't be null • test/features/medical_research/standards_service_test.dart:28:20 • unnecessary_non_null_assertion
+warning • Unused import: 'package:orionhealth_health/features/local_agent/domain/entities/local_model_descriptor.dart' • test/features/settings/llm_settings_cubit_test.dart:5:8 • unused_import
+warning • Unused import: 'package:flutter_localizations/flutter_localizations.dart' • test/l10n_test.dart:4:8 • unused_import
+  error • The name 'IndexingStatusBanner' isn't a class • test/widgets/indexing_status_banner_test.dart:39:24 • creation_with_non_type
+
+609 issues found. (ran in 4.2s)
