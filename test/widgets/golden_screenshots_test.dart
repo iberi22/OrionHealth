@@ -33,9 +33,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/01_main_navigation.png',
-        ),
+        matchesGoldenFile('goldens/01_main_navigation.png'),
       );
     });
 
@@ -47,9 +45,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/02_profile_page.png',
-        ),
+        matchesGoldenFile('goldens/02_profile_page.png'),
       );
     });
 
@@ -64,9 +60,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/03_records_page.png',
-        ),
+        matchesGoldenFile('goldens/03_records_page.png'),
       );
     });
 
@@ -81,9 +75,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/04_ai_assistant_page.png',
-        ),
+        matchesGoldenFile('goldens/04_ai_assistant_page.png'),
       );
     });
 
@@ -98,9 +90,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/05_reports_page.png',
-        ),
+        matchesGoldenFile('goldens/05_reports_page.png'),
       );
     });
 
@@ -120,9 +110,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/06_upload_buttons.png',
-        ),
+        matchesGoldenFile('goldens/06_upload_buttons.png'),
       );
     });
 
@@ -138,9 +126,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/07_profile_form.png',
-        ),
+        matchesGoldenFile('goldens/07_profile_form.png'),
       );
     });
 
@@ -154,9 +140,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/08_chat_interface.png',
-        ),
+        matchesGoldenFile('goldens/08_chat_interface.png'),
       );
     });
 
@@ -169,9 +153,7 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/09_reports_list.png',
-        ),
+        matchesGoldenFile('goldens/09_reports_list.png'),
       );
     });
 
@@ -189,36 +171,28 @@ void main() {
 
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/10_flow_01_profile.png',
-        ),
+        matchesGoldenFile('goldens/10_flow_01_profile.png'),
       );
 
       await tester.tap(find.text('Registros'));
       await tester.pumpAndSettle();
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/10_flow_02_records.png',
-        ),
+        matchesGoldenFile('goldens/10_flow_02_records.png'),
       );
 
       await tester.tap(find.text('Asistente IA'));
       await tester.pumpAndSettle();
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/10_flow_03_assistant.png',
-        ),
+        matchesGoldenFile('goldens/10_flow_03_assistant.png'),
       );
 
       await tester.tap(find.text('Reportes'));
       await tester.pumpAndSettle();
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(
-          '../../integration_test/screenshots/actual/10_flow_04_reports.png',
-        ),
+        matchesGoldenFile('goldens/10_flow_04_reports.png'),
       );
     });
   });
