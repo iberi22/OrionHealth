@@ -182,7 +182,7 @@ class SyncRepository {
         if (conditions.isNotEmpty) {
           final profile = await _isar.userProfiles.where().findFirst();
           if (profile != null) {
-            final existing = profile.medicalConditions ?? <String>[];
+            final existing = profile.medicalConditions;
             final updated = {...existing, ...conditions}.toList();
             await _isar.userProfiles.put(
               profile.copyWith(medicalConditions: updated),

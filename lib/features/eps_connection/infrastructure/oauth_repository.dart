@@ -54,11 +54,9 @@ class OAuthRepositoryImpl implements OAuthRepository {
         ),
       );
 
-      if (result != null) {
-        await _secureStorage.write(key: _accessTokenKey, value: result.accessToken);
-        await _secureStorage.write(key: _idTokenKey, value: result.idToken);
-        await _secureStorage.write(key: _refreshTokenKey, value: result.refreshToken);
-      }
+      await _secureStorage.write(key: _accessTokenKey, value: result.accessToken);
+      await _secureStorage.write(key: _idTokenKey, value: result.idToken);
+      await _secureStorage.write(key: _refreshTokenKey, value: result.refreshToken);
 
       return result;
     } catch (e) {
@@ -99,11 +97,9 @@ class OAuthRepositoryImpl implements OAuthRepository {
         ),
       );
 
-      if (result != null) {
-        await _secureStorage.write(key: _accessTokenKey, value: result.accessToken);
-        await _secureStorage.write(key: _idTokenKey, value: result.idToken);
-        await _secureStorage.write(key: _refreshTokenKey, value: result.refreshToken);
-      }
+      await _secureStorage.write(key: _accessTokenKey, value: result.accessToken);
+      await _secureStorage.write(key: _idTokenKey, value: result.idToken);
+      await _secureStorage.write(key: _refreshTokenKey, value: result.refreshToken);
 
       return result;
     } catch (e) {
