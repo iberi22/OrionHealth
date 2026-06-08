@@ -169,7 +169,8 @@ final List<PiiPattern> defaultPiiPatterns = [
 
   // Phone
   PiiPattern(
-    pattern: r'\b\(\d{3}\)\s*\d{3}[-.\s]?\d{4}\b',
+    // Note: no leading \b because '(' is not a word character
+    pattern: r'\(\d{3}\)\s*\d{3}[-.\s]?\d{4}\b',
     entityType: PiiLabel.phoneNumber,
     priority: 9,
     baseScore: 0.6,
@@ -420,6 +421,16 @@ final List<PiiPattern> defaultPiiPatterns = [
     contextBoost: 0.5,
     contextWords: ['password', 'secret', 'key', 'token'],
   ),
+
+  // UUID / Device ID
+  PiiPattern(
+    pattern: r'\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b',
+    entityType: 'UUID',
+    priority: 8,
+    baseScore: 0.85,
+    contextBoost: 0.15,
+    contextWords: ['device', 'id', 'uuid', 'identifier'],
+  ),
 ];
 
 class PiiDetector {
@@ -433,7 +444,7 @@ class PiiDetector {
 
   PiiResult detectPii(String text) {
     if (text.isEmpty) {
-      return PiiResult(entities: [], originalText: text, scrubbedText: text);
+      return PiiResult(entities: [], originalText: text);
     }
 
     final List<PiiEntity> entities = [];
@@ -490,6 +501,7 @@ class PiiDetector {
           start: start,
           end: end,
           confidence: score,
+          source: 'regex',
         ));
       }
     }
@@ -500,12 +512,9 @@ class PiiDetector {
     // Resolve overlaps (redundant but safe)
     final resolvedEntities = _mergeOverlapping(entities);
 
-    final scrubbedText = _scrub(text, resolvedEntities);
-
     return PiiResult(
       entities: resolvedEntities,
       originalText: text,
-      scrubbedText: scrubbedText,
     );
   }
 
@@ -604,6 +613,7 @@ class PiiDetector {
         start: start,
         end: end,
         confidence: entity.confidence,
+        source: entity.source,
       );
     }).toList();
   }

@@ -307,6 +307,35 @@ String normalizeLabel(String label, {String lang = "en"}) {
   return OTHER;
 }
 
+/// Static class providing access to PII labels for use with PII detection.
+/// Maps shorthand property names (e.g., date, ssn, email) to canonical constants.
+class PiiLabel {
+  PiiLabel._();
+
+  static String get date => DATE;
+  static String get ssn => SSN;
+  static String get email => EMAIL;
+  static String get phoneNumber => PHONE;
+  static String get url => URL;
+  static String get ipv4 => IP_ADDRESS;
+  static String get ipv6 => IP_ADDRESS;
+  static String get macAddress => MAC_ADDRESS;
+  static String get streetAddress => STREET_ADDRESS;
+  static String get postcode => ZIP_CODE;
+  static String get fullName => PERSON;
+  static String get organization => ORGANIZATION;
+  static String get creditCard => CREDIT_CARD;
+  static String get password => PASSWORD;
+  static String get npi => NPI;
+  static String get mrn => MEDICAL_RECORD_NUMBER;
+  static String get driverLicense => ID_NUM;
+  static String get passportNumber => ID_NUM;
+  static String get encounterNumber => ID_NUM;
+  static String get insuranceId => INSURANCE_ID;
+  static String get accountNumber => ACCOUNT_NUMBER;
+  static String get routingNumber => ACCOUNT_NUMBER;
+}
+
 const Map<String, Map<String, dynamic>> PII_ENTITY_META = {
   PERSON: {
     'category': 'PII',
