@@ -88,9 +88,6 @@ class _ShareCredentialPageState extends State<ShareCredentialPage> {
 
   @override
   Widget build(BuildContext context) {
-    final credentialType =
-        widget.credential.type.isEmpty ? 'Verifiable Credential' : widget.credential.type;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Share Credential'),

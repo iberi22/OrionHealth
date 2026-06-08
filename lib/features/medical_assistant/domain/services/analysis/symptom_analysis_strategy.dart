@@ -80,7 +80,7 @@ class SymptomAnalysisStrategy {
         'Ejercicio moderado regular',
       ];
 
-      final guideline = await ClinicalGuidelines.findByCode('CLSI-2017');
+      final guideline = ClinicalGuidelines.findByCode('CLSI-2017');
 
       insights.add(MedicalInsight(
         id: 'fatigue-${DateTime.now().millisecondsSinceEpoch}',

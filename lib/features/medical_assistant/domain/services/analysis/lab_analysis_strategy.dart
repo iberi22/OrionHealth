@@ -11,7 +11,7 @@ class LabAnalysisStrategy {
     String? unit,
     String? patientCondition,
   }) async {
-    final loinc = await LoincCommonLabs.findByCode(labCode);
+    final loinc = LoincCommonLabs.findByCode(labCode);
     final insights = <MedicalInsight>[];
 
     String explanation = '';
@@ -89,7 +89,7 @@ class LabAnalysisStrategy {
         suggestedExams = ['Consulta con tu médico para interpretar este resultado'];
       }
 
-      final guideline = await ClinicalGuidelines.findByCode('CLSI-2017');
+      final guideline = ClinicalGuidelines.findByCode('CLSI-2017');
 
       insights.add(MedicalInsight(
         id: 'lab-$labCode-${DateTime.now().millisecondsSinceEpoch}',

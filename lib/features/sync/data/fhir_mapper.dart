@@ -2,7 +2,6 @@ import '../../../features/user_profile/domain/entities/user_profile.dart';
 import '../../../features/medications/domain/entities/medication.dart';
 import '../../../features/allergies/domain/entities/allergy.dart';
 import '../../../features/vitals/domain/entities/vital_sign.dart';
-import '../../../features/appointments/domain/entities/appointment.dart';
 
 class FhirMapper {
   /// Maps FHIR Patient resource to UserProfile
