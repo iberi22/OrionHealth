@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../../ble_sharing/domain/ble_sharing_service.dart';
+import '../../../health_sharing/infrastructure/ble_sharing_service.dart';
 
 class VitalsMonitorPage extends StatefulWidget {
   const VitalsMonitorPage({super.key});
@@ -29,7 +29,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
     });
 
     final results = await _bleService.scanForDevices();
-    
+
     setState(() {
       _devices = results;
       _isScanning = false;
@@ -40,7 +40,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
   Future<void> _connectToDevice(BleDevice device) async {
     setState(() => _statusMessage = 'Connecting to ${device.name}...');
     final success = await _bleService.connect(device.id);
-    
+
     if (success) {
       setState(() => _statusMessage = 'Connected to ${device.name}');
       _startDataStream(device.id);
@@ -85,8 +85,8 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
           children: [
             _buildLivePulseCard(),
             Expanded(
-              child: _devices.isEmpty 
-                ? _buildEmptyState() 
+              child: _devices.isEmpty
+                ? _buildEmptyState()
                 : _buildDeviceList(),
             ),
           ],
@@ -95,7 +95,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _isScanning ? null : _startScan,
         label: Text(_isScanning ? 'Scanning...' : 'Search Devices'),
-        icon: _isScanning 
+        icon: _isScanning
           ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
           : const Icon(Icons.bluetooth_searching),
         backgroundColor: const Color(0xFF38BDF8),
@@ -161,8 +161,8 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
               child: Text(
                 _statusMessage ?? 'Device offline',
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4), 
-                  fontSize: 13, 
+                  color: Colors.white.withValues(alpha: 0.4),
+                  fontSize: 13,
                   fontStyle: FontStyle.italic,
                 ),
               ),
@@ -220,5 +220,3 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
     );
   }
 }
-
-// Removed local Timer stub as we now use dart:async
