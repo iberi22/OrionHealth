@@ -6,7 +6,7 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:orionhealth_health/features/auth/infrastructure/services/ble_medical_sharing_service.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
-import 'package:orionhealth_health/features/ble_sharing/domain/ble_sharing_service.dart';
+import 'package:orionhealth_health/features/health_sharing/infrastructure/ble_sharing_service.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/did.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/revocation_entry.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/verifiable_credential.dart';
