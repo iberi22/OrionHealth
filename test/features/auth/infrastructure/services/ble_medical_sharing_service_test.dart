@@ -5,7 +5,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/ble_medical_sharing_service.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
-import 'package:orionhealth_health/features/ble_sharing/domain/ble_sharing_service.dart';
+import 'package:orionhealth_health/features/health_sharing/infrastructure/ble_sharing_service.dart';
+import 'package:orionhealth_health/features/health_sharing/domain/entities/shared_health_package.dart';
 import 'package:orionhealth_health/features/ssi/domain/services/ssi_service.dart';
 import 'package:orionhealth_health/features/ssi/domain/entities/verifiable_credential.dart';
 
@@ -92,18 +93,19 @@ void main() {
         issuanceDate: DateTime.now(),
       );
 
-      final package = MedicalSharePackage(
+      final package = SharedHealthPackage(
         id: 'pkg-1',
         senderNodeId: 'sender',
         recipientNodeId: 'self',
         createdAt: DateTime.now(),
         expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-        payload: EncryptedMedicalPayload(
-          cipherText: base64Encode(utf8.encode(jsonEncode(vc.toJson()))),
+        payload: EncryptedPayload(
+          encryptedData: base64Encode(utf8.encode(jsonEncode(vc.toJson()))),
           iv: 'iv',
+          ephemeralPublicKey: '',
           authTag: 'tag',
         ),
-        metadata: MedicalShareMetadata(
+        metadata: PackageMetadata(
           packageType: 'VerifiableCredential',
           consentVerified: true,
           includedCategories: {},

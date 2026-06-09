@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:injectable/injectable.dart';
 import '../domain/entities/shared_health_package.dart';
 
 /// WiFi Direct sharing service for health data transfer
+@lazySingleton
 class WifiDirectService {
   static const int kDefaultPort = 9124;
   static const Duration connectionTimeout = Duration(seconds: 30);
