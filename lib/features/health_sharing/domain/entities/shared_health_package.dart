@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:equatable/equatable.dart';
 
 /// Represents an encrypted health data package for P2P sharing
@@ -62,8 +63,15 @@ class SharedHealthPackage extends Equatable {
     return SharedHealthPackage.fromJson(jsonDecode(utf8.decode(base64Decode(encoded))));
   }
 
+  /// Hashes a PIN using SHA-256
+  static String hashPin(String pin) {
+    final bytes = utf8.encode(pin);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
   @override
-  List<Object?> get props => [id, senderNodeId, recipientNodeId, createdAt, expiresAt];
+  List<Object?> get props => [id, senderNodeId, recipientNodeId, createdAt, expiresAt, payload, metadata, signature];
 }
 
 /// Encrypted payload containing health data
@@ -132,8 +140,15 @@ class PackageMetadata extends Equatable {
     );
   }
 
+  /// Verifies a PIN against the stored hash
+  bool verifyPin(String pin) {
+    if (pinHash == null) return true; // No PIN required
+    final hashed = SharedHealthPackage.hashPin(pin);
+    return hashed == pinHash;
+  }
+
   @override
-  List<Object?> get props => [packageType, consentVerified, includedCategories, appVersion];
+  List<Object?> get props => [packageType, consentVerified, includedCategories, pinHash, appVersion];
 }
 
 /// Categories of health data that can be shared

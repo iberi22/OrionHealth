@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/sync/data/fhir_client.dart';
 import 'package:orionhealth_health/features/sync/data/sync_repository.dart';
+import 'package:orionhealth_health/features/sync/data/node_discovery_service.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
@@ -13,11 +14,13 @@ import 'dart:io';
 
 class MockFhirClient extends Mock implements FhirClient {}
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
+class MockNodeDiscoveryService extends Mock implements NodeDiscoveryService {}
 
 void main() {
   late SyncRepository syncRepository;
   late MockFhirClient mockFhirClient;
   late MockFlutterSecureStorage mockSecureStorage;
+  late MockNodeDiscoveryService mockDiscoveryService;
   late Isar isar;
 
   setUpAll(() async {
@@ -27,6 +30,8 @@ void main() {
   setUp(() async {
     mockFhirClient = MockFhirClient();
     mockSecureStorage = MockFlutterSecureStorage();
+    mockDiscoveryService = MockNodeDiscoveryService();
+    when(() => mockDiscoveryService.currentNodes).thenReturn([]);
 
     final tempDir = await Directory.systemTemp.createTemp();
     isar = await Isar.open(
@@ -38,6 +43,7 @@ void main() {
       mockFhirClient,
       isar,
       mockSecureStorage,
+      mockDiscoveryService,
     );
 
     SharedPreferences.setMockInitialValues({});
