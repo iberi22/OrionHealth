@@ -57,7 +57,7 @@ void main() {
 
       expect(record1, equals(record2));
       expect(record1, isNot(equals(record3)));
-      expect(record1.hashCode, equals(record2.hashCode));
+      expect(record1.hashCode, record2.hashCode);
     });
 
     test('should support serialization', () {

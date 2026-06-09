@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_cubit.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_state.dart';
@@ -14,6 +15,7 @@ void main() {
   late MockAuthCubit mockAuthCubit;
 
   setUp(() {
+    GoogleFonts.config.allowRuntimeFetching = true;
     mockAuthCubit = MockAuthCubit();
     when(() => mockAuthCubit.state).thenReturn(const AuthInitial());
     when(() => mockAuthCubit.loginWithBiometrics()).thenAnswer((_) async {});

@@ -1,0 +1,188 @@
+00:00 +0: loading E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart
+00:00 +0: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine should produce surrogate for phone
+00:00 +1: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine should produce surrogate for EMAIL with domain preserved
+00:00 +2: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine should produce surrogate for SSN with last 4 preserved
+00:00 +3: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine should produce surrogate for CREDIT_CARD with last 4 preserved
+00:00 +4: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine should produce surrogate for PERSON name
+00:00 +5: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine should produce surrogate for DATE with same format
+00:00 +6: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine should produce surrogate for AGE
+00:00 +7: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine should produce surrogate for LOCATION
+00:00 +8: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine deterministic mode should return same surrogate for same input
+00:00 +9: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine deterministic mode should return different surrogates for different inputs
+00:00 +10: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine surrogate for unknown label should preserve format
+00:00 +11: E:/scripts-python/orionhealth/test/core/medical/anonymizer_engine_test.dart: AnonymizerEngine registerGenerator should override built-in
+00:00 +12: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: extractDigitGroups should extract digit groups from US phone
+00:00 +13: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: extractDigitGroups should extract digit groups from French phone
+00:00 +14: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: extractDigitGroups should return empty list for text with no digits
+00:00 +15: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preservePhoneFormat should keep non-digit chars, replace digits
+00:00 +16: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preservePhoneFormat should work with simple digits
+00:00 +17: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preserveDateFormat should use same separator slash by default
+00:00 +18: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preserveDateFormat should use dash separator when original uses dash
+00:00 +19: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preserveDateFormat should use day-first when specified
+00:00 +20: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preserveEmailPattern should keep domain, replace local part
+00:00 +21: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preserveEmailPattern should return fake email verbatim when original has no @
+00:00 +22: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preserveIdPattern should replace digits with random digits
+00:00 +23: E:/scripts-python/orionhealth/test/core/medical/format_preserve_test.dart: preserveIdPattern should preserve separators
+00:00 +24: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: I18nValidatorImpl BR (CPF) validation
+00:00 +25: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: I18nValidatorImpl ES (DNI) validation
+00:00 +26: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: I18nValidatorImpl PE (DNI) validation
+00:00 +27: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: I18nValidatorImpl MX (CURP) validation
+00:00 +28: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: I18nValidatorImpl Unsupported country code
+00:00 +29: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: Direct function tests validateCpf
+00:00 +30: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: Direct function tests validateDniSpain
+00:00 +31: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: Direct function tests validateDniPeru
+00:00 +32: E:/scripts-python/orionhealth/test/core/medical/i18n_validators_test.dart: Direct function tests validateCurp
+00:01 +33: E:/scripts-python/orionhealth/test/core/medical/pii_detector_test.dart: detects SSN
+00:01 +34: E:/scripts-python/orionhealth/test/core/medical/pii_detector_test.dart: detects email
+00:01 +35: E:/scripts-python/orionhealth/test/core/medical/pii_detector_test.dart: detects credit card with Luhn
+00:01 +36: E:/scripts-python/orionhealth/test/core/medical/pii_detector_test.dart: context boosting
+00:01 +37: E:/scripts-python/orionhealth/test/core/medical/pii_detector_test.dart: no false positive on non-PII number (low confidence)
+00:01 +38: E:/scripts-python/orionhealth/test/core/medical/pii_detector_test.dart: detects multiple PII types
+00:01 +39: E:/scripts-python/orionhealth/test/core/medical/pii_detector_test.dart: scrubbing works
+00:01 +40: E:/scripts-python/orionhealth/test/core/medical/pii_detector_test.dart: handles empty text
+00:01 +41: E:/scripts-python/orionhealth/test/core/medical/pii_entity_test.dart: PiiEntity toJson/fromJson works correctly
+00:01 +42: E:/scripts-python/orionhealth/test/core/medical/pii_entity_test.dart: PiiEntity overlaps detects overlapping spans
+00:01 +43: E:/scripts-python/orionhealth/test/core/medical/pii_entity_test.dart: PiiEntity merge combines overlapping entities
+00:01 +44: E:/scripts-python/orionhealth/test/core/medical/pii_entity_test.dart: PiiMatch toEntity converts match correctly
+00:01 +45: E:/scripts-python/orionhealth/test/core/medical/pii_entity_test.dart: PiiResult scrubbedText replaces entities with labels
+00:01 +46: E:/scripts-python/orionhealth/test/core/medical/pii_entity_test.dart: PiiResult sortedByPosition sorts by start index
+00:01 +47: E:/scripts-python/orionhealth/test/core/medical/pii_entity_test.dart: PiiResult mergeOverlapping merges overlapping entities
+00:01 +48: E:/scripts-python/orionhealth/test/core/medical/pii_entity_test.dart: PiiResult toJson/fromJson works correctly
+00:02 +49: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: normalizeLabel normalizes basic labels
+00:02 +50: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: normalizeLabel normalizes snake_case labels
+00:02 +51: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: normalizeLabel normalizes UPPERCASE no-separator labels
+00:02 +52: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: normalizeLabel normalizes BIOES-tagged labels
+00:02 +53: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: normalizeLabel normalizes mixed case with separators
+00:02 +54: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: normalizeLabel normalizes medical specific labels
+00:02 +55: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: normalizeLabel returns OTHER for unknown labels
+00:02 +56: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: normalizeLabel handles canonical labels directly
+00:02 +57: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: PII_ENTITY_META contains expected metadata for PERSON
+00:02 +58: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: PII_ENTITY_META contains expected metadata for MEDICAL_RECORD_NUMBER
+00:02 +59: E:/scripts-python/orionhealth/test/core/medical/pii_labels_test.dart: PII_ENTITY_META contains expected metadata for DRUG_NAME
+00:03 +60: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGateConfig default values
+00:03 +61: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGateConfig fromJson/toJson
+00:03 +62: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.validateSpans valid spans
+00:03 +63: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.validateSpans inverted span
+00:03 +64: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.validateSpans zero-length span
+00:03 +65: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.validateSpans out of bounds (negative)
+00:03 +66: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.validateSpans out of bounds (exceeds length)
+00:03 +67: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.validateSpans text mismatch
+00:03 +68: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.validateSpans whitespace-only mismatch (should be valid)
+00:03 +69: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.detectOverlaps detects overlaps
+00:03 +70: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.detectOverlaps no overlaps
+00:03 +71: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.applyGates default confidence filtering
+00:03 +72: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.applyGates custom default confidence filtering
+00:03 +73: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.applyGates per-label confidence filtering
+00:03 +74: E:/scripts-python/orionhealth/test/core/medical/quality_gates_test.dart: QualityGate.applyGates span validation filtering
+00:04 +75: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor cleanText should normalize whitespace by default
+00:04 +76: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor cleanText should protect medical abbreviations from punctuation removal
+00:04 +77: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor cleanText should lowercase text when requested
+00:04 +78: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor cleanText should remove numbers but preserve medical measurements
+00:04 +79: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor segmentSentences should split text into sentences
+00:04 +80: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor segmentSentences should protect medical abbreviations from causing splits
+00:04 +81: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor extractDosages should extract simple dosages
+00:04 +82: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor extractDosages should extract frequency dosages
+00:04 +83: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor extractVitalSigns should extract various vital signs
+00:04 +84: E:/scripts-python/orionhealth/test/core/medical/text_processor_test.dart: TextProcessor postprocessText should capitalize first letter and trim
+00:04 +85: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: DeviceCapabilities enum thresholds DeviceProfile.light for RAM < 4 GB
+00:04 +86: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: DeviceCapabilities enum thresholds DeviceProfile.medium for 4–6 GB
+00:04 +87: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: DeviceCapabilities enum thresholds DeviceProfile.high for RAM > 6 GB
+00:04 +88: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: ModelRecommendation thresholds cloudOnly for RAM < 2 GB
+00:04 +89: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: ModelRecommendation thresholds light for 2–4 GB
+00:04 +90: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: ModelRecommendation thresholds medium for 4–6 GB
+00:04 +91: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: ModelRecommendation thresholds heavy for RAM > 6 GB
+00:04 +92: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: DeviceCapabilities toString formats RAM in GB correctly
+00:04 +93: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: DeviceProfile boundary conditions 3.99 GB -> light
+00:04 +94: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: DeviceProfile boundary conditions 4 GB -> medium
+00:04 +95: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: DeviceProfile boundary conditions 6 GB -> medium
+00:04 +96: E:/scripts-python/orionhealth/test/core/services/device_capability_service_test.dart: DeviceProfile boundary conditions 6.01 GB -> high
+00:05 +97: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: (setUpAll)
+00:05 +97: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests should scrub email from prompt
+00:05 +98: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests should scrub phone number from prompt with context
+00:05 +99: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests should scrub IP address from prompt
+00:05 +100: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests should scrub UUID/device ID from prompt
+00:05 +101: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests should scrub SSN with format preservation and context
+00:05 +102: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests should scrub Credit Card with format preservation and context
+00:05 +103: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests should maintain backward compatibility with scrub method
+00:05 +104: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests should log scrub operation in Isar
+00:05 +105: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests PiiDetector standalone test
+00:05 +106: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Tests PiiResult mask extension works
+00:05 +107: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Surrogate Mode should replace email with surrogate preserving domain
+00:05 +108: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Surrogate Mode should replace phone with surrogate preserving format
+00:05 +109: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Surrogate Mode should replace SSN with surrogate preserving last 4
+00:05 +110: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Surrogate Mode should be consistent across repeated calls
+00:05 +111: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Surrogate Mode should use placeholders when useSurrogates is false
+00:05 +112: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: PromptScrubber Surrogate Mode detectAndScrubWithSurrogates convenience method works
+00:05 +113: E:/scripts-python/orionhealth/test/core/services/privacy_anonymizer_test.dart: (tearDownAll)
+00:05 +113: E:/scripts-python/orionhealth/test/core/widgets/floating_assistant_button_test.dart: FloatingAssistantButtonController initial state has no notification
+00:05 +114: E:/scripts-python/orionhealth/test/core/widgets/floating_assistant_button_test.dart: FloatingAssistantButtonController showNotification updates state correctly
+00:05 +115: E:/scripts-python/orionhealth/test/core/widgets/floating_assistant_button_test.dart: FloatingAssistantButtonController clearNotification resets state
+00:05 +116: E:/scripts-python/orionhealth/test/core/widgets/floating_assistant_button_test.dart: FloatingAssistantButtonController setBadgeCount updates both values
+00:05 +117: E:/scripts-python/orionhealth/test/core/widgets/floating_assistant_button_test.dart: FloatingAssistantButtonScope provides controller to descendants
+00:06 +118: E:/scripts-python/orionhealth/test/features/about/presentation/pages/about_page_test.dart: AboutPage displays mission section and blog posts
+00:06 +119: E:/scripts-python/orionhealth/test/features/about/presentation/pages/about_page_test.dart: AboutPage displays mission section and blog posts
+00:06 +120: E:/scripts-python/orionhealth/test/features/about/presentation/pages/about_page_test.dart: AboutPage displays mission section and blog posts
+00:06 +121: E:/scripts-python/orionhealth/test/features/about/presentation/pages/about_page_test.dart: AboutPage displays mission section and blog posts
+00:06 +122: E:/scripts-python/orionhealth/test/features/about/presentation/pages/about_page_test.dart: AboutPage displays mission section and blog posts
+00:07 +123: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: ChatPage renders initial message and composer
+00:08 +124: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +125: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +126: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +127: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +128: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +129: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +130: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +131: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +132: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +133: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +134: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:08 +135: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Sending a message updates the UI
+00:09 +136: E:/scripts-python/orionhealth/test/features/ai_assistant/presentation/pages/chat_page_test.dart: Quick prompt sends a message
+00:11 +137: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService checkInteraction should return true when medication name contains allergen
+00:11 +138: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService checkInteraction should return true when medication name contains allergen (case insensitive)
+00:11 +139: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService checkInteraction should return true when medication notes contain allergen
+00:11 +140: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService checkInteraction should return false when no interaction is found
+00:11 +141: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService checkInteraction should return false if allergy is invalid
+00:11 +142: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService checkInteraction should return true for partial matches within words
+00:11 +143: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService checkInteraction should handle allergen with leading/trailing whitespace
+00:11 +144: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService getSeverityLevel should return 1 for mild
+00:11 +145: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService getSeverityLevel should return 2 for moderate
+00:11 +146: E:/scripts-python/orionhealth/test/features/allergies/domain/services/allergy_service_test.dart: AllergyService getSeverityLevel should return 3 for severe
+00:12 +147: E:/scripts-python/orionhealth/test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart: (setUpAll)
+00:12 +147: E:/scripts-python/orionhealth/test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart: IsarAllergyRepository Should return an empty list when no allergies exist
+00:12 +148: E:/scripts-python/orionhealth/test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart: IsarAllergyRepository Should save and retrieve an allergy
+00:12 +149: E:/scripts-python/orionhealth/test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart: IsarAllergyRepository Should update an existing allergy and persist all fields
+00:12 +150: E:/scripts-python/orionhealth/test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart: IsarAllergyRepository Should delete an allergy
+00:12 +151: E:/scripts-python/orionhealth/test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart: IsarAllergyRepository Should not fail when deleting a non-existent allergy ID
+00:12 +152: E:/scripts-python/orionhealth/test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart: IsarAllergyRepository Should return multiple allergies and maintain their order/data
+00:13 +153: E:/scripts-python/orionhealth/test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart: (tearDownAll)
+00:13 +153: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Conflict Detection should detect conflict when appointments overlap perfectly
+00:13 +154: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Conflict Detection should detect conflict when new appointment starts during existing one
+00:13 +155: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Conflict Detection should detect conflict when new appointment ends during existing one
+00:13 +156: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Conflict Detection should NOT detect conflict when appointments are back-to-back
+00:13 +157: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Conflict Detection should ignore cancelled appointments for conflict detection
+00:13 +158: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Conflict Detection should NOT detect conflict if new appointment is cancelled
+00:13 +159: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Recurrence Logic should return only one instance if no recurrence rule
+00:13 +160: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Recurrence Logic should generate daily instances
+00:13 +161: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_service_test.dart: AppointmentService - Recurrence Logic should generate weekly instances
+00:13 +162: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_test.dart: Appointment Model Validation valid appointment should pass validation
+00:13 +163: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_test.dart: Appointment Model Validation appointment with empty doctor name should fail validation
+00:13 +164: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_test.dart: Appointment Model Validation appointment with empty specialty should fail validation
+00:13 +165: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_test.dart: Appointment Model Validation appointment with zero duration should fail validation
+00:13 +166: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_test.dart: Appointment Model Validation appointment with negative duration should fail validation
+00:13 +167: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_test.dart: Appointment Model Validation isPast should return true for dates in the past
+00:13 +168: E:/scripts-python/orionhealth/test/features/appointments/domain/appointment_test.dart: Appointment Model Validation isPast should return false for future dates
+00:14 +169: E:/scripts-python/orionhealth/test/features/auth/application/bloc/auth_cubit_test.dart: AuthCubit initial state should be AuthInitial
+00:14 +170: E:/scripts-python/orionhealth/test/features/auth/application/bloc/auth_cubit_test.dart: AuthCubit checkStatus should emit AuthNotSetup when no credentials exist
+00:14 +171: E:/scripts-python/orionhealth/test/features/auth/application/bloc/auth_cubit_test.dart: AuthCubit loginWithPin should emit AuthAuthenticated on success
+00:14 +172: E:/scripts-python/orionhealth/test/features/auth/application/bloc/auth_cubit_test.dart: AuthCubit loginWithPin should emit AuthUnauthenticated on failure
+00:14 +173: E:/scripts-python/orionhealth/test/features/auth/application/bloc/auth_cubit_test.dart: AuthCubit Lockout should emit AuthLocked after 5 failed attempts
+00:15 +174: E:/scripts-python/orionhealth/test/features/auth/infrastructure/repositories/auth_repository_impl_test.dart: (setUpAll)
+00:15 +174: E:/scripts-python/orionhealth/test/features/auth/infrastructure/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl should save and get credentials
+00:15 +175: E:/scripts-python/orionhealth/test/features/auth/infrastructure/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl should return null when no credentials exist
+00:15 +176: E:/scripts-python/orionhealth/test/features/auth/infrastructure/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl hasPinSet should return true if hashedPin is present
+00:15 +177: E:/scripts-python/orionhealth/test/features/auth/infrastructure/services/ble_medical_sharing_service_test.dart: BleMedicalSharingService sharePresentation should return error if SSI service is null
+00:15 +178: E:/scripts-python/orionhealth/test/features/auth/infrastructure/services/ble_medical_sharing_service_test.dart: BleMedicalSharingService sharePresentation should return error if SSI service is null
+00:15 +179: E:/scripts-python/orionhealth/test/features/auth/infrastructure/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl deleteCredentials should clear all credentials
+00:15 +180: E:/scripts-python/orionhealth/test/features/auth/infrastructure/services/ble_medical_sharing_service_test.dart: BleMedicalSharingService sharePresentation should proceed if SSI service is available
+00:15 +181: E:/scripts-python/orionhealth/test/features/auth/infrastructure/services/ble_medical_sharing_service_test.dart: BleMedicalSharingService receiveCredential should skip verification if SSI service is null

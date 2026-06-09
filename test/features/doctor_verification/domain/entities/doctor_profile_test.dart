@@ -73,8 +73,8 @@ void main() {
       };
 
       final result = DoctorProfileModel.fromJson(jsonMap);
-
-      expect(result, tDoctorProfileModel);
+      
+      expect(result, equals(tDoctorProfileModel));
     });
 
     test('toJson should return a JSON map containing the proper data', () {
