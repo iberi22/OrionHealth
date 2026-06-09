@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_wallet/health_wallet.dart';
 import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/di/injection.dart';
@@ -79,6 +81,41 @@ class _ReportsPageState extends State<ReportsPage> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
+          _FilterChip(
+            label: 'Exportar FHIR',
+            isSelected: false,
+            onSelected: (_) async {
+              final fhir = await getIt<WalletService>().exportToFhir();
+              if (mounted) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Exportación FHIR R4'),
+                    content: SizedBox(
+                      width: double.maxFinite,
+                      child: SingleChildScrollView(
+                        child: SelectableText(fhir, style: const TextStyle(fontSize: 10, fontFamily: 'monospace')),
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: fhir));
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Copiar'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cerrar'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+          ),
+          const SizedBox(width: 8),
           _FilterChip(
             label: 'Todos',
             isSelected: _selectedStatus == null,

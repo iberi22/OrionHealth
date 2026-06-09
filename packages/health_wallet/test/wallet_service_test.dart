@@ -26,6 +26,7 @@ void main() {
         MedicationEntrySchema,
         MedicalDocumentSchema,
         MedicalEventSchema,
+        MedicalConceptSchema,
       ],
       directory: testDir,
     );
@@ -365,7 +366,18 @@ void main() {
       final export = await walletService.exportAllData();
       expect(export['labs'], isA<List>());
       expect((export['labs'] as List).length, 1);
-      expect(export['version'], '1.0');
+      expect(export['version'], '1.1');
+    });
+
+    test('exportToFhir returns a valid-looking bundle', () async {
+      await walletService.saveHealthRecord(HealthRecord(
+        remoteId: 'hr1', patientId: 'p1', firstName: 'J', lastName: 'D', dateOfBirth: '1990-01-01',
+        createdAt: DateTime.now(), updatedAt: DateTime.now(),
+      ));
+
+      final fhir = await walletService.exportToFhir();
+      expect(fhir, contains('"resourceType": "Bundle"'));
+      expect(fhir, contains('"resourceType": "Patient"'));
     });
 
     test('cleanup methods', () async {
