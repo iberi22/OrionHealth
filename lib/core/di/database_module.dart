@@ -13,6 +13,8 @@ import '../../features/medications/domain/entities/medication.dart';
 import '../../features/vitals/domain/entities/vital_sign.dart';
 import '../../features/appointments/domain/entities/appointment.dart';
 import '../../features/allergies/domain/entities/allergy.dart';
+import '../../features/doctor_verification/domain/entities/doctor_profile.dart';
+import '../../features/doctor_verification/domain/entities/doctor_rating.dart';
 import '../../features/ssi/infrastructure/persistence/isar_did.dart';
 import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
 import '../../features/ssi/infrastructure/persistence/isar_revocation_entry.dart';
@@ -36,6 +38,8 @@ abstract class DatabaseModule {
         MedicationSchema,
         AppointmentSchema,
         AllergySchema,
+        DoctorProfileSchema,
+        DoctorRatingSchema,
         HealthRecordSchema,
         LabResultSchema,
         VitalSignSchema,
