@@ -26,6 +26,7 @@ class _SharePageContent extends StatefulWidget {
 class _SharePageContentState extends State<_SharePageContent> {
   final Set<DataCategory> _selectedCategories = {};
   TransferMethod _selectedMethod = TransferMethod.nfc;
+  final TextEditingController _pinController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,13 @@ class _SharePageContentState extends State<_SharePageContent> {
           }
         },
         builder: (context, state) {
-          if (state is SharingScanning || state is SharingConnecting || state is SharingConnected) {
+          if (state is SharingScanning) {
+            if (state.method == TransferMethod.wifi) {
+              return _buildWifiDiscoveryUI(state);
+            }
+            return _buildTransferringUI(state);
+          }
+          if (state is SharingConnecting || state is SharingConnected || state is SharingTransferring) {
             return _buildTransferringUI(state);
           }
 
@@ -127,23 +134,33 @@ class _SharePageContentState extends State<_SharePageContent> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            RadioGroup<TransferMethod>(
-              groupValue: _selectedMethod,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _selectedMethod = value);
-                }
-              },
-              child: Column(
-                children: TransferMethod.values.map((method) {
-                  return RadioListTile<TransferMethod>(
-                    title: Text(method.displayName),
-                    subtitle: Text(method.description),
-                    value: method,
-                  );
-                }).toList(),
+            ...TransferMethod.values.map((method) {
+              return RadioListTile<TransferMethod>(
+                title: Text(method.displayName),
+                subtitle: Text(method.description),
+                value: method,
+                groupValue: _selectedMethod,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() => _selectedMethod = value);
+                  }
+                },
+              );
+            }),
+            if (_selectedMethod == TransferMethod.wifi) ...[
+              const SizedBox(height: 16),
+              TextField(
+                controller: _pinController,
+                decoration: const InputDecoration(
+                  labelText: 'PIN de seguridad (opcional)',
+                  hintText: 'Ingresa el PIN del destinatario',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock),
+                ),
+                keyboardType: TextInputType.number,
+                obscureText: true,
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -164,6 +181,84 @@ class _SharePageContentState extends State<_SharePageContent> {
         ),
       ),
     );
+  }
+
+  Widget _buildWifiDiscoveryUI(SharingScanning state) {
+    final devices = state.devices;
+
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'Selecciona el dispositivo de destino',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        if (devices.isEmpty)
+          const Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Buscando dispositivos...'),
+                ],
+              ),
+            ),
+          )
+        else
+          Expanded(
+            child: ListView.builder(
+              itemCount: devices.length,
+              itemBuilder: (context, index) {
+                final device = devices[index];
+                return ListTile(
+                  leading: const CircleAvatar(child: Icon(Icons.devices)),
+                  title: Text(device.name),
+                  subtitle: Text(device.address),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _sendToWifiDevice(context, device.address),
+                );
+              },
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: TextButton(
+            onPressed: () => context.read<SharingCubit>().cancelSharing(),
+            child: const Text('Cancelar'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _sendToWifiDevice(BuildContext context, String address) {
+    final pin = _pinController.text.isNotEmpty ? _pinController.text : null;
+
+    final package = SharedHealthPackage(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      senderNodeId: 'my-node-id',
+      recipientNodeId: 'target-node-id',
+      createdAt: DateTime.now(),
+      expiresAt: DateTime.now().add(const Duration(minutes: 3)),
+      payload: const EncryptedPayload(
+        encryptedData: '',
+        iv: '',
+        ephemeralPublicKey: '',
+      ),
+      metadata: PackageMetadata(
+        packageType: 'selective',
+        consentVerified: true,
+        includedCategories: _selectedCategories,
+        appVersion: '1.0.0',
+      ),
+      signature: '',
+    );
+
+    context.read<SharingCubit>().sendViaWifi(address, package, pin: pin);
   }
 
   Widget _buildTransferringUI(SharingState state) {
@@ -207,6 +302,9 @@ class _SharePageContentState extends State<_SharePageContent> {
   }
 
   void _startSharing(BuildContext context) {
+    final pin = _pinController.text.isNotEmpty ? _pinController.text : null;
+    final pinHash = pin != null ? SharedHealthPackage.hashPin(pin) : null;
+
     // Create package
     final package = SharedHealthPackage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -223,15 +321,17 @@ class _SharePageContentState extends State<_SharePageContent> {
         packageType: 'selective',
         consentVerified: true,
         includedCategories: _selectedCategories,
+        pinHash: pinHash,
         appVersion: '1.0.0',
       ),
       signature: '',
     );
 
     context.read<SharingCubit>().startSharing(
-      method: _selectedMethod,
-      package: package,
-    );
+          method: _selectedMethod,
+          package: package,
+          pin: pin,
+        );
   }
 
   void _showSuccessDialog(BuildContext context, SharingResult result) {

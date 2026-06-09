@@ -39,6 +39,8 @@ class BleSharingService {
   BluetoothCharacteristic? _txCharacteristic;
   BluetoothCharacteristic? _rxCharacteristic;
   StreamSubscription? _rxSubscription;
+  StreamSubscription? _connectionStateSubscription;
+  int _mtu = 512;
 
   // Completer for receiving data (signals when a full package is received)
   Completer<MedicalSharePackage?>? _receiveCompleter;
@@ -153,7 +155,28 @@ class BleSharingService {
         timeout: const Duration(seconds: 35),
         mtu: 512,
         autoConnect: false,
-      );
+      ).timeout(const Duration(seconds: 40), onTimeout: () {
+        throw TimeoutException('Connection timed out');
+      });
+
+      // Listen for connection state changes
+      _connectionStateSubscription?.cancel();
+      _connectionStateSubscription = device.connectionState.listen((state) {
+        if (state == BluetoothConnectionState.disconnected) {
+          _handleDisconnection();
+        }
+      });
+
+      // Negotiate MTU (request 512, but it might be less)
+      _mtu = await device.mtu.first;
+      if (_mtu < 512) {
+        try {
+          await device.requestMtu(512, timeout: 15);
+          _mtu = await device.mtu.first;
+        } catch (e) {
+          // Ignore MTU request errors, stick with current MTU
+        }
+      }
 
       // Discover GATT services
       final services = await device.discoverServices(
@@ -211,13 +234,19 @@ class BleSharingService {
       _stateController.add(BleServiceState.connected(deviceId));
       return true;
     } catch (e) {
-      _stateController.add(BleServiceState.error('Failed to connect: $e'));
+      final errorMessage = e is TimeoutException
+          ? 'Connection timed out. Please ensure the device is nearby and discoverable.'
+          : 'Failed to connect: $e';
+      _stateController.add(BleServiceState.error(errorMessage));
       return false;
     }
   }
 
   Future<void> disconnect() async {
     if (_connectedDevice == null) return;
+
+    _connectionStateSubscription?.cancel();
+    _connectionStateSubscription = null;
 
     // Unsubscribe from RX notifications
     _rxSubscription?.cancel();
@@ -232,12 +261,25 @@ class BleSharingService {
     _receiveCompleter = null;
     _receiveBuffer.clear();
 
-    await _connectedDevice!.disconnect();
+    try {
+      await _connectedDevice!.disconnect();
+    } catch (e) {
+      // Ignore disconnection errors
+    }
+
     _connectedDevice = null;
     _connectedDeviceId = null;
     _sessionKey = null;
+    _mtu = 512;
 
     _stateController.add(BleServiceState.ready());
+  }
+
+  void _handleDisconnection() {
+    if (_connectedDevice != null) {
+      _stateController.add(BleServiceState.error('Device disconnected unexpectedly'));
+      disconnect();
+    }
   }
 
   // ─── Sending ────────────────────────────────────────────────────
@@ -266,17 +308,21 @@ class BleSharingService {
       final byteData = ByteData.sublistView(lengthBytes);
       byteData.setUint32(0, bytes.length, Endian.big);
       await _txCharacteristic!.write(lengthBytes.toList(),
-          withoutResponse: false, timeout: 15);
+          withoutResponse: false, timeout: 15).timeout(const Duration(seconds: 20), onTimeout: () {
+            throw TimeoutException('Failed to write length prefix');
+          });
 
-      // Chunked write: 512 bytes per packet (MTU default)
-      const chunkSize = 512;
+      // Chunked write: based on negotiated MTU (3 bytes overhead for BLE)
+      final chunkSize = _mtu - 3;
       for (int i = 0; i < bytes.length; i += chunkSize) {
         final end =
             i + chunkSize > bytes.length ? bytes.length : i + chunkSize;
         final chunk = bytes.sublist(i, end);
 
         await _txCharacteristic!.write(chunk.toList(),
-            withoutResponse: true, timeout: 15);
+            withoutResponse: true, timeout: 15).timeout(const Duration(seconds: 10), onTimeout: () {
+              throw TimeoutException('Failed to write chunk at offset $i');
+            });
 
         // Small delay between chunks to avoid overwhelming the BLE stack
         await Future.delayed(const Duration(milliseconds: 20));
@@ -473,12 +519,22 @@ class BleSharingService {
 
   /// Start advertising as an OrionHealth node.
   ///
-  /// TODO: BLE peripheral mode requires platform-specific GATT server.
-  /// flutter_blue_plus 2.3.2 does not expose startAdvertising in the
-  /// public API. Advertising requires Android GATT server / iOS CBPeripheralManager.
-  /// For now, use the scan+connect pairing flow.
+  /// NOTE: `flutter_blue_plus` is primarily a BLE Central library and does NOT
+  /// support Peripheral mode (advertising and GATT server) out of the box.
+  ///
+  /// To enable true P2P sharing where this device can be discovered by others,
+  /// a separate library like `flutter_ble_peripheral` or `beacon_broadcast`
+  /// would be required to handle the advertising and GATT server setup.
+  ///
+  /// Current implementation: Simulates advertising state for UI purposes,
+  /// but relies on the 'Sender' being the Central (scanner) and the 'Receiver'
+  /// being the Peripheral (advertiser). Since we can't be a Peripheral here,
+  /// P2P sharing between two OrionHealth apps using only this service
+  /// is currently limited to one device acting as a Central and connecting
+  /// to an existing GATT server.
   Future<void> startAdvertising(String nodeId) async {
     _stateController.add(BleServiceState.advertising(nodeId));
+    // Implementation of actual advertising requires additional plugins.
     await Future.delayed(const Duration(seconds: 1));
   }
 
