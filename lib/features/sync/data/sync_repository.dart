@@ -210,7 +210,7 @@ class SyncRepository {
     if (peers.isNotEmpty) {
       // Try to sync from the first available peer
       final peer = peers.first;
-      final peerIp = '${peer.hostAddress}:${peer.port}';
+      final peerIp = '${peer.host}:${peer.port}';
       await syncService.syncAll(peerIp: peerIp);
     } else {
       // Fallback to default (GitHub)

@@ -82,7 +82,7 @@ dependencies:
   url_launcher: ^6.3.2
   app_links: ^7.0.0
   multicast_dns: ^0.3.3
-  bonsoir: ^7.1.1
+  bonsoir: 6.0.3
 
 dev_dependencies:
   flutter_test:

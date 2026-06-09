@@ -222,7 +222,7 @@ class SharingCubit extends Cubit<SharingState> {
     } else if (state.status == 'transferring') {
       emit(SharingTransferring(
         method: TransferMethod.wifi,
-        progress: state.progress ?? 0.5,
+        progress: 0.5,
         message: state.message ?? 'Transferring...',
       ));
     } else if (state.status == 'received') {
@@ -347,7 +347,7 @@ class SharingCubit extends Cubit<SharingState> {
         await _nfcService.startListening();
         break;
       case TransferMethod.wifi:
-        await _wifiService.startServer(pin: pin);
+        await _wifiService.startServer();
         break;
     }
   }
