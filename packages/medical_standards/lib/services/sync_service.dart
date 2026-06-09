@@ -237,7 +237,7 @@ class SyncService {
   ///
   /// Returns a [SyncResult] indicating success/failure and whether
   /// the dataset was updated.
-  Future<SyncResult> syncDataset(SyncConfig config) async {
+  Future<SyncResult> syncDataset(SyncConfig config, {String? peerIp}) async {
     // Validate local file exists
     final localFile = File(config.localPath);
     if (!await localFile.exists()) {
@@ -246,6 +246,14 @@ class SyncService {
         datasetName: config.datasetName,
         error: 'Local file not found: ${config.localPath}',
       );
+    }
+
+    // Try sync from peer if available
+    if (peerIp != null) {
+      final peerResult = await syncFromPeer(peerIp, config);
+      if (peerResult.success && peerResult.wasUpdated) {
+        return peerResult;
+      }
     }
 
     // Check for newer version on GitHub
@@ -313,13 +321,58 @@ class SyncService {
     );
   }
 
+  /// Download a dataset from a peer node.
+  Future<SyncResult> syncFromPeer(String peerIp, SyncConfig config) async {
+    try {
+      final downloadUrl = 'http://$peerIp/orion/standards/${config.localFileName}';
+      final content = await _downloadDataset(downloadUrl);
+
+      if (content != null) {
+        // Validate JSON
+        jsonDecode(content);
+
+        // Save to cache
+        final cacheDir = await _getCacheDir();
+        final cachedFile = File(p.join(cacheDir.path, config.localFileName));
+        await cachedFile.writeAsString(content);
+
+        await _saveVersion(DatasetVersion(
+          datasetName: config.datasetName,
+          version: config.version, // Ideally peer should provide version
+          lastSynced: DateTime.now(),
+          sourceUrl: downloadUrl,
+          isLocal: false,
+        ));
+
+        return SyncResult(
+          success: true,
+          datasetName: config.datasetName,
+          newVersion: config.version,
+          wasUpdated: true,
+        );
+      }
+    } catch (e) {
+      return SyncResult(
+        success: false,
+        datasetName: config.datasetName,
+        error: 'Peer download failed: $e',
+      );
+    }
+
+    return SyncResult(
+      success: false,
+      datasetName: config.datasetName,
+      error: 'Peer did not have the dataset',
+    );
+  }
+
   /// Sync all datasets managed by this service.
   ///
   /// Returns a list of [SyncResult] for each dataset.
-  Future<List<SyncResult>> syncAll() async {
+  Future<List<SyncResult>> syncAll({String? peerIp}) async {
     final results = <SyncResult>[];
     for (final config in datasets) {
-      results.add(await syncDataset(config));
+      results.add(await syncDataset(config, peerIp: peerIp));
     }
     return results;
   }

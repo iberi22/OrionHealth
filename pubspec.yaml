@@ -81,6 +81,8 @@ dependencies:
   device_calendar: ^4.3.3
   url_launcher: ^6.3.2
   app_links: ^7.0.0
+  multicast_dns: ^0.3.3
+  bonsoir: ^7.1.1
 
 dev_dependencies:
   flutter_test:
