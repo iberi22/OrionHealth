@@ -29,7 +29,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(const Duration(seconds: 1));
     registerFallbackValue(const DeviceIdentifier('00:00:00:00:00:00'));
-    registerFallbackValue(License.free);
+    registerFallbackValue(License.nonprofit);
   });
 
   setUp(() {
@@ -55,6 +55,9 @@ void main() {
       timeout: any(named: 'timeout'),
     )).thenAnswer((_) async => [mockBluetoothService]);
     when(() => mockDevice.disconnect()).thenAnswer((_) async => {});
+    when(() => mockDevice.connectionState).thenAnswer((_) => Stream.value(BluetoothConnectionState.connected));
+    when(() => mockDevice.mtu).thenAnswer((_) => Stream.value(512));
+    when(() => mockDevice.requestMtu(any(), timeout: any(named: 'timeout'))).thenAnswer((_) async => 512);
 
     when(() => mockBluetoothService.uuid).thenReturn(Guid(BleSharingService.serviceUuid));
     when(() => mockBluetoothService.characteristics).thenReturn([mockTxCharacteristic, mockRxCharacteristic]);
@@ -118,7 +121,7 @@ void main() {
 
       expect(result, true);
       verify(() => mockDevice.connect(
-        license: License.free,
+        license: License.nonprofit,
         mtu: 512,
         autoConnect: false,
         timeout: any(named: 'timeout'),
