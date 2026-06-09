@@ -1,7 +1,7 @@
 import '../../domain/entities/doctor_profile.dart';
 
 class DoctorProfileModel extends DoctorProfile {
-  const DoctorProfileModel({
+  DoctorProfileModel({
     required super.id,
     required super.fullName,
     required super.specialty,
