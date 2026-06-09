@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
+  bonsoir_windows
   file_selector_windows
   firebase_core
   firebase_database

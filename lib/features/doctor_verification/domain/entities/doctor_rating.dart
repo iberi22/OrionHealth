@@ -1,9 +1,22 @@
+import 'dart:convert';
+import 'package:isar/isar.dart';
+
+part 'doctor_rating.g.dart';
+
+@collection
 class DoctorRating {
+  Id isarId = Isar.autoIncrement;
+
   final String id;
   final String doctorId;
   final String? patientId;
   final int overallScore;
-  final Map<String, int> categories;
+
+  final String categoriesJson;
+
+  @ignore
+  Map<String, int> get categories => jsonDecode(categoriesJson).cast<String, int>();
+
   final String? comment;
   final DateTime createdAt;
   final bool isAnonymous;
@@ -14,7 +27,7 @@ class DoctorRating {
     required this.doctorId,
     this.patientId,
     required this.overallScore,
-    required this.categories,
+    required this.categoriesJson,
     this.comment,
     required this.createdAt,
     required this.isAnonymous,
