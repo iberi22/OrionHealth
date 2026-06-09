@@ -19,8 +19,28 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  # Detectar branches generados por agentes (ID numérico largo al final)
+  check-branch:
+    runs-on: ubuntu-latest
+    outputs:
+      is-agent-branch: ${{ steps.check.outputs.is-agent }}
+    steps:
+      - id: check
+        run: |
+          HEAD_REF="${{ github.head_ref || github.ref_name }}"
+          # Patrón: branch termina con ID numérico de 15+ dígitos
+          if echo "$HEAD_REF" | grep -qE '\-[0-9]{15,}$'; then
+            echo "is-agent=true" >> $GITHUB_OUTPUT
+            echo "⚡ Branch '$HEAD_REF' de agente - saltando build pesado"
+          else
+            echo "is-agent=false" >> $GITHUB_OUTPUT
+            echo "✅ Branch '$HEAD_REF' normal - build completo"
+          fi
+
   build:
     runs-on: ubuntu-latest
+    needs: check-branch
+    if: needs.check-branch.outputs.is-agent-branch != 'true'
 
     steps:
       - uses: actions/checkout@v4
