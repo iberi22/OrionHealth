@@ -24,10 +24,12 @@ class SharingReady extends SharingState {}
 
 class SharingScanning extends SharingState {
   final TransferMethod method;
-  const SharingScanning(this.method);
+  final List<dynamic> devices;
+
+  const SharingScanning(this.method, {this.devices = const []});
 
   @override
-  List<Object?> get props => [method];
+  List<Object?> get props => [method, devices];
 }
 
 class SharingAdvertising extends SharingState {
@@ -155,7 +157,7 @@ class SharingCubit extends Cubit<SharingState> {
 
   void _handleBleState(BleSharingState state) {
     if (state.status == 'scanning') {
-      emit(SharingScanning(TransferMethod.ble));
+      emit(const SharingScanning(TransferMethod.ble));
     } else if (state.status == 'advertising') {
       emit(SharingAdvertising(TransferMethod.ble, state.deviceId ?? ''));
     } else if (state.status == 'connecting') {
@@ -212,7 +214,7 @@ class SharingCubit extends Cubit<SharingState> {
 
   void _handleWifiState(WifiSharingState state) {
     if (state.status == 'discovering') {
-      emit(SharingScanning(TransferMethod.wifi));
+      emit(const SharingScanning(TransferMethod.wifi));
     } else if (state.status == 'hosting') {
       emit(SharingAdvertising(TransferMethod.wifi, state.address ?? ''));
     } else if (state.status == 'connecting') {
@@ -220,7 +222,7 @@ class SharingCubit extends Cubit<SharingState> {
     } else if (state.status == 'transferring') {
       emit(SharingTransferring(
         method: TransferMethod.wifi,
-        progress: 0.5,
+        progress: state.progress ?? 0.5,
         message: state.message ?? 'Transferring...',
       ));
     } else if (state.status == 'received') {
@@ -250,6 +252,7 @@ class SharingCubit extends Cubit<SharingState> {
   Future<void> startSharing({
     required TransferMethod method,
     required SharedHealthPackage package,
+    String? pin,
   }) async {
     _currentMethod = method;
 
@@ -261,7 +264,9 @@ class SharingCubit extends Cubit<SharingState> {
         await _nfcService.shareData(package);
         break;
       case TransferMethod.wifi:
-        await _wifiService.startServer();
+        // For WiFi, sender discovers the receiver's server
+        final devices = await _wifiService.discoverDevices();
+        emit(SharingScanning(TransferMethod.wifi, devices: devices));
         break;
     }
   }
@@ -283,8 +288,30 @@ class SharingCubit extends Cubit<SharingState> {
   }
 
   /// Send via WiFi Direct
-  Future<void> sendViaWifi(String targetIp, SharedHealthPackage package) async {
-    final result = await _wifiService.sendData(targetIp, package);
+  Future<void> sendViaWifi(String targetIp, SharedHealthPackage package, {String? pin}) async {
+    // If PIN is provided, ensure it's hashed in the package metadata
+    SharedHealthPackage packageToSend = package;
+    if (pin != null) {
+      final pinHash = SharedHealthPackage.hashPin(pin);
+      packageToSend = SharedHealthPackage(
+        id: package.id,
+        senderNodeId: package.senderNodeId,
+        recipientNodeId: package.recipientNodeId,
+        createdAt: package.createdAt,
+        expiresAt: package.expiresAt,
+        payload: package.payload,
+        metadata: PackageMetadata(
+          packageType: package.metadata.packageType,
+          consentVerified: package.metadata.consentVerified,
+          includedCategories: package.metadata.includedCategories,
+          pinHash: pinHash,
+          appVersion: package.metadata.appVersion,
+        ),
+        signature: package.signature,
+      );
+    }
+
+    final result = await _wifiService.sendData(targetIp, packageToSend);
     if (result.success) {
       emit(SharingComplete(result, TransferMethod.wifi));
     } else {
@@ -309,7 +336,7 @@ class SharingCubit extends Cubit<SharingState> {
   // ==========================================================================
 
   /// Start listening for incoming data
-  Future<void> startListening(TransferMethod method) async {
+  Future<void> startListening(TransferMethod method, {String? pin}) async {
     _currentMethod = method;
 
     switch (method) {
@@ -320,7 +347,7 @@ class SharingCubit extends Cubit<SharingState> {
         await _nfcService.startListening();
         break;
       case TransferMethod.wifi:
-        await _wifiService.startServer();
+        await _wifiService.startServer(pin: pin);
         break;
     }
   }
