@@ -56,13 +56,11 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
   final MedicalLlmAdapter _llmAdapter;
   final MedicalAnalysisService _analysisService;
   final HealthContextService _healthContextService;
+
   MedicalAssistantCubit({
     MedicalLlmAdapter? llmAdapter,
     MedicalAnalysisService? analysisService,
     required HealthContextService healthContextService,
-    dynamic labInterpreter,
-    dynamic vitalAnalyzer,
-    dynamic riskCalculator,
   })  : _llmAdapter = llmAdapter ?? MedicalLlmAdapter(),
         _analysisService = analysisService ?? MedicalAnalysisService(),
         _healthContextService = healthContextService,
@@ -237,5 +235,4 @@ class MedicalAssistantCubit extends Cubit<MedicalAssistantState> {
 
     return tags;
   }
-
 }

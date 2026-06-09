@@ -79,29 +79,33 @@ class EncryptedPayload extends Equatable {
   final String encryptedData; // AES-256-GCM encrypted JSON
   final String iv; // Initialization vector
   final String ephemeralPublicKey; // ECDH ephemeral key for recipient
+  final String authTag; // Authentication tag for AES-GCM
 
   const EncryptedPayload({
     required this.encryptedData,
     required this.iv,
     required this.ephemeralPublicKey,
+    this.authTag = '',
   });
 
   Map<String, dynamic> toJson() => {
         'encryptedData': encryptedData,
         'iv': iv,
         'ephemeralPublicKey': ephemeralPublicKey,
+        'authTag': authTag,
       };
 
   factory EncryptedPayload.fromJson(Map<String, dynamic> json) {
     return EncryptedPayload(
-      encryptedData: json['encryptedData'],
-      iv: json['iv'],
-      ephemeralPublicKey: json['ephemeralPublicKey'],
+      encryptedData: json['encryptedData'] ?? '',
+      iv: json['iv'] ?? '',
+      ephemeralPublicKey: json['ephemeralPublicKey'] ?? '',
+      authTag: json['authTag'] ?? '',
     );
   }
 
   @override
-  List<Object?> get props => [encryptedData, iv, ephemeralPublicKey];
+  List<Object?> get props => [encryptedData, iv, ephemeralPublicKey, authTag];
 }
 
 /// Metadata about the shared package
