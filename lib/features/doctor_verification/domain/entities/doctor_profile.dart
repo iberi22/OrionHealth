@@ -1,6 +1,11 @@
-import 'package:equatable/equatable.dart';
+import 'package:isar/isar.dart';
 
-class DoctorProfile extends Equatable {
+part 'doctor_profile.g.dart';
+
+@collection
+class DoctorProfile {
+  Id isarId = Isar.autoIncrement;
+
   final String id;
   final String fullName;
   final String specialty;
@@ -13,7 +18,7 @@ class DoctorProfile extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  const DoctorProfile({
+  DoctorProfile({
     required this.id,
     required this.fullName,
     required this.specialty,
@@ -28,17 +33,33 @@ class DoctorProfile extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        id,
-        fullName,
-        specialty,
-        licenseNumber,
-        countryCode,
-        institution,
-        yearsOfExperience,
-        languages,
-        verified,
-        createdAt,
-        updatedAt,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DoctorProfile &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          fullName == other.fullName &&
+          specialty == other.specialty &&
+          licenseNumber == other.licenseNumber &&
+          countryCode == other.countryCode &&
+          institution == other.institution &&
+          yearsOfExperience == other.yearsOfExperience &&
+          languages == other.languages &&
+          verified == other.verified &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      fullName.hashCode ^
+      specialty.hashCode ^
+      licenseNumber.hashCode ^
+      countryCode.hashCode ^
+      institution.hashCode ^
+      yearsOfExperience.hashCode ^
+      languages.hashCode ^
+      verified.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode;
 }
