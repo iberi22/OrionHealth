@@ -34,19 +34,18 @@ class NodeDiscoveryService {
     // 2. Discover others
     _discovery = BonsoirDiscovery(type: _serviceType);
 
-    _discovery!.eventStream!.listen((event) {
+    _discovery?.eventStream?.listen((event) {
       if (event is BonsoirDiscoveryServiceFoundEvent) {
-        event.service!.resolve(_discovery!.serviceResolver);
+        final resolver = _discovery?.serviceResolver;
+        if (resolver != null) {
+          event.service.resolve(resolver);
+        }
       } else if (event is BonsoirDiscoveryServiceResolvedEvent) {
-        if (event.service != null) {
-          _nodes[event.service!.name] = event.service!;
-          _notify();
-        }
+        _nodes[event.service.name] = event.service;
+        _notify();
       } else if (event is BonsoirDiscoveryServiceLostEvent) {
-        if (event.service != null) {
-          _nodes.remove(event.service!.name);
-          _notify();
-        }
+        _nodes.remove(event.service.name);
+        _notify();
       }
     });
 

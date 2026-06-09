@@ -568,22 +568,6 @@ class PiiDetector {
     return merged;
   }
 
-  String _scrub(String text, List<PiiEntity> entities) {
-    if (entities.isEmpty) return text;
-
-    final buffer = StringBuffer();
-    int lastEnd = 0;
-
-    for (final entity in entities) {
-      buffer.write(text.substring(lastEnd, entity.start));
-      buffer.write('[${entity.label}]');
-      lastEnd = entity.end;
-    }
-    buffer.write(text.substring(lastEnd));
-
-    return buffer.toString();
-  }
-
   /// Port of BIOES-to-entity decoding logic (simplified for regex-based engine)
   /// In this pure regex version, we mostly deal with whole entities, but this
   /// method can be used for future ML-based token merging.

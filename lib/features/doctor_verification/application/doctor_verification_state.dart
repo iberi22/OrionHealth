@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import '../domain/entities/doctor_profile.dart';
-import '../domain/entities/doctor_rating.dart';
 
 abstract class DoctorVerificationState extends Equatable {
   const DoctorVerificationState();
