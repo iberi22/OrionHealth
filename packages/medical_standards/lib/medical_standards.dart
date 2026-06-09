@@ -10,6 +10,7 @@ export 'icd10/icd10.dart';
 export 'snomed/snomed.dart';
 export 'loinc/loinc.dart';
 export 'fhir/fhir.dart';
+export 'fhir/fhir_exporter.dart';
 export 'medications/medications.dart';
 export 'guidelines/guidelines.dart';
 export 'onboarding/onboarding.dart';
