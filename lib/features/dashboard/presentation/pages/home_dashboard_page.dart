@@ -7,7 +7,7 @@ import '../../../local_agent/presentation/chat_page.dart';
 import '../../../vitals/presentation/pages/vitals_page.dart';
 import '../../../medications/presentation/pages/medications_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
-import '../../../doctor_verification/presentation/pages/doctor_list_page.dart';
+import '../../../health_record/presentation/pages/timeline_page.dart';
 
 class HomeDashboardPage extends StatelessWidget {
   const HomeDashboardPage({super.key});
@@ -124,13 +124,13 @@ class HomeDashboardPage extends StatelessWidget {
           ),
         ),
         _QuickActionCard(
-          title: 'Verificación',
-          icon: Icons.verified_user,
+          title: 'Timeline',
+          icon: Icons.timeline,
           color: Colors.tealAccent,
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => const DoctorListPage(),
+              builder: (_) => const TimelinePage(),
             ),
           ),
         ),
