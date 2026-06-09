@@ -8,23 +8,27 @@ import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../features/user_profile/domain/entities/user_profile.dart';
-import '../../../features/medications/domain/entities/medication.dart';
+import '../../../features/medications/domain/entities/medication.dart' as app_med;
 import '../../../features/allergies/domain/entities/allergy.dart';
-import '../../../features/vitals/domain/entities/vital_sign.dart';
+import '../../../features/vitals/domain/entities/vital_sign.dart' as app_vital;
+import 'package:medical_standards/medical_standards.dart';
 import 'fhir_client.dart';
 import 'fhir_mapper.dart';
 import 'rda_parser.dart';
+import 'node_discovery_service.dart';
 
 @lazySingleton
 class SyncRepository {
   final FhirClient _fhirClient;
   final Isar _isar;
   final FlutterSecureStorage _secureStorage;
+  final NodeDiscoveryService _discoveryService;
 
   SyncRepository(
     this._fhirClient,
     this._isar,
     this._secureStorage,
+    this._discoveryService,
   );
 
   static const String _lastSyncKey = 'last_fhir_sync_timestamp';
@@ -52,8 +56,11 @@ class SyncRepository {
     await prefs.setInt(_lastSyncKey, time.millisecondsSinceEpoch);
   }
 
-  /// Full sync: Patient profile + RDA (medications, allergies, vitals, conditions)
+  /// Full sync: Patient profile + RDA (medications, allergies, vitals, conditions) + P2P Medical Standards
   Future<void> syncAll() async {
+    // 0. Sync Medical Standards via P2P if possible
+    await syncMedicalStandards();
+
     final token = await getAccessToken();
     if (token == null) {
       throw Exception('No hay conexión con IHCE. Conectá tu EPS primero.');
@@ -99,10 +106,10 @@ class SyncRepository {
       if (parsed == null) return;
 
       final sections = parsed['sections'] as List<dynamic>? ?? [];
-      final medications = <Medication>[];
+      final medications = <app_med.Medication>[];
       final allergies = <Allergy>[];
       final conditions = <String>[];
-      final vitals = <VitalSign>[];
+      final vitals = <app_vital.VitalSign>[];
 
       // Process each section - entries from IHCE RDA
       // In a real scenario, we'd also fetch the full Bundle resources
@@ -192,6 +199,22 @@ class SyncRepository {
       });
     } catch (e) {
       print('Error syncing RDA: $e');
+    }
+  }
+
+  /// Sync medical standards from peers if any are discovered
+  Future<void> syncMedicalStandards() async {
+    final peers = _discoveryService.currentNodes;
+    final syncService = SyncService();
+
+    if (peers.isNotEmpty) {
+      // Try to sync from the first available peer
+      final peer = peers.first;
+      final peerIp = '${peer.hostAddress}:${peer.port}';
+      await syncService.syncAll(peerIp: peerIp);
+    } else {
+      // Fallback to default (GitHub)
+      await syncService.syncAll();
     }
   }
 

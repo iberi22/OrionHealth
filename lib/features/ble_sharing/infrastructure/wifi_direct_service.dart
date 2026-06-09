@@ -5,6 +5,8 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import '../domain/ble_sharing_service.dart';
 
 class WifiDirectService {
@@ -74,6 +76,11 @@ class WifiDirectService {
   }
 
   Future<void> _handleRequest(HttpRequest request) async {
+    if (request.method == 'GET' && request.uri.path.startsWith('/orion/standards/')) {
+      await _handleStandardsRequest(request);
+      return;
+    }
+
     if (request.method != 'POST' || request.uri.path != '/orion/share') {
       request.response.statusCode = 404;
       request.response.close();
@@ -223,6 +230,28 @@ class WifiDirectService {
     }
 
     return MedicalSharePackage.fromJson(json);
+  }
+
+  Future<void> _handleStandardsRequest(HttpRequest request) async {
+    try {
+      final filename = request.uri.pathSegments.last;
+      final appDir = await getApplicationSupportDirectory();
+      final standardsDir = Directory(p.join(appDir.path, 'medical_standards', 'standards_cache'));
+      final file = File(p.join(standardsDir.path, filename));
+
+      if (await file.exists()) {
+        request.response.headers.contentType = ContentType.json;
+        await request.response.addStream(file.openRead());
+      } else {
+        request.response.statusCode = HttpStatus.notFound;
+        request.response.writeln('Standard not found: $filename');
+      }
+    } catch (e) {
+      request.response.statusCode = HttpStatus.internalServerError;
+      request.response.writeln('Error serving standard: $e');
+    } finally {
+      await request.response.close();
+    }
   }
 
   Uint8List _aes256GcmEncrypt(Uint8List plain, Uint8List key, Uint8List iv) {
