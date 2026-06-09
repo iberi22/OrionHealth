@@ -24,20 +24,25 @@ class _ReceivePageContent extends StatefulWidget {
 }
 
 class _ReceivePageContentState extends State<_ReceivePageContent> {
-  @override
-  void initState() {
-    super.initState();
-    // Start listening for incoming data
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SharingCubit>().startListening(TransferMethod.nfc);
-    });
-  }
+  final TextEditingController _pinController = TextEditingController();
+  bool _isListening = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recibir Datos'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (_isListening) {
+              context.read<SharingCubit>().cancelSharing();
+              setState(() => _isListening = false);
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.close),
@@ -58,10 +63,84 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
           }
         },
         builder: (context, state) {
+          if (!_isListening) {
+            return _buildSetupUI(context);
+          }
           return _buildWaitingUI(state);
         },
       ),
     );
+  }
+
+  Widget _buildSetupUI(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Icon(Icons.download, size: 80, color: Colors.blue),
+          const SizedBox(height: 24),
+          const Text(
+            'Configurar recepción',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Selecciona el método para recibir datos de salud de otro dispositivo.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey),
+          ),
+          const SizedBox(height: 32),
+          ListTile(
+            leading: const Icon(Icons.wifi),
+            title: const Text('WiFi Direct'),
+            subtitle: const Text('Recomendado para archivos grandes'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _startListening(context, TransferMethod.wifi),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.nfc),
+            title: const Text('NFC'),
+            subtitle: const Text('Toque los teléfonos para recibir'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _startListening(context, TransferMethod.nfc),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.bluetooth),
+            title: const Text('Bluetooth'),
+            subtitle: const Text('Para dispositivos cercanos'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _startListening(context, TransferMethod.ble),
+          ),
+          const SizedBox(height: 32),
+          const Text(
+            'Seguridad (opcional)',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _pinController,
+            decoration: const InputDecoration(
+              labelText: 'PIN para esta sesión',
+              hintText: 'Ej: 1234',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.lock),
+            ),
+            keyboardType: TextInputType.number,
+            obscureText: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _startListening(BuildContext context, TransferMethod method) {
+    final pin = _pinController.text.isNotEmpty ? _pinController.text : null;
+    context.read<SharingCubit>().startListening(method, pin: pin);
+    setState(() => _isListening = true);
   }
 
   Widget _buildWaitingUI(SharingState state) {
