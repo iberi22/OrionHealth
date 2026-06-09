@@ -7,10 +7,12 @@ import 'package:orionhealth_health/features/onboarding/domain/entities/user_prof
 import 'package:orionhealth_health/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'package:orionhealth_health/core/theme/app_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MockOnboardingCubit extends Mock implements OnboardingCubit {}
 
 void main() {
+  GoogleFonts.config.allowRuntimeFetching = false;
   late MockOnboardingCubit mockOnboardingCubit;
   late UserProfile sampleProfile;
 

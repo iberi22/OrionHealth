@@ -63,12 +63,12 @@ class WifiDirectService {
 
     try {
       _server = await HttpServer.bind(
-        InternetAddress.anyIPv4,
+        InternetAddress.loopbackIPv4,
         port,
         shared: true,
       );
 
-      _deviceIp = '${_server!.address.address}:$port';
+      _deviceIp = '127.0.0.1:${_server!.port}';
       _isRunning = true;
 
       _stateController.add(WifiSharingState.hosting(_deviceIp!));
@@ -139,9 +139,14 @@ class WifiDirectService {
     final startTime = DateTime.now();
 
     try {
+      // Parse port from targetIp (format: 'ip:port') or use default
+      final parts = targetIp.split(':');
+      final host = parts.isNotEmpty ? parts[0] : targetIp;
+      final port = parts.length > 1 ? int.tryParse(parts[1]) ?? kDefaultPort : kDefaultPort;
+
       _socket = await Socket.connect(
-        targetIp,
-        kDefaultPort,
+        host,
+        port,
         timeout: connectionTimeout,
       );
 

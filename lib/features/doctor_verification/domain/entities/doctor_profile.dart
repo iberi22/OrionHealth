@@ -44,7 +44,7 @@ class DoctorProfile {
           countryCode == other.countryCode &&
           institution == other.institution &&
           yearsOfExperience == other.yearsOfExperience &&
-          languages == other.languages &&
+          _listEquals(languages, other.languages) &&
           verified == other.verified &&
           createdAt == other.createdAt &&
           updatedAt == other.updatedAt;
@@ -62,4 +62,12 @@ class DoctorProfile {
       verified.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
+
+  bool _listEquals(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }

@@ -65,7 +65,7 @@ class MedicalRecord {
 
   @override
   int get hashCode =>
-      id.hashCode ^ date.hashCode ^ type.hashCode ^ summary.hashCode ^ attachments.hashCode;
+      id.hashCode ^ date.hashCode ^ type.hashCode ^ summary.hashCode ^ _listHashCode(attachments);
 
   bool _listEquals(List<MedicalAttachment> a, List<MedicalAttachment> b) {
     if (a.length != b.length) return false;
@@ -73,5 +73,9 @@ class MedicalRecord {
       if (a[i] != b[i]) return false;
     }
     return true;
+  }
+
+  int _listHashCode(List<MedicalAttachment> list) {
+    return list.fold(0, (hash, item) => hash ^ item.hashCode);
   }
 }
