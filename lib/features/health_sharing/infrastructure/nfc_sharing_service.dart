@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
 import '../domain/entities/shared_health_package.dart';
 
 /// NFC sharing service for tap-to-share health data
+@lazySingleton
 class NfcSharingService {
   static const MethodChannel _channel = MethodChannel('orionhealth/nfc');
 

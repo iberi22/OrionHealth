@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 import '../domain/entities/shared_health_package.dart';
 import '../infrastructure/ble_sharing_service.dart';
 import '../infrastructure/nfc_sharing_service.dart';
@@ -108,6 +109,7 @@ class SharingError extends SharingState {
 // CUBIT
 // ============================================================================
 
+@injectable
 class SharingCubit extends Cubit<SharingState> {
   final BleSharingService _bleService;
   final NfcSharingService _nfcService;

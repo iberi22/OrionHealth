@@ -3,21 +3,23 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
-import 'dart:typed_data' as _i8;
+import 'dart:async' as _i6;
+import 'dart:typed_data' as _i9;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
+import 'package:mockito/src/dummies.dart' as _i8;
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart'
-    as _i6;
-import 'package:orionhealth_health/features/ble_sharing/domain/ble_sharing_service.dart'
+    as _i7;
+import 'package:orionhealth_health/features/health_sharing/domain/entities/shared_health_package.dart'
     as _i2;
+import 'package:orionhealth_health/features/health_sharing/infrastructure/ble_sharing_service.dart'
+    as _i5;
 import 'package:orionhealth_health/features/ssi/domain/entities/did.dart'
     as _i3;
 import 'package:orionhealth_health/features/ssi/domain/entities/verifiable_credential.dart'
     as _i4;
 import 'package:orionhealth_health/features/ssi/domain/services/ssi_service.dart'
-    as _i9;
+    as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -66,32 +68,122 @@ class _FakeVerifiableCredential_2 extends _i1.SmartFake
 /// A class which mocks [BleSharingService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockBleSharingService extends _i1.Mock implements _i2.BleSharingService {
+class MockBleSharingService extends _i1.Mock implements _i5.BleSharingService {
   MockBleSharingService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Stream<_i2.BleServiceState> get stateStream => (super.noSuchMethod(
+  _i6.Stream<_i5.BleSharingState> get stateStream => (super.noSuchMethod(
         Invocation.getter(#stateStream),
-        returnValue: _i5.Stream<_i2.BleServiceState>.empty(),
-      ) as _i5.Stream<_i2.BleServiceState>);
+        returnValue: _i6.Stream<_i5.BleSharingState>.empty(),
+      ) as _i6.Stream<_i5.BleSharingState>);
 
   @override
-  _i5.Stream<_i2.MedicalSharePackage> get incomingData => (super.noSuchMethod(
+  _i6.Stream<_i2.SharedHealthPackage> get incomingData => (super.noSuchMethod(
         Invocation.getter(#incomingData),
-        returnValue: _i5.Stream<_i2.MedicalSharePackage>.empty(),
-      ) as _i5.Stream<_i2.MedicalSharePackage>);
+        returnValue: _i6.Stream<_i2.SharedHealthPackage>.empty(),
+      ) as _i6.Stream<_i2.SharedHealthPackage>);
 
   @override
-  _i5.Future<void> initialize() => (super.noSuchMethod(
+  _i6.Future<void> initialize() => (super.noSuchMethod(
         Invocation.method(
           #initialize,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> startAdvertising(String? nodeId) => (super.noSuchMethod(
+        Invocation.method(
+          #startAdvertising,
+          [nodeId],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> stopAdvertising() => (super.noSuchMethod(
+        Invocation.method(
+          #stopAdvertising,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<List<_i5.BleDevice>> scanForDevices(
+          {Duration? timeout = const Duration(seconds: 15)}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #scanForDevices,
+          [],
+          {#timeout: timeout},
+        ),
+        returnValue: _i6.Future<List<_i5.BleDevice>>.value(<_i5.BleDevice>[]),
+      ) as _i6.Future<List<_i5.BleDevice>>);
+
+  @override
+  _i6.Future<bool> connect(String? deviceId) => (super.noSuchMethod(
+        Invocation.method(
+          #connect,
+          [deviceId],
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+
+  @override
+  _i6.Future<void> disconnect() => (super.noSuchMethod(
+        Invocation.method(
+          #disconnect,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<_i2.SharingResult> sendData(_i2.SharedHealthPackage? package) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #sendData,
+          [package],
+        ),
+        returnValue: _i6.Future<_i2.SharingResult>.value(_FakeSharingResult_0(
+          this,
+          Invocation.method(
+            #sendData,
+            [package],
+          ),
+        )),
+      ) as _i6.Future<_i2.SharingResult>);
+
+  @override
+  _i6.Future<_i2.SharedHealthPackage?> receiveData(
+          {Duration? timeout = const Duration(seconds: 30)}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #receiveData,
+          [],
+          {#timeout: timeout},
+        ),
+        returnValue: _i6.Future<_i2.SharedHealthPackage?>.value(),
+      ) as _i6.Future<_i2.SharedHealthPackage?>);
+
+  @override
+  _i6.Future<void> startMedicalDataStream(String? deviceId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #startMedicalDataStream,
+          [deviceId],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
@@ -101,108 +193,18 @@ class MockBleSharingService extends _i1.Mock implements _i2.BleSharingService {
         ),
         returnValueForMissingStub: null,
       );
-
-  @override
-  _i5.Future<List<_i2.BleDevice>> scanForDevices(
-          {Duration? timeout = const Duration(seconds: 15)}) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #scanForDevices,
-          [],
-          {#timeout: timeout},
-        ),
-        returnValue: _i5.Future<List<_i2.BleDevice>>.value(<_i2.BleDevice>[]),
-      ) as _i5.Future<List<_i2.BleDevice>>);
-
-  @override
-  _i5.Future<bool> connect(String? deviceId) => (super.noSuchMethod(
-        Invocation.method(
-          #connect,
-          [deviceId],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<void> disconnect() => (super.noSuchMethod(
-        Invocation.method(
-          #disconnect,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
-
-  @override
-  _i5.Future<_i2.SharingResult> sendData(_i2.MedicalSharePackage? package) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #sendData,
-          [package],
-        ),
-        returnValue: _i5.Future<_i2.SharingResult>.value(_FakeSharingResult_0(
-          this,
-          Invocation.method(
-            #sendData,
-            [package],
-          ),
-        )),
-      ) as _i5.Future<_i2.SharingResult>);
-
-  @override
-  _i5.Future<_i2.MedicalSharePackage?> receiveData(
-          {Duration? timeout = const Duration(seconds: 30)}) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #receiveData,
-          [],
-          {#timeout: timeout},
-        ),
-        returnValue: _i5.Future<_i2.MedicalSharePackage?>.value(),
-      ) as _i5.Future<_i2.MedicalSharePackage?>);
-
-  @override
-  _i5.Future<void> startMedicalDataStream(String? deviceId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #startMedicalDataStream,
-          [deviceId],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
-
-  @override
-  _i5.Future<void> startAdvertising(String? nodeId) => (super.noSuchMethod(
-        Invocation.method(
-          #startAdvertising,
-          [nodeId],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
-
-  @override
-  _i5.Future<void> stopAdvertising() => (super.noSuchMethod(
-        Invocation.method(
-          #stopAdvertising,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
 }
 
 /// A class which mocks [EncryptionService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockEncryptionService extends _i1.Mock implements _i6.EncryptionService {
+class MockEncryptionService extends _i1.Mock implements _i7.EncryptionService {
   MockEncryptionService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<String> hashPin(
+  _i6.Future<String> hashPin(
     String? pin,
     String? salt,
   ) =>
@@ -214,7 +216,7 @@ class MockEncryptionService extends _i1.Mock implements _i6.EncryptionService {
             salt,
           ],
         ),
-        returnValue: _i5.Future<String>.value(_i7.dummyValue<String>(
+        returnValue: _i6.Future<String>.value(_i8.dummyValue<String>(
           this,
           Invocation.method(
             #hashPin,
@@ -224,40 +226,40 @@ class MockEncryptionService extends _i1.Mock implements _i6.EncryptionService {
             ],
           ),
         )),
-      ) as _i5.Future<String>);
+      ) as _i6.Future<String>);
 
   @override
-  _i5.Future<void> initialize() => (super.noSuchMethod(
+  _i6.Future<void> initialize() => (super.noSuchMethod(
         Invocation.method(
           #initialize,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<_i8.Uint8List> encryptBytes(_i8.Uint8List? plainBytes) =>
+  _i6.Future<_i9.Uint8List> encryptBytes(_i9.Uint8List? plainBytes) =>
       (super.noSuchMethod(
         Invocation.method(
           #encryptBytes,
           [plainBytes],
         ),
-        returnValue: _i5.Future<_i8.Uint8List>.value(_i8.Uint8List(0)),
-      ) as _i5.Future<_i8.Uint8List>);
+        returnValue: _i6.Future<_i9.Uint8List>.value(_i9.Uint8List(0)),
+      ) as _i6.Future<_i9.Uint8List>);
 
   @override
-  _i5.Future<_i8.Uint8List> decryptBytes(_i8.Uint8List? encryptedBytes) =>
+  _i6.Future<_i9.Uint8List> decryptBytes(_i9.Uint8List? encryptedBytes) =>
       (super.noSuchMethod(
         Invocation.method(
           #decryptBytes,
           [encryptedBytes],
         ),
-        returnValue: _i5.Future<_i8.Uint8List>.value(_i8.Uint8List(0)),
-      ) as _i5.Future<_i8.Uint8List>);
+        returnValue: _i6.Future<_i9.Uint8List>.value(_i9.Uint8List(0)),
+      ) as _i6.Future<_i9.Uint8List>);
 
   @override
-  _i5.Future<dynamic> encrypt(
+  _i6.Future<dynamic> encrypt(
     String? data, [
     String? key,
   ]) =>
@@ -269,11 +271,11 @@ class MockEncryptionService extends _i1.Mock implements _i6.EncryptionService {
             key,
           ],
         ),
-        returnValue: _i5.Future<dynamic>.value(),
-      ) as _i5.Future<dynamic>);
+        returnValue: _i6.Future<dynamic>.value(),
+      ) as _i6.Future<dynamic>);
 
   @override
-  _i5.Future<String> decrypt(
+  _i6.Future<String> decrypt(
     String? encryptedData,
     String? key,
   ) =>
@@ -285,7 +287,7 @@ class MockEncryptionService extends _i1.Mock implements _i6.EncryptionService {
             key,
           ],
         ),
-        returnValue: _i5.Future<String>.value(_i7.dummyValue<String>(
+        returnValue: _i6.Future<String>.value(_i8.dummyValue<String>(
           this,
           Invocation.method(
             #decrypt,
@@ -295,25 +297,25 @@ class MockEncryptionService extends _i1.Mock implements _i6.EncryptionService {
             ],
           ),
         )),
-      ) as _i5.Future<String>);
+      ) as _i6.Future<String>);
 
   @override
-  _i5.Future<String> generatePinSalt() => (super.noSuchMethod(
+  _i6.Future<String> generatePinSalt() => (super.noSuchMethod(
         Invocation.method(
           #generatePinSalt,
           [],
         ),
-        returnValue: _i5.Future<String>.value(_i7.dummyValue<String>(
+        returnValue: _i6.Future<String>.value(_i8.dummyValue<String>(
           this,
           Invocation.method(
             #generatePinSalt,
             [],
           ),
         )),
-      ) as _i5.Future<String>);
+      ) as _i6.Future<String>);
 
   @override
-  _i5.Future<bool> verifyPin(
+  _i6.Future<bool> verifyPin(
     String? pin,
     String? storedHash,
     String? salt,
@@ -327,45 +329,45 @@ class MockEncryptionService extends _i1.Mock implements _i6.EncryptionService {
             salt,
           ],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 }
 
 /// A class which mocks [SsiService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSsiService extends _i1.Mock implements _i9.SsiService {
+class MockSsiService extends _i1.Mock implements _i10.SsiService {
   MockSsiService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i3.Did> createDid() => (super.noSuchMethod(
+  _i6.Future<_i3.Did> createDid() => (super.noSuchMethod(
         Invocation.method(
           #createDid,
           [],
         ),
-        returnValue: _i5.Future<_i3.Did>.value(_FakeDid_1(
+        returnValue: _i6.Future<_i3.Did>.value(_FakeDid_1(
           this,
           Invocation.method(
             #createDid,
             [],
           ),
         )),
-      ) as _i5.Future<_i3.Did>);
+      ) as _i6.Future<_i3.Did>);
 
   @override
-  _i5.Future<Map<String, dynamic>?> resolveDid(String? did) =>
+  _i6.Future<Map<String, dynamic>?> resolveDid(String? did) =>
       (super.noSuchMethod(
         Invocation.method(
           #resolveDid,
           [did],
         ),
-        returnValue: _i5.Future<Map<String, dynamic>?>.value(),
-      ) as _i5.Future<Map<String, dynamic>?>);
+        returnValue: _i6.Future<Map<String, dynamic>?>.value(),
+      ) as _i6.Future<Map<String, dynamic>?>);
 
   @override
-  _i5.Future<_i4.VerifiableCredential> issueCredential({
+  _i6.Future<_i4.VerifiableCredential> issueCredential({
     required String? schemaId,
     required String? subjectDid,
     required Map<String, dynamic>? claims,
@@ -382,7 +384,7 @@ class MockSsiService extends _i1.Mock implements _i9.SsiService {
             #expirationDate: expirationDate,
           },
         ),
-        returnValue: _i5.Future<_i4.VerifiableCredential>.value(
+        returnValue: _i6.Future<_i4.VerifiableCredential>.value(
             _FakeVerifiableCredential_2(
           this,
           Invocation.method(
@@ -396,20 +398,20 @@ class MockSsiService extends _i1.Mock implements _i9.SsiService {
             },
           ),
         )),
-      ) as _i5.Future<_i4.VerifiableCredential>);
+      ) as _i6.Future<_i4.VerifiableCredential>);
 
   @override
-  _i5.Future<bool> verifyCredential(_i4.VerifiableCredential? credential) =>
+  _i6.Future<bool> verifyCredential(_i4.VerifiableCredential? credential) =>
       (super.noSuchMethod(
         Invocation.method(
           #verifyCredential,
           [credential],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 
   @override
-  _i5.Future<Map<String, dynamic>> createPresentation({
+  _i6.Future<Map<String, dynamic>> createPresentation({
     required _i4.VerifiableCredential? credential,
     required List<String>? disclosedFields,
   }) =>
@@ -423,26 +425,26 @@ class MockSsiService extends _i1.Mock implements _i9.SsiService {
           },
         ),
         returnValue:
-            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i5.Future<Map<String, dynamic>>);
+            _i6.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i6.Future<Map<String, dynamic>>);
 
   @override
-  _i5.Future<void> revokeCredential(String? credentialId) =>
+  _i6.Future<void> revokeCredential(String? credentialId) =>
       (super.noSuchMethod(
         Invocation.method(
           #revokeCredential,
           [credentialId],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<bool> isAvailable() => (super.noSuchMethod(
+  _i6.Future<bool> isAvailable() => (super.noSuchMethod(
         Invocation.method(
           #isAvailable,
           [],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 }

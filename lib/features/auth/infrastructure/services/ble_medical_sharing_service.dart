@@ -4,7 +4,8 @@ import 'dart:typed_data';
 
 import 'package:injectable/injectable.dart';
 
-import '../../../ble_sharing/domain/ble_sharing_service.dart';
+import '../../../health_sharing/domain/entities/shared_health_package.dart';
+import '../../../health_sharing/infrastructure/ble_sharing_service.dart';
 import '../../../ssi/domain/entities/verifiable_credential.dart';
 import '../../../ssi/domain/services/ssi_service.dart';
 import 'encryption_service.dart';
@@ -54,21 +55,22 @@ class BleMedicalSharingService {
     required VerifiableCredential credential,
     required String recipientNodeId,
   }) async {
-    final package = MedicalSharePackage(
+    final package = SharedHealthPackage(
       id: credential.id,
       senderNodeId: 'self',
       recipientNodeId: recipientNodeId,
       createdAt: DateTime.now(),
       expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-      payload: EncryptedMedicalPayload(
-        cipherText: base64Encode(utf8.encode(jsonEncode(credential.toJson()))),
+      payload: EncryptedPayload(
+        encryptedData: base64Encode(utf8.encode(jsonEncode(credential.toJson()))),
         iv: _generateIv(),
+        ephemeralPublicKey: '',
         authTag: '',
       ),
-      metadata: MedicalShareMetadata(
+      metadata: PackageMetadata(
         packageType: 'VerifiableCredential',
         consentVerified: true,
-        includedCategories: {MedicalDataCategory.documents},
+        includedCategories: {DataCategory.documents},
         appVersion: '1.0.0',
       ),
       signature: credential.proof ?? '',
@@ -106,18 +108,19 @@ class BleMedicalSharingService {
       Uint8List.fromList(plainBytes),
     );
 
-    final package = MedicalSharePackage(
+    final package = SharedHealthPackage(
       id: 'pres:${credential.id}',
       senderNodeId: 'self',
       recipientNodeId: recipientNodeId,
       createdAt: DateTime.now(),
       expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-      payload: EncryptedMedicalPayload(
-        cipherText: base64Encode(encrypted),
+      payload: EncryptedPayload(
+        encryptedData: base64Encode(encrypted),
         iv: _generateIv(),
+        ephemeralPublicKey: '',
         authTag: '',
       ),
-      metadata: MedicalShareMetadata(
+      metadata: PackageMetadata(
         packageType: 'VerifiablePresentation',
         consentVerified: true,
         includedCategories: const {},
@@ -137,7 +140,7 @@ class BleMedicalSharingService {
     if (package == null) return null;
 
     final jsonStr = utf8.decode(
-      base64Decode(package.payload.cipherText),
+      base64Decode(package.payload.encryptedData),
     );
     final json = jsonDecode(jsonStr) as Map<String, dynamic>;
 
@@ -195,21 +198,22 @@ class BleMedicalSharingService {
     final jsonStr = jsonEncode(data);
     final encrypted = await _encryptionService.encrypt(jsonStr);
 
-    final package = MedicalSharePackage(
+    final package = SharedHealthPackage(
       id: 'med:${DateTime.now().millisecondsSinceEpoch}',
       senderNodeId: 'self',
       recipientNodeId: recipientNodeId,
       createdAt: DateTime.now(),
       expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-      payload: EncryptedMedicalPayload(
-        cipherText: base64Encode(encrypted),
+      payload: EncryptedPayload(
+        encryptedData: base64Encode(encrypted),
         iv: _generateIv(),
+        ephemeralPublicKey: '',
         authTag: '',
       ),
-      metadata: MedicalShareMetadata(
+      metadata: PackageMetadata(
         packageType: 'MedicalData',
         consentVerified: true,
-        includedCategories: {MedicalDataCategory.labResults},
+        includedCategories: {DataCategory.labResults},
         appVersion: '1.0.0',
       ),
       signature: '',
@@ -218,8 +222,8 @@ class BleMedicalSharingService {
     return _bleService.sendData(package);
   }
 
-  /// Encrypt any medical data into a [MedicalSharePackage].
-  Future<MedicalSharePackage> encryptPackage(
+  /// Encrypt any medical data into a [SharedHealthPackage].
+  Future<SharedHealthPackage> encryptPackage(
     Map<String, dynamic> data, {
     required String packageType,
     required String recipientNodeId,
@@ -230,18 +234,19 @@ class BleMedicalSharingService {
       Uint8List.fromList(plainBytes),
     );
 
-    return MedicalSharePackage(
+    return SharedHealthPackage(
       id: 'pkg:${DateTime.now().millisecondsSinceEpoch}',
       senderNodeId: 'self',
       recipientNodeId: recipientNodeId,
       createdAt: DateTime.now(),
       expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-      payload: EncryptedMedicalPayload(
-        cipherText: base64Encode(encrypted),
+      payload: EncryptedPayload(
+        encryptedData: base64Encode(encrypted),
         iv: _generateIv(),
+        ephemeralPublicKey: '',
         authTag: '',
       ),
-      metadata: MedicalShareMetadata(
+      metadata: PackageMetadata(
         packageType: packageType,
         consentVerified: true,
         includedCategories: const {},
@@ -251,10 +256,10 @@ class BleMedicalSharingService {
     );
   }
 
-  /// Decrypt a [MedicalSharePackage] back into a data map.
+  /// Decrypt a [SharedHealthPackage] back into a data map.
   Future<Map<String, dynamic>> decryptPackage(
-      MedicalSharePackage package) async {
-    final encryptedBytes = base64Decode(package.payload.cipherText);
+      SharedHealthPackage package) async {
+    final encryptedBytes = base64Decode(package.payload.encryptedData);
     final decryptedBytes =
         await _encryptionService.decryptBytes(encryptedBytes);
     final jsonStr = utf8.decode(decryptedBytes);
