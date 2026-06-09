@@ -23,6 +23,7 @@ class PiiEntity extends Equatable {
   final int start;
   final int end;
   final String source; // 'regex', 'model', 'context'
+  final Map<String, dynamic>? metadata;
 
   const PiiEntity({
     required this.label,
@@ -31,6 +32,7 @@ class PiiEntity extends Equatable {
     required this.start,
     required this.end,
     required this.source,
+    this.metadata,
   });
 
   factory PiiEntity.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class PiiEntity extends Equatable {
       start: json['start'] as int,
       end: json['end'] as int,
       source: json['source'] as String,
+      metadata: json['metadata'] as Map<String, dynamic>?,
     );
   }
 
@@ -52,17 +55,23 @@ class PiiEntity extends Equatable {
       'start': start,
       'end': end,
       'source': source,
+      if (metadata != null) 'metadata': metadata,
     };
   }
 
   @override
-  List<Object?> get props => [label, text, confidence, start, end, source];
+  List<Object?> get props =>
+      [label, text, confidence, start, end, source, metadata];
 
   /// Merges this entity with another, taking the union of spans and max confidence.
   /// Assumes the entities are overlapping or adjacent.
   PiiEntity merge(PiiEntity other, String originalText) {
     final newStart = start < other.start ? start : other.start;
     final newEnd = end > other.end ? end : other.end;
+    final newMetadata = <String, dynamic>{};
+    if (metadata != null) newMetadata.addAll(metadata!);
+    if (other.metadata != null) newMetadata.addAll(other.metadata!);
+
     return PiiEntity(
       label: label == other.label ? label : '$label,${other.label}',
       text: originalText.substring(newStart, newEnd),
@@ -70,6 +79,27 @@ class PiiEntity extends Equatable {
       start: newStart,
       end: newEnd,
       source: source == other.source ? source : 'merger',
+      metadata: newMetadata.isEmpty ? null : newMetadata,
+    );
+  }
+
+  PiiEntity copyWith({
+    String? label,
+    String? text,
+    double? confidence,
+    int? start,
+    int? end,
+    String? source,
+    Map<String, dynamic>? metadata,
+  }) {
+    return PiiEntity(
+      label: label ?? this.label,
+      text: text ?? this.text,
+      confidence: confidence ?? this.confidence,
+      start: start ?? this.start,
+      end: end ?? this.end,
+      source: source ?? this.source,
+      metadata: metadata ?? this.metadata,
     );
   }
 
