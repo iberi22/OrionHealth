@@ -111,4 +111,88 @@ void main() {
       expect(masked, isNot(contains('test@test.com')));
     });
   });
+
+  group('PromptScrubber Surrogate Mode', () {
+    test('should replace email with surrogate preserving domain', () async {
+      const prompt = 'Contact me at john@hospital.org';
+      final result = await scrubber.detectAndScrub(
+        prompt,
+        apiName: 'test-api',
+        useSurrogates: true,
+      );
+
+      expect(result, isNot(contains('john@hospital.org')));
+      expect(result, contains('@hospital.org'));
+      expect(result, isNot(contains('[EMAIL]')));
+    });
+
+    test('should replace phone with surrogate preserving format', () async {
+      const prompt = 'My phone is (213) 555-1234';
+      final result = await scrubber.detectAndScrub(
+        prompt,
+        apiName: 'test-api',
+        useSurrogates: true,
+      );
+
+      expect(result, isNot(contains('(213) 555-1234')));
+      expect(result, isNot(contains('[PHONE]')));
+      // Format should be preserved (parentheses, spaces, dashes)
+      expect(
+        RegExp(r'\(\d{3}\) \d{3}-\d{4}').hasMatch(result),
+        isTrue,
+      );
+    });
+
+    test('should replace SSN with surrogate preserving last 4', () async {
+      const prompt = 'SSN 123-45-6789';
+      final result = await scrubber.detectAndScrub(
+        prompt,
+        apiName: 'test-api',
+        useSurrogates: true,
+      );
+
+      expect(result, isNot(contains('123-45-6789')));
+      expect(result, isNot(contains('[SSN]')));
+      expect(result, contains('-6789'));
+    });
+
+    test('should be consistent across repeated calls', () async {
+      const prompt = 'Email: contact@example.com';
+      final r1 = await scrubber.detectAndScrub(
+        prompt,
+        apiName: 'test-api',
+        useSurrogates: true,
+      );
+      final r2 = await scrubber.detectAndScrub(
+        prompt,
+        apiName: 'test-api',
+        useSurrogates: true,
+      );
+
+      expect(r1, equals(r2));
+    });
+
+    test('should use placeholders when useSurrogates is false', () async {
+      const prompt = 'Email: alice@demo.com';
+      final result = await scrubber.detectAndScrub(
+        prompt,
+        apiName: 'test-api',
+        useSurrogates: false,
+      );
+
+      expect(result, contains('[EMAIL]'));
+    });
+
+    test('detectAndScrubWithSurrogates convenience method works', () async {
+      const prompt = 'Email: bob@site.org';
+      final result = await scrubber.detectAndScrubWithSurrogates(
+        prompt,
+        apiName: 'test-api',
+      );
+
+      expect(result, isNot(contains('bob@site.org')));
+      expect(result, contains('@site.org'));
+      expect(result, isNot(contains('[EMAIL]')));
+    });
+  });
 }
