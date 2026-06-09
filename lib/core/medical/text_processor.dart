@@ -72,15 +72,15 @@ class TextProcessor {
 
     // Remove or clean numbers
     if (removeNumbers) {
-      // Preserve medical measurements (e.g., "120/80", "98.6°F")
-      // Only remove numbers that are not part of a decimal or fraction and not followed by a unit symbol
-      // AND not part of a placeholder
+      // Preserve placeholders (__ABBREV_N__) and medical measurements (e.g., "120/80", "98.6°F")
+      // Only remove numbers that are not part of a placeholder or measurement
       processed = processed.replaceAllMapped(RegExp(r'(?<![./\d])\d+(?![./\d°%])'), (match) {
-          final start = match.start;
-          final prefix = processed.substring(0, start);
-          if (prefix.contains('__ABBREV_') && !prefix.substring(prefix.lastIndexOf('__ABBREV_')).contains('__')) {
-              return match.group(0)!;
-          }
+          // Check if this number is part of a __ABBREV_ placeholder
+          final sub = processed.substring(match.start, processed.length);
+          if (sub.startsWith('__ABBREV_')) return match.group(0)!;
+          // Check if preceded by __ABBREV_ (i.e., __ABBREV_123)
+          final prefix = processed.substring(0, match.start);
+          if (prefix.endsWith('__ABBREV_')) return match.group(0)!;
           return ' ';
       });
     }
@@ -99,7 +99,8 @@ class TextProcessor {
     // Restore protected abbreviations
     protectedAbbrevs.forEach((placeholder, original) {
       final restored = lowercase ? original.toLowerCase() : original;
-      processed = processed.replaceAll(placeholder.toLowerCase(), restored);
+      // Use case-insensitive replace: text may have been lowercased
+      processed = processed.replaceAll(RegExp(RegExp.escape(placeholder), caseSensitive: false), restored);
     });
 
     // Final whitespace normalization
@@ -124,7 +125,8 @@ class TextProcessor {
     int i = 0;
 
     for (final abbrev in abbrevWithDot) {
-        final regex = RegExp('\\b${RegExp.escape(abbrev)}', caseSensitive: false);
+        // Note: no \\b prefix because some abbrevs follow digits (e.g. "50mg.")
+        final regex = RegExp(RegExp.escape(abbrev), caseSensitive: false);
         if (regex.hasMatch(textModified)) {
             final placeholder = '__DOT_${i}__';
             textModified = textModified.replaceAllMapped(regex, (match) {
