@@ -6,6 +6,7 @@ import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../domain/entities/timeline_entry.dart';
 import '../../domain/entities/medical_record.dart';
+import '../../domain/repositories/health_record_repository.dart';
 
 class TimelinePage extends StatefulWidget {
   const TimelinePage({super.key});

@@ -330,11 +330,9 @@ class PiiDetector {
           }
         }
 
-        bool validated = true;
         if (piiPattern.validator != null) {
           if (!piiPattern.validator!(matchedText)) {
             score *= 0.3;
-            validated = false;
           }
         }
 
