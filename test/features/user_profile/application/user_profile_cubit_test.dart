@@ -25,6 +25,16 @@ void main() {
     cubit.close();
   });
 
+  group('UserProfileState', () {
+    test('supports value comparisons', () {
+      final profile = UserProfile(name: 'Test');
+      expect(UserProfileInitial(), equals(UserProfileInitial()));
+      expect(UserProfileLoading(), equals(UserProfileLoading()));
+      expect(UserProfileLoaded(profile), equals(UserProfileLoaded(profile)));
+      expect(UserProfileError('error'), equals(UserProfileError('error')));
+    });
+  });
+
   group('UserProfileCubit', () {
     final tProfile = UserProfile(name: 'John Doe', age: 30);
 
