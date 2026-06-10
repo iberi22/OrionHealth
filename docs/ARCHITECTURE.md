@@ -92,25 +92,38 @@ App Launch → PIN/Biometric Check → Authenticated Session
 
 ## Module Responsibilities
 
-| Module | Responsibility |
-|--------|---------------|
-| `core/di` | Dependency injection container setup |
-| `core/theme` | Visual theming (light/dark, cyber aesthetic) |
-| `core/widgets` | Shared UI components (GlassmorphicCard) |
-| `features/auth` | Authentication, PIN/biometric, session management |
-| `features/onboarding` | First-run experience, privacy consent |
-| `features/dashboard` | Home screen with health summary |
-| `features/health_record` | Document upload, OCR, structured storage |
-| `features/vitals` | Vitals tracking, sensor integration |
-| `features/medications` | Medication list and reminders |
-| `features/allergies` | Allergy tracking |
-| `features/appointments` | Appointment scheduling and reminders |
-| `features/reports` | Health report generation (PDF export) |
-| `features/health_sharing` | Unified P2P sharing (BLE, NFC, WiFi) |
-| `features/medical_assistant` | On-device AI chat with RAG |
-| `features/local_agent` | Local LLM management (ONNX Runtime) |
-| `features/user_profile` | User profile and preferences |
+Currently, the project contains 25 feature modules. Clean Architecture Completion: 72%
 
+| Module | Responsibility | Clean Arch Status |
+|--------|---------------|-------------------|
+| `core/di` | Dependency injection container setup | N/A |
+| `core/theme` | Visual theming (light/dark, cyber aesthetic) | N/A |
+| `core/widgets` | Shared UI components (GlassmorphicCard) | N/A |
+| `features/about` | Static content | Partial |
+| `features/ai_assistant` | AI Assistant UI | Partial |
+| `features/allergies` | Allergy tracking | Partial |
+| `features/appointments` | Appointment scheduling and reminders | Partial |
+| `features/auth` | Authentication, PIN/biometric, session management | Full |
+| `features/calendar_import` | Import appointments from calendar | Partial |
+| `features/dashboard` | Home screen with health summary | Partial |
+| `features/doctor_verification` | Doctor verification flow | Full |
+| `features/email-citas` | Parse appointments from email | Partial |
+| `features/eps_connection` | Connect to health providers | Partial |
+| `features/health_data_import` | Import data from Apple Health / Google Fit | Partial |
+| `features/health_record` | Document upload, OCR, structured storage | Full |
+| `features/health_sharing` | Unified P2P sharing (BLE, NFC, WiFi) | Full |
+| `features/home` | Home orchestration | Partial |
+| `features/local_agent` | Local LLM management (ONNX Runtime) | Full |
+| `features/medical_assistant` | On-device AI chat with RAG | Full |
+| `features/medical_research` | Web search and evidence processing | Partial |
+| `features/medications` | Medication list and reminders | Partial |
+| `features/onboarding` | First-run experience, privacy consent | Partial |
+| `features/reports` | Health report generation (PDF export) | Full |
+| `features/settings` | App and LLM settings | Partial |
+| `features/ssi` | Verifiable Credentials | Full |
+| `features/sync` | Decentralized network node sync | Partial |
+| `features/user_profile` | User profile and preferences | Full |
+| `features/vitals` | Vitals tracking, sensor integration | Partial |
 ---
 
 ## Platform Integration
