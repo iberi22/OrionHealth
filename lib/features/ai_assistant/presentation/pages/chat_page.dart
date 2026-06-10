@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/di/injection.dart';
 import '../../../local_agent/domain/chat_message.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
+import '../../application/ai_assistant_cubit.dart';
+import '../../infrastructure/repositories/ai_repository_impl.dart';
 import '../widgets/message_composer.dart';
 import '../../../../../core/theme/app_colors.dart';
 
-
-enum AssistantState { idle, thinking, responding }
-
 class ChatPage extends StatefulWidget {
-  final LlmService llmService;
-  const ChatPage({super.key, required this.llmService});
+  final LlmService? llmService;
+  const ChatPage({super.key, this.llmService});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -21,19 +22,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final List<ChatMessage> _messages = [];
-  AssistantState _assistantState = AssistantState.idle;
-
-  @override
-  void initState() {
-    super.initState();
-    // Add initial AI message
-    _messages.add(ChatMessage(
-      role: ChatRole.assistant,
-      content: "Welcome to OrionHealth. How can I assist you with your health data today?",
-      timestamp: DateTime.now(),
-    ));
-  }
 
   @override
   void dispose() {
@@ -54,93 +42,64 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void _sendMessage([String? text]) {
-    final messageText = text ?? _textController.text.trim();
-    if (messageText.isEmpty) return;
-
-    HapticFeedback.lightImpact();
-
-    final userMessage = ChatMessage(
-      role: ChatRole.user,
-      content: messageText,
-      timestamp: DateTime.now(),
-    );
-
-    setState(() {
-      _messages.add(userMessage);
-      _assistantState = AssistantState.thinking;
-    });
-
-    if (text == null) _textController.clear();
-    _scrollToBottom();
-
-    final assistantMessage = ChatMessage(
-      role: ChatRole.assistant,
-      content: '',
-      timestamp: DateTime.now(),
-    );
-
-    setState(() => _messages.add(assistantMessage));
-
-    bool firstChunk = true;
-    widget.llmService.generate(messageText).listen(
-      (chunk) {
-        if (firstChunk) {
-          setState(() {
-            _assistantState = AssistantState.responding;
-            firstChunk = false;
-          });
-        }
-        setState(() {
-          _messages.last.content += chunk;
-        });
-        _scrollToBottom();
-      },
-      onDone: () {
-        setState(() => _assistantState = AssistantState.idle);
-        _scrollToBottom();
-      },
-      onError: (error) {
-        setState(() {
-          _messages.last.content = 'Error: ${error.toString()}';
-          _assistantState = AssistantState.idle;
-        });
-        _scrollToBottom();
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final message = _messages[index];
-                return _ChatMessageWidget(message: message);
-              },
+    return BlocProvider(
+      create: (context) {
+        if (widget.llmService != null) {
+          return AiAssistantCubit(AiRepositoryImpl(widget.llmService!));
+        }
+        return getIt<AiAssistantCubit>();
+      },
+      child: BlocConsumer<AiAssistantCubit, AiAssistantState>(
+        listener: (context, state) {
+          _scrollToBottom();
+        },
+        builder: (context, state) {
+          return Scaffold(
+            appBar: _buildAppBar(state.status),
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                    itemCount: state.messages.length,
+                    itemBuilder: (context, index) {
+                      final message = state.messages[index];
+                      return _ChatMessageWidget(message: message);
+                    },
+                  ),
+                ),
+                if (state.status == AiAssistantStatus.thinking ||
+                    state.status == AiAssistantStatus.responding)
+                  _TypingIndicator(status: state.status),
+                MessageComposer(
+                  controller: _textController,
+                  onSend: () {
+                    final messageText = _textController.text.trim();
+                    if (messageText.isEmpty) return;
+                    HapticFeedback.lightImpact();
+                    context.read<AiAssistantCubit>().sendMessage(messageText);
+                    _textController.clear();
+                  },
+                  onQuickPrompt: (prompt) {
+                    HapticFeedback.lightImpact();
+                    context.read<AiAssistantCubit>().sendMessage(prompt);
+                  },
+                  isEnabled: state.status == AiAssistantStatus.idle ||
+                      state.status == AiAssistantStatus.error,
+                ),
+              ],
             ),
-          ),
-          if (_assistantState != AssistantState.idle)
-            _TypingIndicator(state: _assistantState),
-          MessageComposer(
-            controller: _textController,
-            onSend: _sendMessage,
-            onQuickPrompt: (prompt) => _sendMessage(prompt),
-            isEnabled: _assistantState == AssistantState.idle,
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(AiAssistantStatus status) {
+    final isProcessing = status == AiAssistantStatus.thinking || status == AiAssistantStatus.responding;
     return AppBar(
       title: Column(
         children: [
@@ -149,15 +108,15 @@ class _ChatPageState extends State<ChatPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.circle,
-                color: _assistantState == AssistantState.idle ? AppColors.primary : Colors.orange,
+                color: !isProcessing ? AppColors.primary : Colors.orange,
                 size: 8
               ),
               const SizedBox(width: 4),
               Text(
-                _assistantState == AssistantState.idle ? 'Online' : 'Processing...',
+                !isProcessing ? 'Online' : 'Processing...',
                 style: TextStyle(
                   fontSize: 12,
-                  color: _assistantState == AssistantState.idle ? AppColors.primary : Colors.orange
+                  color: !isProcessing ? AppColors.primary : Colors.orange
                 )
               ),
             ],
@@ -236,8 +195,8 @@ class _ChatMessageWidget extends StatelessWidget {
 }
 
 class _TypingIndicator extends StatefulWidget {
-  final AssistantState state;
-  const _TypingIndicator({required this.state});
+  final AiAssistantStatus status;
+  const _TypingIndicator({required this.status});
 
   @override
   State<_TypingIndicator> createState() => _TypingIndicatorState();
@@ -267,7 +226,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
 
   @override
   Widget build(BuildContext context) {
-    final statusText = widget.state == AssistantState.thinking
+    final statusText = widget.status == AiAssistantStatus.thinking
         ? 'Orion is thinking...'
         : 'Orion is responding...';
 
@@ -281,7 +240,7 @@ class _TypingIndicatorState extends State<_TypingIndicator> with SingleTickerPro
             child: CircularProgressIndicator(
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(
-                widget.state == AssistantState.thinking ? AppColors.secondary : AppColors.primary
+                widget.status == AiAssistantStatus.thinking ? AppColors.secondary : AppColors.primary
               ),
             ),
           ),
