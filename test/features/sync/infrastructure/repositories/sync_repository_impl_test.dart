@@ -2,9 +2,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/sync/data/fhir_client.dart';
-import 'package:orionhealth_health/features/sync/data/sync_repository.dart';
-import 'package:orionhealth_health/features/sync/data/node_discovery_service.dart';
+import 'package:orionhealth_health/features/sync/infrastructure/repositories/fhir_client.dart';
+import 'package:orionhealth_health/features/sync/infrastructure/repositories/sync_repository_impl.dart';
+import 'package:orionhealth_health/features/sync/infrastructure/repositories/node_discovery_service.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
@@ -17,7 +17,7 @@ class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 class MockNodeDiscoveryService extends Mock implements NodeDiscoveryService {}
 
 void main() {
-  late SyncRepository syncRepository;
+  late SyncRepositoryImpl syncRepository;
   late MockFhirClient mockFhirClient;
   late MockFlutterSecureStorage mockSecureStorage;
   late MockNodeDiscoveryService mockDiscoveryService;
@@ -39,7 +39,7 @@ void main() {
       directory: tempDir.path,
     );
 
-    syncRepository = SyncRepository(
+    syncRepository = SyncRepositoryImpl(
       mockFhirClient,
       isar,
       mockSecureStorage,
@@ -53,7 +53,7 @@ void main() {
     await isar.close();
   });
 
-  group('SyncRepository Conflict Resolution', () {
+  group('SyncRepositoryImpl Conflict Resolution', () {
     test('syncAll should not create duplicate medications', () async {
       // Setup
       when(() => mockSecureStorage.read(key: 'ihce_access_token'))
