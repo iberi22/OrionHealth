@@ -60,29 +60,32 @@ class DoctorListPage extends StatelessWidget {
                           children: [
                             Text(doctor.specialty),
                             const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Icon(
-                                  doctor.verified ? Icons.verified : Icons.warning_amber_rounded,
-                                  size: 14,
-                                  color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  doctor.verified ? 'Verificado' : 'Sin verificar',
-                                  style: TextStyle(
-                                    fontSize: 12,
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    doctor.verified ? Icons.verified : Icons.warning_amber_rounded,
+                                    size: 14,
                                     color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                const Icon(Icons.star, size: 14, color: Colors.amber),
-                                const SizedBox(width: 4),
-                                Text(
-                                  rating.toStringAsFixed(1),
-                                  style: const TextStyle(fontSize: 12, color: Colors.amber),
-                                ),
-                              ],
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    doctor.verified ? 'Verificado' : 'Sin verificar',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Icon(Icons.star, size: 14, color: Colors.amber),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    rating.toStringAsFixed(1),
+                                    style: const TextStyle(fontSize: 12, color: Colors.amber),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

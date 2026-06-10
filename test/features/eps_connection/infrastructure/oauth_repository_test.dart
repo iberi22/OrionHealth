@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:orionhealth_health/features/eps_connection/infrastructure/repositories/oauth_repository_impl.dart';
+import 'package:orionhealth_health/features/eps_connection/infrastructure/oauth_repository.dart';
 
 import 'oauth_repository_test.mocks.dart';
 

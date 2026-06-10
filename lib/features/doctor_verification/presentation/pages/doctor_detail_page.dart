@@ -80,23 +80,26 @@ class DoctorDetailPage extends StatelessWidget {
             style: const TextStyle(fontSize: 18, color: CyberTheme.secondary),
           ),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                doctor.verified ? Icons.verified : Icons.warning_amber_rounded,
-                color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                doctor.verified ? 'MÉDICO VERIFICADO' : 'PENDIENTE DE VERIFICACIÓN',
-                style: TextStyle(
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  doctor.verified ? Icons.verified : Icons.warning_amber_rounded,
                   color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Text(
+                  doctor.verified ? 'MÉDICO VERIFICADO' : 'PENDIENTE DE VERIFICACIÓN',
+                  style: TextStyle(
+                    color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.1,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
