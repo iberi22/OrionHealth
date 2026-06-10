@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'utils/video_recorder.dart';
 
 /// E2E Tests para el flujo de Onboarding de OrionHealth
 /// 
@@ -237,7 +238,7 @@ void main() {
 
       // ========== PÁGINA 1: BIENVENIDA ==========
       expect(find.text('Bienvenido a OrionHealth'), findsOneWidget);
-      await _captureScreenshot(tester, 'flow_01_welcome');
+      await VideoRecorder.recordStep(tester, 'onboarding', '01_welcome');
       
       // Avanzar
       await tester.tap(find.byIcon(Icons.arrow_forward).first);
@@ -245,7 +246,7 @@ void main() {
 
       // ========== PÁGINA 2: PERFIL ==========
       expect(find.text('Datos Personales'), findsOneWidget);
-      await _captureScreenshot(tester, 'flow_02_profile');
+      await VideoRecorder.recordStep(tester, 'onboarding', '02_profile');
       
       // Llenar formulario
       final nameField = find.byType(TextFormField).first;
@@ -257,7 +258,7 @@ void main() {
 
       // ========== PÁGINA 3: ALERGIAS ==========
       expect(find.text('Alergias'), findsOneWidget);
-      await _captureScreenshot(tester, 'flow_03_allergies');
+      await VideoRecorder.recordStep(tester, 'onboarding', '03_allergies');
       
       // Seleccionar opción
       await tester.tap(find.text('Ninguna').first);
@@ -268,14 +269,14 @@ void main() {
 
       // ========== PÁGINA 4: SIGNOS VITALES ==========
       expect(find.text('Signos Vitales'), findsOneWidget);
-      await _captureScreenshot(tester, 'flow_04_vitals');
+      await VideoRecorder.recordStep(tester, 'onboarding', '04_vitals');
       
       await tester.tap(find.byIcon(Icons.arrow_forward).first);
       await tester.pumpAndSettle();
 
       // ========== PÁGINA 5: COMPLETADO ==========
       expect(find.text('¡Bienvenido!'), findsWidgets);
-      await _captureScreenshot(tester, 'flow_05_complete');
+      await VideoRecorder.recordStep(tester, 'onboarding', '05_complete');
 
       // Verificar que el flujo llegó al final
       expect(find.text('Comenzar'), findsOneWidget);
