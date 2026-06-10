@@ -1,14 +1,7 @@
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
-
-abstract class OAuthRepository {
-  Future<AuthorizationTokenResponse?> login();
-  Future<void> logout();
-  Future<String?> getAccessToken();
-  Future<String?> getIdToken();
-  Future<TokenResponse?> refreshToken();
-}
+import '../../domain/repositories/oauth_repository.dart';
 
 @LazySingleton(as: OAuthRepository)
 class OAuthRepositoryImpl implements OAuthRepository {

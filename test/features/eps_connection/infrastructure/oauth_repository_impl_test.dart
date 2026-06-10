@@ -3,7 +3,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/eps_connection/infrastructure/oauth_repository.dart';
+import 'package:orionhealth_health/features/eps_connection/infrastructure/repositories/oauth_repository_impl.dart';
 
 class MockFlutterAppAuth extends Mock implements FlutterAppAuth {}
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}

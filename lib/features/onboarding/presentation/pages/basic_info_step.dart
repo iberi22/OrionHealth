@@ -5,7 +5,7 @@ import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../../eps_connection/presentation/eps_connect_button.dart';
-import '../../../eps_connection/domain/eps_connection_cubit.dart';
+import '../../../eps_connection/application/bloc/eps_connection_cubit.dart';
 import '../../../../core/di/injection.dart';
 
 class BasicInfoStep extends StatefulWidget {
