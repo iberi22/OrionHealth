@@ -3,7 +3,16 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 
 class MissionSection extends StatelessWidget {
-  const MissionSection({super.key});
+  final String missionStatement;
+  final List<String> values;
+  final List<String> activities;
+
+  const MissionSection({
+    super.key,
+    required this.missionStatement,
+    required this.values,
+    required this.activities,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +34,7 @@ class MissionSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'NUESTRA MISIÓN',
           style: TextStyle(
             color: AppColors.primary,
@@ -35,7 +44,7 @@ class MissionSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
+        const Text(
           'SALUD HUMANA COMO PRIORIDAD NÚMERO UNO',
           style: TextStyle(
             fontSize: 24,
@@ -52,7 +61,7 @@ class MissionSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Text(
-          'Creemos que la salud es el activo más valioso de la humanidad. OrionHealth nace con la visión de poner la tecnología más avanzada al servicio del bienestar individual, garantizando la privacidad y el empoderamiento del paciente.',
+          missionStatement,
           style: TextStyle(
             fontSize: 16,
             height: 1.5,
@@ -64,13 +73,6 @@ class MissionSection extends StatelessWidget {
   }
 
   Widget _buildValuesSection() {
-    final values = [
-      'Cada persona merece acceso a su historial médico completo',
-      'La privacidad médica es un derecho fundamental',
-      'La IA médica debe estar al servicio de la salud, no de corporaciones',
-      'Los datos de salud empoderan a las personas para tomar mejores decisiones',
-    ];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -100,13 +102,6 @@ class MissionSection extends StatelessWidget {
   }
 
   Widget _buildWhatWeDoSection() {
-    final activities = [
-      'Almacenamos datos médicos de forma segura y encriptada en tu dispositivo',
-      'Permitimos que modelos de IA analicen tu información para ayudarte',
-      'Buscamos información médica actualizada de fuentes científicas confiables',
-      'Conectamos personas con estándares de medicina mundial',
-    ];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
