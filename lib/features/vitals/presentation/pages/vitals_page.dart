@@ -115,7 +115,7 @@ class _VitalsPageState extends State<VitalsPage> {
       crossAxisCount: 2,
       crossAxisSpacing: 12,
       mainAxisSpacing: 12,
-      childAspectRatio: 1.5,
+      childAspectRatio: 1.3,
       children: [
         _buildVitalCard(VitalSignType.heartRate, 'BPM', Icons.favorite),
         _buildVitalCard(VitalSignType.temperature, '°C', Icons.thermostat),
@@ -131,29 +131,34 @@ class _VitalsPageState extends State<VitalsPage> {
 
     return GlassmorphicCard(
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               children: [
-                Icon(icon, size: 16, color: CyberTheme.secondary),
+                Icon(icon, size: 14, color: CyberTheme.secondary),
                 const SizedBox(width: 4),
-                Text(label,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
               vital != null ? vital.value.toStringAsFixed(1) : '--',
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: CyberTheme.primary,
               ),
             ),
-            Text(unit, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            Text(unit, style: const TextStyle(fontSize: 10, color: Colors.grey)),
           ],
         ),
       ),
@@ -166,32 +171,40 @@ class _VitalsPageState extends State<VitalsPage> {
 
     return GlassmorphicCard(
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Row(
               children: [
-                Icon(Icons.speed, size: 16, color: CyberTheme.secondary),
+                Icon(Icons.speed, size: 14, color: CyberTheme.secondary),
                 SizedBox(width: 4),
-                Text('Presión',
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                Expanded(
+                  child: Text(
+                    'Presión',
+                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              systolic != null && diastolic != null
-                  ? '${systolic.value.toInt()}/${diastolic.value.toInt()}'
-                  : '--/--',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: CyberTheme.primary,
+            const SizedBox(height: 4),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                systolic != null && diastolic != null
+                    ? '${systolic.value.toInt()}/${diastolic.value.toInt()}'
+                    : '--/--',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: CyberTheme.primary,
+                ),
               ),
             ),
             const Text('mmHg',
-                style: TextStyle(fontSize: 12, color: Colors.grey)),
+                style: TextStyle(fontSize: 10, color: Colors.grey)),
           ],
         ),
       ),
