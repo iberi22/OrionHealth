@@ -5,7 +5,7 @@ import '../../../../../core/widgets/glassmorphic_card.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
 import '../../../local_agent/presentation/chat_page.dart';
 import '../../../vitals/presentation/pages/vitals_page.dart';
-import '../../../medications/presentation/pages/medications_page.dart';
+import '../../../medications/presentation/pages/medications_page.dart' hide getIt;
 import '../../../reports/presentation/pages/reports_page.dart';
 import '../../../health_record/presentation/pages/timeline_page.dart';
 import '../../../medical_research/presentation/pages/medical_research_page.dart';
