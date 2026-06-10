@@ -7,24 +7,25 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../domain/entities/sync_node.dart';
+import '../domain/sync_repository.dart';
 import '../../../features/user_profile/domain/entities/user_profile.dart';
 import '../../../features/medications/domain/entities/medication.dart' as app_med;
 import '../../../features/allergies/domain/entities/allergy.dart';
 import '../../../features/vitals/domain/entities/vital_sign.dart' as app_vital;
-import 'package:medical_standards/medical_standards.dart';
 import 'fhir_client.dart';
 import 'fhir_mapper.dart';
 import 'rda_parser.dart';
 import 'node_discovery_service.dart';
 
-@lazySingleton
-class SyncRepository {
+@LazySingleton(as: SyncRepository)
+class SyncRepositoryImpl implements SyncRepository {
   final FhirClient _fhirClient;
   final Isar _isar;
   final FlutterSecureStorage _secureStorage;
   final NodeDiscoveryService _discoveryService;
 
-  SyncRepository(
+  SyncRepositoryImpl(
     this._fhirClient,
     this._isar,
     this._secureStorage,
@@ -33,16 +34,17 @@ class SyncRepository {
 
   static const String _lastSyncKey = 'last_fhir_sync_timestamp';
 
-  /// Get access token from secure storage
+  @override
   Future<String?> getAccessToken() async {
     return await _secureStorage.read(key: 'ihce_access_token');
   }
 
-  /// Save access token to secure storage
+  @override
   Future<void> saveAccessToken(String token) async {
     await _secureStorage.write(key: 'ihce_access_token', value: token);
   }
 
+  @override
   Future<DateTime?> getLastSyncTime() async {
     final prefs = await SharedPreferences.getInstance();
     final timestamp = prefs.getInt(_lastSyncKey);
@@ -51,42 +53,20 @@ class SyncRepository {
         : null;
   }
 
-  Future<void> _setLastSyncTime(DateTime time) async {
+  @override
+  Future<void> setLastSyncTime(DateTime time) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_lastSyncKey, time.millisecondsSinceEpoch);
   }
 
-  /// Full sync: Patient profile + RDA (medications, allergies, vitals, conditions) + P2P Medical Standards
-  Future<void> syncAll() async {
-    // 0. Sync Medical Standards via P2P if possible
-    await syncMedicalStandards();
-
-    final token = await getAccessToken();
-    if (token == null) {
-      throw Exception('No hay conexión con IHCE. Conectá tu EPS primero.');
-    }
-
-    final profile = await _isar.userProfiles.where().findFirst();
-    if (profile == null || profile.epsPatientId == null) {
-      throw Exception('Perfil no encontrado o sin ID de paciente IHCE.');
-    }
-
-    final patientId = profile.epsPatientId!;
-
-    // 1. Sync Patient -> UserProfile
-    await _syncPatient(patientId, token, profile);
-
-    // 2. Sync RDA
-    await _syncRda(patientId, token);
-
-    await _setLastSyncTime(DateTime.now());
-  }
-
-  Future<void> _syncPatient(
+  @override
+  Future<void> syncPatient(
     String patientId,
     String token,
-    UserProfile existingProfile,
   ) async {
+    final existingProfile = await _isar.userProfiles.where().findFirst();
+    if (existingProfile == null) return;
+
     try {
       final patientData = await _fhirClient.getPatient(patientId, token);
       final updatedProfile = FhirMapper.mapPatient(patientData, existingProfile);
@@ -99,7 +79,8 @@ class SyncRepository {
     }
   }
 
-  Future<void> _syncRda(String patientId, String token) async {
+  @override
+  Future<void> syncRda(String patientId, String token) async {
     try {
       final rdaBundle = await _fhirClient.getRDA(patientId, token);
       final parsed = RdaParser.parse(rdaBundle);
@@ -111,9 +92,6 @@ class SyncRepository {
       final conditions = <String>[];
       final vitals = <app_vital.VitalSign>[];
 
-      // Process each section - entries from IHCE RDA
-      // In a real scenario, we'd also fetch the full Bundle resources
-      // For now, search for resources referenced in the Composition
       for (final section in sections) {
         final sectionMap = section as Map<String, dynamic>;
         final entries = sectionMap['entries'] as List<dynamic>? ?? [];
@@ -180,7 +158,6 @@ class SyncRepository {
                 .dateTimeEqualTo(vital.dateTime)
                 .findFirst();
             if (existing != null) {
-              // Only update if value is different or to ensure we have the latest
               vital.id = existing.id;
             }
             await _isar.vitalSigns.put(vital);
@@ -202,32 +179,13 @@ class SyncRepository {
     }
   }
 
-  /// Sync medical standards from peers if any are discovered
-  Future<void> syncMedicalStandards() async {
-    final peers = _discoveryService.currentNodes;
-    final syncService = SyncService();
-
-    if (peers.isNotEmpty) {
-      // Try to sync from the first available peer
-      final peer = peers.first;
-      final peerIp = '${peer.host}:${peer.port}';
-      await syncService.syncAll(peerIp: peerIp);
-    } else {
-      // Fallback to default (GitHub)
-      await syncService.syncAll();
-    }
-  }
-
-  /// Quick sync - only refresh if last sync was > 6 hours ago
-  Future<bool> syncIfStale() async {
-    final lastSync = await getLastSyncTime();
-    if (lastSync != null) {
-      final staleThreshold = DateTime.now().subtract(const Duration(hours: 6));
-      if (lastSync.isAfter(staleThreshold)) {
-        return false; // Not stale, skip
-      }
-    }
-    await syncAll();
-    return true; // Synced
+  @override
+  List<SyncNode> getDiscoveredNodes() {
+    return _discoveryService.currentNodes.map((node) => SyncNode(
+      id: node.attributes['nodeId'] ?? node.name,
+      name: node.name,
+      host: node.host,
+      port: node.port,
+    )).toList();
   }
 }
