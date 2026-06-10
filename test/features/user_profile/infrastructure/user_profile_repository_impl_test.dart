@@ -74,5 +74,13 @@ void main() {
 
       expect(await repository.getUserProfile(), isNull);
     });
+
+    test('should return the first profile when multiple exist', () async {
+      await repository.saveUserProfile(UserProfile(name: 'First'));
+      await repository.saveUserProfile(UserProfile(name: 'Second'));
+
+      final result = await repository.getUserProfile();
+      expect(result?.name, 'First');
+    });
   });
 }
