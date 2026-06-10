@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../../../core/di/injection.dart';
 import '../../../health_sharing/infrastructure/ble_sharing_service.dart';
 
 class VitalsMonitorPage extends StatefulWidget {
@@ -10,7 +11,7 @@ class VitalsMonitorPage extends StatefulWidget {
 }
 
 class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
-  final BleSharingService _bleService = BleSharingService();
+  late final BleSharingService _bleService;
   List<BleDevice> _devices = [];
   bool _isScanning = false;
   String? _statusMessage;
@@ -19,6 +20,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
   @override
   void initState() {
     super.initState();
+    _bleService = getIt<BleSharingService>();
     _bleService.initialize();
   }
 
@@ -105,8 +107,8 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
 
   Widget _buildLivePulseCard() {
     return Container(
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(32),
