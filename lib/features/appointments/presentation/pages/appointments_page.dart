@@ -17,7 +17,7 @@ class AppointmentsPage extends StatefulWidget {
 }
 
 class _AppointmentsPageState extends State<AppointmentsPage> {
-  final AppointmentRepository _repository = getIt<AppointmentRepository>();
+  late final AppointmentRepository _repository;
   List<Appointment> _allAppointments = [];
   bool _isLoading = true;
   DateTime _focusedDay = DateTime.now();
@@ -26,6 +26,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
   @override
   void initState() {
     super.initState();
+    _repository = getIt<AppointmentRepository>();
     _loadAppointments();
   }
 
