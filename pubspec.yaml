@@ -59,7 +59,7 @@ dependencies:
   health_wallet:
     path: packages/health_wallet
   onnxruntime: ^1.4.1
-  permission_handler: ^12.0.1
+  permission_handler: ^12.0.3
   health: ^13.3.1
   google_fonts: ^8.1.0
   flutter_gemma: ^0.12.6
