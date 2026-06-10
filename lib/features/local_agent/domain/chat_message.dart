@@ -27,4 +27,20 @@ class ChatMessage {
     required this.timestamp,
     this.citations = const [],
   });
+
+  ChatMessage copyWith({
+    Id? id,
+    ChatRole? role,
+    String? content,
+    DateTime? timestamp,
+    List<String>? citations,
+  }) {
+    return ChatMessage(
+      id: id ?? this.id,
+      role: role ?? this.role,
+      content: content ?? this.content,
+      timestamp: timestamp ?? this.timestamp,
+      citations: citations ?? this.citations,
+    );
+  }
 }
