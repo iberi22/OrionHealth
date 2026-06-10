@@ -279,9 +279,10 @@ class _ProfileHeader extends StatelessWidget {
           width: 128,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            image: const DecorationImage(
-              image: NetworkImage(
-                  "https://lh3.googleusercontent.com/aida-public/AB6AXuAIpUPoUs4Oykl6RpdGHalhqjetooQ-sZ9LobLpgbAVOnhYpaq8N5vqWkwgyY-cwthjBPnowELtGGRPqp12k_sBKhk9r7bW6YJUQtkoABO21_fgw5CmQOHkZHg4bwR4J3Ib9VVx_cMtcEqRsl2k7jkw26FOnsrjgs9XHtK8O9g-VGixxrv0pXd_frqH_xsPyWS6rXzsNUlO_BSRmHdplSNegvbJxMUdDddekMquxJ3gn2_oK2Z4ToEq_mHl-FAK5E-ejgnRZzRJt7_M"),
+            image: DecorationImage(
+              image: (userProfile.avatarUrl != null && userProfile.avatarUrl!.isNotEmpty)
+                  ? NetworkImage(userProfile.avatarUrl!)
+                  : const AssetImage('assets/images/user_placeholder.png') as ImageProvider,
               fit: BoxFit.cover,
             ),
             border: Border.all(color: AppColors.primary, width: 2),
