@@ -22,18 +22,23 @@ const AllergySchema = CollectionSchema(
       name: r'allergen',
       type: IsarType.string,
     ),
-    r'isValid': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 1,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'isValid': PropertySchema(
+      id: 2,
       name: r'isValid',
       type: IsarType.bool,
     ),
     r'notes': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'notes',
       type: IsarType.string,
     ),
     r'severity': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'severity',
       type: IsarType.string,
       enumMap: _AllergyseverityEnumValueMap,
@@ -82,9 +87,10 @@ void _allergySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.allergen);
-  writer.writeBool(offsets[1], object.isValid);
-  writer.writeString(offsets[2], object.notes);
-  writer.writeString(offsets[3], object.severity.name);
+  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeBool(offsets[2], object.isValid);
+  writer.writeString(offsets[3], object.notes);
+  writer.writeString(offsets[4], object.severity.name);
 }
 
 Allergy _allergyDeserialize(
@@ -96,9 +102,9 @@ Allergy _allergyDeserialize(
   final object = Allergy(
     allergen: reader.readStringOrNull(offsets[0]),
     id: id,
-    notes: reader.readStringOrNull(offsets[2]),
+    notes: reader.readStringOrNull(offsets[3]),
     severity:
-        _AllergyseverityValueEnumMap[reader.readStringOrNull(offsets[3])] ??
+        _AllergyseverityValueEnumMap[reader.readStringOrNull(offsets[4])] ??
             AllergySeverity.mild,
   );
   return object;
@@ -114,10 +120,12 @@ P _allergyDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    case 4:
       return (_AllergyseverityValueEnumMap[reader.readStringOrNull(offset)] ??
           AllergySeverity.mild) as P;
     default:
@@ -367,6 +375,59 @@ extension AllergyQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'allergen',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> hashCodeEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -729,6 +790,18 @@ extension AllergyQuerySortBy on QueryBuilder<Allergy, Allergy, QSortBy> {
     });
   }
 
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
   QueryBuilder<Allergy, Allergy, QAfterSortBy> sortByIsValid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isValid', Sort.asc);
@@ -777,6 +850,18 @@ extension AllergyQuerySortThenBy
   QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByAllergenDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'allergen', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Allergy, Allergy, QAfterSortBy> thenByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
@@ -838,6 +923,12 @@ extension AllergyQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Allergy, Allergy, QDistinct> distinctByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hashCode');
+    });
+  }
+
   QueryBuilder<Allergy, Allergy, QDistinct> distinctByIsValid() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isValid');
@@ -870,6 +961,12 @@ extension AllergyQueryProperty
   QueryBuilder<Allergy, String?, QQueryOperations> allergenProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'allergen');
+    });
+  }
+
+  QueryBuilder<Allergy, int, QQueryOperations> hashCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hashCode');
     });
   }
 

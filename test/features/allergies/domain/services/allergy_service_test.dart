@@ -69,6 +69,24 @@ void main() {
 
         expect(allergyService.checkInteraction(allergy, mockMedication), isTrue);
       });
+
+      test('should return false for null allergen', () {
+        final allergy = Allergy(allergen: null);
+        when(() => mockMedication.name).thenReturn('Amoxicillin');
+        expect(allergyService.checkInteraction(allergy, mockMedication), isFalse);
+      });
+
+      test('should return false for empty allergen', () {
+        final allergy = Allergy(allergen: '');
+        when(() => mockMedication.name).thenReturn('Amoxicillin');
+        expect(allergyService.checkInteraction(allergy, mockMedication), isFalse);
+      });
+
+      test('should return false for only whitespace allergen', () {
+        final allergy = Allergy(allergen: '   ');
+        when(() => mockMedication.name).thenReturn('Amoxicillin');
+        expect(allergyService.checkInteraction(allergy, mockMedication), isFalse);
+      });
     });
 
     group('getSeverityLevel', () {
