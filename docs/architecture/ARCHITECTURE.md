@@ -48,30 +48,31 @@ OrionHealth is a decentralized medical intelligence network that empowers indivi
 
 ```
 lib/features/
-├── auth/                    # Authentication
-│   ├── domain/            # Entities, Repositories
-│   ├── application/       # Auth Cubit
-│   ├── infrastructure/    # PIN, Biometric, Google Sign-In
-│   └── presentation/      # Auth pages
-│
-├── onboarding/            # 5-step profile setup
-│   ├── domain/           # UserProfile, ProfileAnalyzer
-│   ├── application/      # Onboarding Cubit
-│   └── presentation/     # Step pages
-│
-├── health_record/         # Medical records CRUD
-│
-├── medical_assistant/    # AI health analysis
-│   ├── confidence-based response system
-│   ├── explains symptoms, never diagnoses < 90%
-│   └── medical standards integration
-│
-├── health_sharing/       # P2P health data sharing
-│   ├── BLE (default)     # Bluetooth Low Energy
-│   ├── NFC               # Contactless
-│   └── WiFi Direct       # Direct connection
-│
-└── local_agent/         # Chat with local AI
+├── about/                    # Static content
+├── ai_assistant/             # AI Assistant UI
+├── allergies/                # Allergy tracking
+├── appointments/             # Appointment scheduling and reminders
+├── auth/                     # Authentication, PIN/biometric, session management
+├── calendar_import/          # Import appointments from calendar
+├── dashboard/                # Home screen with health summary
+├── doctor_verification/      # Doctor verification flow
+├── email-citas/              # Parse appointments from email
+├── eps_connection/           # Connect to health providers
+├── health_data_import/       # Import data from Apple Health / Google Fit
+├── health_record/            # Medical records CRUD
+├── health_sharing/           # P2P health data sharing (BLE, NFC, WiFi)
+├── home/                     # Home orchestration
+├── local_agent/              # Chat with local AI (ONNX Runtime)
+├── medical_assistant/        # On-device AI chat with RAG
+├── medical_research/         # Web search and evidence processing
+├── medications/              # Medication list and reminders
+├── onboarding/               # First-run experience, privacy consent
+├── reports/                  # Health report generation (PDF export)
+├── settings/                 # App and LLM settings
+├── ssi/                      # Verifiable Credentials
+├── sync/                     # Decentralized network node sync
+├── user_profile/             # User profile and preferences
+└── vitals/                   # Vitals tracking, sensor integration
 ```
 
 ---
