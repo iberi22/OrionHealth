@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'utils/video_recorder.dart';
 
 /// E2E Tests para Health Wallet de OrionHealth
 /// 
@@ -41,6 +42,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'health_record', '01_empty_form');
 
       final fields = find.byType(TextFormField);
       if (fields.evaluate().length >= 3) {
@@ -49,9 +51,11 @@ void main() {
         await tester.enterText(fields.at(1), '95');
         await tester.pumpAndSettle();
       }
+      await VideoRecorder.recordStep(tester, 'health_record', '02_filled_form');
 
       await tester.tap(find.text('Guardar'));
       await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'health_record', '03_after_save');
     });
 
     // ============================================================
