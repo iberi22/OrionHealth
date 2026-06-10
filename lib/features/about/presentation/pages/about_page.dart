@@ -1,32 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../widgets/mission_section.dart';
-import '../../data/blog_posts.dart';
+import '../../application/about_cubit.dart';
+import '../../domain/entities/about_info.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(),
-          SliverPadding(
-            padding: const EdgeInsets.all(16.0),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                const MissionSection(),
-                const SizedBox(height: 40),
-                _buildBlogHeader(),
-                const SizedBox(height: 16),
-                ...staticBlogPosts.map((post) => _BlogTile(post: post)),
-                const SizedBox(height: 40),
-              ]),
-            ),
-          ),
-        ],
+    return BlocProvider(
+      create: (context) => getIt<AboutCubit>()..loadAboutInfo(),
+      child: Scaffold(
+        body: BlocBuilder<AboutCubit, AboutState>(
+          builder: (context, state) {
+            if (state is AboutLoading || state is AboutInitial) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is AboutError) {
+              return Center(child: Text('Error: ${state.message}'));
+            }
+
+            if (state is AboutLoaded) {
+              final info = state.aboutInfo;
+              return CustomScrollView(
+                slivers: [
+                  _buildAppBar(),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16.0),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        MissionSection(
+                          missionStatement: info.missionStatement,
+                          values: info.values,
+                          activities: info.activities,
+                        ),
+                        const SizedBox(height: 40),
+                        _buildBlogHeader(),
+                        const SizedBox(height: 16),
+                        ...info.blogPosts.map((post) => _BlogTile(post: post)),
+                        const SizedBox(height: 40),
+                      ]),
+                    ),
+                  ),
+                ],
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
@@ -48,7 +75,7 @@ class AboutPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'COMUNIDAD Y NOTICIAS',
           style: TextStyle(
             color: AppColors.secondary,

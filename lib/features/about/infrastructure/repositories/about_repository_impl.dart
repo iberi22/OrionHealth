@@ -1,18 +1,33 @@
-class BlogPost {
-  final String title;
-  final String content;
-  final String date;
-  final String category;
+import 'package:injectable/injectable.dart';
+import '../../domain/entities/about_info.dart';
+import '../../domain/repositories/i_about_repository.dart';
 
-  const BlogPost({
-    required this.title,
-    required this.content,
-    required this.date,
-    required this.category,
-  });
+@LazySingleton(as: IAboutRepository)
+class AboutRepositoryImpl implements IAboutRepository {
+  @override
+  Future<AboutInfo> getAboutInfo() async {
+    // In a real app, this might come from an API or local DB.
+    // For now, we use the static data moved from the legacy data folder.
+    return const AboutInfo(
+      blogPosts: _staticBlogPosts,
+      missionStatement: 'Creemos que la salud es el activo más valioso de la humanidad. OrionHealth nace con la visión de poner la tecnología más avanzada al servicio del bienestar individual, garantizando la privacidad y el empoderamiento del paciente.',
+      values: [
+        'Cada persona merece acceso a su historial médico completo',
+        'La privacidad médica es un derecho fundamental',
+        'La IA médica debe estar al servicio de la salud, no de corporaciones',
+        'Los datos de salud empoderan a las personas para tomar mejores decisiones',
+      ],
+      activities: [
+        'Almacenamos datos médicos de forma segura y encriptada en tu dispositivo',
+        'Permitimos que modelos de IA analicen tu información para ayudarte',
+        'Buscamos información médica actualizada de fuentes científicas confiables',
+        'Conectamos personas con estándares de medicina mundial',
+      ],
+    );
+  }
 }
 
-const List<BlogPost> staticBlogPosts = [
+const List<BlogPost> _staticBlogPosts = [
   BlogPost(
     title: 'Avances médicos que impactan tu salud',
     content: 'La medicina personalizada está avanzando a pasos agigantados. Gracias al análisis de datos a gran escala, ahora es posible adaptar los tratamientos a la genética y el historial único de cada paciente. En OrionHealth, te preparamos para esta revolución permitiéndote ser el dueño de tu propia información médica.',
