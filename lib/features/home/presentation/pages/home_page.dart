@@ -6,13 +6,9 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../../../core/widgets/page_header.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../local_agent/infrastructure/services/medical_indexing_service.dart';
 import '../../../medical_assistant/domain/entities/medical_insight.dart';
-import '../../../medical_assistant/domain/services/medical_analysis_service.dart';
 import '../../../medical_assistant/presentation/pages/medical_assistant_page.dart';
-import '../../../user_profile/domain/repositories/user_profile_repository.dart';
 import '../../../vitals/domain/entities/vital_sign.dart';
-import '../../../vitals/domain/repositories/vital_sign_repository.dart';
 import '../../../vitals/presentation/pages/vitals_monitor_page.dart';
 import '../../application/home_cubit.dart';
 import '../../application/home_state.dart';
@@ -24,12 +20,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return BlocProvider(
-      create: (_) => HomeCubit(
-        getIt<VitalSignRepository>(),
-        getIt<MedicalIndexingService>(),
-        getIt<MedicalAnalysisService>(),
-        getIt<UserProfileRepository>(),
-      ),
+      create: (_) => getIt<HomeCubit>(),
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(

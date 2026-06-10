@@ -6,52 +6,29 @@ import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/home/presentation/pages/home_page.dart';
 import 'package:orionhealth_health/features/home/application/home_cubit.dart';
-import 'package:orionhealth_health/features/home/application/home_state.dart';
-import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
-import 'package:orionhealth_health/features/local_agent/infrastructure/services/medical_indexing_service.dart';
-import 'package:orionhealth_health/features/medical_assistant/domain/services/medical_analysis_service.dart';
-import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:orionhealth_health/features/home/domain/repositories/home_repository.dart';
+import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 
-class MockVitalSignRepository extends Mock implements VitalSignRepository {}
-class MockMedicalIndexingService extends Mock implements MedicalIndexingService {}
-class MockMedicalAnalysisService extends Mock implements MedicalAnalysisService {}
-class MockUserProfileRepository extends Mock implements UserProfileRepository {}
+class MockHomeRepository extends Mock implements HomeRepository {}
 
 void main() {
   final getIt = GetIt.instance;
-  late MockVitalSignRepository mockVitalSignRepository;
-  late MockMedicalIndexingService mockMedicalIndexingService;
-  late MockMedicalAnalysisService mockMedicalAnalysisService;
-  late MockUserProfileRepository mockUserProfileRepository;
+  late MockHomeRepository mockHomeRepository;
 
   setUpAll(() {
-    mockVitalSignRepository = MockVitalSignRepository();
-    mockMedicalIndexingService = MockMedicalIndexingService();
-    mockMedicalAnalysisService = MockMedicalAnalysisService();
-    mockUserProfileRepository = MockUserProfileRepository();
+    mockHomeRepository = MockHomeRepository();
 
-    getIt.registerLazySingleton<VitalSignRepository>(() => mockVitalSignRepository);
-    getIt.registerLazySingleton<MedicalIndexingService>(() => mockMedicalIndexingService);
-    getIt.registerLazySingleton<MedicalAnalysisService>(() => mockMedicalAnalysisService);
-    getIt.registerLazySingleton<UserProfileRepository>(() => mockUserProfileRepository);
+    getIt.registerLazySingleton<HomeRepository>(() => mockHomeRepository);
+    getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<HomeRepository>()));
   });
 
   setUp(() {
     // Default mock behavior for each test
-    when(() => mockMedicalIndexingService.hasIndexed).thenReturn(true);
-    when(() => mockMedicalIndexingService.statusStream).thenAnswer((_) => const Stream.empty());
-    when(() => mockVitalSignRepository.getLatestVitals()).thenAnswer((_) async => {});
-    when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => null);
-    when(() => mockMedicalAnalysisService.analyzeVitals(
-      vitals: any(named: 'vitals'),
-      chronicConditions: any(named: 'chronicConditions'),
-    )).thenAnswer((_) async => []);
-    when(() => mockMedicalAnalysisService.calculateRisks(
-      labValues: any(named: 'labValues'),
-      vitals: any(named: 'vitals'),
-      conditions: any(named: 'conditions'),
-    )).thenAnswer((_) async => []);
+    when(() => mockHomeRepository.hasIndexed).thenReturn(true);
+    when(() => mockHomeRepository.indexingStatusStream).thenAnswer((_) => const Stream.empty());
+    when(() => mockHomeRepository.getLatestVitals()).thenAnswer((_) async => <VitalSignType, VitalSign?>{});
+    when(() => mockHomeRepository.getRecentInsights()).thenAnswer((_) async => []);
   });
 
   tearDownAll(() {
@@ -105,8 +82,8 @@ void main() {
 
   testWidgets('IndexingStatusBanner shows syncing state', (WidgetTester tester) async {
     final controller = StreamController<bool>();
-    when(() => mockMedicalIndexingService.hasIndexed).thenReturn(false);
-    when(() => mockMedicalIndexingService.statusStream).thenAnswer((_) => controller.stream);
+    when(() => mockHomeRepository.hasIndexed).thenReturn(false);
+    when(() => mockHomeRepository.indexingStatusStream).thenAnswer((_) => controller.stream);
 
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pump();
@@ -122,9 +99,9 @@ void main() {
   });
 
   testWidgets('IndexingStatusBanner shows error state and retry works', (WidgetTester tester) async {
-    when(() => mockMedicalIndexingService.hasIndexed).thenReturn(false);
-    when(() => mockMedicalIndexingService.statusStream).thenAnswer((_) => Stream.value(false));
-    when(() => mockMedicalIndexingService.indexAll(force: true)).thenAnswer((_) async => const IndexingResult(total: 0, indexed: 0, errors: 1));
+    when(() => mockHomeRepository.hasIndexed).thenReturn(false);
+    when(() => mockHomeRepository.indexingStatusStream).thenAnswer((_) => Stream.value(false));
+    when(() => mockHomeRepository.retryIndexing()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pump();
@@ -142,13 +119,13 @@ void main() {
     expect(find.text('Reintentar'), findsOneWidget);
 
     await tester.tap(find.text('Reintentar'));
-    verify(() => mockMedicalIndexingService.indexAll(force: true)).called(2); // once from our manual call, once from tap
+    verify(() => mockHomeRepository.retryIndexing()).called(2); // once from our manual call, once from tap
   });
 
   testWidgets('IndexingStatusBanner shows success state then disappears', (WidgetTester tester) async {
     final controller = StreamController<bool>();
-    when(() => mockMedicalIndexingService.hasIndexed).thenReturn(false);
-    when(() => mockMedicalIndexingService.statusStream).thenAnswer((_) => controller.stream);
+    when(() => mockHomeRepository.hasIndexed).thenReturn(false);
+    when(() => mockHomeRepository.indexingStatusStream).thenAnswer((_) => controller.stream);
 
     await tester.pumpWidget(createWidgetUnderTest());
 
