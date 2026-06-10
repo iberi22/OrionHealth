@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
-import '../data/sync_repository.dart';
+import 'sync_service.dart';
 
 enum SyncStatus { initial, loading, success, failure }
 
@@ -34,22 +34,22 @@ class SyncState extends Equatable {
 
 @injectable
 class FhirSyncCubit extends Cubit<SyncState> {
-  final SyncRepository _syncRepository;
+  final SyncService _syncService;
 
-  FhirSyncCubit(this._syncRepository) : super(const SyncState()) {
+  FhirSyncCubit(this._syncService) : super(const SyncState()) {
     _loadLastSyncTime();
   }
 
   Future<void> _loadLastSyncTime() async {
-    final lastSync = await _syncRepository.getLastSyncTime();
+    final lastSync = await _syncService.getLastSyncTime();
     emit(state.copyWith(lastSyncTime: lastSync));
   }
 
   Future<void> performSync() async {
     emit(state.copyWith(status: SyncStatus.loading));
     try {
-      await _syncRepository.syncAll();
-      final lastSync = await _syncRepository.getLastSyncTime();
+      await _syncService.syncAll();
+      final lastSync = await _syncService.getLastSyncTime();
       emit(state.copyWith(
         status: SyncStatus.success,
         lastSyncTime: lastSync,

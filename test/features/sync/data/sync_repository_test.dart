@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/sync/data/fhir_client.dart';
 import 'package:orionhealth_health/features/sync/data/sync_repository.dart';
 import 'package:orionhealth_health/features/sync/data/node_discovery_service.dart';
+import 'package:orionhealth_health/features/sync/domain/sync_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
@@ -39,7 +40,7 @@ void main() {
       directory: tempDir.path,
     );
 
-    syncRepository = SyncRepository(
+    syncRepository = SyncRepositoryImpl(
       mockFhirClient,
       isar,
       mockSecureStorage,
@@ -53,16 +54,9 @@ void main() {
     await isar.close();
   });
 
-  group('SyncRepository Conflict Resolution', () {
-    test('syncAll should not create duplicate medications', () async {
+  group('SyncRepositoryImpl Conflict Resolution', () {
+    test('syncRda should not create duplicate medications', () async {
       // Setup
-      when(() => mockSecureStorage.read(key: 'ihce_access_token'))
-          .thenAnswer((_) async => 'fake_token');
-
-      await isar.writeTxn(() async {
-        await isar.userProfiles.put(UserProfile(epsPatientId: 'pat123'));
-      });
-
       final medicationJson = {
         'resourceType': 'MedicationStatement',
         'status': 'active',
@@ -94,29 +88,20 @@ void main() {
         ]
       };
 
-      when(() => mockFhirClient.getPatient(any(), any()))
-          .thenAnswer((_) async => {'resourceType': 'Patient', 'id': 'pat123'});
       when(() => mockFhirClient.getRDA(any(), any()))
           .thenAnswer((_) async => rdaBundle);
 
       // Perform first sync
-      await syncRepository.syncAll();
+      await syncRepository.syncRda('pat123', 'fake_token');
       expect(await isar.medications.count(), 1);
 
       // Perform second sync with same data
-      await syncRepository.syncAll();
+      await syncRepository.syncRda('pat123', 'fake_token');
       expect(await isar.medications.count(), 1, reason: 'Should not create duplicate medication');
     });
 
-    test('syncAll should update existing medication if data changed', () async {
+    test('syncRda should update existing medication if data changed', () async {
       // Setup
-      when(() => mockSecureStorage.read(key: 'ihce_access_token'))
-          .thenAnswer((_) async => 'fake_token');
-
-      await isar.writeTxn(() async {
-        await isar.userProfiles.put(UserProfile(epsPatientId: 'pat123'));
-      });
-
       final medicationJson1 = {
         'resourceType': 'MedicationStatement',
         'status': 'active',
@@ -139,10 +124,9 @@ void main() {
         ]
       };
 
-      when(() => mockFhirClient.getPatient(any(), any())).thenAnswer((_) async => {});
       when(() => mockFhirClient.getRDA(any(), any())).thenAnswer((_) async => rdaBundle1);
 
-      await syncRepository.syncAll();
+      await syncRepository.syncRda('pat123', 'fake_token');
       var med = await isar.medications.where().findFirst();
       expect(med?.notes, 'Initial note');
 
@@ -154,21 +138,14 @@ void main() {
 
       when(() => mockFhirClient.getRDA(any(), any())).thenAnswer((_) async => rdaBundle2);
 
-      await syncRepository.syncAll();
+      await syncRepository.syncRda('pat123', 'fake_token');
 
       expect(await isar.medications.count(), 1);
       med = await isar.medications.where().findFirst();
       expect(med?.notes, 'Updated note');
     });
 
-    test('syncAll should not duplicate vitals with same type and timestamp', () async {
-       when(() => mockSecureStorage.read(key: 'ihce_access_token'))
-          .thenAnswer((_) async => 'fake_token');
-
-      await isar.writeTxn(() async {
-        await isar.userProfiles.put(UserProfile(epsPatientId: 'pat123'));
-      });
-
+    test('syncRda should not duplicate vitals with same type and timestamp', () async {
       final observationJson = {
         'resourceType': 'Observation',
         'code': {
@@ -191,13 +168,12 @@ void main() {
         ]
       };
 
-      when(() => mockFhirClient.getPatient(any(), any())).thenAnswer((_) async => {});
       when(() => mockFhirClient.getRDA(any(), any())).thenAnswer((_) async => rdaBundle);
 
-      await syncRepository.syncAll();
+      await syncRepository.syncRda('pat123', 'fake_token');
       expect(await isar.vitalSigns.count(), 1);
 
-      await syncRepository.syncAll();
+      await syncRepository.syncRda('pat123', 'fake_token');
       expect(await isar.vitalSigns.count(), 1);
     });
   });
