@@ -193,7 +193,7 @@ class _AllergiesView extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _AllergyForm(
+      builder: (context) => AllergyForm(
         allergy: allergy,
         onSave: (savedAllergy) {
           cubit.saveAllergy(savedAllergy);
@@ -210,22 +210,23 @@ class _AllergiesView extends StatelessWidget {
   }
 }
 
-class _AllergyForm extends StatefulWidget {
+class AllergyForm extends StatefulWidget {
   final Allergy? allergy;
   final Function(Allergy) onSave;
   final VoidCallback? onDelete;
 
-  const _AllergyForm({
+  const AllergyForm({
+    super.key,
     this.allergy,
     required this.onSave,
     this.onDelete,
   });
 
   @override
-  State<_AllergyForm> createState() => _AllergyFormState();
+  State<AllergyForm> createState() => _AllergyFormState();
 }
 
-class _AllergyFormState extends State<_AllergyForm> {
+class _AllergyFormState extends State<AllergyForm> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _allergenController;
   late TextEditingController _notesController;

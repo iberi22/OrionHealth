@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/di/injection.dart';
+import '../../../../../core/di/injection.dart' as di;
 import '../../../../../core/theme/cyber_theme.dart';
 import '../../../../../core/widgets/glassmorphic_card.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
@@ -78,7 +78,7 @@ class HomeDashboardPage extends StatelessWidget {
       crossAxisCount: 2,
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
-      childAspectRatio: 1.5,
+      childAspectRatio: 1.1,
       children: [
         _QuickActionCard(
           title: 'AI Assistant',
@@ -87,7 +87,7 @@ class HomeDashboardPage extends StatelessWidget {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ChatPage(llmService: getIt<LlmService>()),
+              builder: (_) => ChatPage(llmService: di.getIt<LlmService>()),
             ),
           ),
         ),

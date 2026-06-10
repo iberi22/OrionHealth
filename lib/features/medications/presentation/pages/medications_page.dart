@@ -9,8 +9,6 @@ import '../../application/medications_cubit.dart';
 import '../../application/medications_state.dart';
 import 'package:intl/intl.dart';
 
-final getIt = GetIt.instance;
-
 class MedicationsPage extends StatefulWidget {
   const MedicationsPage({super.key});
 
@@ -24,15 +22,15 @@ class _MedicationsPageState extends State<MedicationsPage> {
   @override
   void initState() {
     super.initState();
-    _cubit = getIt.isRegistered<MedicationsCubit>() 
-        ? getIt<MedicationsCubit>() 
-        : MedicationsCubit(getIt());
+    _cubit = GetIt.instance.isRegistered<MedicationsCubit>()
+        ? GetIt.instance<MedicationsCubit>()
+        : MedicationsCubit(GetIt.instance());
     _cubit.loadMedications();
   }
 
   @override
   void dispose() {
-    if (!getIt.isRegistered<MedicationsCubit>()) {
+    if (!GetIt.instance.isRegistered<MedicationsCubit>()) {
       _cubit.close();
     }
     super.dispose();
