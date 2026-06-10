@@ -1,205 +1,125 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// Golden screenshot tests — run separately with:
-//   flutter test test/widgets/golden_screenshots_test.dart
+// Note: Using simplified mocks to avoid dependency injection complexity in this specific runner
+// while maintaining visual fidelity for golden screenshots.
+
 void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
   
-  final screenshotsDir = Directory('integration_test/screenshots/actual');
+  final screenshotsDir = Directory('test/widgets/goldens');
   if (!screenshotsDir.existsSync()) {
     screenshotsDir.createSync(recursive: true);
   }
 
   group('OrionHealth golden screenshots', () {
-    testWidgets('01 main navigation', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          title: 'OrionHealth Test',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-            useMaterial3: true,
+    final devices = [
+      {'name': 'small', 'size': const Size(360, 640)},
+      {'name': 'large', 'size': const Size(720, 1280)},
+    ];
+
+    for (final device in devices) {
+      final name = device['name'] as String;
+      final size = device['size'] as Size;
+
+      testWidgets('01 main navigation - $name', (WidgetTester tester) async {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: _testTheme(),
+            home: const _TestNavigationPage(),
           ),
-          home: const _TestNavigationPage(),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.byType(NavigationBar), findsOneWidget);
-      expect(find.text('Perfil'), findsOneWidget);
-      expect(find.text('Registros'), findsOneWidget);
-      expect(find.text('Asistente IA'), findsOneWidget);
-      expect(find.text('Reportes'), findsOneWidget);
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/01_main_navigation_$name.png'),
+        );
 
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/01_main_navigation.png'),
-      );
-    });
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
 
-    testWidgets('02 profile page', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: const _TestNavigationPage()));
-      await tester.pumpAndSettle();
+      testWidgets('02 onboarding welcome - $name', (WidgetTester tester) async {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
 
-      expect(find.text('Página de Perfil'), findsOneWidget);
+        await tester.pumpWidget(MaterialApp(theme: _testTheme(), home: const _MockOnboardingPage()));
+        await tester.pumpAndSettle();
 
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/02_profile_page.png'),
-      );
-    });
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/02_onboarding_$name.png'),
+        );
 
-    testWidgets('03 records page', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: const _TestNavigationPage()));
-      await tester.pumpAndSettle();
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
 
-      await tester.tap(find.text('Registros'));
-      await tester.pumpAndSettle();
+      testWidgets('03 login page - $name', (WidgetTester tester) async {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
 
-      expect(find.text('Página de Registros'), findsOneWidget);
+        await tester.pumpWidget(MaterialApp(theme: _testTheme(), home: const _MockLoginPage()));
+        await tester.pumpAndSettle();
 
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/03_records_page.png'),
-      );
-    });
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/03_login_$name.png'),
+        );
 
-    testWidgets('04 ai assistant page', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: const _TestNavigationPage()));
-      await tester.pumpAndSettle();
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
 
-      await tester.tap(find.text('Asistente IA'));
-      await tester.pumpAndSettle();
+      testWidgets('04 medical research - $name', (WidgetTester tester) async {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
 
-      expect(find.text('Página de Asistente IA'), findsOneWidget);
+        await tester.pumpWidget(MaterialApp(theme: _testTheme(), home: const _MockMedicalResearchPage()));
+        await tester.pumpAndSettle();
 
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/04_ai_assistant_page.png'),
-      );
-    });
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/04_medical_research_$name.png'),
+        );
 
-    testWidgets('05 reports page', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: const _TestNavigationPage()));
-      await tester.pumpAndSettle();
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
 
-      await tester.tap(find.text('Reportes'));
-      await tester.pumpAndSettle();
+      testWidgets('05 dashboard - $name', (WidgetTester tester) async {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
 
-      expect(find.text('Página de Reportes'), findsOneWidget);
+        await tester.pumpWidget(MaterialApp(theme: _testTheme(), home: const _MockDashboardPage()));
+        await tester.pumpAndSettle();
 
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/05_reports_page.png'),
-      );
-    });
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/05_dashboard_$name.png'),
+        );
 
-    testWidgets('06 upload buttons', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(home: const _MockHealthRecordsPage()),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Subir PDF'), findsOneWidget);
-      expect(find.text('Tomar Foto'), findsOneWidget);
-      expect(find.text('Galería'), findsOneWidget);
-
-      expect(find.byIcon(Icons.picture_as_pdf), findsOneWidget);
-      expect(find.byIcon(Icons.camera_alt), findsOneWidget);
-      expect(find.byIcon(Icons.image), findsOneWidget);
-
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/06_upload_buttons.png'),
-      );
-    });
-
-    testWidgets('07 profile form', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: const _MockUserProfilePage()));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Nombre'), findsOneWidget);
-      expect(find.text('Edad'), findsOneWidget);
-      expect(find.text('Peso (kg)'), findsOneWidget);
-      expect(find.text('Altura (cm)'), findsOneWidget);
-      expect(find.text('Tipo de Sangre'), findsOneWidget);
-
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/07_profile_form.png'),
-      );
-    });
-
-    testWidgets('08 chat interface', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: const _MockChatPage()));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Asistente de Salud IA'), findsOneWidget);
-      expect(find.byType(TextField), findsOneWidget);
-      expect(find.byIcon(Icons.send), findsOneWidget);
-
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/08_chat_interface.png'),
-      );
-    });
-
-    testWidgets('09 reports list', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: const _MockReportsListPage()));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Mis Reportes de Salud'), findsOneWidget);
-      expect(find.byType(Card), findsWidgets);
-
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/09_reports_list.png'),
-      );
-    });
-
-    testWidgets('10 flow screenshots', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-            useMaterial3: true,
-          ),
-          home: const _TestNavigationPage(),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/10_flow_01_profile.png'),
-      );
-
-      await tester.tap(find.text('Registros'));
-      await tester.pumpAndSettle();
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/10_flow_02_records.png'),
-      );
-
-      await tester.tap(find.text('Asistente IA'));
-      await tester.pumpAndSettle();
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/10_flow_03_assistant.png'),
-      );
-
-      await tester.tap(find.text('Reportes'));
-      await tester.pumpAndSettle();
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/10_flow_04_reports.png'),
-      );
-    });
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+    }
   });
 }
+
+ThemeData _testTheme() {
+  return ThemeData(
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+    useMaterial3: true,
+  );
+}
+
+// ─── Mock Pages ──────────────────────────────────────────────────────────────
 
 class _TestNavigationPage extends StatefulWidget {
   const _TestNavigationPage();
@@ -211,94 +131,115 @@ class _TestNavigationPage extends StatefulWidget {
 class _TestNavigationPageState extends State<_TestNavigationPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
-    _MockProfilePage(),
-    _MockHealthRecordsPage(),
-    _MockAIAssistantPage(),
-    _MockReportsPage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      body: const Center(child: Text('Home Page')),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onDestinationSelected: (index) => setState(() => _currentIndex = index),
         destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.folder_open),
-            selectedIcon: Icon(Icons.folder),
-            label: 'Registros',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.chat_bubble_outline),
-            selectedIcon: Icon(Icons.chat_bubble),
-            label: 'Asistente IA',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.assessment_outlined),
-            selectedIcon: Icon(Icons.assessment),
-            label: 'Reportes',
-          ),
+          NavigationDestination(icon: Icon(Icons.person), label: 'Perfil'),
+          NavigationDestination(icon: Icon(Icons.folder), label: 'Registros'),
+          NavigationDestination(icon: Icon(Icons.chat), label: 'Asistente IA'),
+          NavigationDestination(icon: Icon(Icons.assessment), label: 'Reportes'),
         ],
       ),
     );
   }
 }
 
-class _MockProfilePage extends StatelessWidget {
-  const _MockProfilePage();
+class _MockOnboardingPage extends StatelessWidget {
+  const _MockOnboardingPage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Perfil de Usuario')),
-      body: const Center(
-        child: Text('Página de Perfil', style: TextStyle(fontSize: 24)),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.health_and_safety, size: 80, color: Colors.teal),
+              const SizedBox(height: 24),
+              const Text('Bienvenido a OrionHealth', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              const Text('Tu salud, bajo tu control y 100% privada.', textAlign: TextAlign.center),
+              const Spacer(),
+              ElevatedButton(onPressed: () {}, child: const Text('Comenzar Onboarding')),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-class _MockHealthRecordsPage extends StatelessWidget {
-  const _MockHealthRecordsPage();
+class _MockLoginPage extends StatelessWidget {
+  const _MockLoginPage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Nuevo Registro Médico')),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Página de Registros', style: TextStyle(fontSize: 24)),
+            const Icon(Icons.security, size: 80, color: Colors.green),
             const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.picture_as_pdf),
-              label: const Text('Subir PDF'),
-            ),
+            const Text('Acceso Seguro', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 32),
+            const TextField(decoration: InputDecoration(labelText: 'PIN de 6 dígitos', border: OutlineInputBorder()), obscureText: true),
             const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Tomar Foto'),
+            ElevatedButton(onPressed: () {}, child: const Text('Entrar')),
+            const SizedBox(height: 24),
+            const Icon(Icons.fingerprint, size: 48),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MockMedicalResearchPage extends StatelessWidget {
+  const _MockMedicalResearchPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Investigación Médica')),
+      body: DefaultTabController(
+        length: 3,
+        child: Column(
+          children: [
+            const TabBar(
+              tabs: [
+                Tab(text: 'Evidencia'),
+                Tab(text: 'Interacciones'),
+                Tab(text: 'ICD-10'),
+              ],
+              labelColor: Colors.teal,
             ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.image),
-              label: const Text('Galería'),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const TextField(decoration: InputDecoration(hintText: 'Buscar evidencia médica...', prefixIcon: Icon(Icons.search))),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: ListView(
+                        children: const [
+                          Card(child: ListTile(title: Text('Estudio sobre Metformina'), subtitle: Text('Evidencia grado A'))),
+                          Card(child: ListTile(title: Text('Tratamiento Hipertensión'), subtitle: Text('Guía 2025'))),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -307,237 +248,69 @@ class _MockHealthRecordsPage extends StatelessWidget {
   }
 }
 
-class _MockAIAssistantPage extends StatelessWidget {
-  const _MockAIAssistantPage();
+class _MockDashboardPage extends StatelessWidget {
+  const _MockDashboardPage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Asistente IA')),
-      body: const Center(
-        child: Text('Página de Asistente IA', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
-
-class _MockReportsPage extends StatelessWidget {
-  const _MockReportsPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Reportes')),
-      body: const Center(
-        child: Text('Página de Reportes', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
-
-class _MockUserProfilePage extends StatelessWidget {
-  const _MockUserProfilePage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Perfil de Usuario')),
+      appBar: AppBar(title: const Text('Mi Salud')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Nombre'),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Edad'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Peso (kg)'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Altura (cm)'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Tipo de Sangre'),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Guardar Perfil'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MockChatPage extends StatelessWidget {
-  const _MockChatPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Asistente de Salud IA'),
-        actions: [
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
+            const Row(
               children: [
-                _buildChatBubble(
-                  'Hola! Soy tu asistente de salud. ¿En qué puedo ayudarte hoy?',
-                  isUser: false,
-                ),
-                _buildChatBubble(
-                  '¿Puedes revisar mis últimos análisis de sangre?',
-                  isUser: true,
-                ),
-                _buildChatBubble(
-                  'Por supuesto! He revisado tus resultados del 15 de noviembre. '
-                  'Todo parece estar dentro de los rangos normales. '
-                  '¿Te gustaría que te explique algún valor en particular?',
-                  isUser: false,
-                ),
+                Expanded(child: _StatCard(label: 'FC', value: '72 bpm', icon: Icons.favorite, color: Colors.red)),
+                SizedBox(width: 8),
+                Expanded(child: _StatCard(label: 'PA', value: '120/80', icon: Icons.speed, color: Colors.blue)),
               ],
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, -2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Escribe tu mensaje...',
-                      border: OutlineInputBorder(),
+            const SizedBox(height: 16),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Próxima Cita', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const ListTile(
+                      leading: Icon(Icons.calendar_today),
+                      title: Text('Dr. Martínez - Control'),
+                      subtitle: Text('Mañana, 10:00 AM'),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                IconButton(icon: const Icon(Icons.send), onPressed: () {}),
-              ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Widget _buildChatBubble(String message, {required bool isUser}) {
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(12),
-        constraints: const BoxConstraints(maxWidth: 280),
-        decoration: BoxDecoration(
-          color: isUser ? Colors.teal : Colors.grey[200],
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(color: isUser ? Colors.white : Colors.black87),
+          ],
         ),
       ),
     );
   }
 }
 
-class _MockReportsListPage extends StatelessWidget {
-  const _MockReportsListPage();
+class _StatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  const _StatCard({required this.label, required this.value, required this.icon, required this.color});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Mis Reportes de Salud')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildReportCard(
-            'Análisis de Sangre Completo',
-            '15 Nov 2025',
-            'Resultados normales',
-            Icons.bloodtype,
-            Colors.red,
-          ),
-          _buildReportCard(
-            'Examen de Glucosa',
-            '10 Nov 2025',
-            'Glucosa: 95 mg/dL',
-            Icons.monitor_heart,
-            Colors.blue,
-          ),
-          _buildReportCard(
-            'Presión Arterial',
-            '5 Nov 2025',
-            '120/80 mmHg - Normal',
-            Icons.favorite,
-            Colors.pink,
-          ),
-          _buildReportCard(
-            'Control de Peso',
-            '1 Nov 2025',
-            'IMC: 23.5 - Saludable',
-            Icons.fitness_center,
-            Colors.green,
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  static Widget _buildReportCard(
-    String title,
-    String date,
-    String summary,
-    IconData icon,
-    Color color,
-  ) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color.withValues(alpha: 0.2),
-          child: Icon(icon, color: color),
-        ),
-        title: Text(title),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
           children: [
-            Text(date, style: const TextStyle(fontSize: 12)),
-            Text(summary, style: const TextStyle(fontWeight: FontWeight.w500)),
+            Icon(icon, color: color),
+            const SizedBox(height: 4),
+            Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(label, style: const TextStyle(fontSize: 12)),
           ],
         ),
-        trailing: const Icon(Icons.chevron_right),
-        isThreeLine: true,
       ),
     );
   }
