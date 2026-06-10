@@ -12,7 +12,7 @@ class WifiDirectService {
   static const Duration transferTimeout = Duration(minutes: 3);
 
   HttpServer? _server;
-  Socket? _socket;
+  HttpClient? _client;
   bool _isRunning = false;
   String? _deviceIp;
 
@@ -144,28 +144,25 @@ class WifiDirectService {
       final host = parts.isNotEmpty ? parts[0] : targetIp;
       final port = parts.length > 1 ? int.tryParse(parts[1]) ?? kDefaultPort : kDefaultPort;
 
-      _socket = await Socket.connect(
-        host,
-        port,
-        timeout: connectionTimeout,
-      );
+      _client = HttpClient();
+      _client!.connectionTimeout = connectionTimeout;
+
+      final uri = Uri.parse('http://$host:$port/orion/share');
+      final request = await _client!.postUrl(uri);
 
       _stateController.add(WifiSharingState.transferring('Sending...'));
 
       final data = package.encode();
-      _socket!.add(utf8.encode(data));
-      await _socket!.flush();
+      request.write(data);
 
-      // Wait for response
-      final response = await _socket!.first.timeout(const Duration(seconds: 10));
-      final responseStr = utf8.decode(response);
+      final response = await request.close().timeout(const Duration(seconds: 10));
 
-      await _socket!.close();
-      _socket = null;
-
-      if (responseStr.contains('OK')) {
+      if (response.statusCode == 200) {
         final transferTime = DateTime.now().difference(startTime);
         _stateController.add(WifiSharingState.completed(data.length, transferTime));
+
+        _client?.close();
+        _client = null;
 
         return SharingResult(
           success: true,
@@ -173,11 +170,12 @@ class WifiDirectService {
           transferTime: transferTime,
         );
       } else {
-        throw Exception('Remote rejected transfer');
+        final errorBody = await response.transform(utf8.decoder).join();
+        throw Exception('Remote rejected transfer: ${response.statusCode} $errorBody');
       }
     } catch (e) {
-      _socket?.close();
-      _socket = null;
+      _client?.close();
+      _client = null;
 
       _stateController.add(WifiSharingState.error('Send failed: $e'));
 
@@ -192,8 +190,8 @@ class WifiDirectService {
 
   /// Stop server and clean up
   Future<void> stop() async {
-    _socket?.close();
-    _socket = null;
+    _client?.close();
+    _client = null;
 
     await _server?.close(force: true);
     _server = null;
