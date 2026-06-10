@@ -42,7 +42,7 @@ lib/
 | `ble_sharing` | 🟡 Stubs | NFC + WiFi Direct sharing (no real BLE) |
 | `health_data_import` | ✅ Implemented | Import from external sources |
 | `health_record` | ✅ Implemented | Medical records with OCR staging |
-| `health_report` | ✅ Implemented | Report generation (mock) |
+| `reports` | ✅ Implemented | Report generation (mock) |
 | `health_sharing` | 🟡 Stubs | BLE sharing (no real implementation) |
 | `local_agent` | 🟡 Partial | RAG LLM with Gemma/Gemini adapters |
 | `medical_assistant` | ✅ Implemented | AI medical insights + analysis |
@@ -232,7 +232,7 @@ lib/
     ├── ble_sharing/                  # NFC, WiFi (all stubs)
     ├── health_data_import/           # Import cubit + service
     ├── health_record/                # HealthRecordCubit + OCR staging
-    ├── health_report/                # HealthReportBloc + mock service
+    ├── reports/                      # ReportBloc + mock service
     ├── health_sharing/               # BLE sharing (stub + TODO)
     ├── local_agent/                  # RAG LLM, Gemma/Gemini adapters
     ├── medical_assistant/            # AI analysis + response generation

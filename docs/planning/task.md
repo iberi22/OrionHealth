@@ -59,9 +59,9 @@ Para evitar conflictos de merge, el trabajo se divide en 3 pistas independientes
 
 ### 🛤️ Pista D: Reportes y Planes (Agente 4)
 
-**Directorios Permitidos:** `lib/features/health_report/`
+**Directorios Permitidos:** `lib/features/reports/`
 
-- [x] **D-01**: Feature `health_report`: Entidad `HealthReport` (Markdown content).
+- [x] **D-01**: Feature `reports`: Entidad `Report` (Markdown content).
 - [x] **D-02**: Servicio de Generación de Reportes (Mock/LLM).
 - [x] **D-03**: UI: Pantalla de Visualización de Reportes.
 

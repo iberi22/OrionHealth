@@ -114,7 +114,7 @@
 | Documento | Estado | Notas |
 |-----------|--------|-------|
 | `docs/ORIONHEALTH-ROADMAP.md` | ⚠️ Desactualizado | Dice v1.0.0, el proyecto está en v0.8.1 |
-| `docs/ARCHITECTURE.md` | ⚠️ Desactualizado | Menciona `health_report` inexistente |
+| `docs/ARCHITECTURE.md` | ✅ Actualizado | Referencias a `reports` corregidas |
 | `docs/PRODUCTION_CHECKLIST.md` | ✅ Existe | 15 items |
 | `docs/medical/MEDICAL_DATA_GAPS.md` | ✅ Existe | Lacunas de datos médicos |
 | `docs/PRIVACY.md` | ⚠️ No verificado | — |
