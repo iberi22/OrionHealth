@@ -80,13 +80,11 @@ void main() {
       expect(result.success, isTrue);
       final receivedPackage = await dataFuture;
       expect(receivedPackage.id, 'test');
-    }, skip: true);
+    });
 
-    test('transfer with PIN verification failure', () async {
-      // Requires real network — skip in CI mode
+    test('transfer with expired package failure', () async {
       await service.initialize();
 
-      // Start server with one PIN
       await service.startServer(port: 0);
       final address = service.serverAddress!;
 
@@ -94,15 +92,14 @@ void main() {
         id: 'test',
         senderNodeId: 'sender',
         recipientNodeId: 'recipient',
-        createdAt: DateTime.now(),
-        expiresAt: DateTime.now().add(const Duration(minutes: 5)),
+        createdAt: DateTime.now().subtract(const Duration(hours: 1)),
+        expiresAt: DateTime.now().subtract(const Duration(minutes: 5)), // Expired
         payload: const EncryptedPayload(encryptedData: 'data', iv: 'iv', ephemeralPublicKey: 'key'),
         metadata: PackageMetadata(
           packageType: 'full',
           consentVerified: true,
           includedCategories: {DataCategory.vitalSigns},
           appVersion: '1.0.0',
-          pinHash: SharedHealthPackage.hashPin('9999'), // Wrong PIN
         ),
         signature: 'sig',
       );
@@ -110,8 +107,8 @@ void main() {
       final result = await service.sendData(address, package);
 
       expect(result.success, isFalse);
-      expect(result.error, contains('401'));
-    }, skip: true);
+      expect(result.error, contains('410'));
+    });
 
     test('stop() resets state correctly', () async {
       await service.initialize();
