@@ -13,6 +13,7 @@ import 'core/theme/app_theme.dart';
 
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
+import 'features/onboarding/domain/repositories/onboarding_repository.dart';
 import 'features/onboarding/presentation/pages/onboarding_page.dart';
 import 'features/onboarding/application/onboarding_cubit.dart';
 import 'features/sync/data/sync_repository.dart';
@@ -153,8 +154,7 @@ class _StartupRouter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      future: SharedPreferences.getInstance()
-          .then((p) => p.getBool('onboarding_completed') ?? false),
+      future: getIt<OnboardingRepository>().isOnboardingCompleted(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return const Scaffold(

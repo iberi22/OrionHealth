@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import '../domain/entities/user_profile.dart';
+import '../domain/repositories/onboarding_repository.dart';
 import '../domain/services/profile_analysis_service.dart';
 
 // ============================================================================
@@ -129,17 +130,28 @@ enum OnboardingStep {
 
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
+  final OnboardingRepository _repository;
   final ProfileAnalysisService _analysisService;
 
-  OnboardingCubit()
-      : _analysisService = ProfileAnalysisService(),
-        super(OnboardingInitial());
+  OnboardingCubit(this._repository, this._analysisService)
+      : super(OnboardingInitial());
 
   static final int totalSteps = OnboardingStep.values.length;
 
   /// Start onboarding flow
   Future<void> startOnboarding() async {
     emit(const OnboardingLoading('Iniciando...'));
+
+    // Check for saved progress
+    final savedProfile = await _repository.getOnboardingProfile();
+    if (savedProfile != null) {
+      emit(OnboardingInProgress(
+        currentStep: savedProfile.onboardingStep,
+        totalSteps: totalSteps,
+        profile: savedProfile,
+      ));
+      return;
+    }
 
     final now = DateTime.now();
     final profile = UserProfile(
@@ -187,6 +199,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       updatedAt: DateTime.now(),
     );
 
+    await _repository.saveOnboardingProfile(updatedProfile);
+
     emit(currentState.copyWith(
       currentStep: OnboardingStep.basicInfo.index,
       profile: updatedProfile,
@@ -202,6 +216,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       conditions: conditions,
       updatedAt: DateTime.now(),
     );
+
+    await _repository.saveOnboardingProfile(updatedProfile);
 
     emit(currentState.copyWith(
       currentStep: OnboardingStep.conditions.index,
@@ -219,6 +235,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       updatedAt: DateTime.now(),
     );
 
+    await _repository.saveOnboardingProfile(updatedProfile);
+
     emit(currentState.copyWith(
       currentStep: OnboardingStep.familyHistory.index,
       profile: updatedProfile,
@@ -234,6 +252,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       medications: medications,
       updatedAt: DateTime.now(),
     );
+
+    await _repository.saveOnboardingProfile(updatedProfile);
 
     emit(currentState.copyWith(
       currentStep: OnboardingStep.medications.index,
@@ -254,6 +274,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       locale: locale,
       updatedAt: DateTime.now(),
     );
+
+    await _repository.saveOnboardingProfile(updatedProfile);
 
     emit(currentState.copyWith(
       currentStep: OnboardingStep.privacy.index,
@@ -307,6 +329,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       updatedAt: DateTime.now(),
     );
 
+    await _repository.completeOnboarding(completedProfile);
+
     emit(OnboardingCompleted(profile: completedProfile));
   }
 
@@ -354,6 +378,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         updatedAt: DateTime.now(),
       );
 
+      await _repository.saveOnboardingProfile(updatedProfile);
+
       emit(currentState.copyWith(
         currentStep: currentState.currentStep + 1,
         profile: updatedProfile,
@@ -372,6 +398,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
         updatedAt: DateTime.now(),
       );
 
+      await _repository.saveOnboardingProfile(updatedProfile);
+
       emit(currentState.copyWith(
         currentStep: currentState.currentStep - 1,
         profile: updatedProfile,
@@ -389,6 +417,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       onboardingCompleted: true,
       updatedAt: DateTime.now(),
     );
+
+    await _repository.completeOnboarding(skippedProfile);
 
     emit(OnboardingCompleted(profile: skippedProfile));
   }
@@ -410,6 +440,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       name: name,
       updatedAt: DateTime.now(),
     );
+    await _repository.saveOnboardingProfile(updatedProfile);
     emit(currentState.copyWith(profile: updatedProfile));
   }
 
@@ -421,6 +452,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       weightKg: weightKg,
       updatedAt: DateTime.now(),
     );
+    await _repository.saveOnboardingProfile(updatedProfile);
     emit(currentState.copyWith(profile: updatedProfile));
   }
 
@@ -432,6 +464,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       heightCm: heightCm,
       updatedAt: DateTime.now(),
     );
+    await _repository.saveOnboardingProfile(updatedProfile);
     emit(currentState.copyWith(profile: updatedProfile));
   }
 
@@ -443,6 +476,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       birthDate: birthDate,
       updatedAt: DateTime.now(),
     );
+    await _repository.saveOnboardingProfile(updatedProfile);
     emit(currentState.copyWith(profile: updatedProfile));
   }
 
@@ -454,12 +488,20 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       sex: sex,
       updatedAt: DateTime.now(),
     );
+    await _repository.saveOnboardingProfile(updatedProfile);
     emit(currentState.copyWith(profile: updatedProfile));
   }
 
   /// Update allergies (from medications_step)
   Future<void> updateAllergies(List<String> allergies) async {
-    // Store allergies in profile; medications_step uses this
+    final currentState = state;
+    if (currentState is! OnboardingInProgress) return;
+    final updatedProfile = currentState.profile.copyWith(
+      allergies: allergies,
+      updatedAt: DateTime.now(),
+    );
+    await _repository.saveOnboardingProfile(updatedProfile);
+    emit(currentState.copyWith(profile: updatedProfile));
   }
 
   /// Save and complete (from privacy_step)

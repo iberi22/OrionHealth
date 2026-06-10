@@ -1,12 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/onboarding/application/onboarding_cubit.dart';
 import 'package:orionhealth_health/features/onboarding/domain/entities/user_profile.dart';
+import 'package:orionhealth_health/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:orionhealth_health/features/onboarding/domain/services/profile_analysis_service.dart';
+
+class MockOnboardingRepository extends Mock implements OnboardingRepository {}
+class MockProfileAnalysisService extends Mock implements ProfileAnalysisService {}
 
 void main() {
   late OnboardingCubit cubit;
+  late MockOnboardingRepository mockRepository;
+  late MockProfileAnalysisService mockAnalysisService;
 
   setUp(() {
-    cubit = OnboardingCubit();
+    mockRepository = MockOnboardingRepository();
+    mockAnalysisService = MockProfileAnalysisService();
+
+    registerFallbackValue(UserProfile(
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ));
+
+    when(() => mockRepository.getOnboardingProfile())
+        .thenAnswer((_) async => null);
+    when(() => mockRepository.saveOnboardingProfile(any()))
+        .thenAnswer((_) async => {});
+    when(() => mockRepository.completeOnboarding(any()))
+        .thenAnswer((_) async => {});
+    when(() => mockAnalysisService.analyzeProfile(any()))
+        .thenReturn(const RelevantStandards());
+
+    cubit = OnboardingCubit(mockRepository, mockAnalysisService);
   });
 
   tearDown(() {
@@ -24,6 +49,28 @@ void main() {
         emitsInOrder([
           isA<OnboardingLoading>(),
           isA<OnboardingInProgress>().having((s) => s.currentStep, 'currentStep', 0),
+        ]),
+      );
+
+      await cubit.startOnboarding();
+      await expectation;
+      verify(() => mockRepository.getOnboardingProfile()).called(1);
+    });
+
+    test('startOnboarding resumes if saved profile exists', () async {
+      final savedProfile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        onboardingStep: 3,
+      );
+      when(() => mockRepository.getOnboardingProfile())
+          .thenAnswer((_) async => savedProfile);
+
+      final expectation = expectLater(
+        cubit.stream,
+        emitsInOrder([
+          isA<OnboardingLoading>(),
+          isA<OnboardingInProgress>().having((s) => s.currentStep, 'currentStep', 3),
         ]),
       );
 
@@ -190,6 +237,7 @@ void main() {
       expect(state.profile.weightKg, 80);
       expect(state.profile.heightCm, 180);
       expect(state.currentStep, OnboardingStep.basicInfo.index);
+      verify(() => mockRepository.saveOnboardingProfile(any())).called(1);
     });
 
     test('completeOnboarding emits syncing states then Completed', () async {
@@ -205,6 +253,7 @@ void main() {
 
       expect(cubit.state, isA<OnboardingCompleted>());
       expect((cubit.state as OnboardingCompleted).profile.onboardingCompleted, true);
+      verify(() => mockRepository.completeOnboarding(any())).called(1);
     });
   });
 }

@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import '../entities/user_profile.dart';
 
 /// Result of analyzing a user profile for relevant medical standards.
@@ -18,6 +19,7 @@ class RelevantStandards {
 }
 
 /// Service to analyze user profile and determine relevant medical context
+@injectable
 class ProfileAnalysisService {
   /// Analyze user profile and return relevant standards
   RelevantStandards analyzeProfile(UserProfile profile) {
