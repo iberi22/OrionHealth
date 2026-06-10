@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/di/injection.dart';
 import '../../../../../core/theme/cyber_theme.dart';
 import '../../../../../core/widgets/glassmorphic_card.dart';
@@ -8,47 +9,57 @@ import '../../../vitals/presentation/pages/vitals_page.dart';
 import '../../../medications/presentation/pages/medications_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
 import '../../../health_record/presentation/pages/timeline_page.dart';
+import '../../application/dashboard_cubit.dart';
+import '../../application/dashboard_state.dart';
+import '../../domain/entities/activity_item.dart';
 
 class HomeDashboardPage extends StatelessWidget {
   const HomeDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 120,
-            floating: true,
-            pinned: true,
-            backgroundColor: Colors.transparent,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                'ORION HEALTH',
-                style: TextStyle(
-                  color: CyberTheme.primary,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
+    return BlocProvider(
+      create: (context) => getIt<DashboardCubit>()..loadDashboardData(),
+      child: Scaffold(
+        body: BlocBuilder<DashboardCubit, DashboardState>(
+          builder: (context, state) {
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 120,
+                  floating: true,
+                  pinned: true,
+                  backgroundColor: Colors.transparent,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: const Text(
+                      'ORION HEALTH',
+                      style: TextStyle(
+                        color: CyberTheme.primary,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    centerTitle: true,
+                  ),
                 ),
-              ),
-              centerTitle: true,
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(16.0),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _buildQuickActionsHeader(context),
-                const SizedBox(height: 16),
-                _buildQuickActionsGrid(context),
-                const SizedBox(height: 32),
-                _buildRecentActivityHeader(context),
-                const SizedBox(height: 16),
-                _buildRecentActivityList(context),
-              ]),
-            ),
-          ),
-        ],
+                SliverPadding(
+                  padding: const EdgeInsets.all(16.0),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      _buildQuickActionsHeader(context),
+                      const SizedBox(height: 16),
+                      _buildQuickActionsGrid(context),
+                      const SizedBox(height: 32),
+                      _buildRecentActivityHeader(context),
+                      const SizedBox(height: 16),
+                      _buildRecentActivityContent(context, state),
+                    ]),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -155,28 +166,55 @@ class HomeDashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentActivityList(BuildContext context) {
-    return const Column(
-      children: [
-        _ActivityTile(
-          title: 'Chequeo de presión',
-          time: 'Hace 2 horas',
-          icon: Icons.monitor_heart,
-        ),
-        SizedBox(height: 12),
-        _ActivityTile(
-          title: 'Medicamento: Vitamina C',
-          time: 'Hace 5 horas',
-          icon: Icons.done,
-        ),
-        SizedBox(height: 12),
-        _ActivityTile(
-          title: 'Informe semanal generado',
-          time: 'Ayer',
-          icon: Icons.description,
-        ),
-      ],
-    );
+  Widget _buildRecentActivityContent(BuildContext context, DashboardState state) {
+    if (state is DashboardLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is DashboardError) {
+      return Center(child: Text('Error: ${state.message}'));
+    } else if (state is DashboardLoaded) {
+      if (state.activities.isEmpty) {
+        return const Center(child: Text('No hay actividad reciente'));
+      }
+      return Column(
+        children: state.activities.map((activity) => Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: _ActivityTile(
+            title: activity.title,
+            time: _formatTimestamp(activity.timestamp),
+            icon: _getIconForType(activity.type),
+          ),
+        )).toList(),
+      );
+    }
+    return const SizedBox.shrink();
+  }
+
+  String _formatTimestamp(DateTime timestamp) {
+    final now = DateTime.now();
+    final difference = now.difference(timestamp);
+
+    if (difference.inMinutes < 60) {
+      return 'Hace ${difference.inMinutes} minutos';
+    } else if (difference.inHours < 24) {
+      return 'Hace ${difference.inHours} horas';
+    } else {
+      return 'Hace ${difference.inDays} días';
+    }
+  }
+
+  IconData _getIconForType(ActivityType type) {
+    switch (type) {
+      case ActivityType.vitalCheck:
+        return Icons.monitor_heart;
+      case ActivityType.medicationTaken:
+        return Icons.done;
+      case ActivityType.reportGenerated:
+        return Icons.description;
+      case ActivityType.appointment:
+        return Icons.event;
+      default:
+        return Icons.notifications;
+    }
   }
 }
 
