@@ -5,7 +5,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../appointments/domain/entities/appointment.dart';
-import '../domain/calendar_import_cubit.dart';
+import '../application/calendar_import_cubit.dart';
 
 class CalendarImportPage extends StatelessWidget {
   const CalendarImportPage({super.key});

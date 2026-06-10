@@ -4,7 +4,7 @@ import 'package:medical_standards/medical_standards.dart';
 import '../../appointments/domain/entities/appointment.dart';
 import '../../appointments/domain/repositories/appointment_repository.dart';
 import '../../user_profile/domain/repositories/user_profile_repository.dart';
-import '../data/calendar_repository.dart';
+import '../infrastructure/calendar_repository.dart';
 
 abstract class CalendarImportState {}
 
