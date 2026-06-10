@@ -155,6 +155,8 @@ import '../../features/medical_assistant/infrastructure/services/clinical_reason
     as _i93;
 import '../../features/medical_assistant/infrastructure/services/health_context_service_impl.dart'
     as _i100;
+import '../../features/medical_research/application/medical_research_cubit.dart'
+    as _i124;
 import '../../features/medical_research/domain/services/medical_scraper_service.dart'
     as _i39;
 import '../../features/medical_research/domain/services/medical_standards_service.dart'
@@ -177,7 +179,7 @@ import '../../features/medications/infrastructure/repositories/isar_medication_r
     as _i46;
 import '../../features/onboarding/application/onboarding_cubit.dart' as _i55;
 import '../../features/onboarding/application/sync_cubit.dart' as _i117;
-import '../../features/reports/application/bloc/report_bloc.dart' as _i124;
+import '../../features/reports/application/bloc/report_bloc.dart' as _i125;
 import '../../features/reports/domain/repositories/report_repository.dart'
     as _i59;
 import '../../features/reports/domain/services/report_generation_service.dart'
@@ -192,7 +194,7 @@ import '../../features/settings/application/llm_settings_cubit.dart' as _i110;
 import '../../features/settings/domain/repositories/llm_settings_repository.dart'
     as _i29;
 import '../../features/settings/domain/services/device_capability_service.dart'
-    as _i11;
+    as _i12;
 import '../../features/settings/infrastructure/repositories/llm_settings_repository_impl.dart'
     as _i30;
 import '../../features/ssi/domain/repositories/ssi_repository.dart' as _i66;
@@ -222,16 +224,16 @@ import '../../features/vitals/domain/repositories/vital_sign_repository.dart'
     as _i79;
 import '../../features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart'
     as _i80;
-import '../services/device_capability_service.dart' as _i12;
+import '../services/device_capability_service.dart' as _i11;
 import '../services/privacy_anonymizer.dart' as _i56;
-import 'database_module.dart' as _i128;
-import 'fhir_module.dart' as _i125;
-import 'memory_module.dart' as _i127;
-import 'network_module.dart' as _i126;
+import 'database_module.dart' as _i129;
+import 'fhir_module.dart' as _i126;
+import 'memory_module.dart' as _i128;
+import 'network_module.dart' as _i127;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -471,7 +473,7 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i110.LlmSettingsCubit>(() => _i110.LlmSettingsCubit(
           gh<_i29.LlmSettingsRepository>(),
-          gh<_i11.DeviceCapabilityService>(),
+          gh<_i12.DeviceCapabilityService>(),
           gh<_i25.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.factory<_i111.MedicalAssistantCubit>(() => _i111.MedicalAssistantCubit(
@@ -539,7 +541,11 @@ extension GetItInjectableX on _i1.GetIt {
               gh<_i75.VectorStoreService>(),
               gh<_i113.PatientContextIndexer>(),
             ));
-    gh.factory<_i124.ReportBloc>(() => _i124.ReportBloc(
+    gh.factory<_i124.MedicalResearchCubit>(() => _i124.MedicalResearchCubit(
+          gh<_i112.MedicalResearchService>(),
+          gh<_i41.MedicalStandardsService>(),
+        ));
+    gh.factory<_i125.ReportBloc>(() => _i125.ReportBloc(
           gh<_i59.ReportRepository>(),
           gh<_i114.ReportGenerationService>(),
         ));
@@ -547,10 +553,10 @@ extension GetItInjectableX on _i1.GetIt {
   }
 }
 
-class _$FhirModule extends _i125.FhirModule {}
+class _$FhirModule extends _i126.FhirModule {}
 
-class _$NetworkModule extends _i126.NetworkModule {}
+class _$NetworkModule extends _i127.NetworkModule {}
 
-class _$MemoryModule extends _i127.MemoryModule {}
+class _$MemoryModule extends _i128.MemoryModule {}
 
-class _$DatabaseModule extends _i128.DatabaseModule {}
+class _$DatabaseModule extends _i129.DatabaseModule {}

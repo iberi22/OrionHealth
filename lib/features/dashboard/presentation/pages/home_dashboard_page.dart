@@ -8,6 +8,7 @@ import '../../../vitals/presentation/pages/vitals_page.dart';
 import '../../../medications/presentation/pages/medications_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
 import '../../../health_record/presentation/pages/timeline_page.dart';
+import '../../../medical_research/presentation/pages/medical_research_page.dart';
 
 class HomeDashboardPage extends StatelessWidget {
   const HomeDashboardPage({super.key});
@@ -131,6 +132,17 @@ class HomeDashboardPage extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (_) => const TimelinePage(),
+            ),
+          ),
+        ),
+        _QuickActionCard(
+          title: 'Investigación',
+          icon: Icons.science,
+          color: Colors.purpleAccent,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const MedicalResearchPage(),
             ),
           ),
         ),
