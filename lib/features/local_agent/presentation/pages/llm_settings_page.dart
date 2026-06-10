@@ -28,8 +28,8 @@ class LlmSettingsPage extends StatefulWidget {
 }
 
 class _LlmSettingsPageState extends State<LlmSettingsPage> {
-  final _secureStorage = const FlutterSecureStorage();
-  final _modelDownloadService = GetIt.I<ModelDownloadService>();
+  late final FlutterSecureStorage _secureStorage;
+  late final ModelDownloadService _modelDownloadService;
 
   LlmProvider _selectedProvider = LlmProvider.mock;
   final _geminiApiKeyController = TextEditingController();
@@ -39,6 +39,10 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
   @override
   void initState() {
     super.initState();
+    _secureStorage = GetIt.I.isRegistered<FlutterSecureStorage>()
+        ? GetIt.I<FlutterSecureStorage>()
+        : const FlutterSecureStorage();
+    _modelDownloadService = GetIt.I<ModelDownloadService>();
     _loadSettings();
   }
 
