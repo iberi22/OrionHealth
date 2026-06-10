@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/calendar_import/data/calendar_parser.dart';
+import 'package:orionhealth_health/features/calendar_import/infrastructure/calendar_parser.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 
 void main() {

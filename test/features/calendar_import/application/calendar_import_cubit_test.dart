@@ -3,8 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 import 'package:orionhealth_health/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
-import 'package:orionhealth_health/features/calendar_import/data/calendar_repository.dart';
-import 'package:orionhealth_health/features/calendar_import/domain/calendar_import_cubit.dart';
+import 'package:orionhealth_health/features/calendar_import/infrastructure/calendar_repository.dart';
+import 'package:orionhealth_health/features/calendar_import/application/calendar_import_cubit.dart';
 
 class MockCalendarRepository extends Mock implements CalendarRepository {}
 class MockAppointmentRepository extends Mock implements AppointmentRepository {}
