@@ -347,7 +347,7 @@ class SharingCubit extends Cubit<SharingState> {
         await _nfcService.startListening();
         break;
       case TransferMethod.wifi:
-        await _wifiService.startServer();
+        await _wifiService.startServer(expectedPin: pin);
         break;
     }
   }

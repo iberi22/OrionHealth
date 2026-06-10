@@ -12,9 +12,9 @@ class WifiDirectService {
   static const Duration transferTimeout = Duration(minutes: 3);
 
   HttpServer? _server;
-  Socket? _socket;
   bool _isRunning = false;
   String? _deviceIp;
+  String? _expectedPinHash;
 
   final _stateController = StreamController<WifiSharingState>.broadcast();
   Stream<WifiSharingState> get stateStream => _stateController.stream;
@@ -58,8 +58,12 @@ class WifiDirectService {
   }
 
   /// Start HTTP server to receive data
-  Future<void> startServer({int port = kDefaultPort}) async {
+  Future<void> startServer({int port = kDefaultPort, String? expectedPin}) async {
     if (_isRunning) return;
+
+    if (expectedPin != null) {
+      _expectedPinHash = SharedHealthPackage.hashPin(expectedPin);
+    }
 
     try {
       _server = await HttpServer.bind(
@@ -110,8 +114,14 @@ class WifiDirectService {
       }
 
       // Verify PIN if provided
-      if (package.metadata.pinHash != null) {
-        // PIN verification would happen here
+      if (_expectedPinHash != null) {
+        if (package.metadata.pinHash != _expectedPinHash) {
+          request.response.statusCode = 401; // Unauthorized
+          request.response.writeln('Invalid PIN');
+          request.response.close();
+          _stateController.add(WifiSharingState.error('Invalid PIN verification'));
+          return;
+        }
       }
 
       _dataController.add(package);
@@ -137,6 +147,7 @@ class WifiDirectService {
     _stateController.add(WifiSharingState.connecting(targetIp));
 
     final startTime = DateTime.now();
+    final client = HttpClient();
 
     try {
       // Parse port from targetIp (format: 'ip:port') or use default
@@ -144,26 +155,18 @@ class WifiDirectService {
       final host = parts.isNotEmpty ? parts[0] : targetIp;
       final port = parts.length > 1 ? int.tryParse(parts[1]) ?? kDefaultPort : kDefaultPort;
 
-      _socket = await Socket.connect(
-        host,
-        port,
-        timeout: connectionTimeout,
-      );
+      final url = Uri.parse('http://$host:$port/orion/share');
+      final request = await client.postUrl(url).timeout(connectionTimeout);
 
       _stateController.add(WifiSharingState.transferring('Sending...'));
 
       final data = package.encode();
-      _socket!.add(utf8.encode(data));
-      await _socket!.flush();
+      request.write(data);
 
-      // Wait for response
-      final response = await _socket!.first.timeout(const Duration(seconds: 10));
-      final responseStr = utf8.decode(response);
+      final response = await request.close().timeout(transferTimeout);
+      final responseBody = await response.transform(utf8.decoder).join();
 
-      await _socket!.close();
-      _socket = null;
-
-      if (responseStr.contains('OK')) {
+      if (response.statusCode == 200) {
         final transferTime = DateTime.now().difference(startTime);
         _stateController.add(WifiSharingState.completed(data.length, transferTime));
 
@@ -173,12 +176,9 @@ class WifiDirectService {
           transferTime: transferTime,
         );
       } else {
-        throw Exception('Remote rejected transfer');
+        throw Exception('Remote rejected transfer: ${response.statusCode} $responseBody');
       }
     } catch (e) {
-      _socket?.close();
-      _socket = null;
-
       _stateController.add(WifiSharingState.error('Send failed: $e'));
 
       return SharingResult(
@@ -187,19 +187,19 @@ class WifiDirectService {
         bytesTransferred: 0,
         transferTime: DateTime.now().difference(startTime),
       );
+    } finally {
+      client.close();
     }
   }
 
   /// Stop server and clean up
   Future<void> stop() async {
-    _socket?.close();
-    _socket = null;
-
     await _server?.close(force: true);
     _server = null;
 
     _isRunning = false;
     _deviceIp = null;
+    _expectedPinHash = null;
 
     _stateController.add(WifiSharingState.ready());
   }

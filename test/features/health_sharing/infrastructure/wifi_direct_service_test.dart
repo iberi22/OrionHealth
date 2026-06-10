@@ -45,13 +45,12 @@ void main() {
     });
 
     test('full transfer with PIN verification success', () async {
-      // Requires real network — skip in CI mode
-      // Run with `flutter test` to execute
+      // Requires real network
       await service.initialize();
       const pin = '1234';
 
       // Start server with PIN
-      await service.startServer(port: 0);
+      await service.startServer(port: 0, expectedPin: pin);
       final address = service.serverAddress!;
 
       final package = SharedHealthPackage(
@@ -80,14 +79,14 @@ void main() {
       expect(result.success, isTrue);
       final receivedPackage = await dataFuture;
       expect(receivedPackage.id, 'test');
-    }, skip: true);
+    });
 
     test('transfer with PIN verification failure', () async {
-      // Requires real network — skip in CI mode
+      // Requires real network
       await service.initialize();
 
       // Start server with one PIN
-      await service.startServer(port: 0);
+      await service.startServer(port: 0, expectedPin: '1234');
       final address = service.serverAddress!;
 
       final package = SharedHealthPackage(
@@ -111,7 +110,7 @@ void main() {
 
       expect(result.success, isFalse);
       expect(result.error, contains('401'));
-    }, skip: true);
+    });
 
     test('stop() resets state correctly', () async {
       await service.initialize();
