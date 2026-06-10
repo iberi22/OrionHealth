@@ -73,12 +73,40 @@ void main() {
       });
     });
 
-    test('should support equality by reference (default Isar behavior)', () {
-      final allergy1 = Allergy(id: 1, allergen: 'Dust');
-      final allergy2 = Allergy(id: 1, allergen: 'Dust');
+    test('should support value equality (Equatable)', () {
+      final allergy1 = Allergy(
+        id: 1,
+        allergen: 'Dust',
+        severity: AllergySeverity.mild,
+        notes: 'Small note',
+      );
+      final allergy2 = Allergy(
+        id: 1,
+        allergen: 'Dust',
+        severity: AllergySeverity.mild,
+        notes: 'Small note',
+      );
 
-      // Not using Equatable, so they should not be equal by value
-      expect(allergy1, isNot(equals(allergy2)));
+      expect(allergy1, equals(allergy2));
+    });
+
+    test('should support copyWith', () {
+      final allergy = Allergy(
+        id: 1,
+        allergen: 'Pollen',
+        severity: AllergySeverity.moderate,
+        notes: 'Avoid spring',
+      );
+
+      final updated = allergy.copyWith(
+        allergen: 'Pollen Updated',
+        severity: AllergySeverity.severe,
+      );
+
+      expect(updated.id, equals(1));
+      expect(updated.allergen, equals('Pollen Updated'));
+      expect(updated.severity, equals(AllergySeverity.severe));
+      expect(updated.notes, equals('Avoid spring'));
     });
   });
 }

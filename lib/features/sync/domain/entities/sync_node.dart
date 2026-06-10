@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-/// Entity representing a discovered node on the local network.
+/// Represents a discovered OrionHealth node on the local network.
 class SyncNode extends Equatable {
   final String id;
   final String name;
-  final String? host;
+  final String host;
   final int port;
 
   const SyncNode({
     required this.id,
     required this.name,
-    this.host,
+    required this.host,
     required this.port,
   });
 

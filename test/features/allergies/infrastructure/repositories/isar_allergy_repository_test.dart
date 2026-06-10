@@ -103,6 +103,28 @@ void main() {
       await expectLater(repository.deleteAllergy(999), completes);
     });
 
+    test('Should wrap saveAllergy in a write transaction', () async {
+      final allergy = Allergy(allergen: 'Peanuts');
+
+      // Isar operations must be in a txn. IsarAllergyRepository uses writeTxn.
+      // We can verify this indirectly by ensuring it completes and persists data.
+      await repository.saveAllergy(allergy);
+
+      final count = await isar.allergys.count();
+      expect(count, 1);
+    });
+
+    test('Should wrap deleteAllergy in a write transaction', () async {
+      final allergy = Allergy(allergen: 'Peanuts');
+      await repository.saveAllergy(allergy);
+      final saved = (await repository.getAllergies()).first;
+
+      await repository.deleteAllergy(saved.id);
+
+      final count = await isar.allergys.count();
+      expect(count, 0);
+    });
+
     test('Should return multiple allergies and maintain their order/data', () async {
       await repository.saveAllergy(Allergy(allergen: 'A1', severity: AllergySeverity.mild));
       await repository.saveAllergy(Allergy(allergen: 'A2', severity: AllergySeverity.moderate));

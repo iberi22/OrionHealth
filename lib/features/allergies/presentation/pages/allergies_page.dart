@@ -1,37 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/core/theme/cyber_theme.dart';
 import 'package:orionhealth_health/core/widgets/glassmorphic_card.dart';
+import '../../application/allergies_cubit.dart';
+import '../../application/allergies_state.dart';
 import '../../domain/entities/allergy.dart';
-import '../../domain/repositories/allergy_repository.dart';
 
-class AllergiesPage extends StatefulWidget {
+class AllergiesPage extends StatelessWidget {
   const AllergiesPage({super.key});
 
   @override
-  State<AllergiesPage> createState() => _AllergiesPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<AllergiesCubit>()..loadAllergies(),
+      child: const _AllergiesView(),
+    );
+  }
 }
 
-class _AllergiesPageState extends State<AllergiesPage> {
-  final AllergyRepository _repository = getIt<AllergyRepository>();
-  List<Allergy> _allergies = [];
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadAllergies();
-  }
-
-  Future<void> _loadAllergies() async {
-    setState(() => _isLoading = true);
-    final allergies = await _repository.getAllergies();
-    setState(() {
-      _allergies = allergies;
-      _isLoading = false;
-    });
-  }
+class _AllergiesView extends StatelessWidget {
+  const _AllergiesView();
 
   @override
   Widget build(BuildContext context) {
@@ -41,28 +31,39 @@ class _AllergiesPageState extends State<AllergiesPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: CyberTheme.primary),
-            onPressed: () => _showAllergyForm(),
+            onPressed: () => _showAllergyForm(context),
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _buildAllergyList(),
+      body: BlocBuilder<AllergiesCubit, AllergiesState>(
+        builder: (context, state) {
+          if (state is AllergiesLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is AllergiesLoaded) {
+            return _buildAllergyList(context, state.allergies);
+          } else if (state is AllergiesError) {
+            return Center(child: Text(state.message));
+          }
+          return const Center(child: Text('No hay alergias registradas'));
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: CyberTheme.primary,
-        onPressed: () => _showAllergyForm(),
+        onPressed: () => _showAllergyForm(context),
         child: const Icon(Icons.add, color: Colors.black),
       ),
     );
   }
 
-  Widget _buildAllergyList() {
-    if (_allergies.isEmpty) {
+  Widget _buildAllergyList(BuildContext context, List<Allergy> allergies) {
+    if (allergies.isEmpty) {
       return const Center(child: Text('No hay alergias registradas'));
     }
 
-    final severeAllergies = _allergies.where((a) => a.severity == AllergySeverity.severe).toList();
-    final otherAllergies = _allergies.where((a) => a.severity != AllergySeverity.severe).toList();
+    final severeAllergies =
+        allergies.where((a) => a.severity == AllergySeverity.severe).toList();
+    final otherAllergies =
+        allergies.where((a) => a.severity != AllergySeverity.severe).toList();
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -77,7 +78,8 @@ class _AllergiesPageState extends State<AllergiesPage> {
             ),
           ),
           const SizedBox(height: 8),
-          ...severeAllergies.map((a) => _buildAllergyCard(a, isCritical: true)),
+          ...severeAllergies
+              .map((a) => _buildAllergyCard(context, a, isCritical: true)),
           const SizedBox(height: 24),
         ],
         if (otherAllergies.isNotEmpty) ...[
@@ -90,23 +92,25 @@ class _AllergiesPageState extends State<AllergiesPage> {
             ),
           ),
           const SizedBox(height: 8),
-          ...otherAllergies.map((a) => _buildAllergyCard(a)),
+          ...otherAllergies.map((a) => _buildAllergyCard(context, a)),
         ],
       ],
     );
   }
 
-  Widget _buildAllergyCard(Allergy allergy, {bool isCritical = false}) {
+  Widget _buildAllergyCard(BuildContext context, Allergy allergy,
+      {bool isCritical = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(
-        onTap: () => _showAllergyForm(allergy: allergy),
+        onTap: () => _showAllergyForm(context, allergy: allergy),
         child: GlassmorphicCard(
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: isCritical
                 ? BoxDecoration(
-                    border: Border.all(color: Colors.red.withValues(alpha: 0.5), width: 2),
+                    border: Border.all(
+                        color: Colors.red.withValues(alpha: 0.5), width: 2),
                     borderRadius: BorderRadius.circular(16),
                     color: Colors.red.withValues(alpha: 0.05),
                   )
@@ -183,23 +187,22 @@ class _AllergiesPageState extends State<AllergiesPage> {
     );
   }
 
-  void _showAllergyForm({Allergy? allergy}) {
+  void _showAllergyForm(BuildContext context, {Allergy? allergy}) {
+    final cubit = context.read<AllergiesCubit>();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => _AllergyForm(
         allergy: allergy,
-        onSave: (savedAllergy) async {
-          await _repository.saveAllergy(savedAllergy);
-          _loadAllergies();
-          if (mounted) Navigator.pop(context);
+        onSave: (savedAllergy) {
+          cubit.saveAllergy(savedAllergy);
+          Navigator.pop(context);
         },
         onDelete: allergy != null
-            ? () async {
-                await _repository.deleteAllergy(allergy.id);
-                _loadAllergies();
-                if (mounted) Navigator.pop(context);
+            ? () {
+                cubit.deleteAllergy(allergy.id);
+                Navigator.pop(context);
               }
             : null,
       ),
