@@ -1,43 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
-import '../infrastructure/oauth_repository.dart';
-import '../../user_profile/domain/repositories/user_profile_repository.dart';
-
-abstract class EpsConnectionState extends Equatable {
-  const EpsConnectionState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class EpsConnectionInitial extends EpsConnectionState {
-  const EpsConnectionInitial();
-}
-
-class EpsConnectionLoading extends EpsConnectionState {
-  const EpsConnectionLoading();
-}
-
-class EpsConnectionConnected extends EpsConnectionState {
-  final String patientId;
-  const EpsConnectionConnected(this.patientId);
-
-  @override
-  List<Object?> get props => [patientId];
-}
-
-class EpsConnectionDisconnected extends EpsConnectionState {
-  const EpsConnectionDisconnected();
-}
-
-class EpsConnectionError extends EpsConnectionState {
-  final String message;
-  const EpsConnectionError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
+import 'eps_connection_state.dart';
+import '../../infrastructure/oauth_repository.dart';
+import '../../../user_profile/domain/repositories/user_profile_repository.dart';
 
 @injectable
 class EpsConnectionCubit extends Cubit<EpsConnectionState> {

@@ -10,10 +10,14 @@ import 'package:orionhealth_health/features/doctor_verification/application/doct
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
 import '../../../../core/golden_test_utils.dart';
 
-class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {}
+class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {
+  @override
+  Future<void> close() async {}
+}
 
 void main() {
   late MockDoctorVerificationCubit mockCubit;
+  final now = DateTime.now();
   final doctorVerified = DoctorProfile(
     id: '1',
     fullName: 'Dr. Gregory House',
@@ -24,6 +28,8 @@ void main() {
     yearsOfExperience: 20,
     languages: ['English', 'Spanish'],
     countryCode: 'US',
+    createdAt: now,
+    updatedAt: now,
   );
   final doctorUnverified = DoctorProfile(
     id: '2',
@@ -34,6 +40,8 @@ void main() {
     institution: 'St. Bartholomew\'s',
     yearsOfExperience: 10,
     languages: ['English'],
+    createdAt: now,
+    updatedAt: now,
     countryCode: 'UK',
   );
 

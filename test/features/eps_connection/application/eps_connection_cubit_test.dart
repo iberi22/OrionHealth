@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_cubit.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_state.dart';
-import 'package:orionhealth_health/features/eps_connection/domain/repositories/oauth_repository.dart';
+import 'package:orionhealth_health/features/eps_connection/infrastructure/oauth_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
 

@@ -42,18 +42,21 @@ class _RatingDialogState extends State<RatingDialog> {
               style: TextStyle(color: Colors.white70),
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) {
-                return IconButton(
-                  icon: Icon(
-                    index < _rating ? Icons.star : Icons.star_border,
-                    color: Colors.amber,
-                    size: 32,
-                  ),
-                  onPressed: () => setState(() => _rating = index + 1),
-                );
-              }),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return IconButton(
+                    icon: Icon(
+                      index < _rating ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                      size: 32,
+                    ),
+                    onPressed: () => setState(() => _rating = index + 1),
+                  );
+                }),
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -72,15 +75,18 @@ class _RatingDialogState extends State<RatingDialog> {
               ),
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Checkbox(
-                  value: _isAnonymous,
-                  onChanged: (val) => setState(() => _isAnonymous = val ?? false),
-                  activeColor: CyberTheme.primary,
-                ),
-                const Text('Publicar de forma anónima', style: TextStyle(color: Colors.white70)),
-              ],
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: _isAnonymous,
+                    onChanged: (val) => setState(() => _isAnonymous = val ?? false),
+                    activeColor: CyberTheme.primary,
+                  ),
+                  const Text('Publicar de forma anónima', style: TextStyle(color: Colors.white70)),
+                ],
+              ),
             ),
           ],
         ),
