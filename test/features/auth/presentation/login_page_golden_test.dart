@@ -53,4 +53,37 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
   });
+
+  testWidgets('Login Page Locked State Golden Screenshot', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.devicePixelRatio = 1.0;
+
+    final lockoutUntil = DateTime(2026, 6, 15, 14, 30);
+    when(() => mockAuthCubit.state).thenReturn(AuthLocked(lockoutUntil));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.darkTheme,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('es'),
+        home: BlocProvider<AuthCubit>.value(
+          value: mockAuthCubit,
+          child: const LoginPage(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(LoginPage),
+      matchesGoldenFile('../../../goldens/login_page_locked.png'),
+    );
+
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+  });
 }
