@@ -100,7 +100,10 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: _buildCalendar(),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 600),
+                        child: _buildCalendar(),
+                      ),
                     ),
                   ),
                   const SliverToBoxAdapter(
@@ -301,40 +304,61 @@ class _AppointmentCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         appointment.doctorName,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
                       Text(
                         appointment.specialty,
                         style: const TextStyle(color: Colors.white70, fontSize: 14),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
-                      Row(
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          const Icon(Icons.access_time, size: 14, color: CyberTheme.secondary),
-                          const SizedBox(width: 4),
-                          Text(
-                            DateFormat('dd MMM, hh:mm a', 'es').format(appointment.dateTime),
-                            style: const TextStyle(color: CyberTheme.secondary, fontSize: 12),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.access_time, size: 14, color: CyberTheme.secondary),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  DateFormat('dd MMM, hh:mm a', 'es').format(appointment.dateTime),
+                                  style: const TextStyle(color: CyberTheme.secondary, fontSize: 12),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
-                          if (appointment.source != null) ...[
-                            const SizedBox(width: 12),
-                            const Icon(Icons.email_outlined, size: 14, color: Colors.white54),
-                            const SizedBox(width: 4),
-                            Text(
-                              appointment.source!,
-                              style: const TextStyle(color: Colors.white54, fontSize: 12),
+                          if (appointment.source != null)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.email_outlined, size: 14, color: Colors.white54),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: Text(
+                                    appointment.source!,
+                                    style: const TextStyle(color: Colors.white54, fontSize: 12),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
                         ],
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
