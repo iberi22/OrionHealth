@@ -1,6 +1,6 @@
 # OrionHealth — Technical Roadmap & Architecture
 
-> **Version:** 1.0.0 | **Last Updated:** 2026-04-15 | **Status:** Active Development
+> **Version:** 0.8.1 | **Last Updated:** 2026-06-10 | **Status:** Active Development
 
 ---
 
@@ -127,42 +127,42 @@ OrionHealth/
 | Doctor Recommendation | ✅ | Always recommends professional consult |
 | Safe Response Templates | ✅ | Low/Med/High confidence responses |
 
-### 🔄 Phase 3 — P2P Sharing (IN PROGRESS)
+### ✅ Phase 3 — P2P Sharing (COMPLETE)
 
 | Feature | Status | Details |
 |---------|--------|---------|
-| NFC Receiving | 🔄 | Receive packages from other Orion nodes |
-| BLE Transfer | 🔄 | Bluetooth Low Energy P2P |
-| WiFi Server | 🔄 | Local HTTPS server with PIN |
-| Encrypted Packages | 🔄 | AES-256 + ECDH key exchange |
-| Consent Flow | 🔄 | User approves before receiving |
+| NFC Receiving | ✅ | Receive packages from other Orion nodes |
+| BLE Transfer | ✅ | Bluetooth Low Energy P2P |
+| WiFi Server | ✅ | Local HTTPS server with PIN |
+| Encrypted Packages | ✅ | AES-256 + ECDH key exchange |
+| Consent Flow | ✅ | User approves before receiving |
 
-### 📋 Phase 4 — Doctor Verification (TODO)
-
-| Feature | Status | Details |
-|---------|--------|---------|
-| Doctor Profile | 📋 | Public profile with credentials |
-| License Verification | 📋 | Integration with medical boards |
-| Patient Ratings | 📋 | 1-5 stars + comments |
-| Vouching System | 📋 | Doctors validate other doctors |
-| Reputation Badges | 📋 | Bronze/Silver/Gold/Platinum |
-
-### 📋 Phase 5 — Medical Concept (TODO)
+### 🔄 Phase 4 — Doctor Verification (IN PROGRESS)
 
 | Feature | Status | Details |
 |---------|--------|---------|
-| Medical Concept Model | 📋 | Doctor's notes + recommendations |
-| Timeline View | 📋 | Chronological medical history |
-| External Data Import | 📋 | Receive from other apps |
-| FHIR Export | 📋 | Standard format for EHR systems |
-| Second Opinion | 📋 | Multiple doctor reviews |
+| Doctor Profile | ✅ | Public profile with credentials |
+| License Verification | ✅ | Integration with medical boards |
+| Patient Ratings | ✅ | 1-5 stars + comments |
+| Vouching System | 🔄 | Doctors validate other doctors |
+| Reputation Badges | 🔄 | Bronze/Silver/Gold/Platinum |
 
-### 📋 Phase 6 — Network Expansion (TODO)
+### 🔄 Phase 5 — Medical Concept (IN PROGRESS)
 
 | Feature | Status | Details |
 |---------|--------|---------|
-| Node Discovery | 📋 | Find nearby Orion nodes |
-| Distributed Cache | 📋 | IPFS/Filecoin for standards |
+| Medical Concept Model | ✅ | Doctor's notes + recommendations |
+| Timeline View | ✅ | Chronological medical history |
+| External Data Import | 🔄 | Receive from other apps |
+| FHIR Export | ✅ | Standard format for EHR systems |
+| Second Opinion | 🔄 | Multiple doctor reviews |
+
+### 🔄 Phase 6 — Network Expansion (IN PROGRESS)
+
+| Feature | Status | Details |
+|---------|--------|---------|
+| Node Discovery | ✅ | Find nearby Orion nodes |
+| Distributed Cache | 🔄 | IPFS/Filecoin for standards |
 | Governance Token | 📋 | DAO for network decisions |
 | Incentive System | 📋 | Rewards for data contribution |
 
@@ -330,14 +330,6 @@ OrionHealth/
 
 ## Development Status
 
-### Subagent Tasks — In Progress
-
-| Task | Agent | Status |
-|------|-------|--------|
-| Expand ICD-10/SNOMED/LOINC | OpenCode | Running |
-| AI Medical Assistant (confidence rules) | OpenCode | Running |
-| Full Local Data + Sync Service | OpenCode | Running |
-
 ### Subagent Tasks — Complete
 
 | Task | Agent | Status |
@@ -345,16 +337,22 @@ OrionHealth/
 | GitHub Actions CI | OpenCode | ✅ Complete |
 | Health Wallet Package | OpenCode | ✅ Complete |
 | Smart Onboarding | Me | ✅ Complete |
+| NFC/BLE Receiving Infrastructure | OpenCode | ✅ Complete |
+| Doctor Verification System | OpenCode | ✅ Complete |
+| Medical Concept Timeline | OpenCode | ✅ Complete |
+| FHIR Import/Export | OpenCode | ✅ Complete |
+| Network Node Discovery | OpenCode | ✅ Complete |
 
 ### Remaining Tasks
 
 | Task | Priority |
 |------|----------|
-| NFC/BLE Receiving Infrastructure | High |
-| Doctor Verification System | High |
-| Medical Concept Timeline | Medium |
-| FHIR Import/Export | Medium |
-| Network Node Discovery | Low |
+| External Data Import | High |
+| Distributed Cache | High |
+| Vouching & Badges | Medium |
+| Second Opinion | Medium |
+| Governance Token | Low |
+| Incentive System | Low |
 
 ---
 
