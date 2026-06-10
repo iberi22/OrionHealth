@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-import '../../../../core/di/injection.dart';
+import 'package:get_it/get_it.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../domain/entities/medication.dart';
-import '../../domain/repositories/medication_repository.dart';
+import '../../application/medications_cubit.dart';
+import '../../application/medications_state.dart';
 import 'package:intl/intl.dart';
+
+final getIt = GetIt.instance;
 
 class MedicationsPage extends StatefulWidget {
   const MedicationsPage({super.key});
@@ -16,143 +19,134 @@ class MedicationsPage extends StatefulWidget {
 }
 
 class _MedicationsPageState extends State<MedicationsPage> {
-  final MedicationRepository _repository = getIt<MedicationRepository>();
-  List<Medication> _medications = [];
-  bool _isLoading = true;
+  late final MedicationsCubit _cubit;
 
   @override
   void initState() {
     super.initState();
-    _loadMedications();
+    _cubit = getIt.isRegistered<MedicationsCubit>() 
+        ? getIt<MedicationsCubit>() 
+        : MedicationsCubit(getIt());
+    _cubit.loadMedications();
   }
 
-  Future<void> _loadMedications() async {
-    if (!mounted) return;
-    setState(() => _isLoading = true);
-    final medications = await _repository.getAllMedications();
-    if (!mounted) return;
-    setState(() {
-      _medications = medications;
-      _isLoading = false;
-    });
+  @override
+  void dispose() {
+    if (!getIt.isRegistered<MedicationsCubit>()) {
+      _cubit.close();
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Medicamentos',
-          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add, color: AppColors.primary),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              _showMedicationForm();
-            },
+    return BlocProvider.value(
+      value: _cubit,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Medicamentos',
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
           ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: _loadMedications,
-        color: AppColors.primary,
-        backgroundColor: AppColors.surface,
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _medications.isEmpty
-                ? Stack(
-                    children: [
-                      ListView(),
-                      _buildEmptyState(),
-                    ],
-                  )
-                : _buildMedicationList(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primary,
-        onPressed: () {
-          HapticFeedback.lightImpact();
-          _showMedicationForm();
-        },
-        child: const Icon(Icons.add, color: Colors.black),
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.add, color: AppColors.primary),
+                onPressed: () => _showMedicationForm(context),
+              ),
+            ),
+          ],
+        ),
+        body: BlocBuilder<MedicationsCubit, MedicationsState>(
+          builder: (context, state) {
+            if (state is MedicationsLoading || state is MedicationsInitial) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is MedicationsError) {
+              return Center(child: Text(state.message));
+            } else if (state is MedicationsLoaded) {
+              if (state.medications.isEmpty) {
+                return _buildEmptyState(context);
+              }
+              return _buildMedicationsList(context, state.medications);
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.medication_outlined, size: 64, color: Colors.grey[700]),
-          const SizedBox(height: 16),
+          Icon(Icons.medication_liquid, size: 80, color: Colors.white.withValues(alpha: 0.2)),
+          const SizedBox(height: 20),
           Text(
             'No hay medicamentos registrados',
-            style: TextStyle(color: Colors.grey[500]),
+            style: TextStyle(fontSize: 18, color: Colors.white.withValues(alpha: 0.5)),
           ),
+          const SizedBox(height: 20),
+          ElevatedButton.icon(
+            onPressed: () => _showMedicationForm(context),
+            icon: const Icon(Icons.add),
+            label: const Text('Agregar Medicamento'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.black,
+            ),
+          )
         ],
       ),
     );
   }
 
-  Widget _buildMedicationList() {
-    final activeMedications = _medications.where((m) => m.isActive).toList();
-    final inactiveMedications = _medications.where((m) => !m.isActive).toList();
-
-    final List<dynamic> items = [];
-    if (activeMedications.isNotEmpty) {
-      items.add('Activos');
-      items.addAll(activeMedications);
-    }
-    if (inactiveMedications.isNotEmpty) {
-      items.add('Archivados');
-      items.addAll(inactiveMedications);
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final item = items[index];
-        if (item is String) {
-          return Padding(
-            padding: EdgeInsets.only(
-              top: item == 'Archivados' && activeMedications.isNotEmpty ? 24.0 : 0,
-              bottom: 16.0,
-            ),
-            child: Text(
-              item,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: item == 'Activos' ? AppColors.primary : Colors.grey,
-              ),
-            ),
-          );
-        } else if (item is Medication) {
-          return _buildMedicationCard(item, isArchived: !item.isActive);
-        }
-        return const SizedBox.shrink();
-      },
+  Widget _buildMedicationsList(BuildContext context, List<Medication> medications) {
+    return RefreshIndicator(
+      onRefresh: () => context.read<MedicationsCubit>().loadMedications(),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: medications.length,
+        itemBuilder: (context, index) {
+          final medication = medications[index];
+          return _buildMedicationCard(context, medication);
+        },
+      ),
     );
   }
 
-  Widget _buildMedicationCard(Medication medication, {bool isArchived = false}) {
-    return RepaintBoundary(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: InkWell(
-        onTap: () {
-          HapticFeedback.lightImpact();
-          _showMedicationForm(medication: medication);
-        },
-          child: GlassmorphicCard(
+  Widget _buildMedicationCard(BuildContext context, Medication medication) {
+    final bool isArchived = !medication.isActive;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassmorphicCard(
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => _showMedicationForm(context, medication: medication),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isArchived
+                          ? Colors.grey.withValues(alpha: 0.1)
+                          : AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.medication,
+                      color: isArchived ? Colors.grey : AppColors.primary,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,13 +156,24 @@ class _MedicationsPageState extends State<MedicationsPage> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: isArchived ? Colors.grey : Colors.white,
+                            color: isArchived ? Colors.grey[400] : Colors.white,
+                            decoration: isArchived ? TextDecoration.lineThrough : null,
                           ),
                         ),
                         const SizedBox(height: 4),
+                        if (medication.dosage != null && medication.dosage!.isNotEmpty)
+                          Text(
+                            medication.dosage!,
+                            style: TextStyle(
+                              color: isArchived ? Colors.grey[600] : AppColors.secondary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        const SizedBox(height: 8),
                         Text(
-                          '${medication.dosage ?? ''} • ${medication.frequency ?? ''}',
+                          medication.frequency ?? 'Sin frecuencia especificada',
                           style: TextStyle(
+                            fontSize: 13,
                             color: isArchived ? Colors.grey[600] : Colors.grey[400],
                           ),
                         ),
@@ -224,7 +229,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
     );
   }
 
-  void _showMedicationForm({Medication? medication}) {
+  void _showMedicationForm(BuildContext context, {Medication? medication}) {
     final nameController = TextEditingController(text: medication?.name);
     final dosageController = TextEditingController(text: medication?.dosage);
     final frequencyController = TextEditingController(text: medication?.frequency);
@@ -232,18 +237,20 @@ class _MedicationsPageState extends State<MedicationsPage> {
     DateTime selectedDate = medication?.startDate ?? DateTime.now();
     bool isActive = medication?.isActive ?? true;
 
+    final cubit = context.read<MedicationsCubit>();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Container(
+      builder: (bottomSheetContext) => StatefulBuilder(
+        builder: (bottomSheetContext, setModalState) => Container(
           decoration: const BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+            bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom,
             top: 20,
             left: 20,
             right: 20,
@@ -268,10 +275,9 @@ class _MedicationsPageState extends State<MedicationsPage> {
                       IconButton(
                         icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
                         onPressed: () async {
-                          await _repository.deleteMedication(medication.id);
-                          if (!context.mounted) return;
-                          Navigator.pop(context);
-                          _loadMedications();
+                          await cubit.deleteMedication(medication.id);
+                          if (!bottomSheetContext.mounted) return;
+                          Navigator.pop(bottomSheetContext);
                         },
                       ),
                   ],
@@ -294,7 +300,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                   subtitle: Text(DateFormat('dd MMM yyyy').format(selectedDate)),
                   onTap: () async {
                     final date = await showDatePicker(
-                      context: context,
+                      context: bottomSheetContext,
                       initialDate: selectedDate,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
@@ -343,7 +349,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
                     ),
                     onPressed: () async {
                       if (nameController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        ScaffoldMessenger.of(bottomSheetContext).showSnackBar(
                           const SnackBar(
                             content: Text('El nombre es requerido'),
                             backgroundColor: Colors.redAccent,
@@ -362,10 +368,9 @@ class _MedicationsPageState extends State<MedicationsPage> {
                         notes: notesController.text,
                       );
 
-                      await _repository.saveMedication(newMedication);
-                      if (!context.mounted) return;
-                      Navigator.pop(context);
-                      _loadMedications();
+                      await cubit.saveMedication(newMedication);
+                      if (!bottomSheetContext.mounted) return;
+                      Navigator.pop(bottomSheetContext);
                     },
                     child: Text(
                       medication == null ? 'GUARDAR' : 'ACTUALIZAR',
