@@ -74,5 +74,20 @@ void main() {
       final resultsAfterDelete = await repository.getAllAppointments();
       expect(resultsAfterDelete, isEmpty);
     });
+
+    test('deleteAppointment with non-existent ID does not throw', () async {
+      await expectLater(repository.deleteAppointment(999), completes);
+    });
+
+    test('save multiple appointments and verify all', () async {
+      final a1 = Appointment(doctorName: 'A', specialty: 'S', dateTime: DateTime.now(), status: AppointmentStatus.upcoming);
+      final a2 = Appointment(doctorName: 'B', specialty: 'S', dateTime: DateTime.now(), status: AppointmentStatus.upcoming);
+
+      await repository.saveAppointment(a1);
+      await repository.saveAppointment(a2);
+
+      final results = await repository.getAllAppointments();
+      expect(results.length, 2);
+    });
   });
 }

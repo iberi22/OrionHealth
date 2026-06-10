@@ -52,9 +52,35 @@ void main() {
         status: AppointmentStatus.upcoming,
       );
 
+      // (10:00 < 10:59) AND (10:30 > 10:29) -> TRUE
       final result = service.hasConflict(newApp, existing);
       expect(result, isTrue);
     });
+
+    test('should return false if new appointment starts exactly when existing ends (no overlap)', () {
+      final existing = [
+        Appointment(
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardio',
+          dateTime: baseDate, // 10:00 - 10:30
+          durationInMinutes: 30,
+          status: AppointmentStatus.upcoming,
+        )
+      ];
+
+      final newApp = Appointment(
+        doctorName: 'Dr. Jones',
+        specialty: 'Neuro',
+        dateTime: baseDate.add(const Duration(minutes: 30)), // 10:30 - 11:00
+        durationInMinutes: 30,
+        status: AppointmentStatus.upcoming,
+      );
+
+      // (10:30 < 10:30) is FALSE -> FALSE
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isFalse);
+    });
+
 
     test('should return false if existing appointment is cancelled', () {
       final existing = [
