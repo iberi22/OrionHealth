@@ -7,7 +7,7 @@ import '../../../../core/di/injection.dart';
 import '../../../local_agent/domain/chat_message.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
 import '../../application/ai_assistant_cubit.dart';
-import '../../infrastructure/repositories/ai_repository_impl.dart';
+import '../../infrastructure/ai_repository_impl.dart';
 import '../widgets/message_composer.dart';
 import '../../../../../core/theme/app_colors.dart';
 

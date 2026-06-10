@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../local_agent/domain/chat_message.dart';
 import '../domain/entities/ai_query.dart';
 import '../domain/repositories/ai_repository.dart';
-import 'ai_assistant_state.dart';
+export 'ai_assistant_state.dart';
 
 @injectable
 class AiAssistantCubit extends Cubit<AiAssistantState> {
