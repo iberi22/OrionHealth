@@ -75,5 +75,31 @@ void main() {
       expect(result, true);
       verify(() => mockSyncRepository.syncPatient('123', 'token')).called(1);
     });
+
+    test('syncAll handles P2P discovery correctly', () async {
+      final nodes = [
+        const SyncNode(id: 'node1', name: 'Node 1', host: '192.168.1.10', port: 9124),
+      ];
+      when(() => mockSyncRepository.getAccessToken()).thenAnswer((_) async => 'token');
+      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(epsPatientId: '123'));
+      when(() => mockSyncRepository.syncPatient(any(), any())).thenAnswer((_) async => {});
+      when(() => mockSyncRepository.syncRda(any(), any())).thenAnswer((_) async => {});
+      when(() => mockSyncRepository.setLastSyncTime(any())).thenAnswer((_) async => {});
+      when(() => mockSyncRepository.getDiscoveredNodes()).thenReturn(nodes);
+
+      await syncService.syncAll();
+
+      verify(() => mockSyncRepository.getDiscoveredNodes()).called(1);
+    });
+
+    test('syncAll does not set lastSyncTime if it fails early', () async {
+      when(() => mockSyncRepository.getAccessToken()).thenAnswer((_) async => 'token');
+      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(epsPatientId: '123'));
+      when(() => mockSyncRepository.syncPatient(any(), any())).thenThrow(Exception('Sync failed'));
+
+      await expectLater(syncService.syncAll(), throwsA(isA<Exception>()));
+
+      verifyNever(() => mockSyncRepository.setLastSyncTime(any()));
+    });
   });
 }

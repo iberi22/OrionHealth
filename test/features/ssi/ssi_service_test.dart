@@ -100,6 +100,11 @@ void main() {
     });
 
     group('resolveDid', () {
+      test('returns null for invalid DID format', () async {
+        final doc = await service.resolveDid('invalid:did:format');
+        expect(doc, isNull);
+      });
+
       test('resolves locally created DID', () async {
         final did = Did(
           did: 'did:orion:123',
@@ -214,6 +219,34 @@ void main() {
 
         final captured = verify(() => mockRepository.saveCredential(captureAny())).captured.first as VerifiableCredential;
         expect(captured.isRevoked, true);
+      });
+
+      test('does nothing when revoking non-existent credential', () async {
+        when(() => mockRepository.getCredentialById('vc:non-existent')).thenAnswer((_) async => null);
+
+        await service.revokeCredential('vc:non-existent');
+
+        verifyNever(() => mockRepository.saveCredential(any()));
+      });
+    });
+
+    group('verifyCredential edge cases', () {
+      test('returns false when issuer DID cannot be resolved', () async {
+        final vc = VerifiableCredential(
+          id: 'vc:123',
+          issuer: 'did:orion:unknown',
+          subject: 'did:orion:subject',
+          type: 'Test',
+          schemaId: 'schema',
+          claims: {},
+          issuanceDate: DateTime.now(),
+          proof: 'some-proof',
+        );
+
+        when(() => mockRepository.getDidDocument('did:orion:unknown')).thenAnswer((_) async => null);
+
+        final result = await service.verifyCredential(vc);
+        expect(result, false);
       });
     });
   });
