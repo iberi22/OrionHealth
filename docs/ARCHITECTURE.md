@@ -105,7 +105,7 @@ App Launch → PIN/Biometric Check → Authenticated Session
 | `features/medications` | Medication list and reminders |
 | `features/allergies` | Allergy tracking |
 | `features/appointments` | Appointment scheduling and reminders |
-| `features/health_report` | Health report generation (PDF export) |
+| `features/reports` | Health report generation (PDF export) |
 | `features/health_sharing` | Unified P2P sharing (BLE, NFC, WiFi) |
 | `features/medical_assistant` | On-device AI chat with RAG |
 | `features/local_agent` | Local LLM management (ONNX Runtime) |

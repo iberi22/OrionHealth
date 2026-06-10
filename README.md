@@ -126,7 +126,7 @@ lib/
 │   ├── health_record/      # Medical history management
 │   ├── local_agent/        # AI chat & RAG
 │   ├── user_profile/       # User settings & preferences
-│   └── health_report/      # Analytics & export
+│   └── reports/            # Analytics & export
 packages/
 ├── isar_agent_memory/      # Graph + Vector DB (RAG)
 ├── health_wallet/          # Offline health records
