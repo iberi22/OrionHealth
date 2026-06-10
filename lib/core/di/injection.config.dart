@@ -18,6 +18,7 @@ import 'package:isar/isar.dart' as _i20;
 import 'package:isar_agent_memory/isar_agent_memory.dart' as _i14;
 import 'package:medical_standards/medical_standards.dart' as _i33;
 
+import '../../features/allergies/application/allergies_cubit.dart' as _i119;
 import '../../features/allergies/domain/repositories/allergy_repository.dart'
     as _i81;
 import '../../features/allergies/domain/services/allergy_service.dart' as _i3;
@@ -29,8 +30,8 @@ import '../../features/appointments/domain/services/appointment_service.dart'
     as _i4;
 import '../../features/appointments/infrastructure/repositories/isar_appointment_repository.dart'
     as _i86;
-import '../../features/auth/application/auth_cubit.dart' as _i119;
-import '../../features/auth/application/bloc/auth_cubit.dart' as _i120;
+import '../../features/auth/application/auth_cubit.dart' as _i120;
+import '../../features/auth/application/bloc/auth_cubit.dart' as _i121;
 import '../../features/auth/domain/auth_service.dart' as _i89;
 import '../../features/auth/domain/repositories/auth_repository.dart' as _i87;
 import '../../features/auth/infrastructure/repositories/auth_repository_impl.dart'
@@ -66,7 +67,7 @@ import '../../features/health_data_import/application/health_import_cubit.dart'
 import '../../features/health_data_import/domain/services/health_data_import_service.dart'
     as _i18;
 import '../../features/health_record/application/bloc/health_record_cubit.dart'
-    as _i121;
+    as _i122;
 import '../../features/health_record/domain/repositories/health_record_repository.dart'
     as _i102;
 import '../../features/health_record/infrastructure/repositories/health_record_repository_impl.dart'
@@ -93,9 +94,9 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i25;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i75;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
-    as _i26;
-import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i27;
+import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
+    as _i28;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
     as _i104;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
@@ -103,12 +104,12 @@ import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
     as _i106;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
-    as _i28;
+    as _i26;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
     as _i109;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i108;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
-    as _i122;
+    as _i123;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
     as _i36;
 import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
@@ -120,7 +121,7 @@ import '../../features/local_agent/infrastructure/services/llm_adapter_factory.d
 import '../../features/local_agent/infrastructure/services/local_llm_service.dart'
     as _i31;
 import '../../features/local_agent/infrastructure/services/medical_indexing_service.dart'
-    as _i123;
+    as _i124;
 import '../../features/local_agent/infrastructure/services/model_download_service.dart'
     as _i48;
 import '../../features/local_agent/infrastructure/services/patient_context_indexer.dart'
@@ -177,7 +178,7 @@ import '../../features/medications/infrastructure/repositories/isar_medication_r
     as _i46;
 import '../../features/onboarding/application/onboarding_cubit.dart' as _i55;
 import '../../features/onboarding/application/sync_cubit.dart' as _i117;
-import '../../features/reports/application/bloc/report_bloc.dart' as _i124;
+import '../../features/reports/application/bloc/report_bloc.dart' as _i125;
 import '../../features/reports/domain/repositories/report_repository.dart'
     as _i59;
 import '../../features/reports/domain/services/report_generation_service.dart'
@@ -224,10 +225,10 @@ import '../../features/vitals/infrastructure/repositories/vital_sign_repository_
     as _i80;
 import '../services/device_capability_service.dart' as _i12;
 import '../services/privacy_anonymizer.dart' as _i56;
-import 'database_module.dart' as _i128;
-import 'fhir_module.dart' as _i125;
-import 'memory_module.dart' as _i127;
-import 'network_module.dart' as _i126;
+import 'database_module.dart' as _i129;
+import 'fhir_module.dart' as _i126;
+import 'memory_module.dart' as _i128;
+import 'network_module.dart' as _i127;
 
 const String _mobile = 'mobile';
 const String _desktop = 'desktop';
@@ -285,12 +286,12 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingletonAsync<_i24.LicenseVerifier>(() async =>
         _i24.LicenseVerifier(await getAsync<_i23.LicenseRegistryLocal>()));
     gh.lazySingleton<_i25.LlmAdapter>(
-      () => _i26.FlutterGemmaAdapter(wrapper: gh<_i27.FlutterGemmaWrapper>()),
-      instanceName: 'gemma',
+      () => _i26.OpenaiCompatibleAdapter(),
+      instanceName: 'openai',
     );
     gh.lazySingleton<_i25.LlmAdapter>(
-      () => _i28.OpenaiCompatibleAdapter(),
-      instanceName: 'openai',
+      () => _i27.FlutterGemmaAdapter(wrapper: gh<_i28.FlutterGemmaWrapper>()),
+      instanceName: 'gemma',
     );
     gh.lazySingleton<_i29.LlmSettingsRepository>(
         () => _i30.LlmSettingsRepositoryImpl(gh<_i20.Isar>()));
@@ -511,13 +512,15 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i118.UserProfileCubit>(
         () => _i118.UserProfileCubit(gh<_i72.UserProfileRepository>()));
-    gh.factory<_i119.AuthCubit>(() => _i119.AuthCubit(gh<_i89.AuthService>()));
-    gh.factory<_i120.AuthCubit>(() => _i120.AuthCubit(
+    gh.factory<_i119.AllergiesCubit>(
+        () => _i119.AllergiesCubit(gh<_i81.AllergyRepository>()));
+    gh.factory<_i120.AuthCubit>(() => _i120.AuthCubit(gh<_i89.AuthService>()));
+    gh.factory<_i121.AuthCubit>(() => _i121.AuthCubit(
           gh<_i87.AuthRepository>(),
           gh<_i15.EncryptionService>(),
           gh<_i5.BiometricService>(),
         ));
-    gh.factory<_i121.HealthRecordCubit>(() => _i121.HealthRecordCubit(
+    gh.factory<_i122.HealthRecordCubit>(() => _i122.HealthRecordCubit(
           gh<_i102.HealthRecordRepository>(),
           gh<_i17.FilePickerService>(),
           gh<_i19.ImagePickerService>(),
@@ -525,7 +528,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i75.VectorStoreService>(),
         ));
     gh.lazySingleton<_i108.LlmService>(
-      () => _i122.RagLlmService(
+      () => _i123.RagLlmService(
         gh<_i75.VectorStoreService>(),
         gh<_i112.MedicalResearchService>(),
         gh<_i72.UserProfileRepository>(),
@@ -533,13 +536,13 @@ extension GetItInjectableX on _i1.GetIt {
       ),
       instanceName: 'rag',
     );
-    gh.lazySingleton<_i123.MedicalIndexingService>(
-        () => _i123.MedicalIndexingService(
+    gh.lazySingleton<_i124.MedicalIndexingService>(
+        () => _i124.MedicalIndexingService(
               gh<_i35.MedicalKnowledgeRepository>(),
               gh<_i75.VectorStoreService>(),
               gh<_i113.PatientContextIndexer>(),
             ));
-    gh.factory<_i124.ReportBloc>(() => _i124.ReportBloc(
+    gh.factory<_i125.ReportBloc>(() => _i125.ReportBloc(
           gh<_i59.ReportRepository>(),
           gh<_i114.ReportGenerationService>(),
         ));
@@ -547,10 +550,10 @@ extension GetItInjectableX on _i1.GetIt {
   }
 }
 
-class _$FhirModule extends _i125.FhirModule {}
+class _$FhirModule extends _i126.FhirModule {}
 
-class _$NetworkModule extends _i126.NetworkModule {}
+class _$NetworkModule extends _i127.NetworkModule {}
 
-class _$MemoryModule extends _i127.MemoryModule {}
+class _$MemoryModule extends _i128.MemoryModule {}
 
-class _$DatabaseModule extends _i128.DatabaseModule {}
+class _$DatabaseModule extends _i129.DatabaseModule {}
