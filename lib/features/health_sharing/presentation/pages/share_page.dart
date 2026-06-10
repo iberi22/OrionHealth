@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/injection.dart';
 import '../../application/sharing_cubit.dart';
 import '../../domain/entities/shared_health_package.dart';
 
@@ -10,7 +11,7 @@ class SharePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SharingCubit()..initialize(),
+      create: (_) => getIt<SharingCubit>()..initialize(),
       child: const _SharePageContent(),
     );
   }

@@ -201,20 +201,25 @@ class _ResponseContent extends StatelessWidget {
                     children: [
                       const Icon(Icons.smart_toy, color: Colors.teal),
                       const SizedBox(width: 8),
-                      const Text(
-                        'AI Analysis',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                      const Expanded(
+                        child: Text(
+                          'AI Analysis',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const Spacer(),
                       if (response.confidence != null)
-                        Text(
-                          '${(response.confidence! * 100).toInt()}% confidence',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 12,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            '${(response.confidence! * 100).toInt()}% confidence',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                     ],
