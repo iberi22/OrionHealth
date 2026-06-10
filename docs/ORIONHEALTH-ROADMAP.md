@@ -345,14 +345,19 @@ OrionHealth/
 
 ### Remaining Tasks
 
-| Task | Priority |
-|------|----------|
-| External Data Import | High |
-| Distributed Cache | High |
-| Vouching & Badges | Medium |
-| Second Opinion | Medium |
-| Governance Token | Low |
-| Incentive System | Low |
+| Task | Priority | Status |
+|------|----------|--------|
+| External Data Import | High | ✅ Complete (health_data_import feature) |
+| Distributed Cache | High | 🔄 In Progress |
+| Vouching & Badges | Medium | 🔄 In Progress |
+| Second Opinion | Medium | 📋 Planned |
+| Clean Architecture Gaps — `ai_assistant` | 🔴 CRITICAL | ⬜ Needs D+A+I layers + tests (currently 25%) |
+| Clean Architecture Gaps — `about` (migrate data→infra) | 🔴 HIGH | ⬜ Needs D+A layers + infra migration (currently 37%) |
+| Clean Architecture Gaps — `calendar_import` (migrate data→infra) | 🟡 MEDIUM | ⬜ Needs A layer + infra migration (currently 50%) |
+| Clean Architecture Gaps — `health_data_import` (add infra) | 🟡 MEDIUM | ⬜ Needs infra layer (currently 60%) |
+| Golden tests — `appointments`, `ssi`, `sync`, `vitals` | 🟢 LOW | ⬜ Each at 80% — missing golden screenshots |
+| Governance Token | Low | 📋 Planned |
+| Incentive System | Low | 📋 Planned |
 
 ---
 

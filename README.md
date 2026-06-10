@@ -14,7 +14,10 @@
 
 ## 📊 Project Status
 
-**v0.8.0-beta** — Production code `0 errors` ✅ | Tests `146/162 passing` (90%) ✅ | SSI (AnonCreds + DID + VCs) ✅ | Clinical AI (Symphony Reasoner) ✅ | Drug Interaction Checker ✅ | Offline Medical Standards (ICD-10, LOINC, RxNorm, SNOMED CT) ✅ | Offline Health Wallet ✅ | BLE Medical Sharing ✅
+**v0.8.1** — Tests `325 pass / 2 fail` (99.4%) ✅ | Clean Architecture Coverage: **17/25 (68%) full** + **4/25 (16%) near-complete** = **84% with all 4 layers** | SSI (AnonCreds + DID + VCs) ✅ | Clinical AI (Symphony Reasoner) ✅ | Drug Interaction Checker ✅ | Offline Medical Standards (ICD-10, LOINC, RxNorm, SNOMED CT) ✅ | Offline Health Wallet ✅ | BLE Medical Sharing ✅ | 21/25 features have all 4 Clean Architecture layers ✅
+
+> **Full coverage details:** [`coverage_report.md`](./coverage_report.md)
+> **Remaining gaps:** `ai_assistant` (25%), `about` (37%), `calendar_import` (50%), `health_data_import` (60%) — golden tests missing for `appointments`, `ssi`, `sync`, `vitals`
 
 ---
 
