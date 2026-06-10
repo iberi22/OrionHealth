@@ -150,18 +150,24 @@ gh issue list --repo iberi22/OrionHealth --state open --label "enhancement,bug"
 
 ### Issues Already Created (Priority Order)
 
-| Priority | Issue | Title | Files | Status |
-|----------|-------|-------|-------|--------|
-| 🔴 P0 | #152 | PR #112 merge conflicts | 5 files | Planning (Jules) |
-| 🟡 P1 | #141 | Privacy-conscious analytics | 1-2 files | Not started |
-| 🟢 P2 | #111 | E2EE Security (part of #152) | - | Merged via #152 |
+*No open issues currently.* Last batch completed via `#514-#520` (golden tests — all closed).
 
-### Issues to Create
+### Issues to Create (Updated 2026-06-10)
 
-| Issue | Title | Files | Jules? |
-|-------|-------|-------|--------|
-| #153 | Add Plausible analytics to BaseLayout | 1 file | ✅ |
-| #154 | Fix NFC sharing service imports | 1 file | ✅ |
+Based on latest coverage report (code-verified). Refer to [`coverage_report.md`](../coverage_report.md).
+
+| Issue | Title | Files | Jules? | Priority |
+|-------|-------|-------|--------|----------|
+| — | feat(ai_assistant): add domain + application + infrastructure layers | 4-6 files | ⚠️ SPLIT into 2 issues | 🔴 CRITICAL |
+| — | feat(about): add domain + application layers, migrate data→infra | 3-4 files | ✅ (1-3 files each after split) | 🔴 HIGH |
+| — | feat(calendar_import): add application layer, migrate data→infra | 2-3 files | ✅ | 🟡 MEDIUM |
+| — | feat(health_data_import): add infrastructure layer | 1 file | ✅ | 🟡 MEDIUM |
+| — | test(golden): add golden screenshot tests for appointments | 1 file | ✅ | 🟢 LOW |
+| — | test(golden): add golden screenshot tests for ssi | 1 file | ✅ | 🟢 LOW |
+| — | test(golden): add golden screenshot tests for sync | 1 file | ✅ | 🟢 LOW |
+| — | test(golden): add golden screenshot tests for vitals | 1 file | ✅ | 🟢 LOW |
+| — | test: add unit tests for ai_assistant (domain) after layers created | 1 file | ✅ | 🔴 CRITICAL |
+| — | fix: email-citas golden test — MissingPluginException (2 fails) | 1 file | ✅ | 🟡 MEDIUM |
 
 ---
 
