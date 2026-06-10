@@ -86,12 +86,17 @@
 23. user_profile
 24. vitals ↑ (post PR #540)
 
-## Feature con gap
+## Features con cobertura completa (25)
 
-1. **calendar_import** — 50%: falta application layer y infrastructure layer (migrar data/ → infra/). Issue #530 pendiente.
+1. calendar_import ↑ (commit b381e32)
+2. All 24 features from previous list.
+
+**25/25 — 100% ORIONHEALTH ✅**
 
 ## Notas
 
+- **calendar_import**: Completado. data/ → infrastructure/, cubit movido de domain/ a application/. Clean Architecture completa.
+- **sync**: Golden test agregado (sync_status_widget_golden_test.dart).
+- **ai_assistant**: Ya tenía 4 test files cubriendo todos los layers — issue cerrado sin cambios.
 - **email-citas**: Fix de MissingPluginException aplicado — golden tests ahora estables.
 - **Dependabot PRs mergeados**: uuid 4.5.3, app_links 7.1.1, local_auth 3.0.1, permission_handler 12.0.3, get_it 9.2.1.
-- **Issues sin PR todavía (reactivados con @jules-ai)**: #530 calendar_import, #534 sync golden tests, #536 ai_assistant unit tests.
