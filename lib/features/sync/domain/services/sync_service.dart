@@ -9,3 +9,4 @@ abstract class SyncService {
   /// Gets the last successful synchronization time.
   Future<DateTime?> getLastSyncTime();
 }
+

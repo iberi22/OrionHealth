@@ -1,17 +1,13 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:orion/services/ai_service.dart';
-import 'package:orion/services/audio_service.dart';
-import 'package:orion/services/asr/asr_service.dart';
-import 'package:orion/services/asr/asr_types.dart';
-import 'package:orion/services/agent_memory_service.dart';
-import 'package:orion/state/voice_chat_state.dart';
-import 'package:orion/widgets/connection_status_indicator.dart';
-import 'package:orion/ui/voice_chat/widgets/voice_chat_history.dart';
-import 'package:orion/ui/voice_chat/widgets/voice_chat_controls.dart';
-import 'package:orion/ui/voice_chat/widgets/voice_chat_agent_view.dart';
-import 'package:orion/ui/voice_chat/widgets/voice_chat_status_bar.dart';
+import 'package:orionhealth_health/core/services/aicore_service.dart';
+import 'package:orionhealth_health/core/services/audio/audio_player_service.dart';
+import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
+import 'package:orionhealth_health/core/services/asr/asr_service.dart';
+import 'package:orionhealth_health/core/services/asr/asr_types.dart';
+import 'package:orionhealth_health/features/voice_chat/state/voice_chat_state.dart';
+import 'package:orionhealth_health/core/widgets/connection_status_indicator.dart';
 
 /// Full voice chat screen with complete pipeline:
 /// Record -> Transcribe -> Memory -> AI Response -> TTS -> Playback

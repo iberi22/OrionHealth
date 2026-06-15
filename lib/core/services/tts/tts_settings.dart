@@ -1,19 +1,17 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../config/app_config.dart';
-
 /// Stores and retrieves user TTS preferences.
 class TTSSettings {
   static const _kPreferredVoice = 'preferred_tts_voice';
+  static const String defaultTtsVoice = 'es-ES';
 
-  /// Returns the preferred voice or defaults to AppConfig.ttsVoice.
+  /// Returns the preferred voice or defaults to the default voice.
   static Future<String> getPreferredVoice() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      return prefs.getString(_kPreferredVoice) ?? AppConfig.ttsVoice;
+      return prefs.getString(_kPreferredVoice) ?? defaultTtsVoice;
     } catch (_) {
-      // In tests or restricted envs, fall back to AppConfig.
-      return AppConfig.ttsVoice;
+      return defaultTtsVoice;
     }
   }
 

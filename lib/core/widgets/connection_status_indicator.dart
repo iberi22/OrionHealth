@@ -3,7 +3,7 @@
 // Shows connection status for Orion (local/offline)
 
 import 'package:flutter/material.dart';
-import 'package:orion/utils/icon_fallbacks.dart';
+import 'package:orionhealth_health/core/utils/icon_fallbacks.dart';
 
 enum ConnectionStatus {
   disconnected,

@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:orion/services/agent_memory_service.dart';
-import 'package:orion/services/audio_service.dart';
-import 'package:orion/services/meditation_service.dart';
-import 'package:orion/ui/meditation/widgets/meditation_welcome_view.dart';
-import 'package:orion/ui/meditation/widgets/meditation_active_view.dart';
-import 'package:orion/ui/meditation/widgets/meditation_finished_view.dart';
+import 'package:orionhealth_health/core/services/audio/audio_player_service.dart';
+import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
 
 typedef MeditationAudioAction = Future<void> Function();
 typedef MeditationSpeakAction = Future<void> Function(String text);

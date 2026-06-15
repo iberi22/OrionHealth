@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:orion/utils/error_handler.dart';
+import 'package:orionhealth_health/core/utils/error_handler.dart';
 import 'asr_model_manifest.dart';
 
 /// Manages on-device ASR models: manifest loading, install, verify, remove.

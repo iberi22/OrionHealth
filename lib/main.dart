@@ -15,7 +15,7 @@ import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
 import 'features/onboarding/presentation/pages/onboarding_page.dart';
 import 'features/onboarding/application/onboarding_cubit.dart';
-import 'features/sync/data/sync_repository.dart';
+import 'features/sync/infrastructure/sync_repository.dart';
 import 'features/home/presentation/pages/main_navigation_page.dart';
 
 // ─────────────────────────────────────────────

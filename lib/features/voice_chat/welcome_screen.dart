@@ -1,8 +1,8 @@
-﻿import 'package:animate_gradient/animate_gradient.dart';
+import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:orion/services/ai_service.dart';
-import 'package:orion/ui/meditation_screen.dart';
-import 'package:orion/ui/voice_chat_screen.dart';
+import 'package:orionhealth_health/core/services/aicore_service.dart';
+import 'package:orionhealth_health/features/meditation/meditation_screen.dart';
+import 'package:orionhealth_health/features/voice_chat/voice_chat_screen.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' as shadcn;
 
 
@@ -130,7 +130,7 @@ class _WelcomeScreenState extends material.State<WelcomeScreen> {
           mainAxisAlignment: material.MainAxisAlignment.center,
           children: [
             material.Text(
-              'Iniciar MeditaciÃ³n Guiada',
+              'Iniciar Meditación Guiada',
               style: material.TextStyle(
                 fontSize: 24,
                 fontWeight: material.FontWeight.bold,

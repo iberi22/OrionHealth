@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:orion/services/asr/asr_types.dart';
-import 'package:orion/services/asr/local_asr_service.dart';
+import 'asr_types.dart';
+import 'local_asr_service.dart';
 
 /// Mock ASR service for testing and fallback.
 class MockAsrService implements LocalAsrService {

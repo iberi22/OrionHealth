@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:orion/utils/icon_fallbacks.dart';
+import 'package:orionhealth_health/core/utils/icon_fallbacks.dart';
 
 enum MessageType { user, agent, system }
 

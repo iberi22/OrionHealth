@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:orion/services/asr/asr_types.dart';
-import 'package:orion/services/asr/local_asr_service.dart';
-import 'package:orion/services/asr/sherpa_onnx_asr_service.dart';
-import 'package:orion/services/asr/mock_asr_service.dart';
-import 'package:orion/services/asr/asr_settings.dart';
+import 'asr_types.dart';
+import 'local_asr_service.dart';
+import 'sherpa_onnx_asr_service.dart';
+import 'mock_asr_service.dart';
+import 'asr_settings.dart';
 
 /// Central factory/manager for ASR services.
 class AsrService {

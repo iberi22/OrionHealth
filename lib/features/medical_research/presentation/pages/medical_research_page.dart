@@ -340,3 +340,4 @@ class _MedicalResearchPageState extends State<MedicalResearchPage> with SingleTi
     );
   }
 }
+

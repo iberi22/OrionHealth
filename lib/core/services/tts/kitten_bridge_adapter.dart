@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
 
-import '../../config/app_config.dart';
+
 import 'tts_adapter.dart';
 import 'tts_types.dart';
 
@@ -47,7 +45,7 @@ class KittenBridgeAdapter implements TTSAdapter {
   }
 
   Uri _buildUri(String path) {
-    final base = AppConfig.kittenBridgeUrl ?? 'http://127.0.0.1:8000';
+    final base = 'http://127.0.0.1:8000';
     return Uri.parse(base + path);
   }
 
@@ -64,8 +62,8 @@ class KittenBridgeAdapter implements TTSAdapter {
 
       final reqBody = {
         'text': text,
-        'sample_rate': AppConfig.ttsSampleRate,
-        'voice': AppConfig.ttsVoice,
+        'sample_rate': 16000,
+        'voice': 'es-ES',
         'language': _language,
         'rate': _rate,
         'pitch': _pitch,
@@ -140,7 +138,7 @@ class KittenBridgeAdapter implements TTSAdapter {
   @override
   Future<List<Map<String, String>>> getVoices() async {
     return [
-      {'name': AppConfig.ttsVoice, 'lang': _language},
+      {'name': 'es-ES', 'lang': _language},
     ];
   }
 

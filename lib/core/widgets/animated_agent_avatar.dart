@@ -3,8 +3,8 @@
 // Provides animated visual feedback for AI agent states
 
 import 'package:flutter/material.dart';
-import 'package:orion/state/app_state_manager.dart';
-import 'package:orion/utils/icon_fallbacks.dart';
+import 'package:orionhealth_health/features/voice_chat/state/app_state_manager.dart';
+import 'package:orionhealth_health/core/utils/icon_fallbacks.dart';
 
 class AnimatedAgentAvatar extends StatefulWidget {
   final VoiceChatState chatState;

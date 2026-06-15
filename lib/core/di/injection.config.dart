@@ -60,11 +60,11 @@ import '../../features/dashboard/infrastructure/repositories/dashboard_repositor
     as _i101;
 import '../../features/doctor_verification/application/doctor_verification_cubit.dart'
     as _i104;
-import '../../features/doctor_verification/data/datasources/license_registry_local.dart'
+import '../../features/doctor_verification/infrastructure/datasources/license_registry_local.dart'
     as _i25;
-import '../../features/doctor_verification/data/repositories/isar_doctor_profile_repository.dart'
+import '../../features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository.dart'
     as _i103;
-import '../../features/doctor_verification/data/repositories/isar_rating_repository.dart'
+import '../../features/doctor_verification/infrastructure/repositories/isar_rating_repository.dart'
     as _i61;
 import '../../features/doctor_verification/domain/repositories/doctor_profile_repository.dart'
     as _i102;
@@ -237,9 +237,9 @@ import '../../features/ssi/infrastructure/services/sidetree_anchor_client.dart'
 import '../../features/ssi/infrastructure/services/ssi_service_impl.dart'
     as _i72;
 import '../../features/sync/application/sync_cubit.dart' as _i141;
-import '../../features/sync/data/fhir_client.dart' as _i18;
-import '../../features/sync/data/node_discovery_service.dart' as _i53;
-import '../../features/sync/data/sync_repository.dart' as _i75;
+import '../../features/sync/infrastructure/fhir_client.dart' as _i18;
+import '../../features/sync/infrastructure/node_discovery_service.dart' as _i53;
+import '../../features/sync/infrastructure/sync_repository.dart' as _i75;
 import '../../features/sync/domain/repositories/sync_repository.dart' as _i131;
 import '../../features/sync/domain/services/sync_service.dart' as _i129;
 import '../../features/sync/domain/sync_cubit.dart' as _i140;

@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:orion/services/agent_memory_service.dart';
-import 'package:orion/services/local_data_service.dart';
-import 'package:orion/utils/feedback_manager.dart';
-import 'package:orion/utils/performance_monitor.dart';
-import 'package:orion/utils/cache_manager.dart';
-import 'package:orion/ui/welcome_screen.dart';
-import 'package:orion/ui/settings/tts_models_page.dart';
-import 'package:orion/ui/settings/asr_models_page.dart';
-import 'package:orion/ui/settings/ai_settings_page.dart';
-import 'package:orion/ui/privacy_policy_screen.dart';
-import 'package:orion/ui/terms_of_service_screen.dart';
+import 'package:orionhealth_health/core/utils/feedback_manager.dart';
+import 'package:orionhealth_health/core/utils/performance_monitor.dart';
+import 'package:orionhealth_health/core/utils/cache_manager.dart';
+import 'package:orionhealth_health/features/voice_chat/welcome_screen.dart';
+import 'package:orionhealth_health/features/voice_chat/privacy_policy_screen.dart';
 import 'package:share_plus/share_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
