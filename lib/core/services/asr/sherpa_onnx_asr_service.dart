@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart';
-import 'package:orion/services/asr/asr_types.dart';
-import 'package:orion/services/asr/local_asr_service.dart';
-import 'package:orion/services/asr/asr_model_manager.dart';
-import 'package:orion/services/asr/asr_settings.dart';
+import 'asr_types.dart';
+import 'local_asr_service.dart';
+import 'asr_model_manager.dart';
+import 'asr_settings.dart';
 
 /// Implementation of LocalAsrService using sherpa_onnx.
 class SherpaOnnxAsrService implements LocalAsrService {

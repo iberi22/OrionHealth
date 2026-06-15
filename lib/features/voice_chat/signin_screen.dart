@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:orion/ui/welcome_screen.dart';
+import 'package:orionhealth_health/features/voice_chat/welcome_screen.dart';
 
 /// Sign-in screen — Orion is 100% offline, no authentication needed.
 /// This screen redirects to the main welcome screen.

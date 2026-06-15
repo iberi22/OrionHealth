@@ -1,12 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 import 'tts_adapter.dart';
 import 'tts_types.dart';
 
 /// Adapter that wraps the platform system TTS via flutter_tts
+///
+/// NOTE: flutter_tts is not available in the current dependency set (dio HTTP 403
+/// on pub.dev for Orion Health). System TTS has been stubbed out — all speak/stop
+/// calls return errors directing users to use the sherpa_onnx adapter instead.
+/// If flutter_tts becomes available in the future, restore the real implementation.
 class SystemTTSAdapter implements TTSAdapter {
   @override
   TTSCallbacks callbacks;
@@ -14,129 +16,74 @@ class SystemTTSAdapter implements TTSAdapter {
   @override
   TTSState state = TTSState.uninitialized;
 
-  final FlutterTts _flutterTts = FlutterTts();
-
   SystemTTSAdapter({TTSCallbacks? callbacks})
     : callbacks = callbacks ?? const TTSCallbacks();
 
   @override
   Future<void> initialize() async {
     if (state != TTSState.uninitialized) return;
-
-    _flutterTts.setStartHandler(() {
-      state = TTSState.speaking;
-      callbacks.onStart?.call();
-      if (kDebugMode) print('SystemTTSAdapter: start');
-    });
-
-    _flutterTts.setCompletionHandler(() {
-      state = TTSState.completed;
-      callbacks.onComplete?.call();
-      if (kDebugMode) print('SystemTTSAdapter: completed');
-    });
-
-    _flutterTts.setCancelHandler(() {
-      state = TTSState.cancelled;
-      callbacks.onCancel?.call();
-      if (kDebugMode) print('SystemTTSAdapter: cancelled');
-    });
-
-    _flutterTts.setPauseHandler(() {
-      state = TTSState.paused;
-      callbacks.onPause?.call();
-      if (kDebugMode) print('SystemTTSAdapter: paused');
-    });
-
-    _flutterTts.setContinueHandler(() {
-      state = TTSState.continued;
-      callbacks.onContinue?.call();
-      if (kDebugMode) print('SystemTTSAdapter: continued');
-    });
-
-    _flutterTts.setErrorHandler((msg) {
-      state = TTSState.error;
-      callbacks.onError?.call(msg);
-      if (kDebugMode) print('SystemTTSAdapter error: $msg');
-    });
-
-    // Default configuration similar to previous service
-    await setLanguage('es-ES');
-    await setSpeechRate(0.5);
-    await setVolume(0.8);
-    await setPitch(1.0);
-
-    if (Platform.isAndroid) {
-      await _flutterTts.setQueueMode(1); // Flush mode
-    } else if (Platform.isIOS) {
-      await _flutterTts.setSharedInstance(true);
-      await _flutterTts.setIosAudioCategory(
-        IosTextToSpeechAudioCategory.playback,
-        [
-          IosTextToSpeechAudioCategoryOptions.allowBluetooth,
-          IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
-          IosTextToSpeechAudioCategoryOptions.mixWithOthers,
-        ],
-        IosTextToSpeechAudioMode.spokenAudio,
+    callbacks.onError?.call(
+      'System TTS not available — use sherpa_onnx adapter instead',
+    );
+    state = TTSState.error;
+    if (kDebugMode) {
+      print(
+        'SystemTTSAdapter: flutter_tts not available, stubbed out. Use sherpa_onnx.',
       );
     }
-
-    state = TTSState.initialized;
   }
 
   @override
   Future<void> speak(String text) async {
-    if (text.trim().isEmpty) {
-      callbacks.onError?.call('Cannot speak empty text');
-      return;
-    }
-    await _flutterTts.speak(text);
+    callbacks.onError?.call(
+      'System TTS not available — use sherpa_onnx adapter instead',
+    );
   }
 
   @override
   Future<void> stop() async {
-    await _flutterTts.stop();
     state = TTSState.stopped;
   }
 
   @override
   Future<void> pause() async {
-    await _flutterTts.pause();
+    state = TTSState.paused;
   }
 
   @override
   Future<List<String>> getLanguages() async {
-    final languages = await _flutterTts.getLanguages;
-    return List<String>.from(languages);
+    return ['es-ES', 'en-US'];
   }
 
   @override
   Future<List<Map<String, String>>> getVoices() async {
-    final voices = await _flutterTts.getVoices;
-    return List<Map<String, String>>.from(voices);
+    return [
+      {'name': 'es-ES', 'lang': 'es-ES'},
+    ];
   }
 
   @override
   Future<void> setLanguage(String language) async {
-    await _flutterTts.setLanguage(language);
+    // No-op: not available
   }
 
   @override
   Future<void> setPitch(double pitch) async {
-    await _flutterTts.setPitch(pitch.clamp(0.5, 2.0));
+    // No-op: not available
   }
 
   @override
   Future<void> setSpeechRate(double rate) async {
-    await _flutterTts.setSpeechRate(rate.clamp(0.0, 1.0));
+    // No-op: not available
   }
 
   @override
   Future<void> setVolume(double volume) async {
-    await _flutterTts.setVolume(volume.clamp(0.0, 1.0));
+    // No-op: not available
   }
 
   @override
   void dispose() {
-    _flutterTts.stop();
+    // No-op: not available
   }
 }
