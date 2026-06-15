@@ -1,3 +1,6 @@
+// TODO: migrate from data/ — moved to infrastructure/datasources/license_registry_local.dart
+// This file is kept temporarily. Remove after verifying new imports work.
+
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';

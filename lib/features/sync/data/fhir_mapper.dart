@@ -1,3 +1,6 @@
+// TODO: migrate from data/ — moved to infrastructure/services/fhir_mapper.dart
+// This file is kept temporarily. Remove after verifying new imports work.
+
 import '../../../features/user_profile/domain/entities/user_profile.dart';
 import '../../../features/medications/domain/entities/medication.dart';
 import '../../../features/allergies/domain/entities/allergy.dart';

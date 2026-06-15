@@ -1,3 +1,6 @@
+// TODO: migrate from data/ — moved to infrastructure/services/rda_parser.dart
+// This file is kept temporarily. Remove after verifying new imports work.
+
 /// RDA Parser for IHCE Colombia
 /// Maps FHIR Composition/Bundle to simplified patient summary
 library;

@@ -1,13 +1,18 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
+import 'dart:io' show Platform;
+
 import 'package:injectable/injectable.dart';
 import '../domain/entities/shared_health_package.dart';
+import 'nfc_handler.dart';
 
 /// NFC sharing service for tap-to-share health data
+///
+/// Uses [NfcHandler] as a platform-aware wrapper around the native
+/// method channel. On platforms without native NFC support, falls back
+/// gracefully rather than crashing.
 @lazySingleton
 class NfcSharingService {
-  static const MethodChannel _channel = MethodChannel('orionhealth/nfc');
-
+  final NfcHandler _nfcHandler;
   bool _isInitialized = false;
   bool _isEnabled = false;
 
@@ -17,23 +22,35 @@ class NfcSharingService {
   final _dataController = StreamController<SharedHealthPackage>.broadcast();
   Stream<SharedHealthPackage> get incomingData => _dataController.stream;
 
-  /// Initialize NFC adapter
+  NfcSharingService({NfcHandler? nfcHandler})
+      : _nfcHandler = nfcHandler ?? NfcHandler();
+
+  /// Initialize NFC adapter.
+  ///
+  /// On platforms without native NFC support (desktop, web, or when the
+  /// native plugin is unregistered), sets [_isEnabled] to false and
+  /// emits a ready state without throwing.
   Future<void> initialize() async {
     if (_isInitialized) return;
 
+    if (!(Platform.isAndroid || Platform.isIOS)) {
+      _isEnabled = false;
+      _isInitialized = true;
+      _stateController.add(NfcSharingState.ready(isEnabled: false));
+      return;
+    }
+
     try {
-      final result = await _channel.invokeMethod<bool>('isNfcAvailable');
-      _isEnabled = result ?? false;
+      _isEnabled = await _nfcHandler.isNfcAvailable();
 
       if (_isEnabled) {
-        // Start NFC session in native code
-        await _channel.invokeMethod('startNfcSession');
+        await _nfcHandler.startNfcSession();
       }
 
       _isInitialized = true;
       _stateController.add(NfcSharingState.ready(isEnabled: _isEnabled));
-    } on PlatformException catch (e) {
-      _stateController.add(NfcSharingState.error('NFC not available: ${e.message}'));
+    } catch (e) {
+      _stateController.add(NfcSharingState.error('NFC not available: $e'));
       _isEnabled = false;
       _isInitialized = true;
     }
@@ -45,7 +62,10 @@ class NfcSharingService {
     return _isEnabled;
   }
 
-  /// Share data via NFC beam
+  /// Share data via NFC beam.
+  ///
+  /// Uses [NfcHandler.beamNdefMessage] to invoke native NFC data
+  /// transfer. Returns a [SharingResult] indicating success or failure.
   Future<SharingResult> shareData(SharedHealthPackage package) async {
     if (!_isEnabled) {
       return SharingResult(
@@ -65,48 +85,49 @@ class NfcSharingService {
 
     try {
       final data = package.encode();
+      final bytes = data.codeUnits;
 
-      // In production, use Android Beam or iOS NFC:
-      // await _channel.invokeMethod('beamNdefMessage', {'data': data});
-
-      await Future.delayed(const Duration(seconds: 1)); // Simulate beam
+      await _nfcHandler.beamNdefMessage(bytes);
 
       final transferTime = DateTime.now().difference(startTime);
 
       _stateController.add(NfcSharingState.completed(
-        data.length,
+        bytes.length,
         transferTime,
       ));
 
       return SharingResult(
         success: true,
-        bytesTransferred: data.length,
+        bytesTransferred: bytes.length,
         transferTime: transferTime,
       );
-    } on PlatformException catch (e) {
-      _stateController.add(NfcSharingState.error('NFC share failed: ${e.message}'));
+    } catch (e) {
+      _stateController.add(NfcSharingState.error('NFC share failed: $e'));
       return SharingResult(
         success: false,
-        error: e.message,
+        error: e.toString(),
         bytesTransferred: 0,
         transferTime: DateTime.now().difference(startTime),
       );
     }
   }
 
-  /// Start listening for incoming NFC data
+  /// Start listening for incoming NFC data.
+  ///
+  /// In production, this enables the native NFC reader session which
+  /// triggers the [handleReceivedData] callback when an NDEF message
+  /// is received.
   Future<void> startListening() async {
     if (!_isEnabled) return;
 
     _stateController.add(NfcSharingState.listening());
 
-    // In production, this would be handled by native code
-    // and trigger onNdefDataReceived callback
+    await _nfcHandler.startNfcSession();
   }
 
-  /// Stop listening for NFC
+  /// Stop listening for NFC.
   Future<void> stopListening() async {
-    await _channel.invokeMethod('stopNfcSession');
+    await _nfcHandler.stopNfcSession();
     _stateController.add(NfcSharingState.ready(isEnabled: _isEnabled));
   }
 

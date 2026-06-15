@@ -1,3 +1,6 @@
+// TODO: migrate from data/ — moved to infrastructure/models/doctor_profile_model.dart
+// This file is kept temporarily. Remove after verifying new imports work.
+
 import '../../domain/entities/doctor_profile.dart';
 
 class DoctorProfileModel extends DoctorProfile {

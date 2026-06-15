@@ -65,15 +65,25 @@ class BleSharingService {
   }
 
   /// Start advertising as an OrionHealth node.
+  ///
+  /// Uses the platform-specific GATT server (Android/iOS/macOS) via
+  /// [BleWrapper.startAdvertise] to broadcast the OrionHealth service
+  /// UUID so that other devices can discover, connect, and receive
+  /// health data from this node.
   Future<void> startAdvertising(String nodeId) async {
     if (!_isInitialized) await initialize();
     _stateController.add(BleSharingState.advertising(nodeId));
-    // TODO: BLE peripheral mode requires platform-specific GATT server.
-    await Future.delayed(const Duration(seconds: 1));
+
+    await _bleWrapper.startAdvertise(
+      serviceUuid: kOrionHealthServiceUuid,
+      localName: nodeId,
+      includePowerLevel: true,
+    );
   }
 
-  /// Stop advertising
+  /// Stop advertising.
   Future<void> stopAdvertising() async {
+    await _bleWrapper.stopAdvertise();
     _stateController.add(BleSharingState.ready());
   }
 

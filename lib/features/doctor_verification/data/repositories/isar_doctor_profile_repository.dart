@@ -1,3 +1,6 @@
+// TODO: migrate from data/ — moved to infrastructure/repositories/isar_doctor_profile_repository.dart
+// This file is kept temporarily. Remove after verifying new imports work.
+
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import '../../domain/entities/doctor_profile.dart';

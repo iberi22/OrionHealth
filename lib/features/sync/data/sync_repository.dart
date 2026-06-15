@@ -1,3 +1,6 @@
+// TODO: migrate from data/ — moved to infrastructure/repositories/sync_repository.dart
+// This file is kept temporarily. Remove after verifying new imports work.
+
 /// Sync repository for IHCE Colombia
 /// Uses FhirClient natively from Flutter - no backend needed
 /// Communicates directly with IHCE FHIR APIs from the device
