@@ -1,3 +1,6 @@
+// TODO: migrate from data/ — moved to infrastructure/services/node_discovery_service.dart
+// This file is kept temporarily. Remove after verifying new imports work.
+
 import 'dart:async';
 import 'package:bonsoir/bonsoir.dart';
 import 'package:injectable/injectable.dart';

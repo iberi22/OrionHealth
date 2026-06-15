@@ -1,34 +1,38 @@
-import '../../appointments/domain/entities/appointment.dart';
+import '../domain/entities/calendar_event.dart';
 
+/// Parses calendar data from external file formats (ICS, CSV) into
+/// domain [CalendarEvent] entities.
+///
+/// This class is stateless and can be instantiated freely or injected.
 class CalendarParser {
-  static final List<String> _medicalKeywords = [
-    "cita",
-    "médico",
-    "consulta",
-    "EPS",
-    "Sura",
-    "Comfama",
-    "Sanitas",
-    "doctor",
-    "especialista",
-    "control",
-    "examen",
-    "procedimiento",
-    "odontología",
-    "terapia",
-    "laboratorio",
-    "vacuna",
+  static const List<String> _medicalKeywords = [
+    'cita',
+    'médico',
+    'consulta',
+    'EPS',
+    'Sura',
+    'Comfama',
+    'Sanitas',
+    'doctor',
+    'especialista',
+    'control',
+    'examen',
+    'procedimiento',
+    'odontología',
+    'terapia',
+    'laboratorio',
+    'vacuna',
   ];
 
-  /// Parses an ICS (iCalendar) string into a list of [Appointment] entities.
-  List<Appointment> parseIcs(String icsData) {
-    final List<Appointment> appointments = [];
+  /// Parses an ICS (iCalendar) string into a list of [CalendarEvent] entities.
+  List<CalendarEvent> parseIcs(String icsData) {
+    final List<CalendarEvent> events = [];
     final lines = icsData.split(RegExp(r'\r\n|\r|\n'));
 
     Map<String, String>? currentEvent;
     bool inEvent = false;
 
-    for (var line in lines) {
+    for (final line in lines) {
       if (line.startsWith('BEGIN:VEVENT')) {
         inEvent = true;
         currentEvent = {};
@@ -38,9 +42,9 @@ class CalendarParser {
       if (line.startsWith('END:VEVENT')) {
         inEvent = false;
         if (currentEvent != null) {
-          final appointment = _mapIcsToAppointment(currentEvent);
-          if (appointment != null && _isMedicalEvent(appointment)) {
-            appointments.add(appointment);
+          final event = _mapIcsToCalendarEvent(currentEvent);
+          if (event != null && _isMedicalEvent(event)) {
+            events.add(event);
           }
         }
         currentEvent = null;
@@ -57,23 +61,24 @@ class CalendarParser {
       }
     }
 
-    return _deduplicate(appointments);
+    return _deduplicate(events);
   }
 
-  /// Parses a CSV string into a list of [Appointment] entities.
+  /// Parses a CSV string into a list of [CalendarEvent] entities.
   /// Expected columns: Subject, Start Date, Start Time, Description
-  List<Appointment> parseCsv(String csvData) {
-    final List<Appointment> appointments = [];
+  List<CalendarEvent> parseCsv(String csvData) {
+    final List<CalendarEvent> events = [];
     final lines = csvData.trim().split('\n');
 
     if (lines.isEmpty) return [];
 
-    // Simple CSV split (not handling quotes for simplicity here, but could be improved)
-    final headers = lines[0].toLowerCase().split(',').map((h) => h.trim()).toList();
+    final headers =
+        lines[0].toLowerCase().split(',').map((h) => h.trim()).toList();
     final subjectIdx = headers.indexOf('subject');
     final dateIdx = headers.indexOf('start date');
     final timeIdx = headers.indexOf('start time');
     final descIdx = headers.indexOf('description');
+    final locationIdx = headers.indexOf('location');
 
     if (subjectIdx == -1 || dateIdx == -1) return [];
 
@@ -81,61 +86,68 @@ class CalendarParser {
       final line = lines[i].trim();
       if (line.isEmpty) continue;
 
-      // Handle commas within quotes if needed, but for now simple split
       final parts = line.split(',');
-
       if (subjectIdx >= parts.length || dateIdx >= parts.length) continue;
 
       final subject = parts[subjectIdx].trim();
       if (subject.isEmpty) continue;
-      final dateStr = parts[dateIdx].trim();
-      final timeStr = (timeIdx != -1 && timeIdx < parts.length) ? parts[timeIdx].trim() : "00:00:00";
-      final description = (descIdx != -1 && descIdx < parts.length) ? parts[descIdx].trim() : "";
 
-      final dateTime = DateTime.tryParse('$dateStr $timeStr') ?? DateTime.tryParse(dateStr);
+      final dateStr = parts[dateIdx].trim();
+      final timeStr = (timeIdx != -1 && timeIdx < parts.length)
+          ? parts[timeIdx].trim()
+          : '00:00:00';
+      final description = (descIdx != -1 && descIdx < parts.length)
+          ? parts[descIdx].trim()
+          : '';
+      final location = (locationIdx != -1 && locationIdx < parts.length)
+          ? parts[locationIdx].trim()
+          : null;
+
+      final dateTime =
+          DateTime.tryParse('$dateStr $timeStr') ?? DateTime.tryParse(dateStr);
 
       if (dateTime != null) {
-        final appointment = Appointment(
-          doctorName: _extractDoctorName(subject),
-          specialty: _extractSpecialty(subject),
-          dateTime: dateTime,
-          notes: description,
-          source: 'CSV_IMPORT',
-          status: AppointmentStatus.upcoming,
+        final event = CalendarEvent(
+          title: subject,
+          startDateTime: dateTime,
+          description: description,
+          location: location,
+          source: CalendarEventSource.csvFile,
         );
 
-        if (_isMedicalEvent(appointment)) {
-          appointments.add(appointment);
+        if (_isMedicalEvent(event)) {
+          events.add(event);
         }
       }
     }
 
-    return _deduplicate(appointments);
+    return _deduplicate(events);
   }
 
-  Appointment? _mapIcsToAppointment(Map<String, String> event) {
-    final summary = event['SUMMARY'] ?? 'Cita Médica';
-    final description = event['DESCRIPTION'] ?? '';
-    final dtStart = event['DTSTART'];
+  CalendarEvent? _mapIcsToCalendarEvent(Map<String, String> icsEvent) {
+    final summary = icsEvent['SUMMARY'] ?? 'Cita Médica';
+    final description = icsEvent['DESCRIPTION'];
+    final location = icsEvent['LOCATION'];
+    final dtStart = icsEvent['DTSTART'];
 
     if (dtStart == null) return null;
 
     final dateTime = _parseIcsDateTime(dtStart);
     if (dateTime == null) return null;
 
-    return Appointment(
-      doctorName: _extractDoctorName(summary),
-      specialty: _extractSpecialty(summary),
-      dateTime: dateTime,
-      notes: 'Importado de ICS: $description',
-      source: 'ICS_IMPORT',
-      status: AppointmentStatus.upcoming,
+    return CalendarEvent(
+      title: summary,
+      startDateTime: dateTime,
+      description: description,
+      location: location,
+      source: CalendarEventSource.icsFile,
     );
   }
 
   DateTime? _parseIcsDateTime(String dtStart) {
     // 20231027T100000Z or 20231027T100000
-    final dateRegExp = RegExp(r'^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z)?$');
+    final dateRegExp =
+        RegExp(r'^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z)?$');
     final match = dateRegExp.firstMatch(dtStart);
 
     if (match != null) {
@@ -156,63 +168,37 @@ class CalendarParser {
 
     // Fallback for YYYYMMDD
     if (dtStart.length >= 8) {
-       final year = int.tryParse(dtStart.substring(0, 4));
-       final month = int.tryParse(dtStart.substring(4, 6));
-       final day = int.tryParse(dtStart.substring(6, 8));
-       if (year != null && month != null && day != null) {
-         return DateTime(year, month, day);
-       }
+      final year = int.tryParse(dtStart.substring(0, 4));
+      final month = int.tryParse(dtStart.substring(4, 6));
+      final day = int.tryParse(dtStart.substring(6, 8));
+      if (year != null && month != null && day != null) {
+        return DateTime(year, month, day);
+      }
     }
 
     return DateTime.tryParse(dtStart);
   }
 
-  bool _isMedicalEvent(Appointment app) {
-    final doctor = app.doctorName.toLowerCase();
-    final specialty = app.specialty.toLowerCase();
-    final notes = app.notes?.toLowerCase() ?? "";
-
-    // "Médico" and "Consulta General" are default values, don't use them for keyword matching
-    // unless they were actually in the original text.
-    // But here they are always set if not found.
+  bool _isMedicalEvent(CalendarEvent event) {
+    // Only check if the title/description contains medical keywords
+    final title = event.title.toLowerCase();
+    final description = event.description?.toLowerCase() ?? '';
 
     return _medicalKeywords.any((keyword) {
       final k = keyword.toLowerCase();
-      return (doctor != "médico" && doctor.contains(k)) ||
-             (specialty != "consulta general" && specialty.contains(k)) ||
-             notes.contains(k);
+      return title.contains(k) || description.contains(k);
     });
   }
 
-  String _extractDoctorName(String text) {
-    if (text.contains("Dr.") || text.contains("Dra.")) {
-      final parts = text.split(" ");
-      final drIndex = parts.indexWhere((p) => p.contains("Dr.") || p.contains("Dra."));
-      if (drIndex != -1 && drIndex + 1 < parts.length) {
-        return parts.sublist(drIndex).join(" ");
-      }
-    }
-    return "Médico";
-  }
-
-  String _extractSpecialty(String text) {
-    for (var keyword in _medicalKeywords) {
-      if (text.toLowerCase().contains(keyword.toLowerCase())) {
-        return keyword;
-      }
-    }
-    return "Consulta General";
-  }
-
-  List<Appointment> _deduplicate(List<Appointment> appointments) {
+  List<CalendarEvent> _deduplicate(List<CalendarEvent> events) {
     final seen = <String>{};
-    final List<Appointment> results = [];
+    final List<CalendarEvent> results = [];
 
-    for (final app in appointments) {
-      final key = '${app.dateTime.millisecondsSinceEpoch}_${app.specialty}_${app.doctorName}';
+    for (final event in events) {
+      final key = event.dedupKey;
       if (!seen.contains(key)) {
         seen.add(key);
-        results.add(app);
+        results.add(event);
       }
     }
     return results;

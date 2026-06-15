@@ -1,8 +1,7 @@
 /// Infrastructure layer for doctor_verification feature.
 ///
-/// Re-exports from the data layer for clean architecture consistency.
-/// Actual implementations live under data/ for legacy reasons.
-export '../data/repositories/isar_doctor_profile_repository.dart';
-export '../data/repositories/isar_rating_repository.dart';
-export '../data/datasources/license_registry_local.dart';
-export '../data/models/doctor_profile_model.dart';
+/// Exports infrastructure implementations migrated from legacy data/ layer.
+export 'datasources/license_registry_local.dart';
+export 'models/doctor_profile_model.dart';
+export 'repositories/isar_doctor_profile_repository.dart';
+export 'repositories/isar_rating_repository.dart';

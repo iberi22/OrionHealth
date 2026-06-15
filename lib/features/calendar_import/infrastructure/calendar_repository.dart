@@ -1,75 +1,106 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:injectable/injectable.dart';
-import '../../appointments/domain/entities/appointment.dart';
 
-@lazySingleton
-class CalendarRepository {
+import '../domain/entities/calendar_event.dart';
+import '../domain/entities/calendar_source.dart';
+import '../domain/repositories/calendar_repository.dart';
+
+/// Infrastructure implementation of [CalendarRepository].
+///
+/// Uses the native device calendar plugin to access the device's calendars,
+/// fetches events, and filters those that appear to be medical in nature.
+@LazySingleton(as: CalendarRepository)
+class DeviceCalendarRepository implements CalendarRepository {
   final DeviceCalendarPlugin _deviceCalendarPlugin = DeviceCalendarPlugin();
 
-  final List<String> _medicalKeywords = [
-    "cita",
-    "médico",
-    "consulta",
-    "EPS",
-    "Sura",
-    "Comfama",
-    "Sanitas",
-    "doctor",
-    "especialista",
-    "control",
-    "examen",
-    "procedimiento",
-    "odontología",
-    "terapia",
-    "laboratorio",
-    "vacuna",
+  static const List<String> _medicalKeywords = [
+    'cita',
+    'médico',
+    'consulta',
+    'EPS',
+    'Sura',
+    'Comfama',
+    'Sanitas',
+    'doctor',
+    'especialista',
+    'control',
+    'examen',
+    'procedimiento',
+    'odontología',
+    'terapia',
+    'laboratorio',
+    'vacuna',
   ];
 
+  @override
   Future<bool> hasPermissions() async {
-    var permissionsGranted = await _deviceCalendarPlugin.hasPermissions();
-    if (permissionsGranted.isSuccess && permissionsGranted.data!) {
-      return true;
-    }
-    return false;
+    final permissionsGranted = await _deviceCalendarPlugin.hasPermissions();
+    return permissionsGranted.isSuccess && permissionsGranted.data == true;
   }
 
+  @override
   Future<bool> requestPermissions() async {
-    var permissionsGranted = await _deviceCalendarPlugin.requestPermissions();
-    return permissionsGranted.isSuccess && permissionsGranted.data!;
+    final permissionsGranted = await _deviceCalendarPlugin.requestPermissions();
+    return permissionsGranted.isSuccess && permissionsGranted.data == true;
   }
 
-  Future<List<Appointment>> fetchMedicalEvents() async {
+  @override
+  Future<List<CalendarSource>> getCalendarSources() async {
     final calendarsResult = await _deviceCalendarPlugin.retrieveCalendars();
     if (!calendarsResult.isSuccess || calendarsResult.data == null) {
       return [];
     }
 
-    final List<Appointment> medicalAppointments = [];
-    final now = DateTime.now();
-    final startDate = now.subtract(const Duration(days: 30));
-    final endDate = now.add(const Duration(days: 90));
+    return calendarsResult.data!.map((cal) {
+      return CalendarSource(
+        id: cal.id,
+        name: cal.name ?? 'Unknown',
+        isReadOnly: cal.isReadOnly,
+        isPrimary: cal.isPrimary,
+      );
+    }).toList();
+  }
 
-    for (var calendar in calendarsResult.data!) {
+  @override
+  Future<List<CalendarEvent>> fetchMedicalEvents({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    final now = DateTime.now();
+    final effectiveStart = startDate ?? now.subtract(const Duration(days: 30));
+    final effectiveEnd = endDate ?? now.add(const Duration(days: 90));
+
+    final calendarsResult = await _deviceCalendarPlugin.retrieveCalendars();
+    if (!calendarsResult.isSuccess || calendarsResult.data == null) {
+      return [];
+    }
+
+    final List<CalendarEvent> medicalEvents = [];
+
+    for (final calendar in calendarsResult.data!) {
       final eventsResult = await _deviceCalendarPlugin.retrieveEvents(
         calendar.id,
-        RetrieveEventsParams(startDate: startDate, endDate: endDate),
+        RetrieveEventsParams(
+          startDate: effectiveStart,
+          endDate: effectiveEnd,
+        ),
       );
 
       if (eventsResult.isSuccess && eventsResult.data != null) {
-        for (var event in eventsResult.data!) {
+        for (final event in eventsResult.data!) {
           if (_isMedicalEvent(event)) {
-            medicalAppointments.add(_mapEventToAppointment(event));
+            medicalEvents.add(_mapEventToCalendarEvent(event));
           }
         }
       }
     }
 
-    return medicalAppointments;
+    return medicalEvents;
   }
 
   bool _isMedicalEvent(Event event) {
-    final title = event.title?.toLowerCase() ?? "";
-    final description = event.description?.toLowerCase() ?? "";
+    final title = event.title?.toLowerCase() ?? '';
+    final description = event.description?.toLowerCase() ?? '';
 
     return _medicalKeywords.any((keyword) {
       final k = keyword.toLowerCase();
@@ -77,34 +108,14 @@ class CalendarRepository {
     });
   }
 
-  Appointment _mapEventToAppointment(Event event) {
-    // Simple parsing logic: use title as doctor name or specialty if recognizable
-    String doctorName = "Médico";
-    String specialty = "Consulta General";
-
-    final title = event.title ?? "Cita Médica";
-    if (title.contains("Dr.") || title.contains("Dra.")) {
-      final parts = title.split(" ");
-      final drIndex = parts.indexWhere((p) => p.contains("Dr.") || p.contains("Dra."));
-      if (drIndex != -1 && drIndex + 1 < parts.length) {
-        doctorName = parts.sublist(drIndex).join(" ");
-      }
-    }
-
-    // Try to guess specialty
-    for (var keyword in _medicalKeywords) {
-      if (title.toLowerCase().contains(keyword.toLowerCase())) {
-        specialty = keyword;
-        break;
-      }
-    }
-
-    return Appointment(
-      doctorName: doctorName,
-      specialty: specialty,
-      dateTime: event.start ?? DateTime.now(),
-      notes: "Importado de calendario: ${event.description ?? ''}",
-      status: AppointmentStatus.upcoming,
+  CalendarEvent _mapEventToCalendarEvent(Event event) {
+    return CalendarEvent(
+      title: event.title ?? 'Cita Médica',
+      startDateTime: event.start ?? DateTime.now(),
+      endDateTime: event.end,
+      description: event.description,
+      location: event.location,
+      source: CalendarEventSource.deviceCalendar,
     );
   }
 }

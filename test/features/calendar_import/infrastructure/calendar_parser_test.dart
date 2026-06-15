@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/calendar_import/infrastructure/calendar_parser.dart';
-import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
 
 void main() {
   late CalendarParser parser;
@@ -28,9 +28,8 @@ END:VCALENDAR
 ''';
       final results = parser.parseIcs(ics);
       expect(results.length, 1);
-      expect(results[0].doctorName, 'Dr. House');
-      expect(results[0].specialty, 'cita');
-      expect(results[0].source, 'ICS_IMPORT');
+      expect(results[0].title, 'Cita con Dr. House');
+      expect(results[0].source, CalendarEventSource.icsFile);
     });
 
     test('should handle ICS timezone (Z suffix)', () {
@@ -43,10 +42,12 @@ END:VEVENT
 END:VCALENDAR
 ''';
       final results = parser.parseIcs(ics);
-      expect(results[0].dateTime.isUtc, false); // Converted to local
+      expect(results.length, 1);
+      // Should be converted to local time (non-UTC)
+      expect(results[0].startDateTime.isUtc, false);
     });
 
-    test('should deduplicate events in ICS', () {
+    test('should deduplicate identical events in ICS', () {
       const ics = '''
 BEGIN:VCALENDAR
 BEGIN:VEVENT
@@ -62,6 +63,20 @@ END:VCALENDAR
       final results = parser.parseIcs(ics);
       expect(results.length, 1);
     });
+
+    test('should return empty list for non-medical events', () {
+      const ics = '''
+BEGIN:VCALENDAR
+BEGIN:VEVENT
+SUMMARY:Birthday party
+DTSTART:20231027T100000Z
+DESCRIPTION:Fun celebration
+END:VEVENT
+END:VCALENDAR
+''';
+      final results = parser.parseIcs(ics);
+      expect(results, isEmpty);
+    });
   });
 
   group('CalendarParser - CSV', () {
@@ -73,9 +88,9 @@ Partido de fútbol,2023-10-27,18:00:00,Estadio
 ''';
       final results = parser.parseCsv(csv);
       expect(results.length, 1);
-      expect(results[0].doctorName, 'Dra. Grey');
-      expect(results[0].specialty, 'cita');
-      expect(results[0].dateTime.hour, 9);
+      expect(results[0].title, 'Cita con Dra. Grey');
+      expect(results[0].source, CalendarEventSource.csvFile);
+      expect(results[0].startDateTime.hour, 9);
     });
 
     test('should handle malformed CSV rows', () {

@@ -1,3 +1,6 @@
+// TODO: migrate from data/ — moved to infrastructure/services/fhir_client.dart
+// This file is kept temporarily. Remove after verifying new imports work.
+
 /// FHIR Client for IHCE Colombia
 /// Native Dart implementation - no backend needed
 /// Uses flutter_appauth for OAuth and http for FHIR API calls

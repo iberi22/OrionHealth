@@ -1,10 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:medical_standards/medical_standards.dart';
+
 import '../../appointments/domain/entities/appointment.dart';
-import '../../appointments/domain/repositories/appointment_repository.dart';
-import '../../user_profile/domain/repositories/user_profile_repository.dart';
-import '../infrastructure/calendar_repository.dart';
+import '../domain/entities/calendar_event.dart';
+import '../domain/repositories/calendar_repository.dart';
+import '../domain/usecases/import_calendar_usecase.dart';
+
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
 
 abstract class CalendarImportState {}
 
@@ -29,16 +33,18 @@ class CalendarImportError extends CalendarImportState {
 
 class CalendarImportPermissionDenied extends CalendarImportState {}
 
+// ---------------------------------------------------------------------------
+// Cubit
+// ---------------------------------------------------------------------------
+
 @injectable
 class CalendarImportCubit extends Cubit<CalendarImportState> {
   final CalendarRepository _calendarRepository;
-  final AppointmentRepository _appointmentRepository;
-  final UserProfileRepository _userProfileRepository;
+  final ImportCalendarUseCase _importCalendarUseCase;
 
   CalendarImportCubit(
     this._calendarRepository,
-    this._appointmentRepository,
-    this._userProfileRepository,
+    this._importCalendarUseCase,
   ) : super(CalendarImportInitial());
 
   Future<void> scanCalendar() async {
@@ -53,7 +59,9 @@ class CalendarImportCubit extends Cubit<CalendarImportState> {
         }
       }
 
-      final appointments = await _calendarRepository.fetchMedicalEvents();
+      // Fetch as CalendarEvent domain entities, then map to Appointment for UI
+      final calendarEvents = await _calendarRepository.fetchMedicalEvents();
+      final appointments = calendarEvents.map(_mapEventToAppointment).toList();
       emit(CalendarImportLoaded(appointments));
     } catch (e) {
       emit(CalendarImportError(e.toString()));
@@ -63,37 +71,58 @@ class CalendarImportCubit extends Cubit<CalendarImportState> {
   Future<void> importAppointments(List<Appointment> appointments) async {
     emit(CalendarImportLoading());
     try {
-      int count = 0;
-      final profile = await _userProfileRepository.getUserProfile();
-      final isConnected = profile?.uniqueId != null;
+      // Convert Appointment list back to CalendarEvent list for the use case
+      final events = appointments.map((app) {
+        return CalendarEvent(
+          title: '${app.doctorName} - ${app.specialty}',
+          startDateTime: app.dateTime,
+          description: app.notes ?? app.doctorName,
+          source: CalendarEventSource.deviceCalendar,
+        );
+      }).toList();
 
-      for (final app in appointments) {
-        await _appointmentRepository.saveAppointment(app);
-        count++;
-
-        if (isConnected) {
-          _syncWithFhir(app, profile!.uniqueId!);
-        }
-      }
-      emit(CalendarImportSuccess(count));
+      final result = await _importCalendarUseCase.execute(
+        ImportCalendarParams(events: events),
+      );
+      emit(CalendarImportSuccess(result.importedCount));
     } catch (e) {
       emit(CalendarImportError(e.toString()));
     }
   }
 
-  void _syncWithFhir(Appointment appointment, String patientId) {
-    // In a real application, this would call a FHIR API.
-    // Here we use the FhirAppointment builder from medical_standards to prepare the data.
-    final fhirAppointment = FhirAppointment(
-      id: 'app-${appointment.id}',
-      status: 'booked',
-      start: appointment.dateTime,
-      description: '${appointment.specialty} con ${appointment.doctorName}',
-      participantActorDisplay: 'Patient/$patientId',
-    );
+  Appointment _mapEventToAppointment(CalendarEvent event) {
+    // Simple extraction from event title
+    final title = event.title;
+    String doctorName = 'Médico';
+    String specialty = 'Consulta General';
 
-    // Mock FHIR sync log
-    // ignore: avoid_print
-    print('Syncing to FHIR: ${fhirAppointment.toJson()}');
+    if (title.contains('Dr.') || title.contains('Dra.')) {
+      final parts = title.split(' ');
+      final drIndex =
+          parts.indexWhere((p) => p.contains('Dr.') || p.contains('Dra.'));
+      if (drIndex != -1 && drIndex + 1 < parts.length) {
+        doctorName = parts.sublist(drIndex).join(' ');
+      }
+    }
+
+    const keywords = [
+      'cita', 'médico', 'consulta', 'EPS', 'Sura', 'Comfama',
+      'Sanitas', 'doctor', 'especialista', 'control', 'examen',
+      'procedimiento', 'odontología', 'terapia', 'laboratorio', 'vacuna',
+    ];
+    for (final kw in keywords) {
+      if (title.toLowerCase().contains(kw)) {
+        specialty = kw;
+        break;
+      }
+    }
+
+    return Appointment(
+      doctorName: doctorName,
+      specialty: specialty,
+      dateTime: event.startDateTime,
+      notes: 'Importado de calendario: ${event.description ?? ''}',
+      status: AppointmentStatus.upcoming,
+    );
   }
 }
