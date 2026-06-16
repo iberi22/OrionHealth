@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -96,20 +97,20 @@ class ErrorHandler {
   /// Log error to console with formatting
   static void _logToConsole(AppError error) {
     final severityIcon = _getSeverityIcon(error.severity);
-    print(
+    debugPrint(
       '$severityIcon [${error.severity.name.toUpperCase()}] ${error.context}',
     );
-    print('   Error: ${error.error}');
+    debugPrint('   Error: ${error.error}');
     if (error.stackTrace != null) {
-      print(
+      debugPrint(
         '   Stack: ${error.stackTrace.toString().split('\n').take(3).join('\n')}',
       );
     }
     if (error.metadata.isNotEmpty) {
-      print('   Metadata: ${error.metadata}');
+      debugPrint('   Metadata: ${error.metadata}');
     }
-    print('   Time: ${error.timestamp}');
-    print('---');
+    debugPrint('   Time: ${error.timestamp}');
+    debugPrint('---');
   }
 
   /// Get icon for severity level
@@ -129,7 +130,7 @@ class ErrorHandler {
   /// Local diagnostics hook. No remote crash reporter is used by the MVP.
   static void _logToLocalDiagnostics(AppError error) {
     if (kDebugMode && error.severity == ErrorSeverity.critical) {
-      print('Local critical diagnostic captured for ${error.context}');
+      debugPrint('Local critical diagnostic captured for ${error.context}');
     }
   }
 
@@ -302,3 +303,5 @@ class AppError {
     return 'AppError(context: $context, severity: $severity, error: $error, timestamp: $timestamp)';
   }
 }
+
+

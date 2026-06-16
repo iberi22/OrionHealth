@@ -9,6 +9,82 @@ import 'package:orionhealth_health/core/services/asr/asr_types.dart';
 import 'package:orionhealth_health/features/voice_chat/state/voice_chat_state.dart';
 import 'package:orionhealth_health/core/widgets/connection_status_indicator.dart';
 
+// ---------------------------------------------------------------------------
+// Stub widgets — pending real VoiceChat* widget implementations
+// ---------------------------------------------------------------------------
+
+class VoiceChatAgentView extends StatelessWidget {
+  final VoiceChatState chatState;
+  final Animation<double> pulseAnimation;
+
+  const VoiceChatAgentView({
+    super.key,
+    required this.chatState,
+    required this.pulseAnimation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox.shrink();
+  }
+}
+
+class VoiceChatHistory extends StatelessWidget {
+  final VoiceChatState chatState;
+  final ScrollController scrollController;
+
+  const VoiceChatHistory({
+    super.key,
+    required this.chatState,
+    required this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox.shrink();
+  }
+}
+
+class VoiceChatStatusBar extends StatelessWidget {
+  final VoiceChatState chatState;
+  final double currentAudioLevel;
+
+  const VoiceChatStatusBar({
+    super.key,
+    required this.chatState,
+    required this.currentAudioLevel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox.shrink();
+  }
+}
+
+class VoiceChatControls extends StatelessWidget {
+  final VoiceChatState chatState;
+  final TextEditingController textController;
+  final VoidCallback onRecordPressed;
+  final VoidCallback onStopRecording;
+  final void Function(String) onSendTextMessage;
+  final VoidCallback onInterrupt;
+
+  const VoiceChatControls({
+    super.key,
+    required this.chatState,
+    required this.textController,
+    required this.onRecordPressed,
+    required this.onStopRecording,
+    required this.onSendTextMessage,
+    required this.onInterrupt,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox.shrink();
+  }
+}
+
 /// Full voice chat screen with complete pipeline:
 /// Record -> Transcribe -> Memory -> AI Response -> TTS -> Playback
 class VoiceChatScreen extends StatefulWidget {
@@ -73,8 +149,9 @@ class _VoiceChatScreenState extends State<VoiceChatScreen>
       // Load recent history into state
       final recentHistory = await _memoryService.getRecentHistory(limit: 20);
       _chatState.clearHistory();
-      for (final memory in recentHistory.reversed) {
-        _chatState.addConversationTurn(memory.userInput, memory.aiResponse);
+      // recientHistory son List<String> — cada string alterna user/ai
+      for (var i = 0; i + 1 < recentHistory.length; i += 2) {
+        _chatState.addConversationTurn(recentHistory[i], recentHistory[i + 1]);
       }
 
       final count = await _memoryService.getMemoryCount();
@@ -206,7 +283,7 @@ class _VoiceChatScreenState extends State<VoiceChatScreen>
 
       final response = await _aiService.getResponse(
         transcription,
-        context: contextList,
+        context: contextList.cast<String>()
       );
 
       _chatState.updateAiResponse(response);

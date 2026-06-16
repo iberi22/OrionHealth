@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
+import 'dart:async';
 import 'package:flutter/services.dart';
 
 enum AicoreStatus { available, downloadable, unavailable, downloading }
@@ -95,4 +96,71 @@ class AicoreService {
 
   bool get isInitialized => _initialized;
   bool get usesFullModel => _useFullModel;
+}
+
+/// Stub — pending real AIService implementation
+class AIService {
+  final _stateController = StreamController<AIServiceState>.broadcast();
+
+  AIServiceState _state = AIServiceState.loading;
+  AIServiceState get currentState => _state;
+  Stream<AIServiceState> get stateStream => _stateController.stream;
+
+  Future<void> initialize() async {
+    _state = AIServiceState.ready;
+    _stateController.add(_state);
+  }
+
+  Future<String> getResponse(String input, {List<String>? context}) async {
+    return 'Respuesta simulada';
+  }
+
+  Future<String> transcribeAudio(List<int> audioBytes) async {
+    return 'Transcripción simulada';
+  }
+
+  void dispose() {
+    _stateController.close();
+  }
+}
+
+enum AIServiceState { loading, ready, error }
+
+/// Stub — AgentMemoryService for xavier integration
+class AgentMemoryService {
+  Future<void> initialize() async {}
+
+  Future<List<_MemoryNode>> searchMemories({
+    required String query,
+    int limit = 5,
+    double minScore = 0.6,
+  }) async {
+    return [];
+  }
+
+  Future<List<String>> getRecentHistory({int limit = 20}) async {
+    return [];
+  }
+
+  Future<int> getMemoryCount() async {
+    return 0;
+  }
+
+  Future<String> getContextForQuery(String query) async {
+    return '';
+  }
+
+  Future<void> addMemory({
+    required String input,
+    required String output,
+  }) async {}
+
+  void dispose() {}
+}
+
+class _MemoryNode {
+  final String userInput;
+  final String aiResponse;
+
+  _MemoryNode({required this.userInput, required this.aiResponse});
 }
