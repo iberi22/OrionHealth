@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:orionhealth/core/services/app_logger.dart';
 
 /// Centralized error handling system for the Orion app
 class ErrorHandler {
@@ -35,10 +34,8 @@ class ErrorHandler {
       showToUser: showToUser,
     );
 
-    // Log to console in debug mode
-    if (kDebugMode) {
-      _logToConsole(appError);
-    }
+    // Log to console via AppLogger
+    _logToConsole(appError);
 
     // Send to error stream for UI handling
     _instance._errorController.add(appError);
@@ -94,23 +91,18 @@ class ErrorHandler {
     );
   }
 
-  /// Log error to console with formatting
+  /// Log error to console with formatting via AppLogger
   static void _logToConsole(AppError error) {
     final severityIcon = _getSeverityIcon(error.severity);
-    debugPrint(
+    final tag = 'ErrorHandler.${error.context}';
+    AppLogger.e(
+      tag,
       '$severityIcon [${error.severity.name.toUpperCase()}] ${error.context}',
+      error: error.error,
+      stackTrace: error.stackTrace,
     );
-    debugPrint('   Error: ${error.error}');
-    if (error.stackTrace != null) {
-      debugPrint(
-        '   Stack: ${error.stackTrace.toString().split('\n').take(3).join('\n')}',
-      );
-    }
-    if (error.metadata.isNotEmpty) {
-      debugPrint('   Metadata: ${error.metadata}');
-    }
-    debugPrint('   Time: ${error.timestamp}');
-    debugPrint('---');
+    AppLogger.d(tag, '   Metadata: ${error.metadata}');
+    AppLogger.d(tag, '   Time: ${error.timestamp}');
   }
 
   /// Get icon for severity level
@@ -129,8 +121,8 @@ class ErrorHandler {
 
   /// Local diagnostics hook. No remote crash reporter is used by the MVP.
   static void _logToLocalDiagnostics(AppError error) {
-    if (kDebugMode && error.severity == ErrorSeverity.critical) {
-      debugPrint('Local critical diagnostic captured for ${error.context}');
+    if (error.severity == ErrorSeverity.critical) {
+      AppLogger.w('ErrorHandler', 'Local critical diagnostic captured for ${error.context}');
     }
   }
 
