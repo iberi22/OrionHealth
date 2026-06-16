@@ -15,13 +15,34 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
+
+    // ── Product flavors (dev / staging / prod) ─────────────
+    flavorDimensions += listOf("environment")
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            manifestPlaceholders["appAuthRedirectScheme"] = "com.orionhealth.dev"
+        }
+        create("staging") {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = "-staging"
+            manifestPlaceholders["appAuthRedirectScheme"] = "com.orionhealth.staging"
+        }
+        create("prod") {
+            dimension = "environment"
+            manifestPlaceholders["appAuthRedirectScheme"] = "com.orionhealth.app"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.orionhealth.orionhealth_health"
         minSdk = 28
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["appAuthRedirectScheme"] = "com.orionhealth.app"
     }
     buildTypes {
         release {

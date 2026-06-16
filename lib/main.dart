@@ -2,14 +2,20 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'l10n/app_localizations.dart';
 import 'core/di/injection.dart';
 import 'core/theme/app_theme.dart';
+import 'core/services/app_logger.dart';
+import 'core/widgets/error_boundary.dart';
 
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
@@ -112,13 +118,27 @@ void main() async {
   });
 }
 
-void _logError(Object error, StackTrace? stack) {
-  // ignore: avoid_print
-  print('--- FATAL ERROR ---');
-  // ignore: avoid_print
-  print(error);
-  // ignore: avoid_print
-  print(stack);
+Future<File> _crashLogFile() async {
+  final dir = await getApplicationDocumentsDirectory();
+  return File('${dir.path}/crash_reports.jsonl');
+}
+
+Future<void> _logError(Object error, StackTrace? stack) async {
+  AppLogger.e('CrashReporter', 'Crash detected', error: error, stackTrace: stack);
+  try {
+    final report = jsonEncode({
+      'timestamp': DateTime.now().toIso8601String(),
+      'error': error.toString(),
+      'stackTrace': stack?.toString(),
+      'platform': defaultTargetPlatform.name,
+      'releaseMode': kReleaseMode,
+    });
+    final file = await _crashLogFile();
+    await file.writeAsString('$report\n', mode: FileMode.writeOnlyAppend);
+    AppLogger.i('CrashReporter', 'Crash report persisted');
+  } catch (e) {
+    AppLogger.e('CrashReporter', 'Failed to persist crash report', error: e);
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -130,15 +150,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      theme: AppTheme.darkTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('es', ''), // Force Spanish for now as requested
-      home: const _StartupRouter(),
+    return ErrorBoundary(
+      label: 'AppRoot',
+      child: MaterialApp(
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        theme: AppTheme.darkTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.dark,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('es', ''), // Force Spanish for now as requested
+        home: const _StartupRouter(),
+      ),
     );
   }
 }
