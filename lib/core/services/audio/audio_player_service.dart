@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
+import 'package:orionhealth_health/core/services/tts/tts_adapter.dart';
+import 'package:orionhealth_health/core/services/tts/tts_types.dart';
+import 'package:orionhealth_health/core/services/tts/sherpa_onnx_adapter.dart';
+import 'package:orionhealth_health/core/services/tts/model_manager.dart';
 
 enum AudioState { idle, recording, processing, speaking, playing, playbackCompleted, playbackStopped, ttsStopped, error }
 
@@ -19,17 +23,60 @@ class AudioService extends AudioPlayerService {
   Stream<double> get currentVolumeStream => _volumeController.stream;
   Stream<AudioState> get stateStream => _audioStateController.stream;
 
+  SherpaOnnxTTSAdapter? _tts;
+  bool _ttsInitialized = false;
+
+  Future<void> _initTTS() async {
+    if (_ttsInitialized) return;
+    try {
+      _tts = SherpaOnnxTTSAdapter(
+        callbacks: TTSCallbacks(
+          onStart: () {
+            _audioStateController.add(AudioState.speaking);
+          },
+          onComplete: () {
+            _audioStateController.add(AudioState.playbackCompleted);
+          },
+          onCancel: () {
+            _audioStateController.add(AudioState.ttsStopped);
+          },
+          onError: (msg) {
+            _errorController.add(msg ?? 'TTS error');
+            _audioStateController.add(AudioState.error);
+          },
+        ),
+      );
+      await _tts!.initialize();
+      _ttsInitialized = true;
+    } catch (e) {
+      if (kDebugMode) print('TTS init failed: $e — using playAudioBytes fallback');
+      _ttsInitialized = false;
+    }
+  }
+
   Future<void> speakText(String text) async {
-    // TODO: implement TTS — stub for compilation
+    await _initTTS();
+    if (_tts != null && _ttsInitialized) {
+      _audioStateController.add(AudioState.speaking);
+      await _tts!.speak(text);
+    } else {
+      _errorController.add('TTS not initialized — no speech available');
+      _audioStateController.add(AudioState.error);
+    }
   }
 
   Future<void> stopTTS() async {
-    // TODO: implement — stub for compilation
+    try {
+      await _tts?.stop();
+      _audioStateController.add(AudioState.ttsStopped);
+    } catch (e) {
+      _errorController.add('Failed to stop TTS: $e');
+    }
   }
 
   Future<void> stopAll() async {
     await stopPlayback();
-    // TODO: stop TTS too — stub for compilation
+    await stopTTS();
   }
 
   Future<void> startRecording() async {
