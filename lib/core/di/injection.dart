@@ -13,5 +13,9 @@ final getIt = GetIt.instance;
   asExtension: true, // default
 )
 Future<void> configureDependencies() async {
-  await getIt.init(environment: 'mobile');
+  await getIt.init(environment: AppEnvironment.current.name);
 }
+
+// Re-export for convenience
+import 'package:orionhealth_health/core/config/environment.dart';
+export 'package:orionhealth_health/core/config/environment.dart';
