@@ -20,7 +20,6 @@ class AppLogger {
   /// Debug message. Silent in release mode.
   static void d(String tag, String message) {
     if (!kReleaseMode) {
-      // ignore: prefer_constructors_over_static_methods
       _log('[$tag] DEBUG: $message');
     }
   }
@@ -28,7 +27,6 @@ class AppLogger {
   /// Info message. Silent in release mode.
   static void i(String tag, String message) {
     if (!kReleaseMode) {
-      // ignore: prefer_constructors_over_static_methods
       _log('[$tag] INFO: $message');
     }
   }
@@ -36,7 +34,6 @@ class AppLogger {
   /// Warning message. Silent in release mode.
   static void w(String tag, String message) {
     if (!kReleaseMode) {
-      // ignore: prefer_constructors_over_static_methods
       _log('[$tag] WARN: $message');
     }
   }
@@ -58,4 +55,3 @@ class AppLogger {
     print(message);
   }
 }
-
