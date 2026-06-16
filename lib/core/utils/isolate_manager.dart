@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'package:flutter/foundation.dart';
+import 'package:orionhealth/core/services/app_logger.dart';
 
 /// Manages isolates for heavy computational tasks
 class IsolateManager {
@@ -35,9 +35,7 @@ class IsolateManager {
     await worker.initialize();
     _workers[taskType] = worker;
 
-    if (kDebugMode) {
-      debugPrint('IsolateManager: Created worker for $taskType');
-    }
+    AppLogger.d('IsolateManager', 'Created worker for $taskType');
 
     return worker;
   }
@@ -59,9 +57,7 @@ class IsolateManager {
       await worker.terminate();
       _workers.remove(taskType);
 
-      if (kDebugMode) {
-        debugPrint('IsolateManager: Terminated worker for $taskType');
-      }
+      AppLogger.d('IsolateManager', 'Terminated worker for $taskType');
     }
   }
 
@@ -71,9 +67,7 @@ class IsolateManager {
     await Future.wait(futures);
     _workers.clear();
 
-    if (kDebugMode) {
-      debugPrint('IsolateManager: Terminated all workers');
-    }
+    AppLogger.d('IsolateManager', 'Terminated all workers');
   }
 
   /// Get worker statistics
@@ -136,15 +130,9 @@ class IsolateWorker {
       await _initCompleter!.future;
       _isActive = true;
 
-      if (kDebugMode) {
-        debugPrint('IsolateWorker: Initialized worker for $taskType');
-      }
+      AppLogger.d('IsolateWorker', 'Initialized worker for $taskType');
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint(
-          'IsolateWorker: Failed to initialize worker for $taskType: $e',
-        );
-      }
+      AppLogger.e('IsolateWorker', 'Failed to initialize worker for $taskType', error: e);
       await terminate();
       rethrow;
     }
@@ -212,9 +200,7 @@ class IsolateWorker {
     _sendPort = null;
     _receivePort = null;
 
-    if (kDebugMode) {
-      debugPrint('IsolateWorker: Terminated worker for $taskType');
-    }
+    AppLogger.d('IsolateWorker', 'Terminated worker for $taskType');
   }
 
   /// Isolate entry point
