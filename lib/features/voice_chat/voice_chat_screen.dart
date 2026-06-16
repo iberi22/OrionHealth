@@ -66,7 +66,7 @@ class VoiceChatControls extends StatelessWidget {
   final TextEditingController textController;
   final VoidCallback onRecordPressed;
   final VoidCallback onStopRecording;
-  final void Function(String) onSendTextMessage;
+  final Future<void> Function(String) onSendTextMessage;
   final VoidCallback onInterrupt;
 
   const VoiceChatControls({
