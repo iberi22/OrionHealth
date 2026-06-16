@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:orionhealth/core/services/app_logger.dart';
 
 /// Interface for CacheManager
 abstract class CacheManagerInterface {
@@ -51,15 +51,9 @@ class CacheManager implements CacheManagerInterface {
       // Clean up expired cache entries
       await _cleanupExpiredEntries();
 
-      if (kDebugMode) {
-        debugPrint(
-          'CacheManager: Initialized with cache dir: ${_cacheDir!.path}',
-        );
-      }
+      AppLogger.d('CacheManager', 'Initialized with cache dir: ${_cacheDir!.path}');
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint('CacheManager: Failed to initialize - $e');
-      }
+      AppLogger.e('CacheManager', 'Failed to initialize', error: e);
     }
   }
 
@@ -91,13 +85,9 @@ class CacheManager implements CacheManagerInterface {
       // Cleanup if cache is too large
       await _cleanupIfNeeded(type);
 
-      if (kDebugMode) {
-        debugPrint('CacheManager: Cached ${data.length} bytes for key: $key');
-      }
+      AppLogger.d('CacheManager', 'Cached ${data.length} bytes for key: $key');
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint('CacheManager: Failed to cache data for key $key - $e');
-      }
+      AppLogger.e('CacheManager', 'Failed to cache data for key $key', error: e);
     }
   }
 
@@ -113,9 +103,7 @@ class CacheManager implements CacheManagerInterface {
     if (memoryEntry != null &&
         !memoryEntry.isExpired &&
         memoryEntry.type == type) {
-      if (kDebugMode) {
-        debugPrint('CacheManager: Retrieved from memory cache: $key');
-      }
+      AppLogger.d('CacheManager', 'Retrieved from memory cache: $key');
       return memoryEntry.data;
     }
 
@@ -137,19 +125,11 @@ class CacheManager implements CacheManagerInterface {
       // Add to memory cache
       _addToMemoryCache(key, data, type);
 
-      if (kDebugMode) {
-        debugPrint(
-          'CacheManager: Retrieved ${data.length} bytes for key: $key',
-        );
-      }
+      AppLogger.d('CacheManager', 'Retrieved ${data.length} bytes for key: $key');
 
       return data;
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint(
-          'CacheManager: Failed to retrieve cached data for key $key - $e',
-        );
-      }
+      AppLogger.e('CacheManager', 'Failed to retrieve cached data for key $key', error: e);
       return null;
     }
   }
@@ -199,15 +179,9 @@ class CacheManager implements CacheManagerInterface {
 
       await _removeCacheMetadata(key, type);
 
-      if (kDebugMode) {
-        debugPrint('CacheManager: Removed cached data for key: $key');
-      }
+      AppLogger.d('CacheManager', 'Removed cached data for key: $key');
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint(
-          'CacheManager: Failed to remove cached data for key $key - $e',
-        );
-      }
+      AppLogger.e('CacheManager', 'Failed to remove cached data for key $key', error: e);
     }
   }
 
@@ -236,15 +210,9 @@ class CacheManager implements CacheManagerInterface {
         _memoryCache.clear();
       }
 
-      if (kDebugMode) {
-        debugPrint(
-          'CacheManager: Cleared cache${type != null ? ' for ${type.name}' : ''}',
-        );
-      }
+      AppLogger.d('CacheManager', 'Cleared cache${type != null ? ' for ${type.name}' : ''}');
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint('CacheManager: Failed to clear cache - $e');
-      }
+      AppLogger.e('CacheManager', 'Failed to clear cache', error: e);
     }
   }
 
