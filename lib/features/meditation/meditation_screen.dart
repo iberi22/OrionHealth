@@ -2,10 +2,154 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:orionhealth_health/core/services/audio/audio_player_service.dart';
 import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
+import 'package:orionhealth_health/features/meditation/meditation_models.dart';
 
 typedef MeditationAudioAction = Future<void> Function();
 typedef MeditationSpeakAction = Future<void> Function(String text);
 typedef MeditationMemoryHintsLoader = Future<List<String>> Function();
+
+// ---------------------------------------------------------------------------
+// Stub service — pending real MeditationService implementation
+// ---------------------------------------------------------------------------
+class MeditationService {
+  List<MeditationScript> scripts = [
+    const MeditationScript(
+      id: 'calm-01',
+      title: 'Calma Interior',
+      category: MeditationCategory.calm,
+      durationMinutes: 5,
+      steps: ['Respira profundamente', 'Relaja los hombros', 'Sonríe'],
+    ),
+  ];
+
+  Future<void> initialize() async {}
+
+  Future<MeditationScript> recommendScript({List<String>? memoryHints}) async {
+    return scripts.isNotEmpty
+        ? scripts.first
+        : const MeditationScript(
+            id: 'default',
+            title: 'Meditación',
+            category: MeditationCategory.calm,
+            durationMinutes: 5,
+            steps: ['Relájate'],
+          );
+  }
+
+  Future<MeditationProgress> getProgress() async {
+    return const MeditationProgress();
+  }
+
+  Future<MeditationSessionRecord> startSession(
+    MeditationScript script,
+  ) async {
+    return MeditationSessionRecord(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      scriptId: script.id,
+      category: script.category,
+      startedAt: DateTime.now(),
+    );
+  }
+
+  Future<void> completeSession({
+    required MeditationSessionRecord session,
+    required int elapsedSeconds,
+    required int completedSteps,
+  }) async {}
+}
+
+// ---------------------------------------------------------------------------
+// Stub widgets — pending real Meditation*View widget implementations
+// ---------------------------------------------------------------------------
+class MeditationFinishedView extends StatelessWidget {
+  final int elapsedSeconds;
+  final MeditationProgress progress;
+  final VoidCallback onRestart;
+
+  const MeditationFinishedView({
+    super.key,
+    required this.elapsedSeconds,
+    required this.progress,
+    required this.onRestart,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: Text('Meditación completada'));
+  }
+}
+
+class MeditationWelcomeView extends StatelessWidget {
+  final MeditationScript? script;
+  final MeditationProgress progress;
+  final String? error;
+  final VoidCallback onStart;
+
+  const MeditationWelcomeView({
+    super.key,
+    required this.script,
+    required this.progress,
+    this.error,
+    required this.onStart,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(script?.title ?? 'Meditación'),
+        if (error != null) Text(error!, style: const TextStyle(color: Colors.orange)),
+        ElevatedButton(onPressed: onStart, child: const Text('Comenzar')),
+      ],
+    );
+  }
+}
+
+class MeditationActiveView extends StatelessWidget {
+  final List<String> steps;
+  final int currentStep;
+  final int elapsedSeconds;
+  final bool isPaused;
+  final Animation<double> breathAnimation;
+  final VoidCallback onPrevious;
+  final VoidCallback onTogglePause;
+  final VoidCallback onNext;
+
+  const MeditationActiveView({
+    super.key,
+    required this.steps,
+    required this.currentStep,
+    required this.elapsedSeconds,
+    required this.isPaused,
+    required this.breathAnimation,
+    required this.onPrevious,
+    required this.onTogglePause,
+    required this.onNext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Paso ${currentStep + 1} de ${steps.length}'),
+        Text(steps.isNotEmpty ? steps[currentStep] : ''),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(icon: const Icon(Icons.skip_previous), onPressed: onPrevious),
+            IconButton(
+              icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
+              onPressed: onTogglePause,
+            ),
+            IconButton(icon: const Icon(Icons.skip_next), onPressed: onNext),
+          ],
+        ),
+      ],
+    );
+  }
+}
 
 class MeditationScreen extends StatefulWidget {
   final MeditationService? meditationService;
@@ -120,19 +264,13 @@ class _MeditationScreenState extends State<MeditationScreen>
   }
 
   Future<List<String>> _loadLocalMemoryHints() async {
-    try {
-      final memory = AgentMemoryService();
-      await memory.initialize();
-      final matches = await memory.searchMemories(
-        query: 'meditacion calma enfoque dormir respiracion ansiedad',
-        limit: 3,
-      );
-      return matches
-          .map((node) => '${node.userInput} ${node.aiResponse}')
-          .toList();
-    } catch (_) {
-      return const [];
-    }
+    // AgentMemoryService no está disponible — usar hints por defecto.
+    return [
+      'calma interior respiracion profunda',
+      'enfoque concentracion mente clara',
+      'relajacion cuerpo-mente antes de dormir',
+      'ansiedad control respiracion',
+    ];
   }
 
   Future<void> _startMeditation() async {

@@ -2,6 +2,52 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
+
+enum AudioState { idle, recording, processing, speaking, playing, playbackCompleted, playbackStopped, ttsStopped, error }
+
+/// Legacy alias — voice chat screens reference `AudioService`.
+class AudioService extends AudioPlayerService {
+  final AudioRecorderService _recorder = AudioRecorderService();
+  final StreamController<AudioState> _audioStateController =
+      StreamController<AudioState>.broadcast();
+  final StreamController<double> _volumeController =
+      StreamController<double>.broadcast();
+
+  AudioService() : super();
+
+  Stream<double> get currentVolumeStream => _volumeController.stream;
+  Stream<AudioState> get stateStream => _audioStateController.stream;
+
+  Future<void> speakText(String text) async {
+    // TODO: implement TTS — stub for compilation
+  }
+
+  Future<void> stopTTS() async {
+    // TODO: implement — stub for compilation
+  }
+
+  Future<void> stopAll() async {
+    await stopPlayback();
+    // TODO: stop TTS too — stub for compilation
+  }
+
+  Future<void> startRecording() async {
+    await _recorder.startRecording();
+  }
+
+  Future<Uint8List?> stopRecording() async {
+    return await _recorder.stopRecording();
+  }
+
+  @override
+  void dispose() {
+    _recorder.dispose();
+    _audioStateController.close();
+    _volumeController.close();
+    super.dispose();
+  }
+}
 
 class AudioPlayerService {
   final AudioPlayer _player = AudioPlayer();
