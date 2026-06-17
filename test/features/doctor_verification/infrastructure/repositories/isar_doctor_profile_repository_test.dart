@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_rating.dart';
-import 'package:orionhealth_health/features/doctor_verification/data/repositories/isar_doctor_profile_repository.dart';
-import 'package:orionhealth_health/features/doctor_verification/data/repositories/isar_rating_repository.dart';
+import 'package:orionhealth_health/features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository.dart';
+import 'package:orionhealth_health/features/doctor_verification/infrastructure/repositories/isar_rating_repository.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
