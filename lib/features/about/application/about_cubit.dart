@@ -11,9 +11,13 @@ abstract class AboutState extends Equatable {
   List<Object?> get props => [];
 }
 
-class AboutInitial extends AboutState {}
+class AboutInitial extends AboutState {
+  const AboutInitial();
+}
 
-class AboutLoading extends AboutState {}
+class AboutLoading extends AboutState {
+  const AboutLoading();
+}
 
 class AboutLoaded extends AboutState {
   final AboutInfo aboutInfo;

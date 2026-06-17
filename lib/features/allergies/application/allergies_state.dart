@@ -8,9 +8,13 @@ abstract class AllergiesState extends Equatable {
   List<Object?> get props => [];
 }
 
-class AllergiesInitial extends AllergiesState {}
+class AllergiesInitial extends AllergiesState {
+  const AllergiesInitial();
+}
 
-class AllergiesLoading extends AllergiesState {}
+class AllergiesLoading extends AllergiesState {
+  const AllergiesLoading();
+}
 
 class AllergiesLoaded extends AllergiesState {
   final List<Allergy> allergies;

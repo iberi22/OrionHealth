@@ -8,9 +8,13 @@ abstract class DoctorVerificationState extends Equatable {
   List<Object?> get props => [];
 }
 
-class DoctorVerificationInitial extends DoctorVerificationState {}
+class DoctorVerificationInitial extends DoctorVerificationState {
+  const DoctorVerificationInitial();
+}
 
-class DoctorVerificationLoading extends DoctorVerificationState {}
+class DoctorVerificationLoading extends DoctorVerificationState {
+  const DoctorVerificationLoading();
+}
 
 class DoctorVerificationLoaded extends DoctorVerificationState {
   final List<DoctorProfile> doctors;

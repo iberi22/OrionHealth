@@ -18,9 +18,13 @@ abstract class SharingState extends Equatable {
   List<Object?> get props => [];
 }
 
-class SharingInitial extends SharingState {}
+class SharingInitial extends SharingState {
+  const SharingInitial();
+}
 
-class SharingReady extends SharingState {}
+class SharingReady extends SharingState {
+  const SharingReady();
+}
 
 class SharingScanning extends SharingState {
   final TransferMethod method;

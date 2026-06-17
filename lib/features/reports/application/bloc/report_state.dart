@@ -1,10 +1,16 @@
 part of 'report_bloc.dart';
 
-abstract class ReportState {}
+abstract class ReportState {
+  const ReportState();
+}
 
-class ReportInitial extends ReportState {}
+class ReportInitial extends ReportState {
+  const ReportInitial();
+}
 
-class ReportLoading extends ReportState {}
+class ReportLoading extends ReportState {
+  const ReportLoading();
+}
 
 class ReportLoaded extends ReportState {
   final List<Report> reports;

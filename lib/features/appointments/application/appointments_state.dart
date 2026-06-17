@@ -8,9 +8,13 @@ abstract class AppointmentsState extends Equatable {
   List<Object?> get props => [];
 }
 
-class AppointmentsInitial extends AppointmentsState {}
+class AppointmentsInitial extends AppointmentsState {
+  const AppointmentsInitial();
+}
 
-class AppointmentsLoading extends AppointmentsState {}
+class AppointmentsLoading extends AppointmentsState {
+  const AppointmentsLoading();
+}
 
 class AppointmentsLoaded extends AppointmentsState {
   final List<Appointment> appointments;
