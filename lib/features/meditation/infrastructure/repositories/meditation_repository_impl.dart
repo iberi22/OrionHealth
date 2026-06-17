@@ -1,32 +1,47 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:orionhealth_health/core/services/app_logger.dart';
-import 'package:orionhealth_health/features/meditation/meditation_models.dart';
+import 'package:injectable/injectable.dart';
+import '../../../../core/services/app_logger.dart';
+import '../../domain/entities/meditation_category.dart';
+import '../../domain/entities/meditation_preferences.dart';
+import '../../domain/entities/meditation_progress.dart';
+import '../../domain/entities/meditation_script.dart';
+import '../../domain/entities/meditation_session.dart';
+import '../../domain/repositories/meditation_repository.dart';
+import '../datasources/meditation_local_datasource.dart';
 
-/// Full offline meditation service with bundled scripts,
-/// progress persistence, and preferences storage.
-///
-/// All content is pre-loaded; no network required.
-class MeditationServiceV2 {
-  static const String _scriptsKey = 'meditation_scripts';
-  static const String _prefsKey = 'meditation_preferences';
-  static const String _historyKey = 'meditation_history';
-  static const String _progressKey = 'meditation_progress';
+@LazySingleton(as: MeditationRepository)
+class MeditationRepositoryImpl implements MeditationRepository {
+  final MeditationLocalDataSource _localDataSource;
 
   List<MeditationScript> _scripts = [];
-  List<MeditationSessionRecord> _history = [];
+  List<MeditationSession> _history = [];
   MeditationPreferences _preferences = const MeditationPreferences();
   bool _initialized = false;
 
-  // ── Script library ───────────────────────────────────────
+  MeditationRepositoryImpl(this._localDataSource);
 
+  @override
   List<MeditationScript> get scripts => List.unmodifiable(_scripts);
-  MeditationPreferences get preferences => _preferences;
-  List<MeditationSessionRecord> get history => List.unmodifiable(_history);
 
+  @override
+  MeditationPreferences get preferences => _preferences;
+
+  @override
+  List<MeditationSession> get history => List.unmodifiable(_history);
+
+  @override
+  Future<void> initialize() async {
+    if (_initialized) return;
+    _scripts = _bundledScripts();
+    _preferences = await _localDataSource.getPreferences() ?? const MeditationPreferences();
+    _history = await _localDataSource.getHistory();
+    _initialized = true;
+    AppLogger.i('MeditationRepository', 'Initialized with ${_scripts.length} scripts');
+  }
+
+  @override
   MeditationScript? getScript(String id) {
     try {
       return _scripts.firstWhere((s) => s.id == id);
@@ -35,67 +50,13 @@ class MeditationServiceV2 {
     }
   }
 
+  @override
   List<MeditationScript> scriptsByCategory(MeditationCategory category) =>
       _scripts.where((s) => s.category == category).toList();
 
-  // ── Lifecycle ────────────────────────────────────────────
-
-  Future<void> initialize() async {
-    if (_initialized) return;
-    _loadBundledScripts();
-    await _loadFromStorage();
-    _initialized = true;
-    AppLogger.i('MeditationV2', 'Initialized with ${_scripts.length} scripts');
-  }
-
-  void _loadBundledScripts() {
-    _scripts = _bundledScripts();
-    AppLogger.d('MeditationV2', 'Loaded ${_scripts.length} bundled scripts');
-  }
-
-  Future<void> _loadFromStorage() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-
-      // Load preferences
-      final prefsJson = prefs.getString(_prefsKey);
-      if (prefsJson != null) {
-        _preferences =
-            MeditationPreferences.fromJson(jsonDecode(prefsJson));
-      }
-
-      // Load history
-      final historyJson = prefs.getString(_historyKey);
-      if (historyJson != null) {
-        final list = jsonDecode(historyJson) as List<dynamic>;
-        _history = list
-            .map((e) => MeditationSessionRecord.fromJson(e as Map<String, dynamic>))
-            .toList();
-      }
-
-      AppLogger.i('MeditationV2', 'Loaded ${_history.length} sessions from storage');
-    } catch (e) {
-      AppLogger.e('MeditationV2', 'Failed to load from storage', error: e);
-    }
-  }
-
-  Future<void> _saveToStorage() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_prefsKey, jsonEncode(_preferences.toJson()));
-      await prefs.setString(
-        _historyKey,
-        jsonEncode(_history.map((s) => s.toJson()).toList()),
-      );
-    } catch (e) {
-      AppLogger.e('MeditationV2', 'Failed to save to storage', error: e);
-    }
-  }
-
-  // ── Script recommendation ────────────────────────────────
-
+  @override
   Future<MeditationScript> recommendScript({List<String>? memoryHints}) async {
-    if (_scripts.isEmpty) return _fallbackScript();
+    if (_scripts.isEmpty) _scripts = _bundledScripts();
 
     // Try matching by last completed
     if (_preferences.lastScriptId != null) {
@@ -110,38 +71,26 @@ class MeditationServiceV2 {
     return _scripts.first;
   }
 
-  MeditationScript _fallbackScript() {
-    const fallback = MeditationScript(
-      id: 'calm-01',
-      title: 'Calma Interior',
-      category: MeditationCategory.calm,
-      durationMinutes: 5,
-      steps: ['Respira profundamente', 'Relaja los hombros', 'Sonríe'],
-    );
-    _scripts = [fallback];
-    return fallback;
-  }
-
-  // ── Session management ───────────────────────────────────
-
-  Future<MeditationSessionRecord> startSession(MeditationScript script) async {
-    final session = MeditationSessionRecord(
+  @override
+  Future<MeditationSession> startSession(MeditationScript script) async {
+    final session = MeditationSession(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       scriptId: script.id,
       category: script.category,
       startedAt: DateTime.now(),
     );
 
-    _updatePreferences(script);
+    await _updateLastScriptId(script.id);
     return session;
   }
 
+  @override
   Future<void> completeSession({
-    required MeditationSessionRecord session,
+    required MeditationSession session,
     required int elapsedSeconds,
     required int completedSteps,
   }) async {
-    final completed = MeditationSessionRecord(
+    final completed = MeditationSession(
       id: session.id,
       scriptId: session.scriptId,
       category: session.category,
@@ -159,16 +108,14 @@ class MeditationServiceV2 {
       _history = _history.sublist(0, 100);
     }
 
-    _updatePreferences(getScript(session.scriptId));
-    await _saveToStorage();
-    AppLogger.i('MeditationV2', 'Session completed: ${session.id} ($elapsedSeconds s)');
+    await _localDataSource.saveHistory(_history);
+    await _updateLastScriptId(session.scriptId);
+    AppLogger.i('MeditationRepository', 'Session completed: ${session.id} ($elapsedSeconds s)');
   }
 
-  // ── Progress ─────────────────────────────────────────────
-
+  @override
   Future<MeditationProgress> getProgress() async {
-    final completed =
-        _history.where((s) => s.completed).toList();
+    final completed = _history.where((s) => s.completed).toList();
     return MeditationProgress(
       totalSessions: _history.length,
       completedSessions: completed.length,
@@ -178,19 +125,16 @@ class MeditationServiceV2 {
     );
   }
 
-  // ── Preferences ──────────────────────────────────────────
-
-  void _updatePreferences(MeditationScript? script) {
-    if (script == null) return;
-    _preferences = _preferences.copyWith(lastScriptId: script.id);
-  }
-
+  @override
   Future<void> updatePreferences(MeditationPreferences prefs) async {
     _preferences = prefs;
-    await _saveToStorage();
+    await _localDataSource.savePreferences(_preferences);
   }
 
-  // ── Bundled scripts (full Spanish content) ───────────────
+  Future<void> _updateLastScriptId(String scriptId) async {
+    _preferences = _preferences.copyWith(lastScriptId: scriptId);
+    await _localDataSource.savePreferences(_preferences);
+  }
 
   static List<MeditationScript> _bundledScripts() {
     return [

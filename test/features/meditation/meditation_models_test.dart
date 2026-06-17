@@ -1,5 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/meditation/meditation_models.dart';
+import 'package:orionhealth_health/features/meditation/domain/entities/meditation_category.dart';
+import 'package:orionhealth_health/features/meditation/domain/entities/meditation_script.dart';
+import 'package:orionhealth_health/features/meditation/domain/entities/meditation_preferences.dart';
+import 'package:orionhealth_health/features/meditation/domain/entities/meditation_session.dart';
+import 'package:orionhealth_health/features/meditation/domain/entities/meditation_progress.dart';
 
 void main() {
   group('MeditationCategory', () {
@@ -149,11 +153,11 @@ void main() {
     });
   });
 
-  group('MeditationSessionRecord', () {
+  group('MeditationSession', () {
     final now = DateTime(2026, 6, 15, 19, 0, 0);
 
     test('creates with required fields', () {
-      final record = MeditationSessionRecord(
+      final record = MeditationSession(
         id: 'session-1',
         scriptId: 'breath-01',
         category: MeditationCategory.breathing,
@@ -171,7 +175,7 @@ void main() {
     });
 
     test('toJson and fromJson roundtrip', () {
-      final record = MeditationSessionRecord(
+      final record = MeditationSession(
         id: 'session-2',
         scriptId: 'calm-01',
         category: MeditationCategory.calm,
@@ -183,7 +187,7 @@ void main() {
       );
 
       final json = record.toJson();
-      final restored = MeditationSessionRecord.fromJson(json);
+      final restored = MeditationSession.fromJson(json);
 
       expect(restored.id, record.id);
       expect(restored.scriptId, record.scriptId);
@@ -203,7 +207,7 @@ void main() {
         'startedAt': now.toIso8601String(),
       };
 
-      final restored = MeditationSessionRecord.fromJson(json);
+      final restored = MeditationSession.fromJson(json);
       expect(restored.completedAt, isNull);
       expect(restored.elapsedSeconds, 0);
       expect(restored.completedSteps, 0);
@@ -222,7 +226,7 @@ void main() {
     });
 
     test('creates with custom values', () {
-      final session = MeditationSessionRecord(
+      final session = MeditationSession(
         id: 's1',
         scriptId: 'calm-01',
         category: MeditationCategory.calm,
