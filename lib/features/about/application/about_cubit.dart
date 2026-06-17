@@ -13,7 +13,9 @@ abstract class AboutState extends Equatable {
 
 class AboutInitial extends AboutState {}
 
-class AboutLoading extends AboutState {}
+class AboutLoading extends AboutState {
+  const AboutLoading();
+}
 
 class AboutLoaded extends AboutState {
   final AboutInfo aboutInfo;
