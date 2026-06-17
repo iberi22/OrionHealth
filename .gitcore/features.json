@@ -14,17 +14,30 @@
     }
   },
   "features": {
-    "total": 25,
-    "complete_layers": 24,
+    "total": 26,
+    "complete_layers": 25,
     "gap_domain": 1,
     "needs_golden_tests": 3,
-    "needs_data_migration": 2
+    "needs_data_migration": 2,
+    "governance": {
+      "implementation_pct": 85.0,
+      "layers": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": false
+      },
+      "tests": {
+        "unit": 1,
+        "infrastructure": 2
+      }
+    }
   },
   "test_suite": {
-    "test_files": 177,
+    "test_files": 179,
     "golden_screenshots": 512,
     "integration_tests": 11,
-    "test_ratio_pct": 27.7
+    "test_ratio_pct": 28.0
   },
   "ci_cd": {
     "workflows": 5,
@@ -40,7 +53,7 @@
     "contributing": true,
     "translations_arb": 26
   },
-  "implementation_pct": 63.2,
+  "implementation_pct": 64.1,
   "bugs": [
     {
       "id": 1,
