@@ -1,127 +1,77 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/meditation/meditation_models.dart';
-import 'package:orionhealth_health/features/meditation/meditation_screen.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:orionhealth_health/features/meditation/application/meditation_cubit.dart';
+import 'package:orionhealth_health/features/meditation/application/meditation_state.dart';
+import 'package:orionhealth_health/features/meditation/presentation/meditation_page.dart';
+import 'package:orionhealth_health/features/meditation/domain/entities/meditation_script.dart';
+import 'package:orionhealth_health/features/meditation/domain/entities/meditation_category.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
 
-/// Stub MeditationService for testing
-class TestMeditationService extends MeditationService {
-  Future<void> initialize() async {}
+class MockMeditationCubit extends Mock implements MeditationCubit {}
 
-  Future<MeditationScript> recommendScript({List<String>? memoryHints}) async {
-    return const MeditationScript(
+void main() {
+  late MockMeditationCubit mockCubit;
+
+  setUp(() {
+    mockCubit = MockMeditationCubit();
+    when(() => mockCubit.state).thenReturn(const MeditationState());
+    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.initialize()).thenAnswer((_) async {});
+    when(() => mockCubit.close()).thenAnswer((_) async {});
+  });
+
+  Widget createWidgetUnderTest() {
+    return MaterialApp(
+      home: BlocProvider<MeditationCubit>.value(
+        value: mockCubit,
+        child: const MeditationView(),
+      ),
+    );
+  }
+
+  testWidgets('MeditationView renders title in AppBar',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(createWidgetUnderTest());
+
+    expect(find.text('Meditación Guiada'), findsOneWidget);
+  });
+
+  testWidgets('MeditationView shows loading indicator when status is loading',
+      (WidgetTester tester) async {
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(status: MeditationStatus.loading),
+    );
+
+    await tester.pumpWidget(createWidgetUnderTest());
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
+  testWidgets('MeditationView shows welcome view when status is idle',
+      (WidgetTester tester) async {
+    const script = MeditationScript(
       id: 'test-01',
       title: 'Respiración Guiada',
       category: MeditationCategory.breathing,
       durationMinutes: 5,
-      steps: ['Inhala', 'Exhala', 'Relájate'],
+      steps: ['Inhala', 'Exhala'],
     );
-  }
-
-  Future<MeditationProgress> getProgress() async {
-    return const MeditationProgress(
-      totalSessions: 5,
-      completedSessions: 3,
-      totalCompletedSeconds: 900,
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(status: MeditationStatus.idle, script: script),
     );
-  }
 
-  Future<MeditationSessionRecord> startSession(MeditationScript script) async {
-    return MeditationSessionRecord(
-      id: 'session-1',
-      scriptId: script.id,
-      category: script.category,
-      startedAt: DateTime.now(),
-    );
-  }
+    await tester.pumpWidget(createWidgetUnderTest());
 
-  Future<void> completeSession({
-    required MeditationSessionRecord session,
-    required int elapsedSeconds,
-    required int completedSteps,
-  }) async {}
-}
-
-/// Widget test for MeditationScreen with all dependencies provided
-/// to avoid compiling against missing service classes (AudioService,
-/// AgentMemoryService).
-void main() {
-  late TestMeditationService testService;
-
-  setUp(() {
-    testService = TestMeditationService();
+    expect(find.text('Respiración Guiada'), findsOneWidget);
+    expect(find.text('Comenzar'), findsOneWidget);
   });
 
-  testWidgets('MeditationScreen renders title in AppBar',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: MeditationScreen(
-          meditationService: testService as dynamic,
-          initializeAudio: () async {},
-          speakText: (String text) async {},
-          stopTts: () async {},
-          stopAll: () async {},
-          loadMemoryHints: () async => [],
-        ),
-      ),
-    );
-
-    expect(find.text('Meditacion Guiada'), findsOneWidget);
-  });
-
-  testWidgets('MeditationScreen shows loading indicator initially',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: MeditationScreen(
-          meditationService: testService as dynamic,
-          initializeAudio: () async {},
-          speakText: (String text) async {},
-          stopTts: () async {},
-          stopAll: () async {},
-          loadMemoryHints: () async => [],
-        ),
-      ),
-    );
-
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    expect(find.text('Preparando meditacion local...'), findsOneWidget);
-  });
-
-  testWidgets('MeditationScreen has close button', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: MeditationScreen(
-          meditationService: testService as dynamic,
-          initializeAudio: () async {},
-          speakText: (String text) async {},
-          stopTts: () async {},
-          stopAll: () async {},
-          loadMemoryHints: () async => [],
-        ),
-      ),
-    );
+  testWidgets('MeditationView has close button', (WidgetTester tester) async {
+    await tester.pumpWidget(createWidgetUnderTest());
 
     expect(find.byIcon(Icons.close), findsOneWidget);
-  });
-
-  testWidgets('MeditationScreen renders Scaffold with gradient',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: MeditationScreen(
-          meditationService: testService as dynamic,
-          initializeAudio: () async {},
-          speakText: (String text) async {},
-          stopTts: () async {},
-          stopAll: () async {},
-          loadMemoryHints: () async => [],
-        ),
-      ),
-    );
-
-    expect(find.byType(Scaffold), findsOneWidget);
-    expect(find.byType(DecoratedBox), findsOneWidget);
   });
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
 import 'package:orionhealth_health/core/services/tts/tts_adapter.dart';
@@ -11,6 +12,7 @@ import 'package:orionhealth_health/core/services/tts/model_manager.dart';
 enum AudioState { idle, recording, processing, speaking, playing, playbackCompleted, playbackStopped, ttsStopped, error }
 
 /// Legacy alias — voice chat screens reference `AudioService`.
+@lazySingleton
 class AudioService extends AudioPlayerService {
   final AudioRecorderService _recorder = AudioRecorderService();
   final StreamController<AudioState> _audioStateController =
