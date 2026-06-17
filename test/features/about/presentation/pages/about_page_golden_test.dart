@@ -6,6 +6,7 @@ import 'package:orionhealth_health/features/about/presentation/pages/about_page.
 import 'package:orionhealth_health/features/about/presentation/widgets/mission_section.dart';
 import 'package:orionhealth_health/features/about/application/about_cubit.dart';
 import 'package:orionhealth_health/features/about/domain/entities/about_info.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
 import '../../../../core/golden_test_utils.dart';
 
 class MockAboutCubit extends Mock implements AboutCubit {}
@@ -13,14 +14,17 @@ class MockAboutCubit extends Mock implements AboutCubit {}
 void main() {
   late MockAboutCubit mockAboutCubit;
 
-  setUp(() {
+  setUp(() async {
     mockAboutCubit = MockAboutCubit();
-    GetIt.I.reset();
-    GetIt.I.registerLazySingleton<AboutCubit>(() => mockAboutCubit);
+    if (!GetIt.I.isRegistered<AboutCubit>()) {
+      await configureDependencies();
+    }
+    GetIt.I.unregister<AboutCubit>();
+    GetIt.I.registerFactory<AboutCubit>(() => mockAboutCubit);
   });
 
   tearDown(() {
-    GetIt.I.reset();
+    GetIt.I.unregister<AboutCubit>();
   });
 
   group('AboutPage Golden Tests', () {
