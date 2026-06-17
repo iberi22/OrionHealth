@@ -21,7 +21,7 @@
     "needs_data_migration": 2
   },
   "test_suite": {
-    "test_files": 177,
+    "test_files": 179,
     "golden_screenshots": 512,
     "integration_tests": 11,
     "test_ratio_pct": 27.7
