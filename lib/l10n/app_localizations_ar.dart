@@ -57,6 +57,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notifications => 'الإشعارات';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'السجلات الصحية';
 
   @override

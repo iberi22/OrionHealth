@@ -57,6 +57,9 @@ class AppLocalizationsPa extends AppLocalizations {
   String get notifications => 'ਨੋਟੀਫਿਕੇਸ਼ਨਾਂ';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'ਸਿਹਤ ਰਿਕਾਰਡ';
 
   @override
