@@ -43,7 +43,7 @@ void main() {
 
     await expectLater(
       find.byType(AllergiesPage),
-      matchesGoldenFile('goldens/allergies_page.png'),
+      matchesGoldenFile("../../../../golden/reference/allergies_page.png"),
     );
   });
 }

@@ -37,7 +37,7 @@ void main() {
 
       await expectLater(
         find.byType(SharePage),
-        matchesGoldenFile('goldens/share_page_initial.png'),
+        matchesGoldenFile("../../../../golden/reference/share_page_initial.png"),
       );
     });
 
@@ -58,7 +58,7 @@ void main() {
 
       await expectLater(
         find.byType(SharePage),
-        matchesGoldenFile('goldens/share_page_active.png'),
+        matchesGoldenFile("../../../../golden/reference/share_page_active.png"),
       );
     });
 
@@ -75,7 +75,7 @@ void main() {
 
       await expectLater(
         find.byType(ReceivePage),
-        matchesGoldenFile('goldens/receive_page_setup.png'),
+        matchesGoldenFile("../../../../golden/reference/receive_page_setup.png"),
       );
     });
 
@@ -111,7 +111,7 @@ void main() {
 
       await expectLater(
         find.byType(ReceivePage),
-        matchesGoldenFile('goldens/receive_page_preview.png'),
+        matchesGoldenFile("../../../../golden/reference/receive_page_preview.png"),
       );
     });
   });

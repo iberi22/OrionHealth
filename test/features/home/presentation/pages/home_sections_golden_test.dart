@@ -49,7 +49,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthStatusGrid),
-        matchesGoldenFile('goldens/health_status_grid.png'),
+        matchesGoldenFile("../../../../golden/reference/health_status_grid.png"),
       );
 
       addTearDown(() {
@@ -75,7 +75,7 @@ void main() {
 
       await expectLater(
         find.byType(HomeDashboardPage),
-        matchesGoldenFile('goldens/home_dashboard_page_sections.png'),
+        matchesGoldenFile("../../../../golden/reference/home_dashboard_page_sections.png"),
       );
 
       addTearDown(() {

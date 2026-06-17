@@ -59,7 +59,7 @@ void main() {
 
     await expectLater(
       find.byType(ReportsPage),
-      matchesGoldenFile('goldens/reports_page_list.png'),
+      matchesGoldenFile("../../../../../golden/reference/reports_page_list.png"),
     );
 
     addTearDown(() {
@@ -93,7 +93,7 @@ void main() {
 
     await expectLater(
       find.byType(ReportDetailPage),
-      matchesGoldenFile('goldens/report_detail_page.png'),
+      matchesGoldenFile("../../../../../golden/reference/report_detail_page.png"),
     );
 
     addTearDown(() {

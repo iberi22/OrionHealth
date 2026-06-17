@@ -110,7 +110,7 @@ void main() {
 
     await expectLater(
       find.byType(MainNavigationPage),
-      matchesGoldenFile('../../../../goldens/main_navigation.png'),
+      matchesGoldenFile("../../../../../golden/reference/main_navigation.png"),
     );
 
     addTearDown(() {

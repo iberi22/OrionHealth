@@ -44,7 +44,7 @@ void main() {
 
     await expectLater(
       find.byType(SyncStatusWidget),
-      matchesGoldenFile('goldens/sync_status_initial.png'),
+      matchesGoldenFile("../../../../golden/reference/sync_status_initial.png"),
     );
     resetGoldenTest(tester);
   });
@@ -62,7 +62,7 @@ void main() {
 
     await expectLater(
       find.byType(SyncStatusWidget),
-      matchesGoldenFile('goldens/sync_status_loading.png'),
+      matchesGoldenFile("../../../../golden/reference/sync_status_loading.png"),
     );
     resetGoldenTest(tester);
   });
