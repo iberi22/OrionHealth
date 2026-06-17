@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/sync/data/fhir_mapper.dart';
+import 'package:orionhealth_health/features/sync/infrastructure/services/fhir_mapper.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 
