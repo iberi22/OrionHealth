@@ -43,6 +43,7 @@ class SyncService {
   }) async {
     try {
       final encrypted = await _encryption.encryptPayload(healthData, pin);
+      // ignore: unused_local_variable
       final package = {
         'version': _protocolVersion,
         'senderNodeId': senderNodeId,
