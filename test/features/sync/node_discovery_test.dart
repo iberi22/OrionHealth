@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bonsoir/bonsoir.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/sync/data/node_discovery_service.dart';
+import 'package:orionhealth_health/features/sync/infrastructure/services/node_discovery_service.dart';
 
 class MockBonsoirBroadcast extends Mock implements BonsoirBroadcast {}
 class MockBonsoirDiscovery extends Mock implements BonsoirDiscovery {}
