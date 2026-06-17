@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
 
 enum AicoreStatus { available, downloadable, unavailable, downloading }
 
@@ -99,6 +100,7 @@ class AicoreService {
 }
 
 /// Stub — pending real AIService implementation
+@lazySingleton
 class AIService {
   final _stateController = StreamController<AIServiceState>.broadcast();
 
@@ -127,6 +129,7 @@ class AIService {
 enum AIServiceState { loading, ready, error }
 
 /// Stub — AgentMemoryService for xavier integration
+@lazySingleton
 class AgentMemoryService {
   Future<void> initialize() async {}
 
