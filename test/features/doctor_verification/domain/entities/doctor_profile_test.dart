@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/doctor_verification/data/models/doctor_profile_model.dart';
+import 'package:orionhealth_health/features/doctor_verification/infrastructure/models/doctor_profile_model.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
 
 void main() {

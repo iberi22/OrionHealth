@@ -1,16 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/doctor_verification/data/datasources/license_registry_local.dart';
+import 'package:orionhealth_health/features/doctor_verification/infrastructure/datasources/license_registry_local.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/services/license_verifier.dart';
 
-class MockLicenseRegistryLocal extends Mock implements LicenseRegistryLocal {}
+class MockLicenseRegistryLocalDataSource extends Mock implements LicenseRegistryLocalDataSource {}
 
 void main() {
   late LicenseVerifier licenseVerifier;
-  late MockLicenseRegistryLocal mockRegistry;
+  late MockLicenseRegistryLocalDataSource mockRegistry;
 
   setUp(() {
-    mockRegistry = MockLicenseRegistryLocal();
+    mockRegistry = MockLicenseRegistryLocalDataSource();
     licenseVerifier = LicenseVerifier(mockRegistry);
   });
 
@@ -22,7 +22,7 @@ void main() {
 
     test('should return valid when license hash is in registry', () async {
       // Arrange
-      when(() => mockRegistry.getHashesForCountry(countryUS)).thenReturn([validHash]);
+      when(() => mockRegistry.getHashesForCountry(countryUS)).thenAnswer((_) async => [validHash]);
 
       // Act
       final result = await licenseVerifier.verify(validLicense, countryUS);
@@ -33,7 +33,7 @@ void main() {
 
     test('should normalize license number (strip all whitespace and uppercase)', () async {
       // Arrange
-      when(() => mockRegistry.getHashesForCountry(countryUS)).thenReturn([validHash]);
+      when(() => mockRegistry.getHashesForCountry(countryUS)).thenAnswer((_) async => [validHash]);
 
       // Act
       final result = await licenseVerifier.verify("  A B C 1 2 3 4 5  ", countryUS);
@@ -44,7 +44,7 @@ void main() {
 
     test('should return invalid when license hash is NOT in registry', () async {
       // Arrange
-      when(() => mockRegistry.getHashesForCountry(countryUS)).thenReturn([validHash]);
+      when(() => mockRegistry.getHashesForCountry(countryUS)).thenAnswer((_) async => [validHash]);
 
       // Act
       final result = await licenseVerifier.verify("WRONG123", countryUS);
@@ -55,7 +55,7 @@ void main() {
 
     test('should return unknown when country is not in registry', () async {
       // Arrange
-      when(() => mockRegistry.getHashesForCountry("UK")).thenReturn([]);
+      when(() => mockRegistry.getHashesForCountry("UK")).thenAnswer((_) async => []);
 
       // Act
       final result = await licenseVerifier.verify(validLicense, "UK");
