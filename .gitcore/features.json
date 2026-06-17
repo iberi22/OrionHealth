@@ -3,7 +3,7 @@
   "version": "0.8.0",
   "protocol_version": "2",
   "metadata": {
-    "last_updated": "2026-06-10",
+    "last_updated": "2026-06-17",
     "flutter_analyze": "0 issues",
     "total_dart_files": 640,
     "total_loc": 0,
@@ -21,7 +21,7 @@
     "needs_data_migration": 2
   },
   "test_suite": {
-    "test_files": 177,
+    "test_files": 180,
     "golden_screenshots": 512,
     "integration_tests": 11,
     "test_ratio_pct": 27.7
@@ -94,12 +94,10 @@
   ],
   "gaps": {
     "missing_golden_tests": [
-      "about",
       "calendar_import",
       "health_data_import"
     ],
     "needs_bloc_state_management": [
-      "about",
       "ai_assistant",
       "calendar_import",
       "dashboard",

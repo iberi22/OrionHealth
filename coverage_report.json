@@ -2,11 +2,11 @@
   {
     "name": "about",
     "layers": {
-      "domain": false,
-      "application": false,
-      "infrastructure": false,
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
       "presentation": true,
-      "goldens": false
+      "goldens": true
     }
   },
   {

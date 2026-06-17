@@ -21,7 +21,7 @@
 
 | Feature | D | A | I | P | Tests | Golden | Status |
 |---------|---|---|---|---|-------|--------|--------|
-| about | 2 | 1 | 1 | 2 | 1 | 0 | ✅ |
+| about | 2 | 1 | 1 | 2 | 5 | 1 | ✅ |
 | ai_assistant | 3 | 2 | 2 | 2 | 4 | 0 | ✅ * |
 | allergies | 4 | 2 | 1 | 1 | 7 | 3 | ✅ |
 | appointments | 4 | 2 | 1 | 1 | 6 | 10 | ✅ |
@@ -72,7 +72,7 @@
 | Legacy `data/` directory (4 files, has infra barrel) | doctor_verification | Low priority |
 
 ### 🟢 Minor (Low Priority)
-- 6 features missing golden tests: about, ai_assistant, calendar_import, health_data_import, sync, user_profile
+- 5 features missing golden tests: ai_assistant, calendar_import, health_data_import, sync, user_profile
 - Golden test failure directories still tracked: appointments, email-citas, ssi, vitals
 
 ---
