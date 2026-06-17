@@ -1,0 +1,502 @@
+{
+  "generated": "2026-06-17T21:26:52.149Z",
+  "totalFeatures": 26,
+  "averageImplPct": 82,
+  "formula": "domain(20) + application(20) + infrastructure(20) + presentation(20) + tests(20) = 100 max",
+  "features": [
+    {
+      "name": "about",
+      "implementationPct": 70,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "2 files",
+        "application": "1 files",
+        "infrastructure": "1 files",
+        "presentation": "2 files",
+        "tests": "2 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "allergies",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "1 files",
+        "tests": "7 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "appointments",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "1 files",
+        "tests": "6 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "auth",
+      "implementationPct": 95,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "5 files",
+        "infrastructure": "5 files",
+        "presentation": "6 files",
+        "tests": "6 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "calendar_import",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "5 files",
+        "application": "1 files",
+        "infrastructure": "5 files",
+        "presentation": "1 files",
+        "tests": "8 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "dashboard",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "3 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "1 files",
+        "tests": "4 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "doctor_verification",
+      "implementationPct": 95,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "18 files",
+        "application": "5 files",
+        "infrastructure": "7 files",
+        "presentation": "3 files",
+        "tests": "10 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "email-citas",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "1 files",
+        "tests": "5 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "eps_connection",
+      "implementationPct": 70,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "1 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "1 files",
+        "tests": "5 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "health_data_import",
+      "implementationPct": 95,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "3 files",
+        "application": "2 files",
+        "infrastructure": "2 files",
+        "presentation": "3 files",
+        "tests": "3 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "health_record",
+      "implementationPct": 95,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "6 files",
+        "application": "2 files",
+        "infrastructure": "4 files",
+        "presentation": "3 files",
+        "tests": "5 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "health_sharing",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "1 files",
+        "application": "1 files",
+        "infrastructure": "5 files",
+        "presentation": "2 files",
+        "tests": "6 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "home",
+      "implementationPct": 95,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "2 files",
+        "infrastructure": "2 files",
+        "presentation": "4 files",
+        "tests": "3 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "local_agent",
+      "implementationPct": 90,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "7 files",
+        "application": "1 files",
+        "infrastructure": "19 files",
+        "presentation": "2 files",
+        "tests": "7 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "medical_research",
+      "implementationPct": 90,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "1 files",
+        "infrastructure": "6 files",
+        "presentation": "5 files",
+        "tests": "8 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "medications",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "3 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "1 files",
+        "tests": "4 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "meditation",
+      "implementationPct": 95,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "11 files",
+        "application": "2 files",
+        "infrastructure": "2 files",
+        "presentation": "3 files",
+        "tests": "3 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "network/governance",
+      "implementationPct": 40,
+      "needsInfrastructure": true,
+      "needsPresentation": true,
+      "files": {
+        "domain": "3 files",
+        "application": "1 files",
+        "infrastructure": "0 files",
+        "presentation": "0 files",
+        "tests": "1 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": false,
+        "presentation": false
+      }
+    },
+    {
+      "name": "network/incentives",
+      "implementationPct": 40,
+      "needsInfrastructure": true,
+      "needsPresentation": true,
+      "files": {
+        "domain": "3 files",
+        "application": "1 files",
+        "infrastructure": "0 files",
+        "presentation": "0 files",
+        "tests": "1 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": false,
+        "presentation": false
+      }
+    },
+    {
+      "name": "onboarding",
+      "implementationPct": 90,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "3 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "15 files",
+        "tests": "4 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "reports",
+      "implementationPct": 90,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "3 files",
+        "infrastructure": "3 files",
+        "presentation": "3 files",
+        "tests": "2 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "settings",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "1 files",
+        "tests": "6 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "sync",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": true,
+      "files": {
+        "domain": "6 files",
+        "application": "2 files",
+        "infrastructure": "9 files",
+        "presentation": "0 files",
+        "tests": "7 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": false
+      }
+    },
+    {
+      "name": "user_profile",
+      "implementationPct": 80,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "1 files",
+        "tests": "5 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "vitals",
+      "implementationPct": 90,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "4 files",
+        "application": "2 files",
+        "infrastructure": "1 files",
+        "presentation": "2 files",
+        "tests": "5 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    },
+    {
+      "name": "voice_chat",
+      "implementationPct": 90,
+      "needsInfrastructure": false,
+      "needsPresentation": false,
+      "files": {
+        "domain": "5 files",
+        "application": "2 files",
+        "infrastructure": "2 files",
+        "presentation": "5 files",
+        "tests": "2 files"
+      },
+      "layersComplete": {
+        "domain": true,
+        "application": true,
+        "infrastructure": true,
+        "presentation": true
+      }
+    }
+  ]
+}
