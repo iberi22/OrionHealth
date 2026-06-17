@@ -57,6 +57,9 @@ class AppLocalizationsJv extends AppLocalizations {
   String get notifications => 'Pemberitahuan';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'Cathetan sehat';
 
   @override

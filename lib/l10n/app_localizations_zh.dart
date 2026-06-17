@@ -57,6 +57,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notifications => '通知';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => '健康记录';
 
   @override
