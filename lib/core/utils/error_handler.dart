@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:orionhealth/core/services/app_logger.dart';
+import '../services/app_logger.dart';
 
 /// Centralized error handling system for the Orion app
 class ErrorHandler {

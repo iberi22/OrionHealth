@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
-import 'package:orionhealth/core/services/app_logger.dart';
+import '../services/app_logger.dart';
 
 /// Interface for CacheManager
 abstract class CacheManagerInterface {

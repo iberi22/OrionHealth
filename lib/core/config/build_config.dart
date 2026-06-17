@@ -14,15 +14,12 @@ class BuildConfig {
   BuildConfig._();
 
   static final String flavor =
-      const String.fromEnvironment('flavor', defaultValue: _detectFlavor);
+      const String.fromEnvironment('flavor', defaultValue: 'dev');
 
   static bool get isDev => flavor == 'dev';
   static bool get isStaging => flavor == 'staging';
   static bool get isProd => flavor == 'prod';
 
-  static String get _detectFlavor {
-    if (Platform.environment.containsKey('FLUTTER_TEST')) return 'test';
-    // In debug builds, default to dev
-    return 'dev';
-  }
+  // For test detection at runtime, move to a separate check
+  static bool get isTest => Platform.environment.containsKey('FLUTTER_TEST');
 }

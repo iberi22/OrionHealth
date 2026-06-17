@@ -21,4 +21,7 @@ abstract class SyncRepository {
 
   /// Get list of discovered OrionHealth nodes on the local network
   List<SyncNode> getDiscoveredNodes();
+
+  /// Perform a full sync of all data types
+  Future<void> syncAll();
 }
