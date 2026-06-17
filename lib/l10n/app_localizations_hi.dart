@@ -57,6 +57,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get notifications => 'सूचनाएं';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'स्वास्थ्य रिकॉर्ड';
 
   @override

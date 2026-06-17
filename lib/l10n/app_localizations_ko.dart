@@ -57,6 +57,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get notifications => '알림';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => '건강 기록';
 
   @override

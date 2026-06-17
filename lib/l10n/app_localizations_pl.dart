@@ -57,6 +57,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get notifications => 'Powiadomienia';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'Rekordy zdrowia';
 
   @override
