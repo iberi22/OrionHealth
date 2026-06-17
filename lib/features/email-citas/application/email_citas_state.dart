@@ -7,9 +7,13 @@ abstract class EmailCitasState extends Equatable {
   List<Object?> get props => [];
 }
 
-class EmailCitasInitial extends EmailCitasState {}
+class EmailCitasInitial extends EmailCitasState {
+  const EmailCitasInitial();
+}
 
-class EmailCitasLoading extends EmailCitasState {}
+class EmailCitasLoading extends EmailCitasState {
+  const EmailCitasLoading();
+}
 
 class EmailCitasConnected extends EmailCitasState {
   final bool isGmailConnected;
@@ -34,7 +38,9 @@ class EmailCitasConnected extends EmailCitasState {
   }
 }
 
-class EmailCitasSyncSuccess extends EmailCitasState {}
+class EmailCitasSyncSuccess extends EmailCitasState {
+  const EmailCitasSyncSuccess();
+}
 
 class EmailCitasError extends EmailCitasState {
   final String message;

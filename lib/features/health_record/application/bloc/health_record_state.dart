@@ -9,9 +9,13 @@ abstract class HealthRecordState extends Equatable {
   List<Object?> get props => [];
 }
 
-class HealthRecordInitial extends HealthRecordState {}
+class HealthRecordInitial extends HealthRecordState {
+  const HealthRecordInitial();
+}
 
-class HealthRecordLoading extends HealthRecordState {}
+class HealthRecordLoading extends HealthRecordState {
+  const HealthRecordLoading();
+}
 
 class HealthRecordLoaded extends HealthRecordState {
   @override
@@ -33,7 +37,9 @@ class HealthRecordFilePicked extends HealthRecordState {
   List<Object?> get props => [filePath, extractedText];
 }
 
-class HealthRecordSaved extends HealthRecordState {}
+class HealthRecordSaved extends HealthRecordState {
+  const HealthRecordSaved();
+}
 
 class HealthRecordError extends HealthRecordState {
   final String message;

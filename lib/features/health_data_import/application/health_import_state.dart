@@ -40,9 +40,13 @@ abstract class HealthImportState extends Equatable {
   List<Object?> get props => [];
 }
 
-class HealthImportInitial extends HealthImportState {}
+class HealthImportInitial extends HealthImportState {
+  const HealthImportInitial();
+}
 
-class HealthImportLoading extends HealthImportState {}
+class HealthImportLoading extends HealthImportState {
+  const HealthImportLoading();
+}
 
 class HealthImportReady extends HealthImportState {
   final List<HealthDataSource> availableSources;

@@ -10,28 +10,36 @@ import '../domain/usecases/import_calendar_usecase.dart';
 // State
 // ---------------------------------------------------------------------------
 
-abstract class CalendarImportState {}
+abstract class CalendarImportState {
+  const CalendarImportState();
+}
 
-class CalendarImportInitial extends CalendarImportState {}
+class CalendarImportInitial extends CalendarImportState {
+  const CalendarImportInitial();
+}
 
-class CalendarImportLoading extends CalendarImportState {}
+class CalendarImportLoading extends CalendarImportState {
+  const CalendarImportLoading();
+}
 
 class CalendarImportLoaded extends CalendarImportState {
   final List<Appointment> foundAppointments;
-  CalendarImportLoaded(this.foundAppointments);
+  const CalendarImportLoaded(this.foundAppointments);
 }
 
 class CalendarImportSuccess extends CalendarImportState {
   final int importedCount;
-  CalendarImportSuccess(this.importedCount);
+  const CalendarImportSuccess(this.importedCount);
 }
 
 class CalendarImportError extends CalendarImportState {
   final String message;
-  CalendarImportError(this.message);
+  const CalendarImportError(this.message);
 }
 
-class CalendarImportPermissionDenied extends CalendarImportState {}
+class CalendarImportPermissionDenied extends CalendarImportState {
+  const CalendarImportPermissionDenied();
+}
 
 // ---------------------------------------------------------------------------
 // Cubit

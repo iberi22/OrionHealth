@@ -9,9 +9,13 @@ abstract class DashboardState extends Equatable {
   List<Object?> get props => [];
 }
 
-class DashboardInitial extends DashboardState {}
+class DashboardInitial extends DashboardState {
+  const DashboardInitial();
+}
 
-class DashboardLoading extends DashboardState {}
+class DashboardLoading extends DashboardState {
+  const DashboardLoading();
+}
 
 class DashboardLoaded extends DashboardState {
   final DashboardStats stats;

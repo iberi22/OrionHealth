@@ -7,9 +7,13 @@ abstract class UserProfileState extends Equatable {
   List<Object?> get props => [];
 }
 
-class UserProfileInitial extends UserProfileState {}
+class UserProfileInitial extends UserProfileState {
+  const UserProfileInitial();
+}
 
-class UserProfileLoading extends UserProfileState {}
+class UserProfileLoading extends UserProfileState {
+  const UserProfileLoading();
+}
 
 class UserProfileLoaded extends UserProfileState {
   final UserProfile userProfile;

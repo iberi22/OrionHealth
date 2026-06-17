@@ -8,9 +8,13 @@ abstract class VitalsState extends Equatable {
   List<Object?> get props => [];
 }
 
-class VitalsInitial extends VitalsState {}
+class VitalsInitial extends VitalsState {
+  const VitalsInitial();
+}
 
-class VitalsLoading extends VitalsState {}
+class VitalsLoading extends VitalsState {
+  const VitalsLoading();
+}
 
 class VitalsLoaded extends VitalsState {
   final List<VitalSign> vitals;

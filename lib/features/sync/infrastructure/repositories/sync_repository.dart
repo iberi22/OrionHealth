@@ -184,7 +184,7 @@ class SyncRepositoryImpl implements SyncRepository {
     return _discoveryService.currentNodes.map((node) => SyncNode(
       id: node.attributes['nodeId'] ?? node.name,
       name: node.name,
-      host: node.host ?? 'unknown',
+      host: node.hostname ?? 'unknown',
       port: node.port,
     )).toList();
   }

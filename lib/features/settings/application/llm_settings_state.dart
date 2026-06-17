@@ -7,9 +7,13 @@ abstract class LlmSettingsState extends Equatable {
   List<Object?> get props => [];
 }
 
-class LlmSettingsInitial extends LlmSettingsState {}
+class LlmSettingsInitial extends LlmSettingsState {
+  const LlmSettingsInitial();
+}
 
-class LlmSettingsLoading extends LlmSettingsState {}
+class LlmSettingsLoading extends LlmSettingsState {
+  const LlmSettingsLoading();
+}
 
 class LlmSettingsLoaded extends LlmSettingsState {
   final LlmConfig config;
