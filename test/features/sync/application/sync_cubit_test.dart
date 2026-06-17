@@ -3,17 +3,21 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/sync/application/sync_cubit.dart';
 import 'package:orionhealth_health/features/sync/application/sync_state.dart';
 import 'package:orionhealth_health/features/sync/domain/services/sync_service.dart';
+import 'package:orionhealth_health/features/sync/infrastructure/services/node_discovery_service.dart';
 
 class MockSyncService extends Mock implements SyncService {}
+class MockNodeDiscoveryService extends Mock implements NodeDiscoveryService {}
 
 void main() {
   late MockSyncService service;
+  late MockNodeDiscoveryService nodeDiscovery;
   late FhirSyncCubit cubit;
 
   setUp(() {
     service = MockSyncService();
+    nodeDiscovery = MockNodeDiscoveryService();
     when(() => service.getLastSyncTime()).thenAnswer((_) async => null);
-    cubit = FhirSyncCubit(service);
+    cubit = FhirSyncCubit(service, nodeDiscovery);
   });
 
   tearDown(() {
