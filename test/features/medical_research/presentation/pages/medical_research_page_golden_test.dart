@@ -34,7 +34,7 @@ void main() {
 
     await expectLater(
       find.byType(MedicalResearchPage),
-      matchesGoldenFile('medical_research_page.png'),
+      matchesGoldenFile("../../../../../golden/reference/medical_research_page.png"),
     );
   });
 }

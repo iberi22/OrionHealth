@@ -38,7 +38,7 @@ void main() {
 
       await expectLater(
         find.byType(HomeDashboardPage),
-        matchesGoldenFile('goldens/home_dashboard_page.png'),
+        matchesGoldenFile("../../../../golden/reference/home_dashboard_page.png"),
       );
       resetGoldenTest(tester);
     });

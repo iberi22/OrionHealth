@@ -78,7 +78,7 @@ void main() {
 
       await expectLater(
         find.byType(DoctorListPage),
-        matchesGoldenFile('goldens/doctor_list_page.png'),
+        matchesGoldenFile("../../../../golden/reference/doctor_list_page.png"),
       );
       resetGoldenTest(tester);
     });
@@ -97,7 +97,7 @@ void main() {
 
       await expectLater(
         find.byType(DoctorDetailPage),
-        matchesGoldenFile('goldens/doctor_detail_verified.png'),
+        matchesGoldenFile("../../../../golden/reference/doctor_detail_verified.png"),
       );
       resetGoldenTest(tester);
     });
@@ -114,7 +114,7 @@ void main() {
 
       await expectLater(
         find.byType(DoctorDetailPage),
-        matchesGoldenFile('goldens/doctor_detail_unverified.png'),
+        matchesGoldenFile("../../../../golden/reference/doctor_detail_unverified.png"),
       );
       resetGoldenTest(tester);
     });
@@ -134,7 +134,7 @@ void main() {
 
       await expectLater(
         find.byType(RatingDialog),
-        matchesGoldenFile('goldens/rating_dialog.png'),
+        matchesGoldenFile("../../../../golden/reference/rating_dialog.png"),
       );
       resetGoldenTest(tester);
     });

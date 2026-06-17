@@ -54,7 +54,7 @@ void main() {
 
       await expectLater(
         find.byType(CalendarImportPage),
-        matchesGoldenFile('goldens/calendar_import_loading.png'),
+        matchesGoldenFile("../../../../../golden/reference/calendar_import_loading.png"),
       );
       resetGoldenTest(tester);
     });
@@ -103,7 +103,7 @@ void main() {
 
       await expectLater(
         find.byType(CalendarImportPage),
-        matchesGoldenFile('goldens/calendar_import_loaded.png'),
+        matchesGoldenFile("../../../../../golden/reference/calendar_import_loaded.png"),
       );
       resetGoldenTest(tester);
     });
@@ -122,7 +122,7 @@ void main() {
 
       await expectLater(
         find.byType(CalendarImportPage),
-        matchesGoldenFile('goldens/calendar_import_empty.png'),
+        matchesGoldenFile("../../../../../golden/reference/calendar_import_empty.png"),
       );
       resetGoldenTest(tester);
     });
@@ -141,7 +141,7 @@ void main() {
 
       await expectLater(
         find.byType(CalendarImportPage),
-        matchesGoldenFile('goldens/calendar_import_permission_denied.png'),
+        matchesGoldenFile("../../../../../golden/reference/calendar_import_permission_denied.png"),
       );
       resetGoldenTest(tester);
     });

@@ -62,7 +62,7 @@ void main() {
 
       await expectLater(
         find.byType(EmailConnectPage),
-        matchesGoldenFile('goldens/email_connect_disconnected.png'),
+        matchesGoldenFile("../../../../../golden/reference/email_connect_disconnected.png"),
       );
       resetGoldenTest(tester);
     });
@@ -80,7 +80,7 @@ void main() {
 
       await expectLater(
         find.byType(EmailConnectPage),
-        matchesGoldenFile('goldens/email_connect_connected.png'),
+        matchesGoldenFile("../../../../../golden/reference/email_connect_connected.png"),
       );
       resetGoldenTest(tester);
     });
@@ -95,7 +95,7 @@ void main() {
 
       await expectLater(
         find.byType(EmailConnectPage),
-        matchesGoldenFile('goldens/email_connect_loading.png'),
+        matchesGoldenFile("../../../../../golden/reference/email_connect_loading.png"),
       );
       resetGoldenTest(tester);
     });
