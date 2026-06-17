@@ -1,6 +1,6 @@
 # OrionHealth — Technical Roadmap & Architecture
 
-> **Version:** 0.8.1 | **Last Updated:** 2026-06-10 | **Status:** Active Development
+> **Version:** 0.9.0 | **Last Updated:** 2026-06-17 | **Status:** Active Development
 
 ---
 
@@ -137,31 +137,33 @@ OrionHealth/
 | Encrypted Packages | ✅ | AES-256 + ECDH key exchange |
 | Consent Flow | ✅ | User approves before receiving |
 
-### 🔄 Phase 4 — Doctor Verification (IN PROGRESS)
+### 🔄 Phase 4 — Doctor Verification (REFACTORING)
 
 | Feature | Status | Details |
 |---------|--------|---------|
-| Doctor Profile | ✅ | Public profile with credentials |
-| License Verification | ✅ | Integration with medical boards |
-| Patient Ratings | ✅ | 1-5 stars + comments |
-| Vouching System | 🔄 | Doctors validate other doctors |
-| Reputation Badges | 🔄 | Bronze/Silver/Gold/Platinum |
+| Doctor Profile | 🔄 | Refactoring to Isar-compatible schemas |
+| License Verification | 🔄 | Integration with medical boards |
+| Patient Ratings | 🔄 | 1-5 stars + comments |
+| Vouching System | 📋 | Doctors validate other doctors (Planned) |
+| Reputation Badges | 📋 | Bronze/Silver/Gold/Platinum (Planned) |
 
-### 🔄 Phase 5 — Medical Concept (IN PROGRESS)
+### ✅ Phase 5 — Medical Concept (COMPLETE)
 
 | Feature | Status | Details |
 |---------|--------|---------|
 | Medical Concept Model | ✅ | Doctor's notes + recommendations |
 | Timeline View | ✅ | Chronological medical history |
-| External Data Import | 🔄 | Receive from other apps |
+| External Data Import | ✅ | Integration with Apple Health / Google Fit |
 | FHIR Export | ✅ | Standard format for EHR systems |
-| Second Opinion | 🔄 | Multiple doctor reviews |
+| Second Opinion | 🔄 | Multiple doctor reviews (In Progress) |
 
 ### 🔄 Phase 6 — Network Expansion (IN PROGRESS)
 
 | Feature | Status | Details |
 |---------|--------|---------|
-| Node Discovery | ✅ | Find nearby Orion nodes |
+| Node Discovery | ✅ | Find nearby Orion nodes via mDNS/Bonsoir |
+| Voice Chat Agent | ✅ | Local LLM voice interaction |
+| Meditation Layers | ✅ | Mental health & wellness integration |
 | Distributed Cache | 🔄 | IPFS/Filecoin for standards |
 | Governance Token | 📋 | DAO for network decisions |
 | Incentive System | 📋 | Rewards for data contribution |
@@ -328,6 +330,18 @@ OrionHealth/
 
 ---
 
+## Architecture Completion Metrics
+
+| Metric | Status | Coverage |
+|--------|--------|----------|
+| Total Feature Modules | 25 | 100% |
+| Clean Architecture (D→A→I→P) | 24 / 25 | 96% ✅ |
+| Unit Test Coverage | 25 / 25 | 100% ✅ |
+| Golden UI Test Coverage | 19 / 25 | 76% 🔄 |
+| Documentation Completeness | 25 / 25 | 100% ✅ |
+
+---
+
 ## Development Status
 
 ### Subagent Tasks — Complete
@@ -338,24 +352,24 @@ OrionHealth/
 | Health Wallet Package | OpenCode | ✅ Complete |
 | Smart Onboarding | Me | ✅ Complete |
 | NFC/BLE Receiving Infrastructure | OpenCode | ✅ Complete |
-| Doctor Verification System | OpenCode | ✅ Complete |
+| External Data Import (HealthKit/Fit) | Jules | ✅ Complete |
+| Clean Architecture Gaps (24/25 modules) | Jules | ✅ Complete |
 | Medical Concept Timeline | OpenCode | ✅ Complete |
 | FHIR Import/Export | OpenCode | ✅ Complete |
 | Network Node Discovery | OpenCode | ✅ Complete |
+| Golden Tests (Appointments, SSI, Vitals) | Jules | ✅ Complete |
+| Issues #581-#591 (Sprint v0.9.0) | Jules | ✅ Complete |
 
 ### Remaining Tasks
 
 | Task | Priority | Status |
 |------|----------|--------|
-| External Data Import | High | ✅ Complete (health_data_import feature) |
-| Distributed Cache | High | 🔄 In Progress |
-| Vouching & Badges | Medium | 🔄 In Progress |
-| Second Opinion | Medium | 📋 Planned |
-| Clean Architecture Gaps — `ai_assistant` | 🔴 CRITICAL | ⬜ Needs D+A+I layers + tests (currently 25%) |
-| Clean Architecture Gaps — `about` (migrate data→infra) | 🔴 HIGH | ⬜ Needs D+A layers + infra migration (currently 37%) |
-| Clean Architecture Gaps — `calendar_import` (migrate data→infra) | 🟡 MEDIUM | ⬜ Needs A layer + infra migration (currently 50%) |
-| Clean Architecture Gaps — `health_data_import` (add infra) | 🟡 MEDIUM | ⬜ Needs infra layer (currently 60%) |
-| Golden tests — `appointments`, `ssi`, `sync`, `vitals` | 🟢 LOW | ⬜ Each at 80% — missing golden screenshots |
+| Distributed Cache (IPFS/Filecoin) | High | 🔄 In Progress |
+| Second Opinion Flow | Medium | 🔄 In Progress |
+| Migrate `sync` legacy data/ | Medium | 📋 Planned (Sprint 2) |
+| Implement real BLE/WiFi discovery | Medium | 📋 Planned (Sprint 2) |
+| Golden tests for 6 remaining features | Low | 📋 Planned (Sprint 2) |
+| Vouching & Badges | Low | 📋 Planned |
 | Governance Token | Low | 📋 Planned |
 | Incentive System | Low | 📋 Planned |
 
