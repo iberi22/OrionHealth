@@ -84,7 +84,7 @@ dependencies:
   multicast_dns: ^0.3.3
   bonsoir: 7.1.4
   just_audio: ^0.10.5
-  record: ^7.1.0
+  record: ^6.2.1
   connectivity_plus: ^7.1.1
   share_plus: ^12.0.2
   sherpa_onnx: ^1.13.3
