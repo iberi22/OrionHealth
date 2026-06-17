@@ -2,11 +2,21 @@
   {
     "name": "about",
     "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "ai_assistant",
+    "layers": {
       "domain": false,
       "application": false,
       "infrastructure": false,
       "presentation": true,
-      "goldens": true
+      "goldens": false
     }
   },
   {
@@ -26,7 +36,7 @@
       "application": true,
       "infrastructure": true,
       "presentation": true,
-      "goldens": true
+      "goldens": false
     }
   },
   {
@@ -43,10 +53,10 @@
     "name": "calendar_import",
     "layers": {
       "domain": true,
-      "application": true,
-      "infrastructure": true,
-      "presentation": true,
-      "goldens": true
+      "application": false,
+      "infrastructure": false,
+      "presentation": false,
+      "goldens": false
     }
   },
   {
@@ -63,7 +73,7 @@
     "name": "doctor_verification",
     "layers": {
       "domain": true,
-      "application": true,
+      "application": false,
       "infrastructure": true,
       "presentation": true,
       "goldens": true
@@ -95,8 +105,8 @@
       "domain": true,
       "application": false,
       "infrastructure": false,
-      "presentation": true,
-      "goldens": true
+      "presentation": false,
+      "goldens": false
     }
   },
   {
@@ -122,8 +132,8 @@
   {
     "name": "home",
     "layers": {
-      "domain": true,
-      "application": true,
+      "domain": false,
+      "application": false,
       "infrastructure": false,
       "presentation": true,
       "goldens": true
@@ -133,6 +143,16 @@
     "name": "local_agent",
     "layers": {
       "domain": false,
+      "application": false,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "medical_assistant",
+    "layers": {
+      "domain": true,
       "application": false,
       "infrastructure": true,
       "presentation": true,
@@ -160,26 +180,6 @@
     }
   },
   {
-    "name": "meditation",
-    "layers": {
-      "domain": false,
-      "application": false,
-      "infrastructure": false,
-      "presentation": true,
-      "goldens": true
-    }
-  },
-  {
-    "name": "network",
-    "layers": {
-      "domain": false,
-      "application": false,
-      "infrastructure": false,
-      "presentation": false,
-      "goldens": false
-    }
-  },
-  {
     "name": "onboarding",
     "layers": {
       "domain": true,
@@ -192,8 +192,8 @@
   {
     "name": "reports",
     "layers": {
-      "domain": true,
-      "application": true,
+      "domain": false,
+      "application": false,
       "infrastructure": true,
       "presentation": true,
       "goldens": true
@@ -210,12 +210,22 @@
     }
   },
   {
+    "name": "ssi",
+    "layers": {
+      "domain": false,
+      "application": true,
+      "infrastructure": true,
+      "presentation": false,
+      "goldens": false
+    }
+  },
+  {
     "name": "sync",
     "layers": {
       "domain": true,
       "application": true,
-      "infrastructure": true,
-      "presentation": false,
+      "infrastructure": false,
+      "presentation": true,
       "goldens": false
     }
   },
@@ -235,16 +245,6 @@
       "domain": true,
       "application": true,
       "infrastructure": true,
-      "presentation": true,
-      "goldens": true
-    }
-  },
-  {
-    "name": "voice_chat",
-    "layers": {
-      "domain": false,
-      "application": false,
-      "infrastructure": false,
       "presentation": false,
       "goldens": false
     }
