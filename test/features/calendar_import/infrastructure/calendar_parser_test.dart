@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/calendar_import/infrastructure/calendar_parser.dart';
+import 'package:orionhealth_health/features/calendar_import/infrastructure/utils/calendar_parser.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
 
 void main() {
