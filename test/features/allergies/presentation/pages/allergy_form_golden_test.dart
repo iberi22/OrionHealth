@@ -25,7 +25,7 @@ void main() {
 
       await expectLater(
         find.byType(AllergyForm),
-        matchesGoldenFile('goldens/allergy_form_new.png'),
+        matchesGoldenFile("../../../../golden/reference/allergy_form_new.png"),
       );
 
       addTearDown(() {
@@ -62,7 +62,7 @@ void main() {
 
       await expectLater(
         find.byType(AllergyForm),
-        matchesGoldenFile('goldens/allergy_form_edit.png'),
+        matchesGoldenFile("../../../../golden/reference/allergy_form_edit.png"),
       );
 
       addTearDown(() {

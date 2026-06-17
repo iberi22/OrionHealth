@@ -76,7 +76,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthRecordStagingPage),
-        matchesGoldenFile('goldens/health_record_staging_history.png'),
+        matchesGoldenFile("../../../../golden/reference/health_record_staging_history.png"),
       );
     });
 
@@ -92,7 +92,7 @@ void main() {
 
       await expectLater(
         find.byType(UploadPage),
-        matchesGoldenFile('goldens/upload_page_source.png'),
+        matchesGoldenFile("../../../../golden/reference/upload_page_source.png"),
       );
     });
 
@@ -114,7 +114,7 @@ void main() {
 
       await expectLater(
         find.byType(UploadPage),
-        matchesGoldenFile('goldens/upload_page_details.png'),
+        matchesGoldenFile("../../../../golden/reference/upload_page_details.png"),
       );
     });
 
@@ -141,7 +141,7 @@ void main() {
 
       await expectLater(
         find.byType(TimelinePage),
-        matchesGoldenFile('goldens/timeline_page.png'),
+        matchesGoldenFile("../../../../golden/reference/timeline_page.png"),
       );
     });
    group('Health Record Golden Tests Extra', () {
@@ -160,7 +160,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthRecordStagingPage),
-        matchesGoldenFile('goldens/health_record_staging_form.png'),
+        matchesGoldenFile("../../../../golden/reference/health_record_staging_form.png"),
       );
     });
    });

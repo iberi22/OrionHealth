@@ -20,7 +20,7 @@ void main() {
 
       await expectLater(
         find.byType(ScraperConfigPage),
-        matchesGoldenFile('goldens/scraper_config_page.png'),
+        matchesGoldenFile("../../../../../golden/reference/scraper_config_page.png"),
       );
 
       addTearDown(() {
@@ -43,7 +43,7 @@ void main() {
 
       await expectLater(
         find.byType(StandardsViewerPage),
-        matchesGoldenFile('goldens/standards_viewer_page.png'),
+        matchesGoldenFile("../../../../../golden/reference/standards_viewer_page.png"),
       );
 
       addTearDown(() {

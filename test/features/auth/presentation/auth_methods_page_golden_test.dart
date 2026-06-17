@@ -58,7 +58,7 @@ void main() {
 
     await expectLater(
       find.byType(SetupPinPage),
-      matchesGoldenFile('goldens/setup_pin_page.png'),
+      matchesGoldenFile("../../../../golden/reference/setup_pin_page.png"),
     );
 
     addTearDown(() {
@@ -87,7 +87,7 @@ void main() {
 
     await expectLater(
       find.byType(ReceiveMedicalDataPage),
-      matchesGoldenFile('goldens/receive_medical_data_page.png'),
+      matchesGoldenFile("../../../../golden/reference/receive_medical_data_page.png"),
     );
 
     addTearDown(() {
@@ -114,7 +114,7 @@ void main() {
 
     await expectLater(
       find.byType(ShareMedicalDataPage),
-      matchesGoldenFile('goldens/share_medical_data_page.png'),
+      matchesGoldenFile("../../../../golden/reference/share_medical_data_page.png"),
     );
 
     addTearDown(() {

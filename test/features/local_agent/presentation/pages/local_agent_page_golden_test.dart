@@ -69,7 +69,7 @@ void main() {
 
       await expectLater(
         find.byType(LlmSettingsPage),
-        matchesGoldenFile('goldens/llm_settings_page.png'),
+        matchesGoldenFile("../../../../../golden/reference/llm_settings_page.png"),
       );
     });
 
@@ -82,7 +82,7 @@ void main() {
 
       await expectLater(
         find.byType(ChatPage),
-        matchesGoldenFile('goldens/chat_page.png'),
+        matchesGoldenFile("../../../../../golden/reference/chat_page.png"),
       );
     });
   });

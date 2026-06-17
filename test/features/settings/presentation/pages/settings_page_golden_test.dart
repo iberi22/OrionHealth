@@ -70,7 +70,7 @@ void main() {
 
     await expectLater(
       find.byType(LlmSettingsPage),
-      matchesGoldenFile('goldens/settings_page_local.png'),
+      matchesGoldenFile("../../../../golden/reference/settings_page_local.png"),
     );
 
     addTearDown(() {
@@ -101,7 +101,7 @@ void main() {
 
     await expectLater(
       find.byType(LlmSettingsPage),
-      matchesGoldenFile('goldens/settings_page_cloud.png'),
+      matchesGoldenFile("../../../../golden/reference/settings_page_cloud.png"),
     );
 
     addTearDown(() {
@@ -132,7 +132,7 @@ void main() {
 
     await expectLater(
       find.byType(LlmSettingsPage),
-      matchesGoldenFile('goldens/settings_page_mode.png'),
+      matchesGoldenFile("../../../../golden/reference/settings_page_mode.png"),
     );
 
     addTearDown(() {

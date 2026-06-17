@@ -44,7 +44,7 @@ void main() {
 
     await expectLater(
       find.byType(LoginPage),
-      matchesGoldenFile('../../../goldens/login_page.png'),
+      matchesGoldenFile("../../../../golden/reference/login_page.png"),
     );
 
     // Reset view
@@ -78,7 +78,7 @@ void main() {
 
     await expectLater(
       find.byType(LoginPage),
-      matchesGoldenFile('../../../goldens/login_page_locked.png'),
+      matchesGoldenFile("../../../../golden/reference/login_page_locked.png"),
     );
 
     addTearDown(() {

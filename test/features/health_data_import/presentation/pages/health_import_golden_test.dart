@@ -41,7 +41,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile('goldens/health_import_initial.png'),
+        matchesGoldenFile("../../../../golden/reference/health_import_initial.png"),
       );
       resetGoldenTest(tester);
     });
@@ -59,7 +59,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile('goldens/health_import_loading.png'),
+        matchesGoldenFile("../../../../golden/reference/health_import_loading.png"),
       );
       resetGoldenTest(tester);
     });
@@ -93,7 +93,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile('goldens/health_import_ready.png'),
+        matchesGoldenFile("../../../../golden/reference/health_import_ready.png"),
       );
       resetGoldenTest(tester);
     });
@@ -125,7 +125,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile('goldens/health_import_ready_all_unavailable.png'),
+        matchesGoldenFile("../../../../golden/reference/health_import_ready_all_unavailable.png"),
       );
       resetGoldenTest(tester);
     });
@@ -146,7 +146,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile('goldens/health_import_authenticating.png'),
+        matchesGoldenFile("../../../../golden/reference/health_import_authenticating.png"),
       );
       resetGoldenTest(tester);
     });
@@ -173,7 +173,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile('goldens/health_import_importing.png'),
+        matchesGoldenFile("../../../../golden/reference/health_import_importing.png"),
       );
       resetGoldenTest(tester);
     });
@@ -202,7 +202,7 @@ void main() {
 
       await expectLater(
         find.byType(DataSourceCard),
-        matchesGoldenFile('goldens/data_source_card_available.png'),
+        matchesGoldenFile("../../../../golden/reference/data_source_card_available.png"),
       );
       resetGoldenTest(tester);
     });
@@ -229,7 +229,7 @@ void main() {
 
       await expectLater(
         find.byType(DataSourceCard),
-        matchesGoldenFile('goldens/data_source_card_unavailable.png'),
+        matchesGoldenFile("../../../../golden/reference/data_source_card_unavailable.png"),
       );
       resetGoldenTest(tester);
     });
@@ -256,7 +256,7 @@ void main() {
 
       await expectLater(
         find.byType(ImportProgressDialog),
-        matchesGoldenFile('goldens/import_progress_dialog.png'),
+        matchesGoldenFile("../../../../golden/reference/import_progress_dialog.png"),
       );
       resetGoldenTest(tester);
     });
