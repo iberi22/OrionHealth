@@ -57,6 +57,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get notifications => 'அறிவிப்புகள்';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'ஆரோக்கிய பதிவுகள்';
 
   @override

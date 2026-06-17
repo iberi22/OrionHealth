@@ -57,6 +57,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get notifications => 'Notifiche';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'Cartelle cliniche';
 
   @override

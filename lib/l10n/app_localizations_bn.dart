@@ -57,6 +57,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get notifications => 'বিজ্ঞপ্তি';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'স্বাস্থ্য রেকর্ড';
 
   @override

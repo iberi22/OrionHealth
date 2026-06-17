@@ -57,6 +57,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notifications => 'Bildirimler';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'Sağlık Kayıtları';
 
   @override
