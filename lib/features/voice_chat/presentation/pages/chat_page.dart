@@ -1,23 +1,18 @@
-import 'package:flutter/material.dart';
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
-/// Chat screen stub — Orion now uses VoiceChatScreen for conversations.
-/// This screen is maintained for backward compatibility.
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+import 'package:flutter/material.dart';
+import 'voice_chat_page.dart';
+
+/// Chat page stub — Orion now uses VoiceChatPage for conversations.
+class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _textController = TextEditingController();
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
-
+class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +42,11 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const VoiceChatPage()),
+                );
+              },
               icon: const Icon(Icons.mic),
               label: const Text('Ir al Chat de Voz'),
             ),

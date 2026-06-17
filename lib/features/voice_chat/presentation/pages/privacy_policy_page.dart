@@ -1,15 +1,18 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PrivacyPolicyScreen extends StatelessWidget {
-  const PrivacyPolicyScreen({super.key});
+class PrivacyPolicyPage extends StatelessWidget {
+  const PrivacyPolicyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Política de Privacidad',
           style: TextStyle(
             color: Colors.white,
@@ -34,7 +37,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text(
                     'Error al cargar la política de privacidad',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                     textAlign: TextAlign.center,
@@ -56,7 +59,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               children: [
                 Text(
                   snapshot.data ?? '',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
                     height: 1.6,
@@ -77,7 +80,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Entendido',
                       style: TextStyle(
                         fontSize: 16,

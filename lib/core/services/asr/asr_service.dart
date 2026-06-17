@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'asr_types.dart';
 import 'local_asr_service.dart';
 import 'sherpa_onnx_asr_service.dart';
@@ -7,10 +8,9 @@ import 'mock_asr_service.dart';
 import 'asr_settings.dart';
 
 /// Central factory/manager for ASR services.
+@lazySingleton
 class AsrService {
-  static final AsrService _instance = AsrService._internal();
-  factory AsrService() => _instance;
-  AsrService._internal();
+  AsrService();
 
   LocalAsrService? _adapter;
   bool _isInitialized = false;
