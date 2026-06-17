@@ -1,0 +1,9 @@
+{
+  "features": [
+    {
+      "name": "network/incentives",
+      "state": "85%",
+      "description": "Infrastructure layer added with token distribution logic and smart contract interactions."
+    }
+  ]
+}
