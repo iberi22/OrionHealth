@@ -57,6 +57,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get notifications => 'Thông báo';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'Hồ sơ sức khỏe';
 
   @override

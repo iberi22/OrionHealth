@@ -57,6 +57,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get notifications => 'Уведомления';
 
   @override
+  String get dashboard => 'Dashboard';
+
+  @override
   String get healthRecords => 'Медицинские записи';
 
   @override

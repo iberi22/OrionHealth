@@ -242,6 +242,12 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get notifications;
 
+  /// No description provided for @dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get dashboard;
+
   /// No description provided for @healthRecords.
   ///
   /// In en, this message translates to:

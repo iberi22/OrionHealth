@@ -6,6 +6,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../health_record/presentation/pages/health_record_staging_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
 import '../../../user_profile/presentation/pages/user_profile_page.dart';
+import 'home_page.dart';
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -18,7 +19,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const Center(child: Text('Dashboard - Próximamente')),
+    const HomePage(),
     const ReportsPage(),
     const HealthRecordStagingPage(),
     const UserProfilePage(),
