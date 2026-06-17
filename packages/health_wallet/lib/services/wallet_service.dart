@@ -1,11 +1,11 @@
 import 'package:isar/isar.dart';
 import '../models/health_record.dart';
 import '../models/lab_result.dart';
-import '../models/vital_sign.dart' as model;
+import '../models/vital_sign.dart' as vitals;
 import '../models/medication_entry.dart';
 import '../models/medical_document.dart';
 import '../models/medical_event.dart';
-import '../models/medical_concept.dart' as model;
+import '../models/medical_concept.dart' as concepts;
 import 'encryption_service.dart';
 import 'package:medical_standards/medical_standards.dart' hide VitalSign, Medication;
 
@@ -15,6 +15,7 @@ class WalletService {
   WalletService(this._isar, this._encryption);
 
   final Isar _isar;
+  // ignore: unused_field
   final EncryptionService _encryption;
 
   // ─── Labs ────────────────────────────────────────────────────────────────
@@ -53,26 +54,26 @@ class WalletService {
 
   // ─── Vitals ──────────────────────────────────────────────────────────────
 
-  Future<void> addVitalSign(model.VitalSign vital) async {
+  Future<void> addVitalSign(vitals.VitalSign vital) async {
     await _isar.writeTxn(() async {
-      await _isar.collection<model.VitalSign>().put(vital);
+      await _isar.collection<vitals.VitalSign>().put(vital);
     });
   }
 
-  Future<List<model.VitalSign>> getVitalsByLoinc(String loincCode) async {
-    return _isar.collection<model.VitalSign>()
+  Future<List<vitals.VitalSign>> getVitalsByLoinc(String loincCode) async {
+    return _isar.collection<vitals.VitalSign>()
         .filter()
         .loincCodeEqualTo(loincCode)
         .sortByRecordedAtDesc()
         .findAll();
   }
 
-  Future<List<model.VitalSign>> getVitalsRange({
+  Future<List<vitals.VitalSign>> getVitalsRange({
     required String loincCode,
     required DateTime from,
     required DateTime to,
   }) async {
-    return _isar.collection<model.VitalSign>()
+    return _isar.collection<vitals.VitalSign>()
         .filter()
         .loincCodeEqualTo(loincCode)
         .recordedAtBetween(from, to)
@@ -129,14 +130,14 @@ class WalletService {
 
   // ─── Medical Concepts ────────────────────────────────────────────────────
 
-  Future<void> addMedicalConcept(model.MedicalConcept concept) async {
+  Future<void> addMedicalConcept(concepts.MedicalConcept concept) async {
     await _isar.writeTxn(() async {
-      await _isar.collection<model.MedicalConcept>().put(concept);
+      await _isar.collection<concepts.MedicalConcept>().put(concept);
     });
   }
 
-  Future<List<model.MedicalConcept>> getAllMedicalConcepts() async {
-    return _isar.collection<model.MedicalConcept>()
+  Future<List<concepts.MedicalConcept>> getAllMedicalConcepts() async {
+    return _isar.collection<concepts.MedicalConcept>()
         .where()
         .sortByConceptDateDesc()
         .findAll();
@@ -176,11 +177,11 @@ class WalletService {
   Future<Map<String, int>> getDataStatistics() async {
     return {
       'labs': _isar.collection<LabResult>().countSync(),
-      'vitals': _isar.collection<model.VitalSign>().countSync(),
+      'vitals': _isar.collection<vitals.VitalSign>().countSync(),
       'medications': _isar.collection<MedicationEntry>().countSync(),
       'events': _isar.collection<MedicalEvent>().countSync(),
       'documents': _isar.collection<MedicalDocument>().countSync(),
-      'concepts': _isar.collection<model.MedicalConcept>().countSync(),
+      'concepts': _isar.collection<concepts.MedicalConcept>().countSync(),
     };
   }
 
@@ -196,11 +197,11 @@ class WalletService {
   Future<Map<String, dynamic>> exportAllData() async {
     return {
       'labs': _isar.collection<LabResult>().where().findAllSync().map((e) => e.toJson()).toList(),
-      'vitals': _isar.collection<model.VitalSign>().where().findAllSync().map((e) => e.toJson()).toList(),
+      'vitals': _isar.collection<vitals.VitalSign>().where().findAllSync().map((e) => e.toJson()).toList(),
       'medications': _isar.collection<MedicationEntry>().where().findAllSync().map((e) => e.toJson()).toList(),
       'events': _isar.collection<MedicalEvent>().where().findAllSync().map((e) => e.toJson()).toList(),
       'documents': _isar.collection<MedicalDocument>().where().findAllSync().map((e) => e.toJson()).toList(),
-      'concepts': _isar.collection<model.MedicalConcept>().where().findAllSync().map((e) => e.toJson()).toList(),
+      'concepts': _isar.collection<concepts.MedicalConcept>().where().findAllSync().map((e) => e.toJson()).toList(),
       'healthRecord': _isar.collection<HealthRecord>().where().findAllSync().map((e) => e.toJson()).toList(),
       'exportedAt': DateTime.now().toIso8601String(),
       'version': '1.1',
@@ -240,8 +241,8 @@ class WalletService {
     }
 
     // Add Vitals
-    final vitals = await _isar.collection<model.VitalSign>().where().findAll();
-    for (final vital in vitals) {
+    final vitalsData = await _isar.collection<vitals.VitalSign>().where().findAll();
+    for (final vital in vitalsData) {
       resources.add(FhirExporter.createObservation(
         id: vital.remoteId,
         loincCode: vital.loincCode,
@@ -253,8 +254,8 @@ class WalletService {
     }
 
     // Add Concepts as DocumentReferences
-    final concepts = await getAllMedicalConcepts();
-    for (final concept in concepts) {
+    final conceptsData = await getAllMedicalConcepts();
+    for (final concept in conceptsData) {
       resources.add(FhirExporter.createDocumentReference(
         id: concept.remoteId,
         author: concept.doctorName,
@@ -262,6 +263,35 @@ class WalletService {
         content: '${concept.notes}\n\nRecommendations: ${concept.recommendations ?? "None"}',
         date: concept.conceptDate,
       ));
+    }
+
+    // Add Medical Events as Appointments (if applicable) or Conditions
+    final events = await _isar.collection<MedicalEvent>().where().findAll();
+    for (final event in events) {
+      if (event.eventType == EventType.appointment) {
+        resources.add(FhirExporter.createBundle(
+          id: 'bundle-${event.remoteId}',
+          resources: [
+            FhirAppointment(
+              id: event.remoteId,
+              status: 'booked',
+              start: event.eventDate,
+              end: event.endDate,
+              description: event.description,
+              participantActorDisplay: event.provider,
+            ).toJson()
+          ],
+        )['entry'].first['resource']);
+      } else {
+        resources.add(FhirExporter.createCondition(
+          id: event.remoteId,
+          code: event.eventType.name,
+          display: event.description,
+          icd10Code: event.icd10Codes?.firstOrNull,
+          date: event.eventDate,
+          note: event.notes,
+        ));
+      }
     }
 
     final bundle = FhirExporter.createBundle(
@@ -291,7 +321,7 @@ class WalletService {
   Future<int> deleteVitalsOlderThan(int days) async {
     final cutoff = DateTime.now().subtract(Duration(days: days));
     return _isar.writeTxn(() async {
-      return _isar.collection<model.VitalSign>()
+      return _isar.collection<vitals.VitalSign>()
           .filter()
           .recordedAtLessThan(cutoff)
           .deleteAll();
