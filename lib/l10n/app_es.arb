@@ -16,7 +16,7 @@
   "language": "Idioma",
   "darkMode": "Modo Oscuro",
   "notifications": "Notificaciones",
-  "healthRecords": "Registros de Salud",
+  "dashboard": "Dashboard","healthRecords": "Registros de Salud",
   "addRecord": "Agregar Registro",
   "medicalHistory": "Historial Médico",
   "allergies": "Alergias",

@@ -85,7 +85,7 @@ class ErrorBoundary extends StatefulWidget {
 
 class _ErrorBoundaryState extends State<ErrorBoundary> {
   ErrorWidgetBuilder? _originalBuilder;
-  FlutterExceptionHandler? _originalHandler;
+  void Function(FlutterErrorDetails)? _originalHandler;
   Object? _error;
 
   @override
@@ -145,7 +145,9 @@ class _ResetApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Trigger a full app reload
-    WidgetsBinding.instance.reassemble();
+    // reassemble() removed in Flutter 3.38;
+    // full restart requires platform channel
+    // WidgetsBinding.instance.reassemble();
     return const Scaffold(
       body: Center(child: CircularProgressIndicator()),
     );

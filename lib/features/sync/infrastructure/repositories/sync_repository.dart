@@ -188,4 +188,17 @@ class SyncRepositoryImpl implements SyncRepository {
       port: node.port,
     )).toList();
   }
+
+  @override
+  Future<void> syncAll() async {
+    // Full sync: read tokens and run all sync operations
+    final token = await getAccessToken();
+    if (token == null) return;
+    // Get patient ID from user profile
+    final profile = await _isar.userProfiles.where().findFirst();
+    final patientId = profile?.epsPatientId ?? profile?.uniqueId ?? '';
+    if (patientId.isEmpty) return;
+    await syncPatient(patientId, token);
+    await syncRda(patientId, token);
+  }
 }

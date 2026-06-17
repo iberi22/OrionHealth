@@ -3,19 +3,18 @@
 
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:orionhealth_health/core/config/environment.dart';
 import 'injection.config.dart';
+
+export 'package:orionhealth_health/core/config/environment.dart';
 
 final getIt = GetIt.instance;
 
 @InjectableInit(
-  initializerName: 'init', // default
-  preferRelativeImports: true, // default
-  asExtension: true, // default
+  initializerName: 'init',
+  preferRelativeImports: true,
+  asExtension: true,
 )
 Future<void> configureDependencies() async {
   await getIt.init(environment: AppEnvironment.current.name);
 }
-
-// Re-export for convenience
-import 'package:orionhealth_health/core/config/environment.dart';
-export 'package:orionhealth_health/core/config/environment.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'package:orionhealth/core/services/app_logger.dart';
+import '../services/app_logger.dart';
 
 /// Manages isolates for heavy computational tasks
 class IsolateManager {
