@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:orionhealth_health/features/local_agent/presentation/pages/llm_settings_page.dart';
 import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart';
@@ -18,19 +21,30 @@ void main() {
   late MockLlmService mockLlmService;
   late MockSecureStorage mockSecureStorage;
 
-  setUpAll(() {
-    final getIt = GetIt.instance;
+  setUp(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
     mockDownloadService = MockModelDownloadService();
     mockLlmService = MockLlmService();
     mockSecureStorage = MockSecureStorage();
 
+    if (!GetIt.I.isRegistered<ModelDownloadService>()) {
+      await configureDependencies();
+    }
+
+    final getIt = GetIt.instance;
+    getIt.unregister<ModelDownloadService>();
+    getIt.unregister<LlmService>();
+    getIt.unregister<FlutterSecureStorage>();
     getIt.registerLazySingleton<ModelDownloadService>(() => mockDownloadService);
     getIt.registerLazySingleton<LlmService>(() => mockLlmService);
     getIt.registerLazySingleton<FlutterSecureStorage>(() => mockSecureStorage);
   });
 
-  tearDownAll(() {
-    GetIt.I.reset();
+  tearDown(() {
+    GetIt.I.unregister<ModelDownloadService>();
+    GetIt.I.unregister<LlmService>();
+    GetIt.I.unregister<FlutterSecureStorage>();
   });
 
   group('Local Agent Golden Tests', () {

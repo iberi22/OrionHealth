@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/about/presentation/pages/about_page.dart';
 import 'package:orionhealth_health/features/about/presentation/widgets/mission_section.dart';
 import 'package:orionhealth_health/features/about/application/about_cubit.dart';
@@ -15,6 +17,8 @@ void main() {
   late MockAboutCubit mockAboutCubit;
 
   setUp(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
     mockAboutCubit = MockAboutCubit();
     if (!GetIt.I.isRegistered<AboutCubit>()) {
       await configureDependencies();
