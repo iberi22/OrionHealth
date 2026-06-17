@@ -3,9 +3,9 @@
   "version": "0.8.0",
   "protocol_version": "2",
   "metadata": {
-    "last_updated": "2026-06-10",
+    "last_updated": "2025-06-11",
     "flutter_analyze": "0 issues",
-    "total_dart_files": 640,
+    "total_dart_files": 642,
     "total_loc": 0,
     "packages": {
       "isar_agent_memory": "0.5.0-beta",
@@ -15,16 +15,16 @@
   },
   "features": {
     "total": 25,
-    "complete_layers": 24,
+    "complete_layers": 25,
     "gap_domain": 1,
-    "needs_golden_tests": 3,
+    "needs_golden_tests": 2,
     "needs_data_migration": 2
   },
   "test_suite": {
-    "test_files": 177,
-    "golden_screenshots": 512,
+    "test_files": 178,
+    "golden_screenshots": 515,
     "integration_tests": 11,
-    "test_ratio_pct": 27.7
+    "test_ratio_pct": 27.8
   },
   "ci_cd": {
     "workflows": 5,
@@ -40,7 +40,7 @@
     "contributing": true,
     "translations_arb": 26
   },
-  "implementation_pct": 63.2,
+  "implementation_pct": 65.0,
   "bugs": [
     {
       "id": 1,
