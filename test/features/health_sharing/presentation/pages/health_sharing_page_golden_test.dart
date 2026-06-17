@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/share_page.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/receive_page.dart';
 import 'package:orionhealth_health/features/health_sharing/application/sharing_cubit.dart';
@@ -13,14 +16,22 @@ class MockSharingCubit extends Mock implements SharingCubit {}
 void main() {
   late MockSharingCubit mockCubit;
 
-  setUpAll(() {
-    final getIt = GetIt.instance;
+  setUp(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
     mockCubit = MockSharingCubit();
+
+    if (!GetIt.I.isRegistered<SharingCubit>()) {
+      await configureDependencies();
+    }
+
+    final getIt = GetIt.instance;
+    getIt.unregister<SharingCubit>();
     getIt.registerLazySingleton<SharingCubit>(() => mockCubit);
   });
 
-  tearDownAll(() {
-    GetIt.I.reset();
+  tearDown(() {
+    GetIt.I.unregister<SharingCubit>();
   });
 
   group('Health Sharing Golden Tests', () {

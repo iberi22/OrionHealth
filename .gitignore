@@ -107,3 +107,7 @@ investigate_tests.js
 resolve_pr112.js
 # Medical standards build output
 packages/medical_standards/build/
+
+# Golden test failures
+failures/
+**/failures/

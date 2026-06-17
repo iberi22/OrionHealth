@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_detail_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/rating_dialog.dart';
@@ -45,13 +48,19 @@ void main() {
     countryCode: 'UK',
   );
 
-  setUpAll(() {
+  setUp(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
     mockCubit = MockDoctorVerificationCubit();
+    if (!GetIt.I.isRegistered<DoctorVerificationCubit>()) {
+      await configureDependencies();
+    }
+    GetIt.I.unregister<DoctorVerificationCubit>();
     GetIt.I.registerSingleton<DoctorVerificationCubit>(mockCubit);
   });
 
-  tearDownAll(() {
-    GetIt.I.reset();
+  tearDown(() {
+    GetIt.I.unregister<DoctorVerificationCubit>();
   });
 
   group('Doctor Verification Golden Tests', () {

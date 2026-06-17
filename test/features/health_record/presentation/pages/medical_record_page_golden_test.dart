@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/health_record/presentation/pages/health_record_staging_page.dart';
 import 'package:orionhealth_health/features/health_record/presentation/pages/upload_page.dart';
 import 'package:orionhealth_health/features/health_record/presentation/pages/timeline_page.dart';
@@ -20,19 +23,30 @@ void main() {
   late MockHealthRecordRepository mockRepo;
   late MockWalletService mockWalletService;
 
-  setUpAll(() {
-    final getIt = GetIt.instance;
+  setUp(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
     mockCubit = MockHealthRecordCubit();
     mockRepo = MockHealthRecordRepository();
     mockWalletService = MockWalletService();
 
+    if (!GetIt.I.isRegistered<HealthRecordCubit>()) {
+      await configureDependencies();
+    }
+
+    final getIt = GetIt.instance;
+    getIt.unregister<HealthRecordCubit>();
+    getIt.unregister<HealthRecordRepository>();
+    getIt.unregister<WalletService>();
     getIt.registerLazySingleton<HealthRecordCubit>(() => mockCubit);
     getIt.registerLazySingleton<HealthRecordRepository>(() => mockRepo);
     getIt.registerLazySingleton<WalletService>(() => mockWalletService);
   });
 
-  tearDownAll(() {
-    GetIt.I.reset();
+  tearDown(() {
+    GetIt.I.unregister<HealthRecordCubit>();
+    GetIt.I.unregister<HealthRecordRepository>();
+    GetIt.I.unregister<WalletService>();
   });
 
   group('Health Record Golden Tests', () {
