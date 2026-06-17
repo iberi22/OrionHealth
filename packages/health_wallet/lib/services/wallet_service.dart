@@ -7,7 +7,8 @@ import '../models/medical_document.dart';
 import '../models/medical_event.dart';
 import '../models/medical_concept.dart' as concepts;
 import 'encryption_service.dart';
-import 'package:medical_standards/medical_standards.dart' hide VitalSign, Medication;
+import 'package:medical_standards/medical_standards.dart'
+    hide VitalSign, Medication;
 
 /// Main service for managing the health wallet.
 /// Coordinates Isar collections and encryption for all health data.
