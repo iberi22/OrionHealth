@@ -27,7 +27,7 @@ void main() {
         final dto = UserProfileDto.fromEntity(entity);
         expect(dto.name, 'Juan Perez');
         expect(dto.birthDate, DateTime(1990, 5, 15));
-        expect(dto.sex, 'male');
+        expect(dto.sex, 'M');
         expect(dto.weight, 75.5);
         expect(dto.height, 1.78);
         expect(dto.medicalConditions, ['hypertension', 'diabetes']);
@@ -75,7 +75,7 @@ void main() {
         final json = UserProfileDto.fromEntity(entity).toJson();
         expect(json['name'], 'Juan Perez');
         expect(json['birthDate'], '1990-05-15T00:00:00.000');
-        expect(json['sex'], 'male');
+        expect(json['sex'], 'M');
         expect(json['weight'], 75.5);
         expect(json['height'], 1.78);
         expect(json['medicalConditions'], ['hypertension', 'diabetes']);

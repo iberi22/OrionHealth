@@ -13,12 +13,15 @@ void main() {
   late MockAllergiesCubit mockAllergiesCubit;
 
   setUpAll(() {
+    GetIt.instance.reset();
     mockAllergiesCubit = MockAllergiesCubit();
-    GetIt.I.registerLazySingleton<AllergiesCubit>(() => mockAllergiesCubit);
+    GetIt.I.registerSingleton<AllergiesCubit>(mockAllergiesCubit);
   });
 
   tearDownAll(() {
-    GetIt.I.unregister<AllergiesCubit>();
+    if (GetIt.I.isRegistered<AllergiesCubit>()) {
+      GetIt.I.unregister<AllergiesCubit>();
+    }
   });
 
   Widget createWidgetUnderTest() {

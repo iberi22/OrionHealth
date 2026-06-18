@@ -10,6 +10,27 @@ void main() {
   late MockGovernanceRepository mockRepository;
   final baseDateTime = DateTime(2026, 7, 1);
 
+  setUpAll(() {
+    registerFallbackValue(
+      Proposal(
+        id: 'fallback',
+        title: 'Fallback',
+        description: 'Fallback',
+        voteCount: 0,
+        deadline: baseDateTime,
+        status: ProposalStatus.active,
+      ),
+    );
+    registerFallbackValue(
+      const Vote(
+        proposalId: 'fallback',
+        voter: 'fallback',
+        decision: VoteDecision.abstain,
+        weight: 0,
+      ),
+    );
+  });
+
   setUp(() {
     mockRepository = MockGovernanceRepository();
   });
@@ -27,7 +48,9 @@ void main() {
         ),
       ];
 
-      when(() => mockRepository.getProposals()).thenAnswer((_) async => proposals);
+      when(
+        () => mockRepository.getProposals(),
+      ).thenAnswer((_) async => proposals);
 
       final result = await mockRepository.getProposals();
       expect(result, hasLength(1));
@@ -51,7 +74,9 @@ void main() {
         status: ProposalStatus.active,
       );
 
-      when(() => mockRepository.getProposalById('1')).thenAnswer((_) async => proposal);
+      when(
+        () => mockRepository.getProposalById('1'),
+      ).thenAnswer((_) async => proposal);
 
       final result = await mockRepository.getProposalById('1');
       expect(result, isNotNull);
@@ -59,7 +84,9 @@ void main() {
     });
 
     test('getProposalById returns null when not found', () async {
-      when(() => mockRepository.getProposalById('non-existent')).thenAnswer((_) async => null);
+      when(
+        () => mockRepository.getProposalById('non-existent'),
+      ).thenAnswer((_) async => null);
 
       final result = await mockRepository.getProposalById('non-existent');
       expect(result, isNull);
@@ -75,7 +102,9 @@ void main() {
         status: ProposalStatus.active,
       );
 
-      when(() => mockRepository.createProposal(any())).thenAnswer((_) async => {});
+      when(
+        () => mockRepository.createProposal(any()),
+      ).thenAnswer((_) async => {});
 
       await mockRepository.createProposal(proposal);
       verify(() => mockRepository.createProposal(proposal)).called(1);
@@ -105,7 +134,9 @@ void main() {
         ),
       ];
 
-      when(() => mockRepository.getVotesForProposal('1')).thenAnswer((_) async => votes);
+      when(
+        () => mockRepository.getVotesForProposal('1'),
+      ).thenAnswer((_) async => votes);
 
       final result = await mockRepository.getVotesForProposal('1');
       expect(result, hasLength(1));
@@ -113,11 +144,14 @@ void main() {
     });
 
     test('updateProposalStatus updates proposal status', () async {
-      when(() => mockRepository.updateProposalStatus('1', ProposalStatus.passed))
-          .thenAnswer((_) async => {});
+      when(
+        () => mockRepository.updateProposalStatus('1', ProposalStatus.passed),
+      ).thenAnswer((_) async => {});
 
       await mockRepository.updateProposalStatus('1', ProposalStatus.passed);
-      verify(() => mockRepository.updateProposalStatus('1', ProposalStatus.passed)).called(1);
+      verify(
+        () => mockRepository.updateProposalStatus('1', ProposalStatus.passed),
+      ).called(1);
     });
 
     test('all methods are defined in the abstract class', () {
