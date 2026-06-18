@@ -40,6 +40,20 @@ void main() {
       expect(results[0].type, VitalSignType.heartRate);
     });
 
+    test('should handle missing columns in CSV', () {
+      const csv = 'type,value,unit\nheartRate,72,bpm';
+      final results = parser.parseCsv(csv);
+      expect(results.isEmpty, isTrue);
+    });
+
+    test('should handle mixed valid and invalid rows', () {
+      const csv = 'type,value,unit,dateTime\nheartRate,72,bpm,2023-10-27T10:00:00Z\ninvalid,row\nspo2,98,%,2023-10-27T10:05:00Z';
+      final results = parser.parseCsv(csv);
+      expect(results.length, 2);
+      expect(results[0].type, VitalSignType.heartRate);
+      expect(results[1].type, VitalSignType.spO2);
+    });
+
     test('should handle empty CSV', () {
       expect(parser.parseCsv('').length, 0);
       expect(parser.parseCsv('   ').length, 0);
@@ -133,6 +147,57 @@ void main() {
       expect(results[0].type, VitalSignType.temperature);
       expect(results[0].value, 37.2);
     });
+
+    test('should parse FHIR Observation with multiple components (Blood Pressure)', () {
+      final fhirBp = jsonEncode({
+        'resourceType': 'Observation',
+        'status': 'final',
+        'code': {
+          'coding': [
+            {'system': 'http://loinc.org', 'code': '85354-9', 'display': 'Blood pressure panel with all children'}
+          ]
+        },
+        'effectiveDateTime': '2023-10-27T16:00:00Z',
+        'component': [
+          {
+            'code': {
+              'coding': [
+                {'system': 'http://loinc.org', 'code': '8480-6', 'display': 'Systolic blood pressure'}
+              ]
+            },
+            'valueQuantity': {'value': 120, 'unit': 'mmHg'}
+          },
+          {
+            'code': {
+              'coding': [
+                {'system': 'http://loinc.org', 'code': '8462-4', 'display': 'Diastolic blood pressure'}
+              ]
+            },
+            'valueQuantity': {'value': 80, 'unit': 'mmHg'}
+          }
+        ]
+      });
+
+      final results = parser.parseFhir(fhirBp);
+
+      expect(results.length, 2);
+      expect(results.any((v) => v.type == VitalSignType.bloodPressureSystolic && v.value == 120), isTrue);
+      expect(results.any((v) => v.type == VitalSignType.bloodPressureDiastolic && v.value == 80), isTrue);
+    });
+
+    test('should handle FHIR with no recognized codes', () {
+      final fhirUnknown = jsonEncode({
+        'resourceType': 'Observation',
+        'code': {
+          'coding': [
+            {'system': 'http://loinc.org', 'code': 'unknown'}
+          ]
+        },
+        'valueQuantity': {'value': 10}
+      });
+      final results = parser.parseFhir(fhirUnknown);
+      expect(results.isEmpty, isTrue);
+    });
   });
 
   group('HealthDataParser - Sanitization & Validation', () {
@@ -174,6 +239,38 @@ void main() {
       final invalid = VitalSign(
         type: VitalSignType.temperature,
         value: 15,
+        dateTime: DateTime.now(),
+      );
+
+      expect(parser.isValid(valid), isTrue);
+      expect(parser.isValid(invalid), isFalse);
+    });
+
+    test('should validate blood pressure range', () {
+      final validSystolic = VitalSign(
+        type: VitalSignType.bloodPressureSystolic,
+        value: 120,
+        dateTime: DateTime.now(),
+      );
+      final invalidSystolic = VitalSign(
+        type: VitalSignType.bloodPressureSystolic,
+        value: 350,
+        dateTime: DateTime.now(),
+      );
+
+      expect(parser.isValid(validSystolic), isTrue);
+      expect(parser.isValid(invalidSystolic), isFalse);
+    });
+
+    test('should validate spO2 range', () {
+      final valid = VitalSign(
+        type: VitalSignType.spO2,
+        value: 98,
+        dateTime: DateTime.now(),
+      );
+      final invalid = VitalSign(
+        type: VitalSignType.spO2,
+        value: 105,
         dateTime: DateTime.now(),
       );
 
