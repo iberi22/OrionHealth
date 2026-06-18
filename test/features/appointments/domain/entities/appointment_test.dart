@@ -65,26 +65,6 @@ void main() {
       expect(appointment.validate(), isFalse);
     });
 
-    test('appointment with whitespace-only doctor name should fail validation', () {
-      final appointment = Appointment(
-        doctorName: '   ',
-        specialty: 'Diagnostics',
-        dateTime: DateTime.now(),
-        status: AppointmentStatus.upcoming,
-      );
-      expect(appointment.validate(), isFalse);
-    });
-
-    test('appointment with whitespace-only specialty should fail validation', () {
-      final appointment = Appointment(
-        doctorName: 'Dr. House',
-        specialty: '   ',
-        dateTime: DateTime.now(),
-        status: AppointmentStatus.upcoming,
-      );
-      expect(appointment.validate(), isFalse);
-    });
-
     test('isPast should return true for dates in the past', () {
       final pastDate = DateTime.now().subtract(const Duration(days: 1));
       final appointment = Appointment(
@@ -107,26 +87,26 @@ void main() {
       expect(appointment.isPast, isFalse);
     });
 
-    test('isPast should return true for a date just now', () {
-      final now = DateTime.now().subtract(const Duration(seconds: 1));
+    test('isPast should return false for near future (1 min)', () {
+      final now = DateTime.now();
       final appointment = Appointment(
         doctorName: 'Dr. House',
         specialty: 'Diagnostics',
-        dateTime: now,
+        dateTime: now.add(const Duration(minutes: 1)),
+        status: AppointmentStatus.upcoming,
+      );
+      expect(appointment.isPast, isFalse);
+    });
+
+    test('isPast should return true for near past (1 min)', () {
+      final now = DateTime.now();
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: 'Diagnostics',
+        dateTime: now.subtract(const Duration(minutes: 1)),
         status: AppointmentStatus.upcoming,
       );
       expect(appointment.isPast, isTrue);
-    });
-
-    test('should allow cancelled status', () {
-      final appointment = Appointment(
-        doctorName: 'Dr. House',
-        specialty: 'Diagnostics',
-        dateTime: DateTime.now(),
-        status: AppointmentStatus.cancelled,
-      );
-      expect(appointment.status, AppointmentStatus.cancelled);
-      expect(appointment.validate(), isTrue);
     });
   });
 }

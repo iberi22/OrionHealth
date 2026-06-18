@@ -1,19 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import '../domain/repositories/dashboard_repository.dart';
+import '../domain/usecases/get_dashboard_stats_usecase.dart';
+import '../domain/usecases/get_recent_activity_usecase.dart';
 import 'dashboard_state.dart';
 
 @injectable
 class DashboardCubit extends Cubit<DashboardState> {
-  final DashboardRepository _repository;
+  final GetDashboardStatsUseCase _getDashboardStats;
+  final GetRecentActivityUseCase _getRecentActivity;
 
-  DashboardCubit(this._repository) : super(DashboardInitial());
+  DashboardCubit(
+    this._getDashboardStats,
+    this._getRecentActivity,
+  ) : super(DashboardInitial());
 
   Future<void> loadDashboardData() async {
     emit(DashboardLoading());
     try {
-      final stats = await _repository.getDashboardStats();
-      final activities = await _repository.getRecentActivity();
+      final stats = await _getDashboardStats();
+      final activities = await _getRecentActivity();
       emit(DashboardLoaded(stats: stats, activities: activities));
     } catch (e) {
       emit(DashboardError(e.toString()));
