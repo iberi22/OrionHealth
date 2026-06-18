@@ -5,7 +5,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/share_page.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/receive_page.dart';
 import 'package:orionhealth_health/features/health_sharing/application/sharing_cubit.dart';
@@ -16,9 +15,10 @@ class MockSharingCubit extends Mock implements SharingCubit {}
 void main() {
   late MockSharingCubit mockCubit;
 
-  setUp(() async {
+  setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
+<<<<<<< HEAD
     mockCubit = MockSharingCubit();
 
     await GetIt.I.reset();
@@ -29,16 +29,23 @@ void main() {
       getIt.unregister<SharingCubit>();
     }
     getIt.registerLazySingleton<SharingCubit>(() => mockCubit);
+=======
+>>>>>>> origin/main
   });
 
-  tearDown(() {
-    GetIt.I.unregister<SharingCubit>();
+  setUp(() async {
+    // Reset GetIt completely before each test to avoid "already registered" errors
+    GetIt.instance.reset();
+    await configureDependencies();
+    mockCubit = MockSharingCubit();
+    GetIt.I.registerFactory<SharingCubit>(() => mockCubit);
   });
 
   group('Health Sharing Golden Tests', () {
     testWidgets('SharePage - Initial/Consent', (tester) async {
       tester.view.physicalSize = const Size(360, 640);
       tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
 
       when(() => mockCubit.state).thenReturn(SharingReady());
       when(() => mockCubit.initialize()).thenAnswer((_) async => {});
@@ -56,6 +63,7 @@ void main() {
     testWidgets('SharePage - Active Session (Transferring)', (tester) async {
       tester.view.physicalSize = const Size(360, 640);
       tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
 
       when(() => mockCubit.state).thenReturn(const SharingTransferring(
         method: TransferMethod.wifi,
@@ -77,6 +85,7 @@ void main() {
     testWidgets('ReceivePage - Setup UI', (tester) async {
       tester.view.physicalSize = const Size(360, 640);
       tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
 
       when(() => mockCubit.state).thenReturn(SharingReady());
       when(() => mockCubit.initialize()).thenAnswer((_) async => {});
@@ -94,26 +103,26 @@ void main() {
     testWidgets('ReceivePage - Received Data Preview', (tester) async {
       tester.view.physicalSize = const Size(360, 640);
       tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
 
-      final package = SharedHealthPackage(
-        id: 'pkg-123',
-        senderNodeId: 'Node-A',
-        recipientNodeId: 'Node-B',
-        createdAt: DateTime.now(),
-        expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-        payload: const EncryptedPayload(encryptedData: '...', iv: '', ephemeralPublicKey: ''),
-        metadata: const PackageMetadata(
-          packageType: 'selective',
-          consentVerified: true,
-          includedCategories: {DataCategory.vitalSigns, DataCategory.medications},
-          appVersion: '1.0.0',
-        ),
-        signature: '',
+      final mockPackage = SharedHealthPackage(
+        senderId: 'doctor001',
+        senderName: 'Dr. García',
+        records: [
+          HealthRecord(
+            type: HealthRecordType.labResult,
+            title: 'Hemograma',
+            description: 'Resultados de análisis de sangre',
+            data: '',
+          ),
+        ],
+        timestamp: DateTime(2026, 6, 17),
+        inboxUrl: 'https://inbox.example.com/receive',
       );
 
-      when(() => mockCubit.state).thenReturn(SharingReceiving(
-        package: package,
-        method: TransferMethod.wifi,
+      when(() => mockCubit.state).thenReturn(SharingReceived(
+        package: mockPackage,
+        source: 'wifi',
       ));
       when(() => mockCubit.initialize()).thenAnswer((_) async => {});
       when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
@@ -123,7 +132,7 @@ void main() {
 
       await expectLater(
         find.byType(ReceivePage),
-        matchesGoldenFile("../../../../golden/reference/receive_page_preview.png"),
+        matchesGoldenFile("../../../../golden/reference/receive_page_data.png"),
       );
     });
   });

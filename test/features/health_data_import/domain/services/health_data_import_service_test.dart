@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:health/health.dart';
+import 'package:orionhealth_health/features/health_data_import/application/health_import_state.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_import_service.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_parser.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
@@ -8,6 +10,120 @@ void main() {
 
   setUp(() {
     service = HealthDataImportService();
+  });
+
+  group('HealthDataImportService - convertToVitalSigns', () {
+    test('should convert various health data points to vital signs', () async {
+      final date = DateTime(2023, 10, 27, 10);
+      final healthData = [
+        HealthDataPoint(
+          uuid: 'uuid1',
+          value: NumericHealthValue(numericValue: 1000),
+          type: HealthDataType.STEPS,
+          unit: HealthDataUnit.COUNT,
+          dateFrom: date,
+          dateTo: date,
+          sourcePlatform: HealthPlatformType.googleHealthConnect,
+          sourceDeviceId: 'deviceId',
+          sourceId: 'sourceId',
+          sourceName: 'sourceName',
+        ),
+        HealthDataPoint(
+          uuid: 'uuid2',
+          value: NumericHealthValue(numericValue: 72),
+          type: HealthDataType.HEART_RATE,
+          unit: HealthDataUnit.BEATS_PER_MINUTE,
+          dateFrom: date,
+          dateTo: date,
+          sourcePlatform: HealthPlatformType.googleHealthConnect,
+          sourceDeviceId: 'deviceId',
+          sourceId: 'sourceId',
+          sourceName: 'sourceName',
+        ),
+        HealthDataPoint(
+          uuid: 'uuid3',
+          value: NumericHealthValue(numericValue: 120),
+          type: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+          unit: HealthDataUnit.MILLIMETER_OF_MERCURY,
+          dateFrom: date,
+          dateTo: date,
+          sourcePlatform: HealthPlatformType.googleHealthConnect,
+          sourceDeviceId: 'deviceId',
+          sourceId: 'sourceId',
+          sourceName: 'sourceName',
+        ),
+        HealthDataPoint(
+          uuid: 'uuid4',
+          value: NumericHealthValue(numericValue: 80),
+          type: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+          unit: HealthDataUnit.MILLIMETER_OF_MERCURY,
+          dateFrom: date,
+          dateTo: date,
+          sourcePlatform: HealthPlatformType.googleHealthConnect,
+          sourceDeviceId: 'deviceId',
+          sourceId: 'sourceId',
+          sourceName: 'sourceName',
+        ),
+        HealthDataPoint(
+          uuid: 'uuid5',
+          value: NumericHealthValue(numericValue: 98),
+          type: HealthDataType.BLOOD_OXYGEN,
+          unit: HealthDataUnit.PERCENT,
+          dateFrom: date,
+          dateTo: date,
+          sourcePlatform: HealthPlatformType.googleHealthConnect,
+          sourceDeviceId: 'deviceId',
+          sourceId: 'sourceId',
+          sourceName: 'sourceName',
+        ),
+      ];
+
+      final results = await service.convertToVitalSigns(healthData, HealthDataSource.googleFit);
+
+      expect(results.length, 5);
+      expect(results.any((v) => v.type == VitalSignType.steps && v.value == 1000), isTrue);
+      expect(results.any((v) => v.type == VitalSignType.heartRate && v.value == 72), isTrue);
+      expect(results.any((v) => v.type == VitalSignType.bloodPressureSystolic && v.value == 120), isTrue);
+      expect(results.any((v) => v.type == VitalSignType.bloodPressureDiastolic && v.value == 80), isTrue);
+      expect(results.any((v) => v.type == VitalSignType.oxygenSaturation && v.value == 98), isTrue);
+    });
+
+    test('should handle height and weight conversion', () async {
+      final date = DateTime(2023, 10, 27, 10);
+      final healthData = [
+        HealthDataPoint(
+          uuid: 'uuid6',
+          value: NumericHealthValue(numericValue: 1.75), // 1.75 meters
+          type: HealthDataType.HEIGHT,
+          unit: HealthDataUnit.METER,
+          dateFrom: date,
+          dateTo: date,
+          sourcePlatform: HealthPlatformType.googleHealthConnect,
+          sourceDeviceId: 'deviceId',
+          sourceId: 'sourceId',
+          sourceName: 'sourceName',
+        ),
+        HealthDataPoint(
+          uuid: 'uuid7',
+          value: NumericHealthValue(numericValue: 70), // 70 kg
+          type: HealthDataType.WEIGHT,
+          unit: HealthDataUnit.KILOGRAM,
+          dateFrom: date,
+          dateTo: date,
+          sourcePlatform: HealthPlatformType.googleHealthConnect,
+          sourceDeviceId: 'deviceId',
+          sourceId: 'sourceId',
+          sourceName: 'sourceName',
+        ),
+      ];
+
+      final results = await service.convertToVitalSigns(healthData, HealthDataSource.googleFit);
+
+      expect(results.length, 2);
+      // Height is mapped to temperature type as a workaround in current implementation
+      expect(results[0].value, 175.0); // 1.75 * 100
+      expect(results[1].value, 70.0);
+    });
   });
 
   group('HealthDataImportService - findDuplicates', () {

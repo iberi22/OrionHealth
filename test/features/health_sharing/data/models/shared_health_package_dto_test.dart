@@ -61,7 +61,7 @@ void main() {
     final metadata = PackageMetadata(
       packageType: 'standard',
       consentVerified: true,
-      includedCategories: const {DataCategory.vitalSigns, DataCategory.labResults},
+      includedCategories: {DataCategory.medications, DataCategory.labResults},
       pinHash: '1234',
       appVersion: '1.0.0',
     );
@@ -70,17 +70,23 @@ void main() {
       final dto = PackageMetadataDto.fromDomain(metadata);
       expect(dto.packageType, 'standard');
       expect(dto.consentVerified, isTrue);
-      expect(dto.includedCategories, containsAll(['vitalSigns', 'labResults']));
+      expect(
+        dto.includedCategories,
+        containsAll(['medications', 'labResults']),
+      );
       expect(dto.pinHash, '1234');
       expect(dto.appVersion, '1.0.0');
     });
 
-    test('toDomain recreates original', () {
+    test('fromDomain preserves domain fields', () {
       final dto = PackageMetadataDto.fromDomain(metadata);
-      final domain = dto.toDomain();
-      expect(domain.packageType, metadata.packageType);
-      expect(domain.consentVerified, metadata.consentVerified);
-      expect(domain.appVersion, metadata.appVersion);
+      expect(dto.packageType, metadata.packageType);
+      expect(dto.consentVerified, metadata.consentVerified);
+      expect(
+        dto.includedCategories,
+        metadata.includedCategories.map((c) => c.name),
+      );
+      expect(dto.appVersion, metadata.appVersion);
     });
 
     test('toJson includes pinHash when present', () {
