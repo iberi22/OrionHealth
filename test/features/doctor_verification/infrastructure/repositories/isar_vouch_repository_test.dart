@@ -94,8 +94,52 @@ void main() {
       expect(results, isEmpty);
     });
 
-    test('verifyVouchChain returns true with valid chain', () async {
-      // doc2 vouches for doc1, doc3 vouches for doc2 -> trust chain
+    test('verifyVouchChain returns true with single depth when vouches exist', () async {
+      // doc2 vouches for doc1
+      final vouch = Vouch(
+        id: 'v1',
+        vouchedBy: 'doc2',
+        targetDoctor: 'doc1',
+        category: 'Clinical',
+        timestamp: tDate,
+      );
+
+      await repository.addVouch(vouch);
+
+      // With depth=1, it finds vouches -> returns true (no recursive check needed)
+      final result = await repository.verifyVouchChain('doc1', depth: 1);
+      expect(result, isTrue);
+    });
+
+    test('verifyVouchChain returns false with no vouches', () async {
+      final result = await repository.verifyVouchChain('lonely_doc');
+      expect(result, isFalse);
+    });
+
+    test('verifyVouchChain returns false when depth is 0', () async {
+      final vouch = Vouch(
+        id: 'v1',
+        vouchedBy: 'doc2',
+        targetDoctor: 'doc1',
+        category: 'Clinical',
+        timestamp: tDate,
+      );
+
+      await repository.addVouch(vouch);
+
+      // With depth=0, should return false immediately
+      final result = await repository.verifyVouchChain('doc1', depth: 0);
+      expect(result, isFalse);
+    });
+
+    test('verifyVouchChain with depth=2 validates multi-level chain', () async {
+      // doc3 vouches for doc2, doc2 vouches for doc1
+      // verifyVouchChain('doc1', depth=2):
+      //   getByDoctor('doc1') -> [v1] 
+      //   v1.depth=2 > 1 -> verifyVouchChain('doc2', depth=1)
+      //     getByDoctor('doc2') -> [v2]
+      //     v2.depth=1 -> depth <= 1 -> return true
+      //   parentVerified=true -> return true
       final v1 = Vouch(
         id: 'v1',
         vouchedBy: 'doc2',
@@ -114,17 +158,12 @@ void main() {
       await repository.addVouch(v1);
       await repository.addVouch(v2);
 
-      final result = await repository.verifyVouchChain('doc1');
+      final result = await repository.verifyVouchChain('doc1', depth: 2);
       expect(result, isTrue);
     });
 
-    test('verifyVouchChain returns false with no vouches', () async {
-      final result = await repository.verifyVouchChain('lonely_doc');
-      expect(result, isFalse);
-    });
-
-    test('verifyVouchChain returns false when depth exhausted', () async {
-      // doc2 vouches for doc1, but no one vouches for doc2 with depth=1
+    test('verifyVouchChain returns false when chain is broken', () async {
+      // doc2 vouches for doc1, but no one vouches for doc2
       final vouch = Vouch(
         id: 'v1',
         vouchedBy: 'doc2',
@@ -135,23 +174,8 @@ void main() {
 
       await repository.addVouch(vouch);
 
-      final result = await repository.verifyVouchChain('doc1', depth: 1);
-      expect(result, isTrue); // depth 1 finds vouches -> returns true
-    });
-
-    test('verifyVouchChain respects depth limit', () async {
-      // doc2 vouches for doc1, but depth=0 should return false
-      final vouch = Vouch(
-        id: 'v1',
-        vouchedBy: 'doc2',
-        targetDoctor: 'doc1',
-        category: 'Clinical',
-        timestamp: tDate,
-      );
-
-      await repository.addVouch(vouch);
-
-      final result = await repository.verifyVouchChain('doc1', depth: 0);
+      // With depth=2, it tries to verify doc2 -> getByDoctor('doc2') returns [] -> false
+      final result = await repository.verifyVouchChain('doc1', depth: 2);
       expect(result, isFalse);
     });
   });
