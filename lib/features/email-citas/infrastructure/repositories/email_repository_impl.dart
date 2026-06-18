@@ -9,7 +9,7 @@ import '../../../appointments/domain/entities/appointment.dart';
 
 @LazySingleton(as: EmailRepository)
 class EmailRepositoryImpl implements EmailRepository {
-  final DeviceCalendarPlugin _deviceCalendarPlugin = DeviceCalendarPlugin();
+  final DeviceCalendarPlugin _deviceCalendarPlugin;
   final http.Client _client;
   static const String _baseUrl = "http://localhost:3000/api";
 
@@ -17,7 +17,11 @@ class EmailRepositoryImpl implements EmailRepository {
   static const String _gmailClientId = "YOUR_GMAIL_CLIENT_ID";
   static const String _outlookClientId = "YOUR_OUTLOOK_CLIENT_ID";
 
-  EmailRepositoryImpl({http.Client? client}) : _client = client ?? http.Client();
+  EmailRepositoryImpl({
+    http.Client? client,
+    DeviceCalendarPlugin? deviceCalendarPlugin,
+  })  : _client = client ?? http.Client(),
+        _deviceCalendarPlugin = deviceCalendarPlugin ?? DeviceCalendarPlugin();
 
   @override
   Future<bool> connectGmail() async {
