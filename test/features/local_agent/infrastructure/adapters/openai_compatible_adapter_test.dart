@@ -57,10 +57,14 @@ void main() {
     });
 
     test('generateStream throws StateError before configure', () async {
-      expect(
-        () => adapter.generateStream('test'),
-        throwsA(isA<StateError>()),
-      );
+      // generateStream is async*, so we must listen to the stream to trigger the error
+      final stream = adapter.generateStream('test');
+      try {
+        await stream.drain();
+        fail('Expected StateError but stream completed without error');
+      } on StateError {
+        // Expected
+      }
     });
 
     test('verifyConnection returns false before configure', () async {

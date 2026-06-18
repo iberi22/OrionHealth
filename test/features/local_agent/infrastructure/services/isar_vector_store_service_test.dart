@@ -76,7 +76,7 @@ void main() {
               content: any(named: 'content'),
               metadata: any(named: 'metadata'),
               deduplicate: any(named: 'deduplicate'),
-            )).thenAnswer((_) async {});
+            )).thenAnswer((_) async => 1);
 
         await service.addDocument(
           'med:ICD-10:E11',
@@ -136,7 +136,7 @@ void main() {
     group('indexMedicalStandards', () {
       test('does not throw when called', () async {
         await service.indexMedicalStandards();
-        // Should complete without exception
+        // Should complete without exception — errors are logged internally
       });
     });
 
@@ -146,7 +146,6 @@ void main() {
         final mockCollection = MockMemoryNodeCollection();
 
         when(() => mockMemoryGraph.isar).thenReturn(mockIsar);
-        // Mock memoryNodes as a getter on the Isar interface
         when(() => mockIsar.memoryNodes).thenReturn(mockCollection);
         when(() => mockCollection.count()).thenAnswer((_) async => 0);
 
@@ -157,30 +156,9 @@ void main() {
       });
     });
 
-    group('getNodesByLayer', () {
-      test('returns empty list when no nodes exist', () async {
-        when(() => mockMemoryGraph.getNodesByLayer(any()))
-            .thenAnswer((_) async => []);
-
-        final nodes = await service.getNodesByLayer(1);
-
-        expect(nodes, isEmpty);
-      });
-    });
-
-    group('multiHopSearch', () {
-      test('returns empty when base search returns nothing', () async {
-        when(() => mockMemoryGraph.hybridSearch(
-              any(),
-              topK: any(named: 'topK'),
-              alpha: any(named: 'alpha'),
-            )).thenAnswer((_) async => []);
-
-        final results = await service.multiHopSearch('test');
-
-        expect(results, isEmpty);
-      });
-    });
+    // Note: getNodesByLayer and multiHopSearch call extension methods
+    // (HierarchicalMemoryGraph) which cannot be mocked with mocktail.
+    // Those methods are tested through integration tests with a real Isar instance.
   });
 }
 
