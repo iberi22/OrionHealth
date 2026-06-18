@@ -6,9 +6,15 @@ import 'package:orionhealth_health/features/user_profile/domain/services/user_pr
 
 class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 
+class UserProfileFake extends Fake implements UserProfile {}
+
 void main() {
   late MockUserProfileRepository mockRepository;
   late UserProfileService service;
+
+  setUpAll(() {
+    registerFallbackValue(UserProfileFake());
+  });
 
   setUp(() {
     mockRepository = MockUserProfileRepository();
@@ -16,13 +22,9 @@ void main() {
   });
 
   group('UserProfileService', () {
-    final now = DateTime.now();
     final profile = UserProfile(
-      createdAt: now,
-      updatedAt: now,
       name: 'Juan Perez',
       birthDate: DateTime(1990, 5, 15),
-      privacyConsent: true,
     );
 
     test('getProfile returns profile from repository', () async {
@@ -49,7 +51,7 @@ void main() {
     });
 
     test('updateProfile throws on invalid profile', () async {
-      final invalid = UserProfile(createdAt: now, updatedAt: now, name: '');
+      final invalid = UserProfile(name: 'Juan', age: 200); // Invalid age
       expect(() => service.updateProfile(invalid), throwsA(isA<Exception>()));
       verifyNever(() => mockRepository.saveUserProfile(any()));
     });

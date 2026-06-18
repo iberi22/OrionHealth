@@ -24,8 +24,6 @@ void main() {
 
     group('UserProfileLoaded', () {
       final profile = UserProfile(
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
       );
 
       test('supports value equality', () {

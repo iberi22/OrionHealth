@@ -6,8 +6,8 @@ void main() {
   group('UserProfileDto', () {
     final now = DateTime(2026, 6, 18);
     final entity = UserProfile(
-      createdAt: now,
-      updatedAt: now,
+
+
       name: 'Juan Perez',
       birthDate: DateTime(1990, 5, 15),
       sex: 'male',
@@ -23,7 +23,7 @@ void main() {
       familyHistoryDiabetes: false,
     );
 
-    final defaultEntity = UserProfile(createdAt: now, updatedAt: now);
+    final defaultEntity = UserProfile();
 
     group('fromEntity', () {
       test('copies all fields from entity', () {
