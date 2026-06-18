@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/llm_adapter.dart';
@@ -9,11 +10,82 @@ import 'package:orionhealth_health/features/settings/domain/repositories/llm_set
 import 'package:orionhealth_health/features/settings/domain/services/device_capability_service.dart';
 
 class MockLlmSettingsRepository extends Mock implements LlmSettingsRepository {}
-
-class MockDeviceCapabilityService extends Mock
-    implements DeviceCapabilityService {}
-
+class MockDeviceCapabilityService extends Mock implements DeviceCapabilityService {}
 class MockLlmAdapter extends Mock implements LlmAdapter {}
+
+class _MockHttpOverrides extends HttpOverrides {
+  final int statusCode;
+  _MockHttpOverrides({required this.statusCode});
+
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    final client = _MockHttpClient();
+    when(() => client.getUrl(any())).thenAnswer((_) async => _MockHttpClientRequest(statusCode: statusCode));
+    when(() => client.openUrl(any(), any())).thenAnswer((_) async => _MockHttpClientRequest(statusCode: statusCode));
+    return client;
+  }
+}
+
+class _MockHttpClient extends Mock implements HttpClient {
+  @override
+  set autoUncompress(bool value) {}
+}
+
+class _MockHttpClientRequest extends Mock implements HttpClientRequest {
+  final int statusCode;
+  _MockHttpClientRequest({required this.statusCode});
+
+  @override
+  final HttpHeaders headers = _MockHttpHeaders();
+
+  @override
+  void add(List<int> data) {}
+
+  @override
+  void write(Object? obj) {}
+
+  @override
+  Future<HttpClientResponse> close() async {
+    return _MockHttpClientResponse(statusCode: statusCode);
+  }
+}
+
+class _MockHttpHeaders extends Mock implements HttpHeaders {
+  @override
+  void set(String name, Object value, {bool preserveHeaderCase = false}) {}
+
+  @override
+  void add(String name, Object value, {bool preserveHeaderCase = false}) {}
+
+  @override
+  void removeAll(String name) {}
+}
+
+class _MockHttpClientResponse extends Mock implements HttpClientResponse {
+  final int statusCode;
+  _MockHttpClientResponse({required this.statusCode});
+
+  @override
+  int get contentLength => 0;
+
+  @override
+  HttpClientResponseCompressionState get compressionState =>
+      HttpClientResponseCompressionState.notCompressed;
+
+  @override
+  StreamSubscription<List<int>> listen(void Function(List<int> event)? onData,
+      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
+    return Stream<List<int>>.fromIterable([utf8.encode('{}')]).listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
+  }
+
+  @override
+  Future<bool> any(bool Function(List<int> element) test) async => false;
+}
 
 void main() {
   late LlmSettingsCubit cubit;
@@ -35,6 +107,10 @@ void main() {
     recommendedModel: 'gemini-2.0-flash',
   );
 
+  setUpAll(() {
+    registerFallbackValue(Uri());
+  });
+
   setUp(() {
     mockRepository = MockLlmSettingsRepository();
     mockDeviceCapabilityService = MockDeviceCapabilityService();
@@ -42,16 +118,10 @@ void main() {
 
     registerFallbackValue(LlmConfig());
 
-    when(
-      () => mockRepository.getLlmConfig(),
-    ).thenAnswer((_) async => testConfig);
+    when(() => mockRepository.getLlmConfig()).thenAnswer((_) async => testConfig);
     when(() => mockRepository.saveLlmConfig(any())).thenAnswer((_) async {});
-    when(
-      () => mockDeviceCapabilityService.detectCapability(),
-    ).thenAnswer((_) async => testCapability);
-    when(
-      () => mockLlmAdapter.listInstalledModels(),
-    ).thenAnswer((_) async => []);
+    when(() => mockDeviceCapabilityService.detectCapability()).thenAnswer((_) async => testCapability);
+    when(() => mockLlmAdapter.listInstalledModels()).thenAnswer((_) async => []);
 
     cubit = LlmSettingsCubit(
       mockRepository,
@@ -69,21 +139,16 @@ void main() {
       expect(cubit.state, isA<LlmSettingsInitial>());
     });
 
-    test(
-      'loadSettings emits Loading then Loaded with config from repository',
-      () async {
-        await cubit.loadSettings();
+    test('loadSettings emits Loading then Loaded with config from repository', () async {
+      await cubit.loadSettings();
 
-        expect(cubit.state, isA<LlmSettingsLoaded>());
-        final loadedState = cubit.state as LlmSettingsLoaded;
-        expect(loadedState.config.selectedModel, testConfig.selectedModel);
-      },
-    );
+      expect(cubit.state, isA<LlmSettingsLoaded>());
+      final loadedState = cubit.state as LlmSettingsLoaded;
+      expect(loadedState.config.selectedModel, testConfig.selectedModel);
+    });
 
     test('loadSettings emits error when repository fails', () async {
-      when(
-        () => mockRepository.getLlmConfig(),
-      ).thenThrow(Exception('DB error'));
+      when(() => mockRepository.getLlmConfig()).thenThrow(Exception('DB error'));
 
       await cubit.loadSettings();
 
@@ -103,10 +168,7 @@ void main() {
     test('updateSelectedModel saves config and updates state', () async {
       await cubit.loadSettings();
       await cubit.updateSelectedModel('new-model');
-      expect(
-        (cubit.state as LlmSettingsLoaded).config.selectedModel,
-        'new-model',
-      );
+      expect((cubit.state as LlmSettingsLoaded).config.selectedModel, 'new-model');
       verify(() => mockRepository.saveLlmConfig(any())).called(greaterThan(0));
     });
 
@@ -120,10 +182,7 @@ void main() {
     test('updateAllowCloudApiCalls updates state', () async {
       await cubit.loadSettings();
       await cubit.updateAllowCloudApiCalls(false);
-      expect(
-        (cubit.state as LlmSettingsLoaded).config.allowCloudApiCalls,
-        false,
-      );
+      expect((cubit.state as LlmSettingsLoaded).config.allowCloudApiCalls, false);
       verify(() => mockRepository.saveLlmConfig(any())).called(greaterThan(0));
     });
 
@@ -144,10 +203,7 @@ void main() {
     test('updateBaseUrl updates state', () async {
       await cubit.loadSettings();
       await cubit.updateBaseUrl('https://example.com');
-      expect(
-        (cubit.state as LlmSettingsLoaded).config.baseUrl,
-        'https://example.com',
-      );
+      expect((cubit.state as LlmSettingsLoaded).config.baseUrl, 'https://example.com');
       verify(() => mockRepository.saveLlmConfig(any())).called(greaterThan(0));
     });
 
@@ -167,31 +223,21 @@ void main() {
 
     test('downloadModel updates progress and handles completion', () async {
       final progressController = StreamController<int>();
-      when(
-        () => mockLlmAdapter.installModel(
-          modelId: any(named: 'modelId'),
-          url: any(named: 'url'),
-        ),
-      ).thenAnswer((_) => progressController.stream);
+      when(() => mockLlmAdapter.installModel(
+        modelId: any(named: 'modelId'),
+        url: any(named: 'url'),
+      )).thenAnswer((_) => progressController.stream);
 
       await cubit.loadSettings();
       await cubit.downloadModel('gemma-3-270m');
 
-      expect(
-        (cubit.state as LlmSettingsLoaded).downloadProgress['gemma-3-270m'],
-        0.0,
-      );
+      expect((cubit.state as LlmSettingsLoaded).downloadProgress['gemma-3-270m'], 0.0);
 
       progressController.add(50);
       await Future.delayed(Duration.zero);
-      expect(
-        (cubit.state as LlmSettingsLoaded).downloadProgress['gemma-3-270m'],
-        0.5,
-      );
+      expect((cubit.state as LlmSettingsLoaded).downloadProgress['gemma-3-270m'], 0.5);
 
-      when(
-        () => mockLlmAdapter.listInstalledModels(),
-      ).thenAnswer((_) async => ['gemma-3-270m']);
+      when(() => mockLlmAdapter.listInstalledModels()).thenAnswer((_) async => ['gemma-3-270m']);
 
       await progressController.close();
       await Future.delayed(Duration.zero);
@@ -203,12 +249,10 @@ void main() {
 
     test('downloadModel handles error', () async {
       final progressController = StreamController<int>();
-      when(
-        () => mockLlmAdapter.installModel(
-          modelId: any(named: 'modelId'),
-          url: any(named: 'url'),
-        ),
-      ).thenAnswer((_) => progressController.stream);
+      when(() => mockLlmAdapter.installModel(
+        modelId: any(named: 'modelId'),
+        url: any(named: 'url'),
+      )).thenAnswer((_) => progressController.stream);
 
       await cubit.loadSettings();
       await cubit.downloadModel('gemma-3-270m');
@@ -223,40 +267,26 @@ void main() {
 
     test('cancelDownload stops subscription and clears progress', () async {
       final progressController = StreamController<int>();
-      when(
-        () => mockLlmAdapter.installModel(
-          modelId: any(named: 'modelId'),
-          url: any(named: 'url'),
-        ),
-      ).thenAnswer((_) => progressController.stream);
+      when(() => mockLlmAdapter.installModel(
+        modelId: any(named: 'modelId'),
+        url: any(named: 'url'),
+      )).thenAnswer((_) => progressController.stream);
       when(() => mockLlmAdapter.cancelDownload(any())).thenAnswer((_) async {});
 
       await cubit.loadSettings();
       await cubit.downloadModel('gemma-3-270m');
 
-      expect(
-        (cubit.state as LlmSettingsLoaded).downloadProgress.containsKey(
-          'gemma-3-270m',
-        ),
-        isTrue,
-      );
+      expect((cubit.state as LlmSettingsLoaded).downloadProgress.containsKey('gemma-3-270m'), isTrue);
 
       await cubit.cancelDownload('gemma-3-270m');
 
-      expect(
-        (cubit.state as LlmSettingsLoaded).downloadProgress.containsKey(
-          'gemma-3-270m',
-        ),
-        isFalse,
-      );
+      expect((cubit.state as LlmSettingsLoaded).downloadProgress.containsKey('gemma-3-270m'), isFalse);
       expect(progressController.hasListener, isFalse);
     });
 
     test('deleteModel uninstalls and refreshes list, handles error', () async {
       when(() => mockLlmAdapter.uninstallModel(any())).thenAnswer((_) async {});
-      when(
-        () => mockLlmAdapter.listInstalledModels(),
-      ).thenAnswer((_) async => []);
+      when(() => mockLlmAdapter.listInstalledModels()).thenAnswer((_) async => []);
 
       await cubit.loadSettings();
       await cubit.deleteModel('gemma-3-270m');
@@ -264,14 +294,9 @@ void main() {
       expect((cubit.state as LlmSettingsLoaded).installedModels, isEmpty);
       verify(() => mockLlmAdapter.uninstallModel('gemma-3-270m')).called(1);
 
-      when(
-        () => mockLlmAdapter.uninstallModel(any()),
-      ).thenThrow(Exception('Delete error'));
+      when(() => mockLlmAdapter.uninstallModel(any())).thenThrow(Exception('Delete error'));
       await cubit.deleteModel('gemma-3-270m');
-      expect(
-        (cubit.state as LlmSettingsLoaded).connectionError,
-        contains('Delete error'),
-      );
+      expect((cubit.state as LlmSettingsLoaded).connectionError, contains('Delete error'));
     });
 
     test('verifyConnection for local provider returns verified true', () async {
@@ -289,23 +314,12 @@ void main() {
 
       // Test without key (Platform.environment should be empty in tests)
       await cubit.verifyConnection();
-      final hasGeminiKey =
-          Platform.environment['GEMINI_API_KEY']?.isNotEmpty ?? false;
-      expect(
-        (cubit.state as LlmSettingsLoaded).connectionVerified,
-        hasGeminiKey,
-      );
-      if (!hasGeminiKey) {
-        expect(
-          (cubit.state as LlmSettingsLoaded).connectionError,
-          contains('GEMINI_API_KEY'),
-        );
-      }
+      expect((cubit.state as LlmSettingsLoaded).connectionVerified, isFalse);
+      expect((cubit.state as LlmSettingsLoaded).connectionError, contains('GEMINI_API_KEY'));
     });
 
-    test(
-      'verifyConnection for openai fails (cannot easily mock http.get directly without DI or wrapper)',
-      () async {
+    test('verifyConnection for openai succeeds when API returns 200', () async {
+      await HttpOverrides.runWithHttpOverrides(() async {
         await cubit.loadSettings();
         await cubit.updateProviderType('openai');
         await cubit.updateApiKey('test-key');
@@ -313,8 +327,22 @@ void main() {
         await cubit.verifyConnection();
 
         final loadedState = cubit.state as LlmSettingsLoaded;
+        expect(loadedState.connectionVerified, isTrue);
+      }, _MockHttpOverrides(statusCode: 200));
+    });
+
+    test('verifyConnection for openai fails when API returns 401', () async {
+      await HttpOverrides.runWithHttpOverrides(() async {
+        await cubit.loadSettings();
+        await cubit.updateProviderType('openai');
+        await cubit.updateApiKey('invalid-key');
+
+        await cubit.verifyConnection();
+
+        final loadedState = cubit.state as LlmSettingsLoaded;
         expect(loadedState.connectionVerified, isFalse);
-      },
-    );
+        expect(loadedState.connectionError, contains('Connection failed'));
+      }, _MockHttpOverrides(statusCode: 401));
+    });
   });
 }
