@@ -15,12 +15,12 @@ void main() {
       test('returns true when medication name contains allergen', () {
         final allergy = Allergy(
           id: 1,
-          allergen: 'Amoxicilina',
+          allergen: 'Penicilina',
           severity: AllergySeverity.severe,
-        )..id = 1;
+        );
         final medication = Medication(
           id: 1,
-          name: 'Amoxicilina',
+          name: 'Penicilina V',
           startDate: DateTime.now(),
           notes: '',
         );
@@ -32,7 +32,7 @@ void main() {
           id: 1,
           allergen: 'Penicilina',
           severity: AllergySeverity.moderate,
-        )..id = 1;
+        );
         final medication = Medication(
           id: 1,
           name: 'Ibuprofeno',
@@ -47,7 +47,7 @@ void main() {
           id: 1,
           allergen: 'Penicilina',
           severity: AllergySeverity.mild,
-        )..id = 1;
+        );
         final medication = Medication(
           id: 1,
           name: 'Ibuprofeno',
@@ -59,9 +59,9 @@ void main() {
       test('returns false when allergy is not valid', () {
         final allergy = Allergy(
           id: 1,
-          allergen: '',
+          allergen: null,
           severity: AllergySeverity.mild,
-        )..id = 1;
+        );
         final medication = Medication(
           id: 1,
           name: 'Amoxicilina',
@@ -75,10 +75,10 @@ void main() {
           id: 1,
           allergen: 'PENICILINA',
           severity: AllergySeverity.mild,
-        )..id = 1;
+        );
         final medication = Medication(
           id: 1,
-          name: 'penicilina',
+          name: 'penicilina v',
           startDate: DateTime.now(),
         );
         expect(service.checkInteraction(allergy, medication), isTrue);

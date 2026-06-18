@@ -33,6 +33,16 @@ void main() {
       expect(appointment.validate(), isFalse);
     });
 
+    test('appointment with whitespace doctor name should fail validation', () {
+      final appointment = Appointment(
+        doctorName: '   ',
+        specialty: 'Diagnostics',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+      );
+      expect(appointment.validate(), isFalse);
+    });
+
     test('appointment with zero duration should fail validation', () {
       final appointment = Appointment(
         doctorName: 'Dr. House',
@@ -75,6 +85,28 @@ void main() {
         status: AppointmentStatus.upcoming,
       );
       expect(appointment.isPast, isFalse);
+    });
+
+    test('isPast should return false for near future (1 min)', () {
+      final now = DateTime.now();
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: 'Diagnostics',
+        dateTime: now.add(const Duration(minutes: 1)),
+        status: AppointmentStatus.upcoming,
+      );
+      expect(appointment.isPast, isFalse);
+    });
+
+    test('isPast should return true for near past (1 min)', () {
+      final now = DateTime.now();
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: 'Diagnostics',
+        dateTime: now.subtract(const Duration(minutes: 1)),
+        status: AppointmentStatus.upcoming,
+      );
+      expect(appointment.isPast, isTrue);
     });
   });
 }

@@ -31,32 +31,42 @@ void main() {
   });
 
   group('loadAboutInfo', () {
-    test('emits [AboutLoading, AboutLoaded] when repository returns data', () async {
-      when(() => mockRepository.getAboutInfo()).thenAnswer((_) async => tAboutInfo);
+    test(
+      'emits [AboutLoading, AboutLoaded] when repository returns data',
+      () async {
+        when(
+          () => mockRepository.getAboutInfo(),
+        ).thenAnswer((_) async => tAboutInfo);
 
-      final expectedStates = [
-        const AboutLoading(),
-        const AboutLoaded(tAboutInfo),
-      ];
+        final expectedStates = [
+          const AboutLoading(),
+          const AboutLoaded(tAboutInfo),
+        ];
 
-      expectLater(cubit.stream, emitsInOrder(expectedStates));
+        expectLater(cubit.stream, emitsInOrder(expectedStates));
 
-      await cubit.loadAboutInfo();
-    });
+        await cubit.loadAboutInfo();
+      },
+    );
 
-    test('emits [AboutLoading, AboutError] when repository throws error', () async {
-      const errorMessage = 'Exception: Error fetching data';
-      when(() => mockRepository.getAboutInfo()).thenThrow(Exception('Error fetching data'));
+    test(
+      'emits [AboutLoading, AboutError] when repository throws error',
+      () async {
+        const errorMessage = 'Exception: Error fetching data';
+        when(
+          () => mockRepository.getAboutInfo(),
+        ).thenThrow(Exception('Error fetching data'));
 
-      final expectedStates = [
-        const AboutLoading(),
-        const AboutError(errorMessage),
-      ];
+        final expectedStates = [
+          const AboutLoading(),
+          const AboutError(errorMessage),
+        ];
 
-      expectLater(cubit.stream, emitsInOrder(expectedStates));
+        expectLater(cubit.stream, emitsInOrder(expectedStates));
 
-      await cubit.loadAboutInfo();
-    });
+        await cubit.loadAboutInfo();
+      },
+    );
   });
 
   group('AboutState Equatable', () {
