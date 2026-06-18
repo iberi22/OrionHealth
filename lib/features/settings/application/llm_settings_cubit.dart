@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import '../domain/entities/llm_config.dart';
+import '../domain/entities/app_settings.dart';
 import '../domain/repositories/llm_settings_repository.dart';
 import '../domain/services/device_capability_service.dart';
 import '../../local_agent/domain/services/llm_adapter.dart';
@@ -30,16 +31,6 @@ const List<String> availableOpenaiModels = [
   'gpt-5.4',
   'claude-3-opus',
   'claude-3-sonnet',
-];
-
-/// Available local models for flutter_gemma
-const List<Map<String, dynamic>> availableLocalModels = [
-  {'id': 'gemma-3-270m', 'name': 'Gemma 3 270M', 'size': '270MB', 'minRam': '2GB'},
-  {'id': 'qwen3-0.6b', 'name': 'Qwen3 0.6B', 'size': '600MB', 'minRam': '3GB'},
-  {'id': 'deepseek-r1', 'name': 'DeepSeek R1', 'size': '1.7GB', 'minRam': '4GB'},
-  {'id': 'phi-4-mini', 'name': 'Phi-4 Mini', 'size': '3.9GB', 'minRam': '6GB'},
-  {'id': 'smolLM-135m', 'name': 'SmolLM 135M', 'size': '135MB', 'minRam': '1GB'},
-  {'id': 'gemma-4-e2b', 'name': 'Gemma 4 E2B', 'size': '2.4GB', 'minRam': '6GB', 'requiresGpu': true},
 ];
 
 @injectable
@@ -68,39 +59,38 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     emit(LlmSettingsLoading());
     try {
       final config = await _repository.getLlmConfig();
+      final appSettings = await _repository.getAppSettings();
       final capability = await _deviceCapabilityService.detectCapability();
 
-      if (config != null) {
-        final loadedState = LlmSettingsLoaded(
-          config: config.copyWith(
-            deviceCapabilityTier: capability.tier.name,
-            recommendedModel: capability.recommendedModel,
-          ),
-          deviceCapability: capability,
-        );
-        emit(loadedState);
-        await _refreshInstalledModels();
-      } else {
-        // Create default config based on device capability
-        final defaultConfig = LlmConfig(
-          selectedModel: capability.recommendedModel,
-          useCloudApi: true,
-          allowCloudApiCalls: true,
+      final currentConfig = config ?? LlmConfig(
+        selectedModel: capability.recommendedModel,
+        useCloudApi: true,
+        allowCloudApiCalls: true,
+        deviceCapabilityTier: capability.tier.name,
+        recommendedModel: capability.recommendedModel,
+      );
+
+      final currentAppSettings = appSettings ?? AppSettings();
+
+      if (config == null) await _repository.saveLlmConfig(currentConfig);
+      if (appSettings == null) await _repository.saveAppSettings(currentAppSettings);
+
+      emit(LlmSettingsLoaded(
+        config: currentConfig.copyWith(
           deviceCapabilityTier: capability.tier.name,
           recommendedModel: capability.recommendedModel,
-        );
-        await _repository.saveLlmConfig(defaultConfig);
-        final loadedState = LlmSettingsLoaded(
-          config: defaultConfig,
-          deviceCapability: capability,
-        );
-        emit(loadedState);
-        await _refreshInstalledModels();
-      }
+        ),
+        appSettings: currentAppSettings,
+        deviceCapability: capability,
+      ));
+
+      await _refreshInstalledModels();
     } catch (e) {
       emit(LlmSettingsError(e.toString()));
     }
   }
+
+  // --- LLM Config Updates ---
 
   Future<void> updateSelectedModel(String model) async {
     final currentState = state;
@@ -129,7 +119,6 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     }
   }
 
-  /// Update the provider type ('local', 'openai', 'gemini')
   Future<void> updateProviderType(String type) async {
     final currentState = state;
     if (currentState is LlmSettingsLoaded) {
@@ -139,7 +128,6 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     }
   }
 
-  /// Update the API key for the custom provider
   Future<void> updateApiKey(String apiKey) async {
     final currentState = state;
     if (currentState is LlmSettingsLoaded) {
@@ -149,7 +137,6 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     }
   }
 
-  /// Update the base URL for the custom provider
   Future<void> updateBaseUrl(String url) async {
     final currentState = state;
     if (currentState is LlmSettingsLoaded) {
@@ -159,7 +146,6 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     }
   }
 
-  /// Update the cloud model name
   Future<void> updateCloudModel(String model) async {
     final currentState = state;
     if (currentState is LlmSettingsLoaded) {
@@ -169,7 +155,6 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     }
   }
 
-  /// Update the local model identifier
   Future<void> updateLocalModel(String modelId) async {
     final currentState = state;
     if (currentState is LlmSettingsLoaded) {
@@ -179,15 +164,70 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     }
   }
 
+  // --- General App Settings Updates ---
+
+  Future<void> updateThemeMode(String themeMode) async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      final updatedSettings = currentState.appSettings.copyWith(themeMode: themeMode);
+      await _repository.saveAppSettings(updatedSettings);
+      emit(currentState.copyWith(appSettings: updatedSettings));
+    }
+  }
+
+  Future<void> updateLanguage(String languageCode) async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      final updatedSettings = currentState.appSettings.copyWith(languageCode: languageCode);
+      await _repository.saveAppSettings(updatedSettings);
+      emit(currentState.copyWith(appSettings: updatedSettings));
+    }
+  }
+
+  Future<void> updateNotificationsEnabled(bool enabled) async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      final updatedSettings = currentState.appSettings.copyWith(notificationsEnabled: enabled);
+      await _repository.saveAppSettings(updatedSettings);
+      emit(currentState.copyWith(appSettings: updatedSettings));
+    }
+  }
+
+  // --- Data Operations ---
+
+  Future<void> exportData() async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      try {
+        final data = await _repository.exportData();
+        emit(currentState.copyWith(exportData: data));
+      } catch (e) {
+        emit(currentState.copyWith(connectionError: 'Export failed: $e'));
+      }
+    }
+  }
+
+  Future<void> importData(String data) async {
+    final currentState = state;
+    if (currentState is LlmSettingsLoaded) {
+      try {
+        await _repository.importData(data);
+        await loadSettings();
+      } catch (e) {
+        emit(currentState.copyWith(connectionError: 'Import failed: $e'));
+      }
+    }
+  }
+
+  // --- Model Management ---
+
   Future<void> _refreshInstalledModels() async {
     final currentState = state;
     if (currentState is LlmSettingsLoaded) {
       try {
         final installed = await _llmAdapter.listInstalledModels();
         emit(currentState.copyWith(installedModels: installed.toSet()));
-      } catch (_) {
-        // Silent fail or update state with error if needed
-      }
+      } catch (_) {}
     }
   }
 
@@ -238,7 +278,6 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
 
       _downloadSubscriptions[modelId] = subscription;
 
-      // Initial progress update
       final newProgress = Map<String, double>.from(currentState.downloadProgress);
       newProgress[modelId] = 0.0;
       emit(currentState.copyWith(downloadProgress: newProgress));
@@ -271,7 +310,8 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     }
   }
 
-  /// Verify API connection by making a test request
+  // --- Connection Verification ---
+
   Future<void> verifyConnection() async {
     final currentState = state;
     if (currentState is LlmSettingsLoaded) {
@@ -286,21 +326,18 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
         final apiKey = config.apiKey ?? '';
 
         if (config.providerType == 'openai' && apiKey.isNotEmpty) {
-          // Test OpenAI-compatible connection
           final verified = await _testOpenAIConnection(baseUrl, apiKey);
           emit(currentState.copyWith(
             connectionVerified: verified,
             connectionError: verified ? null : 'Connection failed. Check URL and API key.',
           ));
         } else if (config.providerType == 'gemini') {
-          // Gemini uses env var, just report as true if configured
           final hasKey = Platform.environment['GEMINI_API_KEY']?.isNotEmpty ?? false;
           emit(currentState.copyWith(
             connectionVerified: hasKey,
             connectionError: hasKey ? null : 'GEMINI_API_KEY not configured.',
           ));
         } else {
-          // Local provider doesn't need connection verification
           emit(currentState.copyWith(
             connectionVerified: true,
             connectionError: null,
@@ -315,7 +352,6 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
     }
   }
 
-  /// Test an OpenAI-compatible API connection
   Future<bool> _testOpenAIConnection(String baseUrl, String apiKey) async {
     try {
       final response = await http.get(
