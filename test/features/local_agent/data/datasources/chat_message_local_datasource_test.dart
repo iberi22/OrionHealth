@@ -19,10 +19,11 @@ void main() {
   test('constructor accepts an Isar instance', () {
     // This test just verifies construction is possible
     // In practice, the data source is created via dependency injection
-    const message = ChatMessage(
+    // ChatMessage constructor is not const
+    final message = ChatMessage(
       role: ChatRole.user,
       content: 'Test',
-      timestamp: null,
+      timestamp: DateTime(2026),
     );
     expect(message.content, equals('Test'));
   });

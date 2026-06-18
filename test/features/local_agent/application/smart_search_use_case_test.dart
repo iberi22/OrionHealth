@@ -98,7 +98,7 @@ void main() {
             topK: any(named: 'topK'),
           )).thenAnswer((_) async => []);
 
-      await useCase.execute('nuevo resultado');
+      await useCase.execute('algo nuevo');
 
       expect(capturedStrategy, 'recency');
     });
