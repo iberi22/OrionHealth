@@ -94,7 +94,7 @@ class EncryptionService {
   Future<String> signPackage(Map<String, dynamic> data) async {
     final algorithm = Hmac.sha256();
     final json = jsonEncode(data);
-    final key = await SecretKeyData.random(length: 32);
+    final key = SecretKeyData.random(length: 32);
     final mac = await algorithm.calculateMac(
       utf8.encode(json),
       secretKey: key,
@@ -110,7 +110,7 @@ class EncryptionService {
     try {
       final algorithm = Hmac.sha256();
       final json = jsonEncode(data);
-      final key = await SecretKeyData.random(length: 32);
+      final key = SecretKeyData.random(length: 32);
       final expected = await algorithm.calculateMac(
         utf8.encode(json),
         secretKey: key,

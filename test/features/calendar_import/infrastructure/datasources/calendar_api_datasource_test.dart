@@ -15,14 +15,14 @@ void main() {
     datasource = CalendarApiDatasource(deviceCalendarPlugin: mockPlugin);
   });
 
-  Result<T> _successResult<T>(T data) {
+  Result<T> successResult<T>(T data) {
     final result = Result<T>();
     result.data = data;
     result.errors = [];
     return result;
   }
 
-  Result<T> _errorResult<T>() {
+  Result<T> errorResult<T>() {
     final result = Result<T>();
     result.data = null;
     result.errors = [ResultError(1, 'error')];
@@ -33,7 +33,7 @@ void main() {
     group('hasPermissions', () {
       test('should return true when permissions are granted', () async {
         when(() => mockPlugin.hasPermissions()).thenAnswer(
-          (_) async => _successResult(true),
+          (_) async => successResult(true),
         );
 
         final result = await datasource.hasPermissions();
@@ -57,7 +57,7 @@ void main() {
 
       test('should return false when Result has errors', () async {
         when(() => mockPlugin.hasPermissions()).thenAnswer(
-          (_) async => _errorResult<bool>(),
+          (_) async => errorResult<bool>(),
         );
 
         final result = await datasource.hasPermissions();
@@ -82,7 +82,7 @@ void main() {
     group('requestPermissions', () {
       test('should return true when permissions are granted', () async {
         when(() => mockPlugin.requestPermissions()).thenAnswer(
-          (_) async => _successResult(true),
+          (_) async => successResult(true),
         );
 
         final result = await datasource.requestPermissions();
@@ -106,7 +106,7 @@ void main() {
 
       test('should return false on error', () async {
         when(() => mockPlugin.requestPermissions()).thenAnswer(
-          (_) async => _errorResult<bool>(),
+          (_) async => errorResult<bool>(),
         );
 
         final result = await datasource.requestPermissions();
@@ -127,7 +127,7 @@ void main() {
 
         final calendars = UnmodifiableListView<Calendar>([calendar1, calendar2]);
         when(() => mockPlugin.retrieveCalendars()).thenAnswer(
-          (_) async => _successResult(calendars),
+          (_) async => successResult(calendars),
         );
 
         final result = await datasource.getCalendars();
@@ -139,7 +139,7 @@ void main() {
 
       test('should return empty list when data is null', () async {
         when(() => mockPlugin.retrieveCalendars()).thenAnswer(
-          (_) async => _errorResult<UnmodifiableListView<Calendar>>(),
+          (_) async => errorResult<UnmodifiableListView<Calendar>>(),
         );
 
         final result = await datasource.getCalendars();
@@ -174,7 +174,7 @@ void main() {
               any(),
               any(),
             )).thenAnswer(
-          (_) async => _successResult(events),
+          (_) async => successResult(events),
         );
 
         final result = await datasource.getEvents(
@@ -202,7 +202,7 @@ void main() {
               any(),
               any(),
             )).thenAnswer(
-          (_) async => _successResult(UnmodifiableListView<Event>([])),
+          (_) async => successResult(UnmodifiableListView<Event>([])),
         );
 
         final result = await datasource.getEvents(
@@ -219,7 +219,7 @@ void main() {
               any(),
               any(),
             )).thenAnswer(
-          (_) async => _errorResult<UnmodifiableListView<Event>>(),
+          (_) async => errorResult<UnmodifiableListView<Event>>(),
         );
 
         final result = await datasource.getEvents(

@@ -4,7 +4,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_detail_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/rating_dialog.dart';

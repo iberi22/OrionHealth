@@ -32,6 +32,7 @@
 /// }
 /// final result = context.getContextFor('metformin');
 /// ```
+library;
 
 export 'medical_context_categories.dart';
 export 'profile_analyzer.dart';

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -137,24 +136,7 @@ void main() {
   });
 
   group('BleSharingService Data Transfer', () {
-    late SharedHealthPackage testPackage;
-
     setUp(() {
-      testPackage = SharedHealthPackage(
-        id: 'test-id',
-        senderNodeId: 'sender',
-        recipientNodeId: 'recipient',
-        createdAt: DateTime.now(),
-        expiresAt: DateTime.now().add(const Duration(hours: 1)),
-        payload: const EncryptedPayload(encryptedData: 'abc', iv: 'def', ephemeralPublicKey: '', authTag: 'ghi'),
-        metadata: const PackageMetadata(
-          packageType: 'selective',
-          consentVerified: true,
-          includedCategories: {},
-          appVersion: '1.0.0',
-        ),
-        signature: 'sig',
-      );
     });
 
     test('sendData chunks data correctly', () async {

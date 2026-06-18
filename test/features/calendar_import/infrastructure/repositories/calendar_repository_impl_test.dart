@@ -2,8 +2,6 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
-import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_source.dart';
-import 'package:orionhealth_health/features/calendar_import/domain/repositories/calendar_repository.dart';
 import 'package:orionhealth_health/features/calendar_import/infrastructure/datasources/calendar_api_datasource.dart';
 import 'package:orionhealth_health/features/calendar_import/infrastructure/repositories/calendar_repository_impl.dart';
 
@@ -18,7 +16,7 @@ void main() {
     repository = CalendarRepositoryImpl(mockDatasource);
   });
 
-  Calendar _makeCalendar(String id, String name, {bool isReadOnly = false}) {
+  Calendar makeCalendar(String id, String name, {bool isReadOnly = false}) {
     final cal = Calendar();
     cal.id = id;
     cal.name = name;
@@ -26,7 +24,7 @@ void main() {
     return cal;
   }
 
-  Event _makeEvent(String calendarId, String eventId, String title, {String? description}) {
+  Event makeEvent(String calendarId, String eventId, String title, {String? description}) {
     return Event(calendarId, eventId: eventId, title: title, description: description);
   }
 
@@ -72,8 +70,8 @@ void main() {
     group('getCalendarSources', () {
       test('should convert device calendars to CalendarSource entities', () async {
         final tDeviceCalendars = [
-          _makeCalendar('1', 'Personal'),
-          _makeCalendar('2', 'Work', isReadOnly: true),
+          makeCalendar('1', 'Personal'),
+          makeCalendar('2', 'Work', isReadOnly: true),
         ];
 
         when(() => mockDatasource.getCalendars()).thenAnswer((_) async => tDeviceCalendars);
@@ -101,13 +99,13 @@ void main() {
     group('fetchMedicalEvents', () {
       test('should filter and return medical events only', () async {
         final tDeviceCalendars = [
-          _makeCalendar('1', 'Personal'),
+          makeCalendar('1', 'Personal'),
         ];
 
         final tAllEvents = <Event>[
-          _makeEvent('1', 'e1', 'Cita con Dr. Smith', description: 'Consulta médica'),
-          _makeEvent('1', 'e2', 'Lunch', description: 'Almuerzo con amigos'),
-          _makeEvent('1', 'e3', 'Examen de sangre', description: 'Lab'),
+          makeEvent('1', 'e1', 'Cita con Dr. Smith', description: 'Consulta médica'),
+          makeEvent('1', 'e2', 'Lunch', description: 'Almuerzo con amigos'),
+          makeEvent('1', 'e3', 'Examen de sangre', description: 'Lab'),
         ];
 
         when(() => mockDatasource.getCalendars()).thenAnswer((_) async => tDeviceCalendars);
@@ -137,7 +135,7 @@ void main() {
 
       test('should use custom date range when provided', () async {
         final tDeviceCalendars = [
-          _makeCalendar('1', 'Personal'),
+          makeCalendar('1', 'Personal'),
         ];
         final tStartDate = DateTime(2026, 7, 1);
         final tEndDate = DateTime(2026, 7, 31);
@@ -153,9 +151,9 @@ void main() {
 
       test('should set source to deviceCalendar for all medical events', () async {
         final tDeviceCalendars = [
-          _makeCalendar('1', 'Personal'),
+          makeCalendar('1', 'Personal'),
         ];
-        final tMedicalEvent = _makeEvent('1', 'e1', 'Cita médica', description: 'Control');
+        final tMedicalEvent = makeEvent('1', 'e1', 'Cita médica', description: 'Control');
 
         when(() => mockDatasource.getCalendars()).thenAnswer((_) async => tDeviceCalendars);
         when(() => mockDatasource.getEvents(any(), startDate: any(named: 'startDate'), endDate: any(named: 'endDate')))

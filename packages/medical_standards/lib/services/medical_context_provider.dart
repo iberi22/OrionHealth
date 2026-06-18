@@ -21,6 +21,7 @@
 /// final guidelines = provider.getGuidelinesForCondition('E11');
 /// final medications = provider.getMedicationsForCondition('E11');
 /// ```
+library;
 
 import 'dart:convert';
 import 'dart:io';

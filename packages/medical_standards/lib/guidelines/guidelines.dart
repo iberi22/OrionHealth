@@ -2,6 +2,7 @@
 ///
 /// References to major clinical guidelines from authoritative
 /// medical organizations.
+library;
 
 import '../medical_standards.dart';
 
@@ -19,7 +20,7 @@ class ClinicalGuidelineReference extends MedicalConcept {
   final String? version;
   final List<String> applicableConditions;
 
-  ClinicalGuidelineReference({
+  const ClinicalGuidelineReference({
     required this.code,
     required this.displayName,
     this.description,

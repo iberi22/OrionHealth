@@ -44,12 +44,10 @@ class SyncService {
     if (peers.isNotEmpty) {
       // Try to sync from the first available peer
       final peer = peers.first;
-      if (peer.host != null) {
-        final peerIp = '${peer.host}:${peer.port}';
-        await medicalSyncService.syncAll(peerIp: peerIp);
-        return;
-      }
-    }
+      final peerIp = '${peer.host}:${peer.port}';
+      await medicalSyncService.syncAll(peerIp: peerIp);
+      return;
+        }
 
     // Fallback to default (GitHub)
     await medicalSyncService.syncAll();

@@ -3,6 +3,7 @@
 /// This is the downloaded and cached context that the AI assistant
 /// uses for inference. Instead of loading a full 3GB standards database,
 /// only the categories relevant to the user are stored locally (~50-200MB).
+library;
 
 import 'package:equatable/equatable.dart';
 
@@ -227,5 +228,5 @@ class LocalMedicalContext {
   @override
   String toString() =>
       'LocalMedicalContext(${downloadedCategories.length} categories, '
-      '${totalEntries} entries)';
+      '$totalEntries entries)';
 }

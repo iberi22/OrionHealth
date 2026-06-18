@@ -3,6 +3,7 @@
 /// Downloads and caches only the medical standards relevant to a user's
 /// profile, avoiding the full ~3GB download. Supports on-demand fetching
 /// when the AI needs context beyond what was pre-downloaded.
+library;
 
 import 'dart:convert';
 import 'dart:io';

@@ -2,6 +2,7 @@
 ///
 /// All standards in this package implement these interfaces
 /// to ensure interoperability.
+library;
 
 import 'package:equatable/equatable.dart';
 
@@ -120,7 +121,7 @@ class ClinicalGuideline extends Equatable {
   final DateTime lastUpdated;
   final List<String> applicableConditions;
 
-  ClinicalGuideline({
+  const ClinicalGuideline({
     required this.id,
     required this.title,
     required this.organization,

@@ -2,6 +2,7 @@
 ///
 /// ICD-10 is the International Classification of Diseases, 10th Revision.
 /// Used for diagnosing diseases and conditions.
+library;
 
 import '../medical_standards.dart';
 

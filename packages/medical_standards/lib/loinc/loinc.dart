@@ -3,6 +3,7 @@
 /// LOINC (Logical Observation Identifiers Names and Codes) is the
 /// universal code system for identifying laboratory and clinical
 /// observations.
+library;
 
 import '../medical_standards.dart';
 
@@ -18,7 +19,7 @@ class LoincCode extends MedicalConcept {
   final String property;
   final String unit;
 
-  LoincCode({
+  const LoincCode({
     required this.code,
     required this.displayName,
     this.description,

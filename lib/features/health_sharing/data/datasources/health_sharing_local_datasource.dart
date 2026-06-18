@@ -1,4 +1,3 @@
-﻿import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import '../../domain/entities/shared_health_package.dart';

@@ -2,6 +2,7 @@
 ///
 /// FHIR (Fast Healthcare Interoperability Resources) is a standard
 /// for exchanging healthcare information electronically.
+library;
 
 /// FHIR Resource Type
 enum FhirResourceType {

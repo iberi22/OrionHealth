@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/about/presentation/pages/about_page.dart';
 import 'package:orionhealth_health/features/about/presentation/widgets/mission_section.dart';
 import 'package:orionhealth_health/features/about/application/about_cubit.dart';

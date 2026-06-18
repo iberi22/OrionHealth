@@ -3,6 +3,7 @@
 /// Each category maps to specific ICD-10 codes, LOINC labs, and medication
 /// classes. Only the categories relevant to a user's profile are downloaded,
 /// reducing the data footprint from ~3GB to ~50-200MB per user.
+library;
 
 
 /// Medical context categories that can be selectively downloaded

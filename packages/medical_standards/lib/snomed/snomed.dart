@@ -4,6 +4,7 @@
 /// clinical documentation. This module maps SNOMED codes to
 /// other standards (ICD-10, LOINC) and provides common clinical
 /// concepts.
+library;
 
 import '../medical_standards.dart';
 
@@ -20,7 +21,7 @@ class SnomedConcept extends MedicalConcept {
   final List<String> icd10Mappings;
   final List<String> loincMappings;
 
-  SnomedConcept({
+  const SnomedConcept({
     required this.code,
     required this.displayName,
     this.description,

@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
 import 'package:orionhealth_health/features/settings/infrastructure/repositories/llm_settings_repository_impl.dart';
-import 'package:path/path.dart' as path;
 
 void main() {
   late Isar isar;

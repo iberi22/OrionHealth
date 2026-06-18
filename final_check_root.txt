@@ -1,0 +1,152 @@
+Analyzing app...
+
+   info • Don't invoke 'print' in production code • integration_test/utils/video_recorder.dart:19:5 • avoid_print
+   info • The constant name 'PERSON' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:14:14 • constant_identifier_names
+   info • The constant name 'FIRST_NAME' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:15:14 • constant_identifier_names
+   info • The constant name 'LAST_NAME' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:16:14 • constant_identifier_names
+   info • The constant name 'MIDDLE_NAME' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:17:14 • constant_identifier_names
+   info • The constant name 'PREFIX' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:18:14 • constant_identifier_names
+   info • The constant name 'USERNAME' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:19:14 • constant_identifier_names
+   info • The constant name 'EMAIL' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:22:14 • constant_identifier_names
+   info • The constant name 'PHONE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:23:14 • constant_identifier_names
+   info • The constant name 'URL' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:24:14 • constant_identifier_names
+   info • The constant name 'LOCATION' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:27:14 • constant_identifier_names
+   info • The constant name 'ADDRESS' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:28:14 • constant_identifier_names
+   info • The constant name 'STREET_ADDRESS' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:29:14 • constant_identifier_names
+   info • The constant name 'BUILDING_NUMBER' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:30:14 • constant_identifier_names
+   info • The constant name 'ZIP_CODE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:31:14 • constant_identifier_names
+   info • The constant name 'ZIPCODE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:32:14 • constant_identifier_names
+   info • The constant name 'GPS_COORDINATES' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:33:14 • constant_identifier_names
+   info • The constant name 'ORDINAL_DIRECTION' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:34:14 • constant_identifier_names
+   info • The constant name 'COUNTRY' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:35:14 • constant_identifier_names
+   info • The constant name 'STATE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:36:14 • constant_identifier_names
+   info • The constant name 'CITY' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:37:14 • constant_identifier_names
+   info • The constant name 'DATE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:40:14 • constant_identifier_names
+   info • The constant name 'DATE_OF_BIRTH' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:41:14 • constant_identifier_names
+   info • The constant name 'TIME' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:42:14 • constant_identifier_names
+   info • The constant name 'AGE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:43:14 • constant_identifier_names
+   info • The constant name 'ID_NUM' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:46:14 • constant_identifier_names
+   info • The constant name 'SSN' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:47:14 • constant_identifier_names
+   info • The constant name 'NPI' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:48:14 • constant_identifier_names
+   info • The constant name 'MEDICAL_RECORD_NUMBER' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:49:14 • constant_identifier_names
+   info • The constant name 'HEALTH_PLAN_ID' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:50:14 • constant_identifier_names
+   info • The constant name 'ACCOUNT_NUMBER' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:51:14 • constant_identifier_names
+   info • The constant name 'PASSWORD' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:52:14 • constant_identifier_names
+   info • The constant name 'PIN' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:53:14 • constant_identifier_names
+   info • The constant name 'API_KEY' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:54:14 • constant_identifier_names
+   info • The constant name 'CREDIT_CARD' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:57:14 • constant_identifier_names
+   info • The constant name 'CREDIT_CARD_ISSUER' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:58:14 • constant_identifier_names
+   info • The constant name 'CVV' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:59:14 • constant_identifier_names
+   info • The constant name 'IBAN' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:60:14 • constant_identifier_names
+   info • The constant name 'BIC' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:61:14 • constant_identifier_names
+   info • The constant name 'AMOUNT' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:62:14 • constant_identifier_names
+   info • The constant name 'CURRENCY' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:63:14 • constant_identifier_names
+   info • The constant name 'BITCOIN_ADDRESS' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:64:14 • constant_identifier_names
+   info • The constant name 'ETHEREUM_ADDRESS' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:65:14 • constant_identifier_names
+   info • The constant name 'LITECOIN_ADDRESS' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:66:14 • constant_identifier_names
+   info • The constant name 'MASKED_NUMBER' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:67:14 • constant_identifier_names
+   info • The constant name 'GENDER' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:70:14 • constant_identifier_names
+   info • The constant name 'EYE_COLOR' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:71:14 • constant_identifier_names
+   info • The constant name 'HEIGHT' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:72:14 • constant_identifier_names
+   info • The constant name 'WEIGHT' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:73:14 • constant_identifier_names
+   info • The constant name 'ORGANIZATION' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:76:14 • constant_identifier_names
+   info • The constant name 'JOB_TITLE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:77:14 • constant_identifier_names
+   info • The constant name 'JOB_DEPARTMENT' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:78:14 • constant_identifier_names
+   info • The constant name 'OCCUPATION' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:79:14 • constant_identifier_names
+   info • The constant name 'IP_ADDRESS' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:82:14 • constant_identifier_names
+   info • The constant name 'MAC_ADDRESS' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:83:14 • constant_identifier_names
+   info • The constant name 'USER_AGENT' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:84:14 • constant_identifier_names
+   info • The constant name 'VIN' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:85:14 • constant_identifier_names
+   info • The constant name 'LICENSE_PLATE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:86:14 • constant_identifier_names
+   info • The constant name 'VEHICLE_REGISTRATION' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:87:14 • constant_identifier_names
+   info • The constant name 'IMEI' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:88:14 • constant_identifier_names
+   info • The constant name 'PATIENT_ID' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:91:14 • constant_identifier_names
+   info • The constant name 'PROVIDER_ID' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:92:14 • constant_identifier_names
+   info • The constant name 'DRUG_NAME' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:93:14 • constant_identifier_names
+   info • The constant name 'DIAGNOSIS_CODE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:94:14 • constant_identifier_names
+   info • The constant name 'PROCEDURE_CODE' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:95:14 • constant_identifier_names
+   info • The constant name 'LAB_RESULT' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:96:14 • constant_identifier_names
+   info • The constant name 'VITAL_SIGN' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:97:14 • constant_identifier_names
+   info • The constant name 'ALLERGY' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:98:14 • constant_identifier_names
+   info • The constant name 'CONDITION' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:99:14 • constant_identifier_names
+   info • The constant name 'INSURANCE_ID' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:100:14 • constant_identifier_names
+   info • The constant name 'OTHER' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:102:14 • constant_identifier_names
+   info • The constant name 'CANONICAL_LABELS' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:104:19 • constant_identifier_names
+   info • The constant name 'ALIAS_MAP' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:122:27 • constant_identifier_names
+   info • The constant name 'PII_ENTITY_META' isn't a lowerCamelCase identifier • lib/core/medical/pii_labels.dart:341:41 • constant_identifier_names
+   info • Invalid use of a private type in a public API • lib/core/services/aicore_service.dart:136:15 • library_private_types_in_public_api
+warning • Dead code • lib/core/services/audio/audio_player_service.dart:44:38 • dead_code
+warning • The left operand can't be null, so the right operand is never executed • lib/core/services/audio/audio_player_service.dart:44:41 • dead_null_aware_expression
+   info • Don't invoke 'print' in production code • lib/core/utils/loading_manager.dart:122:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/utils/loading_manager.dart:132:9 • avoid_print
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/audio_waveform_visualizer.dart:180:46 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/audio_waveform_visualizer.dart:183:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/audio_waveform_visualizer.dart:227:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/audio_waveform_visualizer.dart:230:51 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/audio_waveform_visualizer.dart:270:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/audio_waveform_visualizer.dart:273:51 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/audio_waveform_visualizer.dart:313:27 • deprecated_member_use
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/core/widgets/page_header.dart:62:15 • use_null_aware_elements
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/volume_level_indicator.dart:185:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/volume_level_indicator.dart:200:46 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/volume_level_indicator.dart:266:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/volume_level_indicator.dart:280:46 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/volume_level_indicator.dart:355:54 • deprecated_member_use
+   info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/auth/presentation/pages/share_medical_data_page.dart:139:19 • deprecated_member_use
+   info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/auth/presentation/pages/share_medical_data_page.dart:140:19 • deprecated_member_use
+warning • The library 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart' doesn't export a member with the hidden name 'getIt' • lib/features/dashboard/presentation/pages/home_dashboard_page.dart:8:77 • undefined_hidden_name
+   info • Don't use 'BuildContext's across async gaps • lib/features/doctor_verification/presentation/pages/doctor_list_page.dart:100:29 • use_build_context_synchronously
+   info • The imported package 'timezone' isn't a dependency of the importing package • lib/features/email-citas/infrastructure/repositories/email_repository_impl.dart:6:8 • depend_on_referenced_packages
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/eps_connection/data/repositories/oauth_repository_impl.dart:43:18 • unnecessary_null_comparison
+warning • The operand can't be 'null', so the condition is always 'true' • lib/features/eps_connection/data/repositories/oauth_repository_impl.dart:82:18 • unnecessary_null_comparison
+warning • The value of the field '_isar' isn't used • lib/features/health_sharing/data/datasources/health_sharing_local_datasource.dart:7:14 • unused_field
+warning • The value of the field '_remoteDataSource' isn't used • lib/features/health_sharing/data/repositories/health_sharing_repository_impl.dart:7:39 • unused_field
+   info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/health_sharing/presentation/pages/share_page.dart:143:17 • deprecated_member_use
+   info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/health_sharing/presentation/pages/share_page.dart:144:17 • deprecated_member_use
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:84:9 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:85:9 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:86:9 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:87:9 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:88:9 • use_null_aware_elements
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/meditation/presentation/meditation_page.dart:163:35 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/features/onboarding/main_preview.dart:24:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/sync/domain/usecases/distributed_cache_usecase.dart:17:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/sync/domain/usecases/distributed_cache_usecase.dart:27:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/sync/infrastructure/repositories/sync_repository.dart:78:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/sync/infrastructure/repositories/sync_repository.dart:178:7 • avoid_print
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/vitals/presentation/pages/vitals_page.dart:366:19 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/voice_chat/presentation/pages/voice_chat_page.dart:140:27 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/voice_chat/presentation/widgets/voice_input_button.dart:42:71 • deprecated_member_use
+   info • The imported package 'timezone' isn't a dependency of the importing package • lib/main.dart:7:8 • depend_on_referenced_packages
+   info • The imported package 'path' isn't a dependency of the importing package • packages/health_wallet/test/wallet_service_test.dart:4:8 • depend_on_referenced_packages
+   info • Dangling library doc comment • packages/medical_standards/bin/validate_icd10.dart:2:1 • dangling_library_doc_comments
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:20:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:48:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:49:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:52:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_icd10.dart:54:7 • avoid_print
+   info • Dangling library doc comment • packages/medical_standards/bin/validate_loinc.dart:2:1 • dangling_library_doc_comments
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:18:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:46:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:47:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:50:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_loinc.dart:52:7 • avoid_print
+   info • Dangling library doc comment • packages/medical_standards/bin/validate_medications.dart:2:1 • dangling_library_doc_comments
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:15:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:34:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:59:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:60:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:61:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:64:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_medications.dart:66:7 • avoid_print
+   info • Dangling library doc comment • packages/medical_standards/bin/validate_snomed.dart:2:1 • dangling_library_doc_comments
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:18:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:46:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:47:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:50:5 • avoid_print
+   info • Don't invoke 'print' in production code • packages/medical_standards/bin/validate_snomed.dart:52:7 • avoid_print
+   info • Don't invoke 'print' in production code • scripts/coverage_report.dart:7:5 • avoid_print
+   info • Don't invoke 'print' in production code • scripts/coverage_report.dart:37:3 • avoid_print
+   info • Don't invoke 'print' in production code • scripts/coverage_report.dart:53:3 • avoid_print
+
+148 issues found. (ran in 5.4s)

@@ -1,14 +1,10 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:local_auth/local_auth.dart' show BiometricType;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_cubit.dart';
-import 'package:orionhealth_health/features/auth/application/bloc/auth_state.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/biometric_service.dart';
 import 'package:orionhealth_health/features/auth/domain/repositories/auth_repository.dart';

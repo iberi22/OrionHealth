@@ -6,6 +6,7 @@
 ///
 /// Key insight: AI inference happens locally with full context.
 /// Sync is for updates, not for runtime.
+library;
 
 import 'dart:convert';
 import 'dart:io';

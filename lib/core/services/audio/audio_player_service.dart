@@ -5,9 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
 import 'package:orionhealth_health/core/services/tts/tts_adapter.dart';
-import 'package:orionhealth_health/core/services/tts/tts_types.dart';
 import 'package:orionhealth_health/core/services/tts/sherpa_onnx_adapter.dart';
-import 'package:orionhealth_health/core/services/tts/model_manager.dart';
 
 enum AudioState { idle, recording, processing, speaking, playing, playbackCompleted, playbackStopped, ttsStopped, error }
 

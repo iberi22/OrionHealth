@@ -22,6 +22,8 @@
 /// groupings, same separators, same overall shape. That keeps deidentified
 /// text useful for downstream tooling (regex matchers, length-sensitive UIs,
 /// PDF templates).
+library;
+
 
 import 'dart:math';
 

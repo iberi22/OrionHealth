@@ -2,6 +2,7 @@
 ///
 /// RxNorm provides normalized names for drugs and doses.
 /// This is a curated subset of common medications.
+library;
 
 import '../medical_standards.dart';
 

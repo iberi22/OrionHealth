@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/voice_chat/application/voice_chat_state.dart';
-import 'package:orionhealth_health/features/voice_chat/domain/entities/voice_chat_message.dart';
 
 void main() {
   group('VoiceChatState', () {

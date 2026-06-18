@@ -8,7 +8,6 @@ void main() async {
     exit(1);
   }
 
-  final testFeaturesDir = Directory('test/features');
   final features = featuresDir
       .listSync()
       .whereType<Directory>()

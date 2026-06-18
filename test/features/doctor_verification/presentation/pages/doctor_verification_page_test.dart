@@ -17,6 +17,7 @@ class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubi
   @override
   Future<void> close() => _stateController.close();
 
+  @override
   void emit(DoctorVerificationState state) => _stateController.add(state);
 }
 

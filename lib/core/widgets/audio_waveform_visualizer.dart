@@ -44,8 +44,8 @@ class _AudioWaveformVisualizerState extends State<AudioWaveformVisualizer>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
-  List<AnimationController> _barControllers = [];
-  List<Animation<double>> _barAnimations = [];
+  final List<AnimationController> _barControllers = [];
+  final List<Animation<double>> _barAnimations = [];
 
   @override
   void initState() {

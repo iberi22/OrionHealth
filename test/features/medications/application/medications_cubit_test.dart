@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import '../../../../lib/features/medications/application/medications_cubit.dart';
-import '../../../../lib/features/medications/application/medications_state.dart';
+import 'package:orionhealth_health/features/medications/application/medications_cubit.dart';
+import 'package:orionhealth_health/features/medications/application/medications_state.dart';
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
 import 'package:orionhealth_health/features/medications/domain/repositories/medication_repository.dart';
 

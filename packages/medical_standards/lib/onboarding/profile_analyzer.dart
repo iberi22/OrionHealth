@@ -3,6 +3,7 @@
 /// Uses pattern matching on conditions, medications, symptoms, and
 /// demographic data (age/sex) to determine which [MedicalContextCategory]
 /// standards should be downloaded for the AI assistant.
+library;
 
 import 'medical_context_categories.dart';
 
