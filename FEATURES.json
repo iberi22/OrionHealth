@@ -1,7 +1,7 @@
 ﻿{
-    "averageImplPct":  89,
+    "averageImplPct":  90,
     "totalFeatures":  26,
-    "generated":  "2026-06-17T22:17:51.5091993-05:00",
+    "generated":  "2026-06-17T22:32:24.9879674-05:00",
     "features":  [
                      {
                          "status":  "partial",
@@ -30,7 +30,7 @@
                      {
                          "status":  "partial",
                          "name":  "calendar_import",
-                         "implementationPct":  80,
+                         "implementationPct":  85,
                          "testFiles":  8
                      },
                      {
@@ -120,7 +120,7 @@
                      {
                          "status":  "complete",
                          "name":  "onboarding",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  4
                      },
                      {
