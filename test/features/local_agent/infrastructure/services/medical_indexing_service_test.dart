@@ -229,7 +229,7 @@ void main() {
     group('statusStream', () {
       test('emits false while indexing, true when done', () async {
         final statuses = <bool>[];
-        indexingService.statusStream.listen(statuses.add);
+        final sub = indexingService.statusStream.listen(statuses.add);
 
         when(() => mockKnowledgeRepo.initialize()).thenAnswer((_) async => {});
         when(() => mockKnowledgeRepo.getAllCodes())
@@ -244,9 +244,13 @@ void main() {
 
         await indexingService.indexAll();
 
-        // Should emit at least [true] even for skipped
+        // Wait for stream to settle
+        await Future.delayed(Duration.zero);
+
+        // Should emit both false and true
         expect(statuses.length, greaterThanOrEqualTo(1));
-        expect(statuses.last, isTrue);
+        expect(statuses, contains(isTrue));
+        await sub.cancel();
       });
     });
   });

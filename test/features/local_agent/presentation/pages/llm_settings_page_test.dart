@@ -6,6 +6,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/services/model_download_service.dart';
 import 'package:orionhealth_health/features/local_agent/presentation/pages/llm_settings_page.dart';
 
+// LlmProvider is re-exported via llm_settings_page.dart
+
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 class MockModelDownloadService extends Mock implements ModelDownloadService {}
 
@@ -81,8 +83,10 @@ void main() {
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
-      // Tap on Gemini radio
-      await tester.tap(find.text('GEMINI').last);
+      // Find Gemini radio tile
+      final geminiTile = find.widgetWithText(RadioListTile<LlmProvider>, 'GEMINI');
+      expect(geminiTile, findsOneWidget);
+      await tester.tap(geminiTile);
       await tester.pumpAndSettle();
 
       expect(find.text('Gemini API Configuration'), findsOneWidget);
@@ -93,8 +97,10 @@ void main() {
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
-      // Tap on Local LLM radio
-      await tester.tap(find.text('LOCAL LLM').last);
+      // Find Local LLM radio tile
+      final localTile = find.widgetWithText(RadioListTile<LlmProvider>, 'LOCAL LLM');
+      expect(localTile, findsOneWidget);
+      await tester.tap(localTile);
       await tester.pumpAndSettle();
 
       expect(find.text('Local LLM (Ollama/GGUF)'), findsOneWidget);
@@ -121,7 +127,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Switch to Gemini first
-      await tester.tap(find.text('GEMINI').last);
+      final geminiTile = find.widgetWithText(RadioListTile<LlmProvider>, 'GEMINI');
+      await tester.tap(geminiTile);
       await tester.pumpAndSettle();
 
       // Enter API key
@@ -145,7 +152,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Switch to Gemini
-      await tester.tap(find.text('GEMINI').last);
+      final geminiTile = find.widgetWithText(RadioListTile<LlmProvider>, 'GEMINI');
+      await tester.tap(geminiTile);
       await tester.pumpAndSettle();
 
       verify(() => mockSecureStorage.write(

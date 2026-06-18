@@ -2,22 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/local_agent/domain/entities/medical_code.dart';
 import 'package:orionhealth_health/features/local_agent/domain/repositories/medical_knowledge_repository.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
-class MockPathProvider extends MockPlatformInterfaceBase
-    implements PathProviderPlatformInterface {
-  @override
-  Future<String> getApplicationSupportDirectory() async {
-    return '/tmp/orion_test_support';
-  }
-}
 
 void main() {
   late JsonMedicalKnowledgeRepository repo;
 
   setUp(() {
-    PathProviderPlatformInterface.instance = MockPathProvider();
     repo = JsonMedicalKnowledgeRepository();
   });
 
@@ -92,16 +81,16 @@ void main() {
       expect(results, isEmpty);
     });
 
-    test('getAllCodes returns empty list with no source files', () async {
+    test('getAllCodes returns loaded codes after initialize', () async {
       await repo.initialize();
       final codes = await repo.getAllCodes();
-      expect(codes, isEmpty);
+      expect(codes, isNotEmpty);
     });
 
-    test('getAllCodes with standard filter returns empty on no files', () async {
+    test('getAllCodes with standard filter returns matching codes', () async {
       await repo.initialize();
       final codes = await repo.getAllCodes(standard: 'ICD-10');
-      expect(codes, isEmpty);
+      expect(codes, isNotEmpty);
     });
 
     test('force re-initialize works', () async {

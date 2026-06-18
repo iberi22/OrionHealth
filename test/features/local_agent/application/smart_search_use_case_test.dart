@@ -41,13 +41,13 @@ void main() {
     });
 
     test('execute uses BM25 strategy for medical terms', () async {
+      String capturedStrategy = '';
       when(() => mockVectorStore.searchWithReRanking(
             any(),
             limit: any(named: 'limit'),
             strategy: any(named: 'strategy'),
           )).thenAnswer((invocation) async {
-        final strategy = invocation.namedArguments[#strategy] as String;
-        expect(strategy, 'bm25');
+        capturedStrategy = invocation.namedArguments[#strategy] as String;
         return ['Medical result'];
       });
       when(() => mockVectorStore.multiHopSearch(
@@ -57,6 +57,8 @@ void main() {
           )).thenAnswer((_) async => []);
 
       await useCase.execute('diagnóstico de dolor');
+
+      expect(capturedStrategy, 'bm25');
     });
 
     test('execute uses Recency strategy for temporal queries', () async {
@@ -75,7 +77,28 @@ void main() {
             topK: any(named: 'topK'),
           )).thenAnswer((_) async => []);
 
-      await useCase.execute('resultados recientes');
+      await useCase.execute('reciente');
+
+      expect(capturedStrategy, 'recency');
+    });
+
+    test('execute uses Recency for "nuevo" keyword', () async {
+      String capturedStrategy = '';
+      when(() => mockVectorStore.searchWithReRanking(
+            any(),
+            limit: any(named: 'limit'),
+            strategy: any(named: 'strategy'),
+          )).thenAnswer((invocation) async {
+        capturedStrategy = invocation.namedArguments[#strategy] as String;
+        return ['Recent result'];
+      });
+      when(() => mockVectorStore.multiHopSearch(
+            any(),
+            maxHops: any(named: 'maxHops'),
+            topK: any(named: 'topK'),
+          )).thenAnswer((_) async => []);
+
+      await useCase.execute('nuevo resultado');
 
       expect(capturedStrategy, 'recency');
     });
@@ -96,7 +119,7 @@ void main() {
             topK: any(named: 'topK'),
           )).thenAnswer((_) async => []);
 
-      await useCase.execute('todos los tratamientos');
+      await useCase.execute('todos diferentes opciones');
 
       expect(capturedStrategy, 'diversity');
     });
@@ -117,7 +140,7 @@ void main() {
             topK: any(named: 'topK'),
           )).thenAnswer((_) async => []);
 
-      await useCase.execute('que hay de nuevo');
+      await useCase.execute('consulta general');
 
       expect(capturedStrategy, 'mmr');
     });
@@ -188,11 +211,11 @@ void main() {
         contains('Recency'),
       );
       expect(
-        useCase.explainStrategy('todos'),
+        useCase.explainStrategy('todos diferentes'),
         contains('Diversity'),
       );
       expect(
-        useCase.explainStrategy('hola mundo'),
+        useCase.explainStrategy('consulta general'),
         contains('MMR'),
       );
     });

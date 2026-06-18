@@ -1,17 +1,42 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:get_it/get_it.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
+import 'package:orionhealth_health/features/local_agent/infrastructure/services/model_download_service.dart';
 import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart';
+
+class _MockLlmService extends Mock implements LlmService {}
+class _MockModelDownloadService extends Mock implements ModelDownloadService {}
 
 class MockLlmService extends Mock implements LlmService {}
 
 void main() {
-  late MockLlmService mockLlmService;
+  late _MockLlmService mockLlmService;
 
   setUp(() {
-    mockLlmService = MockLlmService();
+    mockLlmService = _MockLlmService();
+    // Register dependencies needed by LlmSettingsPage on navigation
+    if (!GetIt.I.isRegistered<FlutterSecureStorage>()) {
+      GetIt.I.registerSingleton<FlutterSecureStorage>(const FlutterSecureStorage());
+    }
+    if (!GetIt.I.isRegistered<ModelDownloadService>()) {
+      GetIt.I.registerSingleton<ModelDownloadService>(_MockModelDownloadService());
+    }
+    // Mock LlmService
+    when(() => mockLlmService.generate(any())).thenAnswer(
+      (_) => Stream.value('Test response'),
+    );
+    // Mock ModelDownloadService
+    when(() => (GetIt.I<ModelDownloadService>() as _MockModelDownloadService).listDownloadedModels())
+        .thenAnswer((_) async => []);
+  });
+
+  tearDown(() {
+    GetIt.I.reset();
   });
 
   Widget createTestWidget(LlmService service) {
@@ -116,7 +141,8 @@ void main() {
 
       // Tap settings icon
       await tester.tap(find.byIcon(Icons.settings));
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
       // Should navigate to settings page with LLM Settings title
       expect(find.text('LLM Settings'), findsOneWidget);
