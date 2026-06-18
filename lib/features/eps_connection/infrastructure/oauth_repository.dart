@@ -1,109 +1,152 @@
 import 'package:flutter_appauth/flutter_appauth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
-
-abstract class OAuthRepository {
-  Future<AuthorizationTokenResponse?> login();
-  Future<void> logout();
-  Future<String?> getAccessToken();
-  Future<String?> getIdToken();
-  Future<TokenResponse?> refreshToken();
-}
+import '../domain/entities/eps_provider.dart';
+import '../domain/entities/oauth_token.dart';
+import '../domain/repositories/oauth_repository.dart';
+import '../data/datasources/oauth_local_datasource.dart';
 
 @LazySingleton(as: OAuthRepository)
 class OAuthRepositoryImpl implements OAuthRepository {
+  final OAuthLocalDataSource _localDataSource;
   final FlutterAppAuth _appAuth;
-  final FlutterSecureStorage _secureStorage;
-  final String _clientId;
-  final String _redirectUrl;
-  final String _discoveryUrl;
-  final List<String> _scopes;
-  final String _accessTokenKey;
-  final String _idTokenKey;
-  final String _refreshTokenKey;
 
-  OAuthRepositoryImpl({
+  OAuthRepositoryImpl(
+    this._localDataSource, {
     FlutterAppAuth appAuth = const FlutterAppAuth(),
-    FlutterSecureStorage secureStorage = const FlutterSecureStorage(),
-    String clientId = 'orion-health-app',
-    String redirectUrl = 'com.orionhealth.app://oauth-callback',
-    String discoveryUrl = 'https://ihce.example.com/.well-known/openid-configuration',
-    List<String> scopes = const ['openid', 'profile', 'email', 'patient/*.read'],
-    String accessTokenKey = 'oauth_access_token',
-    String idTokenKey = 'oauth_id_token',
-    String refreshTokenKey = 'oauth_refresh_token',
-  })  : _appAuth = appAuth,
-        _secureStorage = secureStorage,
-        _clientId = clientId,
-        _redirectUrl = redirectUrl,
-        _discoveryUrl = discoveryUrl,
-        _scopes = scopes,
-        _accessTokenKey = accessTokenKey,
-        _idTokenKey = idTokenKey,
-        _refreshTokenKey = refreshTokenKey;
+  }) : _appAuth = appAuth;
 
   @override
-  Future<AuthorizationTokenResponse?> login() async {
+  Future<OAuthLoginResult?> login(EPSProvider provider) async {
     try {
       final result = await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(
-          _clientId,
-          _redirectUrl,
-          discoveryUrl: _discoveryUrl,
-          scopes: _scopes,
+          provider.clientId,
+          provider.redirectUrl,
+          discoveryUrl: provider.discoveryUrl,
+          scopes: provider.scopes,
         ),
       );
 
-      await _secureStorage.write(key: _accessTokenKey, value: result.accessToken);
-      await _secureStorage.write(key: _idTokenKey, value: result.idToken);
-      await _secureStorage.write(key: _refreshTokenKey, value: result.refreshToken);
+      if (result != null) {
+        final token = OAuthToken(
+          accessToken: result.accessToken ?? '',
+          idToken: result.idToken,
+          refreshToken: result.refreshToken,
+          expiresAt: result.accessTokenExpirationDateTime,
+        );
 
-      return result;
+        final patientId = result.authorizationAdditionalParameters?['patient'] as String?;
+
+        await _localDataSource.saveTokensForProvider(
+          provider.id,
+          token.accessToken,
+          token.idToken ?? '',
+          token.refreshToken ?? '',
+        );
+
+        await _localDataSource.saveProviderData(provider.id, {
+          'id': provider.id,
+          'name': provider.name,
+          'discoveryUrl': provider.discoveryUrl,
+          'clientId': provider.clientId,
+          'redirectUrl': provider.redirectUrl,
+          'scopes': provider.scopes,
+          'type': provider.type.name,
+        });
+
+        if (patientId != null) {
+          await _localDataSource.savePatientId(provider.id, patientId);
+        }
+
+        return OAuthLoginResult(token: token, patientId: patientId);
+      }
+      return null;
     } catch (e) {
       return null;
     }
   }
 
   @override
-  Future<void> logout() async {
-    await _secureStorage.delete(key: _accessTokenKey);
-    await _secureStorage.delete(key: _idTokenKey);
-    await _secureStorage.delete(key: _refreshTokenKey);
+  Future<void> logout(String providerId) async {
+    await _localDataSource.clearTokensForProvider(providerId);
   }
 
   @override
-  Future<String?> getAccessToken() async {
-    return await _secureStorage.read(key: _accessTokenKey);
+  Future<OAuthToken?> getToken(String providerId) async {
+    final access = await _localDataSource.getAccessToken(providerId);
+    final id = await _localDataSource.getIdToken(providerId);
+    final refresh = await _localDataSource.getRefreshToken(providerId);
+
+    if (access == null) return null;
+
+    return OAuthToken(
+      accessToken: access,
+      idToken: id,
+      refreshToken: refresh,
+    );
   }
 
   @override
-  Future<String?> getIdToken() async {
-    return await _secureStorage.read(key: _idTokenKey);
+  Future<String?> getPatientId(String providerId) async {
+    return _localDataSource.getPatientId(providerId);
   }
 
   @override
-  Future<TokenResponse?> refreshToken() async {
+  Future<EPSProvider?> getProviderDetails(String providerId) async {
+    final data = await _localDataSource.getProviderData(providerId);
+    if (data == null) return null;
+
+    return EPSProvider(
+      id: data['id'] as String,
+      name: data['name'] as String,
+      discoveryUrl: data['discoveryUrl'] as String,
+      clientId: data['clientId'] as String,
+      redirectUrl: data['redirectUrl'] as String,
+      scopes: (data['scopes'] as List).cast<String>(),
+      type: EPSProviderType.values.firstWhere((e) => e.name == data['type']),
+    );
+  }
+
+  @override
+  Future<OAuthToken?> refreshToken(EPSProvider provider) async {
     try {
-      final refreshToken = await _secureStorage.read(key: _refreshTokenKey);
+      final refreshToken = await _localDataSource.getRefreshToken(provider.id);
       if (refreshToken == null) return null;
 
       final result = await _appAuth.token(
         TokenRequest(
-          _clientId,
-          _redirectUrl,
-          discoveryUrl: _discoveryUrl,
+          provider.clientId,
+          provider.redirectUrl,
+          discoveryUrl: provider.discoveryUrl,
           refreshToken: refreshToken,
-          scopes: _scopes,
+          scopes: provider.scopes,
         ),
       );
 
-      await _secureStorage.write(key: _accessTokenKey, value: result.accessToken);
-      await _secureStorage.write(key: _idTokenKey, value: result.idToken);
-      await _secureStorage.write(key: _refreshTokenKey, value: result.refreshToken);
+      if (result != null) {
+        final token = OAuthToken(
+          accessToken: result.accessToken ?? '',
+          idToken: result.idToken,
+          refreshToken: result.refreshToken,
+          expiresAt: result.accessTokenExpirationDateTime,
+        );
 
-      return result;
+        await _localDataSource.saveTokensForProvider(
+          provider.id,
+          token.accessToken,
+          token.idToken ?? '',
+          token.refreshToken ?? '',
+        );
+        return token;
+      }
+      return null;
     } catch (e) {
       return null;
     }
+  }
+
+  @override
+  Future<List<String>> getConnectedProviders() async {
+    return _localDataSource.getConnectedProviderIds();
   }
 }

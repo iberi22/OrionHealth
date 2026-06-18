@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../domain/entities/eps_connection.dart';
 
 sealed class EpsConnectionState extends Equatable {
   const EpsConnectionState();
@@ -15,16 +16,12 @@ class EpsConnectionLoading extends EpsConnectionState {
   const EpsConnectionLoading();
 }
 
-class EpsConnectionConnected extends EpsConnectionState {
-  final String patientId;
-  const EpsConnectionConnected(this.patientId);
+class EpsConnectionLoaded extends EpsConnectionState {
+  final List<EPSConnection> connections;
+  const EpsConnectionLoaded(this.connections);
 
   @override
-  List<Object?> get props => [patientId];
-}
-
-class EpsConnectionDisconnected extends EpsConnectionState {
-  const EpsConnectionDisconnected();
+  List<Object?> get props => [connections];
 }
 
 class EpsConnectionError extends EpsConnectionState {

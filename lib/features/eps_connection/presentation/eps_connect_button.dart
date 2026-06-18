@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../application/bloc/eps_connection_cubit.dart';
 import '../application/bloc/eps_connection_state.dart';
+import 'pages/eps_connection_page.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 
@@ -23,15 +24,19 @@ class EpsConnectButton extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (state is EpsConnectionConnected) {
+        if (state is EpsConnectionLoaded && state.connections.isNotEmpty) {
+          final conn = state.connections.first;
           return GlassmorphicCard(
             child: ListTile(
               leading: const Icon(Icons.check_circle, color: Colors.green),
               title: const Text('Conectado con IHCE', style: TextStyle(color: Colors.white)),
-              subtitle: Text('ID Paciente: ${state.patientId}', style: const TextStyle(color: Colors.white70)),
+              subtitle: Text('ID Paciente: ${conn.patientId}', style: const TextStyle(color: Colors.white70)),
               trailing: TextButton(
-                onPressed: () => context.read<EpsConnectionCubit>().disconnect(),
-                child: const Text('Desconectar', style: TextStyle(color: Colors.redAccent)),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const EpsConnectionPage()),
+                ),
+                child: const Text('Ver Detalles', style: TextStyle(color: AppColors.primary)),
               ),
             ),
           );
@@ -39,7 +44,10 @@ class EpsConnectButton extends StatelessWidget {
 
         return GlassmorphicCard(
           child: InkWell(
-            onTap: () => context.read<EpsConnectionCubit>().connect(),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const EpsConnectionPage()),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
