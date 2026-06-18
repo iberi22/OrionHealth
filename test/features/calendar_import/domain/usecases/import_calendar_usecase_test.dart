@@ -220,5 +220,92 @@ void main() {
       expect(result.appointments[0].doctorName, 'Médico');
       expect(result.appointments[0].source, 'UNKNOWN_IMPORT');
     });
+
+    test('should cover all specialty keywords', () async {
+      final keywords = [
+        'cita',
+        'médico',
+        'consulta',
+        'EPS',
+        'Sura',
+        'Comfama',
+        'Sanitas',
+        'doctor',
+        'especialista',
+        'control',
+        'examen',
+        'procedimiento',
+        'odontología',
+        'terapia',
+        'laboratorio',
+        'vacuna',
+      ];
+
+      when(() => mockUserProfileRepo.getUserProfile()).thenAnswer((_) async => null);
+      when(() => mockAppointmentRepo.saveAppointment(any())).thenAnswer((_) async => {});
+
+      for (final keyword in keywords) {
+        final result = await useCase.execute(ImportCalendarParams(events: [
+          CalendarEvent(
+            title: 'Mi $keyword',
+            startDateTime: DateTime.now(),
+          )
+        ]));
+        expect(result.appointments[0].specialty, keyword);
+      }
+
+      // Default case
+      final resultDefault = await useCase.execute(ImportCalendarParams(events: [
+        CalendarEvent(
+          title: 'Algo diferente',
+          startDateTime: DateTime.now(),
+        )
+      ]));
+      expect(resultDefault.appointments[0].specialty, 'Consulta General');
+    });
+
+    test('should cover all source tags', () async {
+      final sources = [
+        CalendarEventSource.deviceCalendar,
+        CalendarEventSource.icsFile,
+        CalendarEventSource.csvFile,
+        CalendarEventSource.manual,
+        CalendarEventSource.unknown,
+      ];
+      final expectedTags = [
+        'DEVICE_CALENDAR',
+        'ICS_IMPORT',
+        'CSV_IMPORT',
+        'MANUAL_IMPORT',
+        'UNKNOWN_IMPORT',
+      ];
+
+      when(() => mockUserProfileRepo.getUserProfile()).thenAnswer((_) async => null);
+      when(() => mockAppointmentRepo.saveAppointment(any())).thenAnswer((_) async => {});
+
+      for (int i = 0; i < sources.length; i++) {
+        final result = await useCase.execute(ImportCalendarParams(events: [
+          CalendarEvent(
+            title: 'Cita',
+            startDateTime: DateTime.now(),
+            source: sources[i],
+          )
+        ]));
+        expect(result.appointments[0].source, expectedTags[i]);
+      }
+    });
+
+    test('should handle doctor name with multiple parts', () async {
+      when(() => mockUserProfileRepo.getUserProfile()).thenAnswer((_) async => null);
+      when(() => mockAppointmentRepo.saveAppointment(any())).thenAnswer((_) async => {});
+
+      final result = await useCase.execute(ImportCalendarParams(events: [
+        CalendarEvent(
+          title: 'Cita con Dr. Juan Perez Rodriguez',
+          startDateTime: DateTime.now(),
+        )
+      ]));
+      expect(result.appointments[0].doctorName, 'Dr. Juan Perez Rodriguez');
+    });
   });
 }
