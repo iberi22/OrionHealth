@@ -1,6 +1,6 @@
 # Feature Test Coverage Report
 
-Generated on: 2026-06-18 04:02:27.842531
+Generated on: 2026-06-18 06:38:11.166229
 
 | Feature | Domain | Application | Infrastructure | Presentation | Goldens |
 | :--- | :---: | :---: | :---: | :---: | :---: |
