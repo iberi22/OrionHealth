@@ -1,12 +1,12 @@
 ﻿{
-    "averageImplPct":  88,
+    "averageImplPct":  89,
     "totalFeatures":  26,
-    "generated":  "2026-06-17T21:49:19.1300664-05:00",
+    "generated":  "2026-06-17T22:17:51.5091993-05:00",
     "features":  [
                      {
                          "status":  "partial",
                          "name":  "about",
-                         "implementationPct":  80,
+                         "implementationPct":  85,
                          "testFiles":  5
                      },
                      {
@@ -48,13 +48,13 @@
                      {
                          "status":  "partial",
                          "name":  "email-citas",
-                         "implementationPct":  80,
+                         "implementationPct":  85,
                          "testFiles":  5
                      },
                      {
                          "status":  "partial",
                          "name":  "eps_connection",
-                         "implementationPct":  70,
+                         "implementationPct":  95,
                          "testFiles":  5
                      },
                      {
