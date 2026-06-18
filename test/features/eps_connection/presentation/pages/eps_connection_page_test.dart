@@ -18,12 +18,45 @@ void main() {
     mockCubit = MockEpsConnectionCubit();
   });
 
-  testWidgets('EpsConnectionPage golden test', (tester) async {
+  testWidgets('EpsConnectionPage shows loading indicator when state is Loading', (tester) async {
+    when(() => mockCubit.state).thenReturn(const EpsConnectionLoading());
+    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionLoading()));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BlocProvider<EpsConnectionCubit>.value(
+          value: mockCubit,
+          child: const EpsConnectionPage(),
+        ),
+      ),
+    );
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
+  testWidgets('EpsConnectionPage shows empty message when no connections', (tester) async {
+    when(() => mockCubit.state).thenReturn(const EpsConnectionLoaded([]));
+    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionLoaded([])));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BlocProvider<EpsConnectionCubit>.value(
+          value: mockCubit,
+          child: const EpsConnectionPage(),
+        ),
+      ),
+    );
+
+    expect(find.text('No EPS providers connected'), findsOneWidget);
+    expect(find.text('Connect via QR Code'), findsOneWidget);
+  });
+
+  testWidgets('EpsConnectionPage shows connections list', (tester) async {
     final connection = EPSConnection(
       provider: const EPSProvider(id: '1', name: 'Provider 1', discoveryUrl: 'D', clientId: 'C', redirectUrl: 'R', scopes: []),
       token: const OAuthToken(accessToken: 'A'),
       patientId: 'P1',
-      connectedAt: DateTime(2023, 1, 1),
+      connectedAt: DateTime.now(),
     );
     when(() => mockCubit.state).thenReturn(EpsConnectionLoaded([connection]));
     when(() => mockCubit.stream).thenAnswer((_) => Stream.value(EpsConnectionLoaded([connection])));
@@ -37,7 +70,7 @@ void main() {
       ),
     );
 
-    // This is a placeholder for a real golden test
-    expect(find.byType(EpsConnectionPage), findsOneWidget);
+    expect(find.text('Provider 1'), findsOneWidget);
+    expect(find.textContaining('Patient ID: P1'), findsOneWidget);
   });
 }

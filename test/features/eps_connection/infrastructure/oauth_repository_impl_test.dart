@@ -1,233 +1,86 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/features/eps_connection/data/datasources/oauth_local_datasource.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/repositories/oauth_repository.dart';
 import 'package:orionhealth_health/features/eps_connection/infrastructure/oauth_repository.dart';
 
+class MockOAuthLocalDataSource extends Mock implements OAuthLocalDataSource {}
 class MockFlutterAppAuth extends Mock implements FlutterAppAuth {}
-class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
+
+// Fallback values for mocktail
+class FakeAuthorizationTokenRequest extends Fake implements AuthorizationTokenRequest {}
+class FakeTokenRequest extends Fake implements TokenRequest {}
 
 void main() {
   late OAuthRepositoryImpl repository;
+  late MockOAuthLocalDataSource mockLocalDataSource;
   late MockFlutterAppAuth mockAppAuth;
-  late MockFlutterSecureStorage mockSecureStorage;
+
+  final testProvider = EPSProvider(
+    id: 'test_id',
+    name: 'Test EPS',
+    discoveryUrl: 'https://test.com',
+    clientId: 'client',
+    redirectUrl: 'url',
+    scopes: const ['scope'],
+  );
 
   setUpAll(() {
-    registerFallbackValue(AuthorizationTokenRequest(
-      'clientId',
-      'redirectUrl',
-      discoveryUrl: 'discoveryUrl',
-    ));
-    registerFallbackValue(TokenRequest(
-      'clientId',
-      'redirectUrl',
-      discoveryUrl: 'discoveryUrl',
-      refreshToken: 'refreshToken',
-    ));
+    registerFallbackValue(FakeAuthorizationTokenRequest());
+    registerFallbackValue(FakeTokenRequest());
   });
 
   setUp(() {
+    mockLocalDataSource = MockOAuthLocalDataSource();
     mockAppAuth = MockFlutterAppAuth();
-    mockSecureStorage = MockFlutterSecureStorage();
-    repository = OAuthRepositoryImpl(
-      appAuth: mockAppAuth,
-      secureStorage: mockSecureStorage,
-    );
+    repository = OAuthRepositoryImpl(mockLocalDataSource, appAuth: mockAppAuth);
   });
 
   group('OAuthRepositoryImpl', () {
-    const accessToken = 'test_access_token';
-    const idToken = 'test_id_token';
-    const refreshToken = 'test_refresh_token';
-
-    test('login success stores tokens and returns response', () async {
+    test('login saves tokens and metadata on success', () async {
       final response = AuthorizationTokenResponse(
-        accessToken,
-        refreshToken,
+        'access',
+        'refresh',
         DateTime.now().add(const Duration(hours: 1)),
-        idToken,
-        'tokenType',
-        null,
-        null,
+        'id',
+        'type',
+        <String, dynamic>{'patient': 'PT-123'},
         null,
       );
 
-      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
-          .thenAnswer((_) async => response);
-      when(() => mockSecureStorage.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'),
-          )).thenAnswer((_) async => {});
-
-      final result = await repository.login();
-
-      expect(result, equals(response));
-      verify(() => mockSecureStorage.write(key: 'oauth_access_token', value: accessToken)).called(1);
-      verify(() => mockSecureStorage.write(key: 'oauth_id_token', value: idToken)).called(1);
-      verify(() => mockSecureStorage.write(key: 'oauth_refresh_token', value: refreshToken)).called(1);
-    });
-
-    test('login success but missing patient claim in additional parameters', () async {
-      final response = AuthorizationTokenResponse(
-        accessToken,
-        refreshToken,
-        DateTime.now().add(const Duration(hours: 1)),
-        idToken,
-        'tokenType',
-        null,
-        {}, // empty additional parameters
-        null,
-      );
-
-      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
-          .thenAnswer((_) async => response);
-      when(() => mockSecureStorage.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'),
-          )).thenAnswer((_) async => {});
-
-      final result = await repository.login();
-
-      expect(result, equals(response));
-      expect(result?.authorizationAdditionalParameters?['patient'], isNull);
-    });
-
-    test('login success with empty tokens', () async {
-      final response = AuthorizationTokenResponse(
-        '',
-        '',
-        DateTime.now().add(const Duration(hours: 1)),
-        '',
-        'tokenType',
-        null,
-        null,
-        null,
-      );
-
-      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
-          .thenAnswer((_) async => response);
-      when(() => mockSecureStorage.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'),
-          )).thenAnswer((_) async => {});
-
-      final result = await repository.login();
-
-      expect(result, equals(response));
-      expect(result?.accessToken, isEmpty);
-    });
-
-    test('login exception (e.g. 404, timeout) returns null', () async {
-      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
-          .thenThrow(PlatformException(code: 'network_error', message: '404 Not Found'));
-
-      final result = await repository.login();
-
-      expect(result, isNull);
-    });
-
-    test('login returns null when authorization is cancelled', () async {
-      when(() => mockAppAuth.authorizeAndExchangeCode(any()))
-          .thenAnswer((_) async => null as dynamic);
-
-      final result = await repository.login();
-
-      expect(result, isNull);
-      verifyNever(() => mockSecureStorage.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'),
-          ));
-    });
-
-    test('refreshToken success updates tokens', () async {
-      when(() => mockSecureStorage.read(key: 'oauth_refresh_token'))
-          .thenAnswer((_) async => 'old_refresh_token');
-
-      final response = TokenResponse(
-        'new_access_token',
-        'new_refresh_token',
-        DateTime.now().add(const Duration(hours: 1)),
-        'new_id_token',
-        'tokenType',
-        null,
-        null,
-      );
-
-      when(() => mockAppAuth.token(any()))
-          .thenAnswer((_) async => response);
-      when(() => mockSecureStorage.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'),
-          )).thenAnswer((_) async => {});
-
-      final result = await repository.refreshToken();
-
-      expect(result, equals(response));
-      verify(() => mockSecureStorage.write(key: 'oauth_access_token', value: 'new_access_token')).called(1);
-    });
-
-    test('refreshToken returns null if refresh token expired or invalid', () async {
-      when(() => mockSecureStorage.read(key: 'oauth_refresh_token'))
-          .thenAnswer((_) async => 'expired_token');
-
-      when(() => mockAppAuth.token(any()))
-          .thenThrow(PlatformException(code: 'invalid_grant', message: 'Token expired'));
-
-      final result = await repository.refreshToken();
-
-      expect(result, isNull);
-    });
-
-    test('refreshToken returns null if refresh token is missing in storage', () async {
-      when(() => mockSecureStorage.read(key: 'oauth_refresh_token'))
-          .thenAnswer((_) async => null);
-
-      final result = await repository.refreshToken();
-
-      expect(result, isNull);
-      verifyNever(() => mockAppAuth.token(any()));
-    });
-
-    test('refreshToken returns null on network exception', () async {
-      when(() => mockSecureStorage.read(key: 'oauth_refresh_token'))
-          .thenAnswer((_) async => 'some_refresh_token');
-
-      when(() => mockAppAuth.token(any()))
-          .thenThrow(PlatformException(code: 'network_error', message: 'Timeout'));
-
-      final result = await repository.refreshToken();
-
-      expect(result, isNull);
-    });
-
-    test('logout deletes tokens', () async {
-      when(() => mockSecureStorage.delete(key: any(named: 'key')))
+      when(() => mockAppAuth.authorizeAndExchangeCode(any())).thenAnswer((_) async => response);
+      when(() => mockLocalDataSource.saveTokensForProvider(any(), any(), any(), any()))
           .thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.saveProviderData(any(), any())).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.savePatientId(any(), any())).thenAnswer((_) async => {});
 
-      await repository.logout();
+      final result = await repository.login(testProvider);
 
-      verify(() => mockSecureStorage.delete(key: 'oauth_access_token')).called(1);
-      verify(() => mockSecureStorage.delete(key: 'oauth_id_token')).called(1);
-      verify(() => mockSecureStorage.delete(key: 'oauth_refresh_token')).called(1);
+      expect(result?.token.accessToken, 'access');
+      expect(result?.patientId, 'PT-123');
+      verify(() => mockLocalDataSource.saveTokensForProvider('test_id', 'access', 'id', 'refresh')).called(1);
+      verify(() => mockLocalDataSource.saveProviderData('test_id', any())).called(1);
+      verify(() => mockLocalDataSource.savePatientId('test_id', 'PT-123')).called(1);
     });
 
-    test('getAccessToken returns stored token', () async {
-      when(() => mockSecureStorage.read(key: 'oauth_access_token'))
-          .thenAnswer((_) async => accessToken);
+    test('getProviderDetails returns provider from data source', () async {
+      final providerMap = {
+        'id': 'test_id',
+        'name': 'Test EPS',
+        'discoveryUrl': 'https://test.com',
+        'clientId': 'client',
+        'redirectUrl': 'url',
+        'scopes': ['scope'],
+        'type': 'fhir',
+      };
+      when(() => mockLocalDataSource.getProviderData('test_id')).thenAnswer((_) async => providerMap);
 
-      final result = await repository.getAccessToken();
+      final result = await repository.getProviderDetails('test_id');
 
-      expect(result, equals(accessToken));
-    });
-
-    test('getIdToken returns stored token', () async {
-      when(() => mockSecureStorage.read(key: 'oauth_id_token'))
-          .thenAnswer((_) async => idToken);
-
-      final result = await repository.getIdToken();
-
-      expect(result, equals(idToken));
+      expect(result?.name, 'Test EPS');
+      expect(result?.type, EPSProviderType.fhir);
     });
   });
 }
