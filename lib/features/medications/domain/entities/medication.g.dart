@@ -27,23 +27,28 @@ const MedicationSchema = CollectionSchema(
       name: r'frequency',
       type: IsarType.string,
     ),
-    r'isActive': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 2,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'isActive': PropertySchema(
+      id: 3,
       name: r'isActive',
       type: IsarType.bool,
     ),
     r'name': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'name',
       type: IsarType.string,
     ),
     r'notes': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'notes',
       type: IsarType.string,
     ),
     r'startDate': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'startDate',
       type: IsarType.dateTime,
     )
@@ -98,10 +103,11 @@ void _medicationSerialize(
 ) {
   writer.writeString(offsets[0], object.dosage);
   writer.writeString(offsets[1], object.frequency);
-  writer.writeBool(offsets[2], object.isActive);
-  writer.writeString(offsets[3], object.name);
-  writer.writeString(offsets[4], object.notes);
-  writer.writeDateTime(offsets[5], object.startDate);
+  writer.writeLong(offsets[2], object.hashCode);
+  writer.writeBool(offsets[3], object.isActive);
+  writer.writeString(offsets[4], object.name);
+  writer.writeString(offsets[5], object.notes);
+  writer.writeDateTime(offsets[6], object.startDate);
 }
 
 Medication _medicationDeserialize(
@@ -114,10 +120,10 @@ Medication _medicationDeserialize(
     dosage: reader.readStringOrNull(offsets[0]),
     frequency: reader.readStringOrNull(offsets[1]),
     id: id,
-    isActive: reader.readBoolOrNull(offsets[2]) ?? true,
-    name: reader.readString(offsets[3]),
-    notes: reader.readStringOrNull(offsets[4]),
-    startDate: reader.readDateTime(offsets[5]),
+    isActive: reader.readBoolOrNull(offsets[3]) ?? true,
+    name: reader.readString(offsets[4]),
+    notes: reader.readStringOrNull(offsets[5]),
+    startDate: reader.readDateTime(offsets[6]),
   );
   return object;
 }
@@ -134,12 +140,14 @@ P _medicationDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -533,6 +541,60 @@ extension MedicationQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'frequency',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Medication, Medication, QAfterFilterCondition> hashCodeEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Medication, Medication, QAfterFilterCondition>
+      hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Medication, Medication, QAfterFilterCondition> hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Medication, Medication, QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -964,6 +1026,18 @@ extension MedicationQuerySortBy
     });
   }
 
+  QueryBuilder<Medication, Medication, QAfterSortBy> sortByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Medication, Medication, QAfterSortBy> sortByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
   QueryBuilder<Medication, Medication, QAfterSortBy> sortByIsActive() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isActive', Sort.asc);
@@ -1036,6 +1110,18 @@ extension MedicationQuerySortThenBy
   QueryBuilder<Medication, Medication, QAfterSortBy> thenByFrequencyDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frequency', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Medication, Medication, QAfterSortBy> thenByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Medication, Medication, QAfterSortBy> thenByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
@@ -1116,6 +1202,12 @@ extension MedicationQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Medication, Medication, QDistinct> distinctByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hashCode');
+    });
+  }
+
   QueryBuilder<Medication, Medication, QDistinct> distinctByIsActive() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isActive');
@@ -1160,6 +1252,12 @@ extension MedicationQueryProperty
   QueryBuilder<Medication, String?, QQueryOperations> frequencyProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'frequency');
+    });
+  }
+
+  QueryBuilder<Medication, int, QQueryOperations> hashCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hashCode');
     });
   }
 
