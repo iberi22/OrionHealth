@@ -7,63 +7,64 @@ abstract class LlmSettingsState extends Equatable {
   List<Object?> get props => [];
 }
 
-class LlmSettingsInitial extends LlmSettingsState {
-  const LlmSettingsInitial();
-}
+class LlmSettingsInitial extends LlmSettingsState {}
 
-class LlmSettingsLoading extends LlmSettingsState {
-  const LlmSettingsLoading();
-}
+class LlmSettingsLoading extends LlmSettingsState {}
 
 class LlmSettingsLoaded extends LlmSettingsState {
   final LlmConfig config;
+  final AppSettings appSettings;
   final DeviceCapability deviceCapability;
+  final Set<String> installedModels;
+  final Map<String, double> downloadProgress;
   final bool? connectionVerified;
   final String? connectionError;
-  final List<Map<String, dynamic>>? localModelList;
-  final Map<String, double> downloadProgress;
-  final Set<String> installedModels;
+  final String? exportData;
 
   const LlmSettingsLoaded({
     required this.config,
+    required this.appSettings,
     required this.deviceCapability,
+    this.installedModels = const {},
+    this.downloadProgress = const {},
     this.connectionVerified,
     this.connectionError,
-    this.localModelList,
-    this.downloadProgress = const {},
-    this.installedModels = const {},
+    this.exportData,
   });
+
+  LlmSettingsLoaded copyWith({
+    LlmConfig? config,
+    AppSettings? appSettings,
+    DeviceCapability? deviceCapability,
+    Set<String>? installedModels,
+    Map<String, double>? downloadProgress,
+    bool? connectionVerified,
+    String? connectionError,
+    String? exportData,
+  }) {
+    return LlmSettingsLoaded(
+      config: config ?? this.config,
+      appSettings: appSettings ?? this.appSettings,
+      deviceCapability: deviceCapability ?? this.deviceCapability,
+      installedModels: installedModels ?? this.installedModels,
+      downloadProgress: downloadProgress ?? this.downloadProgress,
+      connectionVerified: connectionVerified ?? this.connectionVerified,
+      connectionError: connectionError ?? this.connectionError,
+      exportData: exportData ?? this.exportData,
+    );
+  }
 
   @override
   List<Object?> get props => [
         config,
+        appSettings,
         deviceCapability,
+        installedModels,
+        downloadProgress,
         connectionVerified,
         connectionError,
-        localModelList,
-        downloadProgress,
-        installedModels,
+        exportData,
       ];
-
-  LlmSettingsLoaded copyWith({
-    LlmConfig? config,
-    DeviceCapability? deviceCapability,
-    bool? connectionVerified,
-    String? connectionError,
-    List<Map<String, dynamic>>? localModelList,
-    Map<String, double>? downloadProgress,
-    Set<String>? installedModels,
-  }) {
-    return LlmSettingsLoaded(
-      config: config ?? this.config,
-      deviceCapability: deviceCapability ?? this.deviceCapability,
-      connectionVerified: connectionVerified ?? this.connectionVerified,
-      connectionError: connectionError ?? this.connectionError,
-      localModelList: localModelList ?? this.localModelList,
-      downloadProgress: downloadProgress ?? this.downloadProgress,
-      installedModels: installedModels ?? this.installedModels,
-    );
-  }
 }
 
 class LlmSettingsError extends LlmSettingsState {
