@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import '../../domain/entities/activity_item.dart';
 import '../../domain/entities/dashboard_stats.dart';
 import '../../domain/repositories/dashboard_repository.dart';
@@ -9,6 +10,7 @@ import '../../../reports/domain/repositories/report_repository.dart';
 ///
 /// Aggregates data from multiple feature repos to compute
 /// dashboard stats and recent activity items.
+@LazySingleton(as: DashboardRepository)
 class DashboardRepositoryImpl implements DashboardRepository {
   final VitalSignRepository _vitalSignRepository;
   final MedicationRepository _medicationRepository;
@@ -63,7 +65,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
       activities.add(ActivityItem(
         id: 'med_${med.id}',
         title: 'Medicamento: ${med.name}',
-        timestamp: DateTime.now().subtract(const Duration(hours: 5)),
+        timestamp: DateTime.now().subtract(const Duration(hours: 5)), // Placeholder for real "taken" history
         type: ActivityType.medicationTaken,
       ));
     }
