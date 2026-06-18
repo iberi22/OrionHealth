@@ -23,8 +23,7 @@ void main() {
     });
 
     group('UserProfileLoaded', () {
-      final profile = UserProfile(
-      );
+      final profile = UserProfile();
 
       test('supports value equality', () {
         expect(UserProfileLoaded(profile), equals(UserProfileLoaded(profile)));

@@ -4,13 +4,10 @@ import 'package:orionhealth_health/features/user_profile/domain/entities/user_pr
 
 void main() {
   group('UserProfileDto', () {
-    final now = DateTime(2026, 6, 18);
     final entity = UserProfile(
-
-
       name: 'Juan Perez',
       birthDate: DateTime(1990, 5, 15),
-      sex: 'male',
+      sex: 'M',
       weight: 75.5,
       height: 1.78,
       medicalConditions: ['hypertension', 'diabetes'],
@@ -30,7 +27,7 @@ void main() {
         final dto = UserProfileDto.fromEntity(entity);
         expect(dto.name, 'Juan Perez');
         expect(dto.birthDate, DateTime(1990, 5, 15));
-        expect(dto.sex, 'male');
+        expect(dto.sex, 'M');
         expect(dto.weight, 75.5);
         expect(dto.height, 1.78);
         expect(dto.medicalConditions, ['hypertension', 'diabetes']);
@@ -78,7 +75,7 @@ void main() {
         final json = UserProfileDto.fromEntity(entity).toJson();
         expect(json['name'], 'Juan Perez');
         expect(json['birthDate'], '1990-05-15T00:00:00.000');
-        expect(json['sex'], 'male');
+        expect(json['sex'], 'M');
         expect(json['weight'], 75.5);
         expect(json['height'], 1.78);
         expect(json['medicalConditions'], ['hypertension', 'diabetes']);
@@ -115,7 +112,7 @@ void main() {
         final json = {
           'name': 'Maria',
           'birthDate': '1992-03-10T00:00:00.000',
-          'sex': 'female',
+          'sex': 'F',
           'weight': 62.0,
           'height': 1.65,
           'medicalConditions': ['asthma'],
@@ -130,7 +127,7 @@ void main() {
         final dto = UserProfileDto.fromJson(json);
         expect(dto.name, 'Maria');
         expect(dto.birthDate, DateTime(1992, 3, 10));
-        expect(dto.sex, 'female');
+        expect(dto.sex, 'F');
         expect(dto.weight, 62.0);
         expect(dto.height, 1.65);
         expect(dto.medicalConditions, ['asthma']);

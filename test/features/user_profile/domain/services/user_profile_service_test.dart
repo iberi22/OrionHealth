@@ -6,14 +6,12 @@ import 'package:orionhealth_health/features/user_profile/domain/services/user_pr
 
 class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 
-class UserProfileFake extends Fake implements UserProfile {}
-
 void main() {
   late MockUserProfileRepository mockRepository;
   late UserProfileService service;
 
   setUpAll(() {
-    registerFallbackValue(UserProfileFake());
+    registerFallbackValue(UserProfile());
   });
 
   setUp(() {
@@ -45,21 +43,19 @@ void main() {
     test('updateProfile calls repository with validated profile', () async {
       when(
         () => mockRepository.saveUserProfile(any()),
-      ).thenAnswer((_) async => {});
+      ).thenAnswer((_) async {});
       await service.updateProfile(profile);
       verify(() => mockRepository.saveUserProfile(profile)).called(1);
     });
 
     test('updateProfile throws on invalid profile', () async {
-      final invalid = UserProfile(name: 'Juan', age: 200); // Invalid age
+      final invalid = UserProfile(age: -1);
       expect(() => service.updateProfile(invalid), throwsA(isA<Exception>()));
       verifyNever(() => mockRepository.saveUserProfile(any()));
     });
 
     test('deleteProfile calls repository', () async {
-      when(
-        () => mockRepository.deleteUserProfile(),
-      ).thenAnswer((_) async => {});
+      when(() => mockRepository.deleteUserProfile()).thenAnswer((_) async {});
       await service.deleteProfile();
       verify(() => mockRepository.deleteUserProfile()).called(1);
     });
@@ -67,7 +63,7 @@ void main() {
     test('repository failure propagates', () async {
       when(
         () => mockRepository.getUserProfile(),
-      ).thenThrow(Exception('DB error'));
+      ).thenAnswer((_) async => throw Exception('DB error'));
       expect(() => service.getProfile(), throwsA(isA<Exception>()));
     });
   });
