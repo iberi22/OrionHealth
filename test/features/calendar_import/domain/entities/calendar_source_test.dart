@@ -55,5 +55,16 @@ void main() {
         'CalendarSource(id: cal-id, name: My Calendar)',
       );
     });
+
+    test('hashCode is based on id', () {
+      const s1 = CalendarSource(id: '1', name: 'A');
+      const s2 = CalendarSource(id: '1', name: 'B');
+      expect(s1.hashCode, s2.hashCode);
+    });
+
+    test('equality with other types', () {
+      const source = CalendarSource(id: '1', name: 'A');
+      expect(source == 'not a source', isFalse);
+    });
   });
 }

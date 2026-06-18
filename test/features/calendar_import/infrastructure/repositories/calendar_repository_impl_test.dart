@@ -121,6 +121,60 @@ void main() {
         expect(result[1].title, 'Examen de sangre');
       });
 
+      test('should cover all medical keywords (case-insensitive)', () async {
+        final keywords = [
+          'cita',
+          'médico',
+          'consulta',
+          'eps',
+          'sura',
+          'comfama',
+          'sanitas',
+          'doctor',
+          'especialista',
+          'control',
+          'examen',
+          'procedimiento',
+          'odontología',
+          'terapia',
+          'laboratorio',
+          'vacuna',
+          'hospital',
+          'clínica',
+          'salud',
+          'pediatría',
+          'ginecología',
+          'cardiología',
+        ];
+
+        final tDeviceCalendars = [_makeCalendar('1', 'Personal')];
+        when(() => mockDatasource.getCalendars()).thenAnswer((_) async => tDeviceCalendars);
+
+        for (final keyword in keywords) {
+          final event = _makeEvent('1', 'e-$keyword', keyword.toUpperCase());
+          when(() => mockDatasource.getEvents('1',
+                  startDate: any(named: 'startDate'), endDate: any(named: 'endDate')))
+              .thenAnswer((_) async => [event]);
+
+          final result = await repository.fetchMedicalEvents();
+          expect(result, isNotEmpty, reason: 'Failed for keyword: $keyword');
+          expect(result.first.title, keyword.toUpperCase());
+        }
+      });
+
+      test('should handle null title or description by treating as empty string', () async {
+        final tDeviceCalendars = [_makeCalendar('1', 'Personal')];
+        final event = Event('1', eventId: 'e1', title: null, description: null);
+
+        when(() => mockDatasource.getCalendars()).thenAnswer((_) async => tDeviceCalendars);
+        when(() => mockDatasource.getEvents('1',
+                startDate: any(named: 'startDate'), endDate: any(named: 'endDate')))
+            .thenAnswer((_) async => [event]);
+
+        final result = await repository.fetchMedicalEvents();
+        expect(result, isEmpty);
+      });
+
       test('should handle null calendar ids by skipping them', () async {
         final cal = Calendar();
         cal.name = 'No ID Calendar';

@@ -63,11 +63,15 @@ void main() {
       final event1 = CalendarEvent(
         title: 'Cita',
         startDateTime: now,
+        description: 'D',
+        location: 'L',
         source: CalendarEventSource.icsFile,
       );
       final event2 = CalendarEvent(
         title: 'Cita',
         startDateTime: now,
+        description: 'D',
+        location: 'L',
         source: CalendarEventSource.icsFile,
       );
       final event3 = CalendarEvent(
@@ -76,7 +80,9 @@ void main() {
       );
 
       expect(event1, equals(event2));
+      expect(event1.hashCode, event2.hashCode);
       expect(event1, isNot(equals(event3)));
+      expect(event1 == 'not an event', isFalse);
     });
 
     test('toString should include title and start date', () {
