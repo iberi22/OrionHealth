@@ -33,6 +33,16 @@ void main() {
       expect(appointment.validate(), isFalse);
     });
 
+    test('appointment with whitespace doctor name should fail validation', () {
+      final appointment = Appointment(
+        doctorName: '   ',
+        specialty: 'Diagnostics',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+      );
+      expect(appointment.validate(), isFalse);
+    });
+
     test('appointment with zero duration should fail validation', () {
       final appointment = Appointment(
         doctorName: 'Dr. House',

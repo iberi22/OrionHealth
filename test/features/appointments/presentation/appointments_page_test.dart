@@ -6,14 +6,18 @@ import 'package:orionhealth_health/features/appointments/domain/entities/appoint
 import 'package:orionhealth_health/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:orionhealth_health/features/appointments/presentation/pages/appointments_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class MockAppointmentRepository extends Mock implements AppointmentRepository {}
+
+class FakeAppointment extends Fake implements Appointment {}
 
 void main() {
   late MockAppointmentRepository mockRepository;
 
   setUpAll(() {
     initializeDateFormatting('es', null);
+    registerFallbackValue(FakeAppointment());
   });
 
   setUp(() async {
@@ -102,5 +106,171 @@ void main() {
 
     expect(find.text('Nueva Cita'), findsOneWidget);
     expect(find.text('Nombre del Doctor'), findsOneWidget);
+  });
+
+  testWidgets('shows error snackbar when loading fails', (WidgetTester tester) async {
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => throw Exception('Test Error'));
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pump(); // Trigger _loadAppointments
+    await tester.pump(); // Rebuild after loading error state
+
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.textContaining('Test Error'), findsOneWidget);
+  });
+
+  testWidgets('can create a new appointment', (WidgetTester tester) async {
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => <Appointment>[]);
+    when(() => mockRepository.saveAppointment(any()))
+        .thenAnswer((_) async => {});
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.widgetWithText(TextField, 'Nombre del Doctor'), 'Dr. Watson');
+    await tester.enterText(find.widgetWithText(TextField, 'Especialidad'), 'General');
+
+    await tester.tap(find.text('GUARDAR'));
+    await tester.pumpAndSettle();
+
+    verify(() => mockRepository.saveAppointment(any(
+      that: isA<Appointment>()
+          .having((a) => a.doctorName, 'doctorName', 'Dr. Watson')
+          .having((a) => a.specialty, 'specialty', 'General'),
+    ))).called(1);
+    verify(() => mockRepository.getAllAppointments()).called(2);
+  });
+
+  testWidgets('can edit an existing appointment', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.reset());
+
+    final appointment = Appointment(
+      id: 1,
+      doctorName: 'Dr. House',
+      specialty: 'Diagnostics',
+      dateTime: DateTime.now().add(const Duration(days: 1)),
+      status: AppointmentStatus.upcoming,
+    );
+
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => [appointment]);
+    when(() => mockRepository.saveAppointment(any()))
+        .thenAnswer((_) async => {});
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Dr. House', skipOffstage: false));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Editar Cita'), findsOneWidget);
+
+    await tester.enterText(find.widgetWithText(TextField, 'Nombre del Doctor'), 'Dr. Wilson');
+
+    await tester.tap(find.text('GUARDAR'));
+    await tester.pumpAndSettle();
+
+    verify(() => mockRepository.saveAppointment(any(
+      that: isA<Appointment>()
+          .having((a) => a.id, 'id', 1)
+          .having((a) => a.doctorName, 'doctorName', 'Dr. Wilson'),
+    ))).called(1);
+  });
+
+  testWidgets('can delete an appointment', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.reset());
+
+    final appointment = Appointment(
+      id: 1,
+      doctorName: 'Dr. House',
+      specialty: 'Diagnostics',
+      dateTime: DateTime.now().add(const Duration(days: 1)),
+      status: AppointmentStatus.upcoming,
+    );
+
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => [appointment]);
+    when(() => mockRepository.deleteAppointment(any()))
+        .thenAnswer((_) async => {});
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Dr. House', skipOffstage: false));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('ELIMINAR'));
+    await tester.pumpAndSettle();
+
+    verify(() => mockRepository.deleteAppointment(1)).called(1);
+  });
+
+  testWidgets('can navigate calendar months', (WidgetTester tester) async {
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => <Appointment>[]);
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    final initialMonthText = find.textContaining(DateFormat.MMMM('es').format(DateTime.now()).toUpperCase());
+    expect(initialMonthText, findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.chevron_right));
+    await tester.pumpAndSettle();
+
+    final nextMonth = DateTime(DateTime.now().year, DateTime.now().month + 1);
+    expect(find.textContaining(DateFormat.MMMM('es').format(nextMonth).toUpperCase()), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.chevron_left));
+    await tester.pumpAndSettle();
+    expect(initialMonthText, findsOneWidget);
+  });
+
+  testWidgets('can change date and time in _AppointmentForm', (WidgetTester tester) async {
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => <Appointment>[]);
+    when(() => mockRepository.saveAppointment(any()))
+        .thenAnswer((_) async => {});
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    // Tap Fecha ListTile
+    await tester.tap(find.text('Fecha'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+
+    // Tap Hora ListTile
+    await tester.tap(find.text('Hora'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+
+    // Change status
+    await tester.tap(find.text('upcoming'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('completed').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('GUARDAR'));
+    await tester.pumpAndSettle();
+
+    verify(() => mockRepository.saveAppointment(any(
+      that: isA<Appointment>()
+          .having((a) => a.status, 'status', AppointmentStatus.completed),
+    ))).called(1);
   });
 }
