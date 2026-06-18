@@ -52,7 +52,6 @@ void main() {
         status: AppointmentStatus.upcoming,
       );
 
-      // (10:00 < 10:59) AND (10:30 > 10:29) -> TRUE
       final result = service.hasConflict(newApp, existing);
       expect(result, isTrue);
     });
@@ -76,11 +75,9 @@ void main() {
         status: AppointmentStatus.upcoming,
       );
 
-      // (10:30 < 10:30) is FALSE -> FALSE
       final result = service.hasConflict(newApp, existing);
       expect(result, isFalse);
     });
-
 
     test('should return false if existing appointment is cancelled', () {
       final existing = [
@@ -117,7 +114,7 @@ void main() {
       final newApp = Appointment(
         doctorName: 'Dr. Jones',
         specialty: 'Neuro',
-        dateTime: baseDate.add(const Duration(minutes: 30)), // 10:30
+        dateTime: baseDate.add(const Duration(minutes: 60)), // 11:00
         status: AppointmentStatus.upcoming,
       );
 
@@ -161,6 +158,118 @@ void main() {
 
       final result = service.hasConflict(app, [app]);
       expect(result, isFalse);
+    });
+
+    test('should return true if new appointment entirely encompasses an existing one', () {
+      final existing = [
+        Appointment(
+          id: 1,
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardio',
+          dateTime: baseDate.add(const Duration(minutes: 10)), // 10:10 - 10:20
+          durationInMinutes: 10,
+          status: AppointmentStatus.upcoming,
+        )
+      ];
+
+      final newApp = Appointment(
+        id: 2,
+        doctorName: 'Dr. Jones',
+        specialty: 'Neuro',
+        dateTime: baseDate, // 10:00 - 10:30
+        durationInMinutes: 30,
+        status: AppointmentStatus.upcoming,
+      );
+
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isTrue);
+    });
+
+    test('should return true if existing appointment entirely encompasses the new one', () {
+      final existing = [
+        Appointment(
+          id: 1,
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardio',
+          dateTime: baseDate, // 10:00 - 10:30
+          durationInMinutes: 30,
+          status: AppointmentStatus.upcoming,
+        )
+      ];
+
+      final newApp = Appointment(
+        id: 2,
+        doctorName: 'Dr. Jones',
+        specialty: 'Neuro',
+        dateTime: baseDate.add(const Duration(minutes: 10)), // 10:10 - 10:20
+        durationInMinutes: 10,
+        status: AppointmentStatus.upcoming,
+      );
+
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isTrue);
+    });
+
+    test('should return true if overlap is at the last millisecond', () {
+      final existing = [
+        Appointment(
+          id: 1,
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardio',
+          dateTime: baseDate, // 10:00:00 - 10:30:00
+          durationInMinutes: 30,
+          status: AppointmentStatus.upcoming,
+        )
+      ];
+
+      final newApp = Appointment(
+        id: 2,
+        doctorName: 'Dr. Jones',
+        specialty: 'Neuro',
+        dateTime: baseDate.add(const Duration(minutes: 29, seconds: 59, milliseconds: 999)),
+        durationInMinutes: 30,
+        status: AppointmentStatus.upcoming,
+      );
+
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isTrue);
+    });
+
+    test('should return true if conflict is in the middle of a list', () {
+      final existing = [
+        Appointment(
+          id: 1,
+          doctorName: 'Dr. One',
+          specialty: 'General',
+          dateTime: baseDate.subtract(const Duration(hours: 2)),
+          status: AppointmentStatus.upcoming,
+        ),
+        Appointment(
+          id: 2,
+          doctorName: 'Dr. Two',
+          specialty: 'General',
+          dateTime: baseDate,
+          status: AppointmentStatus.upcoming,
+        ),
+        Appointment(
+          id: 3,
+          doctorName: 'Dr. Three',
+          specialty: 'General',
+          dateTime: baseDate.add(const Duration(hours: 2)),
+          status: AppointmentStatus.upcoming,
+        ),
+      ];
+
+      final newApp = Appointment(
+        id: 4,
+        doctorName: 'Dr. New',
+        specialty: 'Special',
+        dateTime: baseDate.add(const Duration(minutes: 10)),
+        status: AppointmentStatus.upcoming,
+      );
+
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isTrue);
     });
   });
 
@@ -237,6 +346,81 @@ void main() {
       final instances = service.generateInstances(app);
       expect(instances.length, 1);
       expect(instances.first, app);
+    });
+
+    test('should return single instance if count is 1', () {
+      final app = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: baseDate,
+        status: AppointmentStatus.upcoming,
+        recurrenceRule: 'FREQ=DAILY',
+      );
+
+      final instances = service.generateInstances(app, count: 1);
+      expect(instances.length, 1);
+      expect(instances.first.dateTime, baseDate);
+    });
+
+    test('should return no instances if count is 0', () {
+      final app = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: baseDate,
+        status: AppointmentStatus.upcoming,
+        recurrenceRule: 'FREQ=DAILY',
+      );
+
+      final instances = service.generateInstances(app, count: 0);
+      expect(instances.length, 0);
+    });
+
+    test('should handle year transition (Dec 31st)', () {
+      final yearEnd = DateTime(2023, 12, 31, 10, 0);
+      final app = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: yearEnd,
+        status: AppointmentStatus.upcoming,
+        recurrenceRule: 'FREQ=DAILY',
+      );
+
+      final instances = service.generateInstances(app, count: 2);
+      expect(instances.length, 2);
+      expect(instances[0].dateTime, yearEnd);
+      expect(instances[1].dateTime, DateTime(2024, 1, 1, 10, 0));
+    });
+
+    test('should handle month transition (Jan 31st)', () {
+      final monthEnd = DateTime(2024, 1, 31, 10, 0);
+      final app = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: monthEnd,
+        status: AppointmentStatus.upcoming,
+        recurrenceRule: 'FREQ=DAILY',
+      );
+
+      final instances = service.generateInstances(app, count: 2);
+      expect(instances.length, 2);
+      expect(instances[0].dateTime, monthEnd);
+      expect(instances[1].dateTime, DateTime(2024, 2, 1, 10, 0));
+    });
+
+    test('should handle leap year (Feb 28th 2024)', () {
+      final febEnd = DateTime(2024, 2, 28, 10, 0);
+      final app = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: febEnd,
+        status: AppointmentStatus.upcoming,
+        recurrenceRule: 'FREQ=DAILY',
+      );
+
+      final instances = service.generateInstances(app, count: 2);
+      expect(instances.length, 2);
+      expect(instances[0].dateTime, febEnd);
+      expect(instances[1].dateTime, DateTime(2024, 2, 29, 10, 0));
     });
   });
 }

@@ -26,17 +26,13 @@ void main() {
     });
 
     group('DashboardLoaded', () {
-      final stats = DashboardStats(
-        totalMedications: 10,
-        reportsCount: 5,
-        lastVitalCheck: DateTime(2023, 1, 1),
-      );
+      final stats = DashboardStats(totalMedications: 10, reportsCount: 2);
       final activities = [
         ActivityItem(
           id: '1',
           title: 'Activity 1',
-          timestamp: DateTime(2023, 1, 1),
-          type: ActivityType.vitalCheck,
+          timestamp: DateTime(2026, 6, 18),
+          type: ActivityType.other,
         ),
       ];
 
@@ -48,17 +44,16 @@ void main() {
       });
 
       test('props are correct', () {
-        expect(
-          DashboardLoaded(stats: stats, activities: activities).props,
-          [stats, activities],
-        );
+        expect(DashboardLoaded(stats: stats, activities: activities).props, [
+          stats,
+          activities,
+        ]);
       });
 
       test('different stats are not equal', () {
         final otherStats = DashboardStats(
           totalMedications: 20,
-          reportsCount: 10,
-          lastVitalCheck: DateTime(2023, 1, 1),
+          reportsCount: 5,
         );
         expect(
           DashboardLoaded(stats: stats, activities: activities),
