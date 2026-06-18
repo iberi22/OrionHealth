@@ -10,6 +10,23 @@ void main() {
   late MockGovernanceRepository mockRepository;
   final baseDateTime = DateTime(2026, 7, 1);
 
+  setUpAll(() {
+    registerFallbackValue(Proposal(
+      id: '1',
+      title: 'Test',
+      description: 'Desc',
+      voteCount: 0,
+      deadline: DateTime.now(),
+      status: ProposalStatus.active,
+    ));
+    registerFallbackValue(const Vote(
+      proposalId: '1',
+      voter: 'v1',
+      decision: VoteDecision.forProposal,
+      weight: 1.0,
+    ));
+  });
+
   setUp(() {
     mockRepository = MockGovernanceRepository();
   });

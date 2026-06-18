@@ -11,10 +11,7 @@ void main() {
   late GovernanceCubit cubit;
   late MockGovernanceRepository repository;
 
-  setUp(() {
-    repository = MockGovernanceRepository();
-    cubit = GovernanceCubit(repository);
-
+  setUpAll(() {
     registerFallbackValue(Proposal(
       id: '1',
       title: 'Test',
@@ -30,6 +27,11 @@ void main() {
       decision: VoteDecision.forProposal,
       weight: 1.0,
     ));
+  });
+
+  setUp(() {
+    repository = MockGovernanceRepository();
+    cubit = GovernanceCubit(repository);
   });
 
   tearDown(() {
@@ -129,6 +131,51 @@ void main() {
       await cubit.tally('1');
 
       verify(() => repository.updateProposalStatus('1', ProposalStatus.rejected)).called(1);
+    });
+
+    test('loadProposals emits error on repository failure', () async {
+      when(() => repository.getProposals()).thenThrow(Exception('Failed to load'));
+
+      await cubit.loadProposals();
+
+      expect(cubit.state.status, GovernanceStatus.error);
+      expect(cubit.state.errorMessage, contains('Failed to load'));
+    });
+
+    test('createProposal emits error on repository failure', () async {
+      when(() => repository.createProposal(any())).thenThrow(Exception('Failed to create'));
+
+      await cubit.createProposal('Title', 'Desc', const Duration(days: 1));
+
+      expect(cubit.state.status, GovernanceStatus.error);
+      expect(cubit.state.errorMessage, contains('Failed to create'));
+    });
+
+    test('vote emits error on repository failure', () async {
+      when(() => repository.vote(any())).thenThrow(Exception('Failed to vote'));
+
+      await cubit.vote('prop1', 'voter1', VoteDecision.forProposal, 1.0);
+
+      expect(cubit.state.status, GovernanceStatus.error);
+      expect(cubit.state.errorMessage, contains('Failed to vote'));
+    });
+
+    test('tally emits error on repository failure', () async {
+      when(() => repository.getProposalById('1')).thenThrow(Exception('Failed to tally'));
+
+      await cubit.tally('1');
+
+      expect(cubit.state.status, GovernanceStatus.error);
+      expect(cubit.state.errorMessage, contains('Failed to tally'));
+    });
+
+    test('tally returns early if proposal not found', () async {
+      when(() => repository.getProposalById('1')).thenAnswer((_) async => null);
+
+      await cubit.tally('1');
+
+      verify(() => repository.getProposalById('1')).called(1);
+      verifyNever(() => repository.getVotesForProposal(any()));
     });
   });
 }

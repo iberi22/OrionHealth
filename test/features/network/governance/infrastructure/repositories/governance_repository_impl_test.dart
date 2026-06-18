@@ -111,5 +111,20 @@ void main() {
 
       verify(() => mockIpfsDatasource.uploadProposal(updatedProposal)).called(1);
     });
+
+    test('getProposalById returns null if not found in memory map', () async {
+      final result = await repository.getProposalById('non-existent');
+      expect(result, isNull);
+    });
+
+    test('getVotesForProposal returns empty list if no votes for proposal', () async {
+      final result = await repository.getVotesForProposal('no-votes');
+      expect(result, isEmpty);
+    });
+
+    test('updateProposalStatus does nothing if proposal not found', () async {
+      await repository.updateProposalStatus('non-existent', ProposalStatus.passed);
+      verifyNever(() => mockIpfsDatasource.uploadProposal(any()));
+    });
   });
 }

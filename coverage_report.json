@@ -10,16 +10,6 @@
     }
   },
   {
-    "name": "ai_assistant",
-    "layers": {
-      "domain": false,
-      "application": false,
-      "infrastructure": false,
-      "presentation": true,
-      "goldens": false
-    }
-  },
-  {
     "name": "allergies",
     "layers": {
       "domain": true,
@@ -36,7 +26,7 @@
       "application": true,
       "infrastructure": true,
       "presentation": true,
-      "goldens": false
+      "goldens": true
     }
   },
   {
@@ -53,10 +43,10 @@
     "name": "calendar_import",
     "layers": {
       "domain": true,
-      "application": false,
-      "infrastructure": false,
-      "presentation": false,
-      "goldens": false
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
     }
   },
   {
@@ -73,7 +63,7 @@
     "name": "doctor_verification",
     "layers": {
       "domain": true,
-      "application": false,
+      "application": true,
       "infrastructure": true,
       "presentation": true,
       "goldens": true
@@ -92,7 +82,7 @@
   {
     "name": "eps_connection",
     "layers": {
-      "domain": false,
+      "domain": true,
       "application": true,
       "infrastructure": true,
       "presentation": true,
@@ -105,8 +95,8 @@
       "domain": true,
       "application": false,
       "infrastructure": false,
-      "presentation": false,
-      "goldens": false
+      "presentation": true,
+      "goldens": true
     }
   },
   {
@@ -132,8 +122,8 @@
   {
     "name": "home",
     "layers": {
-      "domain": false,
-      "application": false,
+      "domain": true,
+      "application": true,
       "infrastructure": false,
       "presentation": true,
       "goldens": true
@@ -143,16 +133,6 @@
     "name": "local_agent",
     "layers": {
       "domain": false,
-      "application": false,
-      "infrastructure": true,
-      "presentation": true,
-      "goldens": true
-    }
-  },
-  {
-    "name": "medical_assistant",
-    "layers": {
-      "domain": true,
       "application": false,
       "infrastructure": true,
       "presentation": true,
@@ -180,6 +160,26 @@
     }
   },
   {
+    "name": "meditation",
+    "layers": {
+      "domain": false,
+      "application": false,
+      "infrastructure": false,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "network",
+    "layers": {
+      "domain": false,
+      "application": false,
+      "infrastructure": false,
+      "presentation": false,
+      "goldens": false
+    }
+  },
+  {
     "name": "onboarding",
     "layers": {
       "domain": true,
@@ -192,8 +192,8 @@
   {
     "name": "reports",
     "layers": {
-      "domain": false,
-      "application": false,
+      "domain": true,
+      "application": true,
       "infrastructure": true,
       "presentation": true,
       "goldens": true
@@ -210,21 +210,11 @@
     }
   },
   {
-    "name": "ssi",
-    "layers": {
-      "domain": false,
-      "application": true,
-      "infrastructure": true,
-      "presentation": false,
-      "goldens": false
-    }
-  },
-  {
     "name": "sync",
     "layers": {
       "domain": true,
       "application": true,
-      "infrastructure": false,
+      "infrastructure": true,
       "presentation": true,
       "goldens": false
     }
@@ -245,6 +235,16 @@
       "domain": true,
       "application": true,
       "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "voice_chat",
+    "layers": {
+      "domain": false,
+      "application": false,
+      "infrastructure": false,
       "presentation": false,
       "goldens": false
     }
