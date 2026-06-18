@@ -1,57 +1,137 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/di/injection.dart' as di;
-import '../../../../../core/theme/cyber_theme.dart';
-import '../../../../../core/widgets/glassmorphic_card.dart';
-import '../../../local_agent/infrastructure/llm_service.dart';
-import '../../../local_agent/presentation/chat_page.dart';
-import '../../../vitals/presentation/pages/vitals_page.dart';
-import '../../../medications/presentation/pages/medications_page.dart' hide getIt;
-import '../../../reports/presentation/pages/reports_page.dart';
-import '../../../health_record/presentation/pages/timeline_page.dart';
-import '../../../medical_research/presentation/pages/medical_research_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:orionhealth_health/core/di/injection.dart' as di;
+import 'package:orionhealth_health/core/theme/cyber_theme.dart';
+import 'package:orionhealth_health/core/widgets/glassmorphic_card.dart';
+import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
+import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart';
+import 'package:orionhealth_health/features/vitals/presentation/pages/vitals_page.dart';
+import 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart' hide getIt;
+import 'package:orionhealth_health/features/reports/presentation/pages/reports_page.dart';
+import 'package:orionhealth_health/features/health_record/presentation/pages/timeline_page.dart';
+import 'package:orionhealth_health/features/medical_research/presentation/pages/medical_research_page.dart';
+import 'package:orionhealth_health/features/dashboard/application/dashboard_cubit.dart';
+import 'package:orionhealth_health/features/dashboard/application/dashboard_state.dart';
+import 'package:orionhealth_health/features/dashboard/domain/entities/activity_item.dart';
 
-class HomeDashboardPage extends StatelessWidget {
+class HomeDashboardPage extends StatefulWidget {
   const HomeDashboardPage({super.key});
+
+  @override
+  State<HomeDashboardPage> createState() => _HomeDashboardPageState();
+}
+
+class _HomeDashboardPageState extends State<HomeDashboardPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<DashboardCubit>().loadDashboardData();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 120,
-            floating: true,
-            pinned: true,
-            backgroundColor: Colors.transparent,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                'ORION HEALTH',
-                style: TextStyle(
-                  color: CyberTheme.primary,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
+      body: RefreshIndicator(
+        onRefresh: () => context.read<DashboardCubit>().loadDashboardData(),
+        child: BlocBuilder<DashboardCubit, DashboardState>(
+          builder: (context, state) {
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 120,
+                  floating: true,
+                  pinned: true,
+                  backgroundColor: Colors.transparent,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: const Text(
+                      'ORION HEALTH',
+                      style: TextStyle(
+                        color: CyberTheme.primary,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    centerTitle: true,
+                  ),
                 ),
-              ),
-              centerTitle: true,
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(16.0),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _buildQuickActionsHeader(context),
-                const SizedBox(height: 16),
-                _buildQuickActionsGrid(context),
-                const SizedBox(height: 32),
-                _buildRecentActivityHeader(context),
-                const SizedBox(height: 16),
-                _buildRecentActivityList(context),
-              ]),
-            ),
-          ),
-        ],
+                if (state is DashboardLoading)
+                  const SliverFillRemaining(
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (state is DashboardError)
+                  SliverFillRemaining(
+                    child: Center(
+                      child: Text(
+                        'Error: ${state.message}',
+                        style: const TextStyle(color: Colors.redAccent),
+                      ),
+                    ),
+                  )
+                else if (state is DashboardLoaded)
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16.0),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        _buildQuickActionsHeader(context),
+                        const SizedBox(height: 16),
+                        _buildQuickActionsGrid(context),
+                        const SizedBox(height: 32),
+                        _buildRecentActivityHeader(context),
+                        const SizedBox(height: 16),
+                        if (state.activities.isEmpty)
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              child: Text(
+                                'No hay actividad reciente',
+                                style: TextStyle(color: Colors.white54),
+                              ),
+                            ),
+                          )
+                        else
+                          ...state.activities.map((activity) => Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: _ActivityTile(
+                                  title: activity.title,
+                                  time: _formatTimestamp(activity.timestamp),
+                                  icon: _getIconForActivity(activity.type),
+                                ),
+                              )),
+                      ]),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
       ),
     );
+  }
+
+  String _formatTimestamp(DateTime timestamp) {
+    final diff = DateTime.now().difference(timestamp);
+    if (diff.inMinutes < 60) {
+      return 'Hace ${diff.inMinutes} minutos';
+    } else if (diff.inHours < 24) {
+      return 'Hace ${diff.inHours} horas';
+    } else {
+      return 'Hace ${diff.inDays} días';
+    }
+  }
+
+  IconData _getIconForActivity(ActivityType type) {
+    switch (type) {
+      case ActivityType.vitalCheck:
+        return Icons.monitor_heart;
+      case ActivityType.medicationTaken:
+        return Icons.done;
+      case ActivityType.reportGenerated:
+        return Icons.description;
+      case ActivityType.appointment:
+        return Icons.calendar_today;
+      case ActivityType.other:
+        return Icons.info_outline;
+    }
   }
 
   Widget _buildQuickActionsHeader(BuildContext context) {
@@ -162,30 +242,6 @@ class HomeDashboardPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecentActivityList(BuildContext context) {
-    return const Column(
-      children: [
-        _ActivityTile(
-          title: 'Chequeo de presión',
-          time: 'Hace 2 horas',
-          icon: Icons.monitor_heart,
-        ),
-        SizedBox(height: 12),
-        _ActivityTile(
-          title: 'Medicamento: Vitamina C',
-          time: 'Hace 5 horas',
-          icon: Icons.done,
-        ),
-        SizedBox(height: 12),
-        _ActivityTile(
-          title: 'Informe semanal generado',
-          time: 'Ayer',
-          icon: Icons.description,
         ),
       ],
     );

@@ -4,17 +4,21 @@ import 'package:orionhealth_health/features/dashboard/application/dashboard_cubi
 import 'package:orionhealth_health/features/dashboard/application/dashboard_state.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/activity_item.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/dashboard_stats.dart';
-import 'package:orionhealth_health/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:orionhealth_health/features/dashboard/domain/usecases/get_dashboard_stats_usecase.dart';
+import 'package:orionhealth_health/features/dashboard/domain/usecases/get_recent_activity_usecase.dart';
 
-class MockDashboardRepository extends Mock implements DashboardRepository {}
+class MockGetDashboardStatsUseCase extends Mock implements GetDashboardStatsUseCase {}
+class MockGetRecentActivityUseCase extends Mock implements GetRecentActivityUseCase {}
 
 void main() {
   late DashboardCubit cubit;
-  late MockDashboardRepository mockRepository;
+  late MockGetDashboardStatsUseCase mockGetDashboardStats;
+  late MockGetRecentActivityUseCase mockGetRecentActivity;
 
   setUp(() {
-    mockRepository = MockDashboardRepository();
-    cubit = DashboardCubit(mockRepository);
+    mockGetDashboardStats = MockGetDashboardStatsUseCase();
+    mockGetRecentActivity = MockGetRecentActivityUseCase();
+    cubit = DashboardCubit(mockGetDashboardStats, mockGetRecentActivity);
   });
 
   tearDown(() {
@@ -42,10 +46,8 @@ void main() {
 
     test('emits [DashboardLoading, DashboardLoaded] when loadDashboardData is successful', () async {
       // arrange
-      when(() => mockRepository.getDashboardStats())
-          .thenAnswer((_) async => tStats);
-      when(() => mockRepository.getRecentActivity())
-          .thenAnswer((_) async => tActivities);
+      when(() => mockGetDashboardStats()).thenAnswer((_) async => tStats);
+      when(() => mockGetRecentActivity()).thenAnswer((_) async => tActivities);
 
       // act
       final future = cubit.loadDashboardData();
@@ -58,14 +60,12 @@ void main() {
 
     test('emits [DashboardLoading, DashboardError] when loadDashboardData fails', () async {
       // arrange
-      when(() => mockRepository.getDashboardStats())
-          .thenThrow(Exception('Failed to load stats'));
+      when(() => mockGetDashboardStats()).thenThrow(Exception('Failed to load stats'));
 
       // act
       final future = cubit.loadDashboardData();
 
       // assert
-      // We need to wait for the future to complete or check states in order
       await future;
       expect(cubit.state, isA<DashboardError>());
     });
