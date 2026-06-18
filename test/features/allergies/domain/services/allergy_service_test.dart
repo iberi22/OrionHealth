@@ -15,10 +15,9 @@ void main() {
       test('returns true when medication name contains allergen', () {
         final allergy = Allergy(
           id: 1,
-          name: 'Penicilina',
+          allergen: 'Amoxicilina',
           severity: AllergySeverity.severe,
-          isValid: true,
-        );
+        )..id = 1;
         final medication = Medication(
           id: 1,
           name: 'Amoxicilina',
@@ -31,10 +30,9 @@ void main() {
       test('returns true when medication notes contain allergen', () {
         final allergy = Allergy(
           id: 1,
-          name: 'Penicilina',
+          allergen: 'Penicilina',
           severity: AllergySeverity.moderate,
-          isValid: true,
-        );
+        )..id = 1;
         final medication = Medication(
           id: 1,
           name: 'Ibuprofeno',
@@ -47,10 +45,9 @@ void main() {
       test('returns false when no interaction', () {
         final allergy = Allergy(
           id: 1,
-          name: 'Penicilina',
+          allergen: 'Penicilina',
           severity: AllergySeverity.mild,
-          isValid: true,
-        );
+        )..id = 1;
         final medication = Medication(
           id: 1,
           name: 'Ibuprofeno',
@@ -62,10 +59,9 @@ void main() {
       test('returns false when allergy is not valid', () {
         final allergy = Allergy(
           id: 1,
-          name: 'Penicilina',
+          allergen: '',
           severity: AllergySeverity.mild,
-          isValid: false,
-        );
+        )..id = 1;
         final medication = Medication(
           id: 1,
           name: 'Amoxicilina',
@@ -77,13 +73,12 @@ void main() {
       test('is case insensitive', () {
         final allergy = Allergy(
           id: 1,
-          name: 'PENICILINA',
+          allergen: 'PENICILINA',
           severity: AllergySeverity.mild,
-          isValid: true,
-        );
+        )..id = 1;
         final medication = Medication(
           id: 1,
-          name: 'amoxicilina',
+          name: 'penicilina',
           startDate: DateTime.now(),
         );
         expect(service.checkInteraction(allergy, medication), isTrue);

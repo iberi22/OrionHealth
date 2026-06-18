@@ -10,6 +10,10 @@ void main() {
   late MockUserProfileRepository mockRepository;
   late UserProfileService service;
 
+  setUpAll(() {
+    registerFallbackValue(UserProfile());
+  });
+
   setUp(() {
     mockRepository = MockUserProfileRepository();
     service = UserProfileService(mockRepository);
@@ -18,11 +22,8 @@ void main() {
   group('UserProfileService', () {
     final now = DateTime.now();
     final profile = UserProfile(
-      createdAt: now,
-      updatedAt: now,
       name: 'Juan Perez',
       birthDate: DateTime(1990, 5, 15),
-      privacyConsent: true,
     );
 
     test('getProfile returns profile from repository', () async {
@@ -49,7 +50,7 @@ void main() {
     });
 
     test('updateProfile throws on invalid profile', () async {
-      final invalid = UserProfile(createdAt: now, updatedAt: now, name: '');
+      final invalid = UserProfile(age: -1);
       expect(() => service.updateProfile(invalid), throwsA(isA<Exception>()));
       verifyNever(() => mockRepository.saveUserProfile(any()));
     });

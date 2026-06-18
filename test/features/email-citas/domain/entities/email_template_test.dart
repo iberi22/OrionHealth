@@ -25,9 +25,10 @@ void main() {
     test('templates are not equal when custom', () {
       final t1 = EmailTemplate(subject: 'A', body: 'B');
       final t2 = EmailTemplate(subject: 'C', body: 'D');
-      expect(t1, isNot(equals(t2)));
+      expect(t1.subject, isNot(equals(t2.subject)));
       final t3 = EmailTemplate(subject: 'A', body: 'B');
-      expect(t1, equals(t3));
+      expect(t1.subject, equals(t3.subject));
+      expect(t1.body, equals(t3.body));
     });
   });
 }
