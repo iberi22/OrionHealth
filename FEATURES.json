@@ -1,7 +1,7 @@
 ﻿{
-    "averageImplPct":  94,
+    "averageImplPct":  95,
     "totalFeatures":  26,
-    "generated":  "2026-06-18T01:41:02.4147983-05:00",
+    "generated":  "2026-06-18T01:41:47.7007130-05:00",
     "features":  [
                      {
                          "status":  "partial",
@@ -12,7 +12,7 @@
                      {
                          "status":  "partial",
                          "name":  "allergies",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  7
                      },
                      {
@@ -48,7 +48,7 @@
                      {
                          "status":  "partial",
                          "name":  "email-citas",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  5
                      },
                      {
@@ -96,7 +96,7 @@
                      {
                          "status":  "partial",
                          "name":  "medications",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  4
                      },
                      {
