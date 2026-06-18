@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
 
 /// NFC method channel name used by [NfcSharingService].
 const String kNfcChannelName = 'orionhealth/nfc';
@@ -13,6 +14,7 @@ const String kNfcChannelName = 'orionhealth/nfc';
 /// when the native plugin is not registered, provides a graceful
 /// fallback that logs a warning and returns a "not available" state
 /// without crashing.
+@lazySingleton
 class NfcHandler {
   final MethodChannel _channel;
   bool _nativeAvailable = true;

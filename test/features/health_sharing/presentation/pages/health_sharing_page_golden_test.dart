@@ -18,6 +18,19 @@ void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
+<<<<<<< HEAD
+    mockCubit = MockSharingCubit();
+
+    await GetIt.I.reset();
+    await configureDependencies();
+
+    final getIt = GetIt.instance;
+    if (getIt.isRegistered<SharingCubit>()) {
+      getIt.unregister<SharingCubit>();
+    }
+    getIt.registerLazySingleton<SharingCubit>(() => mockCubit);
+=======
+>>>>>>> origin/main
   });
 
   setUp(() async {

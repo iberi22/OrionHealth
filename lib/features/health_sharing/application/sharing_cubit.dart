@@ -6,6 +6,9 @@ import '../domain/entities/shared_health_package.dart';
 import '../infrastructure/ble_sharing_service.dart';
 import '../infrastructure/nfc_sharing_service.dart';
 import '../infrastructure/wifi_direct_service.dart';
+import '../domain/usecases/start_sharing_usecase.dart';
+import '../domain/usecases/start_listening_usecase.dart';
+import '../domain/usecases/cancel_sharing_usecase.dart';
 
 // ============================================================================
 // STATES
@@ -118,6 +121,9 @@ class SharingCubit extends Cubit<SharingState> {
   final BleSharingService _bleService;
   final NfcSharingService _nfcService;
   final WifiDirectService _wifiService;
+  final StartSharingUseCase _startSharingUseCase;
+  final StartListeningUseCase _startListeningUseCase;
+  final CancelSharingUseCase _cancelSharingUseCase;
 
   StreamSubscription? _bleSubscription;
   StreamSubscription? _nfcSubscription;
@@ -129,9 +135,15 @@ class SharingCubit extends Cubit<SharingState> {
     BleSharingService? bleService,
     NfcSharingService? nfcService,
     WifiDirectService? wifiService,
+    required StartSharingUseCase startSharingUseCase,
+    required StartListeningUseCase startListeningUseCase,
+    required CancelSharingUseCase cancelSharingUseCase,
   })  : _bleService = bleService ?? BleSharingService(),
         _nfcService = nfcService ?? NfcSharingService(),
         _wifiService = wifiService ?? WifiDirectService(),
+        _startSharingUseCase = startSharingUseCase,
+        _startListeningUseCase = startListeningUseCase,
+        _cancelSharingUseCase = cancelSharingUseCase,
         super(SharingInitial());
 
   /// Initialize all services
@@ -260,18 +272,20 @@ class SharingCubit extends Cubit<SharingState> {
   }) async {
     _currentMethod = method;
 
-    switch (method) {
-      case TransferMethod.ble:
-        await _bleService.startAdvertising(package.recipientNodeId);
-        break;
-      case TransferMethod.nfc:
-        await _nfcService.shareData(package);
-        break;
-      case TransferMethod.wifi:
-        // For WiFi, sender discovers the receiver's server
-        final devices = await _wifiService.discoverDevices();
-        emit(SharingScanning(TransferMethod.wifi, devices: devices));
-        break;
+    if (method == TransferMethod.wifi) {
+      // Special case for WiFi: emit Scanning before/during discovery
+      emit(const SharingScanning(TransferMethod.wifi));
+    }
+
+    await _startSharingUseCase(
+      method: method,
+      package: package,
+      pin: pin,
+    );
+
+    if (method == TransferMethod.wifi) {
+      final devices = await _wifiService.discoverDevices();
+      emit(SharingScanning(TransferMethod.wifi, devices: devices));
     }
   }
 
@@ -325,10 +339,7 @@ class SharingCubit extends Cubit<SharingState> {
 
   /// Cancel current sharing
   Future<void> cancelSharing() async {
-    await _bleService.disconnect();
-    await _bleService.stopAdvertising();
-    await _nfcService.stopListening();
-    await _wifiService.stop();
+    await _cancelSharingUseCase();
 
     _currentMethod = null;
 
@@ -343,17 +354,7 @@ class SharingCubit extends Cubit<SharingState> {
   Future<void> startListening(TransferMethod method, {String? pin}) async {
     _currentMethod = method;
 
-    switch (method) {
-      case TransferMethod.ble:
-        await _bleService.scanForDevices();
-        break;
-      case TransferMethod.nfc:
-        await _nfcService.startListening();
-        break;
-      case TransferMethod.wifi:
-        await _wifiService.startServer();
-        break;
-    }
+    await _startListeningUseCase(method, pin: pin);
   }
 
   /// Handle incoming package
