@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_cubit.dart';
 import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
 
 class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {}
 
@@ -19,14 +19,19 @@ void main() {
       (_) => const Stream.empty(),
     );
     when(() => mockCubit.close()).thenAnswer((_) async {});
+
+    // DoctorListPage uses getIt internally, so we must register
+    getIt.reset();
+    getIt.registerSingleton<DoctorVerificationCubit>(mockCubit);
+  });
+
+  tearDown(() {
+    getIt.reset();
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: BlocProvider<DoctorVerificationCubit>.value(
-        value: mockCubit,
-        child: const DoctorListPage(),
-      ),
+    return const MaterialApp(
+      home: DoctorListPage(),
     );
   }
 
