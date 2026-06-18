@@ -1,7 +1,7 @@
 ﻿{
     "averageImplPct":  94,
     "totalFeatures":  26,
-    "generated":  "2026-06-18T01:39:48.8091944-05:00",
+    "generated":  "2026-06-18T01:41:02.4147983-05:00",
     "features":  [
                      {
                          "status":  "partial",
@@ -30,13 +30,13 @@
                      {
                          "status":  "partial",
                          "name":  "calendar_import",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  8
                      },
                      {
                          "status":  "partial",
                          "name":  "dashboard",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  4
                      },
                      {
