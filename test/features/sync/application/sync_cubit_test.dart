@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:bonsoir/bonsoir.dart';
 import 'package:orionhealth_health/features/sync/application/sync_cubit.dart';
 import 'package:orionhealth_health/features/sync/application/sync_state.dart';
 import 'package:orionhealth_health/features/sync/domain/services/sync_service.dart';
 import 'package:orionhealth_health/features/sync/infrastructure/services/node_discovery_service.dart';
 
 class MockSyncService extends Mock implements SyncService {}
+
 class MockNodeDiscoveryService extends Mock implements NodeDiscoveryService {}
 
 void main() {
@@ -17,6 +19,10 @@ void main() {
     service = MockSyncService();
     nodeDiscovery = MockNodeDiscoveryService();
     when(() => service.getLastSyncTime()).thenAnswer((_) async => null);
+    when(
+      () => nodeDiscovery.discoveredNodes,
+    ).thenAnswer((_) => const Stream.empty());
+    when(() => nodeDiscovery.currentNodes).thenReturn(<BonsoirService>[]);
     cubit = FhirSyncCubit(service, nodeDiscovery);
   });
 
@@ -33,7 +39,9 @@ void main() {
       test('emits loading then success on success', () async {
         final tLastSync = DateTime.now();
         when(() => service.performFullSync()).thenAnswer((_) async {});
-        when(() => service.getLastSyncTime()).thenAnswer((_) async => tLastSync);
+        when(
+          () => service.getLastSyncTime(),
+        ).thenAnswer((_) async => tLastSync);
 
         final expected = [
           SyncState(status: SyncStatus.loading, lastSyncTime: null),
@@ -45,12 +53,17 @@ void main() {
       });
 
       test('emits loading then failure on error', () async {
-        when(() => service.performFullSync()).thenThrow(Exception('sync failed'));
+        when(
+          () => service.performFullSync(),
+        ).thenThrow(Exception('sync failed'));
         when(() => service.getLastSyncTime()).thenAnswer((_) async => null);
 
         final expected = [
           SyncState(status: SyncStatus.loading, lastSyncTime: null),
-          SyncState(status: SyncStatus.failure, errorMessage: 'Exception: sync failed'),
+          SyncState(
+            status: SyncStatus.failure,
+            errorMessage: 'Exception: sync failed',
+          ),
         ];
 
         expectLater(cubit.stream, emitsInOrder(expected));
