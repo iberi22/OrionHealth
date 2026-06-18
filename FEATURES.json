@@ -1,12 +1,12 @@
 ﻿{
     "averageImplPct":  94,
     "totalFeatures":  26,
-    "generated":  "2026-06-18T01:30:00.0000000-05:00",
+    "generated":  "2026-06-18T01:39:48.8091944-05:00",
     "features":  [
                      {
                          "status":  "partial",
                          "name":  "about",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  5
                      },
                      {
@@ -72,7 +72,7 @@
                      {
                          "status":  "partial",
                          "name":  "health_sharing",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  6
                      },
                      {
@@ -144,7 +144,7 @@
                      {
                          "status":  "partial",
                          "name":  "user_profile",
-                         "implementationPct":  90,
+                         "implementationPct":  95,
                          "testFiles":  5
                      },
                      {
