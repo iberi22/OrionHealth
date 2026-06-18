@@ -7,7 +7,9 @@ import 'package:orionhealth_health/features/appointments/domain/repositories/app
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 
 class MockEmailRepository extends Mock implements EmailRepository {}
+
 class MockAppointmentRepository extends Mock implements AppointmentRepository {}
+
 class FakeAppointment extends Fake implements Appointment {}
 
 void main() {
@@ -35,7 +37,9 @@ void main() {
 
   group('connectGmail', () {
     test('emits error when connectGmail fails', () async {
-      when(() => mockEmailRepository.connectGmail()).thenAnswer((_) async => false);
+      when(
+        () => mockEmailRepository.connectGmail(),
+      ).thenAnswer((_) async => false);
 
       await cubit.connectGmail();
 
@@ -43,7 +47,9 @@ void main() {
     });
 
     test('does not emit error when connectGmail succeeds', () async {
-      when(() => mockEmailRepository.connectGmail()).thenAnswer((_) async => true);
+      when(
+        () => mockEmailRepository.connectGmail(),
+      ).thenAnswer((_) async => true);
 
       await cubit.connectGmail();
 
@@ -61,16 +67,25 @@ void main() {
         status: AppointmentStatus.upcoming,
       );
 
-      when(() => mockEmailRepository.connectGmail()).thenAnswer((_) async => true);
-      when(() => mockEmailRepository.fetchParsedAppointments(any(), any()))
-          .thenAnswer((_) async => [appointment]);
-      when(() => mockAppointmentRepository.saveAppointment(any())).thenAnswer((_) async => {});
-      when(() => mockEmailRepository.syncToNativeCalendar(any())).thenAnswer((_) async => {});
+      when(
+        () => mockEmailRepository.connectGmail(),
+      ).thenAnswer((_) async => true);
+      when(
+        () => mockEmailRepository.fetchParsedAppointments(any(), any()),
+      ).thenAnswer((_) async => [appointment]);
+      when(
+        () => mockAppointmentRepository.saveAppointment(any()),
+      ).thenAnswer((_) async => {});
+      when(
+        () => mockEmailRepository.syncToNativeCalendar(any()),
+      ).thenAnswer((_) async => {});
 
       await cubit.connectGmail(); // set _pendingProvider
       await cubit.handleOAuthRedirect(uri);
 
-      verify(() => mockEmailRepository.fetchParsedAppointments('Gmail', 'test_code')).called(1);
+      verify(
+        () => mockEmailRepository.fetchParsedAppointments('Gmail', 'test_code'),
+      ).called(1);
       verify(() => mockAppointmentRepository.saveAppointment(any())).called(1);
     });
   });

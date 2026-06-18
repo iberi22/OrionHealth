@@ -6,16 +6,13 @@ import 'package:orionhealth_health/features/user_profile/domain/services/user_pr
 
 class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 
-// Fallback for mocktail
-class UserProfileFake extends Fake implements UserProfile {}
-
 void main() {
-  setUpAll(() {
-    registerFallbackValue(UserProfileFake());
-  });
-
-  late UserProfileService service;
   late MockUserProfileRepository mockRepository;
+  late UserProfileService service;
+
+  setUpAll(() {
+    registerFallbackValue(UserProfile());
+  });
 
   setUp(() {
     mockRepository = MockUserProfileRepository();
@@ -23,47 +20,51 @@ void main() {
   });
 
   group('UserProfileService', () {
-    final tProfile = UserProfile(name: 'John Doe', age: 30);
+    final profile = UserProfile(
+      name: 'Juan Perez',
+      birthDate: DateTime(1990, 5, 15),
+    );
 
-    test('getProfile should return profile from repository', () async {
-      when(() => mockRepository.getUserProfile()).thenAnswer((_) async => tProfile);
-
+    test('getProfile returns profile from repository', () async {
+      when(
+        () => mockRepository.getUserProfile(),
+      ).thenAnswer((_) async => profile);
       final result = await service.getProfile();
-
-      expect(result, equals(tProfile));
+      expect(result, equals(profile));
       verify(() => mockRepository.getUserProfile()).called(1);
     });
 
-    test('updateProfile should save profile when valid', () async {
-      when(() => mockRepository.saveUserProfile(any())).thenAnswer((_) async {});
-
-      await service.updateProfile(tProfile);
-
-      verify(() => mockRepository.saveUserProfile(tProfile)).called(1);
+    test('getProfile returns null when no profile', () async {
+      when(() => mockRepository.getUserProfile()).thenAnswer((_) async => null);
+      final result = await service.getProfile();
+      expect(result, isNull);
     });
 
-    test('updateProfile should save empty profile (default is valid)', () async {
-      final emptyProfile = UserProfile();
-      when(() => mockRepository.saveUserProfile(any())).thenAnswer((_) async {});
-
-      await service.updateProfile(emptyProfile);
-
-      verify(() => mockRepository.saveUserProfile(emptyProfile)).called(1);
+    test('updateProfile calls repository with validated profile', () async {
+      when(
+        () => mockRepository.saveUserProfile(any()),
+      ).thenAnswer((_) async {});
+      await service.updateProfile(profile);
+      verify(() => mockRepository.saveUserProfile(profile)).called(1);
     });
 
-    test('updateProfile should throw exception when profile is invalid', () async {
-      final invalidProfile = UserProfile(age: -1);
-
-      expect(() => service.updateProfile(invalidProfile), throwsException);
+    test('updateProfile throws on invalid profile', () async {
+      final invalid = UserProfile(age: -1);
+      expect(() => service.updateProfile(invalid), throwsA(isA<Exception>()));
       verifyNever(() => mockRepository.saveUserProfile(any()));
     });
 
-    test('deleteProfile should call repository delete', () async {
+    test('deleteProfile calls repository', () async {
       when(() => mockRepository.deleteUserProfile()).thenAnswer((_) async {});
-
       await service.deleteProfile();
-
       verify(() => mockRepository.deleteUserProfile()).called(1);
+    });
+
+    test('repository failure propagates', () async {
+      when(
+        () => mockRepository.getUserProfile(),
+      ).thenAnswer((_) async => throw Exception('DB error'));
+      expect(() => service.getProfile(), throwsA(isA<Exception>()));
     });
   });
 }

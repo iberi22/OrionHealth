@@ -38,7 +38,7 @@ void main() {
 
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/01_main_navigation_$name.png'),
+          matchesGoldenFile("../golden/reference/01_main_navigation_$name.png"),
         );
 
         tester.view.resetPhysicalSize();
@@ -54,7 +54,7 @@ void main() {
 
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/02_onboarding_$name.png'),
+          matchesGoldenFile("../golden/reference/02_onboarding_$name.png"),
         );
 
         tester.view.resetPhysicalSize();
@@ -70,7 +70,7 @@ void main() {
 
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/03_login_$name.png'),
+          matchesGoldenFile("../golden/reference/03_login_$name.png"),
         );
 
         tester.view.resetPhysicalSize();
@@ -86,7 +86,7 @@ void main() {
 
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/04_medical_research_$name.png'),
+          matchesGoldenFile("../golden/reference/04_medical_research_$name.png"),
         );
 
         tester.view.resetPhysicalSize();
@@ -102,7 +102,7 @@ void main() {
 
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/05_dashboard_$name.png'),
+          matchesGoldenFile("../golden/reference/05_dashboard_$name.png"),
         );
 
         tester.view.resetPhysicalSize();

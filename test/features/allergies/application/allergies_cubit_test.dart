@@ -35,13 +35,11 @@ void main() {
     });
 
     test('emits [Loading, Loaded] when loadAllergies is successful', () async {
-      when(() => mockRepository.getAllergies())
-          .thenAnswer((_) async => tAllergies);
+      when(
+        () => mockRepository.getAllergies(),
+      ).thenAnswer((_) async => tAllergies);
 
-      final expectStates = [
-        AllergiesLoading(),
-        AllergiesLoaded(tAllergies),
-      ];
+      final expectStates = [AllergiesLoading(), AllergiesLoaded(tAllergies)];
 
       expectLater(cubit.stream, emitsInOrder(expectStates));
 
@@ -49,8 +47,9 @@ void main() {
     });
 
     test('emits [Loading, Error] when loadAllergies fails', () async {
-      when(() => mockRepository.getAllergies())
-          .thenThrow(Exception('Failed to load'));
+      when(
+        () => mockRepository.getAllergies(),
+      ).thenThrow(Exception('Failed to load'));
 
       final expectStates = [
         AllergiesLoading(),
@@ -63,10 +62,10 @@ void main() {
     });
 
     test('calls saveAllergy and reloads allergies on success', () async {
-      when(() => mockRepository.saveAllergy(any()))
-          .thenAnswer((_) async => {});
-      when(() => mockRepository.getAllergies())
-          .thenAnswer((_) async => tAllergies);
+      when(() => mockRepository.saveAllergy(any())).thenAnswer((_) async => {});
+      when(
+        () => mockRepository.getAllergies(),
+      ).thenAnswer((_) async => tAllergies);
 
       await cubit.saveAllergy(tAllergy);
 
@@ -75,10 +74,10 @@ void main() {
     });
 
     test('calls deleteAllergy and reloads allergies on success', () async {
-      when(() => mockRepository.deleteAllergy(any()))
-          .thenAnswer((_) async => {});
-      when(() => mockRepository.getAllergies())
-          .thenAnswer((_) async => []);
+      when(
+        () => mockRepository.deleteAllergy(any()),
+      ).thenAnswer((_) async => {});
+      when(() => mockRepository.getAllergies()).thenAnswer((_) async => []);
 
       await cubit.deleteAllergy(1);
 

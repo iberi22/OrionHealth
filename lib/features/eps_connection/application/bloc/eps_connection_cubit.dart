@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'eps_connection_state.dart';
-import '../../infrastructure/oauth_repository.dart';
+import '../../domain/entities/eps_connection.dart';
+import '../../domain/entities/eps_provider.dart';
+import '../../domain/repositories/oauth_repository.dart';
 import '../../../user_profile/domain/repositories/user_profile_repository.dart';
 
 @injectable
@@ -11,67 +13,80 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
 
   EpsConnectionCubit(this._oauthRepository, this._userProfileRepository)
       : super(const EpsConnectionInitial()) {
-    _checkInitialState();
+    loadConnections();
   }
 
-  Future<void> _checkInitialState() async {
-    final profile = await _userProfileRepository.getUserProfile();
-    if (state is! EpsConnectionInitial) return;
-    if (profile != null && profile.isEpsConnected && profile.epsPatientId != null) {
-      emit(EpsConnectionConnected(profile.epsPatientId!));
-    } else {
-      emit(const EpsConnectionDisconnected());
+  Future<void> loadConnections() async {
+    emit(const EpsConnectionLoading());
+    try {
+      final connectedIds = await _oauthRepository.getConnectedProviders();
+      final List<EPSConnection> connections = [];
+
+      for (final id in connectedIds) {
+        final token = await _oauthRepository.getToken(id);
+        final provider = await _oauthRepository.getProviderDetails(id);
+        final patientId = await _oauthRepository.getPatientId(id);
+
+        if (token != null && provider != null) {
+          connections.add(EPSConnection(
+            provider: provider,
+            token: token,
+            patientId: patientId ?? 'Unknown',
+            connectedAt: DateTime.now(), // ideally persisted connectedAt too
+          ));
+        }
+      }
+      emit(EpsConnectionLoaded(connections));
+    } catch (e) {
+      emit(EpsConnectionError('Error loading connections: ${e.toString()}'));
     }
   }
 
-  Future<void> connect() async {
+  Future<void> connect(EPSProvider provider) async {
     emit(const EpsConnectionLoading());
     try {
-      final response = await _oauthRepository.login();
-      if (response != null) {
-        // En un flujo real de IHCE/FHIR, el patientId suele venir en los claims del token
-        // o se obtiene llamando a un endpoint /Patient tras el login.
-        // Aquí asumimos que viene en el tokenResponse.additionalParameters['patient']
-        final patientId = response.authorizationAdditionalParameters?['patient'] as String?;
+      final result = await _oauthRepository.login(provider);
+      if (result != null) {
+        final patientId = result.patientId;
 
-        if (patientId != null) {
-          final profile = await _userProfileRepository.getUserProfile();
-          if (profile != null) {
-            final updatedProfile = profile.copyWith(
-              isEpsConnected: true,
-              epsPatientId: patientId,
-            );
-            await _userProfileRepository.saveUserProfile(updatedProfile);
-            emit(EpsConnectionConnected(patientId));
-          } else {
-            emit(const EpsConnectionError('No se encontró el perfil de usuario local.'));
-          }
+        final profile = await _userProfileRepository.getUserProfile();
+        if (profile != null) {
+          final updatedProfile = profile.copyWith(
+            isEpsConnected: true,
+            epsPatientId: patientId,
+          );
+          await _userProfileRepository.saveUserProfile(updatedProfile);
+          await loadConnections();
         } else {
-          emit(const EpsConnectionError('No se pudo obtener el ID del paciente desde IHCE.'));
+          emit(const EpsConnectionError('User profile not found.'));
         }
       } else {
-        emit(const EpsConnectionDisconnected());
+        await loadConnections();
       }
     } catch (e) {
-      emit(EpsConnectionError('Error al conectar con la EPS: ${e.toString()}'));
+      emit(EpsConnectionError('Connection error: ${e.toString()}'));
     }
   }
 
-  Future<void> disconnect() async {
+  Future<void> disconnect(String providerId) async {
     emit(const EpsConnectionLoading());
     try {
-      await _oauthRepository.logout();
+      await _oauthRepository.logout(providerId);
       final profile = await _userProfileRepository.getUserProfile();
       if (profile != null) {
-        final updatedProfile = profile.copyWith(
-          isEpsConnected: false,
-          epsPatientId: null,
-        );
-        await _userProfileRepository.saveUserProfile(updatedProfile);
+        // If it was the only connection or we want to clear the global flag
+        final providers = await _oauthRepository.getConnectedProviders();
+        if (providers.isEmpty) {
+          final updatedProfile = profile.copyWith(
+            isEpsConnected: false,
+            epsPatientId: null,
+          );
+          await _userProfileRepository.saveUserProfile(updatedProfile);
+        }
       }
-      emit(const EpsConnectionDisconnected());
+      await loadConnections();
     } catch (e) {
-      emit(EpsConnectionError('Error al desconectar: ${e.toString()}'));
+      emit(EpsConnectionError('Disconnection error: ${e.toString()}'));
     }
   }
 }

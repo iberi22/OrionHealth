@@ -3,12 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/about/presentation/pages/about_page.dart';
 import 'package:orionhealth_health/features/about/presentation/widgets/mission_section.dart';
 import 'package:orionhealth_health/features/about/application/about_cubit.dart';
 import 'package:orionhealth_health/features/about/domain/entities/about_info.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
 import '../../../../core/golden_test_utils.dart';
 
 class MockAboutCubit extends Mock implements AboutCubit {}
@@ -19,16 +17,17 @@ void main() {
   setUp(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
+
     mockAboutCubit = MockAboutCubit();
-    if (!GetIt.I.isRegistered<AboutCubit>()) {
-      await configureDependencies();
+    final getIt = GetIt.I;
+    if (getIt.isRegistered<AboutCubit>()) {
+      await getIt.unregister<AboutCubit>();
     }
-    GetIt.I.unregister<AboutCubit>();
-    GetIt.I.registerFactory<AboutCubit>(() => mockAboutCubit);
+    getIt.registerFactory<AboutCubit>(() => mockAboutCubit);
   });
 
-  tearDown(() {
-    GetIt.I.unregister<AboutCubit>();
+  tearDown(() async {
+    await GetIt.I.reset();
   });
 
   group('AboutPage Golden Tests', () {
@@ -45,7 +44,7 @@ void main() {
 
       await expectLater(
         find.byType(AboutPage),
-        matchesGoldenFile('goldens/about_page_loading.png'),
+        matchesGoldenFile("../../../../../golden/reference/about_page_loading.png"),
       );
       resetGoldenTest(tester);
     });
@@ -65,7 +64,7 @@ void main() {
 
       await expectLater(
         find.byType(AboutPage),
-        matchesGoldenFile('goldens/about_page_error.png'),
+        matchesGoldenFile("../../../../../golden/reference/about_page_error.png"),
       );
       resetGoldenTest(tester);
     });
@@ -115,7 +114,7 @@ void main() {
 
       await expectLater(
         find.byType(AboutPage),
-        matchesGoldenFile('goldens/about_page_loaded.png'),
+        matchesGoldenFile("../../../../../golden/reference/about_page_loaded.png"),
       );
       resetGoldenTest(tester);
     });
@@ -146,7 +145,7 @@ void main() {
 
       await expectLater(
         find.byType(MissionSection),
-        matchesGoldenFile('goldens/mission_section.png'),
+        matchesGoldenFile("../../../../../golden/reference/mission_section.png"),
       );
       resetGoldenTest(tester);
     });

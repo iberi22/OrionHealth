@@ -80,7 +80,7 @@ void main() {
 
       await expectLater(
         find.byType(VitalsPage),
-        matchesGoldenFile('../goldens/vitals_page.png'),
+        matchesGoldenFile("../../../../golden/reference/vitals_page.png"),
       );
       resetGoldenTest(tester);
     });
@@ -93,7 +93,7 @@ void main() {
 
       await expectLater(
         find.byType(VitalsMonitorPage),
-        matchesGoldenFile('../goldens/vitals_monitor_page.png'),
+        matchesGoldenFile("../../../../golden/reference/vitals_monitor_page.png"),
       );
       resetGoldenTest(tester);
     });

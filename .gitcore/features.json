@@ -1,62 +1,135 @@
 {
   "name": "OrionHealth",
-  "version": "0.9.0",
-  "protocol_version": "3.6.0",
+  "version": "0.8.0",
+  "protocol_version": "2",
   "metadata": {
     "last_updated": "2026-06-17",
-    "flutter_analyze": "203 issues (0 errors, 0 warnings, 203 infos)",
-    "total_dart_files": 449,
-    "total_feature_tests": 27,
+    "flutter_analyze": "0 issues",
+    "total_dart_files": 640,
+    "total_loc": 0,
     "packages": {
+      "isar_agent_memory": "0.5.0-beta",
       "health_wallet": "0.1.0",
-      "medical_standards": "0.1.0",
-      "shared": "0.1.0"
-    },
-    "protocol": {
-      "workflow": "GitHub Flow (main + feature branches)",
-      "agent_routing": "AGENT_INDEX.md",
-      "jules_enabled": true,
-      "labels": ["jules", "fix", "enhancement", "bug", "documentation", "dependencies"]
+      "medical_standards": "0.1.0"
     }
   },
   "features": {
-    "total": 26,
-    "with_full_clean_arch": 22,
-    "average_implementation_pct": 82,
-    "network_features": 2,
-    "needs_domain": 0,
-    "needs_application": 0,
-    "needs_infrastructure": 2,
-    "needs_presentation": 0
+    "total": 25,
+    "complete_layers": 24,
+    "gap_domain": 1,
+    "needs_golden_tests": 3,
+    "needs_data_migration": 2
   },
   "test_suite": {
-    "test_files": 132,
-    "golden_tests": 28,
-    "golden_passing": 10,
-    "unit_test_passing": 662,
-    "needs_regeneration": 0
+    "test_files": 180,
+    "golden_screenshots": 512,
+    "integration_tests": 11,
+    "test_ratio_pct": 27.7
   },
   "ci_cd": {
-    "workflows": 2,
+    "workflows": 5,
     "android_build": true,
     "ci_tests": true,
-    "deploy_docs": false,
-    "flutter_version": "3.41.9",
-    "ci_passing": false,
-    "ci_status": "running - 27719727950"
+    "deploy_docs": true,
+    "medical_standards": true,
+    "release": true
   },
-  "sprint_completed": "S1 - Integración + Estabilización",
-  "sprint_current": "S2 - Network infra + Coverage",
-  "implementation_pct": 82,
-  "bugs": [],
+  "documentation": {
+    "readme": true,
+    "architecture": true,
+    "contributing": true,
+    "translations_arb": 26
+  },
+  "implementation_pct": 63.2,
+  "bugs": [
+    {
+      "id": 1,
+      "feature": "health_sharing",
+      "description": "BLE startAdvertising() stub",
+      "severity": "medium",
+      "status": "fixed"
+    },
+    {
+      "id": 2,
+      "feature": "health_sharing",
+      "description": "WiFi discoverDevices() mock data",
+      "severity": "medium",
+      "status": "fixed"
+    },
+    {
+      "id": 3,
+      "feature": "health_sharing",
+      "description": "NFC sharing sin setup nativo",
+      "severity": "medium",
+      "status": "fixed"
+    },
+    {
+      "id": 4,
+      "feature": "allergies",
+      "description": "Unused equatable import",
+      "severity": "low",
+      "status": "open"
+    },
+    {
+      "id": 5,
+      "feature": "sync",
+      "description": "Legacy data/ dir needs migration to infrastructure/",
+      "severity": "low",
+      "status": "open"
+    },
+    {
+      "id": 6,
+      "feature": "doctor_verification",
+      "description": "Legacy data/ dir needs migration to infrastructure/",
+      "severity": "low",
+      "status": "open"
+    },
+    {
+      "id": 7,
+      "feature": "calendar_import",
+      "description": "Domain layer empty - entities inline in cubit",
+      "severity": "medium",
+      "status": "open"
+    }
+  ],
   "gaps": {
-    "network_missing_infrastructure": [
-      "governance",
-      "incentives"
+    "missing_golden_tests": [
+      "calendar_import",
+      "health_data_import"
     ],
-    "low_test_coverage": [
-      "about",
-      "reports"
+    "needs_bloc_state_management": [
+      "ai_assistant",
+      "calendar_import",
+      "dashboard",
+      "eps_connection",
+      "health_data_import",
+      "home",
+      "medications",
+      "settings",
+      "user_profile",
+      "vitals"
     ]
+  },
+  "plan_to_80plus": {
+    "phase_1_data_layer": {
+      "description": "Add data layer to all features (repositories, datasources)",
+      "features_affected": 23,
+      "impact_pct": "+10%"
+    },
+    "phase_2_golden_tests": {
+      "description": "Add golden tests for about, calendar_import, health_data_import",
+      "features_affected": 3,
+      "impact_pct": "+3%"
+    },
+    "phase_3_test_coverage": {
+      "description": "Increase test coverage from 27.7% to 60%+",
+      "target_test_files": 380,
+      "impact_pct": "+10%"
+    },
+    "phase_4_bloc_state": {
+      "description": "Add proper BLoC/Cubit state management where missing",
+      "features_affected": 11,
+      "impact_pct": "+5%"
+    }
   }
 }

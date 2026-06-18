@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -13,7 +12,9 @@ import 'package:orionhealth_health/features/local_agent/infrastructure/services/
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
 
 class MockModelDownloadService extends Mock implements ModelDownloadService {}
+
 class MockLlmService extends Mock implements LlmService {}
+
 class MockSecureStorage extends Mock implements FlutterSecureStorage {}
 
 void main() {
@@ -28,23 +29,34 @@ void main() {
     mockLlmService = MockLlmService();
     mockSecureStorage = MockSecureStorage();
 
-    if (!GetIt.I.isRegistered<ModelDownloadService>()) {
-      await configureDependencies();
-    }
-
     final getIt = GetIt.instance;
-    getIt.unregister<ModelDownloadService>();
-    getIt.unregister<LlmService>();
-    getIt.unregister<FlutterSecureStorage>();
-    getIt.registerLazySingleton<ModelDownloadService>(() => mockDownloadService);
+    if (getIt.isRegistered<ModelDownloadService>()) {
+      getIt.unregister<ModelDownloadService>();
+    }
+    if (getIt.isRegistered<LlmService>()) {
+      getIt.unregister<LlmService>();
+    }
+    if (getIt.isRegistered<FlutterSecureStorage>()) {
+      getIt.unregister<FlutterSecureStorage>();
+    }
+    getIt.registerLazySingleton<ModelDownloadService>(
+      () => mockDownloadService,
+    );
     getIt.registerLazySingleton<LlmService>(() => mockLlmService);
     getIt.registerLazySingleton<FlutterSecureStorage>(() => mockSecureStorage);
   });
 
   tearDown(() {
-    GetIt.I.unregister<ModelDownloadService>();
-    GetIt.I.unregister<LlmService>();
-    GetIt.I.unregister<FlutterSecureStorage>();
+    final getIt = GetIt.instance;
+    if (getIt.isRegistered<ModelDownloadService>()) {
+      getIt.unregister<ModelDownloadService>();
+    }
+    if (getIt.isRegistered<LlmService>()) {
+      getIt.unregister<LlmService>();
+    }
+    if (getIt.isRegistered<FlutterSecureStorage>()) {
+      getIt.unregister<FlutterSecureStorage>();
+    }
   });
 
   group('Local Agent Golden Tests', () {
@@ -52,16 +64,22 @@ void main() {
       tester.view.physicalSize = const Size(360, 640);
       tester.view.devicePixelRatio = 1.0;
 
-      when(() => mockSecureStorage.read(key: 'gemini_api_key')).thenAnswer((_) async => 'mock-api-key');
-      when(() => mockSecureStorage.read(key: 'llm_provider')).thenAnswer((_) async => 'Local LLM');
-      when(() => mockDownloadService.listDownloadedModels()).thenAnswer((_) async => [
-        ModelInfo(
-          filename: 'gemma-2b-q4.gguf',
-          size: 1600000000,
-          lastModified: DateTime(2023, 1, 1),
-          parameters: '2B',
-        ),
-      ]);
+      when(
+        () => mockSecureStorage.read(key: 'gemini_api_key'),
+      ).thenAnswer((_) async => 'mock-api-key');
+      when(
+        () => mockSecureStorage.read(key: 'llm_provider'),
+      ).thenAnswer((_) async => 'Local LLM');
+      when(() => mockDownloadService.listDownloadedModels()).thenAnswer(
+        (_) async => [
+          ModelInfo(
+            filename: 'gemma-2b-q4.gguf',
+            size: 1600000000,
+            lastModified: DateTime(2023, 1, 1),
+            parameters: '2B',
+          ),
+        ],
+      );
 
       await tester.pumpWidget(const MaterialApp(home: LlmSettingsPage()));
       await tester.pump(); // Use pump instead of pumpAndSettle if it times out
@@ -69,7 +87,9 @@ void main() {
 
       await expectLater(
         find.byType(LlmSettingsPage),
-        matchesGoldenFile('goldens/llm_settings_page.png'),
+        matchesGoldenFile(
+          "../../../../../golden/reference/llm_settings_page.png",
+        ),
       );
     });
 
@@ -77,12 +97,14 @@ void main() {
       tester.view.physicalSize = const Size(360, 640);
       tester.view.devicePixelRatio = 1.0;
 
-      await tester.pumpWidget(MaterialApp(home: ChatPage(llmService: mockLlmService)));
+      await tester.pumpWidget(
+        MaterialApp(home: ChatPage(llmService: mockLlmService)),
+      );
       await tester.pumpAndSettle();
 
       await expectLater(
         find.byType(ChatPage),
-        matchesGoldenFile('goldens/chat_page.png'),
+        matchesGoldenFile("../../../../../golden/reference/chat_page.png"),
       );
     });
   });

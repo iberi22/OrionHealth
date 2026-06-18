@@ -89,5 +89,26 @@ void main() {
       final results = await repository.getAllAppointments();
       expect(results.length, 2);
     });
+
+    test('saveAppointment updates existing appointment when ID is provided', () async {
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: 'Diagnostics',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+      );
+
+      await repository.saveAppointment(appointment);
+      final saved = (await repository.getAllAppointments()).first;
+      final originalId = saved.id;
+
+      saved.doctorName = 'Dr. Wilson';
+      await repository.saveAppointment(saved);
+
+      final results = await repository.getAllAppointments();
+      expect(results.length, 1);
+      expect(results.first.id, originalId);
+      expect(results.first.doctorName, 'Dr. Wilson');
+    });
   });
 }
