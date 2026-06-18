@@ -23,8 +23,8 @@ void main() {
     });
 
     group('AllergiesLoaded', () {
-      final allergies = [
-        Allergy(id: 1, name: 'Penicilina', severity: AllergySeverity.severe),
+      final allergies = <Allergy>[
+        Allergy(id: 1, allergen: 'Penicilina', severity: AllergySeverity.severe),
       ];
 
       test('supports value equality', () {
