@@ -21,12 +21,13 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     mockCubit = MockSharingCubit();
 
-    if (!GetIt.I.isRegistered<SharingCubit>()) {
-      await configureDependencies();
-    }
+    await GetIt.I.reset();
+    await configureDependencies();
 
     final getIt = GetIt.instance;
-    getIt.unregister<SharingCubit>();
+    if (getIt.isRegistered<SharingCubit>()) {
+      getIt.unregister<SharingCubit>();
+    }
     getIt.registerLazySingleton<SharingCubit>(() => mockCubit);
   });
 

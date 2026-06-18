@@ -61,7 +61,7 @@ void main() {
     final metadata = PackageMetadata(
       packageType: 'standard',
       consentVerified: true,
-      includedCategories: {PackageCategory.general, PackageCategory.labResults},
+      includedCategories: const {DataCategory.vitalSigns, DataCategory.labResults},
       pinHash: '1234',
       appVersion: '1.0.0',
     );
@@ -70,7 +70,7 @@ void main() {
       final dto = PackageMetadataDto.fromDomain(metadata);
       expect(dto.packageType, 'standard');
       expect(dto.consentVerified, isTrue);
-      expect(dto.includedCategories, containsAll(['general', 'labResults']));
+      expect(dto.includedCategories, containsAll(['vitalSigns', 'labResults']));
       expect(dto.pinHash, '1234');
       expect(dto.appVersion, '1.0.0');
     });
