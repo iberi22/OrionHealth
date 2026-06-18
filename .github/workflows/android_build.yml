@@ -14,7 +14,7 @@ on:
         type: boolean
 
 env:
-  FLUTTER_VERSION: '3.41.9'
+  FLUTTER_VERSION: '3.44.0'
   JAVA_VERSION: '17'
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -81,6 +81,10 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
+
+      - name: Clean Gradle project
+        working-directory: android
+        run: ./gradlew clean
 
       - name: Build debug APK
         run: flutter build apk --debug
