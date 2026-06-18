@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_cubit.dart';
 import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_detail_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
 
 class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {}
 
@@ -24,8 +24,8 @@ void main() {
     );
     when(() => mockCubit.close()).thenAnswer((_) async {});
 
-    getIt.reset();
-    getIt.registerSingleton<DoctorVerificationCubit>(mockCubit);
+    GetIt.I.reset();
+    GetIt.I.registerSingleton<DoctorVerificationCubit>(mockCubit);
 
     verifiedDoctor = DoctorProfile(
       id: '1',
@@ -57,7 +57,7 @@ void main() {
   });
 
   tearDown(() {
-    getIt.reset();
+    GetIt.I.reset();
   });
 
   Widget createWidgetUnderTest(DoctorProfile doctor) {

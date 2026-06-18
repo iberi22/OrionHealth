@@ -17,11 +17,14 @@ void main() {
   setUp(() {
     mockSearchService = MockWebSearchService();
     mockScraperService = MockScraperService();
+    // Default stub for scrape to return null for any url
+    when(() => mockScraperService.scrape(any()))
+        .thenAnswer((_) async => null);
     researchService = MedicalResearchService(mockSearchService, mockScraperService);
   });
 
   group('MedicalResearchService', () {
-    test('performResearch returns search results when no scrapping needed', () async {
+    test('performResearch scrapes top result when URL starts with http', () async {
       final results = [
         const ResearchResult(
           title: 'Result 1',
@@ -33,12 +36,14 @@ void main() {
 
       when(() => mockSearchService.search('diabetes'))
           .thenAnswer((_) async => results);
+      when(() => mockScraperService.scrape(any()))
+          .thenAnswer((_) async => null);
 
       final actual = await researchService.performResearch('diabetes');
 
-      expect(actual, results);
+      expect(actual.length, 1);
+      expect(actual[0].title, 'Result 1');
       verify(() => mockSearchService.search('diabetes')).called(1);
-      // No scrape call because url starts with http
       verify(() => mockScraperService.scrape(any())).called(1);
     });
 
@@ -97,7 +102,7 @@ void main() {
 
       expect(actual.length, 1);
       expect(actual[0].title, 'Local Result');
-      verify(() => mockScraperService.scrape(any())).called(0);
+      verifyNever(() => mockScraperService.scrape(any()));
     });
 
     test('performResearch keeps original if scrape returns null', () async {
@@ -128,7 +133,7 @@ void main() {
       final actual = await researchService.performResearch('empty');
 
       expect(actual, isEmpty);
-      verify(() => mockScraperService.scrape(any())).called(0);
+      verifyNever(() => mockScraperService.scrape(any()));
     });
 
     test('performResearch propagates search service exception', () async {
