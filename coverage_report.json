@@ -1,0 +1,252 @@
+[
+  {
+    "name": "about",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "allergies",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "appointments",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "auth",
+    "layers": {
+      "domain": false,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "calendar_import",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "dashboard",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "doctor_verification",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "email-citas",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "eps_connection",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": false,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "health_data_import",
+    "layers": {
+      "domain": true,
+      "application": false,
+      "infrastructure": false,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "health_record",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "health_sharing",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "home",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": false,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "local_agent",
+    "layers": {
+      "domain": false,
+      "application": false,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "medical_research",
+    "layers": {
+      "domain": false,
+      "application": true,
+      "infrastructure": false,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "medications",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": false,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "meditation",
+    "layers": {
+      "domain": false,
+      "application": false,
+      "infrastructure": false,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "network",
+    "layers": {
+      "domain": false,
+      "application": false,
+      "infrastructure": false,
+      "presentation": false,
+      "goldens": false
+    }
+  },
+  {
+    "name": "onboarding",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": false,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "reports",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "settings",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "sync",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": false
+    }
+  },
+  {
+    "name": "user_profile",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "vitals",
+    "layers": {
+      "domain": true,
+      "application": true,
+      "infrastructure": true,
+      "presentation": true,
+      "goldens": true
+    }
+  },
+  {
+    "name": "voice_chat",
+    "layers": {
+      "domain": false,
+      "application": false,
+      "infrastructure": false,
+      "presentation": false,
+      "goldens": false
+    }
+  }
+]

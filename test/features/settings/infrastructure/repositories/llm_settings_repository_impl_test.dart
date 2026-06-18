@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
 import 'package:orionhealth_health/features/settings/infrastructure/repositories/llm_settings_repository_impl.dart';
-import 'package:path/path.dart' as path;
 
 void main() {
   late Isar isar;
@@ -16,7 +15,9 @@ void main() {
   });
 
   tearDownAll(() async {
-    await tempDir.delete(recursive: true);
+    if (tempDir.existsSync()) {
+      await tempDir.delete(recursive: true);
+    }
   });
 
   setUp(() async {
@@ -51,17 +52,23 @@ void main() {
       expect(retrieved.useCloudApi, false);
     });
 
-    test('saveLlmConfig should update existing config', () async {
+    test('saveLlmConfig should update existing config and preserve record count', () async {
       final config1 = LlmConfig(selectedModel: 'model1');
       await repository.saveLlmConfig(config1);
 
       final retrieved1 = await repository.getLlmConfig();
-      final config2 = retrieved1!.copyWith(selectedModel: 'model2');
+      expect(retrieved1, isNotNull);
+      final originalId = retrieved1!.id;
+
+      final config2 = retrieved1.copyWith(selectedModel: 'model2');
       await repository.saveLlmConfig(config2);
 
       final retrieved2 = await repository.getLlmConfig();
       expect(retrieved2!.selectedModel, 'model2');
-      expect(await isar.llmConfigs.count(), 1);
+      expect(retrieved2.id, originalId);
+
+      final count = await isar.llmConfigs.count();
+      expect(count, 1);
     });
   });
 }
