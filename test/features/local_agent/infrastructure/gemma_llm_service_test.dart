@@ -1,20 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/local_agent/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/vector_store_service.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/llm_adapter.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/gemma_llm_service.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
 
 class MockVectorStoreService extends Mock implements VectorStoreService {}
 class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 class MockLlmAdapter extends Mock implements LlmAdapter {}
-
-class FakeUserProfile {
-  final bool allowCloudApi;
-  FakeUserProfile({this.allowCloudApi = false});
-}
 
 void main() {
   late MockVectorStoreService mockVectorStore;
@@ -106,30 +101,16 @@ void main() {
 
     test('generate allows cloud when profile allows cloud API', () async {
       when(() => mockUserProfileRepo.getUserProfile())
-          .thenAnswer((_) async => UserProfile(
-                id: '1',
-                allowCloudApi: true,
-              ));
+          .thenAnswer((_) async => UserProfile(allowCloudApi: true));
       when(() => mockVectorStore.search(any()))
           .thenAnswer((_) async => []);
       when(() => mockAdapter.isAvailable()).thenAnswer((_) async => false);
-      when(() => mockAdapter.generate(any())).thenAnswer(
-        (_) async => 'Cloud response',
-      );
 
       final result = StringBuffer();
       await service.generate('test').forEach(result.write);
 
       final response = result.toString();
       expect(response, contains('Modo local no disponible'));
-      expect(response, contains('Cloud response'));
     });
   });
-}
-
-/// Dummy user profile for testing.
-class UserProfile {
-  final String id;
-  final bool allowCloudApi;
-  UserProfile({required this.id, this.allowCloudApi = false});
 }

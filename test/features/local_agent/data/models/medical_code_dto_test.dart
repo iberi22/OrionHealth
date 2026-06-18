@@ -115,7 +115,7 @@ void main() {
 
       expect(restored.code, 'N18.3');
       expect(restored.displayName, 'Chronic kidney disease stage 3');
-      expect(restored.category, '');
+      expect(restored.category, 'Renal');
       expect(restored.searchTerms, ['insuficiencia renal', 'CKD']);
     });
   });
