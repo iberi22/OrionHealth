@@ -1,7 +1,7 @@
 ﻿{
     "averageImplPct":  90,
     "totalFeatures":  26,
-    "generated":  "2026-06-17T22:32:24.9879674-05:00",
+    "generated":  "2026-06-17T22:43:41.7458779-05:00",
     "features":  [
                      {
                          "status":  "partial",
@@ -12,7 +12,7 @@
                      {
                          "status":  "partial",
                          "name":  "allergies",
-                         "implementationPct":  80,
+                         "implementationPct":  85,
                          "testFiles":  7
                      },
                      {
@@ -144,7 +144,7 @@
                      {
                          "status":  "partial",
                          "name":  "user_profile",
-                         "implementationPct":  80,
+                         "implementationPct":  85,
                          "testFiles":  5
                      },
                      {
