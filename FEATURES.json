@@ -1,7 +1,7 @@
 ﻿{
     "averageImplPct":  92,
     "totalFeatures":  26,
-    "generated":  "2026-06-18T00:44:08.8563977-05:00",
+    "generated":  "2026-06-18T01:17:03.5155793-05:00",
     "features":  [
                      {
                          "status":  "partial",
@@ -12,7 +12,7 @@
                      {
                          "status":  "partial",
                          "name":  "allergies",
-                         "implementationPct":  85,
+                         "implementationPct":  90,
                          "testFiles":  7
                      },
                      {
@@ -48,7 +48,7 @@
                      {
                          "status":  "partial",
                          "name":  "email-citas",
-                         "implementationPct":  85,
+                         "implementationPct":  90,
                          "testFiles":  5
                      },
                      {
