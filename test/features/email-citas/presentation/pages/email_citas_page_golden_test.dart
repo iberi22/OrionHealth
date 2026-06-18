@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/email-citas/presentation/email_connect_page.dart';
 import 'package:orionhealth_health/features/email-citas/application/email_citas_cubit.dart';
 import 'package:orionhealth_health/features/email-citas/application/email_citas_state.dart';
@@ -18,37 +15,26 @@ void main() {
   const MethodChannel messagesChannel = MethodChannel('com.llfbandit.app_links/messages');
   const MethodChannel eventsChannel = MethodChannel('com.llfbandit.app_links/events');
 
-  setUp(() async {
+  setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences.setMockInitialValues({});
-
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       messagesChannel,
-      (MethodCall methodCall) async {
-        if (methodCall.method == 'getInitialLink' || methodCall.method == 'getLatestLink') {
-          return null;
-        }
-        return null;
-      },
+      (MethodCall methodCall) async => null,
     );
-
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       eventsChannel,
-      (MethodCall methodCall) async {
-        return null;
-      },
+      (MethodCall methodCall) async => null,
     );
+  });
 
+  setUp(() async {
     mockCubit = MockEmailCitasCubit();
-    if (!GetIt.I.isRegistered<EmailCitasCubit>()) {
-      await configureDependencies();
-    }
-    GetIt.I.unregister<EmailCitasCubit>();
+    await GetIt.I.reset();
     GetIt.I.registerSingleton<EmailCitasCubit>(mockCubit);
   });
 
-  tearDown(() {
-    GetIt.I.unregister<EmailCitasCubit>();
+  tearDown(() async {
+    await GetIt.I.reset();
   });
 
   group('Email Citas Golden Tests', () {

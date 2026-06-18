@@ -7,7 +7,14 @@ plugins {
 android {
     namespace = "com.orionhealth.orionhealth_health"
     compileSdk = 36
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "25.1.8937393"
+
+    packaging {
+        jniLibs {
+            pickFirsts.add("**/libc++_shared.so")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
