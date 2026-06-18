@@ -82,11 +82,11 @@ void main() {
         id: '2',
         title: 'Take Losartan',
         timestamp: now,
-        type: ActivityType.medication,
+        type: ActivityType.medicationTaken,
       );
       final dto = ActivityItemDto.fromEntity(medItem);
-      expect(dto.type, ActivityType.medication);
-      expect(dto.toJson()['type'], 'medication');
+      expect(dto.type, ActivityType.medicationTaken);
+      expect(dto.toJson()['type'], 'medicationTaken');
     });
 
     test('fromEntity roundtrip with lab result type', () {
@@ -94,11 +94,11 @@ void main() {
         id: '3',
         title: 'Blood test',
         timestamp: now,
-        type: ActivityType.labResult,
+        type: ActivityType.reportGenerated,
       );
       final dto = ActivityItemDto.fromEntity(labItem);
-      expect(dto.type, ActivityType.labResult);
-      expect(dto.toJson()['type'], 'labResult');
+      expect(dto.type, ActivityType.reportGenerated);
+      expect(dto.toJson()['type'], 'reportGenerated');
     });
   });
 }
