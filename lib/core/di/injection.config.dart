@@ -474,16 +474,9 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i71.NodeDiscoveryService());
     gh.lazySingleton<_i72.OAuthLocalDataSource>(() =>
         _i72.OAuthLocalDataSource(storage: gh<_i73.FlutterSecureStorage>()));
-    gh.lazySingleton<_i74.OAuthRepository>(() => _i74.OAuthRepositoryImpl(
+    gh.lazySingleton<_i74.OAuthRepositoryImpl>(() => _i74.OAuthRepositoryImpl(
+          gh<_i72.OAuthLocalDataSource>(),
           appAuth: gh<_i75.FlutterAppAuth>(),
-          secureStorage: gh<_i73.FlutterSecureStorage>(),
-          clientId: gh<String>(),
-          redirectUrl: gh<String>(),
-          discoveryUrl: gh<String>(),
-          scopes: gh<List<String>>(),
-          accessTokenKey: gh<String>(),
-          idTokenKey: gh<String>(),
-          refreshTokenKey: gh<String>(),
         ));
     gh.lazySingleton<_i76.OcrService>(() => _i76.MlKitOcrService());
     gh.factory<_i77.OnboardingCubit>(() => _i77.OnboardingCubit());
@@ -571,7 +564,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i109.AppointmentRepository>(),
         ));
     gh.factory<_i124.EpsConnectionCubit>(() => _i124.EpsConnectionCubit(
-          gh<_i74.OAuthRepository>(),
+          gh<_i74.OAuthRepositoryImpl>(),
           gh<_i94.UserProfileRepository>(),
         ));
     gh.lazySingleton<_i86.FileHealthDataSource>(
