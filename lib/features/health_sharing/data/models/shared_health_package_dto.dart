@@ -50,6 +50,15 @@ class PackageMetadataDto {
     pinHash: m.pinHash, appVersion: m.appVersion,
   );
 
+  PackageMetadata toDomain() => PackageMetadata(
+        packageType: packageType,
+        consentVerified: consentVerified,
+        includedCategories:
+            includedCategories.map((name) => DataCategory.valueOf(name)).toSet(),
+        pinHash: pinHash,
+        appVersion: appVersion,
+      );
+
   Map<String, dynamic> toJson() => {
     'packageType': packageType, 'consentVerified': consentVerified,
     'includedCategories': includedCategories.toList(),

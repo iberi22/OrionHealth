@@ -27,21 +27,4 @@ class Medication {
     this.isActive = true,
     this.notes,
   });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Medication &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          name == other.name &&
-          dosage == other.dosage &&
-          frequency == other.frequency &&
-          startDate == other.startDate &&
-          isActive == other.isActive &&
-          notes == other.notes;
-
-  @override
-  int get hashCode =>
-      Object.hash(id, name, dosage, frequency, startDate, isActive, notes);
 }

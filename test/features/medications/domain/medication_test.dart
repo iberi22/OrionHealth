@@ -3,34 +3,28 @@ import 'package:orionhealth_health/features/medications/domain/entities/medicati
 
 void main() {
   group('Medication', () {
-    test('supports property comparison', () {
+    test('supports value equality', () {
       final now = DateTime.now();
-      final med1 = Medication(
-        id: 1,
-        name: 'Ibuprofeno',
-        dosage: '400mg',
-        frequency: 'Cada 8 horas',
-        startDate: now,
-        isActive: true,
-        notes: 'Tomar con comida',
+      expect(
+        Medication(
+          id: 1,
+          name: 'Ibuprofeno',
+          dosage: '400mg',
+          frequency: 'Cada 8 horas',
+          startDate: now,
+          isActive: true,
+          notes: 'Tomar con comida',
+        ),
+        Medication(
+          id: 1,
+          name: 'Ibuprofeno',
+          dosage: '400mg',
+          frequency: 'Cada 8 horas',
+          startDate: now,
+          isActive: true,
+          notes: 'Tomar con comida',
+        ),
       );
-      final med2 = Medication(
-        id: 1,
-        name: 'Ibuprofeno',
-        dosage: '400mg',
-        frequency: 'Cada 8 horas',
-        startDate: now,
-        isActive: true,
-        notes: 'Tomar con comida',
-      );
-
-      expect(med1.id, med2.id);
-      expect(med1.name, med2.name);
-      expect(med1.dosage, med2.dosage);
-      expect(med1.frequency, med2.frequency);
-      expect(med1.startDate, med2.startDate);
-      expect(med1.isActive, med2.isActive);
-      expect(med1.notes, med2.notes);
     });
 
     test('supports different values', () {
@@ -45,8 +39,7 @@ void main() {
         name: 'Paracetamol',
         startDate: now,
       );
-      expect(med1.id, isNot(med2.id));
-      expect(med1.name, isNot(med2.name));
+      expect(med1, isNot(equals(med2)));
     });
 
     test('default values are correct', () {

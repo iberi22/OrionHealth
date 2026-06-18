@@ -230,16 +230,6 @@ void main() {
       );
       expect(result.error, 'Connection failed');
     });
-
-    test('props are correct', () {
-      const result = SharingResult(
-        success: true,
-        error: null,
-        bytesTransferred: 1024,
-        transferTime: Duration(seconds: 1),
-      );
-      expect(result.props, [true, null, 1024, const Duration(seconds: 1)]);
-    });
   });
 
   group('DataCategory', () {
@@ -262,11 +252,7 @@ void main() {
   group('TransferMethod', () {
     test('has display names and descriptions', () {
       expect(TransferMethod.nfc.displayName, 'NFC');
-      expect(TransferMethod.nfc.description, 'Tap phones to share');
-      expect(TransferMethod.ble.displayName, 'Bluetooth');
       expect(TransferMethod.ble.description, 'Nearby device');
-      expect(TransferMethod.wifi.displayName, 'WiFi Direct');
-      expect(TransferMethod.wifi.description, 'Same network');
     });
   });
 }

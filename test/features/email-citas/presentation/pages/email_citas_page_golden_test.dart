@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/email-citas/presentation/email_connect_page.dart';
 import 'package:orionhealth_health/features/email-citas/application/email_citas_cubit.dart';
 import 'package:orionhealth_health/features/email-citas/application/email_citas_state.dart';
@@ -15,26 +18,37 @@ void main() {
   const MethodChannel messagesChannel = MethodChannel('com.llfbandit.app_links/messages');
   const MethodChannel eventsChannel = MethodChannel('com.llfbandit.app_links/events');
 
-  setUpAll(() {
+  setUp(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
+
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       messagesChannel,
-      (MethodCall methodCall) async => null,
+      (MethodCall methodCall) async {
+        if (methodCall.method == 'getInitialLink' || methodCall.method == 'getLatestLink') {
+          return null;
+        }
+        return null;
+      },
     );
+
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       eventsChannel,
-      (MethodCall methodCall) async => null,
+      (MethodCall methodCall) async {
+        return null;
+      },
     );
-  });
 
-  setUp(() async {
     mockCubit = MockEmailCitasCubit();
-    await GetIt.I.reset();
+    if (!GetIt.I.isRegistered<EmailCitasCubit>()) {
+      await configureDependencies();
+    }
+    GetIt.I.unregister<EmailCitasCubit>();
     GetIt.I.registerSingleton<EmailCitasCubit>(mockCubit);
   });
 
-  tearDown(() async {
-    await GetIt.I.reset();
+  tearDown(() {
+    GetIt.I.unregister<EmailCitasCubit>();
   });
 
   group('Email Citas Golden Tests', () {

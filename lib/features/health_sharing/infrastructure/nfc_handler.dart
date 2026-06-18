@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
-
-/// NFC method channel name used by [NfcSharingService].
-const String kNfcChannelName = 'orionhealth/nfc';
+import 'package:injectable/injectable.dart';
 
 /// Provides a platform-aware wrapper around the NFC native channel.
 ///
@@ -13,15 +11,13 @@ const String kNfcChannelName = 'orionhealth/nfc';
 /// when the native plugin is not registered, provides a graceful
 /// fallback that logs a warning and returns a "not available" state
 /// without crashing.
+@injectable
 class NfcHandler {
   final MethodChannel _channel;
   bool _nativeAvailable = true;
 
-  /// Creates an [NfcHandler] for the given [channel].
-  ///
-  /// If [channel] is omitted, defaults to MethodChannel('orionhealth/nfc').
-  NfcHandler({MethodChannel? channel})
-      : _channel = channel ?? MethodChannel(kNfcChannelName);
+  /// Creates an [NfcHandler] for the given [_channel].
+  NfcHandler(@Named('nfcChannel') this._channel);
 
   /// Whether the platform supports native NFC operations.
   bool get isNativeAvailable => _nativeAvailable;

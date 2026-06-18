@@ -1,36 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/allergies/presentation/pages/allergies_page.dart';
 import 'package:orionhealth_health/features/allergies/application/allergies_cubit.dart';
 import 'package:orionhealth_health/features/allergies/application/allergies_state.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
+import 'package:get_it/get_it.dart';
 
 class MockAllergiesCubit extends Mock implements AllergiesCubit {}
 
 void main() {
   late MockAllergiesCubit mockAllergiesCubit;
 
-  setUp(() async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    final getIt = GetIt.instance;
-    await getIt.reset();
+  setUpAll(() {
     mockAllergiesCubit = MockAllergiesCubit();
-    getIt.registerFactory<AllergiesCubit>(() => mockAllergiesCubit);
+    GetIt.I.registerLazySingleton<AllergiesCubit>(() => mockAllergiesCubit);
   });
 
-  tearDown(() async {
-    GetIt.instance.reset();
+  tearDownAll(() {
+    GetIt.I.unregister<AllergiesCubit>();
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: BlocProvider.value(
-        value: mockAllergiesCubit,
-        child: const AllergiesPage(),
-      ),
+    return const MaterialApp(
+      home: AllergiesPage(),
     );
   }
 

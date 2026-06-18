@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_detail_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/rating_dialog.dart';
@@ -38,7 +40,7 @@ void main() {
     specialty: 'General Practice',
     verified: false,
     licenseNumber: 'MD67890',
-    institution: "St. Bartholomew's",
+    institution: 'St. Bartholomew\'s',
     yearsOfExperience: 10,
     languages: ['English'],
     createdAt: now,
@@ -49,15 +51,16 @@ void main() {
   setUp(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
-    await GetIt.I.reset();
     mockCubit = MockDoctorVerificationCubit();
+    if (!GetIt.I.isRegistered<DoctorVerificationCubit>()) {
+      await configureDependencies();
+    }
+    GetIt.I.unregister<DoctorVerificationCubit>();
     GetIt.I.registerSingleton<DoctorVerificationCubit>(mockCubit);
   });
 
   tearDown(() {
-    if (GetIt.I.isRegistered<DoctorVerificationCubit>()) {
-      GetIt.I.unregister<DoctorVerificationCubit>();
-    }
+    GetIt.I.unregister<DoctorVerificationCubit>();
   });
 
   group('Doctor Verification Golden Tests', () {

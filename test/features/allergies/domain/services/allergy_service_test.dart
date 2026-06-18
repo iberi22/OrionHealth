@@ -20,7 +20,7 @@ void main() {
         );
         final medication = Medication(
           id: 1,
-          name: 'Penicilina V',
+          name: 'Amoxicilina',
           startDate: DateTime.now(),
           notes: '',
         );
@@ -78,7 +78,7 @@ void main() {
         );
         final medication = Medication(
           id: 1,
-          name: 'penicilina v',
+          name: 'amoxicilina',
           startDate: DateTime.now(),
         );
         expect(service.checkInteraction(allergy, medication), isTrue);
