@@ -7,6 +7,7 @@ import '../../application/llm_settings_cubit.dart';
 import '../../domain/services/device_capability_service.dart';
 import '../../../local_agent/domain/services/llm_adapter.dart';
 import '../../../local_agent/infrastructure/adapters/flutter_gemma_adapter.dart';
+import '../../../../l10n/app_localizations.dart';
 
 import '../../../../features/local_agent/domain/entities/local_model_descriptor.dart';
 
@@ -52,6 +53,7 @@ class LlmSettingsPage extends StatelessWidget {
           } else if (state is LlmSettingsLoaded) {
             return _LlmSettingsView(
               config: state.config,
+              appSettings: state.appSettings,
               deviceCapability: state.deviceCapability,
             );
           } else if (state is LlmSettingsError) {
@@ -91,18 +93,22 @@ class LlmSettingsPage extends StatelessWidget {
 
 class _LlmSettingsView extends StatelessWidget {
   final dynamic config;
+  final dynamic appSettings;
   final DeviceCapability deviceCapability;
 
   const _LlmSettingsView({
     required this.config,
+    required this.appSettings,
     required this.deviceCapability,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -113,7 +119,7 @@ class _LlmSettingsView extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
-            'Configuración de LLM',
+            l10n.llmSettings,
             style: theme.textTheme.titleLarge
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
@@ -137,21 +143,25 @@ class _LlmSettingsView extends StatelessWidget {
                 labelColor: AppColors.primary,
                 unselectedLabelColor: Colors.white54,
                 labelStyle: const TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 12),
-                unselectedLabelStyle: const TextStyle(fontSize: 12),
+                    fontWeight: FontWeight.w600, fontSize: 10),
+                unselectedLabelStyle: const TextStyle(fontSize: 10),
                 dividerColor: Colors.transparent,
                 tabs: const [
                   Tab(
-                    icon: Icon(Icons.phone_android, size: 20),
+                    icon: Icon(Icons.phone_android, size: 18),
                     text: 'LOCAL',
                   ),
                   Tab(
-                    icon: Icon(Icons.cloud, size: 20),
+                    icon: Icon(Icons.cloud, size: 18),
                     text: 'CLOUD',
                   ),
                   Tab(
-                    icon: Icon(Icons.tune, size: 20),
+                    icon: Icon(Icons.tune, size: 18),
                     text: 'MODO',
+                  ),
+                  Tab(
+                    icon: Icon(Icons.settings, size: 18),
+                    text: 'APP',
                   ),
                 ],
               ),
@@ -166,6 +176,7 @@ class _LlmSettingsView extends StatelessWidget {
             ),
             _CloudProviderTab(config: config),
             _ExecutionModeTab(config: config),
+            _GeneralSettingsTab(appSettings: appSettings),
           ],
         ),
       ),
@@ -188,7 +199,6 @@ class _LocalModelsTab extends StatelessWidget {
 
   int _getAvailableRamMb() {
     final totalRamGbTxt = deviceCapability.totalMemoryMb;
-    // Rough estimate: 40% of total RAM is typically available
     return (totalRamGbTxt * 0.4).round();
   }
 
@@ -205,26 +215,24 @@ class _LocalModelsTab extends StatelessWidget {
         if (state is! LlmSettingsLoaded) return const SizedBox.shrink();
 
         return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 120, bottom: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // -- Device Capability Card (existing widget) --
               _DeviceCapabilityCard(deviceCapability: deviceCapability),
               const SizedBox(height: 24),
 
-              // -- Section header --
               Row(
                 children: [
                   const Icon(Icons.inventory_2_outlined,
                       color: Colors.white70, size: 20),
                   const SizedBox(width: 8),
-                  Text(
+                  const Text(
                     'Modelos Disponibles',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                   const Spacer(),
@@ -245,7 +253,6 @@ class _LocalModelsTab extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // -- Model list --
               ...kAvailableLocalModels.map((model) {
                 final isInstalled = state.installedModels.contains(model.id);
                 final progress = state.downloadProgress[model.id];
@@ -308,10 +315,8 @@ class _ModelListItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // -- Top row: name, size, status badge --
           Row(
             children: [
-              // Model icon
               Container(
                 width: 36,
                 height: 36,
@@ -323,7 +328,6 @@ class _ModelListItem extends StatelessWidget {
                     color: AppColors.primary, size: 20),
               ),
               const SizedBox(width: 12),
-              // Name + size
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,12 +372,10 @@ class _ModelListItem extends StatelessWidget {
                   ],
                 ),
               ),
-              // Status badge
               _statusBadge(status, progress),
             ],
           ),
 
-          // -- Progress bar (only when downloading) --
           if (status == _DownloadStatus.downloading) ...[
             const SizedBox(height: 10),
             ClipRRect(
@@ -410,10 +412,8 @@ class _ModelListItem extends StatelessWidget {
 
           const SizedBox(height: 10),
 
-          // -- Action row --
           Row(
             children: [
-              // Compatibility indicator
               if (status != _DownloadStatus.ready) ...[
                 Icon(
                   compatible ? Icons.check_circle : Icons.warning_amber_rounded,
@@ -455,7 +455,7 @@ class _ModelListItem extends StatelessWidget {
               ],
               if (status == _DownloadStatus.ready) ...[
                 _actionButton(
-label: 'Usar',
+                  label: 'Usar',
                   icon: Icons.play_arrow,
                   onTap: () async {
                     final adapter = getIt<LlmAdapter>(instanceName: 'gemma')
@@ -630,10 +630,10 @@ label: 'Usar',
 
 int sizeToMb(String sizeStr) {
   final numPart =
-      int.tryParse(sizeStr.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
-  if (sizeStr.contains('GB')) return numPart * 1024;
-  if (sizeStr.contains('MB')) return numPart;
-  return numPart;
+      double.tryParse(sizeStr.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
+  if (sizeStr.contains('GB')) return (numPart * 1024).toInt();
+  if (sizeStr.contains('MB')) return numPart.toInt();
+  return numPart.toInt();
 }
 
 // ============================================================================
@@ -653,8 +653,6 @@ class _CloudProviderTab extends StatefulWidget {
 
 class _CloudProviderTabState extends State<_CloudProviderTab> {
   bool _obscureApiKey = true;
-  _ConnectionStatus _connectionStatus = _ConnectionStatus.idle;
-  String? _connectionMessage;
   String _testPrompt = '';
 
   dynamic get config => widget.config;
@@ -667,261 +665,250 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
     final cloudModel = config.cloudModel ?? cloudModels.first;
     final isCustom = providerType == 'custom';
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // -- Main card --
-          GlassmorphicCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Row(
+    return BlocBuilder<LlmSettingsCubit, LlmSettingsState>(
+      builder: (context, state) {
+        _ConnectionStatus status = _ConnectionStatus.idle;
+        String? message;
+        if (state is LlmSettingsLoaded) {
+          if (state.connectionVerified == true) status = _ConnectionStatus.connected;
+          if (state.connectionVerified == false) status = _ConnectionStatus.error;
+          message = state.connectionError;
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 120, bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GlassmorphicCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(Icons.cloud_outlined,
-                          color: AppColors.primary, size: 22),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.cloud_outlined,
+                              color: AppColors.primary, size: 22),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Configuración de Proveedor Cloud',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Conecta con APIs externas de IA',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.47),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Configuración de Proveedor Cloud',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.white,
+
+                    const SizedBox(height: 20),
+                    const Divider(color: Colors.white12),
+                    const SizedBox(height: 16),
+
+                    _labeledField(
+                      label: 'Proveedor',
+                      child: DropdownButton<String>(
+                        value: providerType,
+                        isExpanded: true,
+                        dropdownColor: AppColors.surfaceVariant,
+                        underline: Container(
+                          height: 1,
+                          color: AppColors.primary.withValues(alpha: 0.2),
+                        ),
+                        items: cloudProviders.map((p) {
+                          return DropdownMenuItem(
+                            value: p,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  p == 'openai'
+                                      ? Icons.bolt
+                                      : p == 'gemini'
+                                          ? Icons.auto_awesome
+                                          : Icons.dns,
+                                  size: 16,
+                                  color: AppColors.secondary,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  p == 'openai'
+                                      ? 'OpenAI'
+                                      : p == 'gemini'
+                                          ? 'Gemini'
+                                          : 'Custom (OpenAI compatible)',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ],
                             ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            context
+                                .read<LlmSettingsCubit>()
+                                .updateProviderType(value);
+                          }
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    if (isCustom) ...[
+                      _labeledField(
+                        label: 'Base URL',
+                        child: TextField(
+                          controller: TextEditingController(text: baseUrl),
+                          style: const TextStyle(color: Colors.white),
+                          decoration: _inputDecoration(
+                            hint: 'https://api.ejemplo.com/v1',
+                            prefixIcon: Icons.link,
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Conecta con APIs externas de IA',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white.withValues(alpha: 0.47),
+                          onChanged: (value) {
+                            context
+                                .read<LlmSettingsCubit>()
+                                .updateBaseUrl(value);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
+                    _labeledField(
+                      label: 'API Key',
+                      child: TextField(
+                        controller: TextEditingController(text: apiKey),
+                        obscureText: _obscureApiKey,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: _inputDecoration(
+                          hint: 'sk-...',
+                          prefixIcon: Icons.vpn_key,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureApiKey
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.white38,
+                              size: 20,
                             ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureApiKey = !_obscureApiKey;
+                              });
+                            },
                           ),
-                        ],
+                        ),
+                        onChanged: (value) {
+                          context
+                              .read<LlmSettingsCubit>()
+                              .updateApiKey(value);
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    _labeledField(
+                      label: 'Modelo',
+                      child: DropdownButton<String>(
+                        value: cloudModels.contains(cloudModel)
+                            ? cloudModel
+                            : cloudModels.first,
+                        isExpanded: true,
+                        dropdownColor: AppColors.surfaceVariant,
+                        underline: Container(
+                          height: 1,
+                          color: AppColors.primary.withValues(alpha: 0.2),
+                        ),
+                        items: cloudModels.map((m) {
+                          return DropdownMenuItem(
+                            value: m,
+                            child: Text(
+                              m,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            context
+                                .read<LlmSettingsCubit>()
+                                .updateCloudModel(value);
+                          }
+                        },
                       ),
                     ),
                   ],
                 ),
-
-                const SizedBox(height: 20),
-                const Divider(color: Colors.white12),
-                const SizedBox(height: 16),
-
-                // -- Provider selector --
-                _labeledField(
-                  label: 'Proveedor',
-                  child: DropdownButton<String>(
-                    value: providerType,
-                    isExpanded: true,
-                    dropdownColor: AppColors.surfaceVariant,
-                    underline: Container(
-                      height: 1,
-                      color: AppColors.primary.withValues(alpha: 0.2),
-                    ),
-                    items: cloudProviders.map((p) {
-                      return DropdownMenuItem(
-                        value: p,
-                        child: Row(
-                          children: [
-                            Icon(
-                              p == 'openai'
-                                  ? Icons.bolt
-                                  : p == 'gemini'
-                                      ? Icons.auto_awesome
-                                      : Icons.dns,
-                              size: 16,
-                              color: AppColors.secondary,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              p == 'openai'
-                                  ? 'OpenAI'
-                                  : p == 'gemini'
-                                      ? 'Gemini'
-                                      : 'Custom (OpenAI compatible)',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        context
-                            .read<LlmSettingsCubit>()
-                            .updateProviderType(value);
-                      }
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // -- Base URL (only for custom) --
-                if (isCustom) ...[
-                  _labeledField(
-                    label: 'Base URL',
-                    child: TextField(
-                      controller: TextEditingController(text: baseUrl),
-                      style: const TextStyle(color: Colors.white),
-                      decoration: _inputDecoration(
-                        hint: 'https://api.ejemplo.com/v1',
-                        prefixIcon: Icons.link,
-                      ),
-                      onChanged: (value) {
-                        context
-                            .read<LlmSettingsCubit>()
-                            .updateBaseUrl(value);
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-
-                // -- API Key --
-                _labeledField(
-                  label: 'API Key',
-                  child: TextField(
-                    controller: TextEditingController(text: apiKey),
-                    obscureText: _obscureApiKey,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: _inputDecoration(
-                      hint: 'sk-...',
-                      prefixIcon: Icons.vpn_key,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureApiKey
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Colors.white38,
-                          size: 20,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureApiKey = !_obscureApiKey;
-                          });
-                        },
-                      ),
-                    ),
-                    onChanged: (value) {
-                      context
-                          .read<LlmSettingsCubit>()
-                          .updateApiKey(value);
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // -- Cloud model selector --
-                _labeledField(
-                  label: 'Modelo',
-                  child: DropdownButton<String>(
-                    value: cloudModels.contains(cloudModel)
-                        ? cloudModel
-                        : cloudModels.first,
-                    isExpanded: true,
-                    dropdownColor: AppColors.surfaceVariant,
-                    underline: Container(
-                      height: 1,
-                      color: AppColors.primary.withValues(alpha: 0.2),
-                    ),
-                    items: cloudModels.map((m) {
-                      return DropdownMenuItem(
-                        value: m,
-                        child: Text(
-                          m,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        context
-                            .read<LlmSettingsCubit>()
-                            .updateCloudModel(value);
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // -- Connection test card --
-          _ConnectionTestWidget(
-            status: _connectionStatus,
-            message: _connectionMessage,
-            onTest: () async {
-              setState(() {
-                _connectionStatus = _ConnectionStatus.testing;
-                _connectionMessage = null;
-              });
-              try {
-                await context.read<LlmSettingsCubit>().verifyConnection();
-                setState(() {
-                  _connectionStatus = _ConnectionStatus.connected;
-                  _connectionMessage = 'Conectado (simulado)';
-                });
-              } catch (e) {
-                setState(() {
-                  _connectionStatus = _ConnectionStatus.error;
-                  _connectionMessage = 'Error: ${e.toString()}';
-                });
-              }
-            },
-            testPrompt: _testPrompt,
-            onPromptChanged: (value) {
-              setState(() => _testPrompt = value);
-            },
-          ),
-
-          const SizedBox(height: 24),
-
-          // -- Provider info --
-          GlassmorphicCard(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline,
-                      color: AppColors.secondary, size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      providerType == 'custom'
-                          ? 'Usa cualquier endpoint compatible con OpenAI. '
-                              'Asegúrate de que la URL termine en /v1.'
-                          : providerType == 'gemini'
-                              ? 'Gemini API de Google. '
-                                  'Obtén tu API Key en ai.google.dev.'
-                              : 'OpenAI API. '
-                                  'Obtén tu API Key en platform.openai.com.',
-                      style: const TextStyle(
-                          color: Colors.white54, fontSize: 12),
-                    ),
-                  ),
-                ],
               ),
-            ),
+
+              const SizedBox(height: 16),
+
+              _ConnectionTestWidget(
+                status: status,
+                message: message,
+                onTest: () {
+                  context.read<LlmSettingsCubit>().verifyConnection();
+                },
+                testPrompt: _testPrompt,
+                onPromptChanged: (value) {
+                  setState(() => _testPrompt = value);
+                },
+              ),
+
+              const SizedBox(height: 24),
+
+              GlassmorphicCard(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline,
+                          color: AppColors.secondary, size: 18),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          providerType == 'custom'
+                              ? 'Usa cualquier endpoint compatible con OpenAI. '
+                                  'Asegúrate de que la URL termine en /v1.'
+                              : providerType == 'gemini'
+                                  ? 'Gemini API de Google. '
+                                      'Obtén tu API Key en ai.google.dev.'
+                                  : 'OpenAI API. '
+                                      'Obtén tu API Key en platform.openai.com.',
+                          style: const TextStyle(
+                              color: Colors.white54, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -978,7 +965,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
 }
 
 // ---------------------------------------------------------------------------
-// Connection test widget (Stateless; state managed by parent)
+// Connection test widget
 // ---------------------------------------------------------------------------
 
 class _ConnectionTestWidget extends StatelessWidget {
@@ -1002,17 +989,16 @@ class _ConnectionTestWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Row(
             children: [
               Icon(Icons.dns_outlined,
                   color: AppColors.secondary, size: 20),
               const SizedBox(width: 8),
-              Text(
+              const Text(
                 'Verificar Conexión',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 15,
                 ),
               ),
@@ -1028,7 +1014,6 @@ class _ConnectionTestWidget extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Test button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
@@ -1052,7 +1037,6 @@ class _ConnectionTestWidget extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // Status indicator
           if (status == _ConnectionStatus.connected) ...[
             Container(
               width: double.infinity,
@@ -1112,13 +1096,12 @@ class _ConnectionTestWidget extends StatelessWidget {
           const Divider(color: Colors.white12),
           const SizedBox(height: 8),
 
-          // Test prompt
-          Text(
+          const Text(
             'Prueba rápida',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withValues(alpha: 0.71),
+              color: Colors.white70,
             ),
           ),
           const SizedBox(height: 6),
@@ -1150,7 +1133,6 @@ class _ConnectionTestWidget extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // Send test button
           Align(
             alignment: Alignment.centerRight,
             child: TextButton.icon(
@@ -1158,7 +1140,6 @@ class _ConnectionTestWidget extends StatelessWidget {
                   testPrompt.isEmpty || status == _ConnectionStatus.testing
                       ? null
                       : () {
-                          // Simulate sending a test prompt
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -1206,11 +1187,10 @@ class _ExecutionModeTab extends StatelessWidget {
     final allowCloudApiCalls = config.allowCloudApiCalls ?? false;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 120, bottom: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // -- Execution strategy card --
           GlassmorphicCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1227,10 +1207,10 @@ class _ExecutionModeTab extends StatelessWidget {
                           color: AppColors.primary, size: 22),
                     ),
                     const SizedBox(width: 12),
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Estrategia de Ejecución',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -1242,7 +1222,7 @@ class _ExecutionModeTab extends StatelessWidget {
                           'Define cómo se ejecutan los modelos de IA',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white.withValues(alpha: 0.47),
+                            color: Colors.white70,
                           ),
                         ),
                       ],
@@ -1314,7 +1294,6 @@ class _ExecutionModeTab extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          // -- Privacy card (reuses existing _PrivacyToggle logic) --
           GlassmorphicCard(
             child: _PrivacyToggle(
               allowCloudApiCalls: allowCloudApiCalls,
@@ -1328,14 +1307,13 @@ class _ExecutionModeTab extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // -- Info note --
           GlassmorphicCard(
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.security,
+                  const Icon(Icons.security,
                       color: AppColors.secondary, size: 18),
                   const SizedBox(width: 10),
                   Expanded(
@@ -1359,6 +1337,163 @@ class _ExecutionModeTab extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ============================================================================
+// TAB 4 – General Settings (APP)
+// ============================================================================
+
+class _GeneralSettingsTab extends StatelessWidget {
+  final dynamic appSettings;
+
+  const _GeneralSettingsTab({required this.appSettings});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 120, bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SectionHeader(title: l10n.appPreferences, icon: Icons.settings_applications),
+          const SizedBox(height: 12),
+          GlassmorphicCard(
+            child: Column(
+              children: [
+                _SettingsTile(
+                  icon: Icons.dark_mode,
+                  title: l10n.theme,
+                  subtitle: appSettings.themeMode,
+                  trailing: DropdownButton<String>(
+                    value: appSettings.themeMode,
+                    dropdownColor: AppColors.surfaceVariant,
+                    underline: const SizedBox.shrink(),
+                    items: ['light', 'dark', 'system'].map((m) => DropdownMenuItem(
+                      value: m,
+                      child: Text(m, style: const TextStyle(color: Colors.white, fontSize: 12)),
+                    )).toList(),
+                    onChanged: (v) {
+                      if (v != null) context.read<LlmSettingsCubit>().updateThemeMode(v);
+                    },
+                  ),
+                ),
+                const Divider(color: Colors.white12, height: 1),
+                _SettingsTile(
+                  icon: Icons.language,
+                  title: 'Idioma',
+                  subtitle: appSettings.languageCode,
+                  trailing: DropdownButton<String>(
+                    value: appSettings.languageCode,
+                    dropdownColor: AppColors.surfaceVariant,
+                    underline: const SizedBox.shrink(),
+                    items: ['en', 'es'].map((l) => DropdownMenuItem(
+                      value: l,
+                      child: Text(l.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 12)),
+                    )).toList(),
+                    onChanged: (v) {
+                      if (v != null) context.read<LlmSettingsCubit>().updateLanguage(v);
+                    },
+                  ),
+                ),
+                const Divider(color: Colors.white12, height: 1),
+                SwitchListTile(
+                  secondary: const Icon(Icons.notifications_active, color: AppColors.secondary),
+                  title: Text(l10n.pushNotifications, style: const TextStyle(color: Colors.white, fontSize: 14)),
+                  value: appSettings.notificationsEnabled,
+                  onChanged: (v) => context.read<LlmSettingsCubit>().updateNotificationsEnabled(v),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          _SectionHeader(title: 'Datos y Privacidad', icon: Icons.security),
+          const SizedBox(height: 12),
+          GlassmorphicCard(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.file_download, color: AppColors.primary),
+                  title: const Text('Exportar Datos', style: TextStyle(color: Colors.white, fontSize: 14)),
+                  subtitle: const Text('Descargar historial en formato FHIR JSON', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                  onTap: () async {
+                    await context.read<LlmSettingsCubit>().exportData();
+                    if (context.mounted) {
+                      final state = context.read<LlmSettingsCubit>().state;
+                      if (state is LlmSettingsLoaded && state.exportData != null) {
+                        showDialog(
+                          context: context,
+                          builder: (c) => AlertDialog(
+                            backgroundColor: AppColors.surfaceVariant,
+                            title: const Text('Datos Exportados', style: TextStyle(color: Colors.white)),
+                            content: SingleChildScrollView(child: Text(state.exportData!, style: const TextStyle(color: Colors.white70, fontSize: 10))),
+                            actions: [TextButton(onPressed: () => Navigator.pop(c), child: const Text('OK'))],
+                          ),
+                        );
+                      }
+                    }
+                  },
+                ),
+                const Divider(color: Colors.white12, height: 1),
+                ListTile(
+                  leading: const Icon(Icons.file_upload, color: AppColors.secondary),
+                  title: const Text('Importar Datos', style: TextStyle(color: Colors.white, fontSize: 14)),
+                  subtitle: const Text('Cargar respaldo previo de datos médicos', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                  onTap: () {
+                    // Mock import
+                    context.read<LlmSettingsCubit>().importData('{}');
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Simulación de importación completada')));
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  const _SectionHeader({required this.title, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.white70, size: 20),
+        const SizedBox(width: 8),
+        Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      ],
+    );
+  }
+}
+
+class _SettingsTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Widget trailing;
+
+  const _SettingsTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.secondary),
+      title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 14)),
+      subtitle: Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+      trailing: trailing,
     );
   }
 }
@@ -1391,7 +1526,6 @@ class _ModeOption extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Row(
           children: [
-            // Radio circle
             Container(
               width: 22,
               height: 22,
@@ -1419,7 +1553,6 @@ class _ModeOption extends StatelessWidget {
                   : null,
             ),
             const SizedBox(width: 14),
-            // Icon
             Container(
               width: 38,
               height: 38,
@@ -1436,7 +1569,6 @@ class _ModeOption extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            // Text content
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1468,9 +1600,8 @@ class _ModeOption extends StatelessWidget {
                 ],
               ),
             ),
-            // Check icon when selected
             if (isSelected)
-              Icon(Icons.check_circle,
+              const Icon(Icons.check_circle,
                   color: AppColors.primary, size: 20),
           ],
         ),
@@ -1480,7 +1611,7 @@ class _ModeOption extends StatelessWidget {
 }
 
 // ============================================================================
-// EXISTING WIDGETS (preserved for backward compatibility)
+// PRESERVED WIDGETS
 // ============================================================================
 
 class _DeviceCapabilityCard extends StatelessWidget {
@@ -1505,18 +1636,18 @@ class _DeviceCapabilityCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Capacidad del Dispositivo',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       deviceCapability.tierLabel,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: AppColors.secondary,
                       ),
@@ -1557,12 +1688,12 @@ class _DeviceCapabilityCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.auto_awesome, color: AppColors.primary, size: 20),
+                const Icon(Icons.auto_awesome, color: AppColors.primary, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Modelo recomendado: ${deviceCapability.recommendedModel}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w500,
                     ),
