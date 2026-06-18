@@ -37,6 +37,30 @@ void main() {
 
     test('initial state is AppointmentsInitial', () {
       expect(cubit.state, isA<AppointmentsInitial>());
+      expect(cubit.state.props, isEmpty);
+    });
+
+    test('AppointmentsLoading state props', () {
+      const state = AppointmentsLoading();
+      expect(state.props, isEmpty);
+    });
+
+    test('AppointmentsError state props', () {
+      const state = AppointmentsError('error');
+      expect(state.props, ['error']);
+    });
+
+    test('AppointmentsLoaded state props', () {
+      final tAppointments = [
+        Appointment(
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardiology',
+          dateTime: DateTime.now(),
+          status: AppointmentStatus.upcoming,
+        ),
+      ];
+      final state = AppointmentsLoaded(tAppointments);
+      expect(state.props, [tAppointments]);
     });
 
     group('loadAppointments', () {
@@ -72,6 +96,15 @@ void main() {
         ]));
         await cubit.saveAppointment(tAppointments.first);
       });
+
+      test('emits error on failure', () async {
+        when(() => repository.saveAppointment(any())).thenThrow(Exception('save error'));
+
+        expectLater(cubit.stream, emitsInOrder([
+          isA<AppointmentsError>(),
+        ]));
+        await cubit.saveAppointment(tAppointments.first);
+      });
     });
 
     group('deleteAppointment', () {
@@ -82,6 +115,15 @@ void main() {
         expectLater(cubit.stream, emitsInOrder([
           isA<AppointmentsLoading>(),
           isA<AppointmentsLoaded>(),
+        ]));
+        await cubit.deleteAppointment(1);
+      });
+
+      test('emits error on failure', () async {
+        when(() => repository.deleteAppointment(any())).thenThrow(Exception('delete error'));
+
+        expectLater(cubit.stream, emitsInOrder([
+          isA<AppointmentsError>(),
         ]));
         await cubit.deleteAppointment(1);
       });

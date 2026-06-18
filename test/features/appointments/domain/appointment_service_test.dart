@@ -149,6 +149,19 @@ void main() {
       final result = service.hasConflict(newApp, existing);
       expect(result, isTrue);
     });
+
+    test('should return false when comparing an appointment with itself (same ID)', () {
+      final app = Appointment(
+        id: 1,
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: baseDate,
+        status: AppointmentStatus.upcoming,
+      );
+
+      final result = service.hasConflict(app, [app]);
+      expect(result, isFalse);
+    });
   });
 
   group('AppointmentService - generateInstances', () {
@@ -210,6 +223,20 @@ void main() {
 
       final instances = service.generateInstances(app);
       expect(instances.length, 1);
+    });
+
+    test('should return original appointment if recurrenceRule is empty string', () {
+      final app = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: baseDate,
+        status: AppointmentStatus.upcoming,
+        recurrenceRule: '',
+      );
+
+      final instances = service.generateInstances(app);
+      expect(instances.length, 1);
+      expect(instances.first, app);
     });
   });
 }
