@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
 import 'package:orionhealth_health/features/calendar_import/presentation/calendar_import_page.dart';
 import 'package:orionhealth_health/features/calendar_import/application/calendar_import_cubit.dart';
@@ -13,8 +14,14 @@ class MockCalendarImportCubit extends Mock implements CalendarImportCubit {}
 void main() {
   late MockCalendarImportCubit mockCubit;
 
+  setUpAll(() {
+    getIt.allowReassignment = true;
+  });
+
   setUp(() {
     mockCubit = MockCalendarImportCubit();
+    getIt.registerSingleton<CalendarImportCubit>(mockCubit);
+
     registerFallbackValue(
       Appointment(
         doctorName: '',
@@ -54,7 +61,7 @@ void main() {
 
       await expectLater(
         find.byType(CalendarImportPage),
-        matchesGoldenFile("../../../../../golden/reference/calendar_import_loading.png"),
+        matchesGoldenFile("goldens/calendar_import_loading.png"),
       );
       resetGoldenTest(tester);
     });
@@ -103,7 +110,7 @@ void main() {
 
       await expectLater(
         find.byType(CalendarImportPage),
-        matchesGoldenFile("../../../../../golden/reference/calendar_import_loaded.png"),
+        matchesGoldenFile("goldens/calendar_import_loaded.png"),
       );
       resetGoldenTest(tester);
     });
@@ -122,7 +129,7 @@ void main() {
 
       await expectLater(
         find.byType(CalendarImportPage),
-        matchesGoldenFile("../../../../../golden/reference/calendar_import_empty.png"),
+        matchesGoldenFile("goldens/calendar_import_empty.png"),
       );
       resetGoldenTest(tester);
     });
@@ -141,7 +148,7 @@ void main() {
 
       await expectLater(
         find.byType(CalendarImportPage),
-        matchesGoldenFile("../../../../../golden/reference/calendar_import_permission_denied.png"),
+        matchesGoldenFile("goldens/calendar_import_permission_denied.png"),
       );
       resetGoldenTest(tester);
     });

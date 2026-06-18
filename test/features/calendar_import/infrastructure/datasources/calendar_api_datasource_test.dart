@@ -30,6 +30,10 @@ void main() {
   }
 
   group('CalendarApiDatasource', () {
+    test('should be able to be instantiated without dependencies', () {
+      expect(CalendarApiDatasource(), isA<CalendarApiDatasource>());
+    });
+
     group('hasPermissions', () {
       test('should return true when permissions are granted', () async {
         when(() => mockPlugin.hasPermissions()).thenAnswer(
