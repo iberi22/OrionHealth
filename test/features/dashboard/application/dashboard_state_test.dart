@@ -27,36 +27,41 @@ void main() {
 
     group('DashboardLoaded', () {
       final stats = DashboardStats(
-        totalPatients: 10,
-        activePatients: 5,
-        alertsCount: 2,
+        totalMedications: 10,
+        reportsCount: 5,
+        lastVitalCheck: DateTime(2023, 1, 1),
       );
       final activities = [
-        const ActivityItem(id: '1', title: 'Activity 1', timestamp: null),
+        ActivityItem(
+          id: '1',
+          title: 'Activity 1',
+          timestamp: DateTime(2023, 1, 1),
+          type: ActivityType.vitalCheck,
+        ),
       ];
 
       test('supports value equality', () {
         expect(
-          const DashboardLoaded(stats: stats, activities: activities),
-          equals(const DashboardLoaded(stats: stats, activities: activities)),
+          DashboardLoaded(stats: stats, activities: activities),
+          equals(DashboardLoaded(stats: stats, activities: activities)),
         );
       });
 
       test('props are correct', () {
         expect(
-          const DashboardLoaded(stats: stats, activities: activities).props,
+          DashboardLoaded(stats: stats, activities: activities).props,
           [stats, activities],
         );
       });
 
       test('different stats are not equal', () {
         final otherStats = DashboardStats(
-          totalPatients: 20,
-          activePatients: 10,
-          alertsCount: 5,
+          totalMedications: 20,
+          reportsCount: 10,
+          lastVitalCheck: DateTime(2023, 1, 1),
         );
         expect(
-          const DashboardLoaded(stats: stats, activities: activities),
+          DashboardLoaded(stats: stats, activities: activities),
           isNot(
             equals(DashboardLoaded(stats: otherStats, activities: activities)),
           ),
@@ -65,8 +70,8 @@ void main() {
 
       test('different activities are not equal', () {
         expect(
-          const DashboardLoaded(stats: stats, activities: activities),
-          isNot(equals(const DashboardLoaded(stats: stats, activities: []))),
+          DashboardLoaded(stats: stats, activities: activities),
+          isNot(equals(DashboardLoaded(stats: stats, activities: const []))),
         );
       });
     });
