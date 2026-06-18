@@ -110,5 +110,38 @@ void main() {
       expect(results.first.id, originalId);
       expect(results.first.doctorName, 'Dr. Wilson');
     });
+
+    test('saveAppointment handles null optional fields', () async {
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: 'Diagnostics',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+        notes: null,
+        source: null,
+        recurrenceRule: null,
+      );
+
+      await repository.saveAppointment(appointment);
+      final saved = (await repository.getAllAppointments()).first;
+      expect(saved.notes, isNull);
+      expect(saved.source, isNull);
+      expect(saved.recurrenceRule, isNull);
+    });
+
+    test('deleteAppointment with non-existent ID does not throw and changes nothing', () async {
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: 'Diagnostics',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+      );
+      await repository.saveAppointment(appointment);
+
+      await expectLater(repository.deleteAppointment(999), completes);
+
+      final results = await repository.getAllAppointments();
+      expect(results.length, 1);
+    });
   });
 }

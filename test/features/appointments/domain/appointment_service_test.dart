@@ -33,6 +33,27 @@ void main() {
       expect(result, isFalse);
     });
 
+    test('should return false if both new and existing are cancelled', () {
+      final existing = [
+        Appointment(
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardio',
+          dateTime: baseDate,
+          status: AppointmentStatus.cancelled,
+        )
+      ];
+
+      final newApp = Appointment(
+        doctorName: 'Dr. Jones',
+        specialty: 'Neuro',
+        dateTime: baseDate,
+        status: AppointmentStatus.cancelled,
+      );
+
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isFalse);
+    });
+
     test('should return true if new appointment overlaps exactly', () {
       final existing = [
         Appointment(
@@ -162,6 +183,79 @@ void main() {
       final result = service.hasConflict(app, [app]);
       expect(result, isFalse);
     });
+
+    test('should return true if new appointment is fully contained within existing', () {
+      final existing = [
+        Appointment(
+          id: 1,
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardio',
+          dateTime: baseDate, // 10:00 - 11:00
+          durationInMinutes: 60,
+          status: AppointmentStatus.upcoming,
+        )
+      ];
+
+      final newApp = Appointment(
+        id: 2,
+        doctorName: 'Dr. Jones',
+        specialty: 'Neuro',
+        dateTime: baseDate.add(const Duration(minutes: 15)), // 10:15 - 10:45
+        durationInMinutes: 30,
+        status: AppointmentStatus.upcoming,
+      );
+
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isTrue);
+    });
+
+    test('should return true if new appointment fully contains existing', () {
+      final existing = [
+        Appointment(
+          id: 1,
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardio',
+          dateTime: baseDate.add(const Duration(minutes: 15)), // 10:15 - 10:45
+          durationInMinutes: 30,
+          status: AppointmentStatus.upcoming,
+        )
+      ];
+
+      final newApp = Appointment(
+        id: 2,
+        doctorName: 'Dr. Jones',
+        specialty: 'Neuro',
+        dateTime: baseDate, // 10:00 - 11:00
+        durationInMinutes: 60,
+        status: AppointmentStatus.upcoming,
+      );
+
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isTrue);
+    });
+
+    test('should return false if new appointment ends exactly when existing starts', () {
+      final existing = [
+        Appointment(
+          doctorName: 'Dr. Smith',
+          specialty: 'Cardio',
+          dateTime: baseDate.add(const Duration(minutes: 30)), // 10:30 - 11:00
+          durationInMinutes: 30,
+          status: AppointmentStatus.upcoming,
+        )
+      ];
+
+      final newApp = Appointment(
+        doctorName: 'Dr. Jones',
+        specialty: 'Neuro',
+        dateTime: baseDate, // 10:00 - 10:30
+        durationInMinutes: 30,
+        status: AppointmentStatus.upcoming,
+      );
+
+      final result = service.hasConflict(newApp, existing);
+      expect(result, isFalse);
+    });
   });
 
   group('AppointmentService - generateInstances', () {
@@ -237,6 +331,33 @@ void main() {
       final instances = service.generateInstances(app);
       expect(instances.length, 1);
       expect(instances.first, app);
+    });
+
+    test('should be case-insensitive for recurrence rule', () {
+      final app = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: baseDate,
+        status: AppointmentStatus.upcoming,
+        recurrenceRule: 'freq=daily',
+      );
+
+      final instances = service.generateInstances(app, count: 2);
+      expect(instances.length, 2);
+      expect(instances[1].dateTime, baseDate.add(const Duration(days: 1)));
+    });
+
+    test('should handle default count of 10 if not specified', () {
+      final app = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardio',
+        dateTime: baseDate,
+        status: AppointmentStatus.upcoming,
+        recurrenceRule: 'FREQ=DAILY',
+      );
+
+      final instances = service.generateInstances(app);
+      expect(instances.length, 10);
     });
   });
 }

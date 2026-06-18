@@ -65,6 +65,26 @@ void main() {
       expect(appointment.validate(), isFalse);
     });
 
+    test('appointment with whitespace-only doctor name should fail validation', () {
+      final appointment = Appointment(
+        doctorName: '   ',
+        specialty: 'Diagnostics',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+      );
+      expect(appointment.validate(), isFalse);
+    });
+
+    test('appointment with whitespace-only specialty should fail validation', () {
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: '   ',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+      );
+      expect(appointment.validate(), isFalse);
+    });
+
     test('isPast should return true for dates in the past', () {
       final pastDate = DateTime.now().subtract(const Duration(days: 1));
       final appointment = Appointment(
@@ -85,6 +105,28 @@ void main() {
         status: AppointmentStatus.upcoming,
       );
       expect(appointment.isPast, isFalse);
+    });
+
+    test('isPast should return true for a date just now', () {
+      final now = DateTime.now().subtract(const Duration(seconds: 1));
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: 'Diagnostics',
+        dateTime: now,
+        status: AppointmentStatus.upcoming,
+      );
+      expect(appointment.isPast, isTrue);
+    });
+
+    test('should allow cancelled status', () {
+      final appointment = Appointment(
+        doctorName: 'Dr. House',
+        specialty: 'Diagnostics',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.cancelled,
+      );
+      expect(appointment.status, AppointmentStatus.cancelled);
+      expect(appointment.validate(), isTrue);
     });
   });
 }

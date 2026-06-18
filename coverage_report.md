@@ -1,6 +1,6 @@
 # Feature Test Coverage Report
 
-Generated on: 2026-06-18 04:02:27.842531
+Generated on: 2026-06-18 16:19:03.879243
 
 | Feature | Domain | Application | Infrastructure | Presentation | Goldens |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -17,8 +17,8 @@ Generated on: 2026-06-18 04:02:27.842531
 | health_record | ✅ | ✅ | ✅ | ✅ | ✅ |
 | health_sharing | ✅ | ✅ | ✅ | ✅ | ✅ |
 | home | ✅ | ✅ | ❌ | ✅ | ✅ |
-| local_agent | ❌ | ❌ | ✅ | ✅ | ✅ |
-| medical_research | ❌ | ✅ | ❌ | ✅ | ✅ |
+| local_agent | ✅ | ❌ | ✅ | ✅ | ✅ |
+| medical_research | ✅ | ✅ | ❌ | ✅ | ✅ |
 | medications | ✅ | ✅ | ❌ | ✅ | ✅ |
 | meditation | ❌ | ❌ | ❌ | ✅ | ✅ |
 | network | ❌ | ❌ | ❌ | ❌ | ❌ |
