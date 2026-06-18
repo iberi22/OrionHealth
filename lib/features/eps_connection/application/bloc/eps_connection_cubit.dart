@@ -1,41 +1,32 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'eps_connection_state.dart';
-import '../../domain/entities/eps_connection.dart';
 import '../../domain/entities/eps_provider.dart';
-import '../../domain/repositories/oauth_repository.dart';
-import '../../../user_profile/domain/repositories/user_profile_repository.dart';
+import '../../domain/usecases/connect_provider_usecase.dart';
+import '../../domain/usecases/disconnect_provider_usecase.dart';
+import '../../domain/usecases/get_connections_usecase.dart';
 
 @injectable
 class EpsConnectionCubit extends Cubit<EpsConnectionState> {
-  final OAuthRepository _oauthRepository;
-  final UserProfileRepository _userProfileRepository;
+  final GetConnectionsUseCase _getConnectionsUseCase;
+  final ConnectProviderUseCase _connectProviderUseCase;
+  final DisconnectProviderUseCase _disconnectProviderUseCase;
 
-  EpsConnectionCubit(this._oauthRepository, this._userProfileRepository)
-      : super(const EpsConnectionInitial()) {
+  EpsConnectionCubit(
+    this._getConnectionsUseCase,
+    this._connectProviderUseCase,
+    this._disconnectProviderUseCase,
+  ) : super(const EpsConnectionInitial()) {
     loadConnections();
   }
 
   Future<void> loadConnections() async {
     emit(const EpsConnectionLoading());
     try {
-      final connectedIds = await _oauthRepository.getConnectedProviders();
-      final List<EPSConnection> connections = [];
-
-      for (final id in connectedIds) {
-        final token = await _oauthRepository.getToken(id);
-        final provider = await _oauthRepository.getProviderDetails(id);
-        final patientId = await _oauthRepository.getPatientId(id);
-
-        if (token != null && provider != null) {
-          connections.add(EPSConnection(
-            provider: provider,
-            token: token,
-            patientId: patientId ?? 'Unknown',
-            connectedAt: DateTime.now(), // ideally persisted connectedAt too
-          ));
-        }
-      }
+      final connections = await _getConnectionsUseCase();
       emit(EpsConnectionLoaded(connections));
     } catch (e) {
       emit(EpsConnectionError('Error loading connections: ${e.toString()}'));
@@ -45,24 +36,8 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
   Future<void> connect(EPSProvider provider) async {
     emit(const EpsConnectionLoading());
     try {
-      final result = await _oauthRepository.login(provider);
-      if (result != null) {
-        final patientId = result.patientId;
-
-        final profile = await _userProfileRepository.getUserProfile();
-        if (profile != null) {
-          final updatedProfile = profile.copyWith(
-            isEpsConnected: true,
-            epsPatientId: patientId,
-          );
-          await _userProfileRepository.saveUserProfile(updatedProfile);
-          await loadConnections();
-        } else {
-          emit(const EpsConnectionError('User profile not found.'));
-        }
-      } else {
-        await loadConnections();
-      }
+      await _connectProviderUseCase(provider);
+      await loadConnections();
     } catch (e) {
       emit(EpsConnectionError('Connection error: ${e.toString()}'));
     }
@@ -71,19 +46,7 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
   Future<void> disconnect(String providerId) async {
     emit(const EpsConnectionLoading());
     try {
-      await _oauthRepository.logout(providerId);
-      final profile = await _userProfileRepository.getUserProfile();
-      if (profile != null) {
-        // If it was the only connection or we want to clear the global flag
-        final providers = await _oauthRepository.getConnectedProviders();
-        if (providers.isEmpty) {
-          final updatedProfile = profile.copyWith(
-            isEpsConnected: false,
-            epsPatientId: null,
-          );
-          await _userProfileRepository.saveUserProfile(updatedProfile);
-        }
-      }
+      await _disconnectProviderUseCase(providerId);
       await loadConnections();
     } catch (e) {
       emit(EpsConnectionError('Disconnection error: ${e.toString()}'));

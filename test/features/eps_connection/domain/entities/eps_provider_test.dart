@@ -11,6 +11,7 @@ void main() {
         clientId: 'C',
         redirectUrl: 'R',
         scopes: ['S'],
+        type: EPSProviderType.ihce,
       );
       const p2 = EPSProvider(
         id: '1',
@@ -19,8 +20,31 @@ void main() {
         clientId: 'C',
         redirectUrl: 'R',
         scopes: ['S'],
+        type: EPSProviderType.ihce,
       );
       expect(p1, p2);
+    });
+
+    test('props contain all fields', () {
+      const p = EPSProvider(
+        id: '1',
+        name: 'N',
+        discoveryUrl: 'D',
+        clientId: 'C',
+        redirectUrl: 'R',
+        scopes: ['S'],
+        type: EPSProviderType.fhir,
+      );
+      expect(p.props, ['1', 'N', 'D', 'C', 'R', ['S'], EPSProviderType.fhir]);
+    });
+  });
+
+  group('EPSProviderType', () {
+    test('enum values', () {
+      expect(EPSProviderType.values.length, 3);
+      expect(EPSProviderType.ihce.name, 'ihce');
+      expect(EPSProviderType.openmrs.name, 'openmrs');
+      expect(EPSProviderType.fhir.name, 'fhir');
     });
   });
 }

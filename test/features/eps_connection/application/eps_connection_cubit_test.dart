@@ -2,80 +2,120 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_cubit.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_state.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_connection.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/oauth_token.dart';
-import 'package:orionhealth_health/features/eps_connection/domain/repositories/oauth_repository.dart';
-import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
-import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/usecases/connect_provider_usecase.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/usecases/disconnect_provider_usecase.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/usecases/get_connections_usecase.dart';
 
-class MockOAuthRepository extends Mock implements OAuthRepository {}
-class MockUserProfileRepository extends Mock implements UserProfileRepository {}
+class MockGetConnectionsUseCase extends Mock implements GetConnectionsUseCase {}
+class MockConnectProviderUseCase extends Mock implements ConnectProviderUseCase {}
+class MockDisconnectProviderUseCase extends Mock implements DisconnectProviderUseCase {}
 
 void main() {
   late EpsConnectionCubit cubit;
-  late MockOAuthRepository mockOAuthRepository;
-  late MockUserProfileRepository mockUserProfileRepository;
+  late MockGetConnectionsUseCase mockGetConnectionsUseCase;
+  late MockConnectProviderUseCase mockConnectProviderUseCase;
+  late MockDisconnectProviderUseCase mockDisconnectProviderUseCase;
 
-  final testProfile = UserProfile(
-    name: 'Test User',
-    email: 'test@example.com',
-  );
-
-  final testProvider = EPSProvider(
+  final testProvider = const EPSProvider(
     id: 'test_id',
     name: 'Test EPS',
-    discoveryUrl: 'https://test.com',
-    clientId: 'client',
-    redirectUrl: 'url',
-    scopes: const ['scope'],
+    discoveryUrl: 'D',
+    clientId: 'C',
+    redirectUrl: 'R',
+    scopes: ['S'],
   );
 
-  final testToken = const OAuthToken(accessToken: 'token');
+  final testConnection = EPSConnection(
+    provider: testProvider,
+    token: const OAuthToken(accessToken: 'token'),
+    patientId: 'PT-123',
+    connectedAt: DateTime.now(),
+  );
 
   setUpAll(() {
-    registerFallbackValue(testProfile);
     registerFallbackValue(testProvider);
   });
 
   setUp(() {
-    mockOAuthRepository = MockOAuthRepository();
-    mockUserProfileRepository = MockUserProfileRepository();
+    mockGetConnectionsUseCase = MockGetConnectionsUseCase();
+    mockConnectProviderUseCase = MockConnectProviderUseCase();
+    mockDisconnectProviderUseCase = MockDisconnectProviderUseCase();
 
-    when(() => mockOAuthRepository.getConnectedProviders()).thenAnswer((_) async => []);
+    when(() => mockGetConnectionsUseCase()).thenAnswer((_) async => []);
   });
 
   Future<void> buildCubit() async {
-    cubit = EpsConnectionCubit(mockOAuthRepository, mockUserProfileRepository);
+    cubit = EpsConnectionCubit(
+      mockGetConnectionsUseCase,
+      mockConnectProviderUseCase,
+      mockDisconnectProviderUseCase,
+    );
     await Future.delayed(Duration.zero);
   }
 
   group('EpsConnectionCubit', () {
-    test('loadConnections fetches all details and patient ID', () async {
-      when(() => mockOAuthRepository.getConnectedProviders()).thenAnswer((_) async => ['test_id']);
-      when(() => mockOAuthRepository.getToken('test_id')).thenAnswer((_) async => testToken);
-      when(() => mockOAuthRepository.getProviderDetails('test_id')).thenAnswer((_) async => testProvider);
-      when(() => mockOAuthRepository.getPatientId('test_id')).thenAnswer((_) async => 'PT-123');
+    test('loadConnections emits Loaded state with connections', () async {
+      when(() => mockGetConnectionsUseCase()).thenAnswer((_) async => [testConnection]);
 
       await buildCubit();
 
+      expect(cubit.state, isA<EpsConnectionLoaded>());
       final state = cubit.state as EpsConnectionLoaded;
-      expect(state.connections.length, 1);
-      expect(state.connections.first.patientId, 'PT-123');
-      expect(state.connections.first.provider.name, 'Test EPS');
+      expect(state.connections, [testConnection]);
     });
 
-    test('connect uses patient ID from login result', () async {
-      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => testProfile);
-      when(() => mockOAuthRepository.login(any())).thenAnswer((_) async => OAuthLoginResult(token: testToken, patientId: 'PT-123'));
-      when(() => mockUserProfileRepository.saveUserProfile(any())).thenAnswer((_) async => {});
-      when(() => mockOAuthRepository.getConnectedProviders()).thenAnswer((_) async => []);
+    test('loadConnections emits Error state on exception', () async {
+      when(() => mockGetConnectionsUseCase()).thenThrow(Exception('Fail'));
+
+      await buildCubit();
+
+      expect(cubit.state, isA<EpsConnectionError>());
+      expect((cubit.state as EpsConnectionError).message, contains('Fail'));
+    });
+
+    test('connect calls usecase and reloads', () async {
+      when(() => mockConnectProviderUseCase(any())).thenAnswer((_) async => {});
+      when(() => mockGetConnectionsUseCase()).thenAnswer((_) async => [testConnection]);
 
       await buildCubit();
       await cubit.connect(testProvider);
 
-      verify(() => mockUserProfileRepository.saveUserProfile(any(
-        that: isA<UserProfile>().having((p) => p.epsPatientId, 'epsPatientId', 'PT-123')
-      ))).called(1);
+      verify(() => mockConnectProviderUseCase(testProvider)).called(1);
+      expect(cubit.state, isA<EpsConnectionLoaded>());
+    });
+
+    test('connect emits Error state on exception', () async {
+      when(() => mockConnectProviderUseCase(any())).thenThrow(Exception('Connect Fail'));
+
+      await buildCubit();
+      await cubit.connect(testProvider);
+
+      expect(cubit.state, isA<EpsConnectionError>());
+      expect((cubit.state as EpsConnectionError).message, contains('Connect Fail'));
+    });
+
+    test('disconnect calls usecase and reloads', () async {
+      when(() => mockDisconnectProviderUseCase(any())).thenAnswer((_) async => {});
+      when(() => mockGetConnectionsUseCase()).thenAnswer((_) async => []);
+
+      await buildCubit();
+      await cubit.disconnect('test_id');
+
+      verify(() => mockDisconnectProviderUseCase('test_id')).called(1);
+      expect(cubit.state, isA<EpsConnectionLoaded>());
+    });
+
+    test('disconnect emits Error state on exception', () async {
+      when(() => mockDisconnectProviderUseCase(any())).thenThrow(Exception('Disconnect Fail'));
+
+      await buildCubit();
+      await cubit.disconnect('test_id');
+
+      expect(cubit.state, isA<EpsConnectionError>());
+      expect((cubit.state as EpsConnectionError).message, contains('Disconnect Fail'));
     });
   });
 }
