@@ -12,7 +12,7 @@ void main() {
   late String testDir;
 
   setUpAll(() async {
-    testDir = p.join(Directory.current.path, 'test_db_health_records');
+    testDir = p.join(Directory.systemTemp.path, 'test_db_health_records');
     await Directory(testDir).create(recursive: true);
 
     await Isar.initializeIsarCore(download: true);
@@ -34,45 +34,63 @@ void main() {
     await isar.writeTxn(() => isar.medicalRecords.clear());
   });
 
-  test('Should save and retrieve a health record', () async {
-    final attachment = MedicalAttachment(
-      localPath: 'test.pdf',
-      mimeType: 'application/pdf',
-      extractedText: 'Extracted text content',
-    );
+  group('HealthRecordRepositoryImpl', () {
+    test('Should save and retrieve a health record', () async {
+      final attachment = MedicalAttachment(
+        localPath: 'test.pdf',
+        mimeType: 'application/pdf',
+        extractedText: 'Extracted text content',
+      );
 
-    final record = MedicalRecord(
-      date: DateTime.now(),
-      type: RecordType.labResult,
-      summary: 'Test summary',
-      attachments: [attachment],
-    );
+      final record = MedicalRecord(
+        date: DateTime(2025, 1, 1),
+        type: RecordType.labResult,
+        summary: 'Test summary',
+        attachments: [attachment],
+      );
 
-    await repository.saveRecord(record);
+      await repository.saveRecord(record);
 
-    final records = await repository.getAllRecords();
-    expect(records.length, 1);
-    expect(records.first.summary, 'Test summary');
-    expect(records.first.type, RecordType.labResult);
-    expect(records.first.attachments.length, 1);
-    expect(records.first.attachments.first.extractedText, 'Extracted text content');
-  });
+      final records = await repository.getAllRecords();
+      expect(records.length, 1);
+      expect(records.first.summary, 'Test summary');
+      expect(records.first.type, RecordType.labResult);
+      expect(records.first.attachments.length, 1);
+      expect(records.first.attachments.first.extractedText, 'Extracted text content');
+    });
 
-  test('Should return multiple records sorted by Isar (default)', () async {
-    final record1 = MedicalRecord(summary: 'Record 1');
-    final record2 = MedicalRecord(summary: 'Record 2');
+    test('Should overwrite existing record when saving with same ID', () async {
+      final record = MedicalRecord(summary: 'Original');
+      await repository.saveRecord(record);
 
-    await repository.saveRecord(record1);
-    await repository.saveRecord(record2);
+      final savedRecords = await repository.getAllRecords();
+      final id = savedRecords.first.id;
 
-    final records = await repository.getAllRecords();
-    expect(records.length, 2);
-    final summaries = records.map((r) => r.summary).toList();
-    expect(summaries, containsAll(['Record 1', 'Record 2']));
-  });
+      final updatedRecord = MedicalRecord(summary: 'Updated')..id = id;
+      await repository.saveRecord(updatedRecord);
 
-  test('Should handle empty records', () async {
-    final records = await repository.getAllRecords();
-    expect(records, isEmpty);
+      final finalRecords = await repository.getAllRecords();
+      expect(finalRecords.length, 1);
+      expect(finalRecords.first.summary, 'Updated');
+      expect(finalRecords.first.id, id);
+    });
+
+    test('Should return multiple records', () async {
+      final record1 = MedicalRecord(summary: 'Record 1');
+      final record2 = MedicalRecord(summary: 'Record 2');
+
+      await repository.saveRecord(record1);
+      await repository.saveRecord(record2);
+
+      final records = await repository.getAllRecords();
+      expect(records.length, 2);
+      final summaries = records.map((r) => r.summary).toList();
+      expect(summaries, containsAll(['Record 1', 'Record 2']));
+    });
+
+    test('Should return an empty list when no records exist', () async {
+      final records = await repository.getAllRecords();
+      expect(records, isEmpty);
+    });
   });
 }
