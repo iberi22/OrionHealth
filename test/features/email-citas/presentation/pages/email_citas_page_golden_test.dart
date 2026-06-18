@@ -19,6 +19,7 @@ void main() {
   const MethodChannel eventsChannel = MethodChannel('com.llfbandit.app_links/events');
 
   setUp(() async {
+    await GetIt.I.reset();
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
 
@@ -40,15 +41,7 @@ void main() {
     );
 
     mockCubit = MockEmailCitasCubit();
-    if (!GetIt.I.isRegistered<EmailCitasCubit>()) {
-      await configureDependencies();
-    }
-    GetIt.I.unregister<EmailCitasCubit>();
     GetIt.I.registerSingleton<EmailCitasCubit>(mockCubit);
-  });
-
-  tearDown(() {
-    GetIt.I.unregister<EmailCitasCubit>();
   });
 
   group('Email Citas Golden Tests', () {

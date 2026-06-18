@@ -132,7 +132,7 @@
   {
     "name": "local_agent",
     "layers": {
-      "domain": false,
+      "domain": true,
       "application": false,
       "infrastructure": true,
       "presentation": true,
@@ -142,7 +142,7 @@
   {
     "name": "medical_research",
     "layers": {
-      "domain": false,
+      "domain": true,
       "application": true,
       "infrastructure": false,
       "presentation": true,
