@@ -18,8 +18,17 @@ void main() {
 
     group('CalendarImportLoaded', () {
       test('creates with appointments', () {
-        final apps = [Appointment(id: 1, title: 'Test')];
-        expect(const CalendarImportLoaded(apps).foundAppointments, apps);
+        final now = DateTime.now();
+        final apps = <Appointment>[
+          Appointment(
+            id: 1,
+            doctorName: 'Dr. P�rez',
+            specialty: 'Cardiolog��a',
+            dateTime: now,
+            status: AppointmentStatus.upcoming,
+          ),
+        ];
+        expect(CalendarImportLoaded(apps).foundAppointments, apps);
       });
     });
 
