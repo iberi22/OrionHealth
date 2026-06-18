@@ -24,28 +24,30 @@ void main() {
 
     group('AboutLoaded', () {
       final info = const AboutInfo(
-        name: 'OrionHealth',
-        version: '1.0.0',
-        description: 'Health app',
+        blogPosts: [],
+        missionStatement: 'Health app',
+        values: ['Integrity', 'Care'],
+        activities: ['Community outreach'],
       );
 
       test('supports value equality', () {
-        expect(AboutLoaded(info: info), equals(AboutLoaded(info: info)));
+        expect(AboutLoaded(info), equals(AboutLoaded(info)));
       });
 
       test('props are correct', () {
-        expect(AboutLoaded(info: info).props, [info]);
+        expect(AboutLoaded(info).props, [info]);
       });
 
       test('different info are not equal', () {
         final otherInfo = const AboutInfo(
-          name: 'Different',
-          version: '2.0.0',
-          description: 'Other',
+          blogPosts: [],
+          missionStatement: 'Different mission',
+          values: ['Different values'],
+          activities: ['Other'],
         );
         expect(
-          AboutLoaded(info: info),
-          isNot(equals(AboutLoaded(info: otherInfo))),
+          AboutLoaded(info),
+          isNot(equals(AboutLoaded(otherInfo))),
         );
       });
     });

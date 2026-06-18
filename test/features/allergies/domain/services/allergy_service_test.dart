@@ -15,13 +15,12 @@ void main() {
       test('returns true when medication name contains allergen', () {
         final allergy = Allergy(
           id: 1,
-          name: 'Penicilina',
+          allergen: 'Penicilina',
           severity: AllergySeverity.severe,
-          isValid: true,
         );
         final medication = Medication(
           id: 1,
-          name: 'Amoxicilina',
+          name: 'Penicilina V',
           startDate: DateTime.now(),
           notes: '',
         );
@@ -31,9 +30,8 @@ void main() {
       test('returns true when medication notes contain allergen', () {
         final allergy = Allergy(
           id: 1,
-          name: 'Penicilina',
+          allergen: 'Penicilina',
           severity: AllergySeverity.moderate,
-          isValid: true,
         );
         final medication = Medication(
           id: 1,
@@ -47,9 +45,8 @@ void main() {
       test('returns false when no interaction', () {
         final allergy = Allergy(
           id: 1,
-          name: 'Penicilina',
+          allergen: 'Penicilina',
           severity: AllergySeverity.mild,
-          isValid: true,
         );
         final medication = Medication(
           id: 1,
@@ -62,9 +59,8 @@ void main() {
       test('returns false when allergy is not valid', () {
         final allergy = Allergy(
           id: 1,
-          name: 'Penicilina',
+          allergen: null,
           severity: AllergySeverity.mild,
-          isValid: false,
         );
         final medication = Medication(
           id: 1,
@@ -77,13 +73,12 @@ void main() {
       test('is case insensitive', () {
         final allergy = Allergy(
           id: 1,
-          name: 'PENICILINA',
+          allergen: 'PENICILINA',
           severity: AllergySeverity.mild,
-          isValid: true,
         );
         final medication = Medication(
           id: 1,
-          name: 'amoxicilina',
+          name: 'penicilina v',
           startDate: DateTime.now(),
         );
         expect(service.checkInteraction(allergy, medication), isTrue);

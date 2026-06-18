@@ -10,19 +10,19 @@ void main() {
   late MockUserProfileRepository mockRepository;
   late UserProfileService service;
 
+  setUpAll(() {
+    registerFallbackValue(UserProfile());
+  });
+
   setUp(() {
     mockRepository = MockUserProfileRepository();
     service = UserProfileService(mockRepository);
   });
 
   group('UserProfileService', () {
-    final now = DateTime.now();
     final profile = UserProfile(
-      createdAt: now,
-      updatedAt: now,
       name: 'Juan Perez',
       birthDate: DateTime(1990, 5, 15),
-      privacyConsent: true,
     );
 
     test('getProfile returns profile from repository', () async {
@@ -43,21 +43,19 @@ void main() {
     test('updateProfile calls repository with validated profile', () async {
       when(
         () => mockRepository.saveUserProfile(any()),
-      ).thenAnswer((_) async => {});
+      ).thenAnswer((_) async {});
       await service.updateProfile(profile);
       verify(() => mockRepository.saveUserProfile(profile)).called(1);
     });
 
     test('updateProfile throws on invalid profile', () async {
-      final invalid = UserProfile(createdAt: now, updatedAt: now, name: '');
+      final invalid = UserProfile(age: -1);
       expect(() => service.updateProfile(invalid), throwsA(isA<Exception>()));
       verifyNever(() => mockRepository.saveUserProfile(any()));
     });
 
     test('deleteProfile calls repository', () async {
-      when(
-        () => mockRepository.deleteUserProfile(),
-      ).thenAnswer((_) async => {});
+      when(() => mockRepository.deleteUserProfile()).thenAnswer((_) async {});
       await service.deleteProfile();
       verify(() => mockRepository.deleteUserProfile()).called(1);
     });
@@ -65,7 +63,7 @@ void main() {
     test('repository failure propagates', () async {
       when(
         () => mockRepository.getUserProfile(),
-      ).thenThrow(Exception('DB error'));
+      ).thenAnswer((_) async => throw Exception('DB error'));
       expect(() => service.getProfile(), throwsA(isA<Exception>()));
     });
   });
