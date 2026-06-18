@@ -1,12 +1,12 @@
 ﻿{
-    "averageImplPct":  92,
+    "averageImplPct":  93,
     "totalFeatures":  26,
-    "generated":  "2026-06-18T01:17:03.5155793-05:00",
+    "generated":  "2026-06-18T01:18:06.7481365-05:00",
     "features":  [
                      {
                          "status":  "partial",
                          "name":  "about",
-                         "implementationPct":  85,
+                         "implementationPct":  90,
                          "testFiles":  5
                      },
                      {
@@ -30,7 +30,7 @@
                      {
                          "status":  "partial",
                          "name":  "calendar_import",
-                         "implementationPct":  85,
+                         "implementationPct":  90,
                          "testFiles":  8
                      },
                      {
@@ -144,7 +144,7 @@
                      {
                          "status":  "partial",
                          "name":  "user_profile",
-                         "implementationPct":  85,
+                         "implementationPct":  90,
                          "testFiles":  5
                      },
                      {
