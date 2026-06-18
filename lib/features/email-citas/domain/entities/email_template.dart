@@ -1,8 +1,13 @@
-class EmailTemplate {
+import 'package:equatable/equatable.dart';
+
+class EmailTemplate extends Equatable {
   final String subject;
   final String body;
 
   const EmailTemplate({required this.subject, required this.body});
+
+  @override
+  List<Object?> get props => [subject, body];
 
   static const confirmation = EmailTemplate(
     subject: "Confirmación de Cita: {{specialty}}",
