@@ -1,7 +1,7 @@
 ﻿{
     "averageImplPct":  92,
     "totalFeatures":  26,
-    "generated":  "2026-06-18T00:26:57.9400423-05:00",
+    "generated":  "2026-06-18T00:44:08.8563977-05:00",
     "features":  [
                      {
                          "status":  "partial",
@@ -36,7 +36,7 @@
                      {
                          "status":  "partial",
                          "name":  "dashboard",
-                         "implementationPct":  85,
+                         "implementationPct":  90,
                          "testFiles":  4
                      },
                      {
@@ -96,7 +96,7 @@
                      {
                          "status":  "partial",
                          "name":  "medications",
-                         "implementationPct":  85,
+                         "implementationPct":  90,
                          "testFiles":  4
                      },
                      {
