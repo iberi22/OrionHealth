@@ -11,22 +11,32 @@ import '../../../../core/golden_test_utils.dart';
 
 class MockLlmService extends Mock implements LlmService {}
 
+class FakePathProviderPlatform extends Fake with PathProviderPlatform {
+  @override
+  Future<String?> getApplicationDocumentsPath() async => '/tmp/test_docs';
+  
+  @override
+  Future<String?> getTemporaryPath() async => '/tmp/test_temp';
+}
+
 void main() {
   late MockLlmService mockLlmService;
 
   setUp(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
+    PathProviderPlatform.instance = FakePathProviderPlatform();
     mockLlmService = MockLlmService();
+    await GetIt.I.reset();
     if (!GetIt.I.isRegistered<LlmService>()) {
-      await configureDependencies();
+      GetIt.I.registerSingleton<LlmService>(mockLlmService);
     }
-    GetIt.I.unregister<LlmService>();
-    GetIt.I.registerSingleton<LlmService>(mockLlmService);
   });
 
   tearDown(() {
-    GetIt.I.unregister<LlmService>();
+    if (GetIt.I.isRegistered<LlmService>()) {
+      GetIt.I.unregister<LlmService>();
+    }
   });
 
   group('Dashboard Golden Tests', () {

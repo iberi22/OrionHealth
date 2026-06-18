@@ -24,6 +24,7 @@ void main() {
   late MockDoctorVerificationCubit mockCubit;
 
   setUpAll(() {
+    getIt.reset();
     mockCubit = MockDoctorVerificationCubit();
     getIt.registerSingleton<DoctorVerificationCubit>(mockCubit);
   });

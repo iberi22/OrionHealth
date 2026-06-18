@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
@@ -16,6 +15,14 @@ import '../../../../core/golden_test_utils.dart';
 class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {
   @override
   Future<void> close() async {}
+}
+
+class FakePathProviderPlatform extends Fake implements PathProviderPlatform {
+  @override
+  Future<String?> getApplicationDocumentsPath() async => '/tmp/test_docs';
+  
+  @override
+  Future<String?> getTemporaryPath() async => '/tmp/test_temp';
 }
 
 void main() {
@@ -51,16 +58,16 @@ void main() {
   setUp(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
+    PathProviderPlatform.instance = FakePathProviderPlatform();
+    await GetIt.I.reset();
     mockCubit = MockDoctorVerificationCubit();
-    if (!GetIt.I.isRegistered<DoctorVerificationCubit>()) {
-      await configureDependencies();
-    }
-    GetIt.I.unregister<DoctorVerificationCubit>();
     GetIt.I.registerSingleton<DoctorVerificationCubit>(mockCubit);
   });
 
   tearDown(() {
-    GetIt.I.unregister<DoctorVerificationCubit>();
+    if (GetIt.I.isRegistered<DoctorVerificationCubit>()) {
+      GetIt.I.unregister<DoctorVerificationCubit>();
+    }
   });
 
   group('Doctor Verification Golden Tests', () {

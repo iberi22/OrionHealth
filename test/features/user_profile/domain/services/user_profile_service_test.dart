@@ -10,6 +10,10 @@ void main() {
   late MockUserProfileRepository mockRepository;
   late UserProfileService service;
 
+  setUpAll(() {
+    registerFallbackValue(UserProfile());
+  });
+
   setUp(() {
     mockRepository = MockUserProfileRepository();
     service = UserProfileService(mockRepository);
@@ -39,7 +43,7 @@ void main() {
     test('updateProfile calls repository with validated profile', () async {
       when(
         () => mockRepository.saveUserProfile(any()),
-      ).thenAnswer((_) async => {});
+      ).thenAnswer((_) async {});
       await service.updateProfile(profile);
       verify(() => mockRepository.saveUserProfile(profile)).called(1);
     });
@@ -51,9 +55,7 @@ void main() {
     });
 
     test('deleteProfile calls repository', () async {
-      when(
-        () => mockRepository.deleteUserProfile(),
-      ).thenAnswer((_) async => {});
+      when(() => mockRepository.deleteUserProfile()).thenAnswer((_) async {});
       await service.deleteProfile();
       verify(() => mockRepository.deleteUserProfile()).called(1);
     });
@@ -61,7 +63,7 @@ void main() {
     test('repository failure propagates', () async {
       when(
         () => mockRepository.getUserProfile(),
-      ).thenThrow(Exception('DB error'));
+      ).thenAnswer((_) async => throw Exception('DB error'));
       expect(() => service.getProfile(), throwsA(isA<Exception>()));
     });
   });
