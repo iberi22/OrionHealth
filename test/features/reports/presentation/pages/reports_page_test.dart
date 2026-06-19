@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/reports/application/bloc/report_bloc.dart';
 import 'package:orionhealth_health/features/reports/domain/entities/report.dart';
 import 'package:orionhealth_health/features/reports/presentation/pages/reports_page.dart';
+import 'package:orionhealth_health/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'package:health_wallet/health_wallet.dart';
 
@@ -207,6 +209,57 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(() => mockBloc.add(any(that: isA<LoadReports>()))).called(greaterThanOrEqualTo(1));
+    });
+
+    testWidgets('navigates to ReportDetailPage when a report is tapped', (tester) async {
+      final report = Report(
+        title: 'Report to Tap',
+        generatedAt: DateTime.now(),
+        status: ReportStatus.finalized,
+      );
+      when(() => mockBloc.state).thenReturn(ReportLoaded([report]));
+
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Report to Tap'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ReportDetailPage), findsOneWidget);
+      // Depending on whether the list is still in the tree (it might be in a different route),
+      // we might find 1 or 2 occurrences. Let's just check that it's in the AppBar at least.
+      expect(find.descendant(of: find.byType(AppBar), matching: find.text('Report to Tap')), findsOneWidget);
+    });
+
+    testWidgets('FHIR dialog "Copiar" button sets clipboard data and closes dialog', (tester) async {
+      const fhirContent = '{"resourceType": "Bundle"}';
+      when(() => mockBloc.state).thenReturn(ReportLoaded([]));
+      when(() => mockWalletService.exportToFhir()).thenAnswer((_) async => fhirContent);
+
+      // Mock Clipboard
+      final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'Clipboard.setData') {
+            log.add(methodCall.arguments as Map<String, dynamic>);
+          }
+          return null;
+        },
+      );
+
+      await tester.pumpWidget(createWidgetUnderTest());
+
+      await tester.tap(find.text('Exportar FHIR'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Exportación FHIR R4'), findsOneWidget);
+
+      await tester.tap(find.text('Copiar'));
+      await tester.pumpAndSettle();
+
+      expect(log, contains(predicate((Map<String, dynamic> m) => m['text'] == fhirContent)));
+      expect(find.text('Exportación FHIR R4'), findsNothing);
     });
   });
 }

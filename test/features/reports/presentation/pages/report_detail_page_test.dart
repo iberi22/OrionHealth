@@ -72,5 +72,30 @@ void main() {
       final markdown = tester.widget<Markdown>(find.byType(Markdown));
       expect(markdown.data, '');
     });
+
+    testWidgets('AppBar contains the correct title', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ReportDetailPage(report: tReport),
+        ),
+      );
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      final titleText = appBar.title as Text;
+      expect(titleText.data, 'Detailed Report');
+    });
+
+    testWidgets('AppBar contains the default title when report title is null', (tester) async {
+      final noTitleReport = Report(title: null);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ReportDetailPage(report: noTitleReport),
+        ),
+      );
+
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      final titleText = appBar.title as Text;
+      expect(titleText.data, 'Detalle del Informe');
+    });
   });
 }

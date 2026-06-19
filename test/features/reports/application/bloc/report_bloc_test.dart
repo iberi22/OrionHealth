@@ -110,6 +110,24 @@ void main() {
           ]),
         );
       });
+
+      test('emits [ReportLoading, ReportError] when saveReport fails', () async {
+        when(() => mockGenerationService.generateReport(
+              prompt: any(named: 'prompt'),
+              contextData: any(named: 'contextData'),
+            )).thenAnswer((_) async => tReport);
+        when(() => mockRepository.saveReport(any())).thenThrow(Exception('Save error'));
+
+        reportBloc.add(GenerateReportEvent(prompt: tPrompt, contextData: tContextData));
+
+        expectLater(
+          reportBloc.stream,
+          emitsInOrder([
+            isA<ReportLoading>(),
+            isA<ReportError>().having((s) => s.message, 'message', contains('Save error')),
+          ]),
+        );
+      });
     });
 
     group('DeleteReport', () {
@@ -139,6 +157,25 @@ void main() {
             isA<ReportError>().having((s) => s.message, 'message', contains('Delete failed')),
           ]),
         );
+      });
+    });
+
+    group('ReportEvent', () {
+      test('LoadReports can be instantiated', () {
+        expect(LoadReports(), isA<LoadReports>());
+      });
+
+      test('GenerateReportEvent stores properties', () {
+        const prompt = 'test prompt';
+        const contextData = ['data'];
+        final event = GenerateReportEvent(prompt: prompt, contextData: contextData);
+        expect(event.prompt, prompt);
+        expect(event.contextData, contextData);
+      });
+
+      test('DeleteReport stores id', () {
+        final event = DeleteReport(123);
+        expect(event.id, 123);
       });
     });
 
