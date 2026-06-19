@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/settings/application/llm_settings_cubit.dart';
+import 'package:orionhealth_health/features/settings/domain/entities/app_settings.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
 import 'package:orionhealth_health/features/settings/domain/services/device_capability_service.dart';
 
 void main() {
   group('LlmSettingsState', () {
     final testConfig = LlmConfig(selectedModel: 'test-model');
+    final testAppSettings = AppSettings();
     const testCapability = DeviceCapability(
       tier: DeviceCapabilityTier.medium,
       totalMemoryMb: 4096,
@@ -18,11 +20,13 @@ void main() {
     test('LlmSettingsLoaded supports equality', () {
       final state1 = LlmSettingsLoaded(
         config: testConfig,
+        appSettings: testAppSettings,
         deviceCapability: testCapability,
         downloadProgress: const {'model1': 0.5},
       );
       final state2 = LlmSettingsLoaded(
         config: testConfig,
+        appSettings: testAppSettings,
         deviceCapability: testCapability,
         downloadProgress: const {'model1': 0.5},
       );
@@ -33,6 +37,7 @@ void main() {
     test('LlmSettingsLoaded copyWith should update fields', () {
       final state = LlmSettingsLoaded(
         config: testConfig,
+        appSettings: testAppSettings,
         deviceCapability: testCapability,
       );
 
