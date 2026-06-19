@@ -1,6 +1,6 @@
 # Feature Test Coverage Report
 
-Generated on: 2026-06-18 06:38:11.166229
+Generated on: 2026-06-18 20:01:29.611560
 
 | Feature | Domain | Application | Infrastructure | Presentation | Goldens |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -12,17 +12,17 @@ Generated on: 2026-06-18 06:38:11.166229
 | dashboard | ✅ | ✅ | ✅ | ✅ | ✅ |
 | doctor_verification | ✅ | ✅ | ✅ | ✅ | ✅ |
 | email-citas | ✅ | ✅ | ✅ | ✅ | ✅ |
-| eps_connection | ✅ | ✅ | ❌ | ✅ | ✅ |
-| health_data_import | ✅ | ❌ | ❌ | ✅ | ✅ |
+| eps_connection | ✅ | ✅ | ✅ | ✅ | ✅ |
+| health_data_import | ✅ | ❌ | ✅ | ✅ | ✅ |
 | health_record | ✅ | ✅ | ✅ | ✅ | ✅ |
 | health_sharing | ✅ | ✅ | ✅ | ✅ | ✅ |
 | home | ✅ | ✅ | ❌ | ✅ | ✅ |
-| local_agent | ❌ | ❌ | ✅ | ✅ | ✅ |
-| medical_research | ❌ | ✅ | ❌ | ✅ | ✅ |
+| local_agent | ✅ | ✅ | ✅ | ✅ | ✅ |
+| medical_research | ✅ | ✅ | ✅ | ✅ | ✅ |
 | medications | ✅ | ✅ | ❌ | ✅ | ✅ |
-| meditation | ❌ | ❌ | ❌ | ✅ | ✅ |
+| meditation | ✅ | ✅ | ✅ | ✅ | ✅ |
 | network | ❌ | ❌ | ❌ | ❌ | ❌ |
-| onboarding | ✅ | ✅ | ❌ | ✅ | ✅ |
+| onboarding | ✅ | ✅ | ✅ | ✅ | ✅ |
 | reports | ✅ | ✅ | ✅ | ✅ | ✅ |
 | settings | ✅ | ✅ | ✅ | ✅ | ✅ |
 | sync | ✅ | ✅ | ✅ | ✅ | ❌ |
