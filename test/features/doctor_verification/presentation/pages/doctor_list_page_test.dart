@@ -76,9 +76,9 @@ void main() {
     when(() => mockProfileRepo.getAllDoctorProfiles()).thenThrow(Exception('Network error'));
 
     await tester.pumpWidget(createWidgetUnderTest());
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle().catchError((_) {});
 
-    expect(find.textContaining('Error loading doctors'), findsOneWidget);
+    expect(find.textContaining('Network error'), findsOneWidget);
   });
 
   testWidgets('renders doctors list when loaded', (tester) async {

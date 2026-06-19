@@ -178,5 +178,37 @@ void main() {
       final result = await repository.verifyVouchChain('doc1', depth: 2);
       expect(result, isFalse);
     });
+
+    test('verifyVouchChain with depth=3 validates deep multi-level chain', () async {
+      // doc4 -> doc3 -> doc2 -> doc1
+      final v1 = Vouch(
+        id: 'v1',
+        vouchedBy: 'doc2',
+        targetDoctor: 'doc1',
+        category: 'Clinical',
+        timestamp: tDate,
+      );
+      final v2 = Vouch(
+        id: 'v2',
+        vouchedBy: 'doc3',
+        targetDoctor: 'doc2',
+        category: 'Clinical',
+        timestamp: tDate,
+      );
+      final v3 = Vouch(
+        id: 'v3',
+        vouchedBy: 'doc4',
+        targetDoctor: 'doc3',
+        category: 'Clinical',
+        timestamp: tDate,
+      );
+
+      await repository.addVouch(v1);
+      await repository.addVouch(v2);
+      await repository.addVouch(v3);
+
+      final result = await repository.verifyVouchChain('doc1', depth: 3);
+      expect(result, isTrue);
+    });
   });
 }
