@@ -194,6 +194,95 @@ void main() {
       expect(submittedRating!.verifiedVisit, isTrue);
     });
 
+    testWidgets('updates rating when star is tapped', (tester) async {
+      DoctorRating? submittedRating;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => RatingDialog(
+                      doctorId: doctorId,
+                      onSubmitted: (rating) {
+                        submittedRating = rating;
+                      },
+                    ),
+                  );
+                },
+                child: const Text('Show Dialog'),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Show Dialog'));
+      await tester.pumpAndSettle();
+
+      // Default is 5 stars (all Icons.star)
+      expect(find.byIcon(Icons.star), findsNWidgets(5));
+
+      // Tap 3rd star (index 2)
+      await tester.tap(find.byType(IconButton).at(2));
+      await tester.pumpAndSettle();
+
+      // Now 3 should be Icons.star and 2 should be Icons.star_border
+      expect(find.byIcon(Icons.star), findsNWidgets(3));
+      expect(find.byIcon(Icons.star_border), findsNWidgets(2));
+
+      await tester.tap(find.text('ENVIAR'));
+      await tester.pumpAndSettle();
+
+      expect(submittedRating!.overallScore, 3);
+    });
+
+    testWidgets('submits comment and anonymity status', (tester) async {
+      DoctorRating? submittedRating;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => RatingDialog(
+                      doctorId: doctorId,
+                      onSubmitted: (rating) {
+                        submittedRating = rating;
+                      },
+                    ),
+                  );
+                },
+                child: const Text('Show Dialog'),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Show Dialog'));
+      await tester.pumpAndSettle();
+
+      // Enter comment
+      await tester.enterText(find.byType(TextField), 'Great doctor!');
+
+      // Toggle anonymous
+      await tester.tap(find.byType(Checkbox));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('ENVIAR'));
+      await tester.pumpAndSettle();
+
+      expect(submittedRating!.comment, 'Great doctor!');
+      expect(submittedRating!.isAnonymous, isTrue);
+    });
+
     testWidgets('cancel button closes the dialog', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
