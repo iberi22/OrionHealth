@@ -85,5 +85,19 @@ void main() {
       );
       expect(vital.formattedValue, '90 mg/dL');
     });
+
+    test('supports all optional fields', () {
+      final vital = VitalSign(
+        type: VitalSignType.heartRate,
+        value: 72,
+        dateTime: now,
+        unit: 'bpm',
+        source: 'manual',
+        notes: 'rest',
+      );
+      expect(vital.unit, 'bpm');
+      expect(vital.source, 'manual');
+      expect(vital.notes, 'rest');
+    });
   });
 }
