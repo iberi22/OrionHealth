@@ -78,6 +78,22 @@ void main() {
       final result = await profileRepository.getDoctorProfile('doc1');
       expect(result, isNull);
     });
+
+    test('getDoctorProfile returns null for non-existent ID', () async {
+      final result = await profileRepository.getDoctorProfile('non_existent');
+      expect(result, isNull);
+    });
+
+    test('deleteDoctorProfile handles non-existent ID gracefully', () async {
+      await profileRepository.deleteDoctorProfile('non_existent');
+      final results = await profileRepository.getAllDoctorProfiles();
+      expect(results, isEmpty);
+    });
+
+    test('getAllDoctorProfiles returns empty list when no profiles exist', () async {
+      final results = await profileRepository.getAllDoctorProfiles();
+      expect(results, isEmpty);
+    });
   });
 
   group('IsarRatingRepository', () {
