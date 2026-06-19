@@ -82,6 +82,41 @@ void main() {
         expect((cubit.state as OnboardingInProgress).currentStep, 1); // Still at step 1
       });
 
+      test('nextStep from basicInfo fails if birthDate is missing', () async {
+        await cubit.startOnboarding();
+        await cubit.nextStep();
+        await cubit.updateName('John');
+
+        final expectation = expectLater(
+          cubit.stream,
+          emitsInOrder([
+            isA<OnboardingError>().having((e) => e.message, 'message', contains('nacimiento')),
+            isA<OnboardingInProgress>(),
+          ]),
+        );
+
+        await cubit.nextStep();
+        await expectation;
+      });
+
+      test('nextStep from basicInfo fails if sex is missing', () async {
+        await cubit.startOnboarding();
+        await cubit.nextStep();
+        await cubit.updateName('John');
+        await cubit.updateBirthDate(DateTime(1990, 1, 1));
+
+        final expectation = expectLater(
+          cubit.stream,
+          emitsInOrder([
+            isA<OnboardingError>().having((e) => e.message, 'message', contains('sexo')),
+            isA<OnboardingInProgress>(),
+          ]),
+        );
+
+        await cubit.nextStep();
+        await expectation;
+      });
+
       test('nextStep from basicInfo succeeds if required fields are present', () async {
         await cubit.startOnboarding();
         await cubit.nextStep(); // Move to basicInfo
@@ -192,6 +227,51 @@ void main() {
       expect(state.currentStep, OnboardingStep.basicInfo.index);
     });
 
+    test('updateConditions updates profile', () async {
+      await cubit.startOnboarding();
+      await cubit.updateConditions(['Diabetes']);
+
+      final state = cubit.state as OnboardingInProgress;
+      expect(state.profile.conditions, contains('Diabetes'));
+      expect(state.currentStep, OnboardingStep.conditions.index);
+    });
+
+    test('updateFamilyHistory updates profile', () async {
+      await cubit.startOnboarding();
+      await cubit.updateFamilyHistory(['Hypertension']);
+
+      final state = cubit.state as OnboardingInProgress;
+      expect(state.profile.familyHistory, contains('Hypertension'));
+      expect(state.currentStep, OnboardingStep.familyHistory.index);
+    });
+
+    test('updateMedications updates profile', () async {
+      await cubit.startOnboarding();
+      await cubit.updateMedications(['Metformin']);
+
+      final state = cubit.state as OnboardingInProgress;
+      expect(state.profile.medications, contains('Metformin'));
+      expect(state.currentStep, OnboardingStep.medications.index);
+    });
+
+    test('updateWeight and other simple updates work', () async {
+      await cubit.startOnboarding();
+      await cubit.updateWeight(75.5);
+      expect((cubit.state as OnboardingInProgress).profile.weightKg, 75.5);
+
+      await cubit.updateHeight(175.0);
+      expect((cubit.state as OnboardingInProgress).profile.heightCm, 175.0);
+
+      await cubit.updateSex('F');
+      expect((cubit.state as OnboardingInProgress).profile.sex, 'F');
+
+      await cubit.updateName('Jane');
+      expect((cubit.state as OnboardingInProgress).profile.name, 'Jane');
+
+      await cubit.updateBirthDate(DateTime(2000,1,1));
+      expect((cubit.state as OnboardingInProgress).profile.birthDate, DateTime(2000,1,1));
+    });
+
     test('completeOnboarding emits syncing states then Completed', () async {
       await cubit.startOnboarding();
 
@@ -205,6 +285,49 @@ void main() {
 
       expect(cubit.state, isA<OnboardingCompleted>());
       expect((cubit.state as OnboardingCompleted).profile.onboardingCompleted, true);
+    });
+
+    test('saveAndComplete calls completeOnboarding', () async {
+      await cubit.startOnboarding();
+
+      final expectation = expectLater(
+        cubit.stream,
+        emitsThrough(isA<OnboardingCompleted>()),
+      );
+
+      await cubit.saveAndComplete();
+      await expectation;
+
+      expect(cubit.state, isA<OnboardingCompleted>());
+    });
+
+    test('reset emits OnboardingInitial', () {
+      cubit.reset();
+      expect(cubit.state, isA<OnboardingInitial>());
+    });
+
+    test('currentStep getter returns correct values', () async {
+      expect(cubit.currentStep, 0);
+      await cubit.startOnboarding();
+      expect(cubit.currentStep, 0);
+      await cubit.nextStep();
+      expect(cubit.currentStep, 1);
+    });
+
+    test('OnboardingStep helper works', () {
+      expect(OnboardingStep.fromIndex(0), OnboardingStep.welcome);
+      expect(OnboardingStep.fromIndex(99), OnboardingStep.welcome);
+    });
+
+    test('OnboardingInProgress.progress and copyWith', () {
+      final profile = UserProfile(createdAt: DateTime.now(), updatedAt: DateTime.now());
+      final state = OnboardingInProgress(currentStep: 0, totalSteps: 10, profile: profile);
+
+      expect(state.progress, 0.1);
+
+      final next = state.copyWith(currentStep: 1);
+      expect(next.currentStep, 1);
+      expect(next.profile, profile);
     });
   });
 }

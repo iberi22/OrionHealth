@@ -25,11 +25,11 @@ void main() {
       expect(standards.medicationClasses, contains('metformin'));
     });
 
-    test('analyzeProfile returns correct standards for hypertension', () {
+    test('analyzeProfile returns correct standards for hypertension/HTA', () {
       final profile = UserProfile(
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        conditions: const ['Hypertension'],
+        conditions: const ['HTA'],
       );
 
       final standards = service.analyzeProfile(profile);
@@ -39,16 +39,31 @@ void main() {
       expect(standards.guidelineIds, contains('JNC-8'));
     });
 
+    test('analyzeProfile returns correct standards for thyroid', () {
+      final profile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        conditions: const ['Thyroid issues'],
+      );
+
+      final standards = service.analyzeProfile(profile);
+
+      expect(standards.icd10Codes, contains('E03'));
+      expect(standards.loincCodes, contains('3024-0')); // TSH
+      expect(standards.guidelineIds, contains('ATA-2023'));
+    });
+
     test('analyzeProfile returns correct standards for medications', () {
       final profile = UserProfile(
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        medications: const ['Lisinopril 10mg'],
+        medications: const ['Lisinopril 10mg', 'Metformin'],
       );
 
       final standards = service.analyzeProfile(profile);
 
       expect(standards.medicationClasses, contains('ace_inhibitors'));
+      expect(standards.medicationClasses, contains('diabetes_medications'));
     });
 
     test('estimateStorageSizeMb returns non-zero for medical profile', () {
