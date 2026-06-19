@@ -118,6 +118,25 @@ void main() {
   });
 
   group('startMeditation and timer', () {
+    test('should do nothing if script is null', () async {
+      await cubit.startMeditation();
+      expect(cubit.state.status, MeditationStatus.initial);
+      verifyNever(() => mockStartSessionUseCase(any()));
+    });
+
+    test('should emit [error] when startSession fails', () async {
+      cubit.emit(MeditationState(
+        status: MeditationStatus.idle,
+        script: tScript,
+      ));
+      when(() => mockStartSessionUseCase(any())).thenThrow(Exception('start error'));
+
+      await cubit.startMeditation();
+
+      expect(cubit.state.status, MeditationStatus.error);
+      expect(cubit.state.error, 'Exception: start error');
+    });
+
     test('should emit [playing] and increment elapsedSeconds over time', () {
       fakeAsync((async) {
         when(() => mockStartSessionUseCase(any())).thenAnswer((_) async => tSession);
@@ -248,6 +267,47 @@ void main() {
 
       await cubit.previousStep();
       verify(() => mockAudioService.speakText(tScript.steps[0])).called(2); // once on start, once on previous
+    });
+
+    test('nextStep should call finishMeditation if at last step', () async {
+      when(() => mockAudioService.speakText(any())).thenAnswer((_) async => {});
+      when(() => mockAudioService.stopAll()).thenAnswer((_) async => {});
+      when(() => mockCompleteSessionUseCase(
+            session: any(named: 'session'),
+            elapsedSeconds: any(named: 'elapsedSeconds'),
+            completedSteps: any(named: 'completedSteps'),
+          )).thenAnswer((_) async => {});
+      when(() => mockGetProgressUseCase()).thenAnswer((_) async => tProgress);
+
+      cubit.emit(MeditationState(
+        status: MeditationStatus.playing,
+        script: tScript,
+        steps: tScript.steps,
+        session: tSession,
+        currentStep: 1, // Last step for tScript
+      ));
+
+      await cubit.nextStep();
+
+      expect(cubit.state.status, MeditationStatus.completed);
+      verify(() => mockAudioService.speakText('La meditación ha terminado.')).called(1);
+    });
+
+    test('previousStep should do nothing if at first step', () async {
+      when(() => mockAudioService.speakText(any())).thenAnswer((_) async => {});
+
+      cubit.emit(MeditationState(
+        status: MeditationStatus.playing,
+        script: tScript,
+        steps: tScript.steps,
+        session: tSession,
+        currentStep: 0,
+      ));
+
+      await cubit.previousStep();
+
+      expect(cubit.state.currentStep, 0);
+      verifyNever(() => mockAudioService.speakText(any()));
     });
   });
 

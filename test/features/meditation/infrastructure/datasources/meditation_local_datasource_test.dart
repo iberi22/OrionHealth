@@ -42,6 +42,14 @@ void main() {
       final result = await dataSource.getPreferences();
       expect(result, tPrefs);
     });
+
+    test('should overwrite preferences', () async {
+      await dataSource.savePreferences(tPrefs);
+      final newPrefs = tPrefs.copyWith(preferredDurationMinutes: 20);
+      await dataSource.savePreferences(newPrefs);
+      final result = await dataSource.getPreferences();
+      expect(result?.preferredDurationMinutes, 20);
+    });
   });
 
   group('history', () {
