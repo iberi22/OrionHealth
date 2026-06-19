@@ -165,5 +165,15 @@ void main() {
       final results = await repository.getResponsesForRequest('req3');
       expect(results.length, 2);
     });
+
+    test('getResponsesForRequest returns empty list for non-existent requestId', () async {
+      final results = await repository.getResponsesForRequest('non_existent');
+      expect(results, isEmpty);
+    });
+
+    test('getRequestsForPatient returns empty list for non-existent patientId', () async {
+      final results = await repository.getRequestsForPatient('non_existent');
+      expect(results, isEmpty);
+    });
   });
 }
