@@ -7,7 +7,7 @@ import 'package:orionhealth_health/features/sync/presentation/pages/sync_page.da
 import 'package:orionhealth_health/features/sync/application/sync_cubit.dart';
 import 'package:orionhealth_health/features/sync/application/sync_state.dart';
 import 'package:orionhealth_health/features/sync/domain/entities/sync_node.dart';
-import '../../../core/golden_test_utils.dart';
+import '../../../../core/golden_test_utils.dart';
 
 class MockFhirSyncCubit extends Mock implements FhirSyncCubit {}
 
