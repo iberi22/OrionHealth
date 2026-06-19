@@ -142,12 +142,22 @@ void main() {
       });
     });
 
-    group('ReportState equality', () {
+    group('ReportState properties', () {
       test('ReportInitial equality', () {
         expect(const ReportInitial(), const ReportInitial());
       });
       test('ReportLoading equality', () {
         expect(const ReportLoading(), const ReportLoading());
+      });
+      test('ReportLoaded stores reports', () {
+        final reports = [tReport];
+        final state = ReportLoaded(reports);
+        expect(state.reports, reports);
+      });
+      test('ReportError stores message', () {
+        const message = 'error';
+        final state = ReportError(message);
+        expect(state.message, message);
       });
     });
   });
