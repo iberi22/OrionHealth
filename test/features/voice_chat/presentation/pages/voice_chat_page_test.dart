@@ -1,7 +1,10 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/voice_chat/presentation/pages/voice_chat_page.dart';
 import 'package:orionhealth_health/features/voice_chat/application/voice_chat_cubit.dart';
 import 'package:orionhealth_health/features/voice_chat/application/voice_chat_state.dart';
@@ -18,8 +21,9 @@ void main() {
     registerFallbackValue(const VoiceChatState());
   });
 
-  setUp(() async {
-    await getIt.reset();
+  setUp(() {
+    final getIt = GetIt.instance;
+    getIt.reset();
     mockCubit = MockVoiceChatCubit();
     mockAIService = MockAIService();
 
