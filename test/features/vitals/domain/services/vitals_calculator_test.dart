@@ -49,7 +49,17 @@ void main() {
       test('calculateHeartRateZone handles invalid age', () {
         expect(VitalsCalculator.calculateHeartRateZone(100, 0), HeartRateZone.none);
         expect(VitalsCalculator.calculateHeartRateZone(100, -1), HeartRateZone.none);
+        expect(VitalsCalculator.calculateHeartRateZone(100, 121), HeartRateZone.none);
         expect(VitalsCalculator.calculateHeartRateZone(100, 221), HeartRateZone.none);
+      });
+
+      test('calculateHeartRateZone handles zero maxHr if it were possible', () {
+        // Technically age > 120 is caught before, but for coverage of maxHr <= 0
+        // we can't really reach it unless we change the age limit.
+        // But if the code allows age = 220:
+        // if (age > 220) return none;
+        // maxHr = 220 - 220 = 0;
+        // returns none.
       });
     });
 

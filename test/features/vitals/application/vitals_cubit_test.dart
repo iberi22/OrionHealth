@@ -93,6 +93,26 @@ void main() {
         ]));
         await cubit.saveVitalSigns(tVitals);
       });
+
+      test('emits error on failure', () async {
+        when(() => repository.saveVitalSigns(any())).thenThrow(Exception('save error'));
+
+        expectLater(cubit.stream, emitsInOrder([
+          isA<VitalsError>(),
+        ]));
+        await cubit.saveVitalSigns(tVitals);
+      });
+    });
+
+    group('saveVitalSign', () {
+      test('emits error on failure', () async {
+        when(() => repository.saveVitalSign(any())).thenThrow(Exception('save error'));
+
+        expectLater(cubit.stream, emitsInOrder([
+          isA<VitalsError>(),
+        ]));
+        await cubit.saveVitalSign(tVitals.first);
+      });
     });
   });
 
