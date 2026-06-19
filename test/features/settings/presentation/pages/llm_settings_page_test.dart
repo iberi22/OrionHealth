@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/llm_adapter.dart';
 import 'package:orionhealth_health/features/settings/application/llm_settings_cubit.dart';
+import 'package:orionhealth_health/features/settings/domain/entities/app_settings.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
 import 'package:orionhealth_health/features/settings/domain/services/device_capability_service.dart';
 import 'package:orionhealth_health/features/settings/presentation/pages/llm_settings_page.dart';
@@ -53,7 +54,7 @@ void main() {
 
   group('LlmSettingsPage', () {
     testWidgets('renders loading state', (tester) async {
-      when(() => mockCubit.state).thenReturn(const LlmSettingsLoading());
+      when(() => mockCubit.state).thenReturn(LlmSettingsLoading());
 
       await tester.pumpWidget(createWidget());
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -69,6 +70,7 @@ void main() {
     testWidgets('renders loaded state with tabs', (tester) async {
       when(() => mockCubit.state).thenReturn(LlmSettingsLoaded(
         config: testConfig,
+        appSettings: AppSettings(),
         deviceCapability: testCapability,
       ));
 
@@ -85,6 +87,7 @@ void main() {
     testWidgets('clicking Descargar calls cubit', (tester) async {
       when(() => mockCubit.state).thenReturn(LlmSettingsLoaded(
         config: testConfig,
+        appSettings: AppSettings(),
         deviceCapability: testCapability,
       ));
       when(() => mockCubit.downloadModel(any())).thenAnswer((_) async {});
@@ -101,6 +104,7 @@ void main() {
     testWidgets('switching to MODO tab and toggling cloud switch calls cubit', (tester) async {
       when(() => mockCubit.state).thenReturn(LlmSettingsLoaded(
         config: testConfig,
+        appSettings: AppSettings(),
         deviceCapability: testCapability,
       ));
       when(() => mockCubit.updateAllowCloudApiCalls(any())).thenAnswer((_) async {});
