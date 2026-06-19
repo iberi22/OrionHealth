@@ -48,6 +48,42 @@ void main() {
       expect(entry1.hashCode, equals(entry2.hashCode));
     });
 
+    test('should handle null description and metadata', () {
+      final entry = TimelineEntry(
+        id: '1',
+        title: 'Title',
+        date: testDate,
+        type: TimelineEntryType.labResult,
+      );
+
+      expect(entry.description, isNull);
+      expect(entry.metadata, isNull);
+    });
+
+    test('should handle empty metadata', () {
+      final entry = TimelineEntry(
+        id: '1',
+        title: 'Title',
+        date: testDate,
+        type: TimelineEntryType.labResult,
+        metadata: const {},
+      );
+
+      expect(entry.metadata, isEmpty);
+    });
+
+    test('should support all TimelineEntryType values', () {
+      for (final type in TimelineEntryType.values) {
+        final entry = TimelineEntry(
+          id: 'id_${type.name}',
+          title: 'Title ${type.name}',
+          date: testDate,
+          type: type,
+        );
+        expect(entry.type, type);
+      }
+    });
+
     test('should have correct props', () {
       final entry = TimelineEntry(
         id: '1',

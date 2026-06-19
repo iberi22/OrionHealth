@@ -56,6 +56,14 @@ void main() {
   });
 
   group('loadRecords', () {
+    test('resetAndLoad calls loadRecords', () async {
+      when(() => mockRepository.getAllRecords()).thenAnswer((_) async => []);
+
+      await cubit.resetAndLoad();
+
+      verify(() => mockRepository.getAllRecords()).called(1);
+    });
+
     test('emits [Loading, Loaded] when repository returns records', () async {
       final records = [
         MedicalRecord(type: RecordType.labResult, summary: 'Test record'),
@@ -194,7 +202,7 @@ void main() {
   group('saveRecord', () {
     final testDate = DateTime(2025, 1, 1);
 
-    test('emits [Loading, Saved] when repository succeeds', () async {
+    test('emits [Loading, Saved] when repository succeeds for .pdf', () async {
       when(() => mockRepository.saveRecord(any())).thenAnswer((_) async => {});
 
       final expectation = expectLater(
@@ -214,7 +222,32 @@ void main() {
       );
       await expectation;
 
-      verify(() => mockRepository.saveRecord(any())).called(1);
+      final captured = verify(() => mockRepository.saveRecord(captureAny())).captured.single as MedicalRecord;
+      expect(captured.attachments.first.mimeType, 'application/pdf');
+    });
+
+    test('emits [Loading, Saved] when repository succeeds for .jpg', () async {
+      when(() => mockRepository.saveRecord(any())).thenAnswer((_) async => {});
+
+      final expectation = expectLater(
+        cubit.stream,
+        emitsInOrder([
+          isA<HealthRecordLoading>(),
+          isA<HealthRecordSaved>(),
+        ]),
+      );
+
+      await cubit.saveRecord(
+        filePath: 'test.jpg',
+        extractedText: 'text',
+        summary: 'summary',
+        type: RecordType.labResult,
+        date: testDate,
+      );
+      await expectation;
+
+      final captured = verify(() => mockRepository.saveRecord(captureAny())).captured.single as MedicalRecord;
+      expect(captured.attachments.first.mimeType, 'image/jpeg');
     });
 
     test('emits [Loading, Error] when repository fails', () async {
@@ -273,6 +306,15 @@ void main() {
       when(() => mockRepository.getAllRecords()).thenThrow(Exception('Fail'));
       await cubit.loadRecords();
       expect(cubit.state, isA<HealthRecordError>());
+
+      cubit.reset();
+      expect(cubit.state, isA<HealthRecordInitial>());
+    });
+
+    test('reset() returns to initial state from Loaded', () async {
+      when(() => mockRepository.getAllRecords()).thenAnswer((_) async => []);
+      await cubit.loadRecords();
+      expect(cubit.state, isA<HealthRecordLoaded>());
 
       cubit.reset();
       expect(cubit.state, isA<HealthRecordInitial>());
