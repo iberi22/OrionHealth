@@ -78,6 +78,30 @@ void main() {
       expect(fromJson.attachments.first, equals(attachment));
     });
 
+    test('fromJson should handle null or missing fields', () {
+      final json = {
+        'id': 1,
+        'type': 'other',
+      };
+      final record = MedicalRecord.fromJson(json);
+
+      expect(record.id, 1);
+      expect(record.date, isNull);
+      expect(record.summary, isNull);
+      expect(record.attachments, isEmpty);
+      expect(record.type, RecordType.other);
+    });
+
+    test('fromJson should handle null attachments list', () {
+      final json = {
+        'id': 1,
+        'type': 'other',
+        'attachments': null,
+      };
+      final record = MedicalRecord.fromJson(json);
+      expect(record.attachments, isEmpty);
+    });
+
     test('should handle validation', () {
       final validAttachment = MedicalAttachment(localPath: 'path.pdf');
       final invalidAttachment = MedicalAttachment(localPath: '');
