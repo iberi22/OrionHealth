@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -71,18 +72,63 @@ void main() {
     });
     group('Lockout', () {
       test('should emit AuthLocked after 5 failed attempts', () async {
-       final credentials = AuthCredentials()
-        ..hashedPin = 'hashed'
-        ..salt = 'salt'
-        ..failedAttempts = 4;
+        final credentials = AuthCredentials()
+          ..hashedPin = 'hashed'
+          ..salt = 'salt'
+          ..failedAttempts = 4;
 
-      when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
-      when(mockEncryption.hashPin('1111', 'salt')).thenAnswer((_) async => 'wrong');
+        when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
+        when(mockEncryption.hashPin('1111', 'salt')).thenAnswer((_) async => 'wrong');
 
-      await authCubit.loginWithPin('1111');
+        await authCubit.loginWithPin('1111');
 
-      expect(authCubit.state, isA<AuthLocked>());
+        expect(authCubit.state, isA<AuthLocked>());
+      });
     });
-  });
+
+    test('setupPin should save credentials and emit AuthAuthenticated', () async {
+      when(mockEncryption.hashPin(any, any)).thenAnswer((_) async => 'hashed');
+      when(mockRepository.saveCredentials(any)).thenAnswer((_) async {});
+
+      await authCubit.setupPin('1234');
+
+      verify(mockRepository.saveCredentials(any)).called(1);
+      expect(authCubit.state, isA<AuthAuthenticated>());
+    });
+
+    test('loginWithBiometrics should authenticate and emit AuthAuthenticated', () async {
+      final credentials = AuthCredentials()..biometricEnabled = true;
+      when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
+      when(mockBiometric.authenticate(localizedReason: anyNamed('localizedReason')))
+          .thenAnswer((_) async => true);
+
+      await authCubit.loginWithBiometrics();
+
+      expect(authCubit.state, isA<AuthAuthenticated>());
+    });
+
+    test('toggleBiometrics should update repository', () async {
+      final credentials = AuthCredentials()..biometricEnabled = false;
+      when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
+      when(mockBiometric.authenticate(localizedReason: anyNamed('localizedReason')))
+          .thenAnswer((_) async => true);
+      when(mockRepository.saveCredentials(any)).thenAnswer((_) async {});
+
+      await authCubit.toggleBiometrics(true);
+
+      expect(credentials.biometricEnabled, isTrue);
+      verify(mockRepository.saveCredentials(credentials)).called(1);
+    });
+
+    test('logout should cancel timer and emit AuthUnauthenticated', () async {
+      // First authenticate to start session
+      when(mockEncryption.hashPin(any, any)).thenAnswer((_) async => 'hashed');
+      await authCubit.setupPin('1234');
+      expect(authCubit.state, isA<AuthAuthenticated>());
+
+      authCubit.logout();
+
+      expect(authCubit.state, equals(const AuthUnauthenticated()));
+    });
   });
 }
