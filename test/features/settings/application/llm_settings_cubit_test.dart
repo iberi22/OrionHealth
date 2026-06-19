@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/llm_adapter.dart';
 import 'package:orionhealth_health/features/settings/application/llm_settings_cubit.dart';
+import 'package:orionhealth_health/features/settings/domain/entities/app_settings.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
 import 'package:orionhealth_health/features/settings/domain/repositories/llm_settings_repository.dart';
 import 'package:orionhealth_health/features/settings/domain/services/device_capability_service.dart';
@@ -117,9 +118,12 @@ void main() {
     mockLlmAdapter = MockLlmAdapter();
 
     registerFallbackValue(LlmConfig());
+    registerFallbackValue(AppSettings());
 
     when(() => mockRepository.getLlmConfig()).thenAnswer((_) async => testConfig);
     when(() => mockRepository.saveLlmConfig(any())).thenAnswer((_) async {});
+    when(() => mockRepository.getAppSettings()).thenAnswer((_) async => AppSettings());
+    when(() => mockRepository.saveAppSettings(any())).thenAnswer((_) async {});
     when(() => mockDeviceCapabilityService.detectCapability()).thenAnswer((_) async => testCapability);
     when(() => mockLlmAdapter.listInstalledModels()).thenAnswer((_) async => []);
 
@@ -327,7 +331,7 @@ void main() {
         await cubit.verifyConnection();
 
         final loadedState = cubit.state as LlmSettingsLoaded;
-        expect(loadedState.connectionVerified, isTrue);
+        expect(loadedState.connectionVerified, isTrue, reason: loadedState.connectionError);
       }, _MockHttpOverrides(statusCode: 200));
     });
 
