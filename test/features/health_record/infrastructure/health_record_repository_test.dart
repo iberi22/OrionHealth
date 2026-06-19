@@ -92,5 +92,22 @@ void main() {
       final records = await repository.getAllRecords();
       expect(records, isEmpty);
     });
+
+    test('Should handle saving multiple records and retrieving them all', () async {
+      final recordsToSave = List.generate(
+        5,
+        (i) => MedicalRecord(summary: 'Record $i', date: DateTime(2025, 1, i + 1)),
+      );
+
+      for (final record in recordsToSave) {
+        await repository.saveRecord(record);
+      }
+
+      final retrievedRecords = await repository.getAllRecords();
+      expect(retrievedRecords.length, 5);
+      for (int i = 0; i < 5; i++) {
+        expect(retrievedRecords.any((r) => r.summary == 'Record $i'), isTrue);
+      }
+    });
   });
 }
