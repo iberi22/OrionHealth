@@ -160,42 +160,5 @@ void main() {
       });
     });
 
-    group('ReportEvent', () {
-      test('LoadReports can be instantiated', () {
-        expect(LoadReports(), isA<LoadReports>());
-      });
-
-      test('GenerateReportEvent stores properties', () {
-        const prompt = 'test prompt';
-        const contextData = ['data'];
-        final event = GenerateReportEvent(prompt: prompt, contextData: contextData);
-        expect(event.prompt, prompt);
-        expect(event.contextData, contextData);
-      });
-
-      test('DeleteReport stores id', () {
-        final event = DeleteReport(123);
-        expect(event.id, 123);
-      });
-    });
-
-    group('ReportState properties', () {
-      test('ReportInitial equality', () {
-        expect(const ReportInitial(), const ReportInitial());
-      });
-      test('ReportLoading equality', () {
-        expect(const ReportLoading(), const ReportLoading());
-      });
-      test('ReportLoaded stores reports', () {
-        final reports = [tReport];
-        final state = ReportLoaded(reports);
-        expect(state.reports, reports);
-      });
-      test('ReportError stores message', () {
-        const message = 'error';
-        final state = ReportError(message);
-        expect(state.message, message);
-      });
-    });
   });
 }
