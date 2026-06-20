@@ -68,6 +68,14 @@ void main() {
       expect(await repository.isBiometricsEnabled(), isTrue);
     });
 
+    test('hasPinSet should return false when no credentials', () async {
+      expect(await repository.hasPinSet(), isFalse);
+    });
+
+    test('isBiometricsEnabled should return false when no credentials', () async {
+      expect(await repository.isBiometricsEnabled(), isFalse);
+    });
+
     test('deleteCredentials should clear all credentials', () async {
       final credentials = AuthCredentials()..hashedPin = 'hashed';
       await repository.saveCredentials(credentials);
