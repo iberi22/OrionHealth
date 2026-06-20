@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
-import '../../application/doctor_verification_cubit.dart';
-import '../../application/doctor_verification_state.dart';
+import '../../application/bloc/doctor_verification_bloc.dart';
 import '../../domain/entities/doctor_profile.dart';
 import '../widgets/rating_dialog.dart';
+import '../widgets/verification_badge.dart';
 
 class DoctorDetailPage extends StatelessWidget {
   final DoctorProfile doctor;
@@ -16,13 +16,13 @@ class DoctorDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<DoctorVerificationCubit>()..loadDoctors(),
+      create: (_) => getIt<DoctorVerificationBloc>()..add(LoadDoctors()),
       child: Scaffold(
         appBar: AppBar(
           title: Text(doctor.fullName),
           backgroundColor: Colors.transparent,
         ),
-        body: BlocConsumer<DoctorVerificationCubit, DoctorVerificationState>(
+        body: BlocConsumer<DoctorVerificationBloc, DoctorVerificationState>(
           listener: (context, state) {
             if (state is LicenseVerificationResultState) {
               final color = state.result == 'valid' ? Colors.green : Colors.red;
@@ -80,27 +80,7 @@ class DoctorDetailPage extends StatelessWidget {
             style: const TextStyle(fontSize: 18, color: CyberTheme.secondary),
           ),
           const SizedBox(height: 8),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  doctor.verified ? Icons.verified : Icons.warning_amber_rounded,
-                  color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  doctor.verified ? 'MÉDICO VERIFICADO' : 'PENDIENTE DE VERIFICACIÓN',
-                  style: TextStyle(
-                    color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          VerificationBadge(isVerified: doctor.verified),
         ],
       ),
     );
@@ -146,7 +126,7 @@ class DoctorDetailPage extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
-                context.read<DoctorVerificationCubit>().verifyDoctor(doctor);
+                context.read<DoctorVerificationBloc>().add(VerifyDoctor(doctor));
               },
               icon: const Icon(Icons.security),
               label: const Text('VERIFICAR LICENCIA AHORA'),
@@ -167,7 +147,7 @@ class DoctorDetailPage extends StatelessWidget {
                 builder: (_) => RatingDialog(
                   doctorId: doctor.id,
                   onSubmitted: (rating) {
-                    context.read<DoctorVerificationCubit>().submitRating(rating);
+                    context.read<DoctorVerificationBloc>().add(SubmitRating(rating));
                   },
                 ),
               );
