@@ -1,7 +1,7 @@
 {
-    "averageImplPct":  94,
+    "averageImplPct":  99,
     "totalFeatures":  26,
-    "generated":  "2026-06-19T21:32:15.0341464-05:00",
+    "generated":  "2026-06-19T21:48:34.6091292-05:00",
     "features":  [
                      {
                          "name":  "about",
@@ -11,21 +11,21 @@
                      },
                      {
                          "name":  "allergies",
-                         "status":  "parse",
-                         "implementationPct":  89,
-                         "testFiles":  8
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  9
                      },
                      {
                          "name":  "appointments",
-                         "status":  "parse",
-                         "implementationPct":  83,
-                         "testFiles":  10
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  12
                      },
                      {
                          "name":  "auth",
                          "status":  "parse",
-                         "implementationPct":  80,
-                         "testFiles":  16
+                         "implementationPct":  95,
+                         "testFiles":  19
                      },
                      {
                          "name":  "calendar_import",
@@ -41,9 +41,9 @@
                      },
                      {
                          "name":  "doctor_verification",
-                         "status":  "parse",
-                         "implementationPct":  97,
-                         "testFiles":  32
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  36
                      },
                      {
                          "name":  "email-citas",
@@ -83,9 +83,9 @@
                      },
                      {
                          "name":  "local_agent",
-                         "status":  "parse",
-                         "implementationPct":  94,
-                         "testFiles":  33
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  36
                      },
                      {
                          "name":  "medical_research",
@@ -113,9 +113,9 @@
                      },
                      {
                          "name":  "network/incentives",
-                         "status":  "parse",
-                         "implementationPct":  73,
-                         "testFiles":  8
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  11
                      },
                      {
                          "name":  "onboarding",
@@ -125,9 +125,9 @@
                      },
                      {
                          "name":  "reports",
-                         "status":  "incomplete",
-                         "implementationPct":  69,
-                         "testFiles":  9
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  13
                      },
                      {
                          "name":  "settings",
@@ -138,14 +138,14 @@
                      {
                          "name":  "sync",
                          "status":  "parse",
-                         "implementationPct":  79,
-                         "testFiles":  15
+                         "implementationPct":  84,
+                         "testFiles":  16
                      },
                      {
                          "name":  "user_profile",
-                         "status":  "parse",
-                         "implementationPct":  91,
-                         "testFiles":  10
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  11
                      },
                      {
                          "name":  "vitals",
