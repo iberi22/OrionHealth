@@ -5,15 +5,24 @@ import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 import 'package:orionhealth_health/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:orionhealth_health/features/appointments/presentation/pages/appointments_page.dart';
+import 'package:orionhealth_health/features/email-citas/presentation/email_connect_page.dart';
+import 'package:orionhealth_health/features/email-citas/application/email_citas_cubit.dart';
+import 'package:orionhealth_health/features/email-citas/application/email_citas_state.dart';
+import 'package:orionhealth_health/features/calendar_import/presentation/calendar_import_page.dart';
+import 'package:orionhealth_health/features/calendar_import/application/calendar_import_cubit.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class MockAppointmentRepository extends Mock implements AppointmentRepository {}
+class MockEmailCitasCubit extends Mock implements EmailCitasCubit {}
+class MockCalendarImportCubit extends Mock implements CalendarImportCubit {}
 
 class FakeAppointment extends Fake implements Appointment {}
 
 void main() {
   late MockAppointmentRepository mockRepository;
+  late MockEmailCitasCubit mockEmailCitasCubit;
+  late MockCalendarImportCubit mockCalendarImportCubit;
 
   setUpAll(() {
     initializeDateFormatting('es', null);
@@ -22,8 +31,21 @@ void main() {
 
   setUp(() async {
     mockRepository = MockAppointmentRepository();
+    mockEmailCitasCubit = MockEmailCitasCubit();
+    mockCalendarImportCubit = MockCalendarImportCubit();
+
+    when(() => mockEmailCitasCubit.state).thenReturn(EmailCitasInitial());
+    when(() => mockEmailCitasCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCalendarImportCubit.state).thenReturn(const CalendarImportInitial());
+    when(() => mockCalendarImportCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCalendarImportCubit.scanCalendar()).thenAnswer((_) async => Future.value());
+    when(() => mockEmailCitasCubit.close()).thenAnswer((_) async {});
+    when(() => mockCalendarImportCubit.close()).thenAnswer((_) async {});
+
     await getIt.reset();
     getIt.registerSingleton<AppointmentRepository>(mockRepository);
+    getIt.registerFactory<EmailCitasCubit>(() => mockEmailCitasCubit);
+    getIt.registerFactory<CalendarImportCubit>(() => mockCalendarImportCubit);
   });
 
   tearDown(() async {
@@ -52,6 +74,56 @@ void main() {
     await tester.pumpAndSettle(); // Finish loading
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('can trigger refresh indicator', (WidgetTester tester) async {
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => <Appointment>[]);
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    await tester.fling(find.byType(RefreshIndicator), const Offset(0.0, 300.0), 1000.0);
+    await tester.pump(); // Start refresh
+    await tester.pump(const Duration(seconds: 1)); // Wait for animation
+    await tester.pumpAndSettle();
+
+    verify(() => mockRepository.getAllAppointments()).called(2);
+  });
+
+  testWidgets('email import button navigates to EmailConnectPage', (WidgetTester tester) async {
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => <Appointment>[]);
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    final emailButton = find.byTooltip('Importar desde correo');
+    expect(emailButton, findsOneWidget);
+
+    await tester.tap(emailButton);
+    await tester.pumpAndSettle();
+
+    // Verify navigation (EmailConnectPage should be present)
+    expect(find.byType(EmailConnectPage), findsOneWidget);
+  });
+
+  testWidgets('calendar import button navigates to CalendarImportPage', (WidgetTester tester) async {
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => <Appointment>[]);
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    final calendarButton = find.byTooltip('Importar desde calendario');
+    expect(calendarButton, findsOneWidget);
+
+    await tester.tap(calendarButton);
+    // Use pump twice instead of pumpAndSettle to avoid infinite animation issues
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.byType(CalendarImportPage), findsOneWidget);
   });
 
   testWidgets('shows appointments list when data is available', (WidgetTester tester) async {
