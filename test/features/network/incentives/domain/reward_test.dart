@@ -54,6 +54,17 @@ void main() {
           isClaimed: false,
         ),
       );
+
+       expect(
+        reward.copyWith(id: 'new_id', userId: 'new_user', tier: 'Gold'),
+        const Reward(
+          id: 'new_id',
+          userId: 'new_user',
+          points: 100,
+          tier: 'Gold',
+          isClaimed: false,
+        ),
+      );
     });
 
     test('props are correct', () {

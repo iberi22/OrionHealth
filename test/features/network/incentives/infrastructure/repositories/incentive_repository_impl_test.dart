@@ -85,5 +85,11 @@ void main() {
       expect(result, 100);
       verify(() => datasource.getTotalPoints(userId)).called(1);
     });
+
+    test('propagates errors from datasource', () async {
+      when(() => datasource.getLeaderboard()).thenThrow(Exception('Data source error'));
+
+      expect(() => repository.getLeaderboard(), throwsA(isA<Exception>()));
+    });
   });
 }

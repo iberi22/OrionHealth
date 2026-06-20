@@ -32,6 +32,11 @@ void main() {
       expect(contributions.first.id, 'c1');
     });
 
+    test('getContributions returns empty list for user with no contributions', () async {
+      final contributions = await datasource.getContributions('unknown_user');
+      expect(contributions, isEmpty);
+    });
+
     test('addContribution generates a reward when points threshold is met', () async {
       final c1 = Contribution(
         id: 'c1',
@@ -89,6 +94,22 @@ void main() {
       expect(leaderboard.keys.first, 'u2');
       expect(leaderboard['u2'], 200);
       expect(leaderboard['u1'], 100);
+    });
+
+    test('handling multiple users separately', () async {
+       await datasource.addContribution(Contribution(
+        id: 'c1', userId: 'u1', type: ContributionType.storage, rewardPoints: 100, timestamp: DateTime.now(),
+      ));
+      await datasource.addContribution(Contribution(
+        id: 'c2', userId: 'u2', type: ContributionType.storage, rewardPoints: 200, timestamp: DateTime.now(),
+      ));
+
+      expect(await datasource.getTotalPoints('u1'), 100);
+      expect(await datasource.getTotalPoints('u2'), 200);
+
+      final contributionsU1 = await datasource.getContributions('u1');
+      expect(contributionsU1.length, 1);
+      expect(contributionsU1.first.userId, 'u1');
     });
   });
 }

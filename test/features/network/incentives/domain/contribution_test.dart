@@ -35,5 +35,26 @@ void main() {
       );
       expect(contribution.props, ['1', 'user1', ContributionType.storage, 10, timestamp]);
     });
+
+    test('different values are not equal', () {
+       expect(
+        Contribution(
+          id: '1',
+          userId: 'user1',
+          type: ContributionType.storage,
+          rewardPoints: 10,
+          timestamp: timestamp,
+        ),
+        isNot(equals(
+          Contribution(
+            id: '2',
+            userId: 'user1',
+            type: ContributionType.storage,
+            rewardPoints: 10,
+            timestamp: timestamp,
+          ),
+        )),
+      );
+    });
   });
 }
