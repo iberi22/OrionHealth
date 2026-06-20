@@ -12,12 +12,14 @@ void main() {
   late MockSyncService mockSyncService;
   late MockVectorStoreService mockVectorStoreService;
 
+  setUpAll(() {
+    registerFallbackValue(SyncService.datasets.first);
+  });
+
   setUp(() {
     mockSyncService = MockSyncService();
     mockVectorStoreService = MockVectorStoreService();
     cubit = SyncCubit(mockSyncService, mockVectorStoreService);
-
-    registerFallbackValue(SyncService.datasets.first);
   });
 
   tearDown(() {

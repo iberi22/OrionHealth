@@ -11,18 +11,23 @@ class MockHttpClient extends Mock implements http.Client {}
 
 class MockUrlLauncher extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
 
+class FakeLaunchOptions extends Fake implements LaunchOptions {}
+
 void main() {
   late EmailRepositoryImpl repository;
   late MockHttpClient mockHttpClient;
   late MockUrlLauncher mockUrlLauncher;
+
+  setUpAll(() {
+    registerFallbackValue(Uri.parse('http://localhost'));
+    registerFallbackValue(FakeLaunchOptions());
+  });
 
   setUp(() {
     mockHttpClient = MockHttpClient();
     repository = EmailRepositoryImpl(client: mockHttpClient);
     mockUrlLauncher = MockUrlLauncher();
     UrlLauncherPlatform.instance = mockUrlLauncher;
-
-    registerFallbackValue(Uri.parse('http://localhost'));
   });
 
   group('connect methods', () {
@@ -53,8 +58,11 @@ void main() {
         }
       ]);
 
-      when(() => mockHttpClient.post(any(), headers: any(named: 'headers'), body: any(named: 'body')))
-          .thenAnswer((_) async => http.Response(responseBody, 200));
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response(responseBody, 200));
 
       final result = await repository.fetchParsedAppointments('Gmail', 'test_code');
 
@@ -65,16 +73,22 @@ void main() {
 
     test('handles missing data with defaults', () async {
       final responseBody = jsonEncode([{}]);
-      when(() => mockHttpClient.post(any(), headers: any(named: 'headers'), body: any(named: 'body')))
-          .thenAnswer((_) async => http.Response(responseBody, 200));
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response(responseBody, 200));
 
       final result = await repository.fetchParsedAppointments('Outlook', 'test_code');
       expect(result.first.doctorName, 'Desconocido');
     });
 
     test('throws exception on non-200', () async {
-      when(() => mockHttpClient.post(any(), headers: any(named: 'headers'), body: any(named: 'body')))
-          .thenAnswer((_) async => http.Response('Error', 400));
+      when(() => mockHttpClient.post(
+            any(),
+            headers: any(named: 'headers'),
+            body: any(named: 'body'),
+          )).thenAnswer((_) async => http.Response('Error', 400));
 
       expect(() => repository.fetchParsedAppointments('Gmail', 'test_code'), throwsException);
     });

@@ -36,13 +36,15 @@ void main() {
     recommendedModel: 'gemini-2.0-flash',
   );
 
+  setUpAll(() {
+    registerFallbackValue(LlmConfig());
+    registerFallbackValue(AppSettings());
+  });
+
   setUp(() {
     mockRepository = MockLlmSettingsRepository();
     mockDeviceCapabilityService = MockDeviceCapabilityService();
     mockLlmAdapter = MockLlmAdapter();
-
-    registerFallbackValue(LlmConfig());
-    registerFallbackValue(AppSettings());
 
     when(() => mockRepository.getLlmConfig()).thenAnswer((_) async => testConfig);
     when(() => mockRepository.saveLlmConfig(any())).thenAnswer((_) async {});
