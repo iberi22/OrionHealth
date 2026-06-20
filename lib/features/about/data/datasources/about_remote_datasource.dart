@@ -17,4 +17,16 @@ class AboutRemoteDataSource {
     // e.g. GET /api/about/blog-posts
     return null;
   }
+
+  /// Fetch the current application version from the remote server.
+  Future<String?> fetchAppVersion() async {
+    // TODO: Implement HTTP call
+    return null;
+  }
+
+  /// Fetch the general "about" content for the application.
+  Future<Map<String, dynamic>?> fetchAboutContent() async {
+    // TODO: Implement HTTP call
+    return null;
+  }
 }

@@ -15,5 +15,19 @@ void main() {
         expect(result, isNull);
       });
     });
+
+    group('fetchAppVersion', () {
+      test('returns null (placeholder)', () async {
+        final result = await datasource.fetchAppVersion();
+        expect(result, isNull);
+      });
+    });
+
+    group('fetchAboutContent', () {
+      test('returns null (placeholder)', () async {
+        final result = await datasource.fetchAboutContent();
+        expect(result, isNull);
+      });
+    });
   });
 }
