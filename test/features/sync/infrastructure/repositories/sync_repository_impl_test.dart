@@ -6,7 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/sync/infrastructure/services/fhir_client.dart';
 import 'package:orionhealth_health/features/sync/infrastructure/repositories/sync_repository.dart';
 import 'package:orionhealth_health/features/sync/infrastructure/services/node_discovery_service.dart';
-import 'package:orionhealth_health/features/sync/domain/sync_repository.dart';
+import 'package:orionhealth_health/features/sync/domain/repositories/sync_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
@@ -96,7 +96,7 @@ void main() {
       expect(result, nowMs);
     });
 
-    test('getDiscoveredNodes returns mapped nodes from discovery service', () {
+    test('getDiscoveredNodes returns mapped nodes from discovery service', () async {
       final mockNode = MockBonsoirService();
       when(() => mockNode.name).thenReturn('Node1');
       when(() => mockNode.hostname).thenReturn('192.168.1.5');
@@ -105,7 +105,7 @@ void main() {
 
       when(() => mockDiscoveryService.currentNodes).thenReturn([mockNode]);
 
-      final result = syncRepository.getDiscoveredNodes();
+      final result = await syncRepository.getDiscoveredNodes();
 
       expect(result.length, 1);
       expect(result.first.id, 'id123');
