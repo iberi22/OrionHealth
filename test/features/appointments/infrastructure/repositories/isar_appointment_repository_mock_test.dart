@@ -23,6 +23,8 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(FakeAppointment());
+    registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(AppointmentStatus.upcoming);
   });
 
   setUp(() {

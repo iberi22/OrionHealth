@@ -27,6 +27,10 @@ void main() {
     registerFallbackValue(
       CalendarEvent(title: 'test', startDateTime: DateTime.now()),
     );
+    registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(<CalendarEvent>[]);
+    registerFallbackValue(AppointmentStatus.upcoming);
+    registerFallbackValue(CalendarEventSource.unknown);
   });
 
   late CalendarImportCubit cubit;

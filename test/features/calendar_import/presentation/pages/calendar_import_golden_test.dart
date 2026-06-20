@@ -16,12 +16,6 @@ void main() {
 
   setUpAll(() {
     getIt.allowReassignment = true;
-  });
-
-  setUp(() {
-    mockCubit = MockCalendarImportCubit();
-    getIt.registerSingleton<CalendarImportCubit>(mockCubit);
-
     registerFallbackValue(
       Appointment(
         doctorName: '',
@@ -36,6 +30,15 @@ void main() {
         startDateTime: DateTime.now(),
       ),
     );
+    registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(<CalendarEvent>[]);
+    registerFallbackValue(AppointmentStatus.upcoming);
+    registerFallbackValue(CalendarEventSource.unknown);
+  });
+
+  setUp(() {
+    mockCubit = MockCalendarImportCubit();
+    getIt.registerSingleton<CalendarImportCubit>(mockCubit);
   });
 
   Widget buildTestWidget(CalendarImportCubit cubit) {
