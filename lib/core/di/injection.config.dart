@@ -82,10 +82,8 @@ import '../../features/dashboard/domain/usecases/get_recent_activity_usecase.dar
     as _i138;
 import '../../features/doctor_verification/application/badge_cubit.dart'
     as _i184;
-import '../../features/doctor_verification/application/bloc/doctor_verification_bloc.dart'
-    as _i130;
 import '../../features/doctor_verification/application/doctor_verification_cubit.dart'
-    as _i131;
+    as _i130;
 import '../../features/doctor_verification/application/second_opinion_cubit.dart'
     as _i167;
 import '../../features/doctor_verification/application/vouch_cubit.dart'
@@ -613,14 +611,8 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i127.DistributedCacheUsecase(gh<_i42.IpfsService>()));
     gh.lazySingleton<_i128.DoctorProfileRepository>(
         () => _i129.IsarDoctorProfileRepository(gh<_i43.Isar>()));
-    gh.factoryAsync<_i130.DoctorVerificationBloc>(
-        () async => _i130.DoctorVerificationBloc(
-              gh<_i128.DoctorProfileRepository>(),
-              gh<_i84.RatingRepository>(),
-              await getAsync<_i45.LicenseVerifier>(),
-            ));
-    gh.factoryAsync<_i131.DoctorVerificationCubit>(
-        () async => _i131.DoctorVerificationCubit(
+    gh.factoryAsync<_i130.DoctorVerificationCubit>(
+        () async => _i130.DoctorVerificationCubit(
               gh<_i128.DoctorProfileRepository>(),
               gh<_i84.RatingRepository>(),
               await getAsync<_i45.LicenseVerifier>(),
@@ -764,10 +756,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i175.SyncRepository>(),
           gh<_i54.SyncService>(),
         ));
-    gh.lazySingleton<_i176.SyncService>(() => _i176.SyncService(
-          gh<_i94.SyncRepository>(),
-          gh<_i97.UserProfileRepository>(),
-        ));
+
     gh.factory<_i177.UserProfileCubit>(
         () => _i177.UserProfileCubit(gh<_i97.UserProfileRepository>()));
     gh.factory<_i178.VoiceChatCubit>(() => _i178.VoiceChatCubit(
