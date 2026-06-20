@@ -19,10 +19,12 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: BlocProvider<EpsConnectionCubit>.value(
-        value: mockCubit,
-        child: const EpsConnectionPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<EpsConnectionCubit>.value(value: mockCubit),
+      ],
+      child: const MaterialApp(
+        home: EpsConnectionPage(),
       ),
     );
   }

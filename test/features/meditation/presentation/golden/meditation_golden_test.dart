@@ -38,11 +38,13 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
 
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.darkTheme,
-        home: BlocProvider<MeditationCubit>.value(
-          value: mockCubit,
-          child: const MeditationView(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<MeditationCubit>.value(value: mockCubit),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.darkTheme,
+          home: const MeditationView(),
         ),
       ),
     );
@@ -76,11 +78,13 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
 
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.darkTheme,
-        home: BlocProvider<MeditationCubit>.value(
-          value: mockCubit,
-          child: const MeditationView(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<MeditationCubit>.value(value: mockCubit),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.darkTheme,
+          home: const MeditationView(),
         ),
       ),
     );

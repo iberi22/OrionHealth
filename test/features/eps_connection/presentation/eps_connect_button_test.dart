@@ -20,11 +20,13 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: Scaffold(
-        body: BlocProvider<EpsConnectionCubit>.value(
-          value: mockCubit,
-          child: const EpsConnectButton(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<EpsConnectionCubit>.value(value: mockCubit),
+      ],
+      child: const MaterialApp(
+        home: Scaffold(
+          body: EpsConnectButton(),
         ),
       ),
     );

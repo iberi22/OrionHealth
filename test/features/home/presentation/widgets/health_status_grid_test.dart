@@ -19,11 +19,11 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: Scaffold(
-        body: BlocProvider<HomeCubit>.value(
-          value: mockHomeCubit,
-          child: const HealthStatusGrid(),
+    return BlocProvider<HomeCubit>.value(
+      value: mockHomeCubit,
+      child: const MaterialApp(
+        home: Scaffold(
+          body: HealthStatusGrid(),
         ),
       ),
     );
