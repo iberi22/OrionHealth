@@ -12,5 +12,26 @@ void main() {
     test('default status is finalized', () {
       expect(Report().status, ReportStatus.finalized);
     });
+
+    test('constructor correctly assigns values', () {
+      final now = DateTime.now();
+      final report = Report(
+        generatedAt: now,
+        title: 'Title',
+        content: 'Content',
+        status: ReportStatus.urgent,
+      );
+
+      expect(report.generatedAt, now);
+      expect(report.title, 'Title');
+      expect(report.content, 'Content');
+      expect(report.status, ReportStatus.urgent);
+    });
+
+    test('id can be assigned', () {
+      final report = Report();
+      report.id = 123;
+      expect(report.id, 123);
+    });
   });
 }
