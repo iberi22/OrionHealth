@@ -194,6 +194,32 @@ void main() {
         await expectation;
       });
 
+      test('previousStep at step 0 stays at step 0', () async {
+        await cubit.startOnboarding();
+        expect(cubit.currentStep, 0);
+
+        await cubit.previousStep();
+        expect(cubit.currentStep, 0);
+      });
+
+      test('nextStep at final step does not exceed total steps', () async {
+        await cubit.startOnboarding();
+        // Manually set to last step
+        final lastStep = OnboardingCubit.totalSteps - 1;
+        final profile = (cubit.state as OnboardingInProgress).profile.copyWith(
+              onboardingStep: lastStep,
+              name: 'Test',
+              birthDate: DateTime.now(),
+              sex: 'M',
+              privacyConsent: true,
+            );
+        await cubit.resumeOnboarding(profile);
+        expect(cubit.currentStep, lastStep);
+
+        await cubit.nextStep();
+        expect(cubit.currentStep, lastStep);
+      });
+
       test('skipOnboarding emits OnboardingCompleted', () async {
         await cubit.startOnboarding();
 
@@ -328,6 +354,16 @@ void main() {
       final next = state.copyWith(currentStep: 1);
       expect(next.currentStep, 1);
       expect(next.profile, profile);
+    });
+
+    test('updateAllergies documents current no-op behavior', () async {
+      await cubit.startOnboarding();
+      final originalProfile = (cubit.state as OnboardingInProgress).profile;
+
+      await cubit.updateAllergies(['Peanuts']);
+
+      // Currently updateAllergies is empty in lib/, so profile shouldn't change
+      expect((cubit.state as OnboardingInProgress).profile, equals(originalProfile));
     });
   });
 }

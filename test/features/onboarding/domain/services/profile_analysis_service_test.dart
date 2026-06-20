@@ -91,5 +91,37 @@ void main() {
       expect(standards.medicationClasses, isEmpty);
       expect(standards.estimatedSizeMB, 0);
     });
+
+    test('analyzeProfile aggregates codes for multiple conditions', () {
+      final profile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        conditions: const ['Diabetes', 'Hypertension'],
+      );
+
+      final standards = service.analyzeProfile(profile);
+
+      expect(standards.icd10Codes, containsAll(['E10', 'E11', 'I10', 'I11']));
+      expect(standards.loincCodes, containsAll(['2345-7', '4548-4', '8480-6', '8462-4']));
+      expect(standards.guidelineIds, containsAll(['ADA-2024', 'JNC-8']));
+      expect(standards.medicationClasses, containsAll(['insulin', 'metformin', 'ace_inhibitors', 'beta_blockers']));
+      expect(standards.estimatedSizeMB, greaterThan(0));
+    });
+
+    test('analyzeProfile handles unknown conditions gracefully', () {
+      final profile = UserProfile(
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        conditions: const ['Unknown condition 123'],
+      );
+
+      final standards = service.analyzeProfile(profile);
+
+      expect(standards.icd10Codes, isEmpty);
+      expect(standards.loincCodes, isEmpty);
+      expect(standards.guidelineIds, isEmpty);
+      expect(standards.medicationClasses, isEmpty);
+      expect(standards.estimatedSizeMB, 0);
+    });
   });
 }
