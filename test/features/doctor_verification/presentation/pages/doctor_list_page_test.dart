@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_cubit.dart';
-import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
+import 'package:orionhealth_health/features/doctor_verification/application/bloc/doctor_verification_bloc.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/repositories/doctor_profile_repository.dart';
@@ -19,28 +18,28 @@ void main() {
   late MockProfileRepo mockProfileRepo;
   late MockRatingRepo mockRatingRepo;
   late MockLicenseVerifier mockLicenseVerifier;
-  late DoctorVerificationCubit realCubit;
+  late DoctorVerificationBloc realBloc;
 
   setUp(() {
     mockProfileRepo = MockProfileRepo();
     mockRatingRepo = MockRatingRepo();
     mockLicenseVerifier = MockLicenseVerifier();
 
-    realCubit = DoctorVerificationCubit(
+    realBloc = DoctorVerificationBloc(
       mockProfileRepo,
       mockRatingRepo,
       mockLicenseVerifier,
     );
 
-    if (GetIt.I.isRegistered<DoctorVerificationCubit>()) {
-      GetIt.I.unregister<DoctorVerificationCubit>();
+    if (GetIt.I.isRegistered<DoctorVerificationBloc>()) {
+      GetIt.I.unregister<DoctorVerificationBloc>();
     }
-    GetIt.I.registerSingleton<DoctorVerificationCubit>(realCubit);
+    GetIt.I.registerSingleton<DoctorVerificationBloc>(realBloc);
   });
 
   tearDown(() {
-    if (GetIt.I.isRegistered<DoctorVerificationCubit>()) {
-      GetIt.I.unregister<DoctorVerificationCubit>();
+    if (GetIt.I.isRegistered<DoctorVerificationBloc>()) {
+      GetIt.I.unregister<DoctorVerificationBloc>();
     }
   });
 
@@ -51,13 +50,11 @@ void main() {
   }
 
   testWidgets('renders loading state', (tester) async {
-    // Make loadDoctors hang indefinitely so we stay in Loading state
     final completer = Completer<List<DoctorProfile>>();
     when(() => mockProfileRepo.getAllDoctorProfiles()).thenAnswer((_) => completer.future);
 
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
@@ -76,7 +73,7 @@ void main() {
     when(() => mockProfileRepo.getAllDoctorProfiles()).thenThrow(Exception('Network error'));
 
     await tester.pumpWidget(createWidgetUnderTest());
-    await tester.pumpAndSettle().catchError((_) {});
+    await tester.pumpAndSettle();
 
     expect(find.textContaining('Network error'), findsOneWidget);
   });
@@ -95,10 +92,8 @@ void main() {
     when(() => mockProfileRepo.getAllDoctorProfiles()).thenAnswer((_) async => [doctor]);
     when(() => mockRatingRepo.getAverageForDoctor('1')).thenAnswer((_) async => 4.5);
 
-    // Use a try-catch to handle the ListTile background assertion from GlassmorphicCard
     await tester.pumpWidget(createWidgetUnderTest());
-    // Ignore the exception thrown by pumpAndSettle
-    await tester.pumpAndSettle().catchError((_) {});
+    await tester.pumpAndSettle();
 
     expect(find.text('Dr. Smith'), findsOneWidget);
     expect(find.text('Cardiology'), findsOneWidget);
