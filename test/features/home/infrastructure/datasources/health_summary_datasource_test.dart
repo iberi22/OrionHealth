@@ -3,9 +3,20 @@ import 'package:orionhealth_health/features/home/infrastructure/datasources/heal
 
 void main() {
   group('HealthSummaryDatasource', () {
+    late HealthSummaryDatasource datasource;
+
+    setUp(() {
+      datasource = HealthSummaryDatasource();
+    });
+
     test('should be able to create an instance', () {
-      final datasource = HealthSummaryDatasource();
       expect(datasource, isNotNull);
+    });
+
+    test('getHealthSummary returns a non-empty summary', () async {
+      final summary = await datasource.getHealthSummary();
+      expect(summary, isNotEmpty);
+      expect(summary, contains('Resumen de salud'));
     });
   });
 }

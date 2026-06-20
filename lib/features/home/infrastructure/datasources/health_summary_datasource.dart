@@ -7,4 +7,11 @@ import 'package:injectable/injectable.dart';
 @injectable
 class HealthSummaryDatasource {
   HealthSummaryDatasource();
+
+  /// Fetches a summary of the patient's health data.
+  ///
+  /// Currently a placeholder that returns a static mock summary.
+  Future<String> getHealthSummary() async {
+    return 'Resumen de salud: El paciente presenta signos vitales estables y sigue su tratamiento para la hipertensión.';
+  }
 }
