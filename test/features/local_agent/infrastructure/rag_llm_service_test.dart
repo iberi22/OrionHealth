@@ -21,6 +21,10 @@ void main() {
   late MockLlmAdapter mockAdapter;
   late RagLlmService service;
 
+  setUpAll(() {
+    registerFallbackValue('test-query');
+  });
+
   setUp(() {
     mockVectorStore = MockVectorStoreService();
     mockResearch = MockMedicalResearchService();
@@ -33,8 +37,6 @@ void main() {
       mockUserProfileRepo,
       mockAdapter,
     );
-
-    registerFallbackValue('test-query');
 
     // Default stub for performResearch to return empty list
     when(() => mockResearch.performResearch(any()))

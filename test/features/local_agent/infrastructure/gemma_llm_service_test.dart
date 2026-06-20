@@ -17,6 +17,10 @@ void main() {
   late MockLlmAdapter mockAdapter;
   late GemmaLlmService service;
 
+  setUpAll(() {
+    registerFallbackValue('test-query');
+  });
+
   setUp(() {
     mockVectorStore = MockVectorStoreService();
     mockUserProfileRepo = MockUserProfileRepository();
@@ -27,8 +31,6 @@ void main() {
       mockUserProfileRepo,
       mockAdapter,
     );
-
-    registerFallbackValue('test-query');
   });
 
   group('GemmaLlmService', () {
