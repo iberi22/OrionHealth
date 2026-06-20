@@ -18,9 +18,7 @@ class DoctorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassmorphicCard(
-      child: Material(
-        type: MaterialType.transparency,
-        child: ListTile(
+      child: ListTile(
         leading: CircleAvatar(
           backgroundColor: CyberTheme.primary.withValues(alpha: 0.2),
           child: const Icon(Icons.person, color: CyberTheme.primary),
@@ -65,7 +63,6 @@ class DoctorCard extends StatelessWidget {
         ),
         trailing: const Icon(Icons.chevron_right, color: Colors.white54),
         onTap: onTap,
-          ),
       ),
     );
   }

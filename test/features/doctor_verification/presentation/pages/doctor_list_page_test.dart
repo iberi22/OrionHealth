@@ -3,41 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/doctor_verification/application/bloc/doctor_verification_bloc.dart';
+import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_cubit.dart';
+import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
-import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
 
-class MockDoctorVerificationBloc extends Mock implements DoctorVerificationBloc {}
-
-class _DoctorVerificationEventFake extends Fake implements DoctorVerificationEvent {}
+class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {}
 
 void main() {
-  setUpAll(() {
-    registerFallbackValue(_DoctorVerificationEventFake());
-  });
-  late MockDoctorVerificationBloc mockBloc;
+  late MockDoctorVerificationCubit mockCubit;
 
   setUp(() {
-    mockBloc = MockDoctorVerificationBloc();
-    when(() => mockBloc.close()).thenAnswer((_) async {});
-    when(() => mockBloc.add(any())).thenReturn(null);
-    GetIt.instance.registerFactory<DoctorVerificationBloc>(() => mockBloc);
-    GetIt.instance.allowReassignment = true;
+    mockCubit = MockDoctorVerificationCubit();
+    when(() => mockCubit.close()).thenAnswer((_) async {});
   });
 
   Widget createWidgetUnderTest() {
     return MaterialApp(
-      home: BlocProvider<DoctorVerificationBloc>.value(
-        value: mockBloc,
+      home: BlocProvider<DoctorVerificationCubit>.value(
+        value: mockCubit,
         child: const DoctorListPage(),
       ),
     );
   }
 
   testWidgets('renders loading state', (tester) async {
-    when(() => mockBloc.state).thenReturn(const DoctorVerificationLoading());
-    when(() => mockBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.state).thenReturn(const DoctorVerificationLoading());
+    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
 
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pump();
@@ -46,13 +39,14 @@ void main() {
   });
 
   testWidgets('renders empty state', (tester) async {
-    when(() => mockBloc.state).thenReturn(const DoctorVerificationLoaded(doctors: [], averageRatings: {}));
-    when(() => mockBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.state).thenReturn(const DoctorVerificationLoaded(doctors: [], averageRatings: {}));
+    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
 
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pumpAndSettle();
 
-    expect(find.text('No se encontraron medicos.'), findsOneWidget);
+    expect(find.text('No se encontraron médicos.'), findsOneWidget);
   });
 
   testWidgets('renders doctors list when loaded', (tester) async {
@@ -66,8 +60,9 @@ void main() {
       updatedAt: DateTime.now(),
     );
 
-    when(() => mockBloc.state).thenReturn(DoctorVerificationLoaded(doctors: [doctor], averageRatings: {'1': 4.5}));
-    when(() => mockBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.state).thenReturn(DoctorVerificationLoaded(doctors: [doctor], averageRatings: {'1': 4.5}));
+    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
 
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pumpAndSettle();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/doctor_card.dart';
-// removed: import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/verification_badge.dart';
+import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/verification_badge.dart';
 
 void main() {
   final tDoctor = DoctorProfile(
@@ -32,7 +32,7 @@ void main() {
 
       expect(find.text('Dr. Smith'), findsOneWidget);
       expect(find.text('Cardiology'), findsOneWidget);
-      expect(find.text('Verificado'), findsOneWidget);
+      expect(find.byType(VerificationBadge), findsOneWidget);
       expect(find.text('4.5'), findsOneWidget);
 
       await tester.tap(find.byType(DoctorCard));

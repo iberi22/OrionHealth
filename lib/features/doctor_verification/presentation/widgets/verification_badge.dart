@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class VerificationBadge extends StatelessWidget {
   final bool isVerified;
 
-  const VerificationBadge({super.key, required this.isVerified});
+  const VerificationBadge({
+    super.key,
+    required this.isVerified,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class VerificationBadge extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            isVerified ? 'MEDICO VERIFICADO' : 'PENDIENTE DE VERIFICACION',
+            isVerified ? 'MÉDICO VERIFICADO' : 'PENDIENTE DE VERIFICACIÓN',
             style: TextStyle(
               color: isVerified ? Colors.greenAccent : Colors.orangeAccent,
               fontWeight: FontWeight.bold,

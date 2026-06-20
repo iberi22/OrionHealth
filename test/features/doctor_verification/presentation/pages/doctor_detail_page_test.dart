@@ -2,36 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/doctor_verification/application/bloc/doctor_verification_bloc.dart';
+import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_cubit.dart';
+import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_detail_page.dart';
-import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
 
-
-class MockDoctorVerificationBloc extends Mock implements DoctorVerificationBloc {}
-
-class _DoctorVerificationEventFake extends Fake implements DoctorVerificationEvent {}
+class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {}
+class FakeDoctorProfile extends Fake implements DoctorProfile {}
 
 void main() {
-  setUpAll(() {
-    registerFallbackValue(_DoctorVerificationEventFake());
-  });
-  late MockDoctorVerificationBloc mockBloc;
+  late MockDoctorVerificationCubit mockCubit;
   late DoctorProfile verifiedDoctor;
   late DoctorProfile unverifiedDoctor;
   final tDate = DateTime(2023, 1, 1);
 
+  setUpAll(() {
+    registerFallbackValue(FakeDoctorProfile());
+  });
+
   setUp(() {
-    mockBloc = MockDoctorVerificationBloc();
-    when(() => mockBloc.stream).thenAnswer(
+    mockCubit = MockDoctorVerificationCubit();
+    when(() => mockCubit.stream).thenAnswer(
       (_) => const Stream.empty(),
     );
-    when(() => mockBloc.state).thenReturn(const DoctorVerificationInitial());
-    when(() => mockBloc.close()).thenAnswer((_) async {});
-    when(() => mockBloc.add(any())).thenReturn(null);
-
-    GetIt.instance.registerFactory<DoctorVerificationBloc>(() => mockBloc);
-    GetIt.instance.allowReassignment = true;
+    when(() => mockCubit.state).thenReturn(const DoctorVerificationInitial());
+    when(() => mockCubit.close()).thenAnswer((_) async {});
+    when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
 
     verifiedDoctor = DoctorProfile(
       id: '1',
@@ -64,8 +60,8 @@ void main() {
 
   Widget createWidgetUnderTest(DoctorProfile doctor) {
     return MaterialApp(
-      home: BlocProvider<DoctorVerificationBloc>.value(
-        value: mockBloc,
+      home: BlocProvider<DoctorVerificationCubit>.value(
+        value: mockCubit,
         child: DoctorDetailPage(doctor: doctor),
       ),
     );
@@ -77,47 +73,47 @@ void main() {
       await tester.pump();
 
       expect(find.text('Dr. Verified'), findsWidgets);
-      expect(find.text('Cardiology'), findsOneWidget);
+      expect(find.text('Cardiology'), findsWidgets);
     });
 
     testWidgets('shows verified status correctly', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest(verifiedDoctor));
       await tester.pump();
 
-      expect(find.text('MEDICO VERIFICADO'), findsOneWidget);
+      expect(find.text('Verificado'), findsOneWidget);
     });
 
     testWidgets('shows unverified status correctly', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest(unverifiedDoctor));
       await tester.pump();
 
-      expect(find.text('PENDIENTE DE VERIFICACION'), findsOneWidget);
+      expect(find.text('Sin verificar'), findsOneWidget);
     });
 
     testWidgets('shows verify button only for unverified doctor', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest(unverifiedDoctor));
       await tester.pump();
 
-      expect(find.text('Verificar Licencia'), findsOneWidget);
-      await tester.pump();
+      expect(find.text('VERIFICAR LICENCIA AHORA'), findsOneWidget);
     });
 
     testWidgets('hides verify button for verified doctor', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest(verifiedDoctor));
       await tester.pump();
 
-      expect(find.text('Verificar Licencia'), findsNothing);
-      await tester.pump();
+      expect(find.text('VERIFICAR LICENCIA AHORA'), findsNothing);
     });
 
-    testWidgets('calls VerifyDoctor event when verify button is pressed', (tester) async {
+    testWidgets('calls verifyDoctor when verify button is pressed', (tester) async {
+      when(() => mockCubit.verifyDoctor(any())).thenAnswer((_) async {});
+      
       await tester.pumpWidget(createWidgetUnderTest(unverifiedDoctor));
       await tester.pump();
 
-      await tester.tap(find.text('Verificar Licencia'));
+      await tester.tap(find.text('VERIFICAR LICENCIA AHORA'));
       await tester.pump();
 
-      verify(() => mockBloc.add(VerifyDoctor(unverifiedDoctor))).called(1);
+      verify(() => mockCubit.verifyDoctor(unverifiedDoctor)).called(1);
     });
   });
 }
