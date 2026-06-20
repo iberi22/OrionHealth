@@ -43,6 +43,14 @@ void main() {
       verify(() => mockAIService.getResponse(text, context: context)).called(1);
     });
 
+    test('getAiResponse should propagate AIService errors', () async {
+      const text = 'Hello';
+      when(() => mockAIService.getResponse(text, context: any(named: 'context')))
+          .thenThrow(Exception('AI Error'));
+
+      expect(() => datasource.getAiResponse(text), throwsException);
+    });
+
     group('transcribe', () {
       final audioBytes = [1, 2, 3];
       final uint8AudioBytes = Uint8List.fromList(audioBytes);
@@ -134,6 +142,20 @@ void main() {
       test('clearMemory should be callable', () async {
         await datasource.clearMemory();
         // Currently a stub, but we verify it can be called without error
+      });
+
+      test('getContextForQuery should propagate memory service errors', () async {
+        when(() => mockMemoryService.getContextForQuery('test'))
+            .thenThrow(Exception('Memory Error'));
+
+        expect(() => datasource.getContextForQuery('test'), throwsException);
+      });
+
+      test('saveToMemory should propagate memory service errors', () async {
+        when(() => mockMemoryService.addMemory(input: 'in', output: 'out'))
+            .thenThrow(Exception('Memory Error'));
+
+        expect(() => datasource.saveToMemory('in', 'out'), throwsException);
       });
     });
   });

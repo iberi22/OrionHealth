@@ -57,6 +57,14 @@ void main() {
       verify(() => mockDatasource.getAiResponse(text, context: [])).called(1);
     });
 
+    test('sendMessage should propagate datasource errors', () async {
+      const text = 'Hello';
+      when(() => mockDatasource.getContextForQuery(text))
+          .thenThrow(Exception('Datasource Error'));
+
+      expect(() => repository.sendMessage(text), throwsException);
+    });
+
     test('getChatHistory should parse history correctly', () async {
       final rawHistory = ['Hello', 'Hi', 'How are you?', 'I am fine'];
       when(() => mockDatasource.getRecentHistory(limit: any(named: 'limit')))
@@ -73,6 +81,27 @@ void main() {
       expect(result[2].role, MessageRole.user);
       expect(result[3].content, 'I am fine');
       expect(result[3].role, MessageRole.ai);
+    });
+
+    test('getChatHistory should handle empty history', () async {
+      when(() => mockDatasource.getRecentHistory(limit: any(named: 'limit')))
+          .thenAnswer((_) async => []);
+
+      final result = await repository.getChatHistory(limit: 20);
+
+      expect(result, isEmpty);
+    });
+
+    test('getChatHistory should handle odd-numbered history', () async {
+      final rawHistory = ['Hello', 'Hi', 'How are you?'];
+      when(() => mockDatasource.getRecentHistory(limit: any(named: 'limit')))
+          .thenAnswer((_) async => rawHistory);
+
+      final result = await repository.getChatHistory(limit: 20);
+
+      expect(result.length, 2);
+      expect(result[0].content, 'Hello');
+      expect(result[1].content, 'Hi');
     });
 
     test('clearHistory should call datasource clearMemory', () async {
@@ -93,6 +122,14 @@ void main() {
 
       expect(result, transcription);
       verify(() => mockDatasource.transcribe(audioBytes)).called(1);
+    });
+
+    test('transcribeAudio should propagate datasource errors', () async {
+      final audioBytes = [1, 2, 3];
+      when(() => mockDatasource.transcribe(audioBytes))
+          .thenThrow(Exception('Datasource Error'));
+
+      expect(() => repository.transcribeAudio(audioBytes), throwsException);
     });
   });
 }
