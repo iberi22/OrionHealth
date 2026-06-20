@@ -1,3 +1,4 @@
+import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
@@ -16,6 +17,7 @@ import 'dart:io';
 class MockFhirClient extends Mock implements FhirClient {}
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 class MockNodeDiscoveryService extends Mock implements NodeDiscoveryService {}
+class MockBonsoirService extends Mock implements BonsoirService {}
 
 void main() {
   late SyncRepository syncRepository;
@@ -54,7 +56,110 @@ void main() {
     await isar.close();
   });
 
-  group('SyncRepositoryImpl Conflict Resolution', () {
+  group('SyncRepositoryImpl', () {
+    test('getAccessToken returns token from secure storage', () async {
+      when(() => mockSecureStorage.read(key: 'ihce_access_token'))
+          .thenAnswer((_) async => 'fake_token');
+
+      final result = await syncRepository.getAccessToken();
+
+      expect(result, 'fake_token');
+    });
+
+    test('saveAccessToken writes token to secure storage', () async {
+      when(() => mockSecureStorage.write(
+            key: 'ihce_access_token',
+            value: any(named: 'value'),
+          )).thenAnswer((_) async {});
+
+      await syncRepository.saveAccessToken('new_token');
+
+      verify(() => mockSecureStorage.write(
+            key: 'ihce_access_token',
+            value: 'new_token',
+          )).called(1);
+    });
+
+    test('getLastSyncTime returns null when no timestamp is saved', () async {
+      final result = await syncRepository.getLastSyncTime();
+      expect(result, isNull);
+    });
+
+    test('getLastSyncTime/setLastSyncTime correctly persists timestamp', () async {
+      final now = DateTime.now();
+      // Round to milliseconds since that's how it's stored
+      final nowMs = DateTime.fromMillisecondsSinceEpoch(now.millisecondsSinceEpoch);
+
+      await syncRepository.setLastSyncTime(nowMs);
+      final result = await syncRepository.getLastSyncTime();
+
+      expect(result, nowMs);
+    });
+
+    test('getDiscoveredNodes returns mapped nodes from discovery service', () {
+      final mockNode = MockBonsoirService();
+      when(() => mockNode.name).thenReturn('Node1');
+      when(() => mockNode.hostname).thenReturn('192.168.1.5');
+      when(() => mockNode.port).thenReturn(9124);
+      when(() => mockNode.attributes).thenReturn({'nodeId': 'id123'});
+
+      when(() => mockDiscoveryService.currentNodes).thenReturn([mockNode]);
+
+      final result = syncRepository.getDiscoveredNodes();
+
+      expect(result.length, 1);
+      expect(result.first.id, 'id123');
+      expect(result.first.name, 'Node1');
+      expect(result.first.host, '192.168.1.5');
+      expect(result.first.port, 9124);
+    });
+
+    test('syncPatient updates user profile in Isar', () async {
+      // Setup existing profile
+      final profile = UserProfile(uniqueId: 'user1', epsPatientId: 'eps123', name: 'Old Name');
+      await isar.writeTxn(() => isar.userProfiles.put(profile));
+
+      final patientData = {
+        'resourceType': 'Patient',
+        'id': 'eps123',
+        'name': [
+          {
+            'given': ['New'],
+            'family': 'Name'
+          }
+        ]
+      };
+
+      when(() => mockFhirClient.getPatient('eps123', 'token'))
+          .thenAnswer((_) async => patientData);
+
+      await syncRepository.syncPatient('eps123', 'token');
+
+      final updatedProfile = await isar.userProfiles.where().findFirst();
+      expect(updatedProfile?.name, 'New Name');
+    });
+
+    test('syncAll coordinates patient and rda sync', () async {
+      // Setup profile with token
+      final profile = UserProfile(uniqueId: 'user1', epsPatientId: 'eps123');
+      await isar.writeTxn(() => isar.userProfiles.put(profile));
+
+      when(() => mockSecureStorage.read(key: 'ihce_access_token'))
+          .thenAnswer((_) async => 'token');
+
+      when(() => mockFhirClient.getPatient(any(), any()))
+          .thenAnswer((_) async => {'resourceType': 'Patient', 'id': 'eps123'});
+
+      when(() => mockFhirClient.getRDA(any(), any()))
+          .thenAnswer((_) async => {'resourceType': 'Bundle', 'entry': []});
+
+      await syncRepository.syncAll();
+
+      verify(() => mockFhirClient.getPatient('eps123', 'token')).called(1);
+      verify(() => mockFhirClient.getRDA('eps123', 'token')).called(1);
+    });
+
+
     test('syncRda should not create duplicate medications', () async {
       // Setup
       final medicationJson = {
