@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
-import '../../application/doctor_verification_cubit.dart';
-import '../../application/doctor_verification_state.dart';
+import '../../application/bloc/doctor_verification_bloc.dart';
 import '../../domain/entities/doctor_profile.dart';
 import '../widgets/rating_dialog.dart';
+import '../widgets/verification_badge.dart';
 
 class DoctorDetailPage extends StatelessWidget {
   final DoctorProfile doctor;
@@ -15,50 +15,57 @@ class DoctorDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<DoctorVerificationCubit>()..loadDoctors(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(doctor.fullName),
-          backgroundColor: Colors.transparent,
-        ),
-        body: BlocConsumer<DoctorVerificationCubit, DoctorVerificationState>(
-          listener: (context, state) {
-            if (state is LicenseVerificationResultState) {
-              final color = state.result == 'valid' ? Colors.green : Colors.red;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Verificación finalizada: ${state.result.toUpperCase()}'),
-                  backgroundColor: color,
-                ),
-              );
-            } else if (state is DoctorVerificationError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 24),
-                  _buildInfoSection(),
-                  const SizedBox(height: 24),
-                  _buildActions(context),
-                ],
+    Widget content = Scaffold(
+      appBar: AppBar(
+        title: Text(doctor.fullName),
+        backgroundColor: Colors.transparent,
+      ),
+      body: BlocConsumer<DoctorVerificationBloc, DoctorVerificationState>(
+        listener: (context, state) {
+          if (state is LicenseVerificationResultState) {
+            final color = state.result == 'valid' ? Colors.green : Colors.red;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Verificación finalizada: ${state.result.toUpperCase()}'),
+                backgroundColor: color,
               ),
             );
-          },
-        ),
+          } else if (state is DoctorVerificationError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 24),
+                _buildInfoSection(),
+                const SizedBox(height: 24),
+                _buildActions(context),
+              ],
+            ),
+          );
+        },
       ),
     );
+
+    try {
+      context.read<DoctorVerificationBloc>();
+      return content;
+    } catch (_) {
+      return BlocProvider(
+        create: (_) => getIt<DoctorVerificationBloc>()..add(const LoadDoctors()),
+        child: content,
+      );
+    }
   }
 
   Widget _buildHeader() {
@@ -82,23 +89,10 @@ class DoctorDetailPage extends StatelessWidget {
           const SizedBox(height: 8),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  doctor.verified ? Icons.verified : Icons.warning_amber_rounded,
-                  color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  doctor.verified ? 'MÉDICO VERIFICADO' : 'PENDIENTE DE VERIFICACIÓN',
-                  style: TextStyle(
-                    color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-              ],
+            child: VerificationBadge(
+              isVerified: doctor.verified,
+              fontSize: 14,
+              iconSize: 18,
             ),
           ),
         ],
@@ -146,7 +140,7 @@ class DoctorDetailPage extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
-                context.read<DoctorVerificationCubit>().verifyDoctor(doctor);
+                context.read<DoctorVerificationBloc>().add(VerifyDoctor(doctor));
               },
               icon: const Icon(Icons.security),
               label: const Text('VERIFICAR LICENCIA AHORA'),
@@ -167,7 +161,7 @@ class DoctorDetailPage extends StatelessWidget {
                 builder: (_) => RatingDialog(
                   doctorId: doctor.id,
                   onSubmitted: (rating) {
-                    context.read<DoctorVerificationCubit>().submitRating(rating);
+                    context.read<DoctorVerificationBloc>().add(SubmitRating(rating));
                   },
                 ),
               );
