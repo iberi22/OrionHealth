@@ -1,33 +1,163 @@
-﻿{
-    "averageImplPct": 95,
-    "totalFeatures": 26,
-    "generated": "2026-06-18T22:57:21.9521059-05:00",
-    "features": [
-        { "name": "about", "status": "complete", "implementationPct": 95, "testFiles": 9 },
-        { "name": "allergies", "status": "complete", "implementationPct": 95, "testFiles": 8 },
-        { "name": "appointments", "status": "parse", "implementationPct": 95, "testFiles": 10 },
-        { "name": "auth", "status": "complete", "implementationPct": 95, "testFiles": 8 },
-        { "name": "calendar_import", "status": "complete", "implementationPct": 95, "testFiles": 13 },
-        { "name": "dashboard", "status": "complete", "implementationPct": 95, "testFiles": 11 },
-        { "name": "doctor_verification", "status": "parse", "implementationPct": 95, "testFiles": 23 },
-        { "name": "email-citas", "status": "complete", "implementationPct": 95, "testFiles": 10 },
-        { "name": "eps_connection", "status": "complete", "implementationPct": 95, "testFiles": 15 },
-        { "name": "health_data_import", "status": "complete", "implementationPct": 95, "testFiles": 7 },
-        { "name": "health_record", "status": "parse", "implementationPct": 95, "testFiles": 6 },
-        { "name": "health_sharing", "status": "parse", "implementationPct": 95, "testFiles": 10 },
-        { "name": "home", "status": "complete", "implementationPct": 95, "testFiles": 12 },
-        { "name": "local_agent", "status": "complete", "implementationPct": 95, "testFiles": 33 },
-        { "name": "medical_research", "status": "complete", "implementationPct": 95, "testFiles": 21 },
-        { "name": "medications", "status": "complete", "implementationPct": 95, "testFiles": 7 },
-        { "name": "meditation", "status": "parse", "implementationPct": 95, "testFiles": 11 },
-        { "name": "network/governance", "status": "complete", "implementationPct": 95, "testFiles": 11 },
-        { "name": "network/incentives", "status": "complete", "implementationPct": 95, "testFiles": 8 },
-        { "name": "onboarding", "status": "parse", "implementationPct": 95, "testFiles": 10 },
-        { "name": "reports", "status": "complete", "implementationPct": 95, "testFiles": 9 },
-        { "name": "settings", "status": "parse", "implementationPct": 95, "testFiles": 7 },
-        { "name": "sync", "status": "complete", "implementationPct": 95, "testFiles": 15 },
-        { "name": "user_profile", "status": "complete", "implementationPct": 95, "testFiles": 10 },
-        { "name": "vitals", "status": "complete", "implementationPct": 95, "testFiles": 6 },
-        { "name": "voice_chat", "status": "complete", "implementationPct": 95, "testFiles": 13 }
-    ]
+{
+    "averageImplPct":  94,
+    "totalFeatures":  26,
+    "generated":  "2026-06-19T20:47:43.0065970-05:00",
+    "features":  [
+                     {
+                         "name":  "about",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  9
+                     },
+                     {
+                         "name":  "allergies",
+                         "status":  "parse",
+                         "implementationPct":  89,
+                         "testFiles":  8
+                     },
+                     {
+                         "name":  "appointments",
+                         "status":  "parse",
+                         "implementationPct":  83,
+                         "testFiles":  10
+                     },
+                     {
+                         "name":  "auth",
+                         "status":  "parse",
+                         "implementationPct":  80,
+                         "testFiles":  16
+                     },
+                     {
+                         "name":  "calendar_import",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  13
+                     },
+                     {
+                         "name":  "dashboard",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  11
+                     },
+                     {
+                         "name":  "doctor_verification",
+                         "status":  "parse",
+                         "implementationPct":  97,
+                         "testFiles":  32
+                     },
+                     {
+                         "name":  "email-citas",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  10
+                     },
+                     {
+                         "name":  "eps_connection",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  15
+                     },
+                     {
+                         "name":  "health_data_import",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  15
+                     },
+                     {
+                         "name":  "health_record",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  15
+                     },
+                     {
+                         "name":  "health_sharing",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  17
+                     },
+                     {
+                         "name":  "home",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  12
+                     },
+                     {
+                         "name":  "local_agent",
+                         "status":  "parse",
+                         "implementationPct":  94,
+                         "testFiles":  33
+                     },
+                     {
+                         "name":  "medical_research",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  21
+                     },
+                     {
+                         "name":  "medications",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  7
+                     },
+                     {
+                         "name":  "meditation",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  19
+                     },
+                     {
+                         "name":  "network/governance",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  11
+                     },
+                     {
+                         "name":  "network/incentives",
+                         "status":  "parse",
+                         "implementationPct":  73,
+                         "testFiles":  8
+                     },
+                     {
+                         "name":  "onboarding",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  25
+                     },
+                     {
+                         "name":  "reports",
+                         "status":  "incomplete",
+                         "implementationPct":  69,
+                         "testFiles":  9
+                     },
+                     {
+                         "name":  "settings",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  23
+                     },
+                     {
+                         "name":  "sync",
+                         "status":  "parse",
+                         "implementationPct":  79,
+                         "testFiles":  15
+                     },
+                     {
+                         "name":  "user_profile",
+                         "status":  "parse",
+                         "implementationPct":  91,
+                         "testFiles":  10
+                     },
+                     {
+                         "name":  "vitals",
+                         "status":  "complete",
+                         "implementationPct":  100,
+                         "testFiles":  12
+                     },
+                     {
+                         "name":  "voice_chat",
+                         "status":  "parse",
+                         "implementationPct":  93,
+                         "testFiles":  13
+                     }
+                 ]
 }
