@@ -12,6 +12,7 @@ class FakeVitalSign extends Fake implements VitalSign {}
 void main() {
   setUpAll(() {
     registerFallbackValue(FakeVitalSign());
+    registerFallbackValue(const <VitalSign>[]);
   });
   late MockVitalSignRepository repository;
   late VitalsCubit cubit;
