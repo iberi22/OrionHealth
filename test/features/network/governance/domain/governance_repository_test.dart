@@ -7,6 +7,24 @@ import 'package:orionhealth_health/features/network/governance/domain/repositori
 class MockGovernanceRepository extends Mock implements GovernanceRepository {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(Proposal(
+      id: 'fake',
+      title: '',
+      description: '',
+      voteCount: 0,
+      deadline: DateTime.now(),
+      status: ProposalStatus.active,
+    ));
+    registerFallbackValue(const Vote(
+      proposalId: 'fake',
+      voter: '',
+      decision: VoteDecision.abstain,
+      weight: 0,
+    ));
+    registerFallbackValue(ProposalStatus.active);
+  });
+
   late MockGovernanceRepository repository;
 
   setUp(() {
@@ -82,21 +100,4 @@ void main() {
     });
   });
 
-  setUpAll(() {
-    registerFallbackValue(Proposal(
-      id: 'fake',
-      title: '',
-      description: '',
-      voteCount: 0,
-      deadline: DateTime.now(),
-      status: ProposalStatus.active,
-    ));
-    registerFallbackValue(const Vote(
-      proposalId: 'fake',
-      voter: '',
-      decision: VoteDecision.abstain,
-      weight: 0,
-    ));
-    registerFallbackValue(ProposalStatus.active);
-  });
 }

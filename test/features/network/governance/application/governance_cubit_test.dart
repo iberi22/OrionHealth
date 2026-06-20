@@ -11,10 +11,7 @@ void main() {
   late GovernanceCubit cubit;
   late MockGovernanceRepository repository;
 
-  setUp(() {
-    repository = MockGovernanceRepository();
-    cubit = GovernanceCubit(repository);
-
+  setUpAll(() {
     registerFallbackValue(Proposal(
       id: '1',
       title: 'Test',
@@ -30,6 +27,11 @@ void main() {
       decision: VoteDecision.forProposal,
       weight: 1.0,
     ));
+  });
+
+  setUp(() {
+    repository = MockGovernanceRepository();
+    cubit = GovernanceCubit(repository);
   });
 
   tearDown(() {
