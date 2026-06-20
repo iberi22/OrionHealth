@@ -3,31 +3,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
-import '../../application/bloc/doctor_verification_bloc.dart';
+import '../../application/doctor_verification_cubit.dart';
+import '../../application/doctor_verification_state.dart';
 import '../../domain/entities/doctor_profile.dart';
 import '../widgets/rating_dialog.dart';
 import '../widgets/verification_badge.dart';
 
 class DoctorDetailPage extends StatelessWidget {
   final DoctorProfile doctor;
+
   const DoctorDetailPage({super.key, required this.doctor});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<DoctorVerificationBloc>()..add(const LoadDoctors()),
+      create: (_) => getIt<DoctorVerificationCubit>()..loadDoctors(),
       child: Scaffold(
         appBar: AppBar(
           title: Text(doctor.fullName),
           backgroundColor: Colors.transparent,
         ),
-        body: BlocConsumer<DoctorVerificationBloc, DoctorVerificationState>(
+        body: BlocConsumer<DoctorVerificationCubit, DoctorVerificationState>(
           listener: (context, state) {
             if (state is LicenseVerificationResultState) {
               final color = state.result == 'valid' ? Colors.green : Colors.red;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Verificacion finalizada: ${state.result.toUpperCase()}'),
+                  content: Text('Verificación finalizada: ${state.result.toUpperCase()}'),
                   backgroundColor: color,
                 ),
               );
@@ -93,10 +95,10 @@ class DoctorDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildInfoRow(Icons.badge, 'Licencia', doctor.licenseNumber ?? 'N/A'),
-            _buildInfoRow(Icons.business, 'Institucion', doctor.institution ?? 'N/A'),
-            _buildInfoRow(Icons.history, 'Experiencia', '${doctor.yearsOfExperience ?? 0} anios'),
+            _buildInfoRow(Icons.business, 'Institución', doctor.institution ?? 'N/A'),
+            _buildInfoRow(Icons.history, 'Experiencia', '${doctor.yearsOfExperience ?? 0} años'),
             _buildInfoRow(Icons.language, 'Idiomas', doctor.languages.join(', ')),
-            _buildInfoRow(Icons.public, 'Pais', doctor.countryCode),
+            _buildInfoRow(Icons.public, 'País', doctor.countryCode),
           ],
         ),
       ),
@@ -125,13 +127,18 @@ class DoctorDetailPage extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
-                context.read<DoctorVerificationBloc>().add(VerifyDoctor(doctor));
+                context.read<DoctorVerificationCubit>().verifyDoctor(doctor);
               },
               icon: const Icon(Icons.security),
-              label: const Text('Verificar Licencia'),
+              label: const Text('VERIFICAR LICENCIA AHORA'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CyberTheme.primary,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
             ),
           ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
@@ -141,13 +148,18 @@ class DoctorDetailPage extends StatelessWidget {
                 builder: (_) => RatingDialog(
                   doctorId: doctor.id,
                   onSubmitted: (rating) {
-                    context.read<DoctorVerificationBloc>().add(SubmitRating(rating));
+                    context.read<DoctorVerificationCubit>().submitRating(rating);
                   },
                 ),
               );
             },
-            icon: const Icon(Icons.star),
-            label: const Text('Calificar Medico'),
+            icon: const Icon(Icons.star_outline),
+            label: const Text('DEJAR UNA RESEÑA'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: CyberTheme.secondary,
+              side: const BorderSide(color: CyberTheme.secondary),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
           ),
         ),
       ],

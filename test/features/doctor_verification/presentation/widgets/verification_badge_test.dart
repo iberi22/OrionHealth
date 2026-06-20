@@ -13,10 +13,10 @@ void main() {
         ),
       );
 
-      expect(find.text('MEDICO VERIFICADO'), findsOneWidget);
+      expect(find.text('MÉDICO VERIFICADO'), findsOneWidget);
       expect(find.byIcon(Icons.verified), findsOneWidget);
 
-      final textWidget = tester.widget<Text>(find.text('MEDICO VERIFICADO'));
+      final textWidget = tester.widget<Text>(find.text('MÉDICO VERIFICADO'));
       expect(textWidget.style?.color, Colors.greenAccent);
     });
 
@@ -29,10 +29,10 @@ void main() {
         ),
       );
 
-      expect(find.text('PENDIENTE DE VERIFICACION'), findsOneWidget);
+      expect(find.text('PENDIENTE DE VERIFICACIÓN'), findsOneWidget);
       expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
 
-      final textWidget = tester.widget<Text>(find.text('PENDIENTE DE VERIFICACION'));
+      final textWidget = tester.widget<Text>(find.text('PENDIENTE DE VERIFICACIÓN'));
       expect(textWidget.style?.color, Colors.orangeAccent);
     });
   });

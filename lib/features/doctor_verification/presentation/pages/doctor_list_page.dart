@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
-import '../../application/bloc/doctor_verification_bloc.dart';
-import '../../domain/entities/doctor_profile.dart';
+import '../../application/doctor_verification_cubit.dart';
+import '../../application/doctor_verification_state.dart';
 import '../widgets/doctor_card.dart';
 import 'doctor_detail_page.dart';
 
@@ -12,18 +12,18 @@ class DoctorListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<DoctorVerificationBloc>()..add(const LoadDoctors()),
+      create: (_) => getIt<DoctorVerificationCubit>()..loadDoctors(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'VERIFICACION MEDICA',
+            'VERIFICACIÓN MÉDICA',
             style: TextStyle(letterSpacing: 2, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        body: BlocBuilder<DoctorVerificationBloc, DoctorVerificationState>(
+        body: BlocBuilder<DoctorVerificationCubit, DoctorVerificationState>(
           builder: (context, state) {
             if (state is DoctorVerificationLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -31,7 +31,7 @@ class DoctorListPage extends StatelessWidget {
               if (state.doctors.isEmpty) {
                 return const Center(
                   child: Text(
-                    'No se encontraron medicos.',
+                    'No se encontraron médicos.',
                     style: TextStyle(color: Colors.white70),
                   ),
                 );
@@ -55,7 +55,7 @@ class DoctorListPage extends StatelessWidget {
                           ),
                         ).then((_) {
                           if (context.mounted) {
-                            context.read<DoctorVerificationBloc>().add(const LoadDoctors());
+                            context.read<DoctorVerificationCubit>().loadDoctors();
                           }
                         });
                       },
