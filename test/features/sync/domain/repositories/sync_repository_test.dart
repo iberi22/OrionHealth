@@ -44,10 +44,10 @@ void main() {
       expect(result, isTrue);
     });
 
-    test('getDiscoveredNodes signature verification', () async {
+    test('getDiscoveredNodes signature verification', () {
       final nodes = [const SyncNode(id: '1', name: 'Node 1', host: 'localhost', port: 8080)];
-      when(() => mockSyncRepository.getDiscoveredNodes()).thenAnswer((_) async => nodes);
-      final result = await mockSyncRepository.getDiscoveredNodes();
+      when(() => mockSyncRepository.getDiscoveredNodes()).thenReturn(nodes);
+      final result = mockSyncRepository.getDiscoveredNodes();
       expect(result, nodes);
     });
   });
