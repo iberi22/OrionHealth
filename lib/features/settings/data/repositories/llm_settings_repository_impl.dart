@@ -13,27 +13,25 @@ class LlmSettingsRepositoryImpl implements LlmSettingsRepository {
   Future<LlmConfig?> getLlmConfig() => _localDataSource.getLlmConfig();
 
   @override
-  Future<void> saveLlmConfig(LlmConfig config) => _localDataSource.saveLlmConfig(config);
+  Future<void> saveLlmConfig(LlmConfig config) =>
+      _localDataSource.saveLlmConfig(config);
 
   @override
-  Future<AppSettings?> getAppSettings() async {
-    // TODO: implement when AppSettings local datasource is ready
-    return null;
-  }
+  Future<AppSettings?> getAppSettings() => _localDataSource.getAppSettings();
 
   @override
-  Future<void> saveAppSettings(AppSettings settings) async {
-    // TODO: implement when AppSettings local datasource is ready
-  }
+  Future<void> saveAppSettings(AppSettings settings) =>
+      _localDataSource.saveAppSettings(settings);
 
   @override
   Future<String> exportData() async {
-    // TODO: implement export functionality
-    return '{}';
+    // Mock implementation for FHIR/JSON export
+    return '{"version": "1.0", "data": "FHIR Bundle Mock"}';
   }
 
   @override
   Future<void> importData(String data) async {
-    // TODO: implement import functionality
+    // Mock implementation for data import
+    return;
   }
 }
