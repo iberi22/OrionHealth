@@ -58,6 +58,16 @@ void main() {
       expect(cubit.state.leaderboard, leaderboard);
     });
 
+    test('loadIncentiveData emits error status on failure', () async {
+      const userId = 'user1';
+      when(() => repository.getContributions(userId)).thenThrow(Exception('Failed to load'));
+
+      await cubit.loadIncentiveData(userId);
+
+      expect(cubit.state.status, IncentiveStatus.error);
+      expect(cubit.state.errorMessage, contains('Failed to load'));
+    });
+
     test('contribute calls repository and reloads data', () async {
       const userId = 'user1';
       when(() => repository.addContribution(any())).thenAnswer((_) async => {});
@@ -70,6 +80,16 @@ void main() {
 
       verify(() => repository.addContribution(any())).called(1);
       verify(() => repository.getContributions(userId)).called(1);
+    });
+
+    test('contribute emits error status on failure', () async {
+      const userId = 'user1';
+      when(() => repository.addContribution(any())).thenThrow(Exception('Failed to contribute'));
+
+      await cubit.contribute(userId, ContributionType.storage, 10);
+
+      expect(cubit.state.status, IncentiveStatus.error);
+      expect(cubit.state.errorMessage, contains('Failed to contribute'));
     });
 
     test('claimReward calls repository and reloads data', () async {
@@ -87,6 +107,17 @@ void main() {
       verify(() => repository.getRewards(userId)).called(1);
     });
 
+    test('claimReward emits error status on failure', () async {
+      const userId = 'user1';
+      const rewardId = 'r1';
+      when(() => repository.claimReward(rewardId)).thenThrow(Exception('Failed to claim'));
+
+      await cubit.claimReward(userId, rewardId);
+
+      expect(cubit.state.status, IncentiveStatus.error);
+      expect(cubit.state.errorMessage, contains('Failed to claim'));
+    });
+
     test('leaderboard updates leaderboard in state', () async {
       final leaderboard = {'u1': 1000};
       when(() => repository.getLeaderboard()).thenAnswer((_) async => leaderboard);
@@ -95,6 +126,34 @@ void main() {
 
       expect(cubit.state.leaderboard, leaderboard);
       verify(() => repository.getLeaderboard()).called(1);
+    });
+
+    test('leaderboard emits error status on failure', () async {
+      when(() => repository.getLeaderboard()).thenThrow(Exception('Failed to get leaderboard'));
+
+      await cubit.leaderboard();
+
+      expect(cubit.state.status, IncentiveStatus.error);
+      expect(cubit.state.errorMessage, contains('Failed to get leaderboard'));
+    });
+   group('IncentiveState', () {
+      test('supports value equality', () {
+        expect(const IncentiveState(), const IncentiveState());
+      });
+
+      test('props are correct', () {
+        expect(
+          const IncentiveState().props,
+          [[], [], {}, 0, IncentiveStatus.initial, null],
+        );
+      });
+
+      test('copyWith works correctly', () {
+        expect(
+          const IncentiveState().copyWith(status: IncentiveStatus.loading),
+          const IncentiveState(status: IncentiveStatus.loading),
+        );
+      });
     });
   });
 }
