@@ -1,62 +1,78 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/reports/domain/entities/report.dart';
 import 'package:orionhealth_health/features/reports/infrastructure/repositories/isar_report_repository.dart';
-
-class MockIsar extends Mock implements Isar {
-  @override
-  Future<T> writeTxn<T>(Future<T> Function() callback, {bool silent = false}) {
-    return callback();
-  }
-}
-abstract class IsarCollectionReport extends IsarCollection<Report> {}
-class MockIsarCollection extends Mock implements IsarCollectionReport {}
-class FakeReport extends Fake implements Report {}
+import 'package:path/path.dart' as p;
 
 void main() {
-  late MockIsar mockIsar;
-  late MockIsarCollection mockCollection;
+  late Isar isar;
   late IsarReportRepository repository;
+  late String testDir;
 
-  setUpAll(() {
-    registerFallbackValue(FakeReport());
+  setUpAll(() async {
+    testDir = p.join(Directory.current.path, 'test_db_reports');
+    await Directory(testDir).create(recursive: true);
+
+    await Isar.initializeIsarCore(download: true);
+    isar = await Isar.open(
+      [ReportSchema],
+      directory: testDir,
+    );
+    repository = IsarReportRepository(isar);
   });
 
-  setUp(() {
-    mockIsar = MockIsar();
-    mockCollection = MockIsarCollection();
-    repository = IsarReportRepository(mockIsar);
+  tearDownAll(() async {
+    await isar.close();
+    if (await Directory(testDir).exists()) {
+      await Directory(testDir).delete(recursive: true);
+    }
+  });
 
-    when(() => mockIsar.reports).thenReturn(mockCollection);
+  setUp(() async {
+    await isar.writeTxn(() => isar.reports.clear());
   });
 
   group('IsarReportRepository', () {
-    test('saveReport puts report in collection within transaction', () async {
-      final report = Report(title: 'Test');
-      when(() => mockCollection.put(any())).thenAnswer((_) async => 1);
+    test('saveReport and getReportById', () async {
+      final report = Report(
+        title: 'Test Report',
+        content: 'Content',
+        generatedAt: DateTime.now(),
+      );
 
       await repository.saveReport(report);
 
-      verify(() => mockCollection.put(report)).called(1);
+      expect(report.id, isNot(Isar.autoIncrement));
+
+      final retrieved = await repository.getReportById(report.id);
+      expect(retrieved, isNotNull);
+      expect(retrieved!.title, 'Test Report');
     });
 
-    test('deleteReport deletes from collection within transaction', () async {
-      when(() => mockCollection.delete(any())).thenAnswer((_) async => true);
+    test('deleteReport removes the report', () async {
+      final report = Report(title: 'To Delete');
+      await repository.saveReport(report);
 
-      await repository.deleteReport(1);
+      await repository.deleteReport(report.id);
 
-      verify(() => mockCollection.delete(1)).called(1);
+      final retrieved = await repository.getReportById(report.id);
+      expect(retrieved, isNull);
     });
 
-    test('getReportById gets from collection', () async {
-      final report = Report(title: 'Test');
-      when(() => mockCollection.get(any())).thenAnswer((_) async => report);
+    test('getReports returns all reports sorted by generatedAt desc', () async {
+      final now = DateTime.now();
+      final r1 = Report(title: 'Old', generatedAt: now.subtract(const Duration(days: 1)));
+      final r2 = Report(title: 'New', generatedAt: now);
 
-      final result = await repository.getReportById(1);
+      await repository.saveReport(r1);
+      await repository.saveReport(r2);
 
-      expect(result, report);
-      verify(() => mockCollection.get(1)).called(1);
+      final results = await repository.getReports();
+
+      expect(results.length, 2);
+      expect(results.first.title, 'New');
+      expect(results.last.title, 'Old');
     });
   });
 }
