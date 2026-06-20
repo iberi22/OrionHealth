@@ -44,5 +44,25 @@ void main() {
       await tester.tap(find.byType(SyncNodeCard));
       expect(tapped, isTrue);
     });
+
+    testWidgets('renders unknown host and port correctly', (tester) async {
+      const unknownNode = SyncNode(
+        id: '2',
+        name: 'Unknown Node',
+        host: 'unknown',
+        port: 0,
+      );
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SyncNodeCard(node: unknownNode),
+          ),
+        ),
+      );
+
+      expect(find.text('Unknown Node'), findsOneWidget);
+      expect(find.text('unknown:0'), findsOneWidget);
+    });
   });
 }
