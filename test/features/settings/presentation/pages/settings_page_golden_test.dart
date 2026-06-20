@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
@@ -52,6 +53,7 @@ void main() {
     ));
     when(() => mockCubit.loadSettings()).thenAnswer((_) async {});
     when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.close()).thenAnswer((_) async {});
   });
 
   testWidgets('Settings Page - Local Tab Golden', (WidgetTester tester) async {
@@ -64,7 +66,10 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('es'),
-        home: const LlmSettingsPage(),
+        home: BlocProvider<LlmSettingsCubit>.value(
+          value: mockCubit,
+          child: const LlmSettingsPage(),
+        ),
       ),
     );
 
@@ -91,7 +96,10 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('es'),
-        home: const LlmSettingsPage(),
+        home: BlocProvider<LlmSettingsCubit>.value(
+          value: mockCubit,
+          child: const LlmSettingsPage(),
+        ),
       ),
     );
 
@@ -122,7 +130,10 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('es'),
-        home: const LlmSettingsPage(),
+        home: BlocProvider<LlmSettingsCubit>.value(
+          value: mockCubit,
+          child: const LlmSettingsPage(),
+        ),
       ),
     );
 
