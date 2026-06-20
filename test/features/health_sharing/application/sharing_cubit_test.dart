@@ -20,6 +20,7 @@ class FakeSharedHealthPackage extends Fake implements SharedHealthPackage {}
 
 void main() {
   setUpAll(() {
+    registerFallbackValue(TransferMethod.ble);
     registerFallbackValue(FakeSharedHealthPackage());
   });
 
