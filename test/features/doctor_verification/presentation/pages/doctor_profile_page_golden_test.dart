@@ -105,6 +105,8 @@ void main() {
         doctors: [doctorUnverified],
         averageRatings: {'2': 3.8},
       ));
+      when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
+      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
 
       await tester.pumpWidget(wrapWithMaterial(DoctorDetailPage(doctor: doctorUnverified)));
       await tester.pumpAndSettle();

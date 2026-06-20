@@ -8,7 +8,7 @@ import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/sync_node.dart';
-import '../../domain/sync_repository.dart';
+import '../../domain/repositories/sync_repository.dart';
 import '../../../user_profile/domain/entities/user_profile.dart';
 import '../../../medications/domain/entities/medication.dart' as app_med;
 import '../../../allergies/domain/entities/allergy.dart';
@@ -53,13 +53,11 @@ class SyncRepositoryImpl implements SyncRepository {
         : null;
   }
 
-  @override
   Future<void> setLastSyncTime(DateTime time) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_lastSyncKey, time.millisecondsSinceEpoch);
   }
 
-  @override
   Future<void> syncPatient(
     String patientId,
     String token,
@@ -79,7 +77,6 @@ class SyncRepositoryImpl implements SyncRepository {
     }
   }
 
-  @override
   Future<void> syncRda(String patientId, String token) async {
     try {
       final rdaBundle = await _fhirClient.getRDA(patientId, token);
@@ -180,7 +177,7 @@ class SyncRepositoryImpl implements SyncRepository {
   }
 
   @override
-  List<SyncNode> getDiscoveredNodes() {
+  Future<List<SyncNode>> getDiscoveredNodes() async {
     return _discoveryService.currentNodes.map((node) => SyncNode(
       id: node.attributes['nodeId'] ?? node.name,
       name: node.name,
@@ -191,6 +188,7 @@ class SyncRepositoryImpl implements SyncRepository {
 
   @override
   Future<void> syncAll() async {
+    final startTime = DateTime.now();
     // Full sync: read tokens and run all sync operations
     final token = await getAccessToken();
     if (token == null) return;
@@ -200,5 +198,17 @@ class SyncRepositoryImpl implements SyncRepository {
     if (patientId.isEmpty) return;
     await syncPatient(patientId, token);
     await syncRda(patientId, token);
+    await setLastSyncTime(startTime);
+  }
+
+  @override
+  Future<bool> syncIfStale() async {
+    final lastSync = await getLastSyncTime();
+    if (lastSync == null ||
+        DateTime.now().difference(lastSync) > const Duration(hours: 6)) {
+      await syncAll();
+      return true;
+    }
+    return false;
   }
 }
