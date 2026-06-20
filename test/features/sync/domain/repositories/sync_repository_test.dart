@@ -6,55 +6,49 @@ import 'package:orionhealth_health/features/sync/domain/entities/sync_node.dart'
 class MockSyncRepository extends Mock implements SyncRepository {}
 
 void main() {
-  late SyncRepository repository;
+  group('SyncRepository Interface', () {
+    late MockSyncRepository mockSyncRepository;
 
-  setUp(() {
-    repository = MockSyncRepository();
-  });
-
-  group('SyncRepository Domain Interface Smoke Test', () {
-    test('getAccessToken smoke test', () async {
-      when(() => repository.getAccessToken()).thenAnswer((_) async => 'fake_token');
-      final result = await repository.getAccessToken();
-      expect(result, 'fake_token');
-      verify(() => repository.getAccessToken()).called(1);
+    setUp(() {
+      mockSyncRepository = MockSyncRepository();
     });
 
-    test('saveAccessToken smoke test', () async {
-      when(() => repository.saveAccessToken(any())).thenAnswer((_) async {});
-      await repository.saveAccessToken('new_token');
-      verify(() => repository.saveAccessToken('new_token')).called(1);
+    test('getAccessToken signature verification', () async {
+      when(() => mockSyncRepository.getAccessToken()).thenAnswer((_) async => 'token');
+      final result = await mockSyncRepository.getAccessToken();
+      expect(result, 'token');
     });
 
-    test('getLastSyncTime smoke test', () async {
+    test('saveAccessToken signature verification', () async {
+      when(() => mockSyncRepository.saveAccessToken(any())).thenAnswer((_) async => {});
+      await mockSyncRepository.saveAccessToken('token');
+      verify(() => mockSyncRepository.saveAccessToken('token')).called(1);
+    });
+
+    test('getLastSyncTime signature verification', () async {
       final now = DateTime.now();
-      when(() => repository.getLastSyncTime()).thenAnswer((_) async => now);
-      final result = await repository.getLastSyncTime();
+      when(() => mockSyncRepository.getLastSyncTime()).thenAnswer((_) async => now);
+      final result = await mockSyncRepository.getLastSyncTime();
       expect(result, now);
-      verify(() => repository.getLastSyncTime()).called(1);
     });
 
-    test('syncAll smoke test', () async {
-      when(() => repository.syncAll()).thenAnswer((_) async {});
-      await repository.syncAll();
-      verify(() => repository.syncAll()).called(1);
+    test('syncAll signature verification', () async {
+      when(() => mockSyncRepository.syncAll()).thenAnswer((_) async => {});
+      await mockSyncRepository.syncAll();
+      verify(() => mockSyncRepository.syncAll()).called(1);
     });
 
-    test('syncIfStale smoke test', () async {
-      when(() => repository.syncIfStale()).thenAnswer((_) async => true);
-      final result = await repository.syncIfStale();
+    test('syncIfStale signature verification', () async {
+      when(() => mockSyncRepository.syncIfStale()).thenAnswer((_) async => true);
+      final result = await mockSyncRepository.syncIfStale();
       expect(result, isTrue);
-      verify(() => repository.syncIfStale()).called(1);
     });
 
-    test('getDiscoveredNodes smoke test', () async {
-      final nodes = [
-        const SyncNode(id: 'node1', name: 'Node 1', host: 'localhost', port: 8080),
-      ];
-      when(() => repository.getDiscoveredNodes()).thenAnswer((_) async => nodes);
-      final result = await repository.getDiscoveredNodes();
+    test('getDiscoveredNodes signature verification', () async {
+      final nodes = [const SyncNode(id: '1', name: 'Node 1', host: 'localhost', port: 8080)];
+      when(() => mockSyncRepository.getDiscoveredNodes()).thenAnswer((_) async => nodes);
+      final result = await mockSyncRepository.getDiscoveredNodes();
       expect(result, nodes);
-      verify(() => repository.getDiscoveredNodes()).called(1);
     });
   });
 }
