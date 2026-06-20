@@ -21,7 +21,7 @@ void main() {
 
   group('SyncServiceImpl', () {
     test('performFullSync performs sync with medical standards fallback to remote', () async {
-      when(() => mockSyncRepository.getDiscoveredNodes()).thenAnswer((_) async => []);
+      when(() => mockSyncRepository.getDiscoveredNodes()).thenReturn([]);
       when(() => mockMedicalStandardsSyncService.syncAll(peerIp: any(named: 'peerIp')))
           .thenAnswer((_) async => <ms.SyncResult>[]);
       when(() => mockSyncRepository.syncAll()).thenAnswer((_) async => {});
@@ -36,7 +36,7 @@ void main() {
       final nodes = [
         const SyncNode(id: '1', name: 'Node 1', host: '192.168.1.1', port: 8080),
       ];
-      when(() => mockSyncRepository.getDiscoveredNodes()).thenAnswer((_) async => nodes);
+      when(() => mockSyncRepository.getDiscoveredNodes()).thenReturn(nodes);
       when(() => mockMedicalStandardsSyncService.syncAll(peerIp: any(named: 'peerIp')))
           .thenAnswer((_) async => <ms.SyncResult>[]);
       when(() => mockSyncRepository.syncAll()).thenAnswer((_) async => {});

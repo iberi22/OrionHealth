@@ -7,7 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../domain/entities/sync_node.dart';
 import '../../domain/sync_repository.dart';
 import '../../../user_profile/domain/entities/user_profile.dart';
 import '../../../medications/domain/entities/medication.dart' as app_med;
@@ -181,12 +180,27 @@ class SyncRepositoryImpl implements SyncRepository {
 
   @override
   List<SyncNode> getDiscoveredNodes() {
-    return _discoveryService.currentNodes.map((node) => SyncNode(
-      id: node.attributes['nodeId'] ?? node.name,
-      name: node.name,
-      host: node.hostname ?? 'unknown',
-      port: node.port,
-    )).toList();
+    return _discoveryService.currentNodes
+        .map((node) => SyncNode(
+              id: node.attributes['nodeId'] ?? node.name,
+              name: node.name,
+              host: node.hostname ?? 'unknown',
+              port: node.port,
+            ))
+        .toList();
+  }
+
+  @override
+  Future<bool> syncIfStale() async {
+    final lastSync = await getLastSyncTime();
+    final now = DateTime.now();
+
+    if (lastSync == null || now.difference(lastSync) > const Duration(hours: 6)) {
+      await syncAll();
+      await setLastSyncTime(now);
+      return true;
+    }
+    return false;
   }
 
   @override

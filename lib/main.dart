@@ -22,7 +22,6 @@ import 'features/local_agent/infrastructure/services/medical_indexing_service.da
 import 'features/onboarding/presentation/pages/onboarding_page.dart';
 import 'features/onboarding/application/onboarding_cubit.dart';
 import 'features/sync/domain/sync_repository.dart';
-import 'features/sync/infrastructure/repositories/sync_repository.dart';
 import 'features/home/presentation/pages/main_navigation_page.dart';
 
 // ─────────────────────────────────────────────

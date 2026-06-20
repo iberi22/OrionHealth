@@ -23,7 +23,7 @@ class SyncServiceImpl implements SyncService {
   }
 
   Future<void> _syncMedicalStandards() async {
-    final peers = await _syncRepository.getDiscoveredNodes();
+    final peers = _syncRepository.getDiscoveredNodes();
 
     if (peers.isNotEmpty) {
       // Try to sync from the first available peer
