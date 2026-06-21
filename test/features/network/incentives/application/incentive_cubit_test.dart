@@ -11,10 +11,7 @@ void main() {
   late IncentiveCubit cubit;
   late MockIncentiveRepository repository;
 
-  setUp(() {
-    repository = MockIncentiveRepository();
-    cubit = IncentiveCubit(repository);
-
+  setUpAll(() {
     registerFallbackValue(Contribution(
       id: '1',
       userId: 'user1',
@@ -22,6 +19,11 @@ void main() {
       rewardPoints: 10,
       timestamp: DateTime.now(),
     ));
+  });
+
+  setUp(() {
+    repository = MockIncentiveRepository();
+    cubit = IncentiveCubit(repository);
   });
 
   tearDown(() {
