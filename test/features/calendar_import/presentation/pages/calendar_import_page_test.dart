@@ -27,6 +27,8 @@ void main() {
       ),
     );
     registerFallbackValue(FakeRoute());
+    registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(AppointmentStatus.upcoming);
   });
 
   setUp(() {

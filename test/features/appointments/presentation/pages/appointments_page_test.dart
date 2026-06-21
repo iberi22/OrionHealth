@@ -27,6 +27,8 @@ void main() {
   setUpAll(() {
     initializeDateFormatting('es', null);
     registerFallbackValue(FakeAppointment());
+    registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(AppointmentStatus.upcoming);
   });
 
   setUp(() async {

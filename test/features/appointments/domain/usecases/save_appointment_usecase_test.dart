@@ -11,6 +11,8 @@ class AppointmentFake extends Fake implements Appointment {}
 void main() {
   setUpAll(() {
     registerFallbackValue(AppointmentFake());
+    registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(AppointmentStatus.upcoming);
   });
 
   late SaveAppointmentUseCase useCase;

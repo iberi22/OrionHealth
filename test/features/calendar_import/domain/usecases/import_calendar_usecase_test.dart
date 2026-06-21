@@ -28,6 +28,10 @@ void main() {
         startDateTime: DateTime.now(),
       ),
     );
+    registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(<CalendarEvent>[]);
+    registerFallbackValue(AppointmentStatus.upcoming);
+    registerFallbackValue(CalendarEventSource.unknown);
   });
 
   late MockCalendarRepo mockCalendarRepo;
