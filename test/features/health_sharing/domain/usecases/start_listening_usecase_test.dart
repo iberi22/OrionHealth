@@ -11,6 +11,10 @@ class MockNfcSharingService extends Mock implements NfcSharingService {}
 class MockWifiDirectService extends Mock implements WifiDirectService {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(TransferMethod.ble);
+  });
+
   late StartListeningUseCase useCase;
   late MockBleSharingService mockBleService;
   late MockNfcSharingService mockNfcService;

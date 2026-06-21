@@ -26,7 +26,7 @@ void main() {
     mockSharingCubit = MockSharingCubit();
     getIt.registerFactory<AuthCubit>(() => mockAuthCubit);
     getIt.registerFactory<SharingCubit>(() => mockSharingCubit);
-    registerFallbackValue(TransferMethod.nfc);
+    registerFallbackValue(TransferMethod.ble);
   });
 
   setUp(() {

@@ -1,7 +1,12 @@
 ﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/health_sharing/domain/entities/shared_health_package.dart';
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(TransferMethod.ble);
+  });
+
   group('SharedHealthPackage', () {
     late SharedHealthPackage testPackage;
     final now = DateTime.now();
