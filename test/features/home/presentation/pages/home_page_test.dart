@@ -4,12 +4,17 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orionhealth_health/features/home/application/home_cubit.dart';
 import 'package:orionhealth_health/features/home/application/home_state.dart';
+import 'package:orionhealth_health/features/dashboard/application/dashboard_cubit.dart';
+import 'package:orionhealth_health/features/dashboard/application/dashboard_state.dart';
 import 'package:orionhealth_health/features/home/presentation/pages/home_page.dart';
 
 class MockHomeCubit extends Mock implements HomeCubit {}
 
+class MockDashboardCubit extends Mock implements DashboardCubit {}
+
 void main() {
   late MockHomeCubit mockHomeCubit;
+  late MockDashboardCubit mockDashboardCubit;
 
   setUp(() {
     mockHomeCubit = MockHomeCubit();
@@ -18,13 +23,21 @@ void main() {
     when(() => mockHomeCubit.refresh()).thenAnswer((_) async {});
     when(() => mockHomeCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockHomeCubit.close()).thenAnswer((_) async {});
+
+    mockDashboardCubit = MockDashboardCubit();
+    when(() => mockDashboardCubit.state).thenReturn(const DashboardInitial());
+    when(() => mockDashboardCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockDashboardCubit.close()).thenAnswer((_) async {});
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: BlocProvider<HomeCubit>.value(
-        value: mockHomeCubit,
-        child: const Scaffold(body: HomePageView()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<HomeCubit>.value(value: mockHomeCubit),
+        BlocProvider<DashboardCubit>.value(value: mockDashboardCubit),
+      ],
+      child: const MaterialApp(
+        home: Scaffold(body: HomePageView()),
       ),
     );
   }

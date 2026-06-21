@@ -29,10 +29,12 @@ void main() {
     when(() => mockCubit.stream).thenAnswer((_) => Stream.value(EpsConnectionLoaded([connection])));
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: BlocProvider<EpsConnectionCubit>.value(
-          value: mockCubit,
-          child: const EpsConnectionPage(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<EpsConnectionCubit>.value(value: mockCubit),
+        ],
+        child: const MaterialApp(
+          home: EpsConnectionPage(),
         ),
       ),
     );

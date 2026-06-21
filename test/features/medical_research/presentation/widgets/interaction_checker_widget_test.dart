@@ -8,11 +8,13 @@ import 'package:orionhealth_health/features/medical_research/presentation/widget
 class MockMedicalResearchCubit extends Mock implements MedicalResearchCubit {}
 
 Widget createTestWidget(MedicalResearchCubit cubit) {
-  return MaterialApp(
-    home: Scaffold(
-      body: BlocProvider<MedicalResearchCubit>.value(
-        value: cubit,
-        child: const InteractionCheckerWidget(),
+  return MultiBlocProvider(
+    providers: [
+      BlocProvider<MedicalResearchCubit>.value(value: cubit),
+    ],
+    child: const MaterialApp(
+      home: Scaffold(
+        body: InteractionCheckerWidget(),
       ),
     ),
   );
