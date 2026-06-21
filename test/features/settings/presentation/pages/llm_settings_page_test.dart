@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
@@ -8,6 +9,7 @@ import 'package:orionhealth_health/features/settings/domain/entities/app_setting
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
 import 'package:orionhealth_health/features/settings/domain/services/device_capability_service.dart';
 import 'package:orionhealth_health/features/settings/presentation/pages/llm_settings_page.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
 
 class MockLlmSettingsCubit extends Mock implements LlmSettingsCubit {}
 class MockLlmAdapter extends Mock implements LlmAdapter {}
@@ -48,7 +50,12 @@ void main() {
 
   Widget createWidget() {
     return MaterialApp(
-      home: const LlmSettingsPage(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: BlocProvider<LlmSettingsCubit>.value(
+        value: mockCubit,
+        child: const LlmSettingsPage(),
+      ),
     );
   }
 

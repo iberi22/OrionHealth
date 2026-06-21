@@ -129,7 +129,7 @@ void main() {
   });
 
   testWidgets('MeditationView listener coverage', (tester) async {
-    final controller = StreamController<MeditationState>();
+    final controller = StreamController<MeditationState>.broadcast();
     when(() => mockCubit.stream).thenAnswer((_) => controller.stream);
     when(() => mockCubit.state).thenReturn(const MeditationState(status: MeditationStatus.idle));
 
