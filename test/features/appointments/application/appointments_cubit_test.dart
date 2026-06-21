@@ -12,6 +12,8 @@ class FakeAppointment extends Fake implements Appointment {}
 void main() {
   setUpAll(() {
     registerFallbackValue(FakeAppointment());
+    registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(AppointmentStatus.upcoming);
   });
   late MockAppointmentRepository repository;
   late AppointmentsCubit cubit;
