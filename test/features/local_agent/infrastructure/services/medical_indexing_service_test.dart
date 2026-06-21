@@ -17,6 +17,12 @@ void main() {
   late MockPatientContextIndexer mockPatientIndexer;
   late MedicalIndexingService indexingService;
 
+  setUpAll(() {
+    registerFallbackValue('test-id');
+    registerFallbackValue('test-content');
+    registerFallbackValue(<String, dynamic>{});
+  });
+
   setUp(() {
     mockKnowledgeRepo = MockMedicalKnowledgeRepository();
     mockVectorStore = MockVectorStoreService();
@@ -27,10 +33,6 @@ void main() {
       mockVectorStore,
       mockPatientIndexer,
     );
-
-    registerFallbackValue('test-id');
-    registerFallbackValue('test-content');
-    registerFallbackValue(<String, dynamic>{});
   });
 
   group('MedicalIndexingService', () {

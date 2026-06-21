@@ -29,6 +29,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(FakeAuthorizationTokenRequest());
     registerFallbackValue(FakeTokenRequest());
+    registerFallbackValue(<String, dynamic>{});
   });
 
   setUp(() {
