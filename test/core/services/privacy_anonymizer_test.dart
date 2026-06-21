@@ -16,6 +16,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(ApiAuditLogFake());
+    registerFallbackValue(() async {});
   });
 
   setUp(() {
