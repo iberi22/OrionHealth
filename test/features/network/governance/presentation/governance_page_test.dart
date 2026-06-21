@@ -21,10 +21,12 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: BlocProvider<GovernanceCubit>.value(
-        value: mockCubit,
-        child: const GovernancePage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GovernanceCubit>.value(value: mockCubit),
+      ],
+      child: const MaterialApp(
+        home: GovernancePage(),
       ),
     );
   }

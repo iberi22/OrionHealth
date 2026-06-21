@@ -19,11 +19,13 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: Scaffold(
-        body: BlocProvider<VoiceChatCubit>.value(
-          value: mockCubit,
-          child: const VoiceInputButton(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<VoiceChatCubit>.value(value: mockCubit),
+      ],
+      child: const MaterialApp(
+        home: Scaffold(
+          body: VoiceInputButton(),
         ),
       ),
     );

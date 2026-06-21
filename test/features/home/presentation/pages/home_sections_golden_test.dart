@@ -7,21 +7,32 @@ import 'package:orionhealth_health/features/home/presentation/widgets/health_sta
 import 'package:orionhealth_health/features/dashboard/presentation/pages/home_dashboard_page.dart';
 import 'package:orionhealth_health/features/home/application/home_cubit.dart';
 import 'package:orionhealth_health/features/home/application/home_state.dart';
+import 'package:orionhealth_health/features/dashboard/application/dashboard_cubit.dart';
+import 'package:orionhealth_health/features/dashboard/application/dashboard_state.dart';
 import 'package:orionhealth_health/core/theme/app_theme.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MockHomeCubit extends Mock implements HomeCubit {}
 
+class MockDashboardCubit extends Mock implements DashboardCubit {}
+
 void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
   late MockHomeCubit mockHomeCubit;
+  late MockDashboardCubit mockDashboardCubit;
 
   setUp(() {
     mockHomeCubit = MockHomeCubit();
     when(() => mockHomeCubit.state).thenReturn(const HomeState());
     when(() => mockHomeCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockHomeCubit.close()).thenAnswer((_) async {});
+
+    mockDashboardCubit = MockDashboardCubit();
+    when(() => mockDashboardCubit.state).thenReturn(const DashboardInitial());
+    when(() => mockDashboardCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockDashboardCubit.loadDashboardData()).thenAnswer((_) async {});
+    when(() => mockDashboardCubit.close()).thenAnswer((_) async {});
   });
 
   group('Home Sections Golden Tests', () {
@@ -30,15 +41,17 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.darkTheme,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('en'),
-          home: Scaffold(
-            body: BlocProvider<HomeCubit>.value(
-              value: mockHomeCubit,
-              child: const SingleChildScrollView(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<HomeCubit>.value(value: mockHomeCubit),
+        ],
+          child: MaterialApp(
+            theme: AppTheme.darkTheme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            home: const Scaffold(
+              body: SingleChildScrollView(
                 child: HealthStatusGrid(),
               ),
             ),
@@ -64,10 +77,15 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
 
       await tester.pumpWidget(
-        const MaterialApp(
-          themeMode: ThemeMode.dark,
-          home: Scaffold(
-            body: HomeDashboardPage(),
+        MultiBlocProvider(
+          providers: [
+            BlocProvider<DashboardCubit>.value(value: mockDashboardCubit),
+          ],
+          child: const MaterialApp(
+            themeMode: ThemeMode.dark,
+            home: Scaffold(
+              body: HomeDashboardPage(),
+            ),
           ),
         ),
       );

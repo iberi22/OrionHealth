@@ -19,11 +19,11 @@ void main() {
   });
 
   Widget buildTestWidget(HealthImportCubit cubit) {
-    return wrapWithMaterial(
-      BlocProvider<HealthImportCubit>.value(
-        value: cubit,
-        child: const HealthImportPage(),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<HealthImportCubit>.value(value: cubit),
+      ],
+      child: wrapWithMaterial(const HealthImportPage()),
     );
   }
 

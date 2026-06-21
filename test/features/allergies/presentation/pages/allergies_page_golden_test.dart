@@ -26,10 +26,12 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: BlocProvider.value(
-        value: mockAllergiesCubit,
-        child: const AllergiesPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AllergiesCubit>.value(value: mockAllergiesCubit),
+      ],
+      child: const MaterialApp(
+        home: AllergiesPage(),
       ),
     );
   }

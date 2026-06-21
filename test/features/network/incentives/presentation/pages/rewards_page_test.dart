@@ -20,10 +20,12 @@ void main() {
 
   testWidgets('RewardsPage displays empty message when no rewards', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: BlocProvider<IncentiveCubit>.value(
-          value: mockCubit,
-          child: const RewardsPage(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<IncentiveCubit>.value(value: mockCubit),
+        ],
+        child: const MaterialApp(
+          home: RewardsPage(),
         ),
       ),
     );
@@ -40,10 +42,12 @@ void main() {
     when(() => mockCubit.state).thenReturn(const IncentiveState(rewards: rewards));
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: BlocProvider<IncentiveCubit>.value(
-          value: mockCubit,
-          child: const RewardsPage(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<IncentiveCubit>.value(value: mockCubit),
+        ],
+        child: const MaterialApp(
+          home: RewardsPage(),
         ),
       ),
     );
@@ -62,10 +66,12 @@ void main() {
     when(() => mockCubit.claimReward(any(), any())).thenAnswer((_) async {});
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: BlocProvider<IncentiveCubit>.value(
-          value: mockCubit,
-          child: const RewardsPage(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<IncentiveCubit>.value(value: mockCubit),
+        ],
+        child: const MaterialApp(
+          home: RewardsPage(),
         ),
       ),
     );
