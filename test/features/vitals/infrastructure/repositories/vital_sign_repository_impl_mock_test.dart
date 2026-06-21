@@ -23,6 +23,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(FakeVitalSign());
+    registerFallbackValue(const <VitalSign>[]);
   });
 
   setUp(() {

@@ -6,11 +6,11 @@ import 'package:orionhealth_health/features/user_profile/domain/repositories/use
 
 class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 
-class UserProfileFake extends Fake implements UserProfile {}
+class FakeUserProfile extends Fake implements UserProfile {}
 
 void main() {
   setUpAll(() {
-    registerFallbackValue(UserProfileFake());
+    registerFallbackValue(FakeUserProfile());
   });
 
   late UserProfileCubit cubit;
