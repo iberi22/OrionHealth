@@ -11,13 +11,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MockUserProfileCubit extends Mock implements UserProfileCubit {}
 
-class UserProfileFake extends Fake implements UserProfile {}
+class FakeUserProfile extends Fake implements UserProfile {}
 
 void main() {
   late MockUserProfileCubit mockCubit;
 
   setUpAll(() {
-    registerFallbackValue(UserProfileFake());
+    registerFallbackValue(FakeUserProfile());
   });
 
   setUp(() {

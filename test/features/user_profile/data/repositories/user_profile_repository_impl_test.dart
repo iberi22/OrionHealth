@@ -6,14 +6,14 @@ import 'package:orionhealth_health/features/user_profile/domain/entities/user_pr
 
 class MockUserProfileLocalDataSource extends Mock implements UserProfileLocalDataSource {}
 
-class UserProfileFake extends Fake implements UserProfile {}
+class FakeUserProfile extends Fake implements UserProfile {}
 
 void main() {
   late MockUserProfileLocalDataSource mockDataSource;
   late UserProfileRepositoryImpl repository;
 
   setUpAll(() {
-    registerFallbackValue(UserProfileFake());
+    registerFallbackValue(FakeUserProfile());
   });
 
   setUp(() {
