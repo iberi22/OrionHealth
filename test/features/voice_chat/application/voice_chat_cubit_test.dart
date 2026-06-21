@@ -30,6 +30,8 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(const VoiceChatState());
+    registerFallbackValue(Uint8List(0));
+    registerFallbackValue(<VoiceChatMessage>[]);
   });
 
   setUp(() {
