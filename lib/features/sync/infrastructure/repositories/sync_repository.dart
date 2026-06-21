@@ -1,3 +1,8 @@
+/// Sync repository for IHCE Colombia
+/// Uses FhirClient natively from Flutter - no backend needed
+/// Communicates directly with IHCE FHIR APIs from the device
+library;
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
@@ -48,13 +53,11 @@ class SyncRepositoryImpl implements SyncRepository {
         : null;
   }
 
-  @override
   Future<void> setLastSyncTime(DateTime time) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_lastSyncKey, time.millisecondsSinceEpoch);
   }
 
-  @override
   Future<void> syncPatient(
     String patientId,
     String token,
@@ -74,7 +77,6 @@ class SyncRepositoryImpl implements SyncRepository {
     }
   }
 
-  @override
   Future<void> syncRda(String patientId, String token) async {
     try {
       final rdaBundle = await _fhirClient.getRDA(patientId, token);
@@ -206,8 +208,7 @@ class SyncRepositoryImpl implements SyncRepository {
     final lastSync = await getLastSyncTime();
     final now = DateTime.now();
 
-    if (lastSync == null ||
-        now.difference(lastSync) > const Duration(hours: 6)) {
+    if (lastSync == null || now.difference(lastSync) > const Duration(hours: 6)) {
       await syncAll();
       await setLastSyncTime(now);
       return true;

@@ -20,13 +20,15 @@ class IncentivesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<IncentiveCubit>()..loadIncentiveData(userId),
-      child: const IncentivesView(),
+      child: IncentivesView(userId: userId),
     );
   }
 }
 
 class IncentivesView extends StatelessWidget {
-  const IncentivesView({super.key});
+  final String userId;
+
+  const IncentivesView({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,7 @@ class IncentivesView extends StatelessWidget {
                   }
 
                   return RefreshIndicator(
-                    onRefresh: () => context.read<IncentiveCubit>().loadIncentiveData('user1'), // TODO: real userId
+                    onRefresh: () => context.read<IncentiveCubit>().loadIncentiveData(userId),
                     child: ListView(
                       padding: const EdgeInsets.all(16),
                       children: [
