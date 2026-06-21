@@ -31,6 +31,7 @@ void main() {
     registerFallbackValue(const Duration(seconds: 1));
     registerFallbackValue(const DeviceIdentifier('00:00:00:00:00:00'));
     registerFallbackValue(License.nonprofit);
+    registerFallbackValue(Uint8List(0));
   });
 
   setUp(() {
