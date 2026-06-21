@@ -1,12 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/eps_connection/data/datasources/oauth_local_datasource.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/repositories/oauth_repository.dart';
 import 'package:orionhealth_health/features/eps_connection/infrastructure/oauth_repository.dart';
 
 class MockOAuthLocalDataSource extends Mock implements OAuthLocalDataSource {}
 class MockFlutterAppAuth extends Mock implements FlutterAppAuth {}
+class MockDio extends Mock implements Dio {}
 
 class FakeAuthorizationTokenRequest extends Fake implements AuthorizationTokenRequest {}
 class FakeTokenRequest extends Fake implements TokenRequest {}
@@ -15,6 +18,7 @@ void main() {
   late OAuthRepositoryImpl repository;
   late MockOAuthLocalDataSource mockLocalDataSource;
   late MockFlutterAppAuth mockAppAuth;
+  late MockDio mockDio;
 
   final testProvider = const EPSProvider(
     id: 'test_id',
@@ -35,15 +39,66 @@ void main() {
   setUp(() {
     mockLocalDataSource = MockOAuthLocalDataSource();
     mockAppAuth = MockFlutterAppAuth();
-    repository = OAuthRepositoryImpl(mockLocalDataSource, appAuth: mockAppAuth);
+    mockDio = MockDio();
+    repository = OAuthRepositoryImpl(mockLocalDataSource, mockDio, appAuth: mockAppAuth);
   });
 
   group('OAuthRepositoryImpl', () {
+    test('logout with revocationUrl calls dio post', () async {
+      final providerWithRevocation = EPSProvider(
+        id: 'test_id',
+        name: 'Test EPS',
+        discoveryUrl: 'D',
+        revocationUrl: 'https://example.com/revoke',
+        clientId: 'C',
+        redirectUrl: 'R',
+        scopes: ['S'],
+        type: EPSProviderType.ihce,
+      );
+
+      final providerData = {
+        'id': 'test_id',
+        'name': 'Test EPS',
+        'discoveryUrl': 'D',
+        'revocationUrl': 'https://example.com/revoke',
+        'clientId': 'C',
+        'redirectUrl': 'R',
+        'scopes': ['S'],
+        'type': 'ihce',
+      };
+
+      when(() => mockLocalDataSource.getProviderData('test_id')).thenAnswer((_) async => providerData);
+      when(() => mockLocalDataSource.getAccessToken('test_id')).thenAnswer((_) async => 'access');
+      when(() => mockLocalDataSource.getIdToken('test_id')).thenAnswer((_) async => 'id');
+      when(() => mockLocalDataSource.getRefreshToken('test_id')).thenAnswer((_) async => 'refresh');
+      when(() => mockLocalDataSource.getExpiresAt('test_id')).thenAnswer((_) async => null);
+      when(() => mockLocalDataSource.clearTokensForProvider(any())).thenAnswer((_) async => {});
+
+      when(() => mockDio.post(
+            'https://example.com/revoke',
+            data: any(named: 'data'),
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
+            requestOptions: RequestOptions(path: ''),
+            statusCode: 200,
+          ));
+
+      await repository.logout('test_id');
+
+      verify(() => mockDio.post(
+            'https://example.com/revoke',
+            data: {'token': 'access'},
+            options: any(named: 'options'),
+          )).called(1);
+      verify(() => mockLocalDataSource.clearTokensForProvider('test_id')).called(1);
+    });
+
     test('login success', () async {
+      final expiration = DateTime.now().add(const Duration(hours: 1));
       final authResponse = AuthorizationTokenResponse(
         'access',
         'refresh',
-        DateTime.now().add(const Duration(hours: 1)),
+        expiration,
         'id',
         'token_type',
         ['S'],
@@ -52,7 +107,7 @@ void main() {
       );
 
       when(() => mockAppAuth.authorizeAndExchangeCode(any())).thenAnswer((_) async => authResponse);
-      when(() => mockLocalDataSource.saveTokensForProvider(any(), any(), any(), any())).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.saveTokensForProvider(any(), any(), any(), any(), expiresAt: any(named: 'expiresAt'))).thenAnswer((_) async => {});
       when(() => mockLocalDataSource.saveProviderData(any(), any())).thenAnswer((_) async => {});
       when(() => mockLocalDataSource.savePatientId(any(), any())).thenAnswer((_) async => {});
       when(() => mockLocalDataSource.getConnectedProviderIds()).thenAnswer((_) async => []);
@@ -61,20 +116,24 @@ void main() {
 
       expect(result?.patientId, 'PT-123');
       expect(result?.token.accessToken, 'access');
-      verify(() => mockLocalDataSource.saveTokensForProvider('test_id', 'access', 'id', 'refresh')).called(1);
+      expect(result?.token.expiresAt, expiration);
+      verify(() => mockLocalDataSource.saveTokensForProvider('test_id', 'access', 'id', 'refresh', expiresAt: expiration)).called(1);
       verify(() => mockLocalDataSource.saveProviderData('test_id', any())).called(1);
       verify(() => mockLocalDataSource.savePatientId('test_id', 'PT-123')).called(1);
     });
 
-    test('login returns null on exception', () async {
+    test('login throws OAuthException on exception', () async {
       when(() => mockAppAuth.authorizeAndExchangeCode(any())).thenThrow(Exception('AppAuth Fail'));
 
-      final result = await repository.login(testProvider);
-
-      expect(result, isNull);
+      expect(() => repository.login(testProvider), throwsA(isA<OAuthException>()));
     });
 
     test('logout clears local data', () async {
+      when(() => mockLocalDataSource.getProviderData(any())).thenAnswer((_) async => null);
+      when(() => mockLocalDataSource.getAccessToken(any())).thenAnswer((_) async => null);
+      when(() => mockLocalDataSource.getIdToken(any())).thenAnswer((_) async => null);
+      when(() => mockLocalDataSource.getRefreshToken(any())).thenAnswer((_) async => null);
+      when(() => mockLocalDataSource.getExpiresAt(any())).thenAnswer((_) async => null);
       when(() => mockLocalDataSource.clearTokensForProvider(any())).thenAnswer((_) async => {});
 
       await repository.logout('test_id');
@@ -82,22 +141,26 @@ void main() {
       verify(() => mockLocalDataSource.clearTokensForProvider('test_id')).called(1);
     });
 
-    test('getToken returns OAuthToken if access token exists', () async {
+    test('getToken returns OAuthToken with expiresAt if access token exists', () async {
+      final expiration = DateTime.now().add(const Duration(hours: 1));
       when(() => mockLocalDataSource.getAccessToken('test_id')).thenAnswer((_) async => 'access');
       when(() => mockLocalDataSource.getIdToken('test_id')).thenAnswer((_) async => 'id');
       when(() => mockLocalDataSource.getRefreshToken('test_id')).thenAnswer((_) async => 'refresh');
+      when(() => mockLocalDataSource.getExpiresAt('test_id')).thenAnswer((_) async => expiration);
 
       final token = await repository.getToken('test_id');
 
       expect(token?.accessToken, 'access');
       expect(token?.idToken, 'id');
       expect(token?.refreshToken, 'refresh');
+      expect(token?.expiresAt, expiration);
     });
 
     test('getToken returns null if access token is missing', () async {
       when(() => mockLocalDataSource.getAccessToken('test_id')).thenAnswer((_) async => null);
       when(() => mockLocalDataSource.getIdToken('test_id')).thenAnswer((_) async => null);
       when(() => mockLocalDataSource.getRefreshToken('test_id')).thenAnswer((_) async => null);
+      when(() => mockLocalDataSource.getExpiresAt('test_id')).thenAnswer((_) async => null);
 
       final token = await repository.getToken('test_id');
 
@@ -138,10 +201,11 @@ void main() {
     });
 
     test('refreshToken success', () async {
+      final expiration = DateTime.now().add(const Duration(hours: 1));
       final tokenResponse = TokenResponse(
         'new_access',
         'new_refresh',
-        DateTime.now().add(const Duration(hours: 1)),
+        expiration,
         'new_id',
         'token_type',
         ['S'],
@@ -149,29 +213,26 @@ void main() {
       );
       when(() => mockLocalDataSource.getRefreshToken('test_id')).thenAnswer((_) async => 'old_refresh');
       when(() => mockAppAuth.token(any())).thenAnswer((_) async => tokenResponse);
-      when(() => mockLocalDataSource.saveTokensForProvider(any(), any(), any(), any())).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.saveTokensForProvider(any(), any(), any(), any(), expiresAt: any(named: 'expiresAt'))).thenAnswer((_) async => {});
 
       final token = await repository.refreshToken(testProvider);
 
       expect(token?.accessToken, 'new_access');
-      verify(() => mockLocalDataSource.saveTokensForProvider('test_id', 'new_access', 'new_id', 'new_refresh')).called(1);
+      expect(token?.expiresAt, expiration);
+      verify(() => mockLocalDataSource.saveTokensForProvider('test_id', 'new_access', 'new_id', 'new_refresh', expiresAt: expiration)).called(1);
     });
 
-    test('refreshToken returns null if no old refresh token', () async {
+    test('refreshToken throws OAuthException if no old refresh token', () async {
       when(() => mockLocalDataSource.getRefreshToken('test_id')).thenAnswer((_) async => null);
 
-      final token = await repository.refreshToken(testProvider);
-
-      expect(token, isNull);
+      expect(() => repository.refreshToken(testProvider), throwsA(isA<OAuthException>()));
     });
 
-    test('refreshToken returns null on exception', () async {
+    test('refreshToken throws OAuthException on exception', () async {
       when(() => mockLocalDataSource.getRefreshToken('test_id')).thenAnswer((_) async => 'old_refresh');
       when(() => mockAppAuth.token(any())).thenThrow(Exception('Fail'));
 
-      final token = await repository.refreshToken(testProvider);
-
-      expect(token, isNull);
+      expect(() => repository.refreshToken(testProvider), throwsA(isA<OAuthException>()));
     });
 
     test('getConnectedProviders returns from local data source', () async {
