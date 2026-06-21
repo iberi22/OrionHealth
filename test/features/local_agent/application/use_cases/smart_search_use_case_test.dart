@@ -9,12 +9,14 @@ void main() {
   late MockVectorStoreService mockVectorStore;
   late SmartSearchUseCase useCase;
 
+  setUpAll(() {
+    registerFallbackValue('bm25');
+    registerFallbackValue(5);
+  });
+
   setUp(() {
     mockVectorStore = MockVectorStoreService();
     useCase = SmartSearchUseCase(mockVectorStore);
-
-    registerFallbackValue('bm25');
-    registerFallbackValue(5);
   });
 
   group('SmartSearchUseCase', () {

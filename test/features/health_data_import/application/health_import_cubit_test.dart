@@ -15,11 +15,14 @@ void main() {
   late MockHealthDataImportService mockImportService;
   late MockVitalSignRepository mockVitalSignRepository;
 
+  setUpAll(() {
+    registerFallbackValue(HealthDataSource.googleFit);
+  });
+
   setUp(() {
     mockImportService = MockHealthDataImportService();
     mockVitalSignRepository = MockVitalSignRepository();
     cubit = HealthImportCubit(mockImportService, mockVitalSignRepository);
-    registerFallbackValue(HealthDataSource.googleFit);
   });
 
   tearDown(() {

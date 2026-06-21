@@ -20,14 +20,16 @@ void main() {
   late MockMedicalKnowledgeRepository mockMedicalRepo;
   late IsarVectorStoreService service;
 
+  setUpAll(() {
+    registerFallbackValue('test-query');
+    registerFallbackValue(<String, dynamic>{});
+  });
+
   setUp(() {
     mockMemoryGraph = MockMemoryGraph();
     mockMedicalRepo = MockMedicalKnowledgeRepository();
 
     service = IsarVectorStoreService(mockMemoryGraph, mockMedicalRepo);
-
-    registerFallbackValue('test-query');
-    registerFallbackValue(<String, dynamic>{});
   });
 
   group('IsarVectorStoreService', () {
