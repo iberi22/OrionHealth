@@ -4,7 +4,6 @@ import '../../domain/entities/app_settings.dart';
 import '../../domain/repositories/llm_settings_repository.dart';
 import '../datasources/settings_local_datasource.dart';
 
-@Injectable(as: LlmSettingsRepository)
 class LlmSettingsRepositoryImpl implements LlmSettingsRepository {
   final SettingsLocalDataSource _localDataSource;
   LlmSettingsRepositoryImpl(this._localDataSource);

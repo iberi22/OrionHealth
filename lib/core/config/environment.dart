@@ -62,6 +62,18 @@ enum AppEnvironment {
     }
   }
 
+  /// Base URL for the CMS content.
+  String get cmsBaseUrl {
+    switch (this) {
+      case AppEnvironment.development:
+        return 'http://localhost:3000';
+      case AppEnvironment.staging:
+        return 'https://staging-api.orionhealth.app';
+      case AppEnvironment.production:
+        return 'https://api.orionhealth.app';
+    }
+  }
+
   /// Enable crash reporting in this environment.
   bool get enableCrashReporting => this == AppEnvironment.production;
 
