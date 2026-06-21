@@ -39,29 +39,44 @@ class FhirMapper {
     final names = json['name'] as List?;
     if (names == null || names.isEmpty) return null;
 
-    final first = names.first;
-    final given = (first['given'] as List?)?.join(' ') ?? '';
-    final family = first['family'] as String? ?? '';
+    // Try to find official name first
+    final official = names.cast<Map<String, dynamic>>().firstWhere(
+      (n) => n['use'] == 'official',
+      orElse: () => names.first as Map<String, dynamic>,
+    );
+
+    if (official['text'] != null) return official['text'] as String;
+
+    final given = (official['given'] as List?)?.join(' ') ?? '';
+    final family = official['family'] as String? ?? '';
 
     final full = '$given $family'.trim();
     return full.isNotEmpty ? full : null;
   }
 
-  /// Maps FHIR MedicationStatement to Medication
+  /// Maps FHIR MedicationStatement or MedicationRequest to Medication
   static Medication? mapMedicationStatement(Map<String, dynamic> json) {
     final medicationCodeableConcept = json['medicationCodeableConcept'];
-    final name = medicationCodeableConcept?['text'] as String? ??
-                 (medicationCodeableConcept?['coding'] as List?)?.first['display'] as String?;
+    final medicationReference = json['medicationReference'];
+
+    String? name;
+    if (medicationCodeableConcept != null) {
+      name = medicationCodeableConcept['text'] as String? ??
+             (medicationCodeableConcept['coding'] as List?)?.first['display'] as String?;
+    } else if (medicationReference != null) {
+      name = medicationReference['display'] as String?;
+    }
 
     if (name == null) return null;
 
     final effectiveDateTimeStr = json['effectiveDateTime'] as String? ??
-                                json['effectivePeriod']?['start'] as String?;
+                                json['effectivePeriod']?['start'] as String? ??
+                                json['authoredOn'] as String?; // For MedicationRequest
     final startDate = effectiveDateTimeStr != null ? DateTime.tryParse(effectiveDateTimeStr) : DateTime.now();
 
     return Medication(
       name: name,
-      isActive: json['status'] == 'active',
+      isActive: json['status'] == 'active' || json['status'] == 'completed',
       startDate: startDate ?? DateTime.now(),
       notes: json['note'] != null ? (json['note'] as List).map((n) => n['text']).join('\n') : null,
     );
@@ -70,8 +85,18 @@ class FhirMapper {
   /// Maps FHIR AllergyIntolerance to Allergy
   static Allergy? mapAllergyIntolerance(Map<String, dynamic> json) {
     final code = json['code'];
-    final allergen = code?['text'] as String? ??
+    String? allergen = code?['text'] as String? ??
                     (code?['coding'] as List?)?.first['display'] as String?;
+
+    // Fallback to substance in reactions if code is missing
+    if (allergen == null) {
+      final reactions = json['reaction'] as List?;
+      if (reactions != null && reactions.isNotEmpty) {
+        final substance = reactions.first['substance'];
+        allergen = substance?['text'] as String? ??
+                  (substance?['coding'] as List?)?.first['display'] as String?;
+      }
+    }
 
     if (allergen == null) return null;
 
@@ -82,9 +107,9 @@ class FhirMapper {
         severity = AllergySeverity.mild;
         break;
       case 'high':
+      case 'unable-to-assess':
         severity = AllergySeverity.severe;
         break;
-      case 'unable-to-assess':
       default:
         severity = AllergySeverity.moderate;
     }
@@ -99,31 +124,39 @@ class FhirMapper {
   /// Extracts ICD-10 codes from FHIR Condition
   static String? mapConditionCode(Map<String, dynamic> json) {
     final code = json['code'];
-    final codings = code?['coding'] as List?;
-    if (codings == null) return null;
+    if (code == null) return null;
 
-    for (final coding in codings) {
-      if (coding['system'] == 'http://hl7.org/fhir/sid/icd-10') {
-        return coding['code'] as String?;
+    final codings = code['coding'] as List?;
+    if (codings != null) {
+      for (final coding in codings) {
+        if (coding['system'] == 'http://hl7.org/fhir/sid/icd-10') {
+          return coding['code'] as String?;
+        }
+      }
+      // Fallback to first available code
+      if (codings.isNotEmpty) {
+        return codings.first['code'] as String?;
       }
     }
-    return null;
+
+    // Fallback to display text
+    return code['text'] as String?;
   }
 
   /// Maps FHIR Observation to VitalSign
   static List<VitalSign> mapObservation(Map<String, dynamic> json) {
     final code = json['code'];
     final codings = code?['coding'] as List?;
-    if (codings == null) return [];
+    if (codings == null && json['component'] == null) return [];
 
-    final effectiveDateTimeStr = json['effectiveDateTime'] as String?;
+    final effectiveDateTimeStr = json['effectiveDateTime'] as String? ?? json['issued'] as String?;
     final dateTime = effectiveDateTimeStr != null ? DateTime.tryParse(effectiveDateTimeStr) : DateTime.now();
     if (dateTime == null) return [];
 
     final List<VitalSign> vitals = [];
 
     // Handle single value observations
-    if (json['valueQuantity'] != null) {
+    if (json['valueQuantity'] != null && codings != null) {
       final type = _mapLoincToVitalType(codings);
       if (type != null) {
         vitals.add(VitalSign(
@@ -161,8 +194,10 @@ class FhirMapper {
 
   static VitalSignType? _mapLoincToVitalType(List codings) {
     for (final coding in codings) {
+      final code = coding['code'] as String?;
+      final display = (coding['display'] as String?)?.toLowerCase() ?? '';
+
       if (coding['system'] == 'http://loinc.org') {
-        final code = coding['code'] as String?;
         switch (code) {
           case '8867-4': return VitalSignType.heartRate;
           case '8310-5': return VitalSignType.temperature;
@@ -171,8 +206,20 @@ class FhirMapper {
           case '2708-6': return VitalSignType.spO2;
           case '59408-5': return VitalSignType.oxygenSaturation;
           case '15074-8': return VitalSignType.bloodGlucose;
+          case '60621-0': return VitalSignType.steps;
+          case '93832-4': return VitalSignType.sleep;
         }
       }
+
+      // Fallback to display name matching
+      if (display.contains('heart rate')) return VitalSignType.heartRate;
+      if (display.contains('temperature')) return VitalSignType.temperature;
+      if (display.contains('systolic')) return VitalSignType.bloodPressureSystolic;
+      if (display.contains('diastolic')) return VitalSignType.bloodPressureDiastolic;
+      if (display.contains('oxygen saturation') || display.contains('spo2')) return VitalSignType.spO2;
+      if (display.contains('glucose')) return VitalSignType.bloodGlucose;
+      if (display.contains('steps')) return VitalSignType.steps;
+      if (display.contains('sleep')) return VitalSignType.sleep;
     }
     return null;
   }

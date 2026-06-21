@@ -69,21 +69,33 @@ void main() {
       expect(result['sections'][0]['entries'][0]['resourceType'], 'Observation');
     });
 
-    test('parse returns null for empty Bundle', () {
-      final result = RdaParser.parse({'resourceType': 'Bundle', 'entry': []});
-      expect(result, isNull);
-    });
-
-    test('parse returns null for Bundle without Composition', () {
+    test('parse returns synthetic summary for Bundle without Composition', () {
       final bundle = {
         'resourceType': 'Bundle',
         'entry': [
           {
-            'resource': {'resourceType': 'Patient', 'id': 'p1'}
+            'resource': {
+              'resourceType': 'Patient',
+              'name': [{'given': ['John'], 'family': 'Doe'}]
+            }
+          },
+          {
+            'resource': {
+              'resourceType': 'MedicationStatement',
+              'medicationCodeableConcept': {'text': 'Aspirin'}
+            }
           }
         ]
       };
       final result = RdaParser.parse(bundle);
+      expect(result!['title'], 'Synthetic Summary');
+      expect(result['patient'], 'John Doe');
+      expect(result['sections'].length, 1);
+      expect(result['sections'][0]['title'], 'Medications');
+    });
+
+    test('parse returns null for empty Bundle', () {
+      final result = RdaParser.parse({'resourceType': 'Bundle', 'entry': []});
       expect(result, isNull);
     });
 
@@ -134,6 +146,22 @@ void main() {
       expect(entries[0]['id'], 'o1');
       expect(entries[1]['id'], 'o2');
       expect(entries[2]['id'], 'o3');
+    });
+
+    test('_resolveReference handles contained resources', () {
+      final composition = {
+        'resourceType': 'Composition',
+        'contained': [
+          {'resourceType': 'Practitioner', 'id': 'p1', 'name': [{'text': 'Dr. Smith'}]}
+        ],
+        'section': [
+          {
+            'entry': [{'reference': '#p1'}]
+          }
+        ]
+      };
+      final result = RdaParser.parse(composition);
+      expect(result!['sections'][0]['entries'][0]['name'][0]['text'], 'Dr. Smith');
     });
   });
 }
