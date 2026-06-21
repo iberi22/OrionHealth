@@ -10,10 +10,13 @@ void main() {
   late IpfsDatasource datasource;
   late MockDio mockDio;
 
+  setUpAll(() {
+    registerFallbackValue(RequestOptions(path: ''));
+  });
+
   setUp(() {
     mockDio = MockDio();
     datasource = IpfsDatasource(mockDio);
-    registerFallbackValue(RequestOptions(path: ''));
   });
 
   group('IpfsDatasource', () {
