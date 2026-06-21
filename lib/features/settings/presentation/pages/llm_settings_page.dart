@@ -1362,93 +1362,116 @@ class _GeneralSettingsTab extends StatelessWidget {
           _SectionHeader(title: l10n.appPreferences, icon: Icons.settings_applications),
           const SizedBox(height: 12),
           GlassmorphicCard(
-            child: Column(
-              children: [
-                _SettingsTile(
-                  icon: Icons.dark_mode,
-                  title: l10n.theme,
-                  subtitle: appSettings.themeMode,
-                  trailing: DropdownButton<String>(
-                    value: appSettings.themeMode,
-                    dropdownColor: AppColors.surfaceVariant,
-                    underline: const SizedBox.shrink(),
-                    items: ['light', 'dark', 'system'].map((m) => DropdownMenuItem(
-                      value: m,
-                      child: Text(m, style: const TextStyle(color: Colors.white, fontSize: 12)),
-                    )).toList(),
-                    onChanged: (v) {
-                      if (v != null) context.read<LlmSettingsCubit>().updateThemeMode(v);
-                    },
+            child: Material(
+              color: Colors.transparent,
+              child: Column(
+                children: [
+                  _SettingsTile(
+                    icon: Icons.dark_mode,
+                    title: l10n.theme,
+                    subtitle: appSettings.themeMode,
+                    trailing: DropdownButton<String>(
+                      value: appSettings.themeMode,
+                      dropdownColor: AppColors.surfaceVariant,
+                      underline: const SizedBox.shrink(),
+                      items: ['light', 'dark', 'system']
+                          .map((m) => DropdownMenuItem(
+                                value: m,
+                                child: Text(m,
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 12)),
+                              ))
+                          .toList(),
+                      onChanged: (v) {
+                        if (v != null) {
+                          context.read<LlmSettingsCubit>().updateThemeMode(v);
+                        }
+                      },
+                    ),
                   ),
-                ),
-                const Divider(color: Colors.white12, height: 1),
-                _SettingsTile(
-                  icon: Icons.language,
-                  title: 'Idioma',
-                  subtitle: appSettings.languageCode,
-                  trailing: DropdownButton<String>(
-                    value: appSettings.languageCode,
-                    dropdownColor: AppColors.surfaceVariant,
-                    underline: const SizedBox.shrink(),
-                    items: ['en', 'es'].map((l) => DropdownMenuItem(
-                      value: l,
-                      child: Text(l.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 12)),
-                    )).toList(),
-                    onChanged: (v) {
-                      if (v != null) context.read<LlmSettingsCubit>().updateLanguage(v);
-                    },
+                  const Divider(color: Colors.white12, height: 1),
+                  _SettingsTile(
+                    icon: Icons.language,
+                    title: 'Idioma',
+                    subtitle: appSettings.languageCode,
+                    trailing: DropdownButton<String>(
+                      value: appSettings.languageCode,
+                      dropdownColor: AppColors.surfaceVariant,
+                      underline: const SizedBox.shrink(),
+                      items: ['en', 'es']
+                          .map((l) => DropdownMenuItem(
+                                value: l,
+                                child: Text(l.toUpperCase(),
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 12)),
+                              ))
+                          .toList(),
+                      onChanged: (v) {
+                        if (v != null) {
+                          context.read<LlmSettingsCubit>().updateLanguage(v);
+                        }
+                      },
+                    ),
                   ),
-                ),
-                const Divider(color: Colors.white12, height: 1),
-                SwitchListTile(
-                  secondary: const Icon(Icons.notifications_active, color: AppColors.secondary),
-                  title: Text(l10n.pushNotifications, style: const TextStyle(color: Colors.white, fontSize: 14)),
-                  value: appSettings.notificationsEnabled,
-                  onChanged: (v) => context.read<LlmSettingsCubit>().updateNotificationsEnabled(v),
-                ),
-              ],
+                  const Divider(color: Colors.white12, height: 1),
+                  SwitchListTile(
+                    secondary: const Icon(Icons.notifications_active,
+                        color: AppColors.secondary),
+                    title: Text(l10n.pushNotifications,
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 14)),
+                    value: appSettings.notificationsEnabled,
+                    onChanged: (v) => context
+                        .read<LlmSettingsCubit>()
+                        .updateNotificationsEnabled(v),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 24),
           _SectionHeader(title: 'Datos y Privacidad', icon: Icons.security),
           const SizedBox(height: 12),
           GlassmorphicCard(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.file_download, color: AppColors.primary),
-                  title: const Text('Exportar Datos', style: TextStyle(color: Colors.white, fontSize: 14)),
-                  subtitle: const Text('Descargar historial en formato FHIR JSON', style: TextStyle(color: Colors.white54, fontSize: 11)),
-                  onTap: () async {
-                    await context.read<LlmSettingsCubit>().exportData();
-                    if (context.mounted) {
-                      final state = context.read<LlmSettingsCubit>().state;
-                      if (state is LlmSettingsLoaded && state.exportData != null) {
-                        showDialog(
-                          context: context,
-                          builder: (c) => AlertDialog(
-                            backgroundColor: AppColors.surfaceVariant,
-                            title: const Text('Datos Exportados', style: TextStyle(color: Colors.white)),
-                            content: SingleChildScrollView(child: Text(state.exportData!, style: const TextStyle(color: Colors.white70, fontSize: 10))),
-                            actions: [TextButton(onPressed: () => Navigator.pop(c), child: const Text('OK'))],
-                          ),
-                        );
+            child: Material(
+              color: Colors.transparent,
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.file_download, color: AppColors.primary),
+                    title: const Text('Exportar Datos', style: TextStyle(color: Colors.white, fontSize: 14)),
+                    subtitle: const Text('Descargar historial en formato FHIR JSON', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                    onTap: () async {
+                      await context.read<LlmSettingsCubit>().exportData();
+                      if (context.mounted) {
+                        final state = context.read<LlmSettingsCubit>().state;
+                        if (state is LlmSettingsLoaded && state.exportData != null) {
+                          showDialog(
+                            context: context,
+                            builder: (c) => AlertDialog(
+                              backgroundColor: AppColors.surfaceVariant,
+                              title: const Text('Datos Exportados', style: TextStyle(color: Colors.white)),
+                              content: SingleChildScrollView(child: Text(state.exportData!, style: const TextStyle(color: Colors.white70, fontSize: 10))),
+                              actions: [TextButton(onPressed: () => Navigator.pop(c), child: const Text('OK'))],
+                            ),
+                          );
+                        }
                       }
-                    }
-                  },
-                ),
-                const Divider(color: Colors.white12, height: 1),
-                ListTile(
-                  leading: const Icon(Icons.file_upload, color: AppColors.secondary),
-                  title: const Text('Importar Datos', style: TextStyle(color: Colors.white, fontSize: 14)),
-                  subtitle: const Text('Cargar respaldo previo de datos médicos', style: TextStyle(color: Colors.white54, fontSize: 11)),
-                  onTap: () {
-                    // Mock import
-                    context.read<LlmSettingsCubit>().importData('{}');
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Simulación de importación completada')));
-                  },
-                ),
-              ],
+                    },
+                  ),
+                  const Divider(color: Colors.white12, height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.file_upload, color: AppColors.secondary),
+                    title: const Text('Importar Datos', style: TextStyle(color: Colors.white, fontSize: 14)),
+                    subtitle: const Text('Cargar respaldo previo de datos médicos', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                    onTap: () {
+                      // Mock import
+                      context.read<LlmSettingsCubit>().importData('{}');
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Simulación de importación completada')));
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -1489,11 +1512,16 @@ class _SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: AppColors.secondary),
-      title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 14)),
-      subtitle: Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 12)),
-      trailing: trailing,
+    return Material(
+      color: Colors.transparent,
+      child: ListTile(
+        leading: Icon(icon, color: AppColors.secondary),
+        title: Text(title,
+            style: const TextStyle(color: Colors.white, fontSize: 14)),
+        subtitle: Text(subtitle,
+            style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        trailing: trailing,
+      ),
     );
   }
 }
@@ -1797,8 +1825,10 @@ class _PrivacyToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
-      title: const Text(
+    return Material(
+      color: Colors.transparent,
+      child: SwitchListTile(
+        title: const Text(
         'Permitir llamadas a la nube',
         style: TextStyle(
           color: Colors.white,
@@ -1811,8 +1841,9 @@ class _PrivacyToggle extends StatelessWidget {
       ),
       value: allowCloudApiCalls,
       onChanged: onChanged,
-      activeTrackColor: AppColors.primary.withValues(alpha: 0.5),
-      activeThumbColor: AppColors.primary,
+        activeTrackColor: AppColors.primary.withValues(alpha: 0.5),
+        activeThumbColor: AppColors.primary,
+      ),
     );
   }
 }
