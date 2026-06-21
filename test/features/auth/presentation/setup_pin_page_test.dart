@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_cubit.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_state.dart';
 import 'package:orionhealth_health/features/auth/presentation/setup_pin_page.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
 
 class MockAuthCubit extends Mock implements AuthCubit {}
 
@@ -19,10 +20,14 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: BlocProvider<AuthCubit>.value(
-        value: mockCubit,
-        child: const SetupPinPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>.value(value: mockCubit),
+      ],
+      child: const MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: SetupPinPage(),
       ),
     );
   }
