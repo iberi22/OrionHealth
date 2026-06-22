@@ -12,7 +12,7 @@ void main() {
 
   setUp(() {
     mockNfcHandler = MockNfcHandler();
-    service = NfcSharingService(nfcHandler: mockNfcHandler);
+    service = NfcSharingService(mockNfcHandler);
   });
 
   final testPackage = SharedHealthPackage(

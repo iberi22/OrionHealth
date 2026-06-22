@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/health_sharing/infrastructure/nfc_sharing_service.dart';
+import 'package:orionhealth_health/features/health_sharing/infrastructure/nfc_handler.dart';
 import 'package:orionhealth_health/features/health_sharing/domain/entities/shared_health_package.dart';
 import 'package:flutter/services.dart';
 
@@ -10,7 +11,7 @@ void main() {
   const MethodChannel channel = MethodChannel('orionhealth/nfc');
 
   setUp(() {
-    service = NfcSharingService();
+    service = NfcSharingService(NfcHandler());
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
