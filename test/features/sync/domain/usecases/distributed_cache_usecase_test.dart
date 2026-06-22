@@ -1,91 +1,64 @@
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/features/sync/domain/services/distributed_storage_service.dart';
 import 'package:orionhealth_health/features/sync/domain/usecases/distributed_cache_usecase.dart';
-import 'package:orionhealth_health/features/sync/infrastructure/services/ipfs_service.dart';
 
-class MockIpfsService extends Mock implements IpfsService {}
+class MockDistributedStorageService extends Mock implements DistributedStorageService {}
 
 void main() {
   late DistributedCacheUsecase usecase;
-  late MockIpfsService mockIpfsService;
+  late MockDistributedStorageService mockStorageService;
 
   setUp(() {
-    mockIpfsService = MockIpfsService();
-    usecase = DistributedCacheUsecase(mockIpfsService);
+    mockStorageService = MockDistributedStorageService();
+    usecase = DistributedCacheUsecase(mockStorageService);
   });
 
-  final testData = Uint8List.fromList([1, 2, 3, 4, 5]);
-  const testCid = 'QmTest123';
+  group('cacheStandard', () {
+    test('returns CID on success', () async {
+      final data = Uint8List.fromList([1, 2, 3]);
+      const cid = 'QmTest';
+      when(() => mockStorageService.cacheData(data)).thenAnswer((_) async => cid);
 
-  group('DistributedCacheUsecase', () {
-    group('cacheStandard', () {
-      test('should return CID when IPFS caching succeeds', () async {
-        when(() => mockIpfsService.cacheData(testData))
-            .thenAnswer((_) async => testCid);
+      final result = await usecase.cacheStandard(data);
 
-        final result = await usecase.cacheStandard(testData);
-
-        expect(result, testCid);
-        verify(() => mockIpfsService.cacheData(testData)).called(1);
-      });
-
-      test('should return null when IPFS caching fails', () async {
-        when(() => mockIpfsService.cacheData(testData))
-            .thenThrow(Exception('IPFS unavailable'));
-
-        final result = await usecase.cacheStandard(testData);
-
-        expect(result, isNull);
-        verify(() => mockIpfsService.cacheData(testData)).called(1);
-      });
+      expect(result, cid);
+      verify(() => mockStorageService.cacheData(data)).called(1);
     });
 
-    group('getStandard', () {
-      const expectedHash = 'abc123hash';
-      final fallbackData = Uint8List.fromList([10, 11, 12]);
+    test('returns null on failure', () async {
+      final data = Uint8List.fromList([1, 2, 3]);
+      when(() => mockStorageService.cacheData(data)).thenThrow(Exception('Storage error'));
 
-      test('should return data from IPFS when retrieval succeeds', () async {
-        when(() => mockIpfsService.getData(testCid, expectedHash))
-            .thenAnswer((_) async => testData);
+      final result = await usecase.cacheStandard(data);
 
-        final result = await usecase.getStandard(
-          testCid,
-          expectedHash,
-          () async => fallbackData,
-        );
+      expect(result, isNull);
+    });
+  });
 
-        expect(result, testData);
-        verify(() => mockIpfsService.getData(testCid, expectedHash)).called(1);
-      });
+  group('getStandard', () {
+    test('returns data from storage on success', () async {
+      final data = Uint8List.fromList([1, 2, 3]);
+      const cid = 'QmTest';
+      const hash = 'hash';
+      when(() => mockStorageService.getData(cid, hash)).thenAnswer((_) async => data);
 
-      test('should return fallback data when IPFS retrieval fails', () async {
-        when(() => mockIpfsService.getData(testCid, expectedHash))
-            .thenThrow(Exception('IPFS retrieval failed'));
+      final result = await usecase.getStandard(cid, hash, () async => Uint8List(0));
 
-        final result = await usecase.getStandard(
-          testCid,
-          expectedHash,
-          () async => fallbackData,
-        );
+      expect(result, data);
+      verify(() => mockStorageService.getData(cid, hash)).called(1);
+    });
 
-        expect(result, fallbackData);
-        verify(() => mockIpfsService.getData(testCid, expectedHash)).called(1);
-      });
+    test('returns fallback data on storage failure', () async {
+      final fallbackData = Uint8List.fromList([4, 5, 6]);
+      const cid = 'QmTest';
+      const hash = 'hash';
+      when(() => mockStorageService.getData(cid, hash)).thenThrow(Exception('Storage error'));
 
-      test('should propagate fallback exceptions', () async {
-        when(() => mockIpfsService.getData(testCid, expectedHash))
-            .thenThrow(Exception('IPFS retrieval failed'));
+      final result = await usecase.getStandard(cid, hash, () async => fallbackData);
 
-        expect(
-          () => usecase.getStandard(
-            testCid,
-            expectedHash,
-            () async => throw Exception('Fallback also failed'),
-          ),
-          throwsA(isA<Exception>()),
-        );
-      });
+      expect(result, fallbackData);
     });
   });
 }

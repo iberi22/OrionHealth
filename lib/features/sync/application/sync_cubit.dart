@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../domain/services/sync_service.dart';
+import '../domain/services/node_discovery_service.dart';
 import '../domain/entities/sync_node.dart';
-import '../infrastructure/services/node_discovery_service.dart';
 import 'sync_state.dart';
 
 @injectable
@@ -24,23 +24,12 @@ class FhirSyncCubit extends Cubit<SyncState> {
 
   void _listenToDiscoveredNodes() {
     _nodesSubscription?.cancel();
-    _nodesSubscription = _nodeDiscoveryService.discoveredNodes.listen((bonsoirNodes) {
-      final syncNodes = bonsoirNodes.map((node) => SyncNode(
-        id: node.attributes['nodeId'] ?? node.name,
-        name: node.name,
-        host: node.hostname ?? 'unknown',
-        port: node.port,
-      )).toList();
+    _nodesSubscription = _nodeDiscoveryService.discoveredNodes.listen((syncNodes) {
       emit(state.copyWith(discoveredNodes: syncNodes));
     });
 
     // Initial nodes
-    final initialNodes = _nodeDiscoveryService.currentNodes.map((node) => SyncNode(
-      id: node.attributes['nodeId'] ?? node.name,
-      name: node.name,
-      host: node.hostname ?? 'unknown',
-      port: node.port,
-    )).toList();
+    final initialNodes = _nodeDiscoveryService.currentNodes;
     if (initialNodes.isNotEmpty) {
       emit(state.copyWith(discoveredNodes: initialNodes));
     }
