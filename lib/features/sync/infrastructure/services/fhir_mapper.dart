@@ -37,7 +37,9 @@ class FhirMapper {
 
   static String? _extractPatientName(Map<String, dynamic> json) {
     final names = json['name'] as List?;
-    if (names == null || names.isEmpty) return null;
+    if (names == null || names.isEmpty) {
+      return json['id'] != null ? 'Patient ${json['id']}' : null;
+    }
 
     // Try to find official name first
     final official = names.cast<Map<String, dynamic>>().firstWhere(
@@ -64,7 +66,7 @@ class FhirMapper {
       name = medicationCodeableConcept['text'] as String? ??
              (medicationCodeableConcept['coding'] as List?)?.first['display'] as String?;
     } else if (medicationReference != null) {
-      name = medicationReference['display'] as String?;
+      name = medicationReference['display'] as String? ?? medicationReference['reference'] as String?;
     }
 
     if (name == null) return null;
@@ -85,16 +87,36 @@ class FhirMapper {
   /// Maps FHIR AllergyIntolerance to Allergy
   static Allergy? mapAllergyIntolerance(Map<String, dynamic> json) {
     final code = json['code'];
-    String? allergen = code?['text'] as String? ??
-                    (code?['coding'] as List?)?.first['display'] as String?;
+    String? allergen = code?['text'] as String?;
+
+    if (allergen == null && code?['coding'] != null) {
+      for (final coding in code['coding'] as List) {
+        if (coding['display'] != null) {
+          allergen = coding['display'] as String;
+          break;
+        }
+      }
+    }
 
     // Fallback to substance in reactions if code is missing
     if (allergen == null) {
       final reactions = json['reaction'] as List?;
-      if (reactions != null && reactions.isNotEmpty) {
-        final substance = reactions.first['substance'];
-        allergen = substance?['text'] as String? ??
-                  (substance?['coding'] as List?)?.first['display'] as String?;
+      if (reactions != null) {
+        for (final reaction in reactions) {
+          final substance = reaction['substance'];
+          if (substance == null) continue;
+
+          allergen = substance['text'] as String?;
+          if (allergen == null && substance['coding'] != null) {
+            for (final coding in substance['coding'] as List) {
+              if (coding['display'] != null) {
+                allergen = coding['display'] as String;
+                break;
+              }
+            }
+          }
+          if (allergen != null) break;
+        }
       }
     }
 
@@ -124,7 +146,7 @@ class FhirMapper {
   /// Extracts ICD-10 codes from FHIR Condition
   static String? mapConditionCode(Map<String, dynamic> json) {
     final code = json['code'];
-    if (code == null) return null;
+    if (code == null) return json['id'] as String?;
 
     final codings = code['coding'] as List?;
     if (codings != null) {
@@ -139,8 +161,8 @@ class FhirMapper {
       }
     }
 
-    // Fallback to display text
-    return code['text'] as String?;
+    // Fallback to display text, then finally to ID if nothing else works
+    return code['text'] as String? ?? json['id'] as String?;
   }
 
   /// Maps FHIR Observation to VitalSign
@@ -221,6 +243,7 @@ class FhirMapper {
       if (display.contains('steps')) return VitalSignType.steps;
       if (display.contains('sleep')) return VitalSignType.sleep;
     }
-    return null;
+    // Fallback: Use heartRate as a default vital type when no match found
+    return VitalSignType.heartRate;
   }
 }
