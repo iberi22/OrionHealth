@@ -14,6 +14,7 @@ void main() {
         name: 'Test',
         dosage: '10mg',
         frequency: 'Daily',
+        startDate: DateTime(2026),
       );
       expect(SaveMedication(medication), isA<SaveMedication>());
     });
