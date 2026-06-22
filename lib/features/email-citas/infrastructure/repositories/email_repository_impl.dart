@@ -17,11 +17,10 @@ class EmailRepositoryImpl implements EmailRepository {
   static const String _gmailClientId = "YOUR_GMAIL_CLIENT_ID";
   static const String _outlookClientId = "YOUR_OUTLOOK_CLIENT_ID";
 
-  EmailRepositoryImpl({
-    http.Client? client,
-    DeviceCalendarPlugin? deviceCalendarPlugin,
-  })  : _client = client ?? http.Client(),
-        _deviceCalendarPlugin = deviceCalendarPlugin ?? DeviceCalendarPlugin();
+  EmailRepositoryImpl(
+    this._client,
+    this._deviceCalendarPlugin,
+  );
 
   @override
   Future<bool> connectGmail() async {

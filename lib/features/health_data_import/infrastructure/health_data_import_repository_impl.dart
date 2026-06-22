@@ -1,29 +1,14 @@
 import 'package:health/health.dart';
 import 'package:injectable/injectable.dart';
+import '../domain/repositories/health_data_import_repository.dart';
 import 'data_source.dart';
 
-/// Repository interface for health data import.
-/// Defined here to adhere to file constraints while providing the abstraction.
-abstract class HealthDataRepository {
-  Future<bool> hasPermissions(List<HealthDataType> types);
-  Future<bool> requestAuthorization(
-    List<HealthDataType> types, {
-    List<HealthDataAccess>? permissions,
-  });
-  Future<List<HealthDataPoint>> fetchHealthData(
-    HealthDataType type,
-    DateTime startTime,
-    DateTime endTime,
-  );
-  Future<String?> pickAndExtractFromFile();
-}
-
-@LazySingleton(as: HealthDataRepository)
-class HealthDataRepositoryImpl implements HealthDataRepository {
+@LazySingleton(as: HealthDataImportRepository)
+class HealthDataImportRepositoryImpl implements HealthDataImportRepository {
   final SensorHealthDataSource _sensorDataSource;
   final FileHealthDataSource _fileDataSource;
 
-  HealthDataRepositoryImpl(
+  HealthDataImportRepositoryImpl(
     this._sensorDataSource,
     this._fileDataSource,
   );
