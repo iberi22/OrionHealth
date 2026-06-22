@@ -16,6 +16,7 @@ import 'core/di/injection.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/app_logger.dart';
 import 'core/widgets/error_boundary.dart';
+import 'core/utils/connectivity_manager.dart';
 
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'features/local_agent/infrastructure/services/medical_indexing_service.dart';
@@ -72,6 +73,7 @@ void main() async {
 
     try {
       await configureDependencies();
+      await ConnectivityManager().initialize();
       await getIt<MemoryGraph>().initialize();
 
       // Index medical standards and patient context at startup

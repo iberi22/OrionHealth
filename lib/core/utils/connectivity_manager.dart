@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:get_it/get_it.dart';
+import 'cache_manager.dart';
+import '../../features/sync/domain/services/sync_service.dart';
 
 /// Manages network connectivity and offline capabilities
 class ConnectivityManager {
@@ -111,7 +114,7 @@ class ConnectivityManager {
     }
 
     // Trigger sync operations, retry failed requests, etc.
-    _triggerDataSync();
+    triggerDataSync();
   }
 
   /// Called when connection is lost
@@ -121,23 +124,54 @@ class ConnectivityManager {
     }
 
     // Enable offline mode, cache data, etc.
-    _enableOfflineMode();
+    enableOfflineMode();
   }
 
   /// Trigger data synchronization when connection is restored
-  void _triggerDataSync() {
-    // TODO: Implement data sync logic
-    // - Sync pending memory entries
-    // - Retry failed API calls
-    // - Update cached data
+  @visibleForTesting
+  void triggerDataSync() {
+    try {
+      // 1. Sync clinical data via SyncService
+      GetIt.instance<SyncService>().performFullSync().catchError((e) {
+        if (kDebugMode) {
+          print('ConnectivityManager: Error during data sync - $e');
+        }
+      });
+
+      // 2. Ensure CacheManager is ready
+      CacheManager().initialize().catchError((e) {
+        if (kDebugMode) {
+          print('ConnectivityManager: Error initializing CacheManager - $e');
+        }
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('ConnectivityManager: Failed to trigger data sync - $e');
+      }
+    }
   }
 
   /// Enable offline mode functionality
-  void _enableOfflineMode() {
-    // TODO: Implement offline mode logic
-    // - Use cached data
-    // - Queue operations for later sync
-    // - Show offline indicators
+  @visibleForTesting
+  void enableOfflineMode() {
+    try {
+      // Ensure CacheManager is initialized for offline access
+      CacheManager().initialize().catchError((e) {
+        if (kDebugMode) {
+          print(
+            'ConnectivityManager: Error initializing CacheManager in offline mode - $e',
+          );
+        }
+      });
+
+      if (kDebugMode) {
+        print('ConnectivityManager: Offline mode enabled');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('ConnectivityManager: Failed to enable offline mode - $e');
+      }
+    }
   }
 
   /// Check if a specific operation requires internet
