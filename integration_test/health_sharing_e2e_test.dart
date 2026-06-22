@@ -264,6 +264,52 @@ void main() {
     });
 
     // ============================================================
+    // EDGE CASE: Connection failure - device not found
+    // ============================================================
+    testWidgets('Edge Case: Connection failure - device not found', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: _MockTransferringPage(simulateError: 'Dispositivo no encontrado'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Error: Dispositivo no encontrado'), findsOneWidget);
+      expect(find.text('Reintentar'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'health_sharing', '12_device_not_found');
+    });
+
+    // ============================================================
+    // EDGE CASE: Timeout during transfer
+    // ============================================================
+    testWidgets('Edge Case: Timeout during transfer', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: _MockTransferringPage(simulateError: 'Tiempo de espera agotado'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Error: Tiempo de espera agotado'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'health_sharing', '13_transfer_timeout');
+    });
+
+    // ============================================================
+    // EDGE CASE: Data corruption - invalid checksum
+    // ============================================================
+    testWidgets('Edge Case: Data corruption - invalid checksum', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: _MockTransferringPage(simulateError: 'Error de integridad de datos'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Error: Error de integridad de datos'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'health_sharing', '14_data_corruption');
+    });
+
+    // ============================================================
     // TEST 12: Verificación de privacidad antes de compartir
     // ============================================================
     testWidgets('E2E 12: Privacy verification before share', (
@@ -441,7 +487,8 @@ class _MockSharePageWithStateState extends State<_MockSharePageWithState> {
 }
 
 class _MockTransferringPage extends StatelessWidget {
-  const _MockTransferringPage();
+  final String? simulateError;
+  const _MockTransferringPage({this.simulateError});
 
   @override
   Widget build(BuildContext context) {
@@ -450,11 +497,19 @@ class _MockTransferringPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: 24),
-            const Text('Buscando dispositivos...', style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 16),
-            const LinearProgressIndicator(),
+            if (simulateError != null) ...[
+              const Icon(Icons.error, color: Colors.red, size: 64),
+              const SizedBox(height: 16),
+              Text('Error: $simulateError'),
+              const SizedBox(height: 24),
+              ElevatedButton(onPressed: () {}, child: const Text('Reintentar')),
+            ] else ...[
+              const CircularProgressIndicator(),
+              const SizedBox(height: 24),
+              const Text('Buscando dispositivos...', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 16),
+              const LinearProgressIndicator(),
+            ],
             const SizedBox(height: 32),
             TextButton(
               onPressed: () {},
