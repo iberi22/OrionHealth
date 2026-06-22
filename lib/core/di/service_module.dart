@@ -12,9 +12,4 @@ abstract class ServiceModule {
   @lazySingleton
   FlutterAppAuth get appAuth => const FlutterAppAuth();
 
-  @lazySingleton
-  http.Client get httpClient => http.Client();
-
-  @lazySingleton
-  DeviceCalendarPlugin get deviceCalendarPlugin => DeviceCalendarPlugin();
 }
