@@ -61,12 +61,15 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
     );
 
     _levelAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+      CurvedAnimation(parent: _animationController, curve: Curves.linear),
     );
 
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
+
+    _currentLevel = widget.volumeLevel.clamp(0.0, 1.0);
+    _animationController.value = _currentLevel;
 
     if (widget.isActive) {
       _pulseController.repeat(reverse: true);
@@ -108,6 +111,9 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
     }
 
     _currentLevel = newLevel;
+    if (mounted) {
+      setState(() {});
+    }
     _animationController.animateTo(newLevel);
   }
 
@@ -161,15 +167,15 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
   Widget _buildIndicator() {
     switch (widget.style) {
       case VolumeIndicatorStyle.circular:
-        return _buildCircularIndicator();
+        return _buildCircularIndicator(_levelAnimation.value);
       case VolumeIndicatorStyle.linear:
-        return _buildLinearIndicator();
+        return _buildLinearIndicator(_levelAnimation.value);
       case VolumeIndicatorStyle.meter:
-        return _buildMeterIndicator();
+        return _buildMeterIndicator(_levelAnimation.value);
     }
   }
 
-  Widget _buildCircularIndicator() {
+  Widget _buildCircularIndicator(double level) {
     return SizedBox(
       width: widget.size,
       height: widget.size,
@@ -209,8 +215,8 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
             child: CustomPaint(
               size: Size(widget.size, widget.size),
               painter: CircularVolumePainter(
-                level: _levelAnimation.value,
-                color: _getVolumeColor(_levelAnimation.value),
+                level: level,
+                color: _getVolumeColor(level),
                 thickness: widget.thickness,
                 showOptimalRange: false,
               ),
@@ -218,7 +224,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
           ),
 
           // Peak indicator
-          if (_peakLevel > _currentLevel)
+          if (_peakLevel > level)
             RepaintBoundary(
               child: CustomPaint(
                 size: Size(widget.size, widget.size),
@@ -236,15 +242,15 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '${(_levelAnimation.value * 100).round()}%',
+                  '${(level * 100).round()}%',
                   style: TextStyle(
                     fontSize: widget.size * 0.15,
                     fontWeight: FontWeight.bold,
-                    color: _getVolumeColor(_levelAnimation.value),
+                    color: _getVolumeColor(level),
                   ),
                 ),
                 Text(
-                  _getVolumeText(_levelAnimation.value),
+                  _getVolumeText(level),
                   style: TextStyle(
                     fontSize: widget.size * 0.08,
                     color: Colors.grey[600],
@@ -257,7 +263,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
     );
   }
 
-  Widget _buildLinearIndicator() {
+  Widget _buildLinearIndicator(double level) {
     return Container(
       width: widget.size * 2,
       height: widget.thickness * 2,
@@ -285,19 +291,19 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
           // Current level
           Positioned(
             left: 0,
-            width: widget.size * 2 * _levelAnimation.value,
+            width: widget.size * 2 * level,
             top: 0,
             bottom: 0,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(widget.thickness),
-                color: _getVolumeColor(_levelAnimation.value),
+                color: _getVolumeColor(level),
               ),
             ),
           ),
 
           // Peak indicator
-          if (_peakLevel > _currentLevel)
+          if (_peakLevel > level)
             Positioned(
               left: widget.size * 2 * _peakLevel - 2,
               width: 4,
@@ -315,7 +321,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
     );
   }
 
-  Widget _buildMeterIndicator() {
+  Widget _buildMeterIndicator(double level) {
     const int segments = 10;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -324,11 +330,11 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              _getVolumeText(_levelAnimation.value),
+              _getVolumeText(level),
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: _getVolumeColor(_levelAnimation.value),
+                color: _getVolumeColor(level),
               ),
             ),
           ),
@@ -339,7 +345,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
           child: Column(
             children: List.generate(segments, (index) {
               final segmentLevel = (segments - index) / segments;
-              final isActive = _levelAnimation.value >= segmentLevel;
+              final isActive = level >= segmentLevel;
               final isPeak =
                   _peakLevel >= segmentLevel &&
                   _peakLevel < segmentLevel + (1 / segments);

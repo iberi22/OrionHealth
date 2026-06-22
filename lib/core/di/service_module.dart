@@ -14,7 +14,4 @@ abstract class ServiceModule {
 
   @lazySingleton
   http.Client get httpClient => http.Client();
-
-  @lazySingleton
-  DeviceCalendarPlugin get deviceCalendarPlugin => DeviceCalendarPlugin();
 }

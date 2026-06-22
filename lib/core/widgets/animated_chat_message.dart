@@ -107,7 +107,11 @@ class _AnimatedChatMessageState extends State<AnimatedChatMessage>
     if (widget.isTyping && widget.type == MessageType.agent) {
       _startTypingEffect();
     } else {
-      _displayedText = widget.message;
+      if (mounted) {
+        setState(() {
+          _displayedText = widget.message;
+        });
+      }
       if (widget.onAnimationComplete != null) {
         widget.onAnimationComplete!();
       }
