@@ -1,22 +1,28 @@
 import 'dart:async';
 import 'package:bonsoir/bonsoir.dart';
 import 'package:injectable/injectable.dart';
+import '../../domain/entities/sync_node.dart';
+import '../../domain/services/node_discovery_service.dart' as domain;
 
 /// Service for discovering OrionHealth nodes on the local network using mDNS.
-@lazySingleton
-class NodeDiscoveryService {
+@LazySingleton(as: domain.NodeDiscoveryService)
+class NodeDiscoveryService implements domain.NodeDiscoveryService {
   static const String _serviceType = '_orion-sync._tcp';
 
   BonsoirBroadcast? _broadcast;
   BonsoirDiscovery? _discovery;
 
-  final _discoveredNodesController = StreamController<List<BonsoirService>>.broadcast();
-  final Map<String, BonsoirService> _nodes = {};
+  final _discoveredNodesController = StreamController<List<SyncNode>>.broadcast();
+  final Map<String, SyncNode> _nodes = {};
 
-  Stream<List<BonsoirService>> get discoveredNodes => _discoveredNodesController.stream;
-  List<BonsoirService> get currentNodes => _nodes.values.toList();
+  @override
+  Stream<List<SyncNode>> get discoveredNodes => _discoveredNodesController.stream;
+
+  @override
+  List<SyncNode> get currentNodes => _nodes.values.toList();
 
   /// Starts advertising this node and browsing for others.
+  @override
   Future<void> start(String nodeId, int port) async {
     // 1. Broadcast our presence
     final service = BonsoirService(
@@ -39,7 +45,8 @@ class NodeDiscoveryService {
           event.service.resolve(resolver);
         }
       } else if (event is BonsoirDiscoveryServiceResolvedEvent) {
-        _nodes[event.service.name] = event.service;
+        final syncNode = _mapToSyncNode(event.service);
+        _nodes[event.service.name] = syncNode;
         _notify();
       } else if (event is BonsoirDiscoveryServiceLostEvent) {
         _nodes.remove(event.service.name);
@@ -55,10 +62,20 @@ class NodeDiscoveryService {
   }
 
   /// Stops advertising and discovery.
+  @override
   Future<void> stop() async {
     await _broadcast?.stop();
     await _discovery?.stop();
     _nodes.clear();
     _notify();
+  }
+
+  SyncNode _mapToSyncNode(BonsoirService node) {
+    return SyncNode(
+      id: node.attributes['nodeId'] ?? node.name,
+      name: node.name,
+      host: node.hostname ?? 'unknown',
+      port: node.port,
+    );
   }
 }

@@ -1,30 +1,30 @@
 import 'dart:typed_data';
 import 'package:injectable/injectable.dart';
-import '../../infrastructure/services/ipfs_service.dart';
+import '../services/distributed_storage_service.dart';
 
 @lazySingleton
 class DistributedCacheUsecase {
-  final IpfsService _ipfsService;
+  final DistributedStorageService _storageService;
 
-  DistributedCacheUsecase(this._ipfsService);
+  DistributedCacheUsecase(this._storageService);
 
-  /// Caches a medical standard chunk on IPFS.
+  /// Caches a medical standard chunk on distributed storage.
   Future<String?> cacheStandard(Uint8List data) async {
     try {
-      return await _ipfsService.cacheData(data);
+      return await _storageService.cacheData(data);
     } catch (e) {
-      // Gracefully degrade if IPFS is unavailable
+      // Gracefully degrade if distributed storage is unavailable
       print('Distributed cache failed: $e. Falling back to direct storage/download.');
       return null;
     }
   }
 
-  /// Retrieves a medical standard from IPFS with fallback.
+  /// Retrieves a medical standard from distributed storage with fallback.
   Future<Uint8List> getStandard(String cid, String expectedHash, Future<Uint8List> Function() fallback) async {
     try {
-      return await _ipfsService.getData(cid, expectedHash);
+      return await _storageService.getData(cid, expectedHash);
     } catch (e) {
-      print('IPFS retrieval failed: $e. Using fallback.');
+      print('Distributed storage retrieval failed: $e. Using fallback.');
       return await fallback();
     }
   }

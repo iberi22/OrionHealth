@@ -9,6 +9,7 @@ import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/sync_node.dart';
 import '../../domain/repositories/sync_repository.dart';
+import '../../domain/services/node_discovery_service.dart';
 import '../../../user_profile/domain/entities/user_profile.dart';
 import '../../../medications/domain/entities/medication.dart' as app_med;
 import '../../../allergies/domain/entities/allergy.dart';
@@ -16,7 +17,6 @@ import '../../../vitals/domain/entities/vital_sign.dart' as app_vital;
 import '../services/fhir_client.dart';
 import '../services/fhir_mapper.dart';
 import '../services/rda_parser.dart';
-import '../services/node_discovery_service.dart';
 
 @LazySingleton(as: SyncRepository)
 class SyncRepositoryImpl implements SyncRepository {
@@ -53,11 +53,13 @@ class SyncRepositoryImpl implements SyncRepository {
         : null;
   }
 
+  @override
   Future<void> setLastSyncTime(DateTime time) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_lastSyncKey, time.millisecondsSinceEpoch);
   }
 
+  @override
   Future<void> syncPatient(
     String patientId,
     String token,
@@ -77,6 +79,7 @@ class SyncRepositoryImpl implements SyncRepository {
     }
   }
 
+  @override
   Future<void> syncRda(String patientId, String token) async {
     try {
       final rdaBundle = await _fhirClient.getRDA(patientId, token);
@@ -178,14 +181,7 @@ class SyncRepositoryImpl implements SyncRepository {
 
   @override
   List<SyncNode> getDiscoveredNodes() {
-    return _discoveryService.currentNodes
-        .map((node) => SyncNode(
-              id: node.attributes['nodeId'] ?? node.name,
-              name: node.name,
-              host: node.hostname ?? 'unknown',
-              port: node.port,
-            ))
-        .toList();
+    return _discoveryService.currentNodes;
   }
 
   @override
