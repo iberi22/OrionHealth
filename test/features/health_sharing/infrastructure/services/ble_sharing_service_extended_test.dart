@@ -12,7 +12,7 @@ void main() {
 
   setUp(() {
     mockBleWrapper = MockBleWrapper();
-    service = BleSharingService(bleWrapper: mockBleWrapper);
+    service = BleSharingService(mockBleWrapper);
   });
 
   group('BleSharingService Extended', () {
