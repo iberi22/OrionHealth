@@ -14,13 +14,15 @@ enum AudioState { idle, recording, processing, speaking, playing, playbackComple
 /// Legacy alias — voice chat screens reference `AudioService`.
 @lazySingleton
 class AudioService extends AudioPlayerService {
-  final AudioRecorderService _recorder = AudioRecorderService();
+  late final AudioRecorderService _recorder;
   final StreamController<AudioState> _audioStateController =
       StreamController<AudioState>.broadcast();
   final StreamController<double> _volumeController =
       StreamController<double>.broadcast();
 
-  AudioService() : super();
+  AudioService({AudioPlayer? player, AudioRecorderService? recorder})
+    : _recorder = recorder ?? AudioRecorderService(),
+      super(player: player);
 
   Stream<double> get currentVolumeStream => _volumeController.stream;
   Stream<AudioState> get stateStream => _audioStateController.stream;
@@ -99,8 +101,10 @@ class AudioService extends AudioPlayerService {
 }
 
 class AudioPlayerService {
-  final AudioPlayer _player = AudioPlayer();
+  late final AudioPlayer _player;
   bool _isPlaying = false;
+
+  AudioPlayerService({AudioPlayer? player}) : _player = player ?? AudioPlayer();
   bool _isInitialized = false;
 
   final StreamController<bool> _playbackStateController =

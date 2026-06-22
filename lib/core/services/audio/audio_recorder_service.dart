@@ -6,8 +6,10 @@ import 'package:record/record.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AudioRecorderService {
-  final AudioRecorder _recorder = AudioRecorder();
+  late final AudioRecorder _recorder;
   bool _isRecording = false;
+
+  AudioRecorderService({AudioRecorder? recorder}) : _recorder = recorder ?? AudioRecorder();
   DateTime? _recordingStartTime;
   Timer? _volumeMonitoringTimer;
 
