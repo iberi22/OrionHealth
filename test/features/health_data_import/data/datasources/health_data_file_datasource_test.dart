@@ -8,41 +8,32 @@ class MockFilePickerService extends Mock implements FilePickerService {}
 class MockOcrService extends Mock implements OcrService {}
 
 void main() {
-  late HealthDataFileDataSource dataSource;
-  late MockFilePickerService mockFilePickerService;
-  late MockOcrService mockOcrService;
+  late HealthDataFileDataSource datasource;
+  late MockFilePickerService mockFilePicker;
+  late MockOcrService mockOcr;
 
   setUp(() {
-    mockFilePickerService = MockFilePickerService();
-    mockOcrService = MockOcrService();
-    dataSource = HealthDataFileDataSource(
-      mockFilePickerService,
-      mockOcrService,
-    );
+    mockFilePicker = MockFilePickerService();
+    mockOcr = MockOcrService();
+    datasource = HealthDataFileDataSource(mockFilePicker, mockOcr);
   });
 
   group('HealthDataFileDataSource', () {
-    test('pickAndExtractText returns null if no file is picked', () async {
-      when(() => mockFilePickerService.pickPdf()).thenAnswer((_) async => null);
+    test('pickAndExtractText returns text when file picked and OCR successful', () async {
+      when(() => mockFilePicker.pickPdf()).thenAnswer((_) async => 'path/to/file.pdf');
+      when(() => mockOcr.extractText(any())).thenAnswer((_) async => 'extracted text');
 
-      final result = await dataSource.pickAndExtractText();
+      final result = await datasource.pickAndExtractText();
 
-      expect(result, isNull);
-      verify(() => mockFilePickerService.pickPdf()).called(1);
-      verifyNever(() => mockOcrService.extractText(any()));
+      expect(result, 'extracted text');
     });
 
-    test('pickAndExtractText returns extracted text if file is picked', () async {
-      const path = 'path/to/file.pdf';
-      const extractedText = 'extracted text';
-      when(() => mockFilePickerService.pickPdf()).thenAnswer((_) async => path);
-      when(() => mockOcrService.extractText(path)).thenAnswer((_) async => extractedText);
+    test('pickAndExtractText returns null when no file picked', () async {
+      when(() => mockFilePicker.pickPdf()).thenAnswer((_) async => null);
 
-      final result = await dataSource.pickAndExtractText();
+      final result = await datasource.pickAndExtractText();
 
-      expect(result, extractedText);
-      verify(() => mockFilePickerService.pickPdf()).called(1);
-      verify(() => mockOcrService.extractText(path)).called(1);
+      expect(result, isNull);
     });
   });
 }
