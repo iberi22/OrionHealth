@@ -10,11 +10,11 @@ class RdaParser {
       if (fhirBundle['resourceType'] == 'Composition') {
         return _parseComposition(fhirBundle);
       }
-      return null;
+      return _createSyntheticComposition([{'resource': fhirBundle}]);
     }
 
     final entries = fhirBundle['entry'] as List<dynamic>?;
-    if (entries == null || entries.isEmpty) return null;
+    if (entries == null || entries.isEmpty) return _createSyntheticComposition([]);
 
     // Find the Composition resource in the bundle
     Map<String, dynamic>? composition;
@@ -64,13 +64,13 @@ class RdaParser {
       'date': composition['date'],
       'title': composition['title'],
       'status': composition['status'],
-      'type': composition['type']?['coding']?.first?['code'],
-      'patient': composition['subject'] != null
-          ? _extractDisplay(composition['subject'])
+      'type': composition['type']?['coding']?.isNotEmpty == true
+          ? composition['type']!['coding']!.first['code']
           : null,
+      'patient': _extractDisplay(composition['subject']),
       'author': composition['author']?.isNotEmpty == true
           ? _extractDisplay(composition['author']!.first)
-          : null,
+          : 'Unknown',
       'sections': sections,
     };
   }
@@ -122,8 +122,8 @@ class RdaParser {
 
   /// Extract a human-readable display from a reference
   static String? _extractDisplay(dynamic reference) {
-    if (reference == null) return null;
-    final ref = reference as Map<String, dynamic>;
+    if (reference == null || reference is! Map) return 'Unknown';
+    final ref = reference as Map;
     if (ref['display'] != null) return ref['display'] as String;
     if (ref['text'] != null) return ref['text'] as String;
     if (ref['reference'] != null) return ref['reference'] as String;
@@ -132,7 +132,7 @@ class RdaParser {
     if (identifier != null) {
       return identifier['value'] as String? ?? identifier['system'] as String?;
     }
-    return null;
+    return 'Unknown';
   }
 
   static Map<String, dynamic> _createSyntheticComposition(List<dynamic> entries) {
