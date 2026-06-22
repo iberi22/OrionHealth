@@ -18,8 +18,7 @@ const String kOrionHealthRxCharacteristic = 'beb5483e-36e1-4688-b7f5-ea07361b26a
 class BleSharingService {
   final BleWrapper _bleWrapper;
 
-  BleSharingService({BleWrapper? bleWrapper})
-      : _bleWrapper = bleWrapper ?? BleWrapper();
+  BleSharingService(this._bleWrapper);
 
   // Standard GATT Service UUIDs
   static const String heartRateServiceUuid = '180d';

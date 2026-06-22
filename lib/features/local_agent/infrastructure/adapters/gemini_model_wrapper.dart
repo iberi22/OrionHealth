@@ -1,6 +1,8 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:injectable/injectable.dart';
 
 /// Wrapper for GenerativeModel to allow mocking in unit tests.
+@lazySingleton
 class GeminiModelWrapper {
   final GenerativeModel _model;
 

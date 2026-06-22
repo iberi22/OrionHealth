@@ -137,17 +137,17 @@ class SharingCubit extends Cubit<SharingState> {
   String? _sessionPin;
 
   SharingCubit({
-    BleSharingService? bleService,
-    NfcSharingService? nfcService,
-    WifiDirectService? wifiService,
+    required BleSharingService bleService,
+    required NfcSharingService nfcService,
+    required WifiDirectService wifiService,
     required StartSharingUseCase startSharingUseCase,
     required StartListeningUseCase startListeningUseCase,
     required CancelSharingUseCase cancelSharingUseCase,
     required wallet.WalletService walletService,
     required wallet.EncryptionService walletEncryption,
-  })  : _bleService = bleService ?? BleSharingService(),
-        _nfcService = nfcService ?? NfcSharingService(),
-        _wifiService = wifiService ?? WifiDirectService(),
+  })  : _bleService = bleService,
+        _nfcService = nfcService,
+        _wifiService = wifiService,
         _startSharingUseCase = startSharingUseCase,
         _startListeningUseCase = startListeningUseCase,
         _cancelSharingUseCase = cancelSharingUseCase,
