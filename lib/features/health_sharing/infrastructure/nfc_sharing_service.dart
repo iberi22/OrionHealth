@@ -22,8 +22,7 @@ class NfcSharingService {
   final _dataController = StreamController<SharedHealthPackage>.broadcast();
   Stream<SharedHealthPackage> get incomingData => _dataController.stream;
 
-  NfcSharingService({NfcHandler? nfcHandler})
-      : _nfcHandler = nfcHandler ?? NfcHandler();
+  NfcSharingService(this._nfcHandler);
 
   /// Initialize NFC adapter.
   ///

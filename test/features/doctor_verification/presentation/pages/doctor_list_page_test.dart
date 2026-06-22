@@ -7,6 +7,7 @@ import 'package:orionhealth_health/features/doctor_verification/application/doct
 import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
+import 'package:get_it/get_it.dart';
 
 class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {}
 
@@ -16,6 +17,13 @@ void main() {
   setUp(() {
     mockCubit = MockDoctorVerificationCubit();
     when(() => mockCubit.close()).thenAnswer((_) async {});
+    if (!GetIt.I.isRegistered<DoctorVerificationCubit>()) {
+      GetIt.I.registerLazySingleton<DoctorVerificationCubit>(() => mockCubit);
+    }
+  });
+
+  tearDown(() {
+    GetIt.I.unregister<DoctorVerificationCubit>();
   });
 
   Widget createWidgetUnderTest() {

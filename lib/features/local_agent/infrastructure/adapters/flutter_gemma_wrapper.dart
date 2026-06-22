@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter_gemma/flutter_gemma.dart' hide ModelType;
 import 'package:flutter_gemma/flutter_gemma.dart' as gemma;
+import 'package:injectable/injectable.dart';
 
 /// Wrapper around FlutterGemma static methods to allow mocking in unit tests.
+@lazySingleton
 class FlutterGemmaWrapper {
   Future<void> initialize({
     String? huggingFaceToken,

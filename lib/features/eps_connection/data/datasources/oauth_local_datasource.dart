@@ -5,8 +5,7 @@ import 'package:injectable/injectable.dart';
 @lazySingleton
 class OAuthLocalDataSource {
   final FlutterSecureStorage _storage;
-  OAuthLocalDataSource({FlutterSecureStorage? storage})
-      : _storage = storage ?? const FlutterSecureStorage();
+  OAuthLocalDataSource(this._storage);
 
   String _accessKey(String id) => 'oauth_access_token_$id';
   String _idKey(String id) => 'oauth_id_token_$id';

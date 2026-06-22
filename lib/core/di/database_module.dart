@@ -19,6 +19,8 @@ import '../../features/doctor_verification/domain/entities/vouch.dart';
 import '../../features/doctor_verification/domain/entities/reputation_badge.dart';
 import '../../features/doctor_verification/domain/entities/second_opinion.dart';
 import '../../features/doctor_verification/domain/entities/license_registry.dart';
+import '../../features/settings/domain/entities/app_settings.dart';
+import '../../features/settings/domain/entities/llm_config.dart';
 // SSI schemas removed in #548 (dead code cleanup)
 // import '../../features/ssi/infrastructure/persistence/isar_did.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
@@ -50,6 +52,8 @@ abstract class DatabaseModule {
         SecondOpinionRequestSchema,
         SecondOpinionResponseSchema,
         LicenseRegistryLocalSchema,
+        AppSettingsSchema,
+        LlmConfigSchema,
         wallet.HealthRecordSchema,
         wallet.LabResultSchema,
         wallet.VitalSignSchema,

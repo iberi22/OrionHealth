@@ -15,9 +15,9 @@ class OAuthRepositoryImpl implements OAuthRepository {
 
   OAuthRepositoryImpl(
     this._localDataSource,
-    this._dio, {
-    FlutterAppAuth appAuth = const FlutterAppAuth(),
-  }) : _appAuth = appAuth;
+    this._dio,
+    this._appAuth,
+  );
 
   @override
   Future<OAuthLoginResult?> login(EPSProvider provider) async {
