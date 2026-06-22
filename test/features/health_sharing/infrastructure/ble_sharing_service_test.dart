@@ -41,7 +41,7 @@ void main() {
     mockTxCharacteristic = MockBluetoothCharacteristic();
     mockRxCharacteristic = MockBluetoothCharacteristic();
 
-    service = BleSharingService(bleWrapper: mockBleWrapper);
+    service = BleSharingService(mockBleWrapper);
 
     when(() => mockBleWrapper.isSupported).thenAnswer((_) async => true);
     when(() => mockDevice.remoteId).thenReturn(const DeviceIdentifier('00:00:00:00:00:00'));

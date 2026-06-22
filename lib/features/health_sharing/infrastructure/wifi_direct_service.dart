@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import '../domain/entities/shared_health_package.dart';
 
@@ -18,7 +19,7 @@ class WifiDirectService {
   static const Duration transferTimeout = Duration(minutes: 3);
 
   HttpServer? _server;
-  HttpClient? _client;
+  http.Client? _client;
   bool _isRunning = false;
   String? _deviceIp;
 
@@ -162,12 +163,12 @@ class WifiDirectService {
 
     try {
       _server = await HttpServer.bind(
-        InternetAddress.loopbackIPv4,
+        InternetAddress.anyIPv4,
         port,
         shared: true,
       );
 
-      _deviceIp = '127.0.0.1:${_server!.port}';
+      _deviceIp = '0.0.0.0:${_server!.port}';
       _isRunning = true;
 
       _stateController.add(WifiSharingState.hosting(_deviceIp!));
@@ -241,24 +242,28 @@ class WifiDirectService {
       // Parse port from targetIp (format: 'ip:port') or use default
       final parts = targetIp.split(':');
       final host = parts.isNotEmpty ? parts[0] : targetIp;
-      final port = parts.length > 1 ? int.tryParse(parts[1]) ?? kDefaultPort : kDefaultPort;
+      final port =
+          parts.length > 1 ? int.tryParse(parts[1]) ?? kDefaultPort : kDefaultPort;
 
-      _client = HttpClient();
-      _client!.connectionTimeout = connectionTimeout;
+      _client = http.Client();
 
       final uri = Uri.parse('http://$host:$port/orion/share');
-      final request = await _client!.postUrl(uri);
 
       _stateController.add(WifiSharingState.transferring('Sending...'));
 
       final data = package.encode();
-      request.write(data);
-
-      final response = await request.close().timeout(const Duration(seconds: 10));
+      final response = await _client!
+          .post(
+            uri,
+            body: data,
+            headers: {'Content-Type': 'text/plain'},
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final transferTime = DateTime.now().difference(startTime);
-        _stateController.add(WifiSharingState.completed(data.length, transferTime));
+        _stateController.add(
+            WifiSharingState.completed(data.length, transferTime));
 
         _client?.close();
         _client = null;
@@ -269,8 +274,8 @@ class WifiDirectService {
           transferTime: transferTime,
         );
       } else {
-        final errorBody = await response.transform(utf8.decoder).join();
-        throw Exception('Remote rejected transfer: ${response.statusCode} $errorBody');
+        throw Exception(
+            'Remote rejected transfer: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       _client?.close();

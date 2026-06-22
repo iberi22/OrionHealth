@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/share_page.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/receive_page.dart';
@@ -32,14 +33,15 @@ void main() {
 
     registerFallbackValue(TransferMethod.nfc);
     registerFallbackValue(FakeSharedHealthPackage());
+    HttpOverrides.global = null;
   });
 
   setUp(() async {
-    GetIt.instance.reset();
+    getIt.reset();
     mockCubit = MockSharingCubit();
     stateController = StreamController<SharingState>.broadcast();
 
-    GetIt.I.registerSingleton<SharingCubit>(mockCubit);
+    getIt.registerSingleton<SharingCubit>(mockCubit);
 
     when(() => mockCubit.initialize()).thenAnswer((_) async => {});
     when(() => mockCubit.close()).thenAnswer((_) async => {});
