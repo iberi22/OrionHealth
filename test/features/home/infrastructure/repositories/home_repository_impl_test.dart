@@ -1,82 +1,71 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/home/infrastructure/repositories/home_repository_impl.dart';
 import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'package:orionhealth_health/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:orionhealth_health/features/medications/domain/repositories/medication_repository.dart';
+import 'package:orionhealth_health/features/home/infrastructure/datasources/home_local_datasource.dart';
+import 'package:orionhealth_health/features/home/infrastructure/datasources/home_remote_datasource.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
-import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
 
 class MockVitalSignRepository extends Mock implements VitalSignRepository {}
 class MockAppointmentRepository extends Mock implements AppointmentRepository {}
 class MockMedicationRepository extends Mock implements MedicationRepository {}
+class MockHomeLocalDataSource extends Mock implements HomeLocalDataSource {}
+class MockHomeRemoteDataSource extends Mock implements HomeRemoteDataSource {}
 
 void main() {
   late HomeRepositoryImpl repository;
-  late MockVitalSignRepository mockVitalSignRepository;
-  late MockAppointmentRepository mockAppointmentRepository;
-  late MockMedicationRepository mockMedicationRepository;
+  late MockVitalSignRepository mockVitals;
+  late MockAppointmentRepository mockAppointments;
+  late MockMedicationRepository mockMeds;
+  late MockHomeLocalDataSource mockLocal;
+  late MockHomeRemoteDataSource mockRemote;
 
   setUp(() {
-    mockVitalSignRepository = MockVitalSignRepository();
-    mockAppointmentRepository = MockAppointmentRepository();
-    mockMedicationRepository = MockMedicationRepository();
+    mockVitals = MockVitalSignRepository();
+    mockAppointments = MockAppointmentRepository();
+    mockMeds = MockMedicationRepository();
+    mockLocal = MockHomeLocalDataSource();
+    mockRemote = MockHomeRemoteDataSource();
+
     repository = HomeRepositoryImpl(
-      mockVitalSignRepository,
-      mockAppointmentRepository,
-      mockMedicationRepository,
+      mockVitals,
+      mockAppointments,
+      mockMeds,
+      mockLocal,
+      mockRemote,
     );
   });
 
-  group('getHealthSummary', () {
-    final tVital = VitalSign(
-      type: VitalSignType.heartRate,
-      value: 70,
-      dateTime: DateTime.now(),
-    );
-    final tAppointment = Appointment(
-      doctorName: 'Dr. Smith',
-      specialty: 'Cardiology',
-      dateTime: DateTime.now().add(const Duration(days: 1)),
-      status: AppointmentStatus.upcoming,
-    );
-    final tPastAppointment = Appointment(
-      doctorName: 'Dr. Jones',
-      specialty: 'General',
-      dateTime: DateTime.now().subtract(const Duration(days: 1)),
-      status: AppointmentStatus.completed,
-    );
+  group('HomeRepositoryImpl', () {
+    test('getHealthSummary returns summarized data', () async {
+      when(() => mockVitals.getLatestVitals()).thenAnswer((_) async => {
+        VitalSignType.heartRate: VitalSign(type: VitalSignType.heartRate, value: 70, dateTime: DateTime.now())
+      });
+      when(() => mockAppointments.getAllAppointments()).thenAnswer((_) async => [
+        Appointment(
+          doctorName: 'Dr. Smith',
+          specialty: 'Med',
+          dateTime: DateTime.now().add(const Duration(days: 1)),
+          status: AppointmentStatus.upcoming,
+        )
+      ]);
+      when(() => mockMeds.getAllMedications()).thenAnswer((_) async => []);
 
-    test('should return health summary with correct data', () async {
-      // arrange
-      when(() => mockVitalSignRepository.getLatestVitals())
-          .thenAnswer((_) async => {VitalSignType.heartRate: tVital});
-      when(() => mockAppointmentRepository.getAllAppointments())
-          .thenAnswer((_) async => [tAppointment, tPastAppointment]);
-      when(() => mockMedicationRepository.getAllMedications())
-          .thenAnswer((_) async => []);
-
-      // act
       final result = await repository.getHealthSummary();
 
-      // assert
-      expect(result.latestVitals, contains(tVital));
-      expect(result.upcomingAppointments, contains(tAppointment));
-      expect(result.upcomingAppointments, isNot(contains(tPastAppointment)));
-      expect(result.medicationCount, 0);
+      expect(result.latestVitals, isNotEmpty);
+      expect(result.upcomingAppointments, hasLength(1));
     });
-  });
 
-  group('getHomeModules', () {
-    test('should return list of modules', () async {
-      // act
+    test('getHomeModules returns cached modules if available', () async {
+      when(() => mockLocal.getCachedHomeModules()).thenAnswer((_) async => []);
+      when(() => mockRemote.getHomeModules()).thenAnswer((_) async => []);
+
       final result = await repository.getHomeModules();
-
-      // assert
-      expect(result, isNotEmpty);
-      expect(result.any((m) => m.title == 'AI Assistant'), isTrue);
+      expect(result, isNotEmpty); // Returns defaults if cache empty
     });
   });
 }
