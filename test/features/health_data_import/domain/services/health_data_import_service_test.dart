@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_state.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_import_service.dart';
-import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_parser.dart';
+import 'package:orionhealth_health/features/health_data_import/infrastructure/parsers/health_data_parser.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 
 void main() {
