@@ -359,6 +359,75 @@ void main() {
         await _captureScreenshot(tester, '10_language_selector');
       }
     });
+
+    // ============================================================
+    // EDGE CASE: Skip optional flows
+    // ============================================================
+    testWidgets('Edge Case: Skip optional flows', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: _FullOnboardingFlow(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Skip from welcome
+      await tester.tap(find.text('Omitir'));
+      await tester.pumpAndSettle();
+
+      // Should be at the end or at a mandatory step
+      expect(find.text('¡Bienvenido!'), findsWidgets);
+      await VideoRecorder.recordStep(tester, 'onboarding', '11_skipped_flow');
+    });
+
+    // ============================================================
+    // EDGE CASE: Partial completion and resume
+    // ============================================================
+    testWidgets('Edge Case: Partial completion and resume', (WidgetTester tester) async {
+      // Simulate app start at Page 2 (Profile)
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: _FullOnboardingFlow(initialPage: 1),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Datos Personales'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'onboarding', '12_resume_partial');
+    });
+
+    // ============================================================
+    // EDGE CASE: State preservation on back navigation
+    // ============================================================
+    testWidgets('Edge Case: State preservation on back navigation', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: _FullOnboardingFlow(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Go to profile and enter name
+      await tester.tap(find.byIcon(Icons.arrow_forward).first);
+      await tester.pumpAndSettle();
+
+      final nameField = find.byType(TextFormField).first;
+      await tester.enterText(nameField, 'Preserve Me');
+      await tester.pumpAndSettle();
+
+      // Go to next page
+      await tester.tap(find.byIcon(Icons.arrow_forward).first);
+      await tester.pumpAndSettle();
+      expect(find.text('Alergias'), findsOneWidget);
+
+      // Go back
+      await tester.tap(find.byIcon(Icons.arrow_back).first);
+      await tester.pumpAndSettle();
+
+      // Check name still there
+      expect(find.text('Preserve Me'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'onboarding', '13_state_preserved_back');
+    });
   });
 }
 
@@ -717,15 +786,23 @@ class OnboardingCompletePage extends StatelessWidget {
 
 // Flujo de onboarding completo para testing
 class _FullOnboardingFlow extends StatefulWidget {
-  const _FullOnboardingFlow();
+  final int initialPage;
+  const _FullOnboardingFlow({this.initialPage = 0});
 
   @override
   State<_FullOnboardingFlow> createState() => _FullOnboardingFlowState();
 }
 
 class _FullOnboardingFlowState extends State<_FullOnboardingFlow> {
-  final PageController _pageController = PageController();
+  late final PageController _pageController;
   int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: widget.initialPage);
+    _currentPage = widget.initialPage;
+  }
 
   @override
   void dispose() {
@@ -768,7 +845,7 @@ class _FullOnboardingFlowState extends State<_FullOnboardingFlow> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _pageController.jumpToPage(4),
                   child: const Text('Omitir'),
                 ),
                 const SizedBox(width: 16),
