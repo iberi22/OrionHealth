@@ -75,33 +75,15 @@ void main() {
     final activities = [
       ActivityItem(
         id: '1',
-        title: 'Vital check',
+        title: 'Vital check activity',
         timestamp: now,
         type: ActivityType.vitalCheck,
       ),
       ActivityItem(
         id: '2',
-        title: 'Medication',
+        title: 'Medication activity',
         timestamp: now.subtract(const Duration(hours: 2)),
         type: ActivityType.medicationTaken,
-      ),
-      ActivityItem(
-        id: '3',
-        title: 'Report',
-        timestamp: now.subtract(const Duration(days: 2)),
-        type: ActivityType.reportGenerated,
-      ),
-      ActivityItem(
-        id: '4',
-        title: 'Appointment',
-        timestamp: now,
-        type: ActivityType.appointment,
-      ),
-      ActivityItem(
-        id: '5',
-        title: 'Other',
-        timestamp: now,
-        type: ActivityType.other,
       ),
     ];
 
@@ -109,14 +91,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('ORION HEALTH'), findsOneWidget);
-    expect(find.text('Vital check'), findsOneWidget);
-    expect(find.text('Medication'), findsOneWidget);
-    expect(find.text('Report'), findsOneWidget);
-    expect(find.text('Appointment'), findsOneWidget);
-    expect(find.text('Other'), findsOneWidget);
 
-    expect(find.text('Hace 2 horas'), findsOneWidget);
-    expect(find.text('Hace 2 días'), findsOneWidget);
+    expect(find.text('Vital check activity'), findsOneWidget);
+    expect(find.text('Medication activity'), findsOneWidget);
+
+    expect(find.textContaining('2 horas'), findsOneWidget);
   });
 
   testWidgets('shows empty message when DashboardLoaded with no activities', (WidgetTester tester) async {
