@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:orionhealth_health/features/health_sharing/infrastructure/wifi_direct_service.dart';
@@ -34,6 +35,10 @@ void main() {
   });
 
   group('WifiDirectService', () {
+    setUpAll(() {
+      HttpOverrides.global = null;
+    });
+
     test('initial state is ready', () async {
       expectLater(
         service.stateStream,
@@ -118,7 +123,6 @@ void main() {
         final receivedPackage = await dataFuture;
         expect(receivedPackage.id, 'test');
       },
-      skip: 'Requires real HttpClient/network; flutter_test intercepts HTTP.',
     );
 
     test(
@@ -156,7 +160,6 @@ void main() {
         expect(result.success, isFalse);
         expect(result.error, contains('410'));
       },
-      skip: 'Requires real HttpClient/network; flutter_test intercepts HTTP.',
     );
 
     test('stop() resets state correctly', () async {
