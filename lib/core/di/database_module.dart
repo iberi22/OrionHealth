@@ -24,7 +24,7 @@ import '../../features/doctor_verification/domain/entities/license_registry.dart
 // import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_revocation_entry.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
-import 'package:health_wallet/health_wallet.dart' hide HealthRecord, LabResult, VitalSign, VitalSignSchema, MedicationEntry, MedicalDocument, MedicalEvent;
+import 'package:health_wallet/health_wallet.dart' as wallet;
 
 @module
 abstract class DatabaseModule {
@@ -50,12 +50,12 @@ abstract class DatabaseModule {
         SecondOpinionRequestSchema,
         SecondOpinionResponseSchema,
         LicenseRegistryLocalSchema,
-        HealthRecordSchema,
-        LabResultSchema,
-        VitalSignSchema,
-        MedicationEntrySchema,
-        MedicalDocumentSchema,
-        MedicalEventSchema,
+        wallet.HealthRecordSchema,
+        wallet.LabResultSchema,
+        wallet.VitalSignSchema,
+        wallet.MedicationEntrySchema,
+        wallet.MedicalDocumentSchema,
+        wallet.MedicalEventSchema,
         // IsarDidSchema, // removed in #548
         // IsarCredentialSchema, // removed in #548
         // IsarRevocationEntrySchema, // removed in #548
@@ -63,4 +63,11 @@ abstract class DatabaseModule {
       directory: dir.path,
     );
   }
+
+  @lazySingleton
+  wallet.EncryptionService get walletEncryptionService => wallet.EncryptionService();
+
+  @lazySingleton
+  wallet.WalletService walletService(Isar isar, wallet.EncryptionService encryption) =>
+      wallet.WalletService(isar, encryption);
 }

@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import 'package:health_wallet/health_wallet.dart' as wallet;
 import '../domain/entities/shared_health_package.dart';
 import '../infrastructure/ble_sharing_service.dart';
 import '../infrastructure/nfc_sharing_service.dart';
@@ -124,12 +126,15 @@ class SharingCubit extends Cubit<SharingState> {
   final StartSharingUseCase _startSharingUseCase;
   final StartListeningUseCase _startListeningUseCase;
   final CancelSharingUseCase _cancelSharingUseCase;
+  final wallet.WalletService _walletService;
+  final wallet.EncryptionService _walletEncryption;
 
   StreamSubscription? _bleSubscription;
   StreamSubscription? _nfcSubscription;
   StreamSubscription? _wifiSubscription;
 
   TransferMethod? _currentMethod;
+  String? _sessionPin;
 
   SharingCubit({
     BleSharingService? bleService,
@@ -138,12 +143,16 @@ class SharingCubit extends Cubit<SharingState> {
     required StartSharingUseCase startSharingUseCase,
     required StartListeningUseCase startListeningUseCase,
     required CancelSharingUseCase cancelSharingUseCase,
+    required wallet.WalletService walletService,
+    required wallet.EncryptionService walletEncryption,
   })  : _bleService = bleService ?? BleSharingService(),
         _nfcService = nfcService ?? NfcSharingService(),
         _wifiService = wifiService ?? WifiDirectService(),
         _startSharingUseCase = startSharingUseCase,
         _startListeningUseCase = startListeningUseCase,
         _cancelSharingUseCase = cancelSharingUseCase,
+        _walletService = walletService,
+        _walletEncryption = walletEncryption,
         super(SharingInitial());
 
   /// Initialize all services
@@ -271,6 +280,7 @@ class SharingCubit extends Cubit<SharingState> {
     String? pin,
   }) async {
     _currentMethod = method;
+    _sessionPin = pin;
 
     if (method == TransferMethod.wifi) {
       // Special case for WiFi: emit Scanning before/during discovery
@@ -353,6 +363,7 @@ class SharingCubit extends Cubit<SharingState> {
   /// Start listening for incoming data
   Future<void> startListening(TransferMethod method, {String? pin}) async {
     _currentMethod = method;
+    _sessionPin = pin;
 
     await _startListeningUseCase(method, pin: pin);
   }
@@ -364,9 +375,98 @@ class SharingCubit extends Cubit<SharingState> {
 
   /// Accept and import incoming package
   Future<void> acceptIncomingPackage() async {
-    // Import to wallet
-    // TODO: Integrate with HealthWalletService
-    emit(SharingReady());
+    final currentState = state;
+    if (currentState is! SharingReceiving || currentState.package == null) {
+      return;
+    }
+
+    final package = currentState.package!;
+
+    try {
+      // 1. Decrypt payload
+      Map<String, dynamic> data;
+      if (package.metadata.pinHash != null) {
+        if (_sessionPin == null) {
+          emit(const SharingError('PIN required to decrypt data'));
+          return;
+        }
+
+        // Re-verify PIN hash
+        if (!package.metadata.verifyPin(_sessionPin!)) {
+          emit(const SharingError('Invalid PIN'));
+          return;
+        }
+
+        // Decrypt using wallet encryption service
+        final payloadMap = {
+          'pinProtected': true,
+          'encryptedData': package.payload.encryptedData,
+        };
+        data = await _walletEncryption.decryptPayload(payloadMap, _sessionPin!);
+      } else {
+        // Not PIN protected
+        final payloadMap = {
+          'pinProtected': false,
+          'data': jsonDecode(package.payload.encryptedData),
+        };
+        data = await _walletEncryption.decryptPayload(payloadMap, '');
+      }
+
+      // 2. Import into wallet
+      await _importDataToWallet(data);
+
+      emit(SharingComplete(
+        SharingResult(
+          success: true,
+          bytesTransferred: package.payload.encryptedData.length,
+          transferTime: Duration.zero,
+        ),
+        _currentMethod ?? TransferMethod.nfc,
+      ));
+    } catch (e) {
+      emit(SharingError('Failed to import data: $e'));
+    }
+  }
+
+  Future<void> _importDataToWallet(Map<String, dynamic> data) async {
+    if (data.containsKey('labs')) {
+      for (var item in data['labs']) {
+        await _walletService.addLabResult(wallet.LabResult.fromJson(item));
+      }
+    }
+    if (data.containsKey('vitals')) {
+      for (var item in data['vitals']) {
+        await _walletService.addVitalSign(wallet.VitalSign.fromJson(item));
+      }
+    }
+    if (data.containsKey('medications')) {
+      for (var item in data['medications']) {
+        await _walletService.addMedication(wallet.MedicationEntry.fromJson(item));
+      }
+    }
+    if (data.containsKey('events')) {
+      for (var item in data['events']) {
+        await _walletService.addMedicalEvent(wallet.MedicalEvent.fromJson(item));
+      }
+    }
+    if (data.containsKey('concepts')) {
+      for (var item in data['concepts']) {
+        await _walletService.addMedicalConcept(wallet.MedicalConcept.fromJson(item));
+      }
+    }
+    if (data.containsKey('documents')) {
+      for (var item in data['documents']) {
+        await _walletService.addDocument(wallet.MedicalDocument.fromJson(item));
+      }
+    }
+    if (data.containsKey('healthRecord')) {
+      final hr = data['healthRecord'];
+      if (hr is List && hr.isNotEmpty) {
+        await _walletService.saveHealthRecord(wallet.HealthRecord.fromJson(hr.first));
+      } else if (hr is Map<String, dynamic>) {
+        await _walletService.saveHealthRecord(wallet.HealthRecord.fromJson(hr));
+      }
+    }
   }
 
   /// Reject incoming package

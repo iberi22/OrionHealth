@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/health_sharing/application/sharing_cubit.dart';
@@ -8,6 +9,7 @@ import 'package:orionhealth_health/features/health_sharing/infrastructure/wifi_d
 import 'package:orionhealth_health/features/health_sharing/domain/usecases/start_sharing_usecase.dart';
 import 'package:orionhealth_health/features/health_sharing/domain/usecases/start_listening_usecase.dart';
 import 'package:orionhealth_health/features/health_sharing/domain/usecases/cancel_sharing_usecase.dart';
+import 'package:health_wallet/health_wallet.dart' as wallet;
 
 class MockBleSharingService extends Mock implements BleSharingService {}
 class MockNfcSharingService extends Mock implements NfcSharingService {}
@@ -15,13 +17,17 @@ class MockWifiDirectService extends Mock implements WifiDirectService {}
 class MockStartSharingUseCase extends Mock implements StartSharingUseCase {}
 class MockStartListeningUseCase extends Mock implements StartListeningUseCase {}
 class MockCancelSharingUseCase extends Mock implements CancelSharingUseCase {}
+class MockWalletService extends Mock implements wallet.WalletService {}
+class MockWalletEncryption extends Mock implements wallet.EncryptionService {}
 
 class FakeSharedHealthPackage extends Fake implements SharedHealthPackage {}
+class FakeLabResult extends Fake implements wallet.LabResult {}
 
 void main() {
   setUpAll(() {
     registerFallbackValue(TransferMethod.ble);
     registerFallbackValue(FakeSharedHealthPackage());
+    registerFallbackValue(FakeLabResult());
   });
 
   late MockBleSharingService mockBleService;
@@ -30,6 +36,8 @@ void main() {
   late MockStartSharingUseCase mockStartSharingUseCase;
   late MockStartListeningUseCase mockStartListeningUseCase;
   late MockCancelSharingUseCase mockCancelSharingUseCase;
+  late MockWalletService mockWalletService;
+  late MockWalletEncryption mockWalletEncryption;
   late SharingCubit cubit;
 
   final testPackage = SharedHealthPackage(
@@ -39,7 +47,7 @@ void main() {
     createdAt: DateTime.now(),
     expiresAt: DateTime.now().add(const Duration(minutes: 5)),
     payload: const EncryptedPayload(
-      encryptedData: 'data',
+      encryptedData: '{"labs": []}',
       iv: 'iv',
       ephemeralPublicKey: 'key',
     ),
@@ -59,6 +67,8 @@ void main() {
     mockStartSharingUseCase = MockStartSharingUseCase();
     mockStartListeningUseCase = MockStartListeningUseCase();
     mockCancelSharingUseCase = MockCancelSharingUseCase();
+    mockWalletService = MockWalletService();
+    mockWalletEncryption = MockWalletEncryption();
 
     when(() => mockBleService.stateStream)
         .thenAnswer((_) => const Stream.empty());
@@ -91,6 +101,8 @@ void main() {
       startSharingUseCase: mockStartSharingUseCase,
       startListeningUseCase: mockStartListeningUseCase,
       cancelSharingUseCase: mockCancelSharingUseCase,
+      walletService: mockWalletService,
+      walletEncryption: mockWalletEncryption,
     );
   });
 
@@ -142,6 +154,37 @@ void main() {
 
       expect(cubit.state, const SharingReady());
       verify(() => mockCancelSharingUseCase()).called(1);
+    });
+
+    test('acceptIncomingPackage decrypts and imports data', () async {
+      final decryptedData = {
+        'labs': [
+          {
+            'remoteId': 'lab-1',
+            'loincCode': '123-4',
+            'testName': 'Glucose',
+            'resultValue': '100',
+            'unit': 'mg/dL',
+            'referenceRangeLow': 70.0,
+            'referenceRangeHigh': 110.0,
+            'collectedAt': DateTime.now().toIso8601String(),
+            'createdAt': DateTime.now().toIso8601String(),
+            'updatedAt': DateTime.now().toIso8601String(),
+          }
+        ]
+      };
+
+      when(() => mockWalletEncryption.decryptPayload(any(), any()))
+          .thenAnswer((_) async => decryptedData);
+      when(() => mockWalletService.addLabResult(any())).thenAnswer((_) async {});
+
+      await cubit.startListening(TransferMethod.ble);
+      cubit.handleIncomingPackage(testPackage);
+      await cubit.acceptIncomingPackage();
+
+      expect(cubit.state, isA<SharingComplete>());
+      verify(() => mockWalletEncryption.decryptPayload(any(), any())).called(1);
+      verify(() => mockWalletService.addLabResult(any())).called(1);
     });
   });
 }
