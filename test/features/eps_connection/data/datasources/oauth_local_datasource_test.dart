@@ -16,15 +16,18 @@ void main() {
 
   group('OAuthLocalDataSource', () {
     test('saveTokensForProvider writes to storage and updates connected list', () async {
+      final expiration = DateTime(2025, 1, 1);
       when(() => mockStorage.write(key: any(named: 'key'), value: any(named: 'value')))
           .thenAnswer((_) async => {});
       when(() => mockStorage.read(key: 'connected_providers')).thenAnswer((_) async => null);
+      when(() => mockStorage.delete(key: any(named: 'key'))).thenAnswer((_) async => {});
 
-      await dataSource.saveTokensForProvider('id1', 'acc', 'id', 'ref');
+      await dataSource.saveTokensForProvider('id1', 'acc', 'id', 'ref', expiresAt: expiration);
 
       verify(() => mockStorage.write(key: 'oauth_access_token_id1', value: 'acc')).called(1);
       verify(() => mockStorage.write(key: 'oauth_id_token_id1', value: 'id')).called(1);
       verify(() => mockStorage.write(key: 'oauth_refresh_token_id1', value: 'ref')).called(1);
+      verify(() => mockStorage.write(key: 'oauth_expires_at_id1', value: expiration.toIso8601String())).called(1);
       verify(() => mockStorage.write(key: 'connected_providers', value: 'id1')).called(1);
     });
 
@@ -55,20 +58,24 @@ void main() {
       verify(() => mockStorage.delete(key: 'oauth_access_token_id1')).called(1);
       verify(() => mockStorage.delete(key: 'oauth_id_token_id1')).called(1);
       verify(() => mockStorage.delete(key: 'oauth_refresh_token_id1')).called(1);
+      verify(() => mockStorage.delete(key: 'oauth_expires_at_id1')).called(1);
       verify(() => mockStorage.delete(key: 'oauth_provider_data_id1')).called(1);
       verify(() => mockStorage.delete(key: 'oauth_patient_id_id1')).called(1);
       verify(() => mockStorage.write(key: 'connected_providers', value: 'id2')).called(1);
     });
 
     test('getters return values from storage', () async {
+      final expiration = DateTime(2025, 1, 1);
       when(() => mockStorage.read(key: 'oauth_access_token_id1')).thenAnswer((_) async => 'acc');
       when(() => mockStorage.read(key: 'oauth_id_token_id1')).thenAnswer((_) async => 'id');
       when(() => mockStorage.read(key: 'oauth_refresh_token_id1')).thenAnswer((_) async => 'ref');
+      when(() => mockStorage.read(key: 'oauth_expires_at_id1')).thenAnswer((_) async => expiration.toIso8601String());
       when(() => mockStorage.read(key: 'oauth_patient_id_id1')).thenAnswer((_) async => 'pt');
 
       expect(await dataSource.getAccessToken('id1'), 'acc');
       expect(await dataSource.getIdToken('id1'), 'id');
       expect(await dataSource.getRefreshToken('id1'), 'ref');
+      expect(await dataSource.getExpiresAt('id1'), expiration);
       expect(await dataSource.getPatientId('id1'), 'pt');
     });
 

@@ -8,6 +8,16 @@ class OAuthLoginResult {
   OAuthLoginResult({required this.token, this.patientId});
 }
 
+class OAuthException implements Exception {
+  final String message;
+  final dynamic originalError;
+
+  OAuthException(this.message, [this.originalError]);
+
+  @override
+  String toString() => 'OAuthException: $message${originalError != null ? ' ($originalError)' : ''}';
+}
+
 abstract class OAuthRepository {
   Future<OAuthLoginResult?> login(EPSProvider provider);
   Future<void> logout(String providerId);

@@ -6,6 +6,7 @@ class EPSProvider extends Equatable {
   final String id;
   final String name;
   final String discoveryUrl;
+  final String? revocationUrl;
   final String clientId;
   final String redirectUrl;
   final List<String> scopes;
@@ -15,6 +16,7 @@ class EPSProvider extends Equatable {
     required this.id,
     required this.name,
     required this.discoveryUrl,
+    this.revocationUrl,
     required this.clientId,
     required this.redirectUrl,
     required this.scopes,
@@ -22,5 +24,5 @@ class EPSProvider extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, name, discoveryUrl, clientId, redirectUrl, scopes, type];
+  List<Object?> get props => [id, name, discoveryUrl, revocationUrl, clientId, redirectUrl, scopes, type];
 }

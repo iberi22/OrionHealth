@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:injectable/injectable.dart';
+import '../../../core/services/app_logger.dart';
 import '../domain/entities/eps_provider.dart';
 import '../domain/entities/oauth_token.dart';
 import '../domain/repositories/oauth_repository.dart';
@@ -9,9 +11,11 @@ import '../data/datasources/oauth_local_datasource.dart';
 class OAuthRepositoryImpl implements OAuthRepository {
   final OAuthLocalDataSource _localDataSource;
   final FlutterAppAuth _appAuth;
+  final Dio _dio;
 
   OAuthRepositoryImpl(
-    this._localDataSource, {
+    this._localDataSource,
+    this._dio, {
     FlutterAppAuth appAuth = const FlutterAppAuth(),
   }) : _appAuth = appAuth;
 
@@ -42,12 +46,14 @@ class OAuthRepositoryImpl implements OAuthRepository {
           token.accessToken,
           token.idToken ?? '',
           token.refreshToken ?? '',
+          expiresAt: token.expiresAt,
         );
 
         await _localDataSource.saveProviderData(provider.id, {
           'id': provider.id,
           'name': provider.name,
           'discoveryUrl': provider.discoveryUrl,
+          'revocationUrl': provider.revocationUrl,
           'clientId': provider.clientId,
           'redirectUrl': provider.redirectUrl,
           'scopes': provider.scopes,
@@ -60,14 +66,33 @@ class OAuthRepositoryImpl implements OAuthRepository {
 
         return OAuthLoginResult(token: token, patientId: patientId);
       }
-      return null;
+      throw OAuthException('Login failed: no response from provider');
     } catch (e) {
-      return null;
+      if (e is OAuthException) rethrow;
+      throw OAuthException('Login failed', e);
     }
   }
 
   @override
   Future<void> logout(String providerId) async {
+    final provider = await getProviderDetails(providerId);
+    final token = await getToken(providerId);
+
+    if (provider?.revocationUrl != null && token?.accessToken != null) {
+      try {
+        await _dio.post(
+          provider!.revocationUrl!,
+          data: {'token': token!.accessToken},
+          options: Options(
+            contentType: Headers.formUrlEncodedContentType,
+          ),
+        );
+      } catch (e) {
+        AppLogger.w('OAuthRepository', 'Token revocation failed for $providerId: $e');
+        // We continue with local logout anyway
+      }
+    }
+
     await _localDataSource.clearTokensForProvider(providerId);
   }
 
@@ -76,6 +101,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
     final access = await _localDataSource.getAccessToken(providerId);
     final id = await _localDataSource.getIdToken(providerId);
     final refresh = await _localDataSource.getRefreshToken(providerId);
+    final expiresAt = await _localDataSource.getExpiresAt(providerId);
 
     if (access == null) return null;
 
@@ -83,6 +109,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
       accessToken: access,
       idToken: id,
       refreshToken: refresh,
+      expiresAt: expiresAt,
     );
   }
 
@@ -100,6 +127,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
       id: data['id'] as String,
       name: data['name'] as String,
       discoveryUrl: data['discoveryUrl'] as String,
+      revocationUrl: data['revocationUrl'] as String?,
       clientId: data['clientId'] as String,
       redirectUrl: data['redirectUrl'] as String,
       scopes: (data['scopes'] as List).cast<String>(),
@@ -111,7 +139,9 @@ class OAuthRepositoryImpl implements OAuthRepository {
   Future<OAuthToken?> refreshToken(EPSProvider provider) async {
     try {
       final refreshToken = await _localDataSource.getRefreshToken(provider.id);
-      if (refreshToken == null) return null;
+      if (refreshToken == null) {
+        throw OAuthException('No refresh token available for provider: ${provider.id}');
+      }
 
       final result = await _appAuth.token(
         TokenRequest(
@@ -136,12 +166,14 @@ class OAuthRepositoryImpl implements OAuthRepository {
           token.accessToken,
           token.idToken ?? '',
           token.refreshToken ?? '',
+          expiresAt: token.expiresAt,
         );
         return token;
       }
-      return null;
+      throw OAuthException('Token refresh failed: no response from provider');
     } catch (e) {
-      return null;
+      if (e is OAuthException) rethrow;
+      throw OAuthException('Token refresh failed', e);
     }
   }
 
