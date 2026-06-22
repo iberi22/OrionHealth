@@ -32,10 +32,13 @@ class OAuthRepositoryImpl implements OAuthRepository {
       );
 
       if (result != null) {
+        final currentRefreshToken = await _localDataSource.getRefreshToken(provider.id);
+        final refreshToken = result.refreshToken ?? currentRefreshToken;
+
         final token = OAuthToken(
           accessToken: result.accessToken ?? '',
           idToken: result.idToken,
-          refreshToken: result.refreshToken,
+          refreshToken: refreshToken,
           expiresAt: result.accessTokenExpirationDateTime,
         );
 
@@ -45,7 +48,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
           provider.id,
           token.accessToken,
           token.idToken ?? '',
-          token.refreshToken ?? '',
+          refreshToken ?? '',
           expiresAt: token.expiresAt,
         );
 
@@ -76,20 +79,34 @@ class OAuthRepositoryImpl implements OAuthRepository {
   @override
   Future<void> logout(String providerId) async {
     final provider = await getProviderDetails(providerId);
-    final token = await getToken(providerId);
+    final access = await _localDataSource.getAccessToken(providerId);
+    final refresh = await _localDataSource.getRefreshToken(providerId);
 
-    if (provider?.revocationUrl != null && token?.accessToken != null) {
-      try {
-        await _dio.post(
-          provider!.revocationUrl!,
-          data: {'token': token!.accessToken},
-          options: Options(
-            contentType: Headers.formUrlEncodedContentType,
-          ),
-        );
-      } catch (e) {
-        AppLogger.w('OAuthRepository', 'Token revocation failed for $providerId: $e');
-        // We continue with local logout anyway
+    if (provider?.revocationUrl != null) {
+      final url = provider!.revocationUrl!;
+
+      if (access != null) {
+        try {
+          await _dio.post(
+            url,
+            data: {'token': access},
+            options: Options(contentType: Headers.formUrlEncodedContentType),
+          );
+        } catch (e) {
+          AppLogger.w('OAuthRepository', 'Access token revocation failed for $providerId: $e');
+        }
+      }
+
+      if (refresh != null) {
+        try {
+          await _dio.post(
+            url,
+            data: {'token': refresh},
+            options: Options(contentType: Headers.formUrlEncodedContentType),
+          );
+        } catch (e) {
+          AppLogger.w('OAuthRepository', 'Refresh token revocation failed for $providerId: $e');
+        }
       }
     }
 
@@ -103,14 +120,28 @@ class OAuthRepositoryImpl implements OAuthRepository {
     final refresh = await _localDataSource.getRefreshToken(providerId);
     final expiresAt = await _localDataSource.getExpiresAt(providerId);
 
-    if (access == null) return null;
-
-    return OAuthToken(
-      accessToken: access,
+    final token = OAuthToken(
+      accessToken: access ?? '',
       idToken: id,
       refreshToken: refresh,
       expiresAt: expiresAt,
     );
+
+    if (access == null || token.isExpired) {
+      if (refresh != null && refresh.isNotEmpty) {
+        final provider = await getProviderDetails(providerId);
+        if (provider != null) {
+          try {
+            return await refreshToken(provider);
+          } catch (e) {
+            AppLogger.e('OAuthRepository', 'Automatic token refresh failed for $providerId', error: e);
+          }
+        }
+      }
+      if (access == null) return null;
+    }
+
+    return token;
   }
 
   @override
@@ -120,26 +151,34 @@ class OAuthRepositoryImpl implements OAuthRepository {
 
   @override
   Future<EPSProvider?> getProviderDetails(String providerId) async {
-    final data = await _localDataSource.getProviderData(providerId);
-    if (data == null) return null;
+    try {
+      final data = await _localDataSource.getProviderData(providerId);
+      if (data == null) {
+        AppLogger.d('OAuthRepository', 'No provider data found for $providerId');
+        return null;
+      }
 
-    return EPSProvider(
-      id: data['id'] as String,
-      name: data['name'] as String,
-      discoveryUrl: data['discoveryUrl'] as String,
-      revocationUrl: data['revocationUrl'] as String?,
-      clientId: data['clientId'] as String,
-      redirectUrl: data['redirectUrl'] as String,
-      scopes: (data['scopes'] as List).cast<String>(),
-      type: EPSProviderType.values.firstWhere((e) => e.name == data['type']),
-    );
+      return EPSProvider(
+        id: data['id'] as String,
+        name: data['name'] as String,
+        discoveryUrl: data['discoveryUrl'] as String,
+        revocationUrl: data['revocationUrl'] as String?,
+        clientId: data['clientId'] as String,
+        redirectUrl: data['redirectUrl'] as String,
+        scopes: (data['scopes'] as List).cast<String>(),
+        type: EPSProviderType.values.firstWhere((e) => e.name == data['type']),
+      );
+    } catch (e) {
+      AppLogger.e('OAuthRepository', 'Error getting provider details for $providerId', error: e);
+      return null;
+    }
   }
 
   @override
   Future<OAuthToken?> refreshToken(EPSProvider provider) async {
     try {
-      final refreshToken = await _localDataSource.getRefreshToken(provider.id);
-      if (refreshToken == null) {
+      final currentRefreshToken = await _localDataSource.getRefreshToken(provider.id);
+      if (currentRefreshToken == null) {
         throw OAuthException('No refresh token available for provider: ${provider.id}');
       }
 
@@ -148,16 +187,17 @@ class OAuthRepositoryImpl implements OAuthRepository {
           provider.clientId,
           provider.redirectUrl,
           discoveryUrl: provider.discoveryUrl,
-          refreshToken: refreshToken,
+          refreshToken: currentRefreshToken,
           scopes: provider.scopes,
         ),
       );
 
       if (result != null) {
+        final newRefreshToken = result.refreshToken ?? currentRefreshToken;
         final token = OAuthToken(
           accessToken: result.accessToken ?? '',
           idToken: result.idToken,
-          refreshToken: result.refreshToken,
+          refreshToken: newRefreshToken,
           expiresAt: result.accessTokenExpirationDateTime,
         );
 
@@ -165,7 +205,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
           provider.id,
           token.accessToken,
           token.idToken ?? '',
-          token.refreshToken ?? '',
+          newRefreshToken,
           expiresAt: token.expiresAt,
         );
         return token;
