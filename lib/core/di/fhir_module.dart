@@ -2,14 +2,11 @@
 library;
 
 import 'package:injectable/injectable.dart';
-import 'package:http/http.dart' as http;
 import '../../features/sync/infrastructure/services/fhir_client.dart';
+import 'package:http/http.dart' as http;
 
 @module
 abstract class FhirModule {
   @lazySingleton
-  http.Client get httpClient => http.Client();
-
-  @lazySingleton
-  FhirClient get fhirClient => FhirClient(client: httpClient);
+  FhirClient fhirClient(http.Client httpClient) => FhirClient(client: httpClient);
 }

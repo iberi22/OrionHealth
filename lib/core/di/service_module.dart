@@ -3,9 +3,13 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:http/http.dart' as http;
 import 'package:device_calendar/device_calendar.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @module
 abstract class ServiceModule {
+  @preResolve
+  Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
+
   @lazySingleton
   FlutterSecureStorage get storage => const FlutterSecureStorage();
 
@@ -14,7 +18,4 @@ abstract class ServiceModule {
 
   @lazySingleton
   http.Client get httpClient => http.Client();
-
-  @lazySingleton
-  DeviceCalendarPlugin get deviceCalendarPlugin => DeviceCalendarPlugin();
 }
