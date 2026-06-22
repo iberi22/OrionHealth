@@ -178,5 +178,109 @@ void main() {
       final results = FhirMapper.mapObservation(json);
       expect(results[0].type, VitalSignType.temperature);
     });
+
+    test('mapPatient should fallback to ID if name is missing', () {
+      final json = {
+        'resourceType': 'Patient',
+        'id': 'patient-123',
+      };
+      final existing = UserProfile();
+      final result = FhirMapper.mapPatient(json, existing);
+      expect(result.name, 'Patient patient-123');
+    });
+
+    test('mapMedicationStatement should fallback to reference if display is missing', () {
+      final json = {
+        'resourceType': 'MedicationStatement',
+        'status': 'active',
+        'medicationReference': {
+          'reference': 'Medication/456'
+        }
+      };
+      final result = FhirMapper.mapMedicationStatement(json);
+      expect(result!.name, 'Medication/456');
+    });
+
+    test('mapAllergyIntolerance should fallback to substance coding display', () {
+      final json = {
+        'resourceType': 'AllergyIntolerance',
+        'reaction': [
+          {
+            'substance': {
+              'coding': [
+                {'display': 'Pollen'}
+              ]
+            }
+          }
+        ]
+      };
+      final result = FhirMapper.mapAllergyIntolerance(json);
+      expect(result!.allergen, 'Pollen');
+    });
+
+    test('mapConditionCode should fallback to ID if code and text are missing', () {
+      final json = {
+        'id': 'cond-789',
+        'code': {
+          'coding': []
+        }
+      };
+      expect(FhirMapper.mapConditionCode(json), 'cond-789');
+    });
+
+    test('mapObservation should handle unknown LOINC with a fallback if possible', () {
+      // If we implement a fallback to heartRate or similar as a default, or just more keywords.
+      // Let's assume we want it to at least NOT be empty if there is a value but unknown code.
+      // Actually the requirement says "VitalSignType fallback: default when no match"
+      final json = {
+        'resourceType': 'Observation',
+        'code': {
+          'coding': [
+            {'system': 'http://loinc.org', 'code': '0000-0', 'display': 'Unknown'}
+          ]
+        },
+        'valueQuantity': {'value': 100},
+        'effectiveDateTime': '2023-10-27T10:00:00Z'
+      };
+
+      final results = FhirMapper.mapObservation(json);
+      // If we implement a fallback to heartRate for example
+      expect(results.isNotEmpty, true);
+    });
+
+    test('mapAllergyIntolerance should iterate through all codings', () {
+      final json = {
+        'resourceType': 'AllergyIntolerance',
+        'code': {
+          'coding': [
+            {'system': 'test', 'code': '123'},
+            {'display': 'Actual Allergen'}
+          ]
+        }
+      };
+      final result = FhirMapper.mapAllergyIntolerance(json);
+      expect(result!.allergen, 'Actual Allergen');
+    });
+
+    test('mapConditionCode should return ID when code is null', () {
+      final json = {
+        'id': 'cond-null-code'
+      };
+      expect(FhirMapper.mapConditionCode(json), 'cond-null-code');
+    });
+
+    test('mapMedicationStatement should handle coding display in medicationCodeableConcept', () {
+      final json = {
+        'resourceType': 'MedicationStatement',
+        'status': 'active',
+        'medicationCodeableConcept': {
+          'coding': [
+            {'display': 'Med From Coding'}
+          ]
+        }
+      };
+      final result = FhirMapper.mapMedicationStatement(json);
+      expect(result!.name, 'Med From Coding');
+    });
   });
 }
