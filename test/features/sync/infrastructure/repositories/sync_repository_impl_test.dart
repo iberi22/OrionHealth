@@ -1,11 +1,11 @@
-import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/features/sync/domain/entities/sync_node.dart';
 import 'package:orionhealth_health/features/sync/infrastructure/services/fhir_client.dart';
-import 'package:orionhealth_health/features/sync/infrastructure/repositories/sync_repository.dart';
-import 'package:orionhealth_health/features/sync/infrastructure/services/node_discovery_service.dart';
+import 'package:orionhealth_health/features/sync/infrastructure/repositories/sync_repository_impl.dart';
+import 'package:orionhealth_health/features/sync/domain/services/node_discovery_service.dart';
 import 'package:orionhealth_health/features/sync/domain/repositories/sync_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
@@ -17,7 +17,6 @@ import 'dart:io';
 class MockFhirClient extends Mock implements FhirClient {}
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 class MockNodeDiscoveryService extends Mock implements NodeDiscoveryService {}
-class MockBonsoirService extends Mock implements BonsoirService {}
 
 void main() {
   late SyncRepository syncRepository;
@@ -97,15 +96,16 @@ void main() {
     });
 
     test('getDiscoveredNodes returns mapped nodes from discovery service', () async {
-      final mockNode = MockBonsoirService();
-      when(() => mockNode.name).thenReturn('Node1');
-      when(() => mockNode.hostname).thenReturn('192.168.1.5');
-      when(() => mockNode.port).thenReturn(9124);
-      when(() => mockNode.attributes).thenReturn({'nodeId': 'id123'});
+      const mockNode = SyncNode(
+        id: 'id123',
+        name: 'Node1',
+        host: '192.168.1.5',
+        port: 9124,
+      );
 
       when(() => mockDiscoveryService.currentNodes).thenReturn([mockNode]);
 
-      final result = await syncRepository.getDiscoveredNodes();
+      final result = syncRepository.getDiscoveredNodes();
 
       expect(result.length, 1);
       expect(result.first.id, 'id123');
