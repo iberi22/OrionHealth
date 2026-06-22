@@ -234,7 +234,11 @@ class FeedbackManager {
           ),
     );
 
-    controller.dispose();
+    // result is returned after dialog is popped, but we should not dispose too early
+    // actually, controller should be disposed after showDialog returns
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+       controller.dispose();
+    });
     return result;
   }
 
