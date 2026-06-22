@@ -1,10 +1,13 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../user_profile/domain/repositories/user_profile_repository.dart';
-import '../../user_profile/domain/entities/user_profile.dart' as domain;
-import '../domain/entities/user_profile.dart' as onboarding;
-import '../domain/repositories/onboarding_repository.dart';
+import '../../../user_profile/domain/repositories/user_profile_repository.dart';
+import '../../../user_profile/domain/entities/user_profile.dart' as domain;
+import '../../domain/entities/user_profile.dart' as onboarding;
+import '../../domain/repositories/onboarding_repository.dart';
 
 @LazySingleton(as: OnboardingRepository)
 class OnboardingRepositoryImpl implements OnboardingRepository {
