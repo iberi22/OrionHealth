@@ -53,7 +53,7 @@ void main() {
     testWidgets('E2E: Reward Claim with Insufficient Balance', (WidgetTester tester) async {
       final reward = Reward(
         id: 'r1',
-        title: 'Tarjeta de Regalo $10',
+        title: 'Tarjeta de Regalo \$10',
         pointsRequired: 2000,
         isClaimed: false,
         userId: 'user1',
@@ -73,7 +73,7 @@ void main() {
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'incentives', '02_rewards_page');
 
-      expect(find.text('Tarjeta de Regalo $10'), findsOneWidget);
+      expect(find.text('Tarjeta de Regalo \$10'), findsOneWidget);
 
       when(() => mockCubit.claimReward(any(), any())).thenAnswer((_) async {
         final errorState = const IncentiveState(
