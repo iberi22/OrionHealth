@@ -96,6 +96,9 @@ lib/features/<feature>/
 ## Quick Links
 
 - [Feature Audit (detailed)](docs/FEATURE_AUDIT.md)
+- [Feature Catalog (FEATURES.json)](FEATURES.json)
+- [Git Protocol & Conventions](GITPROTOCOL.md)
+- [Code Review Findings](CODE_REVIEW.md)
 - [Coverage Report](coverage_report.md)
 - [GitHub Issues](https://github.com/iberi22/OrionHealth/issues)
 - [gitcore Features](.gitcore/features.json)

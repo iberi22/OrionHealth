@@ -98,7 +98,8 @@ flutter test --no-pub            # all tests pass
 |---------|---------------|
 | Flutter SDK | 3.41.9 (pinned) |
 | Flags CI | `--no-fatal-infos --no-fatal-warnings` |
-| Workflows | OrionHealth CI + Android Build |
+| Workflows | [OrionHealth CI](.github/workflows/ci.yml) + Android Build |
+| Docs Deploy | GitHub Actions → GitHub Pages |
 | Test unitarios | `flutter test --no-pub` |
 | Analyze | `dart analyze lib/ test/` → 0 errors |
 | Golden tests | Via `--update-goldens` (cuando sea necesario) |

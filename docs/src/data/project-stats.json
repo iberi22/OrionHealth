@@ -9,7 +9,7 @@
   "features": {
     "total": 25,
     "completed": 24,
-    "pending": 1,
+    "in_progress": 1,
     "coverage": 96
   },
   "architecture": {
