@@ -1,12 +1,13 @@
 ---
 const base = import.meta.env.BASE_URL || '/OrionHealth';
 const screenshots = [
-  { src: `${base}/screenshots/01_main_navigation.png`, title: 'Main Navigation', description: 'Intuitive bottom navigation with 4 main sections' },
-  { src: `${base}/screenshots/02_profile_page.png`, title: 'Profile Page', description: 'Personal health profile management' },
-  { src: `${base}/screenshots/03_records_page.png`, title: 'Health Records', description: 'Track and view your health data' },
-  { src: `${base}/screenshots/08_chat_interface.png`, title: 'AI Assistant', description: 'Private AI-powered health conversations' },
-  { src: `${base}/screenshots/09_reports_list.png`, title: 'Reports', description: 'View AI-generated health insights' },
-  { src: `${base}/screenshots/07_profile_form.png`, title: 'Profile Form', description: 'Easy health data input' },
+  { src: `${base}/screenshots/01_main_navigation.png`, title: 'Secure Login', description: 'PIN & biometric authentication with AES-256 encryption' },
+  { src: `${base}/screenshots/02_profile_page.png`, title: 'Health Profile', description: 'Personal health profile with medical history management' },
+  { src: `${base}/screenshots/03_records_page.png`, title: 'Medications & Records', description: 'Track medications, dosages, and health records (FHIR-compatible)' },
+  { src: `${base}/screenshots/08_chat_interface.png`, title: 'Voice AI Assistant', description: 'On-device AI voice chat — all processing stays local' },
+  { src: `${base}/screenshots/09_reports_list.png`, title: 'Health Reports', description: 'AI-generated reports analyzing your health trends' },
+  { src: `${base}/screenshots/05_reports_page.png`, title: 'Medical Research', description: 'Search ICD-10, LOINC, SNOMED & clinical guidelines' },
+  { src: `${base}/screenshots/07_profile_form.png`, title: 'PIN Security', description: '6-digit PIN setup for secure local access' },
 ];
 ---
 
@@ -44,8 +45,8 @@ const screenshots = [
         ))}
       </div>
 
-      <!-- Desktop: 3-column grid -->
-      <div class="hidden md:grid md:grid-cols-3 gap-6">
+      <!-- Desktop: 2-column grid -->
+      <div class="hidden md:grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
         {screenshots.map((screenshot, index) => (
           <div
             class="flashlight-card glass rounded-xl overflow-hidden group cursor-pointer"
