@@ -1,0 +1,44 @@
+[
+  {
+    "milestone": "Project Inception",
+    "date": "2026-01",
+    "description": "Clean Architecture design, Flutter project setup, domain modeling",
+    "icon": "rocket"
+  },
+  {
+    "milestone": "Core Domain Layer",
+    "date": "2026-02",
+    "description": "Domain entities, repositories, and business logic for 15 features",
+    "icon": "layers"
+  },
+  {
+    "milestone": "Application Layer",
+    "date": "2026-03",
+    "description": "BLoC patterns, use cases, DI modularization, service layer",
+    "icon": "zap"
+  },
+  {
+    "milestone": "Infrastructure Layer",
+    "date": "2026-04",
+    "description": "Isar DB integration, local-only storage, offline-first architecture",
+    "icon": "database"
+  },
+  {
+    "milestone": "Presentation Layer",
+    "date": "2026-05",
+    "description": "UI components, theming, responsive layouts, 24/25 features UI complete",
+    "icon": "layout"
+  },
+  {
+    "milestone": "Testing & Quality",
+    "date": "2026-06",
+    "description": "719 tests (494 unit, 35 golden, 31 E2E, 159 PNG refs), CI/CD pipeline",
+    "icon": "check-circle"
+  },
+  {
+    "milestone": "Privacy Documentation",
+    "date": "2026-06",
+    "description": "HIPAA/GDPR compliance docs, medical standards mapping, GitHub Pages launch",
+    "icon": "shield"
+  }
+]

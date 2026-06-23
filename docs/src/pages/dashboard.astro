@@ -1,0 +1,102 @@
+---
+import ArchitectureFlow from "../components/ArchitectureFlow.astro";
+import FeatureGrid from "../components/FeatureGrid.astro";
+import MedicalStandardsViz from "../components/MedicalStandardsViz.astro";
+import DataPrivacyFlow from "../components/DataPrivacyFlow.astro";
+import TestCoverageDashboard from "../components/TestCoverageDashboard.astro";
+import GitHubLiveStatus from "../components/GitHubLiveStatus.astro";
+import TimelineViz from "../components/TimelineViz.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<BaseLayout
+  title="Dashboard - OrionHealth"
+  description="Real-time project dashboard: architecture, test coverage, features, and medical standards"
+  lang="en"
+>
+  <Header lang="en" />
+
+  <main class="pt-16 md:pt-20 safe-area-top pb-16">
+    <section class="relative py-16 md:py-24 px-4">
+      <div class="container-custom">
+        <div class="max-w-6xl mx-auto">
+          <!-- Dashboard Header -->
+          <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/30 bg-accent/5 text-accent text-xs font-semibold mb-4" style="font-family: 'Fira Code', 'Cascadia Code', monospace;">
+              <span class="w-2 h-2 rounded-full bg-accent"></span>
+              LIVE DASHBOARD
+            </div>
+            <h1 class="text-3xl md:text-5xl font-bold tracking-tighter uppercase mb-4">
+              Project <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent via-secondary to-accent-light">Dashboard</span>
+            </h1>
+            <p class="text-sm md:text-base text-bone-dark leading-relaxed opacity-80 max-w-2xl mx-auto">
+              Complete overview of OrionHealth project: architecture, test matrix, feature completion,
+              medical standards coverage, and CI pipeline health. Updated in real-time.
+            </p>
+          </div>
+
+          <!-- Stats Quick Row -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+              <div class="text-2xl font-bold text-accent font-mono">25</div>
+              <div class="text-xs text-bone-dark opacity-60 uppercase tracking-wider mt-1">Features</div>
+            </div>
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+              <div class="text-2xl font-bold text-blue-400 font-mono">719</div>
+              <div class="text-xs text-bone-dark opacity-60 uppercase tracking-wider mt-1">Tests Total</div>
+            </div>
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+              <div class="text-2xl font-bold text-amber-400 font-mono">628</div>
+              <div class="text-xs text-bone-dark opacity-60 uppercase tracking-wider mt-1">Medical Codes</div>
+            </div>
+            <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+              <div class="text-2xl font-bold text-emerald-400 font-mono">97.3%</div>
+              <div class="text-xs text-bone-dark opacity-60 uppercase tracking-wider mt-1">CI Pass Rate</div>
+            </div>
+          </div>
+
+          <!-- Dashboard Grid -->
+          <div class="space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="dashboard-card"><TestCoverageDashboard /></div>
+              <div class="dashboard-card"><GitHubLiveStatus /></div>
+            </div>
+            <div class="dashboard-card"><ArchitectureFlow /></div>
+            <div class="dashboard-card"><DataPrivacyFlow /></div>
+            <div class="dashboard-card"><MedicalStandardsViz /></div>
+            <div class="dashboard-card"><FeatureGrid /></div>
+            <div class="dashboard-card"><TimelineViz /></div>
+          </div>
+
+          <!-- Combined Dashboard Footer -->
+          <div class="mt-12 text-center">
+            <p class="text-xs text-bone-dark opacity-40 font-mono">
+              OrionHealth v1.0.0 · AGPL-3.0 · Privacy-First Health Assistant
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang="en" />
+</BaseLayout>
+
+<style is:global>
+  .dashboard-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.005) 100%);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s ease;
+  }
+  .dashboard-card:hover {
+    border-color: rgba(16, 185, 129, 0.15);
+  }
+  .font-mono {
+    font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+  }
+</style>

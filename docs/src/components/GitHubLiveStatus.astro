@@ -1,0 +1,92 @@
+---
+// GitHubLiveStatus.astro - GitHub stats dashboard
+import stats from "../data/project-stats.json";
+const { github, ci } = stats;
+---
+
+<div class="ghs-section">
+  <div class="ghs-header">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+    </svg>
+    <h3>GitHub</h3>
+    <a href="https://github.com/iberi22/OrionHealth" class="ghs-link" target="_blank">iberi22/OrionHealth ↗</a>
+  </div>
+  <div class="ghs-grid">
+    <div class="ghs-stat">
+      <div class="ghs-stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="ghs-stat-num">{github.stars}</div>
+      <div class="ghs-stat-label">Stars</div>
+    </div>
+    <div class="ghs-stat">
+      <div class="ghs-stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 2v6M12 2v6M6 2v6"/><rect x="2" y="6" width="20" height="16" rx="2"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+      </div>
+      <div class="ghs-stat-num">{ci.totalRuns}</div>
+      <div class="ghs-stat-label">CI Runs</div>
+    </div>
+    <div class="ghs-stat">
+      <div class="ghs-stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="ghs-stat-num">{ci.passRate}%</div>
+      <div class="ghs-stat-label">Pass Rate</div>
+    </div>
+    <div class="ghs-stat">
+      <div class="ghs-stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="ghs-stat-num">{github.contributors}</div>
+      <div class="ghs-stat-label">Contributors</div>
+    </div>
+    <div class="ghs-stat">
+      <div class="ghs-stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <div class="ghs-stat-num">{github.forks}</div>
+      <div class="ghs-stat-label">Forks</div>
+    </div>
+    <div class="ghs-stat">
+      <div class="ghs-stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="ghs-stat-num">{github.openIssues}</div>
+      <div class="ghs-stat-label">Open Issues</div>
+    </div>
+  </div>
+  <div class="ghs-ci-row">
+    <span class={`ghs-ci-badge ${ci.status}`}>
+      <span class="ghs-ci-dot"></span>
+      CI: {ci.status}
+    </span>
+    <span class="ghs-ci-text">Last build: <strong>{ci.lastBuild}</strong></span>
+  </div>
+</div>
+
+<style is:global>
+  .ghs-section { margin: 2.5rem 0; }
+  .ghs-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .ghs-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
+  .ghs-link { margin-left: auto; font-size: 0.8rem; color: #10B981; text-decoration: none; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .ghs-link:hover { text-decoration: underline; }
+  .ghs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+  .ghs-stat {
+    padding: 1rem; border-radius: 10px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    transition: all 0.25s ease;
+  }
+  .ghs-stat:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+  .ghs-stat-icon { margin-bottom: 0.4rem; }
+  .ghs-stat-num { font-size: 1.5rem; font-weight: 700; color: #E5E7EB; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .ghs-stat-label { font-size: 0.75rem; color: #6B7280; text-transform: uppercase; letter-spacing: 0.04em; }
+  .ghs-ci-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); }
+  .ghs-ci-badge { display: flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .ghs-ci-badge.passing { background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); }
+  .ghs-ci-badge.failing { background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); }
+  .ghs-ci-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .ghs-ci-text { font-size: 0.8rem; color: #6B7280; }
+  .ghs-ci-text strong { color: #9CA3AF; }
+</style>

@@ -1,0 +1,129 @@
+---
+// ArchitectureFlow.astro - Interactive Clean Architecture layers diagram
+// Cyber-minimalist, dark theme, emerald accent. 100% inline SVG.
+---
+
+<div class="arch-flow">
+  <div class="arch-header">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+      <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+    </svg>
+    <h3>Clean Architecture</h3>
+  </div>
+  <div class="arch-diagram">
+    <!-- Domain Layer (Core) -->
+    <div class="arch-layer domain-layer">
+      <div class="layer-badge">Core</div>
+      <div class="layer-name">Domain</div>
+      <div class="layer-items">
+        <span>Entities</span><span>Value Objects</span><span>Aggregates</span>
+      </div>
+      <div class="layer-stats">
+        <span class="stat"><span class="num">87</span> entities</span>
+        <span class="stat"><span class="num">100%</span> coverage</span>
+      </div>
+    </div>
+
+    <!-- Application Layer -->
+    <div class="arch-connector down">
+      <svg width="16" height="24" viewBox="0 0 16 24"><line x1="8" y1="0" x2="8" y2="20" stroke="#10B981" stroke-width="1.5"/><polyline points="2,14 8,20 14,14" fill="none" stroke="#10B981" stroke-width="1.5"/></svg>
+    </div>
+    <div class="arch-layer application-layer">
+      <div class="layer-badge">Use Cases</div>
+      <div class="layer-name">Application</div>
+      <div class="layer-items">
+        <span>BLoCs</span><span>Use Cases</span><span>Ports</span>
+      </div>
+      <div class="layer-stats">
+        <span class="stat"><span class="num">24</span> BLoCs</span>
+        <span class="stat"><span class="num">96%</span> coverage</span>
+      </div>
+    </div>
+
+    <!-- Infrastructure Layer -->
+    <div class="arch-connector down">
+      <svg width="16" height="24" viewBox="0 0 16 24"><line x1="8" y1="0" x2="8" y2="20" stroke="#10B981" stroke-width="1.5"/><polyline points="2,14 8,20 14,14" fill="none" stroke="#10B981" stroke-width="1.5"/></svg>
+    </div>
+    <div class="arch-layer infrastructure-layer">
+      <div class="layer-badge">Data</div>
+      <div class="layer-name">Infrastructure</div>
+      <div class="layer-items">
+        <span>Isar DB</span><span>Repos</span><span>API</span>
+      </div>
+      <div class="layer-stats">
+        <span class="stat"><span class="num">6</span> repos</span>
+        <span class="stat"><span class="num">92%</span> coverage</span>
+      </div>
+    </div>
+
+    <!-- Presentation Layer -->
+    <div class="arch-connector down">
+      <svg width="16" height="24" viewBox="0 0 16 24"><line x1="8" y1="0" x2="8" y2="20" stroke="#10B981" stroke-width="1.5"/><polyline points="2,14 8,20 14,14" fill="none" stroke="#10B981" stroke-width="1.5"/></svg>
+    </div>
+    <div class="arch-layer presentation-layer">
+      <div class="layer-badge">UI</div>
+      <div class="layer-name">Presentation</div>
+      <div class="layer-items">
+        <span>Widgets</span><span>Screens</span><span>Themes</span>
+      </div>
+      <div class="layer-stats">
+        <span class="stat"><span class="num">42</span> screens</span>
+        <span class="stat"><span class="num">94%</span> coverage</span>
+      </div>
+    </div>
+  </div>
+  <div class="arch-tagline">Dependency Rule: Outer → Inner (never inward)</div>
+</div>
+
+<style is:global>
+  .arch-flow { margin: 2rem 0; }
+  .arch-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .arch-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
+  .arch-diagram { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .arch-layer {
+    width: 100%; max-width: 480px;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0.02) 100%);
+    transition: all 0.3s ease;
+  }
+  .arch-layer:hover { border-color: rgba(16, 185, 129, 0.5); transform: translateX(4px); box-shadow: 0 0 20px rgba(16,185,129,0.1); }
+  .domain-layer { background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.05) 100%); }
+  .application-layer { background: linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(59,130,246,0.03) 100%); border-color: rgba(59,130,246,0.2); }
+  .application-layer:hover { border-color: rgba(59,130,246,0.5); box-shadow: 0 0 20px rgba(59,130,246,0.1); }
+  .infrastructure-layer { background: linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.03) 100%); border-color: rgba(245,158,11,0.2); }
+  .infrastructure-layer:hover { border-color: rgba(245,158,11,0.5); box-shadow: 0 0 20px rgba(245,158,11,0.1); }
+  .presentation-layer { background: linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(139,92,246,0.03) 100%); border-color: rgba(139,92,246,0.2); }
+  .presentation-layer:hover { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 20px rgba(139,92,246,0.1); }
+  .layer-badge {
+    display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+  .domain-layer .layer-badge { background: rgba(16,185,129,0.2); color: #10B981; }
+  .application-layer .layer-badge { background: rgba(59,130,246,0.2); color: #60A5FA; }
+  .infrastructure-layer .layer-badge { background: rgba(245,158,11,0.2); color: #FBBF24; }
+  .presentation-layer .layer-badge { background: rgba(139,92,246,0.2); color: #A78BFA; }
+  .layer-name { font-size: 1.1rem; font-weight: 700; color: #E5E7EB; margin-bottom: 0.5rem; }
+  .layer-items { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .layer-items span {
+    padding: 0.2rem 0.6rem; border-radius: 6px;
+    font-size: 0.78rem; color: #9CA3AF;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .layer-stats { display: flex; gap: 1rem; }
+  .stat { font-size: 0.78rem; color: #6B7280; }
+  .stat .num { color: #10B981; font-weight: 600; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .application-layer .stat .num { color: #60A5FA; }
+  .infrastructure-layer .stat .num { color: #FBBF24; }
+  .presentation-layer .stat .num { color: #A78BFA; }
+  .arch-connector { padding: 0.25rem 0; opacity: 0.5; }
+  .arch-tagline {
+    margin-top: 1rem; text-align: center;
+    font-size: 0.8rem; color: #6B7280; font-family: 'Fira Code', 'Cascadia Code', monospace;
+    letter-spacing: 0.02em;
+  }
+</style>

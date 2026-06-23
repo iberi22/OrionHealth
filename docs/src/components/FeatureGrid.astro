@@ -1,0 +1,75 @@
+---
+// FeatureGrid.astro - 25 features with status and layers in interactive grid
+import features from "../data/features-map.json";
+
+const layerColors = {
+  domain: { bg: "rgba(16,185,129,0.15)", text: "#10B981", border: "rgba(16,185,129,0.3)" },
+  application: { bg: "rgba(59,130,246,0.15)", text: "#60A5FA", border: "rgba(59,130,246,0.3)" },
+  infrastructure: { bg: "rgba(245,158,11,0.15)", text: "#FBBF24", border: "rgba(245,158,11,0.3)" },
+  presentation: { bg: "rgba(139,92,246,0.15)", text: "#A78BFA", border: "rgba(139,92,246,0.3)" },
+};
+const completed = features.filter(f => f.status === "completed").length;
+const inProgress = features.filter(f => f.status === "in_progress").length;
+---
+
+<div class="feature-grid-section">
+  <div class="fg-header">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
+    </svg>
+    <h3>Features Map</h3>
+    <span class="fg-count"><span class="emerald">{completed}</span> completed / <span class="amber">{inProgress}</span> in progress</span>
+  </div>
+  <div class="fg-subtitle">25 features across 4 Clean Architecture layers</div>
+  <div class="fg-grid">
+    {
+      features.map(f => {
+        const c = layerColors[f.layer] || layerColors.presentation;
+        const cls = f.status === "completed" ? "fg-card" : "fg-card fg-wip";
+        return (
+          <div class={cls} style={`border-color: ${c.border}`}>
+            <div class="fg-card-top">
+              <span class="fg-layer" style={`background: ${c.bg}; color: ${c.text}`}>{f.layer}</span>
+              <span class={`fg-status ${f.status}`}></span>
+            </div>
+            <div class="fg-name">{f.name}</div>
+            <div class="fg-tests">{f.tests} tests</div>
+          </div>
+        );
+      })
+    }
+  </div>
+</div>
+
+<style is:global>
+  .feature-grid-section { margin: 2.5rem 0; }
+  .fg-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; }
+  .fg-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
+  .fg-count { font-size: 0.85rem; color: #6B7280; margin-left: auto; }
+  .fg-count .emerald { color: #10B981; font-weight: 600; }
+  .fg-count .amber { color: #FBBF24; font-weight: 600; }
+  .fg-subtitle { font-size: 0.85rem; color: #6B7280; margin-bottom: 1.25rem; margin-left: 2.5rem; }
+  .fg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+  .fg-card {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    transition: all 0.25s ease;
+  }
+  .fg-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); border-color: rgba(16,185,129,0.3); }
+  .fg-wip { opacity: 0.7; }
+  .fg-wip:hover { opacity: 1; }
+  .fg-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+  .fg-layer { padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .fg-status { width: 8px; height: 8px; border-radius: 50%; }
+  .fg-status.completed { background: #10B981; box-shadow: 0 0 6px rgba(16,185,129,0.5); }
+  .fg-status.in_progress { background: #FBBF24; box-shadow: 0 0 6px rgba(251,191,36,0.5); animation: pulse 2s infinite; }
+  .fg-name { font-size: 0.88rem; font-weight: 500; color: #D1D5DB; margin-bottom: 0.2rem; }
+  .fg-tests { font-size: 0.75rem; color: #6B7280; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+</style>

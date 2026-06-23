@@ -1,0 +1,43 @@
+{
+  "tests": {
+    "unit": 494,
+    "golden": 35,
+    "e2e": 31,
+    "pngRefs": 159,
+    "total": 719
+  },
+  "features": {
+    "total": 25,
+    "completed": 24,
+    "pending": 1,
+    "coverage": 96
+  },
+  "architecture": {
+    "cleanArchitecture": 96,
+    "testUnit": 96,
+    "e2eCoverage": 88,
+    "goldenTests": 100,
+    "codeGeneration": 95,
+    "diModularity": 90,
+    "errorHandling": 95
+  },
+  "github": {
+    "stars": 42,
+    "openIssues": 3,
+    "contributors": 2,
+    "forks": 7
+  },
+  "ci": {
+    "status": "passing",
+    "lastBuild": "green",
+    "totalRuns": 187,
+    "passRate": 97.3
+  },
+  "medicalStandards": {
+    "icd10": 278,
+    "loinc": 145,
+    "rxnorm": 118,
+    "snomedCT": 87,
+    "total": 628
+  }
+}

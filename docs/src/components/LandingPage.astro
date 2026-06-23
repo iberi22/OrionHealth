@@ -5,6 +5,13 @@ import FeatureCard from "./FeatureCard.astro";
 import Footer from "./Footer.astro";
 import Header from "./Header.astro";
 import ScreenshotsGallery from "./ScreenshotsGallery.astro";
+import ArchitectureFlow from "./ArchitectureFlow.astro";
+import FeatureGrid from "./FeatureGrid.astro";
+import MedicalStandardsViz from "./MedicalStandardsViz.astro";
+import DataPrivacyFlow from "./DataPrivacyFlow.astro";
+import TestCoverageDashboard from "./TestCoverageDashboard.astro";
+import GitHubLiveStatus from "./GitHubLiveStatus.astro";
+import TimelineViz from "./TimelineViz.astro";
 
 interface Props {
 	lang?: string;
@@ -172,6 +179,46 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
   <!-- Screenshots Gallery -->
   <ScreenshotsGallery />
+
+  <!-- Project Dashboard Section -->
+  <section id="dashboard" class="relative py-16 md:py-32 px-4 bg-gradient-to-b from-charcoal/20 to-transparent">
+    <div class="container-custom">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-10 md:mb-16" data-animate>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-bone-dark opacity-40 mb-3 sm:mb-4 block">
+            Project Dashboard
+          </span>
+          <h2 class="section-title font-bold tracking-tighter uppercase mb-4 md:mb-8">
+            BUILD <span class="text-accent">STATUS</span>
+          </h2>
+          <p class="text-sm md:text-base text-bone-dark leading-relaxed opacity-80 max-w-2xl mx-auto">
+            Real-time project metrics, architecture overview, feature completion status, and CI pipeline health.
+          </p>
+        </div>
+
+        <div class="space-y-8">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="dashboard-card"><TestCoverageDashboard /></div>
+            <div class="dashboard-card"><GitHubLiveStatus /></div>
+          </div>
+          <div class="dashboard-card"><ArchitectureFlow /></div>
+          <div class="dashboard-card"><DataPrivacyFlow /></div>
+          <div class="dashboard-card"><MedicalStandardsViz /></div>
+          <div class="dashboard-card"><FeatureGrid /></div>
+          <div class="dashboard-card"><TimelineViz /></div>
+        </div>
+
+        <div class="text-center mt-8">
+          <a href="/OrionHealth/dashboard" class="btn-secondary inline-flex items-center gap-2 px-8 py-4 text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+            </svg>
+            Full Dashboard View
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Medical Standards Section -->
   <section id="standards" class="relative py-16 md:py-32 px-4">
