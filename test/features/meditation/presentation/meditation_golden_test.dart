@@ -52,7 +52,7 @@ void main() {
     await tester.pumpAndSettle();
     await expectLater(
       find.byType(MeditationView),
-      matchesGoldenFile('goldens/meditation_welcome.png'),
+      matchesGoldenFile('../../../golden/reference/meditation_welcome.png'),
     );
   });
 
@@ -93,7 +93,45 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await expectLater(
       find.byType(MeditationView),
-      matchesGoldenFile('goldens/meditation_active.png'),
+      matchesGoldenFile('../../../golden/reference/meditation_active.png'),
+    );
+  });
+
+  testWidgets('Meditation screen golden test - Completed View', (WidgetTester tester) async {
+    const script = MeditationScript(
+      id: 'test-01',
+      title: 'Respiración Guiada',
+      category: MeditationCategory.breathing,
+      durationMinutes: 5,
+      steps: ['Inhala profundamente', 'Exhala lentamente'],
+    );
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(
+        status: MeditationStatus.completed,
+        script: script,
+        elapsedSeconds: 300,
+      ),
+    );
+
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1.0;
+
+    await tester.pumpWidget(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<MeditationCubit>.value(value: mockCubit),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.darkTheme,
+          home: const MeditationView(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(MeditationView),
+      matchesGoldenFile('../../../golden/reference/meditation_completed.png'),
     );
   });
 }

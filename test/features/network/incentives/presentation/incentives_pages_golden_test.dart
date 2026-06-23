@@ -11,7 +11,7 @@ import 'package:orionhealth_health/features/network/incentives/presentation/page
 import 'package:orionhealth_health/features/network/incentives/presentation/pages/rewards_page.dart';
 import 'package:orionhealth_health/features/network/incentives/presentation/widgets/contribution_card.dart';
 import 'package:orionhealth_health/features/network/incentives/presentation/widgets/reward_tile.dart';
-import '../../../../../core/golden_test_utils.dart';
+import '../../../../core/golden_test_utils.dart';
 
 class MockIncentiveCubit extends Mock implements IncentiveCubit {}
 
@@ -60,7 +60,7 @@ void main() {
 
       await expectLater(
         find.byType(IncentivesPage),
-        matchesGoldenFile("../../../../../golden/reference/incentives_page.png"),
+        matchesGoldenFile("../../../../golden/reference/incentives_page.png"),
       );
       resetGoldenTest(tester);
     });
@@ -85,7 +85,7 @@ void main() {
 
       await expectLater(
         find.byType(LeaderboardPage),
-        matchesGoldenFile("../../../../../golden/reference/leaderboard_page.png"),
+        matchesGoldenFile("../../../../golden/reference/leaderboard_page.png"),
       );
       resetGoldenTest(tester);
     });
@@ -108,7 +108,7 @@ void main() {
 
       await expectLater(
         find.byType(RewardsPage),
-        matchesGoldenFile("../../../../../golden/reference/rewards_page.png"),
+        matchesGoldenFile("../../../../golden/reference/rewards_page.png"),
       );
       resetGoldenTest(tester);
     });
@@ -130,7 +130,7 @@ void main() {
 
       await expectLater(
         find.byType(ContributionCard),
-        matchesGoldenFile("../../../../../golden/reference/contribution_card.png"),
+        matchesGoldenFile("../../../../golden/reference/contribution_card.png"),
       );
       resetGoldenTest(tester);
     });
@@ -152,7 +152,7 @@ void main() {
 
       await expectLater(
         find.byType(RewardTile),
-        matchesGoldenFile("../../../../../golden/reference/reward_tile.png"),
+        matchesGoldenFile("../../../../golden/reference/reward_tile.png"),
       );
       resetGoldenTest(tester);
     });
