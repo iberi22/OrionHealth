@@ -159,6 +159,41 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       </div>
     </section>
 
+    <!-- Project Data Files -->
+    <section class="relative py-12 md:py-20 px-4 bg-background-light/5">
+      <div class="container-custom max-w-6xl">
+        <h2 class="text-xl md:text-2xl font-bold tracking-tight mb-8 text-bone text-center" data-animate>
+          PROJECT <span class="text-accent">DATA</span> ASSETS
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <a href="https://github.com/iberi22/OrionHealth/blob/main/DOCS_INDEX.md" class="glass p-4 rounded-lg flex items-center space-x-3 hover:bg-white/5 transition-colors group">
+            <div class="p-2 rounded bg-accent/20 text-accent group-hover:bg-accent group-hover:text-background transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <span class="text-sm font-medium text-bone-dark">DOCS_INDEX.md</span>
+          </a>
+          <a href={`${base}/data/project-stats.json`} class="glass p-4 rounded-lg flex items-center space-x-3 hover:bg-white/5 transition-colors group">
+            <div class="p-2 rounded bg-accent/20 text-accent group-hover:bg-accent group-hover:text-background transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            <span class="text-sm font-medium text-bone-dark">project-stats.json</span>
+          </a>
+          <a href={`${base}/data/features-map.json`} class="glass p-4 rounded-lg flex items-center space-x-3 hover:bg-white/5 transition-colors group">
+            <div class="p-2 rounded bg-accent/20 text-accent group-hover:bg-accent group-hover:text-background transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+            </div>
+            <span class="text-sm font-medium text-bone-dark">features-map.json</span>
+          </a>
+          <a href={`${base}/data/features.json`} class="glass p-4 rounded-lg flex items-center space-x-3 hover:bg-white/5 transition-colors group">
+            <div class="p-2 rounded bg-accent/20 text-accent group-hover:bg-accent group-hover:text-background transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+            </div>
+            <span class="text-sm font-medium text-bone-dark">features.json</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer Note -->
     <section class="relative py-12 px-4">
       <div class="container-custom text-center">
