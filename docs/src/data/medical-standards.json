@@ -1,0 +1,41 @@
+{
+  "standards": [
+    {
+      "name": "ICD-10",
+      "fullName": "International Classification of Diseases 10th Revision",
+      "count": 278,
+      "color": "#10B981",
+      "icon": "diagnosis",
+      "description": "Diagnosis codes for diseases, disorders, injuries and related health conditions. Core medical coding standard used globally.",
+      "coverage": "100%"
+    },
+    {
+      "name": "LOINC",
+      "fullName": "Logical Observation Identifiers Names and Codes",
+      "count": 145,
+      "color": "#3B82F6",
+      "icon": "lab",
+      "description": "Universal standard for identifying medical laboratory observations. Covers lab tests, clinical measurements, and survey instruments.",
+      "coverage": "95%"
+    },
+    {
+      "name": "RxNorm",
+      "fullName": "RxNorm Medication Terminology",
+      "count": 118,
+      "color": "#F59E0B",
+      "icon": "medication",
+      "description": "Standardized nomenclature for clinical drugs and drug delivery devices. Links drug names to active ingredients and strengths.",
+      "coverage": "92%"
+    },
+    {
+      "name": "SNOMED CT",
+      "fullName": "Systematized Nomenclature of Medicine Clinical Terms",
+      "count": 87,
+      "color": "#8B5CF6",
+      "icon": "clinical",
+      "description": "Comprehensive clinical healthcare terminology. Enables consistent representation of clinical content in electronic health records.",
+      "coverage": "88%"
+    }
+  ],
+  "total": 628
+}

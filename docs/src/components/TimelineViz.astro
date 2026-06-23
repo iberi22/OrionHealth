@@ -1,0 +1,59 @@
+---
+// TimelineViz.astro - Development milestones timeline
+import timeline from "../data/timeline.json";
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function formatDate(d) {
+  const [y, m] = d.split("-");
+  return `${months[parseInt(m)-1]} ${y}`;
+}
+---
+
+<div class="tl-section">
+  <div class="tl-header">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+    <h3>Development Timeline</h3>
+  </div>
+  <div class="tl-track">
+    <div class="tl-line"></div>
+    {timeline.map((m, i) => (
+      <div class="tl-item" style={`--i: ${i}`}>
+        <div class="tl-dot">
+          <div class="tl-dot-inner"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-date">{formatDate(m.date)}</div>
+          <div class="tl-title">{m.milestone}</div>
+          <div class="tl-desc">{m.description}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  .tl-section { margin: 2.5rem 0; }
+  .tl-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .tl-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
+  .tl-track { position: relative; padding-left: 2rem; }
+  .tl-line {
+    position: absolute; left: 1rem; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #10B981, rgba(16,185,129,0.2));
+  }
+  .tl-item { position: relative; padding-bottom: 1.5rem; opacity: 0; animation: tlFadeIn 0.5s ease forwards; animation-delay: calc(var(--i) * 0.15s); }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -1.5rem; top: 0.25rem;
+    width: 1rem; height: 1rem; border-radius: 50%;
+    background: rgba(16,185,129,0.2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tl-dot-inner { width: 6px; height: 6px; border-radius: 50%; background: #10B981; }
+  .tl-content { padding-left: 0.5rem; }
+  .tl-date { font-size: 0.7rem; color: #6B7280; font-family: 'Fira Code', 'Cascadia Code', monospace; margin-bottom: 0.1rem; }
+  .tl-title { font-size: 0.95rem; font-weight: 600; color: #E5E7EB; margin-bottom: 0.2rem; }
+  .tl-desc { font-size: 0.8rem; color: #9CA3AF; line-height: 1.4; }
+  @keyframes tlFadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+</style>

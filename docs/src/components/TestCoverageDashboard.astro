@@ -1,0 +1,107 @@
+---
+// TestCoverageDashboard.astro - Custom donut/bar charts with inline SVG
+import stats from "../data/project-stats.json";
+const { tests } = stats;
+const total = tests.unit + tests.golden + tests.e2e + tests.pngRefs;
+function pct(v) { return ((v / total) * 100).toFixed(1); }
+// SVG donut — compute stroke-dasharray
+const r = 54;
+const circ = 2 * Math.PI * r;
+const segments = [
+  { v: tests.unit, color: "#10B981", label: "Unit" },
+  { v: tests.golden, color: "#3B82F6", label: "Golden" },
+  { v: tests.e2e, color: "#F59E0B", label: "E2E" },
+  { v: tests.pngRefs, color: "#8B5CF6", label: "Refs" },
+];
+let offset = 0;
+const arcs = segments.map(s => {
+  const len = (s.v / total) * circ;
+  const o = offset;
+  offset += len;
+  return { ...s, len, offset: -o };
+});
+---
+
+<div class="tcd-section">
+  <div class="tcd-header">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <h3>Test Coverage</h3>
+    <span class="tcd-total">{total} total tests</span>
+  </div>
+  <div class="tcd-content">
+    <div class="tcd-donut">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        {arcs.map(a => (
+          <circle key={a.label} cx="70" cy="70" r={r} fill="none" stroke={a.color} stroke-width="22"
+            stroke-dasharray={`${a.len} ${circ - a.len}`} stroke-dashoffset={a.offset}
+            transform="rotate(-90, 70, 70)" opacity="0.85" class="tcd-arc" />
+        ))}
+        <circle cx="70" cy="70" r="38" fill="#0a0a0a" />
+        <text x="70" y="66" text-anchor="middle" fill="#E5E7EB" font-size="20" font-weight="700" font-family="'Fira Code', monospace">{total}</text>
+        <text x="70" y="84" text-anchor="middle" fill="#6B7280" font-size="10" font-weight="500">tests</text>
+      </svg>
+    </div>
+    <div class="tcd-legend">
+      {segments.map(s => (
+        <div key={s.label} class="tcd-legend-item">
+          <span class="tcd-dot" style={`background: ${s.color}`}></span>
+          <span class="tcd-lname">{s.label}</span>
+          <span class="tcd-lcount">{s.v}</span>
+          <span class="tcd-lpct">{pct(s.v)}%</span>
+        </div>
+      ))}
+    </div>
+    <!-- Bar chart -->
+    <div class="tcd-bars">
+      <div class="tcd-bar-group">
+        <div class="tcd-bar-label">Unit</div>
+        <div class="tcd-bar-track"><div class="tcd-bar-fill unit" style="width: 68.7%"></div></div>
+        <div class="tcd-bar-val">{tests.unit}</div>
+      </div>
+      <div class="tcd-bar-group">
+        <div class="tcd-bar-label">Golden</div>
+        <div class="tcd-bar-track"><div class="tcd-bar-fill golden" style="width: 4.9%"></div></div>
+        <div class="tcd-bar-val">{tests.golden}</div>
+      </div>
+      <div class="tcd-bar-group">
+        <div class="tcd-bar-label">E2E</div>
+        <div class="tcd-bar-track"><div class="tcd-bar-fill e2e" style="width: 4.3%"></div></div>
+        <div class="tcd-bar-val">{tests.e2e}</div>
+      </div>
+      <div class="tcd-bar-group">
+        <div class="tcd-bar-label">Refs</div>
+        <div class="tcd-bar-track"><div class="tcd-bar-fill refs" style="width: 22.1%"></div></div>
+        <div class="tcd-bar-val">{tests.pngRefs}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .tcd-section { margin: 2.5rem 0; }
+  .tcd-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .tcd-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
+  .tcd-total { margin-left: auto; font-size: 0.85rem; color: #6B7280; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .tcd-content { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: center; }
+  .tcd-donut { flex-shrink: 0; }
+  .tcd-arc { transition: opacity 0.3s ease; cursor: pointer; }
+  .tcd-arc:hover { opacity: 1 !important; }
+  .tcd-legend { display: flex; flex-direction: column; gap: 0.5rem; }
+  .tcd-legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+  .tcd-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .tcd-lname { color: #9CA3AF; min-width: 60px; }
+  .tcd-lcount { color: #E5E7EB; font-weight: 600; min-width: 40px; text-align: right; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .tcd-lpct { color: #6B7280; font-family: 'Fira Code', 'Cascadia Code', monospace; font-size: 0.8rem; }
+  .tcd-bars { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.6rem; }
+  .tcd-bar-group { display: flex; align-items: center; gap: 0.5rem; }
+  .tcd-bar-label { min-width: 50px; font-size: 0.8rem; color: #9CA3AF; }
+  .tcd-bar-track { flex: 1; height: 10px; background: rgba(255,255,255,0.04); border-radius: 5px; overflow: hidden; }
+  .tcd-bar-fill { height: 100%; border-radius: 5px; transition: width 1.5s ease; }
+  .tcd-bar-fill.unit { background: linear-gradient(90deg, #10B981, #059669); }
+  .tcd-bar-fill.golden { background: linear-gradient(90deg, #3B82F6, #2563EB); }
+  .tcd-bar-fill.e2e { background: linear-gradient(90deg, #F59E0B, #D97706); }
+  .tcd-bar-fill.refs { background: linear-gradient(90deg, #8B5CF6, #7C3AED); }
+  .tcd-bar-val { min-width: 40px; text-align: right; font-size: 0.8rem; color: #E5E7EB; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+</style>

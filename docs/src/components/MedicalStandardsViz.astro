@@ -1,0 +1,62 @@
+---
+// MedicalStandardsViz.astro - 4 medical standards in interactive cards
+import standards from "../data/medical-standards.json";
+const { standards: items, total } = standards;
+---
+
+<div class="msv-section">
+  <div class="msv-header">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+    </svg>
+    <h3>Medical Standards</h3>
+    <span class="msv-total">{total} codes mapped</span>
+  </div>
+  <div class="msv-grid">
+    {items.map(s => (
+      <div class="msv-card" style={`--accent: ${s.color}`}>
+        <div class="msv-card-top">
+          <div class="msv-icon" style={`background: ${s.color}22; color: ${s.color}`}>
+            {s.icon === "diagnosis" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>}
+            {s.icon === "lab" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4l-4 7h16l-4-7V2"/><circle cx="12" cy="16" r="4"/></svg>}
+            {s.icon === "medication" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="6" x2="12" y2="18"/><line x1="6" y1="12" x2="18" y2="12"/></svg>}
+            {s.icon === "clinical" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>}
+          </div>
+          <div class="msv-count" style={`color: ${s.color}`}>{s.count}</div>
+        </div>
+        <div class="msv-name">{s.name}</div>
+        <div class="msv-fullname">{s.fullName}</div>
+        <div class="msv-bar">
+          <div class="msv-bar-fill" style={`width: ${s.coverage.replace('%','')}%; background: ${s.color}`}></div>
+        </div>
+        <div class="msv-desc">{s.description}</div>
+      </div>
+    ))}
+  </div>
+  <div class="msv-tagline">HIPAA & GDPR compliant medical terminology mapping</div>
+</div>
+
+<style is:global>
+  .msv-section { margin: 2.5rem 0; }
+  .msv-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .msv-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
+  .msv-total { font-size: 0.85rem; color: #6B7280; margin-left: auto; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .msv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+  .msv-card {
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+    transition: all 0.3s ease;
+  }
+  .msv-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.05); }
+  .msv-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .msv-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .msv-count { font-size: 1.8rem; font-weight: 700; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .msv-name { font-size: 1rem; font-weight: 600; color: #E5E7EB; margin-bottom: 0.2rem; }
+  .msv-fullname { font-size: 0.75rem; color: #6B7280; margin-bottom: 0.75rem; }
+  .msv-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-bottom: 0.75rem; overflow: hidden; }
+  .msv-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+  .msv-desc { font-size: 0.78rem; color: #9CA3AF; line-height: 1.5; }
+  .msv-tagline { text-align: center; margin-top: 1rem; font-size: 0.78rem; color: #6B7280; letter-spacing: 0.02em; }
+</style>
