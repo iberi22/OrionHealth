@@ -1,101 +1,77 @@
 # OrionHealth — Architecture Guide
 
-> **Última actualización:** 2026-06-10 | **Versión:** 1.0.0+1 | **Features:** 25
+OrionHealth is a privacy-first personal health assistant built with Flutter, following a strict Clean Architecture pattern and local-first principles.
 
-## Tech Stack
+## 🏗️ Clean Architecture (4 Layers)
 
-| Componente | Tecnología | Versión |
-|---|---|---|
-| Framework | Flutter | ^3.7.0 (Dart 3.x) |
-| DI | GetIt | 9.2.1 |
-| State Management | BLoC | ^9.0.0 |
-| Local DB | IsarDB | via isar_agent_memory |
-| Medical Standards | ObjectBox | via medical_standards |
-| Native Bridge | MethodChannel | AICore/Gemma |
-| Testing | flutter_test + golden | 137 test files |
+The project is organized into modular features, each following four distinct layers to ensure separation of concerns and testability:
 
-## Clean Architecture Layers
+1.  **Domain Layer**: The core of the system. Contains Entities, Use Cases, and Repository Interfaces. It is independent of any other layer and contains the business logic.
+2.  **Application Layer**: Contains BLoCs/Cubits and application-specific logic. It coordinates between the UI and the Domain layer.
+3.  **Infrastructure Layer**: Implements Repository Interfaces. Handles data sources (local DB, external APIs), services (ASR, TTS), and infrastructure details like network or file system.
+4.  **Presentation Layer**: Contains the UI widgets, pages, and animations. It interacts solely with the Application layer (Cubits/BLoCs) to display state.
 
-Cada feature sigue 4 capas:
-
+### Directory Structure
 ```
-lib/features/<feature>/
-├── domain/           # Entidades, repositorios abstractos, casos de uso
-├── application/      # Cubits/BLoCs, casos de uso específicos
-├── infrastructure/   # Implementaciones de repositorios, servicios externos
-└── presentation/     # Widgets, páginas, navegación
+lib/features/<feature_name>/
+├── domain/           # Entities, Repositories, UseCases
+├── application/      # BLoCs, Cubits
+├── infrastructure/   # Repository Impl, Data Sources, Mappers
+└── presentation/     # Widgets, Pages
 ```
 
-### Coverage
+## 🧠 State Management
 
-| Capa | Features con capa |
-|------|------------------|
-| Domain | 24/25 ✅ |
-| Application | 25/25 ✅ |
-| Infrastructure | 25/25 ✅ |
-| Presentation | 25/25 ✅ |
-| **4 capas completas** | **24/25 (96%)** |
+OrionHealth uses **Flutter BLoC/Cubit** for predictable state management.
+- **Cubits** are used for simple state transitions.
+- **BLoCs** are used for more complex event-based state management.
+- All UI components listen to state changes and rebuild reactively.
 
-**Único gap:** `calendar_import` — domain layer vacío (entidades inline en cubit)
+## 🔄 Data Flow
 
-## Feature Inventory (25 features)
+The application follows an **Offline-first** data flow:
+1.  **Local Persistence**: Data is primarily stored and retrieved from **Isar DB** (local).
+2.  **State Management**: The **BLoC/Cubit** layer fetches data from the local repository.
+3.  **Reactive UI**: The UI subscribes to the BLoC/Cubit state and updates when the local data changes.
+4.  **Sync**: Synchronization with external nodes or servers happens in the background via the Infrastructure layer.
 
-| Feature | D | A | I | P | Tests | Goldens | Estado |
-|---|---|---|---|---|---|---|---|
-| about | 2 | 1 | 1 | 2 | 1 | 0 | 🟡 Needs golden |
-| ai_assistant | 3 | 2 | 1 | 2 | 4 | 0 | 🟡 Needs golden |
-| allergies | 4 | 2 | 1 | 1 | 7 | 3 | ✅ |
-| appointments | 4 | 2 | 1 | 1 | 6 | 10 | ✅ |
-| auth | 4 | 5 | 6 | 6 | 11 | 3 | ✅ |
-| calendar_import | 0 | 1 | 2 | 1 | 2 | 0 | ⚠️ Gap: domain |
-| dashboard | 3 | 2 | 1 | 1 | 4 | 2 | ✅ |
-| doctor_verification | 7 | 2 | 5 | 3 | 6 | 4 | ✅ (legacy data/) |
-| email-citas | 4 | 2 | 1 | 1 | 5 | 15 | ✅ |
-| eps_connection | 1 | 2 | 1 | 1 | 6 | 4 | ✅ |
-| health_data_import | 2 | 2 | 2 | 3 | 2 | 0 | 🟡 Needs golden |
-| health_record | 6 | 2 | 4 | 3 | 5 | 6 | ✅ |
-| health_sharing | 1 | 1 | 4 | 2 | 6 | 5 | 🟡 Bugs activos |
-| home | 2 | 2 | 1 | 2 | 3 | 4 | ✅ |
-| local_agent | 7 | 1 | 19 | 2 | 7 | 3 | ✅ |
-| medical_assistant | 13 | 1 | 8 | 4 | 10 | 3 | ✅ |
-| medical_research | 4 | 1 | 6 | 5 | 8 | 4 | ✅ |
-| medications | 3 | 2 | 1 | 1 | 6 | 3 | ✅ |
-| onboarding | 3 | 2 | 1 | 15 | 4 | 4 | ✅ |
-| reports | 4 | 3 | 3 | 3 | 2 | 3 | ✅ |
-| settings | 4 | 2 | 1 | 1 | 6 | 4 | ✅ |
-| ssi | 8 | 2 | 11 | 2 | 9 | 10 | ✅ |
-| sync | 6 | 2 | 6 | 1 | 7 | 1 | 🟡 Needs golden |
-| user_profile | 4 | 2 | 1 | 1 | 5 | 1 | 🟡 Needs golden |
-| vitals | 4 | 2 | 1 | 2 | 5 | 10 | ✅ |
+```text
+Local Storage (Isar DB) <---> Repository (Infra) <---> BLoC/Cubit (Application) <---> UI (Presentation)
+```
 
-## Known Bugs
+## 🔒 Offline-first & Privacy
 
-| # | Feature | Bug | Severidad |
-|---|---|---|---|
-| 1 | health_sharing | BLE startAdvertising() es stub | 🟡 Medium |
-| 2 | health_sharing | WiFi discoverDevices() retorna mock data | 🟡 Medium |
-| 3 | health_sharing | NFC sharing sin setup nativo | 🟡 Medium |
-| 4 | allergies | Unused equatable import | 🟢 Low |
-| 5 | sync | Legacy data/ dir (5 files) | 🟢 Low |
-| 6 | doctor_verification | Legacy data/ dir (4 files) | 🟢 Low |
-| 7 | calendar_import | Domain layer vacío | 🟢 Low |
+- **On-Device AI**: Uses local models for ASR (Speech-to-Text), TTS (Text-to-Speech), and LLM-based assistants.
+- **Local Database**: All health data stays on the device by default, encrypted using **Isar**.
+- **Secure Storage**: Sensitive keys and identifiers are stored in the system's secure enclave (Keychain/Keystore) via `flutter_secure_storage`.
 
-## Git Workflow
+## 📡 P2P Synchronization
 
-- **Main** → producción
-- **Develop** → integración
-- **Feature branches** → `feat/<nombre>`
+OrionHealth supports distributed data sharing and synchronization:
+- **Wi-Fi Direct / mDNS**: Local discovery of other OrionHealth nodes.
+- **IPFS**: Decentralized storage for health records and blobs, ensuring availability without central servers.
+- **SSI (Self-Sovereign Identity)**: Uses DIDs and Verifiable Credentials for secure data exchange.
 
-## Testing Strategy
+## 🏥 Medical Standards Integration
 
-- **Unit tests**: domain + application logic (137 test files)
-- **Golden tests**: UI screenshot comparison (86 PNGs)
-- **Coverage goal**: >50% test/lib ratio
-- **6 features sin golden tests**: about, ai_assistant, calendar_import, health_data_import, sync, user_profile
+To ensure interoperability and accuracy, OrionHealth integrates several international medical standards:
+- **FHIR (R4/DSTU2)**: The primary data model for health resources.
+- **ICD-10**: For clinical diagnoses and classification.
+- **LOINC**: For laboratory and clinical observations.
+- **RxNorm**: For standardized medication nomenclature.
+- **SNOMED CT**: For clinical terminology and medical concepts.
 
-## Quick Links
+## 🚀 Build System & CI
 
-- [Feature Audit (detailed)](docs/FEATURE_AUDIT.md)
-- [Coverage Report](coverage_report.md)
-- [GitHub Issues](https://github.com/iberi22/OrionHealth/issues)
-- [gitcore Features](.gitcore/features.json)
+- **GitHub Actions**: Automated CI pipeline for every push and PR.
+- **Static Analysis**: Enforced `dart analyze` for code quality.
+- **Testing Suite**:
+    - **Unit Tests**: Domain and Application logic.
+    - **Widget Tests**: Presentation layer components.
+    - **Golden Tests**: Visual regression testing using screenshots.
+    - **Integration Tests**: End-to-end flows.
+
+## 🔗 References
+
+- [Features Catalog](features.json)
+- [Git Protocol](GITPROTOCOL.md)
