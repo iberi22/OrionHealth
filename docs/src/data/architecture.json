@@ -1,0 +1,59 @@
+{
+  "pattern": "Clean Architecture (Hexagonal)",
+  "completion": 72,
+  "principles": [
+    "Domain-Driven Design",
+    "Dependency Injection (get_it + injectable)",
+    "BLoC state management per feature",
+    "Isar encrypted local-first database",
+    "On-device LLM via ONNX Runtime"
+  ],
+  "layers": [
+    {
+      "id": "presentation",
+      "name": "Presentation",
+      "order": 0,
+      "color": "#34D399",
+      "description": "UI screens, widgets, BLoC state",
+      "responsibilities": ["Screens", "Widgets", "BLoC/Cubit state", "Route handling"],
+      "files": 0,
+      "detail": "Flutter widgets and state containers. Interacts only with Application layer."
+    },
+    {
+      "id": "application",
+      "name": "Application",
+      "order": 1,
+      "color": "#22D3EE",
+      "description": "Business logic orchestration & use cases",
+      "responsibilities": ["Use cases", "Feature orchestration", "State coordination"],
+      "files": 0,
+      "detail": "Orchestrates domain logic. Depends on Domain abstractions, never on infrastructure details."
+    },
+    {
+      "id": "domain",
+      "name": "Domain",
+      "order": 2,
+      "color": "#10B981",
+      "description": "Entities & repository interfaces (the core)",
+      "responsibilities": ["Entities", "Repository contracts", "Value objects", "Domain events"],
+      "files": 0,
+      "detail": "The protected core. Pure Dart, no Flutter, no I/O. The heart of each feature."
+    },
+    {
+      "id": "infrastructure",
+      "name": "Infrastructure",
+      "order": 3,
+      "color": "#059669",
+      "description": "Repository implementations & data sources",
+      "responsibilities": ["Isar data sources", "Remote adapters", "OCR / LLM runtimes", "Platform channels"],
+      "files": 0,
+      "detail": "The outermost ring. Implements Domain contracts against Isar, ONNX and OS services."
+    }
+  ],
+  "dependencyRule": "Dependencies point inward only: Presentation -> Application -> Domain <- Infrastructure. The Domain core knows nothing about the outside world.",
+  "core": {
+    "name": "core/",
+    "description": "Shared utilities, DI container, theming and reusable widgets",
+    "modules": ["core/di", "core/theme", "core/widgets"]
+  }
+}

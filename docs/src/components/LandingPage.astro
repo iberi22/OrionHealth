@@ -12,6 +12,7 @@ import DataPrivacyFlow from "./DataPrivacyFlow.astro";
 import TestCoverageDashboard from "./TestCoverageDashboard.astro";
 import GitHubLiveStatus from "./GitHubLiveStatus.astro";
 import TimelineViz from "./TimelineViz.astro";
+import MedicalSearch from "./MedicalSearch.astro";
 
 interface Props {
 	lang?: string;
@@ -177,9 +178,6 @@ const t = ui[lang as keyof typeof ui] || ui.en;
     </div>
   </section>
 
-  <!-- Screenshots Gallery -->
-  <ScreenshotsGallery />
-
   <!-- Project Dashboard Section -->
   <section id="dashboard" class="relative py-16 md:py-32 px-4 bg-gradient-to-b from-charcoal/20 to-transparent">
     <div class="container-custom">
@@ -219,6 +217,9 @@ const t = ui[lang as keyof typeof ui] || ui.en;
       </div>
     </div>
   </section>
+
+  <!-- Screenshots Gallery -->
+  <ScreenshotsGallery />
 
   <!-- Medical Standards Section -->
   <section id="standards" class="relative py-16 md:py-32 px-4">
@@ -276,6 +277,8 @@ const t = ui[lang as keyof typeof ui] || ui.en;
             <div class="text-xs text-bone-dark opacity-60">Concepts</div>
           </div>
         </div>
+
+        <MedicalSearch />
       </div>
     </div>
   </section>
@@ -447,3 +450,25 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 </main>
 
 <Footer lang={lang} />
+
+<style>
+  /* Glass containers for each dashboard visualization block */
+  .dashboard-card {
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    background: rgba(20, 20, 20, 0.55);
+    border: 1px solid rgba(16, 185, 129, 0.12);
+    backdrop-filter: blur(14px) saturate(160%);
+    transition: border-color 0.4s cubic-bezier(0.19, 1, 0.22, 1),
+      box-shadow 0.4s cubic-bezier(0.19, 1, 0.22, 1),
+      transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .dashboard-card:hover {
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow: 0 24px 60px -32px rgba(16, 185, 129, 0.4);
+    transform: translateY(-2px);
+  }
+  @media (max-width: 640px) {
+    .dashboard-card { padding: 1rem; }
+  }
+</style>

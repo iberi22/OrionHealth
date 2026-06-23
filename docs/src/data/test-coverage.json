@@ -1,0 +1,11 @@
+{
+  "summary": "Local-first quality gate: everything runs offline, nothing leaks.",
+  "testToLibRatio": "46%",
+  "categories": [
+    { "label": "Unit Tests", "value": 494, "color": "#10B981", "description": "Dart unit tests covering domain + application logic" },
+    { "label": "Golden Tests", "value": 35, "color": "#34D399", "description": "Widget visual regression snapshots" },
+    { "label": "E2E Tests", "value": 31, "color": "#22D3EE", "description": "End-to-end integration flows" },
+    { "label": "Golden PNG Refs", "value": 159, "color": "#A855F7", "description": "Reference images for visual regression" }
+  ],
+  "total": 719
+}

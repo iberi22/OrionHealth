@@ -1,5 +1,5 @@
 ---
-// DataPrivacyFlow.astro - Local-only data flow diagram (Isar DB -> BLoC -> UI -> No Cloud)
+// DataPrivacyFlow.astro - Local-only data flow diagram
 ---
 
 <div class="dpf-section">
@@ -10,105 +10,116 @@
     <h3>Data Flow</h3>
     <span class="dpf-badge">OFFLINE-FIRST · LOCAL-ONLY</span>
   </div>
-  <div class="dpf-diagram">
+
+  <div class="dpf-pipeline">
     <!-- Isar DB -->
-    <div class="dpf-node isar-node">
-      <div class="dpf-node-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5">
+    <div class="dpf-node">
+      <div class="dpf-node-glyph">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5">
           <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
         </svg>
       </div>
-      <div class="dpf-node-name">Isar DB</div>
-      <div class="dpf-node-desc">Local database on device</div>
-      <div class="dpf-node-tags">
-        <span>encrypted</span><span>indexed</span><span>zero-copy</span>
-      </div>
+      <div class="dpf-node-label">Isar DB</div>
+      <div class="dpf-node-sub">Local encrypted database</div>
     </div>
-
     <div class="dpf-arrow">
-      <svg width="80" height="24" viewBox="0 0 80 24"><line x1="0" y1="12" x2="65" y2="12" stroke="#10B981" stroke-width="1.5" stroke-dasharray="4,3"/><polyline points="55,4 65,12 55,20" fill="none" stroke="#10B981" stroke-width="1.5"/></svg>
-      <span class="dpf-arrow-label">128-bit AES</span>
+      <svg width="32" height="14" viewBox="0 0 32 14"><line x1="0" y1="7" x2="26" y2="7" stroke="#10B981" stroke-width="1.5" stroke-dasharray="4,3"/><polyline points="20,2 26,7 20,12" fill="none" stroke="#10B981" stroke-width="1.5"/></svg>
     </div>
 
-    <!-- BLoC -->
-    <div class="dpf-node bloc-node">
-      <div class="dpf-node-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5">
+    <!-- BLoC Layer -->
+    <div class="dpf-node">
+      <div class="dpf-node-glyph">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5">
           <rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/>
         </svg>
       </div>
-      <div class="dpf-node-name">BLoC Layer</div>
-      <div class="dpf-node-desc">Business logic components</div>
-      <div class="dpf-node-tags">
-        <span>24 BLoCs</span><span>reactive</span><span>immutable</span>
-      </div>
+      <div class="dpf-node-label">BLoC Layer</div>
+      <div class="dpf-node-sub">24 business logic components</div>
     </div>
-
     <div class="dpf-arrow">
-      <svg width="80" height="24" viewBox="0 0 80 24"><line x1="0" y1="12" x2="65" y2="12" stroke="#60A5FA" stroke-width="1.5" stroke-dasharray="4,3"/><polyline points="55,4 65,12 55,20" fill="none" stroke="#60A5FA" stroke-width="1.5"/></svg>
-      <span class="dpf-arrow-label">Streams</span>
+      <svg width="32" height="14" viewBox="0 0 32 14"><line x1="0" y1="7" x2="26" y2="7" stroke="#60A5FA" stroke-width="1.5" stroke-dasharray="4,3"/><polyline points="20,2 26,7 20,12" fill="none" stroke="#60A5FA" stroke-width="1.5"/></svg>
     </div>
 
-    <!-- UI -->
-    <div class="dpf-node ui-node">
-      <div class="dpf-node-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.5">
+    <!-- Flutter UI -->
+    <div class="dpf-node">
+      <div class="dpf-node-glyph">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.5">
           <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
         </svg>
       </div>
-      <div class="dpf-node-name">Flutter UI</div>
-      <div class="dpf-node-desc">42 screens · Material 3</div>
-      <div class="dpf-node-tags">
-        <span>responsive</span><span>dark theme</span><span>a11y</span>
-      </div>
+      <div class="dpf-node-label">Flutter UI</div>
+      <div class="dpf-node-sub">42 screens · Material 3</div>
     </div>
+  </div>
 
-    <!-- Big NO CLOUD overlay -->
-    <div class="dpf-nocloud">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-      <div class="dpf-nocloud-text">
-        <strong>No Cloud</strong>
-        <span>Your data never leaves your device</span>
-      </div>
+  <!-- No Cloud -->
+  <div class="dpf-nocloud">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+    </svg>
+    <div class="dpf-nocloud-text">
+      <strong>No Cloud</strong>
+      <span>Your data never leaves your device</span>
+    </div>
+  </div>
+
+  <!-- Guarantees -->
+  <div class="dpf-guarantees">
+    <div class="dpf-guarantee">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span class="dpf-g-label">128-bit AES encrypted</span>
+      <span class="dpf-g-value">ON</span>
+    </div>
+    <div class="dpf-guarantee">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span class="dpf-g-label">Offline-first architecture</span>
+      <span class="dpf-g-value">100%</span>
+    </div>
+    <div class="dpf-guarantee">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span class="dpf-g-label">Zero cloud dependencies</span>
+      <span class="dpf-g-value">YES</span>
     </div>
   </div>
 </div>
 
 <style is:global>
-  .dpf-section { margin: 2.5rem 0; }
-  .dpf-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .dpf-section { margin: 2rem 0; }
+  .dpf-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
   .dpf-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
-  .dpf-badge { margin-left: auto; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; background: rgba(16,185,129,0.15); color: #10B981; letter-spacing: 0.05em; border: 1px solid rgba(16,185,129,0.3); }
-  .dpf-diagram { display: flex; flex-direction: column; align-items: center; gap: 0; position: relative; }
+  .dpf-badge { margin-left: auto; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.66rem; font-weight: 600; background: rgba(16,185,129,0.12); color: #10B981; letter-spacing: 0.06em; border: 1px solid rgba(16,185,129,0.3); white-space: nowrap; }
+  .dpf-pipeline { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.25rem; }
   .dpf-node {
-    width: 100%; max-width: 340px;
-    padding: 1.25rem;
+    flex: 1 1 130px; max-width: 170px;
+    padding: 1rem;
     border-radius: 12px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(160deg, rgba(16,185,129,0.08) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid rgba(16,185,129,0.2);
     text-align: center;
     transition: all 0.3s ease;
   }
-  .dpf-node:hover { transform: scale(1.02); }
-  .isar-node:hover { border-color: rgba(16,185,129,0.4); box-shadow: 0 0 20px rgba(16,185,129,0.1); }
-  .bloc-node:hover { border-color: rgba(96,165,250,0.4); box-shadow: 0 0 20px rgba(96,165,250,0.1); }
-  .ui-node:hover { border-color: rgba(167,139,250,0.4); box-shadow: 0 0 20px rgba(167,139,250,0.1); }
-  .dpf-node-icon { margin-bottom: 0.5rem; }
-  .dpf-node-name { font-size: 1rem; font-weight: 600; color: #E5E7EB; margin-bottom: 0.2rem; }
-  .dpf-node-desc { font-size: 0.8rem; color: #6B7280; margin-bottom: 0.5rem; }
-  .dpf-node-tags { display: flex; justify-content: center; gap: 0.4rem; flex-wrap: wrap; }
-  .dpf-node-tags span { padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.7rem; color: #9CA3AF; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); }
-  .dpf-arrow { display: flex; flex-direction: column; align-items: center; padding: 0.25rem 0; }
-  .dpf-arrow-label { font-size: 0.7rem; color: #6B7280; font-family: 'Fira Code', 'Cascadia Code', monospace; margin-top: -0.25rem; }
+  .dpf-node:hover { transform: translateY(-4px); border-color: rgba(16,185,129,0.5); }
+  .dpf-node-glyph { margin-bottom: 0.5rem; }
+  .dpf-node-label { font-size: 0.9rem; font-weight: 700; color: #E5E7EB; }
+  .dpf-node-sub { font-size: 0.7rem; color: #6B7280; margin-top: 0.15rem; line-height: 1.3; }
+  .dpf-arrow { display: flex; align-items: center; opacity: 0.6; }
   .dpf-nocloud {
-    margin-top: 1.5rem;
-    display: flex; align-items: center; gap: 1rem;
-    padding: 1rem 1.5rem;
-    border-radius: 10px;
+    margin: 1.25rem auto 0; max-width: 360px;
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.85rem 1.15rem;
+    border-radius: 12px;
     background: rgba(239,68,68,0.06);
     border: 1px solid rgba(239,68,68,0.2);
   }
   .dpf-nocloud-text { display: flex; flex-direction: column; }
-  .dpf-nocloud-text strong { color: #EF4444; font-size: 1rem; }
-  .dpf-nocloud-text span { color: #6B7280; font-size: 0.8rem; }
+  .dpf-nocloud-text strong { color: #EF4444; font-size: 0.9rem; }
+  .dpf-nocloud-text span { color: #6B7280; font-size: 0.75rem; }
+  .dpf-guarantees { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; justify-content: center; }
+  .dpf-guarantee { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); }
+  .dpf-g-label { font-size: 0.76rem; color: #9CA3AF; }
+  .dpf-g-value { margin-left: 0.5rem; font-size: 0.74rem; font-weight: 600; color: #10B981; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  @media (max-width: 520px) {
+    .dpf-pipeline { flex-direction: column; align-items: center; }
+    .dpf-arrow { transform: rotate(90deg); }
+  }
 </style>
