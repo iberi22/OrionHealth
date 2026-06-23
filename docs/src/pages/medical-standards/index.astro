@@ -3,6 +3,7 @@ import fs from "node:fs";
 import Footer from "../../components/Footer.astro";
 import Header from "../../components/Header.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import MedicalSearch from "../../components/MedicalSearch.astro";
 
 // Load all standards
 function loadJson(file) {
@@ -91,6 +92,9 @@ const total = standards.reduce((sum, s) => sum + s.count, 0);
           </div>
         ))}
       </div>
+
+      <!-- Search -->
+      <MedicalSearch />
 
       <!-- Standard cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">

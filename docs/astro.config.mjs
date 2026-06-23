@@ -6,7 +6,10 @@ export default defineConfig({
   site: 'https://iberi22.github.io',
   base: '/OrionHealth',
   integrations: [tailwind({
-    applyBaseStyles: false,
+    // Inject @tailwind base/components/utilities so every utility class
+    // (flex, grid, responsive variants, etc.) resolves correctly.
+    // The custom cyber-minimalist styles live in BaseLayout.astro as enhancements.
+    applyBaseStyles: true,
   })],
   build: {
     assets: '_astro'

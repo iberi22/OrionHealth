@@ -1,0 +1,16 @@
+{
+  "repo": "OrionHealth",
+  "owner": "iberi22",
+  "url": "https://github.com/iberi22/OrionHealth",
+  "apiUrl": "https://api.github.com/repos/iberi22/OrionHealth",
+  "license": "AGPL-3.0",
+  "language": "Dart",
+  "description": "Privacy-first, local-first health records powered by on-device AI.",
+  "fallback": {
+    "stars": 0,
+    "forks": 0,
+    "openIssues": 0,
+    "contributors": 1,
+    "subscribers": 1
+  }
+}

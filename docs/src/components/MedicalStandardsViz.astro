@@ -1,62 +1,142 @@
 ---
-// MedicalStandardsViz.astro - 4 medical standards in interactive cards
+// MedicalStandardsViz.astro - 4 medical standards in interactive cards.
+// ICD-10 (278), LOINC (145), RxNorm (118), SNOMED CT (87).
+// Cyber-minimalist, dark theme, emerald accent. 100% inline SVG. No chart libs.
 import standards from "../data/medical-standards.json";
-const { standards: items, total } = standards;
+
+const items = standards.standards;
+const total = standards.total;
+const maxCount = Math.max(...items.map((s) => s.count));
+
+// Per-standard inline SVG icon (hand-drawn — no external assets).
+const icons: Record<string, string> = {
+  diagnosis: '<path d="M9 3h6"/><path d="M7 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M12 10v6"/><path d="M9 13h6"/>',
+  lab: '<path d="M9 2v6l-4 8a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-4-8V2"/><path d="M7 14h10"/><path d="M9 2h6"/>',
+  medication: '<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(45 12 12)"/><path d="M8.5 8.5l7 7"/>',
+  clinical: '<path d="M12 3a4 4 0 0 1 4 4c0 1.5-1 2.5-1 4 0 1 .5 2 2 2.5"/><path d="M12 3a4 4 0 0 0-4 4c0 1.5 1 2.5 1 4 0 1-.5 2-2 2.5"/><circle cx="12" cy="20" r="1.5"/>',
+};
+
+function barWidth(count: number) {
+  // scale to a 0-100 track, min 18% so small bars stay visible
+  return Math.max(18, Math.round((count / maxCount) * 100));
+}
 ---
 
-<div class="msv-section">
-  <div class="msv-header">
+<div class="ms-viz">
+  <div class="ms-header">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>
     </svg>
-    <h3>Medical Standards</h3>
-    <span class="msv-total">{total} codes mapped</span>
+    <h3>Medical Standards Knowledge Base</h3>
+    <span class="ms-total"><span class="num">{total}</span> codes</span>
   </div>
-  <div class="msv-grid">
-    {items.map(s => (
-      <div class="msv-card" style={`--accent: ${s.color}`}>
-        <div class="msv-card-top">
-          <div class="msv-icon" style={`background: ${s.color}22; color: ${s.color}`}>
-            {s.icon === "diagnosis" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>}
-            {s.icon === "lab" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4l-4 7h16l-4-7V2"/><circle cx="12" cy="16" r="4"/></svg>}
-            {s.icon === "medication" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="6" x2="12" y2="18"/><line x1="6" y1="12" x2="18" y2="12"/></svg>}
-            {s.icon === "clinical" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>}
+  <p class="ms-subtitle">Fully offline. Four interoperable terminologies indexed on-device.</p>
+
+  <div class="ms-grid">
+    {
+      items.map((s) => (
+        <article class="ms-card" style={`--accent: ${s.color};`} data-animate>
+          <div class="ms-card-glow" aria-hidden="true" />
+          <div class="ms-card-head">
+            <span class="ms-icon" style={`color:${s.color}; border-color:${s.color}33; background:${s.color}14`}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[s.icon] || icons.clinical} />
+            </span>
+            <div class="ms-titles">
+              <h4>{s.name}</h4>
+              <span class="ms-coverage">{s.coverage} indexed</span>
+            </div>
+            <div class="ms-count" style={`color:${s.color}`}>{s.count}</div>
           </div>
-          <div class="msv-count" style={`color: ${s.color}`}>{s.count}</div>
-        </div>
-        <div class="msv-name">{s.name}</div>
-        <div class="msv-fullname">{s.fullName}</div>
-        <div class="msv-bar">
-          <div class="msv-bar-fill" style={`width: ${s.coverage.replace('%','')}%; background: ${s.color}`}></div>
-        </div>
-        <div class="msv-desc">{s.description}</div>
-      </div>
-    ))}
+
+          <p class="ms-desc">{s.description}</p>
+
+          <div class="ms-bar-wrap" role="img" aria-label={`${s.name} relative size`}>
+            <div class="ms-bar" style={`width:${barWidth(s.count)}%; background: linear-gradient(90deg, ${s.color}, ${s.color}66);`}>
+              <span class="ms-bar-tick" />
+            </div>
+          </div>
+
+          <div class="ms-foot">
+            <span class="ms-share">{Math.round((s.count / total) * 100)}% of base</span>
+            <span class="ms-fullname">{s.fullName}</span>
+          </div>
+        </article>
+      ))
+    }
   </div>
-  <div class="msv-tagline">HIPAA & GDPR compliant medical terminology mapping</div>
+
+  <div class="ms-legend">
+    <span class="ms-chip"><span class="dot" style="background:#10B981" /> Diagnosis</span>
+    <span class="ms-chip"><span class="dot" style="background:#3B82F6" /> Lab</span>
+    <span class="ms-chip"><span class="dot" style="background:#F59E0B" /> Medication</span>
+    <span class="ms-chip"><span class="dot" style="background:#8B5CF6" /> Clinical</span>
+  </div>
 </div>
 
 <style is:global>
-  .msv-section { margin: 2.5rem 0; }
-  .msv-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
-  .msv-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
-  .msv-total { font-size: 0.85rem; color: #6B7280; margin-left: auto; font-family: 'Fira Code', 'Cascadia Code', monospace; }
-  .msv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
-  .msv-card {
-    padding: 1.25rem;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.06);
-    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-    transition: all 0.3s ease;
+  .ms-viz { margin: 2rem 0; }
+  .ms-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; }
+  .ms-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
+  .ms-total { margin-left: auto; font-size: 0.85rem; color: #6B7280; }
+  .ms-total .num { color: #10B981; font-weight: 700; font-family: 'Fira Code', 'Cascadia Code', monospace; }
+  .ms-subtitle { font-size: 0.85rem; color: #6B7280; margin: 0.25rem 0 1.25rem 2.5rem; }
+
+  .ms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.9rem;
   }
-  .msv-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.05); }
-  .msv-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
-  .msv-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-  .msv-count { font-size: 1.8rem; font-weight: 700; font-family: 'Fira Code', 'Cascadia Code', monospace; }
-  .msv-name { font-size: 1rem; font-weight: 600; color: #E5E7EB; margin-bottom: 0.2rem; }
-  .msv-fullname { font-size: 0.75rem; color: #6B7280; margin-bottom: 0.75rem; }
-  .msv-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-bottom: 0.75rem; overflow: hidden; }
-  .msv-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
-  .msv-desc { font-size: 0.78rem; color: #9CA3AF; line-height: 1.5; }
-  .msv-tagline { text-align: center; margin-top: 1rem; font-size: 0.78rem; color: #6B7280; letter-spacing: 0.02em; }
+  .ms-card {
+    position: relative;
+    padding: 1.1rem 1.15rem 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.19,1,0.22,1), border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .ms-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    box-shadow: 0 18px 40px -18px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  .ms-card-glow {
+    position: absolute;
+    top: -40%; right: -30%;
+    width: 70%; height: 90%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 28%, transparent), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .ms-card:hover .ms-card-glow { opacity: 1; }
+
+  .ms-card-head { display: flex; align-items: center; gap: 0.65rem; position: relative; }
+  .ms-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 10px; border: 1px solid transparent;
+    flex-shrink: 0;
+  }
+  .ms-titles { display: flex; flex-direction: column; min-width: 0; }
+  .ms-titles h4 { margin: 0; font-size: 0.98rem; font-weight: 700; color: #E5E7EB; }
+  .ms-coverage { font-size: 0.68rem; color: #6B7280; text-transform: uppercase; letter-spacing: 0.06em; }
+  .ms-count { margin-left: auto; font-size: 1.6rem; font-weight: 700; font-family: 'Fira Code', 'Cascadia Code', monospace; line-height: 1; }
+
+  .ms-desc { font-size: 0.78rem; line-height: 1.5; color: #9CA3AF; margin: 0.75rem 0 0.85rem; min-height: 3.4em; position: relative; }
+
+  .ms-bar-wrap { height: 6px; border-radius: 999px; background: rgba(255,255,255,0.05); overflow: hidden; position: relative; }
+  .ms-bar { height: 100%; border-radius: 999px; position: relative; transition: width 0.8s cubic-bezier(0.19,1,0.22,1); }
+  .ms-bar-tick { position: absolute; right: 0; top: -2px; width: 2px; height: 10px; background: rgba(255,255,255,0.7); border-radius: 2px; }
+
+  .ms-foot { display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.55rem; gap: 0.5rem; position: relative; }
+  .ms-share { font-size: 0.72rem; color: var(--accent); font-family: 'Fira Code', 'Cascadia Code', monospace; font-weight: 600; }
+  .ms-fullname { font-size: 0.64rem; color: #4B5563; text-align: right; line-height: 1.3; }
+
+  .ms-legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; margin-top: 1rem; }
+  .ms-chip { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: #6B7280; }
+  .ms-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  @media (max-width: 520px) {
+    .ms-subtitle { margin-left: 0; }
+  }
 </style>

@@ -306,7 +306,40 @@ const isRTL = lang === "ar";
     .safe-area-top {
       padding-top: env(safe-area-inset-top, 0);
     }
+
+    /* Dashboard Cards - mounts the hand-built data-viz components
+       in a consistent cyber-minimalist frame on every page/route. */
+    .dashboard-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.005) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(8px) saturate(160%);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+    }
+    .dashboard-card:hover {
+      border-color: rgba(16, 185, 129, 0.2);
+      box-shadow: 0 0 24px rgba(16, 185, 129, 0.06);
+    }
+    /* Neutralise the section margins baked into each viz component,
+       since they now live inside a framed card. */
+    .dashboard-card > .arch-flow,
+    .dashboard-card > .feature-grid-section,
+    .dashboard-card > .msv-section,
+    .dashboard-card > .tcd-section,
+    .dashboard-card > .ghs-section,
+    .dashboard-card > .dpf-section,
+    .dashboard-card > .tl-section {
+      margin: 0 !important;
+    }
   </style>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/OrionHealth/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/OrionHealth/android-chrome-192x192.png">
 
   <!-- Plausible Analytics -->
   <script defer data-domain="orionhealth.app" src="https://plausible.io/js/script.js"></script>
@@ -366,6 +399,17 @@ const isRTL = lang === "ar";
         observer.observe(el);
       });
     });
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/OrionHealth/sw.js').then((reg) => {
+          console.log('SW registered: ' + reg.scope);
+        }).catch((err) => {
+          console.log('SW registration failed: ' + err);
+        });
+      });
+    }
   </script>
 </body>
 </html>

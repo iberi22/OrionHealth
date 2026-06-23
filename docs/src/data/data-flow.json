@@ -1,0 +1,74 @@
+{
+  "title": "Local-Only Data Path",
+  "subtitle": "Your data never leaves the device. There is no cloud to hack.",
+  "nodes": [
+    {
+      "id": "input",
+      "label": "User Input",
+      "subtitle": "Sensors, uploads, chat",
+      "icon": "input",
+      "local": true,
+      "order": 0
+    },
+    {
+      "id": "presentation",
+      "label": "Presentation",
+      "subtitle": "UI + BLoC state",
+      "icon": "screen",
+      "local": true,
+      "order": 1
+    },
+    {
+      "id": "application",
+      "label": "Application",
+      "subtitle": "Use cases",
+      "icon": "logic",
+      "local": true,
+      "order": 2
+    },
+    {
+      "id": "domain",
+      "label": "Domain",
+      "subtitle": "Entities & contracts",
+      "icon": "core",
+      "local": true,
+      "order": 3
+    },
+    {
+      "id": "infrastructure",
+      "label": "Infrastructure",
+      "subtitle": "Data sources",
+      "icon": "gear",
+      "local": true,
+      "order": 4
+    },
+    {
+      "id": "isar",
+      "label": "Isar DB",
+      "subtitle": "AES-encrypted on-device",
+      "icon": "database",
+      "local": true,
+      "order": 5
+    },
+    {
+      "id": "llm",
+      "label": "On-Device LLM",
+      "subtitle": "ONNX Runtime",
+      "icon": "chip",
+      "local": true,
+      "order": 6,
+      "branch": true
+    }
+  ],
+  "cloud": {
+    "label": "Cloud",
+    "subtitle": "Never contacted",
+    "disabled": true
+  },
+  "guarantees": [
+    { "label": "AES encryption at rest", "value": "Enabled" },
+    { "label": "Network egress", "value": "Zero" },
+    { "label": "Third-party telemetry", "value": "None" },
+    { "label": "Biometric / PIN lock", "value": "Required" }
+  ]
+}
