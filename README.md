@@ -18,7 +18,7 @@
 
 **v0.9.0** — Tests `325+ pass / 2 fail` (99.4%+) ✅ | Clean Architecture Coverage: **17/25 (68%) full** + **4/25 (16%) near-complete** = **84% with all 4 layers** | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅ | 23/25 features have all 4 Clean Architecture layers ✅
 
-> **Full coverage details:** [`coverage_report.md`](./coverage_report.md)
+> **Full coverage details:** [`coverage_report.md`](./coverage_report.md) | **Feature Catalog:** [`features.json`](./features.json)
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 🏗️ Architecture
 
-OrionHealth follows **Clean Architecture** with 4 layers:
+OrionHealth follows **Clean Architecture** with 4 layers. For a detailed breakdown, see [**ARCHITECTURE.md**](./ARCHITECTURE.md).
 
 ```
 lib/
@@ -144,6 +144,8 @@ genhtml coverage/lcov.info -o coverage/html
 ---
 
 ## 🤝 Contributing
+
+We follow a specific development workflow. Please read our [**GITPROTOCOL.md**](./GITPROTOCOL.md) before contributing.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feat/your-feature`)
