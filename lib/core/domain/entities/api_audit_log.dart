@@ -6,15 +6,15 @@ part 'api_audit_log.g.dart';
 class ApiAuditLog {
   Id id = Isar.autoIncrement;
 
-  DateTime timestamp;
+  final DateTime timestamp;
 
-  String apiName;
+  final String apiName;
 
-  int originalPromptLength;
+  final int originalPromptLength;
 
-  int scrubbedPromptLength;
+  final int scrubbedPromptLength;
 
-  bool piiFound;
+  final bool piiFound;
 
   ApiAuditLog({
     required this.timestamp,
@@ -23,4 +23,45 @@ class ApiAuditLog {
     required this.scrubbedPromptLength,
     required this.piiFound,
   });
+
+  factory ApiAuditLog.fromJson(Map<String, dynamic> json) {
+    return ApiAuditLog(
+      timestamp: DateTime.parse(json['timestamp'] as String),
+      apiName: json['apiName'] as String,
+      originalPromptLength: json['originalPromptLength'] as int,
+      scrubbedPromptLength: json['scrubbedPromptLength'] as int,
+      piiFound: json['piiFound'] as bool,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'timestamp': timestamp.toIso8601String(),
+      'apiName': apiName,
+      'originalPromptLength': originalPromptLength,
+      'scrubbedPromptLength': scrubbedPromptLength,
+      'piiFound': piiFound,
+    };
+  }
+
+  @override
+  @ignore
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ApiAuditLog &&
+          runtimeType == other.runtimeType &&
+          timestamp == other.timestamp &&
+          apiName == other.apiName &&
+          originalPromptLength == other.originalPromptLength &&
+          scrubbedPromptLength == other.scrubbedPromptLength &&
+          piiFound == other.piiFound;
+
+  @override
+  @ignore
+  int get hashCode =>
+      timestamp.hashCode ^
+      apiName.hashCode ^
+      originalPromptLength.hashCode ^
+      scrubbedPromptLength.hashCode ^
+      piiFound.hashCode;
 }
