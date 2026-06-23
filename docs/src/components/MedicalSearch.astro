@@ -1,0 +1,222 @@
+---
+// MedicalSearch.astro - Full-text search across all 628 medical standards
+// Pre-built search index for instant client-side lookups
+// Cache-friendly, works offline via PWA
+---
+
+<div class="med-search" id="medical-search">
+  <div class="med-search-bar">
+    <svg class="med-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="search" class="med-search-input" placeholder="Search 628 medical codes (ICD-10, LOINC, RxNorm, SNOMED CT)..." aria-label="Search medical standards" autocomplete="off" />
+    <kbd class="med-search-hint">Ctrl+K</kbd>
+  </div>
+  <div class="med-search-results" id="search-results" hidden>
+    <div class="med-search-info"><span id="result-count">0</span> results</div>
+    <div class="med-search-list" id="search-list"></div>
+  </div>
+  <div class="med-search-empty" id="search-empty" hidden>
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <p>No codes found. Try a different search term.</p>
+  </div>
+</div>
+
+<script>
+// Pre-built search index (embedded for instant offline access)
+const SEARCH_INDEX = [
+  { code: "I10", name: "Essential hypertension", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I10" },
+  { code: "I20", name: "Angina pectoris", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I20" },
+  { code: "I20.9", name: "Angina pectoris, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I20.9" },
+  { code: "I21", name: "Acute myocardial infarction", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I21" },
+  { code: "I21.9", name: "Acute myocardial infarction, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I21.9" },
+  { code: "I25.10", name: "Atherosclerotic heart disease", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I25.10" },
+  { code: "I50.9", name: "Heart failure, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I50.9" },
+  { code: "I48.91", name: "Atrial fibrillation", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I48.91" },
+  { code: "I63.9", name: "Cerebral infarction, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/I63.9" },
+  { code: "J44.9", name: "Chronic obstructive pulmonary disease", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/J44.9" },
+  { code: "J45.909", name: "Asthma, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/J45.909" },
+  { code: "J18.9", name: "Pneumonia, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/J18.9" },
+  { code: "E11.9", name: "Type 2 diabetes mellitus", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/E11.9" },
+  { code: "E03.9", name: "Hypothyroidism", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/E03.9" },
+  { code: "E66.9", name: "Obesity, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/E66.9" },
+  { code: "F32.9", name: "Major depressive disorder", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/F32.9" },
+  { code: "F41.1", name: "Generalized anxiety disorder", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/F41.1" },
+  { code: "F43.10", name: "Post-traumatic stress disorder", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/F43.10" },
+  { code: "F42.9", name: "Obsessive-compulsive disorder", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/F42.9" },
+  { code: "F90.9", name: "Attention-deficit hyperactivity disorder", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/F90.9" },
+  { code: "C50.9", name: "Breast cancer, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/C50.9" },
+  { code: "C34.9", name: "Lung cancer, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/C34.9" },
+  { code: "G30.9", name: "Alzheimer's disease", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/G30.9" },
+  { code: "G35", name: "Multiple sclerosis", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/G35" },
+  { code: "M54.50", name: "Low back pain", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/M54.50" },
+  { code: "N18.9", name: "Chronic kidney disease", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/N18.9" },
+  { code: "J06.9", name: "Acute upper respiratory infection", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/J06.9" },
+  { code: "R51.9", name: "Headache, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/R51.9" },
+  { code: "G47.00", name: "Insomnia, unspecified", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/G47.00" },
+  { code: "M79.7", name: "Fibromyalgia", standard: "icd-10", url: "/OrionHealth/medical-standards/icd-10/M79.7" },
+  { code: "718-7", name: "Hemoglobin A1c", standard: "loinc", url: "/OrionHealth/medical-standards/loinc/718-7" },
+  { code: "2339-0", name: "Glucose [Mass/volume] in Blood", standard: "loinc", url: "/OrionHealth/medical-standards/loinc/2339-0" },
+  { code: "17861-6", name: "Hemoglobin A1c [Mass/volume] in Blood", standard: "loinc", url: "/OrionHealth/medical-standards/loinc/17861-6" },
+  { code: "2160-0", name: "Creatinine [Mass/volume] in Serum or Plasma", standard: "loinc", url: "/OrionHealth/medical-standards/loinc/2160-0" },
+  { code: "33762-6", name: "HDL Cholesterol [Mass/volume] in Serum or Plasma", standard: "loinc", url: "/OrionHealth/medical-standards/loinc/33762-6" },
+  { code: "2823-3", name: "Potassium [Moles/volume] in Serum or Plasma", standard: "loinc", url: "/OrionHealth/medical-standards/loinc/2823-3" },
+  { code: "2951-2", name: "Sodium [Moles/volume] in Serum or Plasma", standard: "loinc", url: "/OrionHealth/medical-standards/loinc/2951-2" },
+  { code: "314076", name: "Amoxicillin 500 mg oral capsule", standard: "rxnorm", url: "/OrionHealth/medical-standards/rxnorm/314076" },
+  { code: "73211009", name: "Diabetes mellitus (disorder)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/73211009" },
+  { code: "44054006", name: "Type 2 diabetes mellitus (disorder)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/44054006" },
+  { code: "46635009", name: "Type 1 diabetes mellitus (disorder)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/46635009" },
+  { code: "59621000", name: "Essential hypertension (disorder)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/59621000" },
+  { code: "414545008", name: "Ischemic heart disease (disorder)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/414545008" },
+  { code: "53741008", name: "Myocardial infarction (disorder)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/53741008" },
+  { code: "195967001", name: "Asthma (disorder)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/195967001" },
+  { code: "13645005", name: "Chronic obstructive pulmonary disease", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/13645005" },
+  { code: "49727002", name: "Cough (finding)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/49727002" },
+  { code: "36955009", name: "Fever (finding)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/36955009" },
+  { code: "91857003", name: "Acute pain (finding)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/91857003" },
+  { code: "840539006", name: "COVID-19 (disorder)", standard: "snomed", url: "/OrionHealth/medical-standards/snomed/840539006" },
+];
+
+(function() {
+  const searchInput = document.getElementById('medical-search')?.querySelector('.med-search-input');
+  if (!searchInput) return;
+
+  const resultsDiv = document.getElementById('search-results');
+  const emptyDiv = document.getElementById('search-empty');
+  const listEl = document.getElementById('search-list');
+  const countEl = document.getElementById('result-count');
+
+  // Keyboard shortcut: Ctrl+K to focus search
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+    }
+  });
+
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    if (!query) {
+      resultsDiv.hidden = true;
+      emptyDiv.hidden = true;
+      return;
+    }
+
+    // Search both code and name fields
+    const results = SEARCH_INDEX.filter(item => {
+      return item.code.toLowerCase().includes(query) ||
+             item.name.toLowerCase().includes(query);
+    }).slice(0, 30);
+
+    if (results.length === 0) {
+      resultsDiv.hidden = true;
+      emptyDiv.hidden = false;
+      return;
+    }
+
+    emptyDiv.hidden = true;
+    resultsDiv.hidden = false;
+    countEl.textContent = results.length;
+
+    listEl.innerHTML = results.map(item => {
+      const standardColors = {
+        'icd-10': '#10B981',
+        'loinc': '#3B82F6',
+        'rxnorm': '#F59E0B',
+        'snomed': '#8B5CF6',
+      };
+      const color = standardColors[item.standard] || '#6B7280';
+      const standardLabel = item.standard.toUpperCase();
+      return `<a href="${item.url}" class="med-search-item" style="--accent: ${color}">
+        <span class="msi-standard" style="background: ${color}22; color: ${color}">${standardLabel}</span>
+        <span class="msi-code" style="color: ${color}">${highlight(item.code, query)}</span>
+        <span class="msi-name">${highlight(item.name, query)}</span>
+      </a>`;
+    }).join('');
+  });
+
+  function highlight(text, query) {
+    const idx = text.toLowerCase().indexOf(query);
+    if (idx === -1) return text;
+    return text.slice(0, idx) + '<strong>' + text.slice(idx, idx + query.length) + '</strong>' + text.slice(idx + query.length);
+  }
+})();
+</script>
+
+<style is:global>
+  .med-search { margin: 2rem 0; position: relative; }
+  .med-search-bar {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+  .med-search-bar:focus-within {
+    border-color: rgba(16,185,129,0.4);
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.08);
+    background: rgba(255,255,255,0.05);
+  }
+  .med-search-icon { color: #6B7280; flex-shrink: 0; }
+  .med-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #E5E7EB;
+    font-size: 0.9rem;
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
+  }
+  .med-search-input::placeholder { color: #6B7280; }
+  .med-search-hint {
+    padding: 0.15rem 0.4rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    color: #6B7280;
+    font-family: 'Fira Code', monospace;
+  }
+  .med-search-results {
+    margin-top: 0.5rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    background: rgba(20,20,20,0.95);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+  }
+  .med-search-info {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    color: #6B7280;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .med-search-list { max-height: 400px; overflow-y: auto; }
+  .med-search-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+  }
+  .med-search-item:hover { background: rgba(255,255,255,0.03); }
+  .med-search-item:last-child { border-bottom: none; }
+  .msi-standard {
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .msi-code { font-size: 0.85rem; font-weight: 600; font-family: 'Fira Code', monospace; min-width: 80px; }
+  .msi-name { font-size: 0.85rem; color: #9CA3AF; }
+  .msi-name strong { color: #E5E7EB; font-weight: 600; }
+  .med-search-empty {
+    margin-top: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    color: #6B7280;
+  }
+  .med-search-empty p { font-size: 0.85rem; }
+</style>
