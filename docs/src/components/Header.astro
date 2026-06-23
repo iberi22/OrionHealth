@@ -30,8 +30,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
         <a href={`${base}/vision`} class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
           {t.vision}
         </a>
-        <a href={`${base}/dashboard`} class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
-          Dashboard
+        <a href={`${base}/dashboard`} class="text-xs uppercase tracking-wider text-accent opacity-90 hover:opacity-100 font-semibold flex items-center gap-1.5 transition-all duration-500">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+          </svg>
+          ℹ Technical
         </a>
         <a href="#mission" class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
           {t.mission}
@@ -47,6 +50,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
         </a>
         <a href={lang === 'en' ? `${base}/#support` : `${base}/${lang}/#support`} class="text-xs uppercase tracking-wider text-bone-dark opacity-60 hover:opacity-100 hover:text-accent transition-all duration-500">
           {t.support}
+        </a>
+        <a href={`${base}/dashboard`} class="text-xs uppercase tracking-wider text-accent opacity-90 hover:opacity-100 font-semibold flex items-center gap-1.5 transition-all duration-500">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+          </svg>
+          {t.dashboard}
         </a>
       </nav>
 
@@ -92,8 +101,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       <a href={`${base}/vision`} class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
         {t.vision}
       </a>
-      <a href={`${base}/dashboard`} class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
-        Dashboard
+      <a href={`${base}/dashboard`} class="text-sm uppercase tracking-wider text-accent py-2 hover:text-accent transition-colors flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+        {t.dashboard}
       </a>
       <a href="#mission" class="text-sm uppercase tracking-wider text-bone-dark py-2 hover:text-accent transition-colors">
         {t.mission}
