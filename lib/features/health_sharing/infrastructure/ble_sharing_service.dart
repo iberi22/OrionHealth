@@ -73,11 +73,15 @@ class BleSharingService {
     if (!_isInitialized) await initialize();
     _stateController.add(BleSharingState.advertising(nodeId));
 
-    await _bleWrapper.startAdvertise(
-      serviceUuid: kOrionHealthServiceUuid,
-      localName: nodeId,
-      includePowerLevel: true,
-    );
+    try {
+      await _bleWrapper.startAdvertise(
+        serviceUuid: kOrionHealthServiceUuid,
+        localName: nodeId,
+        includePowerLevel: true,
+      );
+    } catch (e) {
+      _stateController.add(BleSharingState.error(e.toString()));
+    }
   }
 
   /// Stop advertising.

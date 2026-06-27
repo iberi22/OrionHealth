@@ -1,64 +1,91 @@
 # OrionHealth — Feature Audit Report
 
-> **Date:** 2026-07-15
-> **Status:** Final v1.0.0 Release Audit
-> **Total features:** 26 | **Full coverage (4-layer + tests):** 25/26 (96%)
+> **Date:** 2026-06-10  
+> **Status:** Post v1.0.0 preparation audit  
+> **Total features:** 25 | **Full coverage (4-layer + tests):** 24/25 (96%)
 
 ## Coverage Summary
 
 | Layer | Files | Lines |
 |-------|-------|-------|
-| Lib (production) | 497 | — |
-| Tests | 531 | — |
-| Golden PNGs | 177 | — |
-| Test/lib ratio | 106% | — |
+| Lib (production) | 298 | — |
+| Tests | 137 | — |
+| Golden PNGs | 86 | — |
+| Test/lib ratio | 46% | — |
 
 ## Feature-by-Feature Breakdown
 
-| Feature | Files | Tests | Goldens | Status |
-|---------|-------|-------|---------|--------|
-| about | 9 | 11 | 0 | ✅ |
-| allergies | 13 | 12 | 0 | ✅ |
-| appointments | 16 | 15 | 0 | ✅ |
-| auth | 20 | 26 | 0 | ✅ |
-| calendar_import | 14 | 14 | 4 | ⚠️ (75%) |
-| dashboard | 14 | 13 | 0 | ✅ |
-| doctor_verification | 38 | 38 | 4 | ✅ |
-| email-citas | 11 | 15 | 0 | ✅ |
-| eps_connection | 17 | 19 | 0 | ✅ |
-| health_data_import | 17 | 19 | 0 | ✅ |
-| health_record | 15 | 15 | 0 | ✅ |
-| health_sharing | 16 | 20 | 6 | ✅ |
-| home | 16 | 14 | 0 | ✅ |
-| local_agent | 35 | 36 | 0 | ✅ |
-| medical_research | 16 | 22 | 1 | ✅ |
-| medications | 11 | 10 | 0 | ✅ |
-| meditation | 18 | 20 | 2 | ✅ |
-| network | 21 | 25 | 0 | ✅ |
-| onboarding | 22 | 25 | 0 | ✅ |
-| reports | 13 | 14 | 0 | ✅ |
-| settings | 18 | 23 | 0 | ✅ |
-| sync | 21 | 21 | 3 | ✅ |
-| user_profile | 11 | 11 | 0 | ✅ |
-| vitals | 13 | 16 | 0 | ✅ |
-| voice_chat | 14 | 15 | 0 | ✅ |
+### ✅ FULL COVERAGE (24 features)
+
+| Feature | D | A | I | P | Tests | Goldens | Notes |
+|---------|---|---|---|---|-------|---------|-------|
+| about | 2 | 1 | 1 | 2 | 1 | 0 | Needs golden tests |
+| ai_assistant | 3 | 2 | 2 | 2 | 4 | 0 | **⚠️ FIXED**: chat_page imports (commit 05ba46f). 1 test duplicates removed |
+| allergies | 4 | 2 | 1 | 1 | 7 | 3 | Warning: unused `equatable` import in entities/allergy.dart |
+| appointments | 4 | 2 | 1 | 1 | 6 | 10 | ✅ Stable golden tests |
+| auth | 4 | 5 | 6 | 6 | 11 | 3 | ✅ |
+| dashboard | 3 | 2 | 1 | 1 | 4 | 1 | ✅ |
+| doctor_verification | 7 | 2 | 1 | 3 | 6 | 4 | Has legacy `data/` (4 files). Infrastructure barrel re-exports from data/ |
+| email-citas | 4 | 2 | 1 | 1 | 5 | 15 | ✅ MissingPluginException fixed |
+| eps_connection | 1 | 2 | 1 | 1 | 6 | 3 | ✅ |
+| health_data_import | 2 | 2 | 2 | 3 | 2 | 0 | Needs golden tests |
+| health_record | 6 | 2 | 4 | 3 | 5 | 5 | ✅ |
+| health_sharing | 1 | 1 | 4 | 2 | 6 | 4 | ✅ BLE documented as unsupported. ✅ WiFi mDNS discovery implemented. |
+| home | 2 | 2 | 1 | 2 | 3 | 2 | ✅ |
+| local_agent | 7 | 1 | 19 | 2 | 7 | 2 | ✅ Large infra layer (LLM models, download service) |
+| medical_assistant | 13 | 1 | 8 | 4 | 10 | 2 | ✅ |
+| medical_research | 4 | 1 | 6 | 5 | 8 | 3 | ✅ |
+| medications | 3 | 2 | 1 | 1 | 6 | 2 | ✅ |
+| onboarding | 3 | 2 | 1 | 15 | 4 | 2 | ✅ Presentation-heavy (many pages) |
+| reports | 4 | 3 | 3 | 3 | 2 | 2 | ✅ |
+| settings | 4 | 2 | 1 | 1 | 6 | 3 | ✅ |
+| ssi | 8 | 2 | 11 | 2 | 9 | 10 | ✅ SSI heavy infra |
+| sync | 6 | 2 | 1 | 1 | 7 | 0 | **⚠️ Has legacy data/ (5 files)**. Needs golden tests |
+| user_profile | 4 | 2 | 1 | 1 | 5 | 0 | Needs golden tests |
+| vitals | 4 | 2 | 1 | 2 | 5 | 10 | ✅ Stable golden tests |
+
+### ⚠️ GAP — calendar_import (score: 75%)
+
+| D | A | I | P | Tests | Goldens |
+|---|---|--|---|-------|---------|
+| 0 | 1 | 2 | 1 | 2 | 0 |
+
+- Domain layer is **empty** (was migrated to application/ in commit b381e32)
+- Domain should contain entities (CalendarImportState types are inline in cubit)
+- ✅ All existing files compile clean
+- No golden tests
 
 ## Issues Found & Fixed
 
-### 🔴 FIXED
+### 🔴 FIXED (commit 05ba46f)
 1. **app_links 7.1.1** — Incompatible with Dart SDK 3.10.0. Reverted to `^7.0.0`.
-2. **ai_assistant chat_page.dart** — Compilation errors fixed. Duplicate `AiRepositoryImpl` removed.
-3. **ai_assistant unreferenced types** — `AiAssistantState` and `AiAssistantStatus` publicly exported from cubit.
-4. **allergies** — Unused `equatable` import in `entities/allergy.dart` removed.
-5. **MissingPluginException** in `email-citas` fixed.
+2. **ai_assistant chat_page.dart** — 20 compilation errors. Root cause: duplicate `AiRepositoryImpl` (one implementing `AiRepository`, the other `IAiRepository`). Removed duplicate, fixed import path.
+3. **ai_assistant unreferenced types** — `AiAssistantState` and `AiAssistantStatus` not publicly exported from cubit. Added `export 'ai_assistant_state.dart'` to cubit.
 
-### 🟡 TO FIX — Post v1.0.0
-1. **health_sharing BLE** — `startAdvertising()` is a stub.
-2. **health_sharing WiFi** — `discoverDevices()` returns hardcoded mock data.
-3. **NFC sharing** — Uses `MethodChannel` requiring native Android setup.
-4. **Data Encryption** — Isar database encryption (128-bit AES) not yet enabled in `database_module.dart`.
+### 🟡 TO FIX — Medium Priority
+4. **allergies** — Unused `import 'package:equatable/equatable.dart'` in `entities/allergy.dart`.
+5. **health_sharing BLE** — `startAdvertising()` documented as unsupported (throws `UnsupportedError`).
+6. **health_sharing WiFi** — `discoverDevices()` uses real mDNS discovery via `bonsoir`.
+7. **NFC sharing** — Uses `MethodChannel` requiring native Android setup.
 
 ### 🟢 KNOWN — Low Priority
-1. **doctor_verification** — Legacy `data/` directory (4 files) but infrastructure barrel re-exports correctly.
-2. **sync** — Legacy `data/` directory (5 files).
-3. **Golden tests** — Coverage increased but still missing for several features.
+8. **doctor_verification** — Legacy `data/` directory (4 files) but infrastructure barrel re-exports correctly.
+9. **sync** — Legacy `data/` directory (5 files) with no infrastructure re-export.
+10. **6 features without golden tests**: about, ai_assistant, calendar_import, health_data_import, sync, user_profile.
+
+## Suggested Sprint Backlog
+
+### Sprint 1 (pre-release)
+- [ ] Fix `allergies` unused import
+- [ ] Remove golden test failure dirs from gitignore
+- [ ] Update coverage_report.md with real audit data
+
+### Sprint 2 (post-v1.0.0)
+- [ ] Migrate `sync` data/ → infrastructure/ (5 files)
+- [x] Implement real BLE advertising in health_sharing (Documented as unsupported)
+- [x] Implement real WiFi discovery in health_sharing
+- [ ] Add golden tests for 6 features without
+
+### Sprint 3
+- [ ] Add domain entities to calendar_import
+- [ ] Remove doctor_verification legacy data/
