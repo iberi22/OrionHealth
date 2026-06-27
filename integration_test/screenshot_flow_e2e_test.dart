@@ -121,6 +121,7 @@ void main() {
   group('📸 OrionHealth Screenshot Flow — Real UI', () {
     testWidgets('FLOW 01: App Launch & Onboarding', (tester) async {
       // Initialize DI and launch the real app
+      await di.getIt.reset();
       await di.configureDependencies();
       await tester.pumpWidget(const app.MyApp());
       await tester.pumpAndSettle(const Duration(seconds: 5));
@@ -168,6 +169,7 @@ void main() {
 
     testWidgets('FLOW 02: Auth & PIN Setup', (tester) async {
       // Re-initialize and navigate to auth
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -197,6 +199,7 @@ void main() {
     });
 
     testWidgets('FLOW 03: Dashboard & Home', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -224,6 +227,7 @@ void main() {
     });
 
     testWidgets('FLOW 04: Health Records', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -256,6 +260,7 @@ void main() {
     });
 
     testWidgets('FLOW 05: Reports', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -280,6 +285,7 @@ void main() {
     });
 
     testWidgets('FLOW 06: User Profile', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -303,6 +309,7 @@ void main() {
     });
 
     testWidgets('FLOW 07: AI Chat & Voice', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -355,6 +362,7 @@ void main() {
     });
 
     testWidgets('FLOW 08: Medical Research & Standards', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -403,6 +411,7 @@ void main() {
     });
 
     testWidgets('FLOW 09: Medications', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -432,6 +441,7 @@ void main() {
     });
 
     testWidgets('FLOW 10: Appointments', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -455,6 +465,7 @@ void main() {
     });
 
     testWidgets('FLOW 11: Health Sharing & P2P', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -478,6 +489,7 @@ void main() {
     });
 
     testWidgets('FLOW 12: Settings & LLM Config', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -514,6 +526,7 @@ void main() {
     });
 
     testWidgets('FLOW 13: Vital Signs Monitor', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -539,6 +552,7 @@ void main() {
     });
 
     testWidgets('FLOW 14: Network & Governance', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -575,6 +589,7 @@ void main() {
     });
 
     testWidgets('FLOW 15: Sync & FHIR Status', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
@@ -604,6 +619,7 @@ void main() {
     });
 
     testWidgets('FLOW 16: Full Navigation Tour', (tester) async {
+      await di.getIt.reset();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(const app.MyApp());
