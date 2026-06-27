@@ -2,19 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
+import 'package:bonsoir/bonsoir.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import '../domain/entities/shared_health_package.dart';
-
-/// Channel for platform-specific WiFi P2P discovery.
-const MethodChannel _wifiP2pChannel =
-    MethodChannel('orionhealth/wifi_p2p');
 
 /// WiFi Direct sharing service for health data transfer
 @lazySingleton
 class WifiDirectService {
   static const int kDefaultPort = 9124;
+  static const String _serviceType = '_orion-health._tcp';
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration transferTimeout = Duration(minutes: 3);
 
@@ -22,6 +19,9 @@ class WifiDirectService {
   http.Client? _client;
   bool _isRunning = false;
   String? _deviceIp;
+
+  BonsoirBroadcast? _broadcast;
+  BonsoirDiscovery? _discovery;
 
   final _stateController = StreamController<WifiSharingState>.broadcast();
   Stream<WifiSharingState> get stateStream => _stateController.stream;
@@ -34,13 +34,7 @@ class WifiDirectService {
     _stateController.add(WifiSharingState.ready());
   }
 
-  /// Discover nearby OrionHealth devices on the local network.
-  ///
-  /// Uses the platform channel 'orionhealth/wifi_p2p' to invoke native
-  /// WiFi P2P peer discovery. If the native handler is unavailable
-  /// (MissingPluginException) or the platform does not support WiFi
-  /// Direct (e.g. desktop / web), falls back to a multicast-DNS
-  /// discovery of OrionHealth HTTP servers listening on port [kDefaultPort].
+  /// Discover nearby OrionHealth devices on the local network using mDNS.
   ///
   /// Returns a list of discovered [WifiDirectDevice]s.
   Future<List<WifiDirectDevice>> discoverDevices({
@@ -48,116 +42,43 @@ class WifiDirectService {
   }) async {
     _stateController.add(WifiSharingState.discovering());
     final results = <WifiDirectDevice>[];
+    final completer = Completer<List<WifiDirectDevice>>();
 
     try {
-      if (Platform.isAndroid || Platform.isIOS) {
-        // Use native WiFi P2P discovery via platform channel.
-        final raw =
-            await _wifiP2pChannel.invokeMethod<List<dynamic>>('discover', {
-          'timeoutMs': timeout.inMilliseconds,
-        });
+      _discovery = BonsoirDiscovery(type: _serviceType);
 
-        if (raw != null) {
-          for (final entry in raw) {
-            if (entry is Map) {
-              results.add(WifiDirectDevice(
-                name: (entry['name'] as String?) ?? 'Unknown',
-                address: (entry['address'] as String?) ?? '',
-              ));
-            }
-          }
-        }
-      } else {
-        // Desktop / web: attempt mDNS discovery of OrionHealth servers.
-        results.addAll(await _discoverByMdns(timeout: timeout));
-      }
-    } on MissingPluginException {
-      // No native handler — fall back to mDNS discovery.
-      try {
-        results.addAll(await _discoverByMdns(timeout: timeout));
-      } catch (_) {
-        // mDNS also unavailable — return empty list.
-      }
-    } catch (e) {
-      // Discovery failed — return whatever we found so far.
-    }
-
-    _stateController.add(WifiSharingState.ready());
-    return results;
-  }
-
-  /// Discovers OrionHealth HTTP servers on the local network using
-  /// the [multicast_dns] package (available in pubspec).
-  Future<List<WifiDirectDevice>> _discoverByMdns({
-    Duration timeout = const Duration(seconds: 10),
-  }) async {
-    final devices = <WifiDirectDevice>[];
-
-    try {
-      // Use the multicast_dns package to discover _orionhealth._tcp
-      // services on the local network.
-      final rawDevices = await _mdnsDiscover(
-        serviceType: '_orionhealth._tcp.local',
-        timeout: timeout,
-      );
-      devices.addAll(rawDevices);
-    } catch (_) {
-      // mDNS failed silently.
-    }
-
-    return devices;
-  }
-
-  /// Perform mDNS discovery (wraps multicast_dns package usage).
-  ///
-  /// Returns parsed devices from discovered SRV/TXT records.
-  Future<List<WifiDirectDevice>> _mdnsDiscover({
-    required String serviceType,
-    required Duration timeout,
-  }) async {
-    final devices = <WifiDirectDevice>[];
-
-    try {
-      // Dynamic import via multicast_dns — already in pubspec.yaml.
-      final result = await _wifiP2pChannel.invokeMethod<List<dynamic>>(
-        'mdnsDiscover',
-        {'serviceType': serviceType, 'timeoutMs': timeout.inMilliseconds},
-      );
-
-      if (result != null) {
-        for (final entry in result) {
-          if (entry is Map) {
-            devices.add(WifiDirectDevice(
-              name: (entry['name'] as String?) ?? 'Unknown',
-              address: (entry['address'] as String?) ?? '',
+      _discovery!.eventStream!.listen((event) {
+        if (event is BonsoirDiscoveryServiceFoundEvent) {
+          event.service.resolve(_discovery!.serviceResolver!);
+        } else if (event is BonsoirDiscoveryServiceResolvedEvent) {
+          final service = event.service;
+          if (service != null) {
+            final host = service.hostname ?? 'localhost';
+            final port = service.port;
+            results.add(WifiDirectDevice(
+              name: service.name,
+              address: '$host:$port',
             ));
           }
         }
-      }
-    } on MissingPluginException {
-      // Native mDNS not registered — try dart:io RawDatagramSocket
-      // mDNS as a second fallback.
-      devices.addAll(await _mdnsFallback(serviceType, timeout));
+      });
+
+      await _discovery!.start();
+
+      // Wait for the timeout or until we have some results
+      await Future.delayed(timeout);
+      await _discovery!.stop();
+      _discovery = null;
+      completer.complete(results);
+    } catch (e) {
+      if (!completer.isCompleted) completer.complete(results);
     }
 
-    return devices;
+    _stateController.add(WifiSharingState.ready());
+    return completer.future;
   }
 
-  /// Pure-Dart mDNS fallback using [RawDatagramSocket].
-  ///
-  /// Sends an mDNS query for the given [serviceType] and listens
-  /// for responses on the local network.
-  Future<List<WifiDirectDevice>> _mdnsFallback(
-    String serviceType,
-    Duration timeout,
-  ) async {
-    // Best-effort: check platform channel for dns discovery.
-    // On desktop where no native handler exists, return empty list
-    // rather than mock data.
-    return [];
-  }
-
-  /// Start HTTP server to receive data
+  /// Start HTTP server to receive data and broadcast presence via mDNS.
   Future<void> startServer({int port = kDefaultPort}) async {
     if (_isRunning) return;
 
@@ -168,8 +89,18 @@ class WifiDirectService {
         shared: true,
       );
 
-      _deviceIp = '0.0.0.0:${_server!.port}';
+      final actualPort = _server!.port;
+      _deviceIp = '0.0.0.0:$actualPort';
       _isRunning = true;
+
+      // Broadcast presence via mDNS
+      final service = BonsoirService(
+        name: 'OrionShare-${DateTime.now().millisecondsSinceEpoch}',
+        type: _serviceType,
+        port: actualPort,
+      );
+      _broadcast = BonsoirBroadcast(service: service);
+      await _broadcast!.start();
 
       _stateController.add(WifiSharingState.hosting(_deviceIp!));
 
@@ -292,10 +223,16 @@ class WifiDirectService {
     }
   }
 
-  /// Stop server and clean up
+  /// Stop server, discovery, and clean up
   Future<void> stop() async {
     _client?.close();
     _client = null;
+
+    await _broadcast?.stop();
+    _broadcast = null;
+
+    await _discovery?.stop();
+    _discovery = null;
 
     await _server?.close(force: true);
     _server = null;
