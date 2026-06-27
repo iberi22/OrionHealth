@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:bonsoir/bonsoir.dart';
 import 'package:orionhealth_health/features/sync/application/sync_cubit.dart';
 import 'package:orionhealth_health/features/sync/application/sync_state.dart';
+import 'package:orionhealth_health/features/sync/domain/entities/sync_node.dart';
 import 'package:orionhealth_health/features/sync/domain/services/sync_service.dart';
 import 'package:orionhealth_health/features/sync/infrastructure/services/node_discovery_service.dart';
 
@@ -22,7 +23,7 @@ void main() {
     when(
       () => nodeDiscovery.discoveredNodes,
     ).thenAnswer((_) => const Stream.empty());
-    when(() => nodeDiscovery.currentNodes).thenReturn(<BonsoirService>[]);
+    when(() => nodeDiscovery.currentNodes).thenReturn(<SyncNode>[]);
     cubit = FhirSyncCubit(service, nodeDiscovery);
   });
 
