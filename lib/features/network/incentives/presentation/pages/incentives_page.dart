@@ -69,14 +69,18 @@ class IncentivesView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'CONTRIBUCIONES RECIENTES',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.2,
+                            const Expanded(
+                              child: Text(
+                                'CONTRIBUCIONES RECIENTES',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            const SizedBox(width: 8),
                             TextButton(
                               onPressed: () {
                                 // Show all contributions
