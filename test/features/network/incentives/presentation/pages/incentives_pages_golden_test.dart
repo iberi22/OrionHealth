@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/network/incentives/application/incentive_cubit.dart';
 import 'package:orionhealth_health/features/network/incentives/domain/entities/contribution.dart';
 import 'package:orionhealth_health/features/network/incentives/domain/entities/reward.dart';
@@ -18,11 +18,22 @@ class MockIncentiveCubit extends Mock implements IncentiveCubit {}
 void main() {
   late MockIncentiveCubit mockCubit;
 
+  setUpAll(() {
+    getIt.allowReassignment = true;
+  });
+
   setUp(() {
     mockCubit = MockIncentiveCubit();
     when(() => mockCubit.state).thenReturn(const IncentiveState());
     when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockCubit.loadIncentiveData(any())).thenAnswer((_) async {});
+    when(() => mockCubit.leaderboard()).thenAnswer((_) async {});
+    when(() => mockCubit.close()).thenAnswer((_) async {});
+    getIt.registerSingleton<IncentiveCubit>(mockCubit);
+  });
+
+  tearDown(() {
+    getIt.unregister<IncentiveCubit>();
   });
 
   final testContribution = Contribution(
