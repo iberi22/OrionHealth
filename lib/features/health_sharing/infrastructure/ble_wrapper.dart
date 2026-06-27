@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -52,44 +51,18 @@ class BleWrapper {
   /// native BLE advertising (advertise the OrionHealth service UUID
   /// so that other devices can discover and connect to this node).
   ///
-  /// On platforms where the native handler is not registered, or if
-  /// the native call fails, the method falls back silently so that
-  /// the caller can continue in receive-only (central) mode.
+  /// Peripheral mode (advertising) is not currently implemented in the
+  /// native layer. This method throws an [UnsupportedError] to notify
+  /// the caller that BLE advertising is not available.
   Future<void> startAdvertise({
     required String serviceUuid,
     required String localName,
     bool includePowerLevel = true,
   }) async {
-    if (_isAdvertising) return;
-
-    try {
-      if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
-        // Native BLE advertising — GATT server + advertisement broadcast.
-        await _bleAdvertiseChannel.invokeMethod('startAdvertising', {
-          'serviceUuid': serviceUuid,
-          'localName': localName,
-          'includePowerLevel': includePowerLevel,
-        });
-        _isAdvertising = true;
-        _advertisementStateController.add(true);
-      } else {
-        // Desktop / web: fall back to a BLE-advertisement-like stub.
-        // FlutterBluePlus on these platforms does not support peripheral
-        // mode natively. The node will still be discoverable via scan
-        // when acting as a central.
-        _isAdvertising = true;
-        _advertisementStateController.add(true);
-      }
-    } on MissingPluginException {
-      // Native plugin not registered — graceful fallback.
-      _isAdvertising = true;
-      _advertisementStateController.add(true);
-    } catch (e) {
-      // Advertising failed (e.g. Bluetooth not in right state),
-      // but we should not block the caller.
-      _isAdvertising = true;
-      _advertisementStateController.add(true);
-    }
+    throw UnsupportedError(
+      'BLE Peripheral mode (advertising) is not supported on this platform yet. '
+      'Use WiFi or NFC sharing instead.',
+    );
   }
 
   /// Stop BLE advertising.

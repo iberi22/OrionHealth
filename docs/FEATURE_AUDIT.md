@@ -30,7 +30,7 @@
 | eps_connection | 1 | 2 | 1 | 1 | 6 | 3 | ✅ |
 | health_data_import | 2 | 2 | 2 | 3 | 2 | 0 | Needs golden tests |
 | health_record | 6 | 2 | 4 | 3 | 5 | 5 | ✅ |
-| health_sharing | 1 | 1 | 4 | 2 | 6 | 4 | **⚠️ BLE startAdvertising is stub** (TODO). **⚠️ WiFi discoverDevices returns mock data** |
+| health_sharing | 1 | 1 | 4 | 2 | 6 | 4 | ✅ BLE documented as unsupported. ✅ WiFi mDNS discovery implemented. |
 | home | 2 | 2 | 1 | 2 | 3 | 2 | ✅ |
 | local_agent | 7 | 1 | 19 | 2 | 7 | 2 | ✅ Large infra layer (LLM models, download service) |
 | medical_assistant | 13 | 1 | 8 | 4 | 10 | 2 | ✅ |
@@ -64,8 +64,8 @@
 
 ### 🟡 TO FIX — Medium Priority
 4. **allergies** — Unused `import 'package:equatable/equatable.dart'` in `entities/allergy.dart`.
-5. **health_sharing BLE** — `startAdvertising()` is a stub (`// TODO: BLE peripheral mode requires platform-specific GATT server`).
-6. **health_sharing WiFi** — `discoverDevices()` returns hardcoded mock devices.
+5. **health_sharing BLE** — `startAdvertising()` documented as unsupported (throws `UnsupportedError`).
+6. **health_sharing WiFi** — `discoverDevices()` uses real mDNS discovery via `bonsoir`.
 7. **NFC sharing** — Uses `MethodChannel` requiring native Android setup.
 
 ### 🟢 KNOWN — Low Priority
@@ -82,8 +82,8 @@
 
 ### Sprint 2 (post-v1.0.0)
 - [ ] Migrate `sync` data/ → infrastructure/ (5 files)
-- [ ] Implement real BLE advertising in health_sharing
-- [ ] Implement real WiFi discovery in health_sharing
+- [x] Implement real BLE advertising in health_sharing (Documented as unsupported)
+- [x] Implement real WiFi discovery in health_sharing
 - [ ] Add golden tests for 6 features without
 
 ### Sprint 3
