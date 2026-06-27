@@ -17,21 +17,42 @@ void main() {
 
   setUp(() {
     service = WifiDirectService();
+
+    const bonsoirChannel = MethodChannel('fr.skyost.bonsoir');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(bonsoirChannel, (methodCall) async {
+      switch (methodCall.method) {
+        case 'discovery.initialize':
+        case 'discovery.start':
+        case 'discovery.stop':
+        case 'broadcast.initialize':
+        case 'broadcast.start':
+        case 'broadcast.stop':
+          return null;
+        default:
+          return null;
+      }
+    });
+
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (methodCall) async {
-          if (methodCall.method == 'mdnsDiscover') {
-            return [
-              {'name': 'OrionHealth Test Device', 'address': '127.0.0.1:9124'},
-            ];
-          }
-          return null;
-        });
+      if (methodCall.method == 'mdnsDiscover') {
+        return [
+          {'name': 'OrionHealth Test Device', 'address': '127.0.0.1:9124'},
+        ];
+      }
+      return null;
+    });
   });
 
   tearDown(() async {
-    await service.stop();
+    try {
+      await service.stop();
+    } catch (_) {}
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('fr.skyost.bonsoir'), null);
   });
 
   group('WifiDirectService', () {
