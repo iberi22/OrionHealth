@@ -1,80 +1,3 @@
-Resolving dependencies...
-Downloading packages...
-  _fe_analyzer_shared 61.0.0 (104.0.0 available)
-  analyzer 5.13.0 (14.0.0 available)
-  app_links 6.4.1 (7.2.0 available)
-  app_links_platform_interface 2.0.2 (2.0.3 available)
-  build 2.4.1 (4.0.6 available)
-  build_config 1.1.2 (1.3.0 available)
-  build_resolvers 2.4.2 (3.0.4 available)
-  build_runner 2.4.13 (2.15.0 available)
-  build_runner_core 7.3.2 (9.3.2 available)
-  connectivity_plus 7.1.1 (7.2.0 available)
-  dart_style 2.3.2 (3.1.9 available)
-  device_info_plus 12.4.0 (13.2.0 available)
-  device_info_plus_platform_interface 7.0.3 (8.1.0 available)
-  file_picker 10.3.10 (11.0.2 available)
-  firebase_database 12.4.3 (12.4.4 available)
-  flat_buffers 23.5.26 (25.9.23 available)
-  flutter_appauth 12.0.1 (12.0.2 available)
-  flutter_blue_plus 2.3.8 (2.3.9 available)
-  flutter_blue_plus_android 9.0.2 (9.0.3 available)
-  flutter_blue_plus_darwin 9.0.2 (9.0.3 available)
-  flutter_blue_plus_linux 9.0.2 (9.0.3 available)
-  flutter_blue_plus_platform_interface 9.0.2 (9.0.3 available)
-  flutter_blue_plus_web 9.0.2 (9.0.3 available)
-  flutter_gemma 0.13.6 (1.1.2 available)
-  flutter_markdown 0.7.7+1 (discontinued replaced by flutter_markdown_plus)
-  flutter_secure_storage_darwin 0.3.2 (0.4.0 available)
-  flutter_secure_storage_windows 4.1.0 (4.2.2 available)
-  freezed 2.5.2 (3.2.5 available)
-  freezed_annotation 2.4.4 (3.1.0 available)
-  googleai_dart 3.6.0 (8.0.0 available)
-  googleapis 15.0.0 (16.0.0 available)
-  image_picker_android 0.8.13+17 (0.8.13+19 available)
-  injectable 2.7.1+4 (3.0.0 available)
-  injectable_generator 2.4.2 (3.1.0 available)
-  intl 0.20.2 (0.20.3 available)
-  js 0.6.7 (0.7.2 available)
-  large_file_handler 0.3.1 (0.5.0 available)
-  local_auth_android 2.0.8 (2.0.9 available)
-< matcher 0.12.18 (was 0.12.19) (0.12.20 available)
-< meta 1.17.0 (was 1.18.0) (1.18.3 available)
-  mobile_scanner 6.0.11 (7.2.0 available)
-  mockito 5.4.4 (5.7.0 available)
-  objectbox 5.0.4 (5.3.2 available)
-  objectbox_flutter_libs 5.0.4 (5.3.2 available)
-  openai_dart 6.2.0 (7.0.0 available)
-  package_config 2.2.0 (3.0.0 available)
-  path_provider_linux 2.2.1 (2.2.2 available)
-  pointycastle 3.9.1 (4.0.0 available)
-  record 6.2.1 (7.1.0 available)
-  record_android 1.5.2 (2.1.2 available)
-  record_ios 1.2.1 (2.1.1 available)
-  record_linux 1.3.1 (2.1.0 available)
-  record_macos 1.2.2 (2.1.1 available)
-  record_platform_interface 1.6.0 (2.1.0 available)
-  record_web 1.3.0 (2.1.0 available)
-  record_windows 1.0.7 (2.2.0 available)
-  share_plus 12.0.2 (13.2.0 available)
-  share_plus_platform_interface 6.1.0 (7.1.0 available)
-  shared_preferences_android 2.4.23 (2.4.26 available)
-  shelf_web_socket 2.0.1 (3.0.0 available)
-  source_gen 1.5.0 (4.2.3 available)
-  synchronized 3.4.0+1 (3.4.1 available)
-< test_api 0.7.9 (was 0.7.11) (0.7.13 available)
-  timezone 0.9.4 (0.11.0 available)
-  url_launcher_android 6.3.30 (6.3.32 available)
-  vector_math 2.2.0 (2.4.0 available)
-  vertex_ai 0.2.1 (0.2.4 available)
-  web_socket_channel 2.4.0 (3.0.3 available)
-  win32 5.15.0 (6.3.0 available)
-  win32_registry 2.1.0 (3.0.3 available)
-  xml 6.6.1 (7.0.1 available)
-Changed 3 dependencies!
-1 package is discontinued.
-70 packages have newer versions incompatible with dependency constraints.
-Try `flutter pub outdated` for more information.
 Analyzing app...
 
 warning • A value for optional parameter 'key' isn't ever given • integration_test/about_e2e_test.dart:33:31 • unused_element_parameter
@@ -140,27 +63,7 @@ warning • A value for optional parameter 'key' isn't ever given • integratio
 warning • A value for optional parameter 'key' isn't ever given • integration_test/sync_e2e_test.dart:90:11 • unused_element_parameter
 warning • A value for optional parameter 'key' isn't ever given • integration_test/user_profile_e2e_test.dart:33:33 • unused_element_parameter
    info • Don't invoke 'print' in production code • integration_test/utils/video_recorder.dart:19:5 • avoid_print
-  error • Undefined name 'UserProfileSchema' • lib/core/di/database_module.dart:39:9 • undefined_identifier
-  error • Undefined name 'ApiAuditLogSchema' • lib/core/di/database_module.dart:40:9 • undefined_identifier
-  error • Undefined name 'ChatMessageSchema' • lib/core/di/database_module.dart:41:9 • undefined_identifier
-  error • Undefined name 'MedicalRecordSchema' • lib/core/di/database_module.dart:42:9 • undefined_identifier
-  error • Undefined name 'ReportSchema' • lib/core/di/database_module.dart:45:9 • undefined_identifier
-  error • Undefined name 'MedicationSchema' • lib/core/di/database_module.dart:46:9 • undefined_identifier
-  error • Undefined name 'AppointmentSchema' • lib/core/di/database_module.dart:47:9 • undefined_identifier
-  error • Undefined name 'AllergySchema' • lib/core/di/database_module.dart:48:9 • undefined_identifier
-  error • Undefined name 'DoctorProfileSchema' • lib/core/di/database_module.dart:49:9 • undefined_identifier
-  error • Undefined name 'DoctorRatingSchema' • lib/core/di/database_module.dart:50:9 • undefined_identifier
-  error • Undefined name 'VouchSchema' • lib/core/di/database_module.dart:51:9 • undefined_identifier
-  error • Undefined name 'ReputationBadgeSchema' • lib/core/di/database_module.dart:52:9 • undefined_identifier
-  error • Undefined name 'SecondOpinionRequestSchema' • lib/core/di/database_module.dart:53:9 • undefined_identifier
-  error • Undefined name 'SecondOpinionResponseSchema' • lib/core/di/database_module.dart:54:9 • undefined_identifier
-  error • Undefined name 'LicenseRegistryLocalSchema' • lib/core/di/database_module.dart:55:9 • undefined_identifier
-  error • Undefined name 'AppSettingsSchema' • lib/core/di/database_module.dart:56:9 • undefined_identifier
-  error • Undefined name 'LlmConfigSchema' • lib/core/di/database_module.dart:57:9 • undefined_identifier
-  error • Undefined name 'DashboardPreferenceSchema' • lib/core/di/database_module.dart:58:9 • undefined_identifier
-  error • Target of URI doesn't exist: 'injection.config.dart' • lib/core/di/injection.dart:7:8 • uri_does_not_exist
-  error • The method 'init' isn't defined for the type 'GetIt' • lib/core/di/injection.dart:19:15 • undefined_method
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/core/domain/entities/api_audit_log.g.dart' • lib/core/domain/entities/api_audit_log.dart:3:6 • uri_has_not_been_generated
+warning • Unused import: '../../features/vitals/domain/entities/vital_sign.dart' • lib/core/di/database_module.dart:13:8 • unused_import
 warning • The annotation 'ignore' can only be used on fields or getters • lib/core/domain/entities/api_audit_log.dart:48:4 • invalid_annotation_target
    info • Dangling library doc comment • lib/core/medical/anonymizer_engine.dart:19:1 • dangling_library_doc_comments
    info • Dangling library doc comment • lib/core/medical/format_preserve.dart:18:1 • dangling_library_doc_comments
@@ -245,7 +148,6 @@ warning • Unused import: 'package:orionhealth_health/core/services/tts/model_m
    info • Parameter 'player' could be a super parameter • lib/core/services/audio/audio_player_service.dart:23:3 • use_super_parameters
 warning • Dead code • lib/core/services/audio/audio_player_service.dart:48:38 • dead_code
 warning • The left operand can't be null, so the right operand is never executed • lib/core/services/audio/audio_player_service.dart:48:41 • dead_null_aware_expression
-  error • The getter 'apiAuditLogs' isn't defined for the type 'Isar' • lib/core/services/privacy_anonymizer.dart:116:21 • undefined_getter
 warning • Unused import: 'dart:math' • lib/core/services/secure_storage_service.dart:5:8 • unused_import
    info • Statements in an if should be enclosed in a block • lib/core/services/tts/sherpa_onnx_adapter.dart:104:11 • curly_braces_in_flow_control_structures
    info • The local variable '_le16' starts with an underscore • lib/core/services/tts/sherpa_onnx_adapter.dart:255:15 • no_leading_underscores_for_local_identifiers
@@ -271,86 +173,19 @@ warning • Unused import: 'dart:async' • lib/core/widgets/error_boundary.dart
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/volume_level_indicator.dart:272:39 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/volume_level_indicator.dart:286:46 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/volume_level_indicator.dart:361:54 • deprecated_member_use
-  error • Target of URI doesn't exist: 'package:orionhealth_health/features/allergies/application/bloc/allergy_bloc.freezed.dart' • lib/features/allergies/application/bloc/allergy_bloc.dart:10:6 • uri_does_not_exist
-  error • The name 'AllergyInitial' isn't a class • lib/features/allergies/application/bloc/allergy_bloc.dart:16:47 • creation_with_non_type
-  error • The name 'AllergyLoading' isn't a class • lib/features/allergies/application/bloc/allergy_bloc.dart:26:16 • creation_with_non_type
-  error • The method 'AllergyLoaded' isn't defined for the type 'AllergyBloc' • lib/features/allergies/application/bloc/allergy_bloc.dart:29:12 • undefined_method
-  error • The method 'AllergyError' isn't defined for the type 'AllergyBloc' • lib/features/allergies/application/bloc/allergy_bloc.dart:31:12 • undefined_method
-  error • The method 'AllergyError' isn't defined for the type 'AllergyBloc' • lib/features/allergies/application/bloc/allergy_bloc.dart:43:12 • undefined_method
-  error • The method 'AllergyError' isn't defined for the type 'AllergyBloc' • lib/features/allergies/application/bloc/allergy_bloc.dart:55:12 • undefined_method
-  error • Classes can only mix in mixins and classes • lib/features/allergies/application/bloc/allergy_state.dart:4:25 • mixin_of_non_class
-  error • The name 'AllergyInitial' isn't a type and can't be used in a redirected constructor • lib/features/allergies/application/bloc/allergy_state.dart:5:42 • redirect_to_non_class
-  error • The name 'AllergyLoading' isn't a type and can't be used in a redirected constructor • lib/features/allergies/application/bloc/allergy_state.dart:6:42 • redirect_to_non_class
-  error • The name 'AllergyLoaded' isn't a type and can't be used in a redirected constructor • lib/features/allergies/application/bloc/allergy_state.dart:7:64 • redirect_to_non_class
-  error • The name 'AllergyError' isn't a type and can't be used in a redirected constructor • lib/features/allergies/application/bloc/allergy_state.dart:8:54 • redirect_to_non_class
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/allergies/domain/entities/allergy.g.dart' • lib/features/allergies/domain/entities/allergy.dart:3:6 • uri_has_not_been_generated
-  error • The getter 'allergys' isn't defined for the type 'Isar' • lib/features/allergies/infrastructure/repositories/isar_allergy_repository.dart:14:18 • undefined_getter
-  error • The getter 'allergys' isn't defined for the type 'Isar' • lib/features/allergies/infrastructure/repositories/isar_allergy_repository.dart:20:19 • undefined_getter
-  error • The getter 'allergys' isn't defined for the type 'Isar' • lib/features/allergies/infrastructure/repositories/isar_allergy_repository.dart:27:19 • undefined_getter
-  error • Target of URI doesn't exist: 'package:orionhealth_health/features/appointments/application/bloc/appointment_bloc.freezed.dart' • lib/features/appointments/application/bloc/appointment_bloc.dart:9:6 • uri_does_not_exist
-  error • The name 'AppointmentInitial' isn't a class • lib/features/appointments/application/bloc/appointment_bloc.dart:15:51 • creation_with_non_type
-  error • The name 'AppointmentLoading' isn't a class • lib/features/appointments/application/bloc/appointment_bloc.dart:25:16 • creation_with_non_type
-  error • The method 'AppointmentLoaded' isn't defined for the type 'AppointmentBloc' • lib/features/appointments/application/bloc/appointment_bloc.dart:28:12 • undefined_method
-  error • The method 'AppointmentError' isn't defined for the type 'AppointmentBloc' • lib/features/appointments/application/bloc/appointment_bloc.dart:30:12 • undefined_method
-  error • The method 'AppointmentError' isn't defined for the type 'AppointmentBloc' • lib/features/appointments/application/bloc/appointment_bloc.dart:42:12 • undefined_method
-  error • The method 'AppointmentError' isn't defined for the type 'AppointmentBloc' • lib/features/appointments/application/bloc/appointment_bloc.dart:54:12 • undefined_method
-  error • Classes can only mix in mixins and classes • lib/features/appointments/application/bloc/appointment_state.dart:4:29 • mixin_of_non_class
-  error • The name 'AppointmentInitial' isn't a type and can't be used in a redirected constructor • lib/features/appointments/application/bloc/appointment_state.dart:5:46 • redirect_to_non_class
-  error • The name 'AppointmentLoading' isn't a type and can't be used in a redirected constructor • lib/features/appointments/application/bloc/appointment_state.dart:6:46 • redirect_to_non_class
-  error • The name 'AppointmentLoaded' isn't a type and can't be used in a redirected constructor • lib/features/appointments/application/bloc/appointment_state.dart:7:75 • redirect_to_non_class
-  error • The name 'AppointmentError' isn't a type and can't be used in a redirected constructor • lib/features/appointments/application/bloc/appointment_state.dart:8:58 • redirect_to_non_class
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/appointments/domain/entities/appointment.g.dart' • lib/features/appointments/domain/entities/appointment.dart:3:6 • uri_has_not_been_generated
-  error • The getter 'appointments' isn't defined for the type 'Isar' • lib/features/appointments/infrastructure/repositories/isar_appointment_repository.dart:14:24 • undefined_getter
-  error • The getter 'appointments' isn't defined for the type 'Isar' • lib/features/appointments/infrastructure/repositories/isar_appointment_repository.dart:20:19 • undefined_getter
-  error • The getter 'appointments' isn't defined for the type 'Isar' • lib/features/appointments/infrastructure/repositories/isar_appointment_repository.dart:27:19 • undefined_getter
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/auth/domain/entities/auth_credentials.g.dart' • lib/features/auth/domain/entities/auth_credentials.dart:3:6 • uri_has_not_been_generated
-  error • The getter 'authCredentials' isn't defined for the type 'Isar' • lib/features/auth/infrastructure/repositories/auth_repository_impl.dart:14:24 • undefined_getter
-  error • The getter 'authCredentials' isn't defined for the type 'Isar' • lib/features/auth/infrastructure/repositories/auth_repository_impl.dart:20:19 • undefined_getter
-  error • The getter 'authCredentials' isn't defined for the type 'Isar' • lib/features/auth/infrastructure/repositories/auth_repository_impl.dart:27:19 • undefined_getter
    info • Constructors for public widgets should have a named 'key' parameter • lib/features/auth/presentation/auth_gate.dart:54:9 • use_key_in_widget_constructors
    info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/auth/presentation/pages/share_medical_data_page.dart:139:19 • deprecated_member_use
    info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/auth/presentation/pages/share_medical_data_page.dart:140:19 • deprecated_member_use
-  error • The getter 'dashboardPreferences' isn't defined for the type 'Isar' • lib/features/dashboard/data/datasources/dashboard_local_datasource.dart:14:36 • undefined_getter
-  error • The getter 'dashboardPreferences' isn't defined for the type 'Isar' • lib/features/dashboard/data/datasources/dashboard_local_datasource.dart:17:21 • undefined_getter
-  error • The getter 'dashboardPreferences' isn't defined for the type 'Isar' • lib/features/dashboard/data/datasources/dashboard_local_datasource.dart:19:21 • undefined_getter
-  error • The getter 'dashboardPreferences' isn't defined for the type 'Isar' • lib/features/dashboard/data/datasources/dashboard_local_datasource.dart:25:30 • undefined_getter
 warning • The value of the field '_localDataSource' isn't used • lib/features/dashboard/data/repositories/dashboard_repository_impl.dart:17:34 • unused_field
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/dashboard/domain/entities/dashboard_preference.g.dart' • lib/features/dashboard/domain/entities/dashboard_preference.dart:3:6 • uri_has_not_been_generated
 warning • The library 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart' doesn't export a member with the hidden name 'getIt' • lib/features/dashboard/presentation/pages/home_dashboard_page.dart:9:104 • undefined_hidden_name
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.g.dart' • lib/features/doctor_verification/domain/entities/doctor_profile.dart:3:6 • uri_has_not_been_generated
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_rating.g.dart' • lib/features/doctor_verification/domain/entities/doctor_rating.dart:4:6 • uri_has_not_been_generated
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/doctor_verification/domain/entities/license_registry.g.dart' • lib/features/doctor_verification/domain/entities/license_registry.dart:3:6 • uri_has_not_been_generated
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/doctor_verification/domain/entities/reputation_badge.g.dart' • lib/features/doctor_verification/domain/entities/reputation_badge.dart:3:6 • uri_has_not_been_generated
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/doctor_verification/domain/entities/second_opinion.g.dart' • lib/features/doctor_verification/domain/entities/second_opinion.dart:3:6 • uri_has_not_been_generated
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/doctor_verification/domain/entities/vouch.g.dart' • lib/features/doctor_verification/domain/entities/vouch.dart:3:6 • uri_has_not_been_generated
 warning • The value of the local variable 'totalVerifiedLicenses' isn't used • lib/features/doctor_verification/domain/services/badge_calculator.dart:27:11 • unused_local_variable
-  error • The getter 'licenseRegistryLocals' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/datasources/license_registry_local.dart:16:32 • undefined_getter
-  error • The getter 'licenseRegistryLocals' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/datasources/license_registry_local.dart:28:22 • undefined_getter
-  error • The getter 'licenseRegistryLocals' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/datasources/license_registry_local.dart:37:33 • undefined_getter
    info • Dangling library doc comment • lib/features/doctor_verification/infrastructure/infrastructure.dart:1:1 • dangling_library_doc_comments
-  error • The getter 'doctorProfiles' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository.dart:14:24 • undefined_getter
-  error • The getter 'doctorProfiles' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository.dart:20:19 • undefined_getter
-  error • The getter 'doctorProfiles' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository.dart:27:19 • undefined_getter
-  error • The getter 'doctorProfiles' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository.dart:33:24 • undefined_getter
-  error • The getter 'doctorRatings' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_rating_repository.dart:15:19 • undefined_getter
-  error • The getter 'doctorRatings' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_rating_repository.dart:21:24 • undefined_getter
-  error • The getter 'secondOpinionRequests' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_second_opinion_repository.dart:15:18 • undefined_getter
-  error • The getter 'secondOpinionResponses' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_second_opinion_repository.dart:22:18 • undefined_getter
-  error • The getter 'secondOpinionRequests' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_second_opinion_repository.dart:28:17 • undefined_getter
-  error • The getter 'secondOpinionResponses' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_second_opinion_repository.dart:33:17 • undefined_getter
-  error • The getter 'secondOpinionRequests' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_second_opinion_repository.dart:38:17 • undefined_getter
-  error • The getter 'vouchs' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_vouch_repository.dart:14:17 • undefined_getter
-  error • The getter 'vouchs' isn't defined for the type 'Isar' • lib/features/doctor_verification/infrastructure/repositories/isar_vouch_repository.dart:20:18 • undefined_getter
    info • The imported package 'timezone' isn't a dependency of the importing package • lib/features/email-citas/infrastructure/repositories/email_repository_impl.dart:6:8 • depend_on_referenced_packages
 warning • The operand can't be 'null', so the condition is always 'true' • lib/features/eps_connection/infrastructure/oauth_repository.dart:34:18 • unnecessary_null_comparison
 warning • Dead code • lib/features/eps_connection/infrastructure/oauth_repository.dart:72:7 • dead_code
 warning • The operand can't be 'null', so the condition is always 'true' • lib/features/eps_connection/infrastructure/oauth_repository.dart:195:18 • unnecessary_null_comparison
 warning • Dead code • lib/features/eps_connection/infrastructure/oauth_repository.dart:213:7 • dead_code
 warning • Unused import: '../../domain/entities/eps_provider.dart' • lib/features/eps_connection/presentation/pages/eps_connection_page.dart:5:8 • unused_import
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/health_record/domain/entities/medical_attachment.g.dart' • lib/features/health_record/domain/entities/medical_attachment.dart:3:6 • uri_has_not_been_generated
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/health_record/domain/entities/medical_record.g.dart' • lib/features/health_record/domain/entities/medical_record.dart:4:6 • uri_has_not_been_generated
-  error • The getter 'medicalRecords' isn't defined for the type 'Isar' • lib/features/health_record/infrastructure/repositories/health_record_repository_impl.dart:15:19 • undefined_getter
-  error • The getter 'medicalRecords' isn't defined for the type 'Isar' • lib/features/health_record/infrastructure/repositories/health_record_repository_impl.dart:21:24 • undefined_getter
 warning • Unused import: 'dart:convert' • lib/features/health_sharing/data/datasources/health_sharing_local_datasource.dart:1:8 • unused_import
 warning • The value of the field '_isar' isn't used • lib/features/health_sharing/data/datasources/health_sharing_local_datasource.dart:8:14 • unused_field
 warning • The value of the field '_remoteDataSource' isn't used • lib/features/health_sharing/data/repositories/health_sharing_repository_impl.dart:7:39 • unused_field
@@ -358,28 +193,14 @@ warning • The value of the field '_remoteDataSource' isn't used • lib/featur
    info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/health_sharing/presentation/pages/share_page.dart:144:17 • deprecated_member_use
 warning • The value of the field '_dio' isn't used • lib/features/home/infrastructure/datasources/home_remote_datasource.dart:10:13 • unused_field
    info • 'value' is deprecated and shouldn't be used. Use component accessors like .r or .g, or toARGB32 for an explicit conversion • lib/features/home/infrastructure/models/home_module_model.dart:28:22 • deprecated_member_use
-  error • The getter 'chatMessages' isn't defined for the type 'Isar' • lib/features/local_agent/data/datasources/chat_message_local_datasource.dart:11:13 • undefined_getter
-  error • The getter 'chatMessages' isn't defined for the type 'Isar' • lib/features/local_agent/data/datasources/chat_message_local_datasource.dart:14:40 • undefined_getter
-  error • The getter 'chatMessages' isn't defined for the type 'Isar' • lib/features/local_agent/data/datasources/chat_message_local_datasource.dart:17:40 • undefined_getter
 warning • The value of the local variable 'dir' isn't used • lib/features/local_agent/data/datasources/local_model_local_datasource.dart:8:11 • unused_local_variable
 warning • The value of the local variable 'dirPath' isn't used • lib/features/local_agent/data/datasources/local_model_local_datasource.dart:22:11 • unused_local_variable
 warning • The value of the local variable 'dirPath' isn't used • lib/features/local_agent/data/datasources/local_model_local_datasource.dart:27:11 • unused_local_variable
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/local_agent/domain/chat_message.g.dart' • lib/features/local_agent/domain/chat_message.dart:3:6 • uri_has_not_been_generated
    info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:84:9 • use_null_aware_elements
    info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:85:9 • use_null_aware_elements
    info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:86:9 • use_null_aware_elements
    info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:87:9 • use_null_aware_elements
    info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/local_agent/domain/entities/medical_code.dart:88:9 • use_null_aware_elements
-warning • Unused import: '../../../health_record/domain/entities/medical_record.dart' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:12:8 • unused_import
-warning • Unused import: '../../../medications/domain/entities/medication.dart' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:13:8 • unused_import
-warning • Unused import: '../../../allergies/domain/entities/allergy.dart' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:14:8 • unused_import
-warning • Unused import: '../../../vitals/domain/entities/vital_sign.dart' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:15:8 • unused_import
-warning • Unused import: '../../../appointments/domain/entities/appointment.dart' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:16:8 • unused_import
-  error • The getter 'medicalRecords' isn't defined for the type 'Isar' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:72:30 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:75:28 • undefined_getter
-  error • The getter 'allergys' isn't defined for the type 'Isar' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:78:25 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:81:23 • undefined_getter
-  error • The getter 'appointments' isn't defined for the type 'Isar' • lib/features/local_agent/infrastructure/services/patient_context_indexer.dart:84:29 • undefined_getter
 warning • The operand can't be 'null', so the condition is always 'true' • lib/features/medical_research/presentation/pages/medical_research_page.dart:313:57 • unnecessary_null_comparison
 warning • The '!' will have no effect because the receiver can't be null • lib/features/medical_research/presentation/pages/medical_research_page.dart:313:95 • unnecessary_non_null_assertion
 warning • The '!' will have no effect because the receiver can't be null • lib/features/medical_research/presentation/pages/medical_research_page.dart:321:56 • unnecessary_non_null_assertion
@@ -387,100 +208,21 @@ warning • The '!' will have no effect because the receiver can't be null • l
    info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/medical_research/presentation/pages/scraper_config_page.dart:53:19 • deprecated_member_use
    info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/medical_research/presentation/pages/scraper_config_page.dart:59:19 • deprecated_member_use
    info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/medical_research/presentation/pages/scraper_config_page.dart:65:19 • deprecated_member_use
-  error • Target of URI doesn't exist: 'package:orionhealth_health/features/medications/application/bloc/medication_bloc.freezed.dart' • lib/features/medications/application/bloc/medication_bloc.dart:9:6 • uri_does_not_exist
-  error • The name 'MedicationInitial' isn't a class • lib/features/medications/application/bloc/medication_bloc.dart:15:50 • creation_with_non_type
-  error • The name 'MedicationLoading' isn't a class • lib/features/medications/application/bloc/medication_bloc.dart:25:16 • creation_with_non_type
-  error • The method 'MedicationLoaded' isn't defined for the type 'MedicationBloc' • lib/features/medications/application/bloc/medication_bloc.dart:28:12 • undefined_method
-  error • The method 'MedicationError' isn't defined for the type 'MedicationBloc' • lib/features/medications/application/bloc/medication_bloc.dart:30:12 • undefined_method
-  error • The method 'MedicationError' isn't defined for the type 'MedicationBloc' • lib/features/medications/application/bloc/medication_bloc.dart:42:12 • undefined_method
-  error • The method 'MedicationError' isn't defined for the type 'MedicationBloc' • lib/features/medications/application/bloc/medication_bloc.dart:54:12 • undefined_method
-  error • Classes can only mix in mixins and classes • lib/features/medications/application/bloc/medication_state.dart:4:28 • mixin_of_non_class
-  error • The name 'MedicationInitial' isn't a type and can't be used in a redirected constructor • lib/features/medications/application/bloc/medication_state.dart:5:45 • redirect_to_non_class
-  error • The name 'MedicationLoading' isn't a type and can't be used in a redirected constructor • lib/features/medications/application/bloc/medication_state.dart:6:45 • redirect_to_non_class
-  error • The name 'MedicationLoaded' isn't a type and can't be used in a redirected constructor • lib/features/medications/application/bloc/medication_state.dart:7:72 • redirect_to_non_class
-  error • The name 'MedicationError' isn't a type and can't be used in a redirected constructor • lib/features/medications/application/bloc/medication_state.dart:8:57 • redirect_to_non_class
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/medications/domain/entities/medication.g.dart' • lib/features/medications/domain/entities/medication.dart:3:6 • uri_has_not_been_generated
-  error • The getter 'medications' isn't defined for the type 'Isar' • lib/features/medications/infrastructure/repositories/isar_medication_repository.dart:14:24 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • lib/features/medications/infrastructure/repositories/isar_medication_repository.dart:20:19 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • lib/features/medications/infrastructure/repositories/isar_medication_repository.dart:27:19 • undefined_getter
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/meditation/presentation/meditation_page.dart:163:35 • deprecated_member_use
    info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/network/governance/presentation/pages/create_proposal_page.dart:45:17 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/network/governance/presentation/pages/proposal_detail_page.dart:107:48 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/network/governance/presentation/widgets/proposal_card.dart:95:22 • deprecated_member_use
    info • Don't invoke 'print' in production code • lib/features/onboarding/main_preview.dart:24:11 • avoid_print
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/reports/domain/entities/report.g.dart' • lib/features/reports/domain/entities/report.dart:3:6 • uri_has_not_been_generated
-  error • The getter 'reports' isn't defined for the type 'Isar' • lib/features/reports/infrastructure/repositories/isar_report_repository.dart:15:19 • undefined_getter
-  error • The getter 'reports' isn't defined for the type 'Isar' • lib/features/reports/infrastructure/repositories/isar_report_repository.dart:21:24 • undefined_getter
-  error • The getter 'reports' isn't defined for the type 'Isar' • lib/features/reports/infrastructure/repositories/isar_report_repository.dart:27:19 • undefined_getter
-  error • The getter 'reports' isn't defined for the type 'Isar' • lib/features/reports/infrastructure/repositories/isar_report_repository.dart:33:24 • undefined_getter
-  error • The getter 'llmConfigs' isn't defined for the type 'Isar' • lib/features/settings/data/datasources/settings_local_datasource.dart:12:13 • undefined_getter
-  error • The getter 'llmConfigs' isn't defined for the type 'Isar' • lib/features/settings/data/datasources/settings_local_datasource.dart:15:40 • undefined_getter
-  error • The getter 'appSettings' isn't defined for the type 'Isar' • lib/features/settings/data/datasources/settings_local_datasource.dart:18:13 • undefined_getter
-  error • The getter 'appSettings' isn't defined for the type 'Isar' • lib/features/settings/data/datasources/settings_local_datasource.dart:21:40 • undefined_getter
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/settings/domain/entities/app_settings.g.dart' • lib/features/settings/domain/entities/app_settings.dart:3:6 • uri_has_not_been_generated
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/settings/domain/entities/llm_config.g.dart' • lib/features/settings/domain/entities/llm_config.dart:3:6 • uri_has_not_been_generated
 warning • Unused import: '../domain/entities/sync_node.dart' • lib/features/sync/application/sync_cubit.dart:6:8 • unused_import
    info • Don't invoke 'print' in production code • lib/features/sync/domain/usecases/distributed_cache_usecase.dart:17:7 • avoid_print
    info • Don't invoke 'print' in production code • lib/features/sync/domain/usecases/distributed_cache_usecase.dart:27:7 • avoid_print
-warning • Unused import: '../../../user_profile/domain/entities/user_profile.dart' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:13:8 • unused_import
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:67:41 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:75:21 • undefined_getter
    info • Don't invoke 'print' in production code • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:78:7 • avoid_print
-  error • The getter 'medications' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:130:42 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:138:25 • undefined_getter
-  error • The getter 'allergys' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:143:42 • undefined_getter
-  error • The getter 'allergys' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:150:25 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:155:42 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:163:25 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:167:39 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:171:25 • undefined_getter
    info • Don't invoke 'print' in production code • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:178:7 • avoid_print
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/sync/infrastructure/repositories/sync_repository_impl.dart:194:33 • undefined_getter
 warning • Unnecessary cast • lib/features/sync/infrastructure/services/rda_parser.dart:126:17 • unnecessary_cast
 warning • The '!' will have no effect because the receiver can't be null • lib/features/sync/infrastructure/services/rda_parser.dart:187:26 • unnecessary_non_null_assertion
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/user_profile/data/datasources/user_profile_local_datasource.dart:11:13 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/user_profile/data/datasources/user_profile_local_datasource.dart:14:40 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/user_profile/data/datasources/user_profile_local_datasource.dart:17:40 • undefined_getter
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.g.dart' • lib/features/user_profile/domain/entities/user_profile.dart:3:6 • uri_has_not_been_generated
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/user_profile/infrastructure/repositories/user_profile_repository_impl.dart:14:24 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/user_profile/infrastructure/repositories/user_profile_repository_impl.dart:20:19 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • lib/features/user_profile/infrastructure/repositories/user_profile_repository_impl.dart:27:19 • undefined_getter
-  error • Target of URI doesn't exist: 'package:orionhealth_health/features/vitals/application/bloc/vital_sign_bloc.freezed.dart' • lib/features/vitals/application/bloc/vital_sign_bloc.dart:9:6 • uri_does_not_exist
-  error • The name 'VitalSignInitial' isn't a class • lib/features/vitals/application/bloc/vital_sign_bloc.dart:15:49 • creation_with_non_type
-  error • The name 'VitalSignLoading' isn't a class • lib/features/vitals/application/bloc/vital_sign_bloc.dart:26:16 • creation_with_non_type
-  error • The method 'VitalSignLoaded' isn't defined for the type 'VitalSignBloc' • lib/features/vitals/application/bloc/vital_sign_bloc.dart:29:12 • undefined_method
-  error • The method 'VitalSignError' isn't defined for the type 'VitalSignBloc' • lib/features/vitals/application/bloc/vital_sign_bloc.dart:31:12 • undefined_method
-  error • The name 'VitalSignLoading' isn't a class • lib/features/vitals/application/bloc/vital_sign_bloc.dart:39:16 • creation_with_non_type
-  error • The method 'VitalSignLatestLoaded' isn't defined for the type 'VitalSignBloc' • lib/features/vitals/application/bloc/vital_sign_bloc.dart:42:12 • undefined_method
-  error • The method 'VitalSignError' isn't defined for the type 'VitalSignBloc' • lib/features/vitals/application/bloc/vital_sign_bloc.dart:44:12 • undefined_method
-  error • The method 'VitalSignError' isn't defined for the type 'VitalSignBloc' • lib/features/vitals/application/bloc/vital_sign_bloc.dart:56:12 • undefined_method
-  error • The method 'VitalSignError' isn't defined for the type 'VitalSignBloc' • lib/features/vitals/application/bloc/vital_sign_bloc.dart:68:12 • undefined_method
-  error • Classes can only mix in mixins and classes • lib/features/vitals/application/bloc/vital_sign_state.dart:4:27 • mixin_of_non_class
-  error • The name 'VitalSignInitial' isn't a type and can't be used in a redirected constructor • lib/features/vitals/application/bloc/vital_sign_state.dart:5:44 • redirect_to_non_class
-  error • The name 'VitalSignLoading' isn't a type and can't be used in a redirected constructor • lib/features/vitals/application/bloc/vital_sign_state.dart:6:44 • redirect_to_non_class
-  error • The name 'VitalSignLoaded' isn't a type and can't be used in a redirected constructor • lib/features/vitals/application/bloc/vital_sign_state.dart:7:65 • redirect_to_non_class
-  error • The name 'VitalSignLatestLoaded' isn't a type and can't be used in a redirected constructor • lib/features/vitals/application/bloc/vital_sign_state.dart:8:86 • redirect_to_non_class
-  error • The name 'VitalSignError' isn't a type and can't be used in a redirected constructor • lib/features/vitals/application/bloc/vital_sign_state.dart:9:56 • redirect_to_non_class
-  error • Target of URI hasn't been generated: 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.g.dart' • lib/features/vitals/domain/entities/vital_sign.dart:3:6 • uri_has_not_been_generated
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • lib/features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart:15:19 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • lib/features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart:23:19 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • lib/features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart:29:24 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • lib/features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart:37:34 • undefined_getter
    info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/vitals/presentation/pages/vitals_page.dart:366:19 • use_build_context_synchronously
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/voice_chat/presentation/pages/voice_chat_page.dart:140:27 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/voice_chat/presentation/widgets/voice_input_button.dart:42:71 • deprecated_member_use
-  error • Target of URI doesn't exist: 'app_localizations_id.dart' • lib/l10n/app_localizations.dart:15:8 • uri_does_not_exist
-  error • Target of URI doesn't exist: 'app_localizations_mr.dart' • lib/l10n/app_localizations.dart:20:8 • uri_does_not_exist
-  error • Target of URI doesn't exist: 'app_localizations_pcm.dart' • lib/l10n/app_localizations.dart:22:8 • uri_does_not_exist
-  error • Target of URI doesn't exist: 'app_localizations_te.dart' • lib/l10n/app_localizations.dart:27:8 • uri_does_not_exist
-  error • Target of URI doesn't exist: 'app_localizations_ur.dart' • lib/l10n/app_localizations.dart:30:8 • uri_does_not_exist
-  error • Target of URI doesn't exist: 'app_localizations_yue.dart' • lib/l10n/app_localizations.dart:32:8 • uri_does_not_exist
-  error • The function 'AppLocalizationsId' isn't defined • lib/l10n/app_localizations.dart:841:14 • undefined_function
-  error • The function 'AppLocalizationsMr' isn't defined • lib/l10n/app_localizations.dart:851:14 • undefined_function
-  error • The function 'AppLocalizationsPcm' isn't defined • lib/l10n/app_localizations.dart:855:14 • undefined_function
-  error • The function 'AppLocalizationsTe' isn't defined • lib/l10n/app_localizations.dart:865:14 • undefined_function
-  error • The function 'AppLocalizationsUr' isn't defined • lib/l10n/app_localizations.dart:871:14 • undefined_function
-  error • The function 'AppLocalizationsYue' isn't defined • lib/l10n/app_localizations.dart:875:14 • undefined_function
    info • The imported package 'timezone' isn't a dependency of the importing package • lib/main.dart:7:8 • depend_on_referenced_packages
    info • Library names are not necessary • packages/health_wallet/lib/health_wallet.dart:7:9 • unnecessary_library_name
    info • Uses 'await' on an instance of 'SecretKeyData', which is not a subtype of 'Future' • packages/health_wallet/lib/services/encryption_service.dart:97:17 • await_only_futures
@@ -1001,7 +743,6 @@ warning • Unused import: 'dart:async' • test/core/services/audio/audio_recor
    info • The import of 'dart:typed_data' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/services.dart' • test/core/services/audio/audio_recorder_service_test.dart:3:8 • unnecessary_import
    info • Don't return 'null' from a function with a return type of 'void' • test/core/services/audio/audio_recorder_service_test.dart:27:84 • avoid_returning_null_for_void
    info • Don't return 'null' from a function with a return type of 'void' • test/core/services/audio/audio_recorder_service_test.dart:29:55 • avoid_returning_null_for_void
-  error • The getter 'apiAuditLogs' isn't defined for the type 'MockIsar' • test/core/services/privacy_anonymizer_test.dart:27:25 • undefined_getter
 warning • Unused import: 'dart:convert' • test/core/services/tts/kitten_bridge_adapter_test.dart:2:8 • unused_import
    info • Don't return 'null' from a function with a return type of 'void' • test/core/services/tts/kitten_bridge_adapter_test.dart:40:52 • avoid_returning_null_for_void
    info • Don't return 'null' from a function with a return type of 'void' • test/core/services/tts/kitten_bridge_adapter_test.dart:41:52 • avoid_returning_null_for_void
@@ -1010,42 +751,13 @@ warning • Unused import: 'package:flutter/services.dart' • test/core/service
    info • The import of 'dart:typed_data' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/services.dart' • test/core/utils/cache_manager_test.dart:2:8 • unnecessary_import
 warning • Unused import: 'package:path_provider/path_provider.dart' • test/core/utils/cache_manager_test.dart:6:8 • unused_import
 warning • Unused import: 'package:flutter/services.dart' • test/core/utils/feedback_manager_test.dart:2:8 • unused_import
-  error • The name 'AllergyInitial' isn't a class • test/features/allergies/application/bloc/allergy_bloc_test.dart:33:39 • creation_with_non_type
-  error • The name 'AllergyLoading' isn't a class • test/features/allergies/application/bloc/allergy_bloc_test.dart:45:19 • creation_with_non_type
-  error • The function 'AllergyLoaded' isn't defined • test/features/allergies/application/bloc/allergy_bloc_test.dart:46:13 • undefined_function
-  error • The name 'AllergyLoading' isn't a class • test/features/allergies/application/bloc/allergy_bloc_test.dart:59:19 • creation_with_non_type
-  error • The name 'AllergyError' isn't a class • test/features/allergies/application/bloc/allergy_bloc_test.dart:60:19 • creation_with_non_type
-  error • The getter 'allergys' isn't defined for the type 'MockIsar' • test/features/allergies/infrastructure/repositories/isar_allergy_repository_mock_test.dart:33:25 • undefined_getter
-  error • The getter 'allergys' isn't defined for the type 'MockIsar' • test/features/allergies/infrastructure/repositories/isar_allergy_repository_test.dart:33:25 • undefined_getter
 warning • Unused import: 'package:orionhealth_health/core/theme/cyber_theme.dart' • test/features/allergies/presentation/pages/allergy_form_golden_test.dart:4:8 • unused_import
-  error • The name 'AppointmentInitial' isn't a class • test/features/appointments/application/bloc/appointment_bloc_test.dart:39:43 • creation_with_non_type
-  error • The name 'AppointmentLoading' isn't a class • test/features/appointments/application/bloc/appointment_bloc_test.dart:51:19 • creation_with_non_type
-  error • The function 'AppointmentLoaded' isn't defined • test/features/appointments/application/bloc/appointment_bloc_test.dart:52:13 • undefined_function
-  error • The name 'AppointmentLoading' isn't a class • test/features/appointments/application/bloc/appointment_bloc_test.dart:65:19 • creation_with_non_type
-  error • The name 'AppointmentError' isn't a class • test/features/appointments/application/bloc/appointment_bloc_test.dart:66:19 • creation_with_non_type
-  error • The getter 'appointments' isn't defined for the type 'MockIsar' • test/features/appointments/infrastructure/repositories/isar_appointment_repository_mock_test.dart:36:25 • undefined_getter
-  error • The getter 'appointments' isn't defined for the type 'MockIsar' • test/features/appointments/infrastructure/repositories/isar_appointment_repository_test.dart:33:25 • undefined_getter
 warning • Unused import: 'package:flutter/material.dart' • test/features/appointments/presentation/golden/appointments_page_golden_test.dart:1:8 • unused_import
-  error • Target of URI doesn't exist: 'auth_cubit_test.mocks.dart' • test/features/auth/application/bloc/auth_cubit_test.dart:12:8 • uri_does_not_exist
-  error • Undefined class 'MockAuthRepository' • test/features/auth/application/bloc/auth_cubit_test.dart:17:8 • undefined_class
-  error • Undefined class 'MockEncryptionService' • test/features/auth/application/bloc/auth_cubit_test.dart:18:8 • undefined_class
-  error • Undefined class 'MockBiometricService' • test/features/auth/application/bloc/auth_cubit_test.dart:19:8 • undefined_class
-  error • The function 'MockAuthRepository' isn't defined • test/features/auth/application/bloc/auth_cubit_test.dart:22:22 • undefined_function
-  error • The function 'MockEncryptionService' isn't defined • test/features/auth/application/bloc/auth_cubit_test.dart:23:22 • undefined_function
-  error • The function 'MockBiometricService' isn't defined • test/features/auth/application/bloc/auth_cubit_test.dart:24:21 • undefined_function
-warning • This function has a nullable return type of 'FutureOr<Object?>', but ends without returning a value • test/features/auth/application/bloc/auth_cubit_test.dart:91:70 • body_might_complete_normally_nullable
-warning • This function has a nullable return type of 'FutureOr<Object?>', but ends without returning a value • test/features/auth/application/bloc/auth_cubit_test.dart:115:70 • body_might_complete_normally_nullable
-  error • The getter 'authCredentials' isn't defined for the type 'MockIsar' • test/features/auth/infrastructure/repositories/auth_repository_impl_test.dart:33:25 • undefined_getter
-  error • The getter 'authCredentials' isn't defined for the type 'MockIsar' • test/features/auth/infrastructure/repositories/auth_repository_unit_test.dart:32:25 • undefined_getter
-  error • Target of URI doesn't exist: 'auth_gate_test.mocks.dart' • test/features/auth/presentation/auth_gate_test.dart:23:8 • uri_does_not_exist
-  error • Undefined class 'MockUserProfileRepository' • test/features/auth/presentation/auth_gate_test.dart:28:8 • undefined_class
-  error • Undefined class 'MockAuthRepository' • test/features/auth/presentation/auth_gate_test.dart:29:8 • undefined_class
-  error • Undefined class 'MockEncryptionService' • test/features/auth/presentation/auth_gate_test.dart:30:8 • undefined_class
-  error • Undefined class 'MockBiometricService' • test/features/auth/presentation/auth_gate_test.dart:31:8 • undefined_class
-  error • The function 'MockUserProfileRepository' isn't defined • test/features/auth/presentation/auth_gate_test.dart:34:33 • undefined_function
-  error • The function 'MockAuthRepository' isn't defined • test/features/auth/presentation/auth_gate_test.dart:35:26 • undefined_function
-  error • The function 'MockEncryptionService' isn't defined • test/features/auth/presentation/auth_gate_test.dart:36:29 • undefined_function
-  error • The function 'MockBiometricService' isn't defined • test/features/auth/presentation/auth_gate_test.dart:37:28 • undefined_function
+warning • Unused import: 'dart:async' • test/features/auth/application/bloc/auth_cubit_test.dart:1:8 • unused_import
+warning • Unused import: 'dart:typed_data' • test/features/auth/presentation/auth_gate_test.dart:2:8 • unused_import
+warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/auth/presentation/auth_gate_test.dart:4:8 • unused_import
+warning • Unused import: 'package:local_auth/local_auth.dart' • test/features/auth/presentation/auth_gate_test.dart:7:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/auth/application/bloc/auth_state.dart' • test/features/auth/presentation/auth_gate_test.dart:11:8 • unused_import
 warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/auth/presentation/auth_methods_page_golden_test.dart:5:8 • unused_import
 warning • Unused import: 'package:flutter/material.dart' • test/features/auth/presentation/pages/auth_pages_golden_test.dart:2:8 • unused_import
 warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/auth/presentation/pages/receive_medical_data_page_test.dart:3:8 • unused_import
@@ -1056,20 +768,11 @@ warning • Unused import: 'package:orionhealth_health/features/calendar_import/
 warning • Unused import: 'package:mocktail/mocktail.dart' • test/features/calendar_import/infrastructure/services/calendar_parser_service_impl_test.dart:2:8 • unused_import
 warning • Unused import: 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart' • test/features/calendar_import/infrastructure/services/calendar_parser_service_impl_test.dart:3:8 • unused_import
 warning • The value of the local variable 'datasource' isn't used • test/features/dashboard/data/datasources/dashboard_local_datasource_test.dart:22:33 • unused_local_variable
-  error • The getter 'dashboardPreferences' isn't defined for the type 'MockIsar' • test/features/dashboard/data/datasources/dashboard_local_datasource_test.dart:33:25 • undefined_getter
 warning • Unused import: 'package:mocktail/mocktail.dart' • test/features/dashboard/data/datasources/dashboard_remote_datasource_test.dart:2:8 • unused_import
 warning • Unused import: 'package:orionhealth_health/features/dashboard/domain/entities/dashboard_stats.dart' • test/features/dashboard/infrastructure/repositories/dashboard_repository_impl_test.dart:5:8 • unused_import
 warning • Unused import: 'package:flutter/material.dart' • test/features/dashboard/presentation/pages/dashboard_page_golden_test.dart:1:8 • unused_import
 warning • Unused import: 'package:flutter/services.dart' • test/features/dashboard/presentation/pages/dashboard_page_golden_test.dart:12:8 • unused_import
 warning • Unused import: 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart' • test/features/doctor_verification/data/models/doctor_profile_model_test.dart:3:8 • unused_import
-  error • Undefined name 'LicenseRegistryLocalSchema' • test/features/doctor_verification/infrastructure/datasources/license_registry_local_test.dart:19:8 • undefined_identifier
-  error • The getter 'licenseRegistryLocals' isn't defined for the type 'Isar' • test/features/doctor_verification/infrastructure/datasources/license_registry_local_test.dart:35:18 • undefined_getter
-  error • The getter 'licenseRegistryLocals' isn't defined for the type 'Isar' • test/features/doctor_verification/infrastructure/datasources/license_registry_local_test.dart:43:18 • undefined_getter
-  error • The getter 'licenseRegistryLocals' isn't defined for the type 'Isar' • test/features/doctor_verification/infrastructure/datasources/license_registry_local_test.dart:74:20 • undefined_getter
-  error • The getter 'doctorProfiles' isn't defined for the type 'MockIsar' • test/features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository_test.dart:33:25 • undefined_getter
-  error • The getter 'doctorRatings' isn't defined for the type 'MockIsar' • test/features/doctor_verification/infrastructure/repositories/isar_rating_repository_test.dart:33:25 • undefined_getter
-  error • The getter 'secondOpinionRequests' isn't defined for the type 'MockIsar' • test/features/doctor_verification/infrastructure/repositories/isar_second_opinion_repository_test.dart:33:25 • undefined_getter
-  error • The getter 'vouchs' isn't defined for the type 'MockIsar' • test/features/doctor_verification/infrastructure/repositories/isar_vouch_repository_test.dart:33:25 • undefined_getter
    info • The imported package 'url_launcher_platform_interface' isn't a dependency of the importing package • test/features/email-citas/infrastructure/email_repository_impl_test.dart:7:8 • depend_on_referenced_packages
    info • The imported package 'plugin_platform_interface' isn't a dependency of the importing package • test/features/email-citas/infrastructure/email_repository_impl_test.dart:8:8 • depend_on_referenced_packages
   error • 2 positional arguments expected by 'EmailRepositoryImpl.new', but 0 found • test/features/email-citas/infrastructure/email_repository_impl_test.dart:28:38 • not_enough_positional_arguments
@@ -1094,9 +797,6 @@ warning • Unused import: 'package:orionhealth_health/features/vitals/domain/en
   error • Undefined class 'HealthDataRepositoryImpl' • test/features/health_data_import/infrastructure/health_data_repository_impl_test.dart:11:8 • undefined_class
   error • The function 'HealthDataRepositoryImpl' isn't defined • test/features/health_data_import/infrastructure/health_data_repository_impl_test.dart:18:18 • undefined_function
 warning • Unused import: 'package:orionhealth_health/core/widgets/glassmorphic_card.dart' • test/features/health_data_import/presentation/widgets/data_source_card_test.dart:5:8 • unused_import
-  error • Undefined name 'MedicalRecordSchema' • test/features/health_record/infrastructure/health_record_repository_test.dart:20:8 • undefined_identifier
-  error • The getter 'medicalRecords' isn't defined for the type 'Isar' • test/features/health_record/infrastructure/health_record_repository_test.dart:34:36 • undefined_getter
-  error • The getter 'medicalRecords' isn't defined for the type 'MockIsar' • test/features/health_record/infrastructure/repositories/health_record_repository_impl_test.dart:33:25 • undefined_getter
 warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/health_record/presentation/pages/health_record_staging_page_test.dart:5:8 • unused_import
 warning • Unused import: 'dart:io' • test/features/health_record/presentation/pages/medical_record_page_golden_test.dart:1:8 • unused_import
    info • The imported package 'path_provider_platform_interface' isn't a dependency of the importing package • test/features/health_record/presentation/pages/medical_record_page_golden_test.dart:8:8 • depend_on_referenced_packages
@@ -1129,14 +829,7 @@ warning • Unused import: 'package:path_provider_platform_interface/path_provid
 warning • The receiver can't be null, so the null-aware operator '?[' is unnecessary • test/features/medical_research/infrastructure/adapters/medical_search_adapters_test.dart:110:33 • invalid_null_aware_operator
 warning • Unused import: 'package:orionhealth_health/core/theme/cyber_theme.dart' • test/features/medical_research/presentation/pages/medical_research_extra_golden_test.dart:5:8 • unused_import
 warning • The '!' will have no effect because the receiver can't be null • test/features/medical_research/standards_service_test.dart:28:20 • unnecessary_non_null_assertion
-  error • The name 'MedicationInitial' isn't a class • test/features/medications/application/bloc/medication_bloc_test.dart:38:42 • creation_with_non_type
-  error • The name 'MedicationLoading' isn't a class • test/features/medications/application/bloc/medication_bloc_test.dart:50:19 • creation_with_non_type
-  error • The function 'MedicationLoaded' isn't defined • test/features/medications/application/bloc/medication_bloc_test.dart:51:13 • undefined_function
-  error • The name 'MedicationLoading' isn't a class • test/features/medications/application/bloc/medication_bloc_test.dart:64:19 • creation_with_non_type
-  error • The name 'MedicationError' isn't a class • test/features/medications/application/bloc/medication_bloc_test.dart:65:19 • creation_with_non_type
   error • The named parameter 'startDate' is required, but there's no corresponding argument • test/features/medications/application/bloc/medication_state_test.dart:17:9 • missing_required_argument
-  error • Undefined name 'MedicationSchema' • test/features/medications/isar_medication_repository_test.dart:20:8 • undefined_identifier
-  error • The getter 'medications' isn't defined for the type 'Isar' • test/features/medications/isar_medication_repository_test.dart:34:36 • undefined_getter
 warning • Unused import: 'dart:async' • test/features/meditation/application/meditation_cubit_test.dart:1:8 • unused_import
    info • The imported package 'fake_async' isn't a dependency of the importing package • test/features/meditation/application/meditation_cubit_test.dart:2:8 • depend_on_referenced_packages
 warning • Unused import: 'dart:convert' • test/features/meditation/infrastructure/datasources/meditation_local_datasource_test.dart:1:8 • unused_import
@@ -1153,69 +846,26 @@ warning • The value of the local variable 'textC' isn't used • test/features
   error • The function 'OnboardingRepositoryImpl' isn't defined • test/features/onboarding/infrastructure/onboarding_repository_impl_test.dart:24:18 • undefined_function
 warning • Unused import: 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart' • test/features/onboarding/presentation/pages/onboarding_main_page_test.dart:7:8 • unused_import
 warning • Unused import: 'package:orionhealth_health/features/home/presentation/pages/main_navigation_page.dart' • test/features/onboarding/presentation/pages/onboarding_page_test.dart:11:8 • unused_import
-  error • Undefined name 'ReportSchema' • test/features/reports/infrastructure/repositories/isar_report_repository_test.dart:19:8 • undefined_identifier
-  error • The getter 'reports' isn't defined for the type 'Isar' • test/features/reports/infrastructure/repositories/isar_report_repository_test.dart:33:36 • undefined_getter
 warning • Unused import: 'package:orionhealth_health/core/theme/app_colors.dart' • test/features/reports/presentation/widgets/report_card_test.dart:5:8 • unused_import
    info • The member 'statusCode' overrides an inherited member but isn't annotated with '@override' • test/features/settings/application/llm_settings_cubit_test.dart:66:13 • annotate_overrides
-  error • Undefined name 'LlmConfigSchema' • test/features/settings/data/datasources/settings_local_datasource_test.dart:26:8 • undefined_identifier
-  error • Undefined name 'AppSettingsSchema' • test/features/settings/data/datasources/settings_local_datasource_test.dart:26:25 • undefined_identifier
-  error • The getter 'appSettings' isn't defined for the type 'Isar' • test/features/settings/data/datasources/settings_local_datasource_test.dart:83:34 • undefined_getter
-  error • Undefined name 'LlmConfigSchema' • test/features/settings/infrastructure/datasources/settings_local_datasource_infra_test.dart:26:8 • undefined_identifier
-  error • Undefined name 'AppSettingsSchema' • test/features/settings/infrastructure/datasources/settings_local_datasource_infra_test.dart:26:25 • undefined_identifier
   error • Target of URI doesn't exist: 'package:orionhealth_health/features/settings/infrastructure/repositories/llm_settings_repository_impl.dart' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_extra_test.dart:6:8 • uri_does_not_exist
   error • Undefined class 'LlmSettingsRepositoryImpl' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_extra_test.dart:10:8 • undefined_class
-  error • Undefined name 'LlmConfigSchema' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_extra_test.dart:26:8 • undefined_identifier
-  error • Undefined name 'AppSettingsSchema' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_extra_test.dart:26:25 • undefined_identifier
   error • The function 'LlmSettingsRepositoryImpl' isn't defined • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_extra_test.dart:29:18 • undefined_function
   error • Target of URI doesn't exist: 'package:orionhealth_health/features/settings/infrastructure/repositories/llm_settings_repository_impl.dart' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_test.dart:6:8 • uri_does_not_exist
   error • Undefined class 'LlmSettingsRepositoryImpl' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_test.dart:10:8 • undefined_class
-  error • Undefined name 'LlmConfigSchema' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_test.dart:26:8 • undefined_identifier
-  error • Undefined name 'AppSettingsSchema' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_test.dart:26:25 • undefined_identifier
   error • The function 'LlmSettingsRepositoryImpl' isn't defined • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_test.dart:29:18 • undefined_function
-  error • The getter 'llmConfigs' isn't defined for the type 'Isar' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_test.dart:71:32 • undefined_getter
-  error • The getter 'appSettings' isn't defined for the type 'Isar' • test/features/settings/infrastructure/repositories/llm_settings_repository_impl_test.dart:112:34 • undefined_getter
   error • The argument type 'List<BonsoirService>' can't be assigned to the parameter type 'List<SyncNode>'.  • test/features/sync/application/sync_cubit_test.dart:25:55 • argument_type_not_assignable
-  error • Undefined name 'UserProfileSchema' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:40:8 • undefined_identifier
-  error • Undefined name 'MedicationSchema' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:40:27 • undefined_identifier
-  error • Undefined name 'AllergySchema' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:40:45 • undefined_identifier
-  error • Undefined name 'VitalSignSchema' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:40:60 • undefined_identifier
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:120:38 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:138:41 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:145:38 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:201:25 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:205:25 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:235:28 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:248:25 • undefined_getter
-  error • The getter 'medications' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:249:24 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:279:25 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • test/features/sync/infrastructure/repositories/sync_repository_impl_test.dart:282:25 • undefined_getter
-  error • Undefined name 'UserProfileSchema' • test/features/user_profile/data/datasources/user_profile_local_datasource_test.dart:19:8 • undefined_identifier
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • test/features/user_profile/data/datasources/user_profile_local_datasource_test.dart:33:36 • undefined_getter
-  error • The getter 'userProfiles' isn't defined for the type 'MockIsar' • test/features/user_profile/infrastructure/repositories/user_profile_repository_impl_mock_test.dart:33:25 • undefined_getter
-  error • Undefined name 'UserProfileSchema' • test/features/user_profile/infrastructure/user_profile_repository_impl_test.dart:19:8 • undefined_identifier
-  error • The getter 'userProfiles' isn't defined for the type 'Isar' • test/features/user_profile/infrastructure/user_profile_repository_impl_test.dart:33:36 • undefined_getter
 warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/user_profile/presentation/pages/user_profile_page_test.dart:2:8 • unused_import
-  error • The name 'VitalSignInitial' isn't a class • test/features/vitals/application/bloc/vital_sign_bloc_test.dart:38:41 • creation_with_non_type
-  error • The name 'VitalSignLoading' isn't a class • test/features/vitals/application/bloc/vital_sign_bloc_test.dart:50:19 • creation_with_non_type
-  error • The function 'VitalSignLoaded' isn't defined • test/features/vitals/application/bloc/vital_sign_bloc_test.dart:51:13 • undefined_function
-  error • The name 'VitalSignLoading' isn't a class • test/features/vitals/application/bloc/vital_sign_bloc_test.dart:64:19 • creation_with_non_type
-  error • The name 'VitalSignError' isn't a class • test/features/vitals/application/bloc/vital_sign_bloc_test.dart:65:19 • creation_with_non_type
-  error • The name 'VitalSignLoading' isn't a class • test/features/vitals/application/bloc/vital_sign_bloc_test.dart:80:19 • creation_with_non_type
-  error • The function 'VitalSignLatestLoaded' isn't defined • test/features/vitals/application/bloc/vital_sign_bloc_test.dart:81:13 • undefined_function
   error • The named parameter 'dateTime' is required, but there's no corresponding argument • test/features/vitals/application/bloc/vital_sign_event_test.dart:16:21 • missing_required_argument
   error • The named parameter 'id' isn't defined • test/features/vitals/application/bloc/vital_sign_event_test.dart:17:9 • undefined_named_parameter
   error • The named parameter 'timestamp' isn't defined • test/features/vitals/application/bloc/vital_sign_event_test.dart:21:9 • undefined_named_parameter
   error • The named parameter 'dateTime' is required, but there's no corresponding argument • test/features/vitals/application/bloc/vital_sign_state_test.dart:17:9 • missing_required_argument
   error • The named parameter 'id' isn't defined • test/features/vitals/application/bloc/vital_sign_state_test.dart:18:11 • undefined_named_parameter
   error • The named parameter 'timestamp' isn't defined • test/features/vitals/application/bloc/vital_sign_state_test.dart:22:11 • undefined_named_parameter
-  error • Undefined name 'VitalSignSchema' • test/features/vitals/infrastructure/repositories/isar_vital_sign_repository_test.dart:19:8 • undefined_identifier
-  error • The getter 'vitalSigns' isn't defined for the type 'Isar' • test/features/vitals/infrastructure/repositories/isar_vital_sign_repository_test.dart:33:36 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'MockIsar' • test/features/vitals/infrastructure/repositories/vital_sign_repository_impl_mock_test.dart:34:25 • undefined_getter
-  error • The getter 'vitalSigns' isn't defined for the type 'MockIsar' • test/features/vitals/infrastructure/repositories/vital_sign_repository_impl_test.dart:34:25 • undefined_getter
 warning • Unused import: 'package:get_it/get_it.dart' • test/features/vitals/presentation/pages/vitals_monitor_page_test.dart:4:8 • unused_import
 warning • Unused import: 'package:get_it/get_it.dart' • test/features/vitals/presentation/pages/vitals_page_test.dart:4:8 • unused_import
 warning • Unused import: 'package:orionhealth_health/features/voice_chat/presentation/pages/voice_chat_page.dart' • test/features/voice_chat/presentation/pages/chat_page_test.dart:7:8 • unused_import
    info • Don't return 'null' from a function with a return type of 'void' • test/features/voice_chat/presentation/widgets/voice_input_button_test.dart:77:58 • avoid_returning_null_for_void
 warning • Unused import: 'package:flutter_localizations/flutter_localizations.dart' • test/l10n_test.dart:4:8 • unused_import
 
-1140 issues found. (ran in 81.6s)
+867 issues found. (ran in 19.7s)
