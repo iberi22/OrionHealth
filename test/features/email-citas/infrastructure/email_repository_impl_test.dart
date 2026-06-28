@@ -4,12 +4,17 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/email-citas/infrastructure/repositories/email_repository_impl.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
+// ignore: depend_on_referenced_packages
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
+// ignore: depend_on_referenced_packages
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:device_calendar/device_calendar.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
 class MockUrlLauncher extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
+
+class MockDeviceCalendarPlugin extends Mock implements DeviceCalendarPlugin {}
 
 class FakeLaunchOptions extends Fake implements LaunchOptions {}
 
@@ -17,6 +22,7 @@ void main() {
   late EmailRepositoryImpl repository;
   late MockHttpClient mockHttpClient;
   late MockUrlLauncher mockUrlLauncher;
+  late MockDeviceCalendarPlugin mockDeviceCalendarPlugin;
 
   setUpAll(() {
     registerFallbackValue(Uri.parse('http://localhost'));
@@ -25,7 +31,8 @@ void main() {
 
   setUp(() {
     mockHttpClient = MockHttpClient();
-    repository = EmailRepositoryImpl(client: mockHttpClient);
+    mockDeviceCalendarPlugin = MockDeviceCalendarPlugin();
+    repository = EmailRepositoryImpl(mockHttpClient, mockDeviceCalendarPlugin);
     mockUrlLauncher = MockUrlLauncher();
     UrlLauncherPlatform.instance = mockUrlLauncher;
   });

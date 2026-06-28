@@ -3,11 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/app_settings.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
-import 'package:orionhealth_health/features/settings/infrastructure/repositories/llm_settings_repository_impl.dart';
+import 'package:orionhealth_health/features/settings/data/repositories/llm_settings_repository_impl.dart';
+import 'package:orionhealth_health/features/settings/data/datasources/settings_local_datasource.dart';
 
 void main() {
   late Isar isar;
   late LlmSettingsRepositoryImpl repository;
+  late SettingsLocalDataSource localDataSource;
   late Directory tempDir;
 
   setUpAll(() async {
@@ -26,7 +28,8 @@ void main() {
       [LlmConfigSchema, AppSettingsSchema],
       directory: tempDir.path,
     );
-    repository = LlmSettingsRepositoryImpl(isar);
+    localDataSource = SettingsLocalDataSource(isar);
+    repository = LlmSettingsRepositoryImpl(localDataSource);
   });
 
   tearDown(() async {

@@ -11,7 +11,7 @@ void main() {
 
   setUp(() {
     mockStorage = MockFlutterSecureStorage();
-    dataSource = OAuthLocalDataSource(storage: mockStorage);
+    dataSource = OAuthLocalDataSource(mockStorage);
   });
 
   group('OAuthLocalDataSource', () {
