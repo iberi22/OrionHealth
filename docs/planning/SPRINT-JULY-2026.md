@@ -1,6 +1,6 @@
 # Sprint Plan — July 2026
 
-> **Goal:** Preparar OrionHealth para release v1.0.0 — tests verdes, CI passing, landing page completa, código limpio.
+> **Goal:** Preparar OrionHealth para open beta (v0.9.x) — CI verde, tests actualizados, landing page pulida.
 > **Repositorio:** https://github.com/iberi22/OrionHealth
 > **Reglas:** Max 1-3 archivos por issue. Un issue por feature/task. Label `jules` activa Jules.
 
@@ -143,12 +143,12 @@ Estos issues preparan el terreno. Sin estos, los tests no pasan y el CI no sirve
 - Si no pasa, iterar hasta verde
 - Configurar badge en README.md
 
-### #4.2 🔧 Create v1.0.0 release checklist and verify
+### #4.2 🔧 Create v0.9.x release checklist and verify
 **Archivos:** (crear release tag)
 **Qué hacer:**
 - Revisar `docs/PRODUCTION_CHECKLIST.md`
 - Verificar que todo está OK
-- Crear tag v1.0.0 + push
+- Crear tag v0.9.0 + push
 - Verificar que GitHub Actions android_build.yml genere APK
 
 ### #4.3 🔧 Update FEATURE_AUDIT.md with current Sprint state

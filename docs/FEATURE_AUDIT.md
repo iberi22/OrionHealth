@@ -1,7 +1,7 @@
 # OrionHealth — Feature Audit Report
 
 > **Date:** 2026-06-10  
-> **Status:** Post v1.0.0 preparation audit  
+> **Status:** Open Beta (v0.9.x) — preparando para release estable
 > **Total features:** 25 | **Full coverage (4-layer + tests):** 24/25 (96%)
 
 ## Coverage Summary
@@ -80,7 +80,7 @@
 - [ ] Remove golden test failure dirs from gitignore
 - [ ] Update coverage_report.md with real audit data
 
-### Sprint 2 (post-v1.0.0)
+### Sprint 2 (post-v0.9.x)
 - [ ] Migrate `sync` data/ → infrastructure/ (5 files)
 - [x] Implement real BLE advertising in health_sharing (Documented as unsupported)
 - [x] Implement real WiFi discovery in health_sharing
