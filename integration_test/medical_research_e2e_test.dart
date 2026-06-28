@@ -4,7 +4,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/pages/medical_research_page.dart';
 import 'package:orionhealth_health/features/medical_research/application/medical_research_cubit.dart';
-import 'package:orionhealth_health/features/medical_research/domain/entities/research_result.dart';
+import 'package:orionhealth_health/features/medical_research/domain/models/research_result.dart';
 import 'package:mocktail/mocktail.dart';
 import 'utils/video_recorder.dart';
 
@@ -28,7 +28,7 @@ void main() {
 
   group('Medical Research Flow - E2E Tests', () {
     testWidgets('E2E: Search Research', (WidgetTester tester) async {
-      when(() => mockCubit.state).thenReturn(const MedicalResearchState(status: MedicalResearchStatus.initial));
+      when(() => mockCubit.state).thenReturn(const MedicalResearchState(status: MedicalResearchStatus.idle));
 
       await tester.pumpWidget(const MaterialApp(home: MedicalResearchPage()));
       await tester.pumpAndSettle();
@@ -37,14 +37,12 @@ void main() {
       await tester.enterText(find.byType(TextField).first, 'Diabetes');
 
       final results = [
-        ResearchResult(
-          id: '1',
+        const ResearchResult(
           title: 'Diabetes Study',
-          summary: 'New findings',
+          content: 'New findings',
           source: 'PubMed',
           url: '',
-          relevance: 0.9,
-          type: ResearchType.study,
+          confidence: 0.9,
         ),
       ];
 

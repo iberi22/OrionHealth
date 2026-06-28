@@ -15,12 +15,11 @@ void main() {
     test('loaded supports value equality', () {
       final vitals = [
         VitalSign(
-          id: 1,
           type: VitalSignType.heartRate,
           value: 70,
           unit: 'bpm',
-          timestamp: DateTime.now(),
-        )
+          dateTime: DateTime.now(),
+        )..id = 1
       ];
       expect(VitalSignState.loaded(vitals), VitalSignState.loaded(vitals));
     });

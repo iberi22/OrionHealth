@@ -51,12 +51,12 @@ void main() {
     });
 
     testWidgets('E2E: Reward Claim with Insufficient Balance', (WidgetTester tester) async {
-      final reward = Reward(
+      const reward = Reward(
         id: 'r1',
-        title: 'Tarjeta de Regalo \$10',
-        pointsRequired: 2000,
-        isClaimed: false,
         userId: 'user1',
+        points: 2000,
+        tier: 'Tarjeta de Regalo \$10',
+        isClaimed: false,
       );
 
       when(() => mockCubit.state).thenReturn(IncentiveState(

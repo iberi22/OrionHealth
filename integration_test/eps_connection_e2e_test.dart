@@ -7,6 +7,7 @@ import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_state.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_connection.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/entities/oauth_token.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'utils/video_recorder.dart';
@@ -33,12 +34,21 @@ void main() {
     testWidgets('E2E: List Connections', (WidgetTester tester) async {
       final connections = [
         EPSConnection(
-          provider: const EPSProvider(id: '1', name: 'Sura', baseUrl: ''),
+          provider: const EPSProvider(
+            id: '1',
+            name: 'Sura',
+            discoveryUrl: 'https://discovery.url',
+            clientId: 'client_id',
+            redirectUrl: 'redirect_url',
+            scopes: ['openid'],
+          ),
+          token: const OAuthToken(accessToken: 'token'),
+          patientId: 'patient_id',
           connectedAt: DateTime.now(),
         ),
       ];
 
-      when(() => mockCubit.state).thenReturn(EpsConnectionLoaded(connections: connections));
+      when(() => mockCubit.state).thenReturn(EpsConnectionLoaded(connections));
 
       await tester.pumpWidget(MaterialApp(
         home: BlocProvider<EpsConnectionCubit>.value(

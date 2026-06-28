@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/onboarding/domain/entities/user_profile.dart' as onboarding;
-import 'package:orionhealth_health/features/onboarding/infrastructure/onboarding_repository_impl.dart';
+import 'package:orionhealth_health/features/onboarding/infrastructure/repositories/onboarding_repository_impl.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart' as domain;
 import 'package:shared_preferences/shared_preferences.dart';

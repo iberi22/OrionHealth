@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_parser.dart';
+import 'package:orionhealth_health/features/health_data_import/infrastructure/parsers/health_data_parser.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 
 void main() {

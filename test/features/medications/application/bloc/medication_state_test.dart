@@ -19,6 +19,7 @@ void main() {
           name: 'Test',
           dosage: '10mg',
           frequency: 'Daily',
+          startDate: DateTime(2025, 1, 1),
         )
       ];
       expect(MedicationState.loaded(medications), MedicationState.loaded(medications));

@@ -30,7 +30,8 @@ void main() {
   group('Health Data Import Flow - E2E Tests', () {
     testWidgets('E2E: Import from Sensor', (WidgetTester tester) async {
       when(() => mockCubit.state).thenReturn(HealthImportReady(
-        availability: {HealthDataSource.googleFit: true, HealthDataSource.appleHealth: false},
+        availableSources: const [HealthDataSource.googleFit],
+        availability: const {HealthDataSource.googleFit: true, HealthDataSource.appleHealth: false},
       ));
 
       await tester.pumpWidget(const MaterialApp(home: HealthImportPage()));
