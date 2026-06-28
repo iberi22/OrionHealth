@@ -1,10 +1,12 @@
-# OrionHealth - Production Release Checklist
+# OrionHealth - Production Readiness Checklist (v0.9.x)
+
+> **Estado:** Open Beta — versión 0.9.x, preparando para release estable.
 
 ## Pre-Release Verification
 
 ### Code Quality
-- [x] flutter analyze passes (lib directory is clean, minor integration test issues remaining)
-- [x] All unit tests pass
+- [ ] flutter analyze passes (lib directory is clean)
+- [ ] All unit tests pass
 - [ ] All E2E tests pass (Integration tests require specific native setup)
 - [x] No TODO comments without issue tracking
 
@@ -31,7 +33,7 @@
 - [x] Data deletion works (right to be forgotten)
 
 ### Platform Specific
-- [x] Android build succeeds
+- [ ] Android build succeeds
 - [ ] iOS build succeeds (if applicable)
 - [x] All platform channels implemented
 - [x] Permissions properly declared
@@ -42,15 +44,9 @@
 - [x] User documentation
 - [x] Architecture documentation
 
-## Release Steps
-1. Create tag: `git tag v1.0.0`
-2. Push tag: `git push origin v1.0.0`
-3. Verify GitHub Actions run
-4. Download artifacts
-5. Sign APK/AAB
-6. Upload to stores
-
-## Post-Release
-- Monitor error reporting
-- Collect user feedback
-- Plan v1.1 updates
+## Release Steps (cuando esté lista)
+1. `git tag v1.0.0 && git push origin v1.0.0`
+2. Verify GitHub Actions run
+3. Download artifacts
+4. Sign APK/AAB
+5. Upload to stores
