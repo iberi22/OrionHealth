@@ -4,6 +4,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/allergies/presentation/pages/allergies_page.dart';
 import 'package:orionhealth_health/features/allergies/application/allergies_cubit.dart';
+import 'package:orionhealth_health/features/allergies/application/allergies_state.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
 import 'package:mocktail/mocktail.dart';
 import 'utils/video_recorder.dart';

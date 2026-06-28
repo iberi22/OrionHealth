@@ -71,7 +71,7 @@ void main() {
       await tester.drag(find.byType(CustomScrollView), const Offset(0, 300));
       await tester.pumpAndSettle();
 
-      verify(() => mockCubit.loadDashboardData()).called(atLeast(1));
+      verify(() => mockCubit.loadDashboardData()).called(greaterThanOrEqualTo(1));
       expect(find.text('ACCIONES RÁPIDAS'), findsOneWidget);
     });
 
@@ -81,7 +81,7 @@ void main() {
         ActivityItem(
           id: '1',
           title: 'Presión arterial registrada',
-          timestamp: DateTime.now(),
+          timestamp: DateTime(2025, 1, 1),
           type: ActivityType.vitalCheck,
         ),
       ];
@@ -104,7 +104,7 @@ void main() {
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'home', '04_refreshed');
 
-      verify(() => mockCubit.loadDashboardData()).called(atLeast(1));
+      verify(() => mockCubit.loadDashboardData()).called(greaterThanOrEqualTo(1));
     });
 
     testWidgets('E2E: Dashboard Modules Interaction', (WidgetTester tester) async {

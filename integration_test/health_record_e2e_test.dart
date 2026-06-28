@@ -34,7 +34,6 @@ void main() {
     testWidgets('E2E: Timeline View with Data', (WidgetTester tester) async {
       final records = [
         MedicalRecord(
-          id: 1,
           type: RecordType.labResult,
           summary: 'Blood test results',
           date: DateTime.now().subtract(const Duration(days: 1)),

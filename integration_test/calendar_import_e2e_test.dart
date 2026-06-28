@@ -35,15 +35,14 @@ void main() {
     testWidgets('E2E: Import Calendar', (WidgetTester tester) async {
       final appointments = [
         Appointment(
-          id: '1',
           doctorName: 'Dr. Smith',
           specialty: 'Cardiology',
           dateTime: DateTime.now().add(const Duration(days: 1)),
-          location: 'Main Hospital',
+          status: AppointmentStatus.upcoming,
         ),
       ];
 
-      when(() => mockCubit.state).thenReturn(CalendarImportLoaded(foundAppointments: appointments));
+      when(() => mockCubit.state).thenReturn(CalendarImportLoaded(appointments));
 
       await tester.pumpWidget(const MaterialApp(home: CalendarImportPage()));
       await tester.pumpAndSettle();
