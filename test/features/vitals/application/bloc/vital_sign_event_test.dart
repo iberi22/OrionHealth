@@ -14,11 +14,10 @@ void main() {
 
     test('SaveVitalSign supports value equality', () {
       final vital = VitalSign(
-        id: 1,
         type: VitalSignType.heartRate,
         value: 70,
         unit: 'bpm',
-        timestamp: DateTime.now(),
+        dateTime: DateTime.now(),
       );
       expect(SaveVitalSign(vital), isA<SaveVitalSign>());
     });

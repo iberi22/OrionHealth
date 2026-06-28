@@ -15,10 +15,10 @@ void main() {
     test('loaded supports value equality', () {
       final medications = [
         Medication(
-          id: 1,
           name: 'Test',
           dosage: '10mg',
           frequency: 'Daily',
+          startDate: DateTime(2024, 1, 1),
         )
       ];
       expect(MedicationState.loaded(medications), MedicationState.loaded(medications));

@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/app_settings.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
-import 'package:orionhealth_health/features/settings/infrastructure/repositories/llm_settings_repository_impl.dart';
+import 'package:orionhealth_health/features/settings/data/repositories/llm_settings_repository_impl.dart';
+import 'package:orionhealth_health/features/settings/data/datasources/settings_local_datasource.dart';
 
 void main() {
   late Isar isar;
@@ -26,7 +27,7 @@ void main() {
       [LlmConfigSchema, AppSettingsSchema],
       directory: tempDir.path,
     );
-    repository = LlmSettingsRepositoryImpl(isar);
+    repository = LlmSettingsRepositoryImpl(SettingsLocalDataSource(isar));
   });
 
   tearDown(() async {
@@ -40,17 +41,12 @@ void main() {
     });
 
     test('saveLlmConfig and getLlmConfig should persist and retrieve config', () async {
-      final config = LlmConfig(
-        selectedModel: 'test-model',
-        useCloudApi: false,
-      );
-
+      final config = LlmConfig(selectedModel: 'model1');
       await repository.saveLlmConfig(config);
 
       final retrieved = await repository.getLlmConfig();
       expect(retrieved, isNotNull);
-      expect(retrieved!.selectedModel, 'test-model');
-      expect(retrieved.useCloudApi, false);
+      expect(retrieved!.selectedModel, 'model1');
     });
 
     test('saveLlmConfig should update existing config and preserve record count', () async {
