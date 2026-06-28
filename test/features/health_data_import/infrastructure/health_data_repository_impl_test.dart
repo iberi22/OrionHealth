@@ -1,27 +1,27 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:health/health.dart';
-import 'package:orionhealth_health/features/health_data_import/infrastructure/health_data_repository_impl.dart';
+import 'package:orionhealth_health/features/health_data_import/infrastructure/health_data_import_repository_impl.dart';
 import 'package:orionhealth_health/features/health_data_import/infrastructure/data_source.dart';
 
 class MockSensorHealthDataSource extends Mock implements SensorHealthDataSource {}
 class MockFileHealthDataSource extends Mock implements FileHealthDataSource {}
 
 void main() {
-  late HealthDataRepositoryImpl repository;
+  late HealthDataImportRepositoryImpl repository;
   late MockSensorHealthDataSource mockSensorDataSource;
   late MockFileHealthDataSource mockFileDataSource;
 
   setUp(() {
     mockSensorDataSource = MockSensorHealthDataSource();
     mockFileDataSource = MockFileHealthDataSource();
-    repository = HealthDataRepositoryImpl(
+    repository = HealthDataImportRepositoryImpl(
       mockSensorDataSource,
       mockFileDataSource,
     );
   });
 
-  group('HealthDataRepositoryImpl', () {
+  group('HealthDataImportRepositoryImpl', () {
     test('hasPermissions should delegate to sensor data source', () async {
       final types = [HealthDataType.STEPS];
       when(() => mockSensorDataSource.hasPermissions(types))

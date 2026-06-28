@@ -40,7 +40,7 @@ void main() {
     mockLocalDataSource = MockOAuthLocalDataSource();
     mockAppAuth = MockFlutterAppAuth();
     mockDio = MockDio();
-    repository = OAuthRepositoryImpl(mockLocalDataSource, mockDio, appAuth: mockAppAuth);
+    repository = OAuthRepositoryImpl(mockLocalDataSource, mockDio, mockAppAuth);
   });
 
   group('OAuthRepositoryImpl', () {

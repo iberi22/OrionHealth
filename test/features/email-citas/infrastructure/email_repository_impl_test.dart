@@ -6,6 +6,7 @@ import 'package:orionhealth_health/features/email-citas/infrastructure/repositor
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:device_calendar/device_calendar.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
@@ -25,7 +26,7 @@ void main() {
 
   setUp(() {
     mockHttpClient = MockHttpClient();
-    repository = EmailRepositoryImpl(client: mockHttpClient);
+    repository = EmailRepositoryImpl(mockHttpClient, DeviceCalendarPlugin());
     mockUrlLauncher = MockUrlLauncher();
     UrlLauncherPlatform.instance = mockUrlLauncher;
   });
