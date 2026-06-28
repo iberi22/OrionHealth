@@ -14,7 +14,6 @@
 //
 // Output: integration_test/screenshots/*.png (organized by flow)
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -315,16 +314,6 @@ void main() {
       await tester.pumpWidget(const app.MyApp());
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
-      // Look for AI Chat navigation
-      final chatNav = find.byWidgetPredicate(
-        (w) => (w is NavigationDestination && 
-               (w.label?.toLowerCase().contains('chat') == true ||
-                w.label?.toLowerCase().contains('ai') == true ||
-                w.label?.toLowerCase().contains('asistente') == true)) ||
-              (w is Icon && (w.icon == Icons.chat ||
-                             w.icon == Icons.chat_bubble_outline))
-      );
-
       final chatIcons = find.byIcon(Icons.chat_bubble_outline);
       final aiIcons = find.byIcon(Icons.psychology_outlined);
       final voiceChatIcons = find.byWidgetPredicate(
@@ -355,7 +344,7 @@ void main() {
                 w.decoration?.hintText?.toLowerCase().contains('escribe') == true),
       );
       if (chatField.evaluate().isNotEmpty) {
-        await tester.enterText(chatField, '¿Cuáles son mis últimos resultados?');
+        await tester.enterText(chatField, 'Cuales son mis ultimos resultados?');
         await tester.pumpAndSettle();
         await captureScreenshot(tester, '07_chat', '03_message_typed');
       }
@@ -373,7 +362,6 @@ void main() {
       final standardsNav = find.text('Estándares');
       final medicalResearchNav = find.text('Medical Research');
       final icdNav = find.textContaining('ICD');
-      final loincNav = find.textContaining('LOINC');
 
       if (researchNav.evaluate().isNotEmpty) {
         await tester.tap(researchNav);
@@ -432,7 +420,7 @@ void main() {
         // Try to navigate via navigation bar
         final navBar = find.byType(NavigationBar);
         if (navBar.evaluate().isNotEmpty) {
-          final destinations = navBar.evaluate().first.widget;
+          navBar.evaluate().first.widget;
         }
       }
 
@@ -474,8 +462,6 @@ void main() {
       // Look for sharing options
       final shareText = find.textContaining('Compartir');
       final bluetoothIcon = find.byIcon(Icons.bluetooth);
-      final nfcIcon = find.byIcon(Icons.nfc);
-      final wifiIcon = find.byIcon(Icons.wifi);
 
       if (shareText.evaluate().isNotEmpty) {
         await tester.tap(shareText.first);
@@ -516,7 +502,6 @@ void main() {
 
       // Look for LLM settings
       final llmNav = find.textContaining('LLM');
-      final llmNavEs = find.textContaining('Modelo');
 
       if (llmNav.evaluate().isNotEmpty) {
         await tester.tap(llmNav.first);
@@ -534,11 +519,6 @@ void main() {
 
       // Look for vitals
       final vitalsText = find.textContaining('Vital');
-      final vitalsIcon = find.byWidgetPredicate(
-        (w) => w is Icon && (w.icon == Icons.favorite ||
-                             w.icon == Icons.monitor_heart ||
-                             w.icon == Icons.monitor_weight),
-      );
       final heartIcon = find.byIcon(Icons.favorite);
 
       if (vitalsText.evaluate().isNotEmpty) {
@@ -561,7 +541,6 @@ void main() {
       // Look for governance / network
       final govNav = find.textContaining('Governance');
       final govNavEs = find.textContaining('Gobernanza');
-      final networkNav = find.textContaining('Network');
       final incentivesNav = find.textContaining('Incentivos');
       final leaderboardNav = find.textContaining('Leaderboard');
 
@@ -638,10 +617,11 @@ void main() {
           
           // Try to get the label
           final dest = destinations.at(i).evaluate().first.widget as NavigationDestination;
-          final label = dest.label ?? 'tab_$i';
+          final label = dest.label;
+          // ignore: unused_local_variable
           final safeLabel = label.replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '_').toLowerCase();
           
-          await captureScreenshot(tester, '16_navigation', '${i}_${safeLabel}');
+          await captureScreenshot(tester, '16_navigation', '${i}_$safeLabel');
         }
       } else {
         // Fallback: try to find any navigation (BottomNavigationBar, TabBar, etc.)

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/eps_connection/presentation/pages/eps_connection_page.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_cubit.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_state.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_connection.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/entities/oauth_token.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'utils/video_recorder.dart';
@@ -33,12 +33,23 @@ void main() {
     testWidgets('E2E: List Connections', (WidgetTester tester) async {
       final connections = [
         EPSConnection(
-          provider: const EPSProvider(id: '1', name: 'Sura', baseUrl: ''),
+          provider: const EPSProvider(
+            id: '1',
+            name: 'Sura',
+            discoveryUrl: 'https://sura.example.com/.well-known/openid-configuration',
+            clientId: 'test-client',
+            redirectUrl: 'orionhealth://callback',
+            scopes: ['openid', 'fhirUser', 'patient/*.read'],
+          ),
+          token: const OAuthToken(
+            accessToken: 'test-token',
+          ),
+          patientId: 'patient-001',
           connectedAt: DateTime.now(),
         ),
       ];
 
-      when(() => mockCubit.state).thenReturn(EpsConnectionLoaded(connections: connections));
+      when(() => mockCubit.state).thenReturn(EpsConnectionLoaded(connections));
 
       await tester.pumpWidget(MaterialApp(
         home: BlocProvider<EpsConnectionCubit>.value(

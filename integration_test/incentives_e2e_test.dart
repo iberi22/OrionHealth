@@ -7,7 +7,6 @@ import 'package:orionhealth_health/features/network/incentives/application/incen
 import 'package:orionhealth_health/features/network/incentives/domain/entities/reward.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'utils/video_recorder.dart';
 
 class MockIncentiveCubit extends Mock implements IncentiveCubit {}
@@ -39,7 +38,6 @@ void main() {
       when(() => mockCubit.state).thenReturn(const IncentiveState(
         status: IncentiveStatus.loaded,
         totalPoints: 1500,
-        contributions: [],
       ));
 
       await tester.pumpWidget(const MaterialApp(home: IncentivesPage(userId: 'user1')));
@@ -53,17 +51,16 @@ void main() {
     testWidgets('E2E: Reward Claim with Insufficient Balance', (WidgetTester tester) async {
       final reward = Reward(
         id: 'r1',
-        title: 'Tarjeta de Regalo \$10',
-        pointsRequired: 2000,
-        isClaimed: false,
         userId: 'user1',
+        points: 2000,
+        tier: 'Standard',
+        isClaimed: false,
       );
 
       when(() => mockCubit.state).thenReturn(IncentiveState(
         status: IncentiveStatus.loaded,
         totalPoints: 1500,
         rewards: [reward],
-        contributions: [],
       ));
 
       await tester.pumpWidget(const MaterialApp(home: IncentivesPage(userId: 'user1')));
@@ -73,20 +70,20 @@ void main() {
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'incentives', '02_rewards_page');
 
-      expect(find.text('Tarjeta de Regalo \$10'), findsOneWidget);
+      expect(find.text('Recompensa Standard'), findsOneWidget);
+      expect(find.text('2000 puntos requeridos'), findsOneWidget);
 
       when(() => mockCubit.claimReward(any(), any())).thenAnswer((_) async {
         final errorState = const IncentiveState(
           status: IncentiveStatus.error,
           errorMessage: 'Insufficient points balance',
           totalPoints: 1500,
-          rewards: [],
         );
         when(() => mockCubit.state).thenReturn(errorState);
         stateController.add(errorState);
       });
 
-      await tester.tap(find.text('CANJEAR'));
+      await tester.tap(find.text('RECLAMAR'));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'incentives', '03_claim_error');
 

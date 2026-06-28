@@ -29,15 +29,17 @@ void main() {
 
   group('Health Data Import Flow - E2E Tests', () {
     testWidgets('E2E: Import from Sensor', (WidgetTester tester) async {
+      final availability = {HealthDataSource.googleFit: true, HealthDataSource.appleHealth: false};
       when(() => mockCubit.state).thenReturn(HealthImportReady(
-        availability: {HealthDataSource.googleFit: true, HealthDataSource.appleHealth: false},
+        availableSources: availability.keys.toList(),
+        availability: availability,
       ));
 
       await tester.pumpWidget(const MaterialApp(home: HealthImportPage()));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'health_import', '01_ready');
 
-      expect(find.text('Google Fit'), findsOneWidget);
+      expect(find.text('Google Fit / Health Connect'), findsOneWidget);
 
       // Trigger import (mocking biometric and cubit response)
       // Note: Real test would need to handle biometric mock which is complex,
