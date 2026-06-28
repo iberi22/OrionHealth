@@ -1,7 +1,9 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Clinical practice guidelines references.
 ///
 /// References to major clinical guidelines from authoritative
 /// medical organizations.
+
 
 import '../medical_standards.dart';
 
@@ -19,7 +21,7 @@ class ClinicalGuidelineReference extends MedicalConcept {
   final String? version;
   final List<String> applicableConditions;
 
-  ClinicalGuidelineReference({
+  const ClinicalGuidelineReference({
     required this.code,
     required this.displayName,
     this.description,

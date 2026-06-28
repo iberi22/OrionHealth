@@ -1,8 +1,10 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Analyzes user profile to determine relevant medical context.
 ///
 /// Uses pattern matching on conditions, medications, symptoms, and
 /// demographic data (age/sex) to determine which [MedicalContextCategory]
 /// standards should be downloaded for the AI assistant.
+
 
 import 'medical_context_categories.dart';
 

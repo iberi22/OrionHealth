@@ -1,3 +1,4 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Sync service for downloading and caching full medical standards datasets.
 ///
 /// This service handles background synchronization of medical standards
@@ -6,6 +7,7 @@
 ///
 /// Key insight: AI inference happens locally with full context.
 /// Sync is for updates, not for runtime.
+
 
 import 'dart:convert';
 import 'dart:io';

@@ -1,9 +1,11 @@
+// ignore_for_file: dangling_library_doc_comments
 /// SNOMED CT (Clinical Terms) mappings.
 ///
 /// SNOMED CT is a standardized medical vocabulary used for
 /// clinical documentation. This module maps SNOMED codes to
 /// other standards (ICD-10, LOINC) and provides common clinical
 /// concepts.
+
 
 import '../medical_standards.dart';
 
@@ -20,7 +22,7 @@ class SnomedConcept extends MedicalConcept {
   final List<String> icd10Mappings;
   final List<String> loincMappings;
 
-  SnomedConcept({
+  const SnomedConcept({
     required this.code,
     required this.displayName,
     this.description,

@@ -1,7 +1,9 @@
+// ignore_for_file: dangling_library_doc_comments
 /// FHIR R4 resource builders.
 ///
 /// FHIR (Fast Healthcare Interoperability Resources) is a standard
 /// for exchanging healthcare information electronically.
+
 
 /// FHIR Resource Type
 enum FhirResourceType {

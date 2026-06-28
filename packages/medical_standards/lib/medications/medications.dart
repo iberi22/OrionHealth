@@ -1,7 +1,9 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Medication reference data (RxNorm subset).
 ///
 /// RxNorm provides normalized names for drugs and doses.
 /// This is a curated subset of common medications.
+
 
 import '../medical_standards.dart';
 

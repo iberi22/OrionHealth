@@ -1,3 +1,4 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Medical context provider for AI inference.
 ///
 /// Provides full local context from cached medical standards datasets.
@@ -21,6 +22,7 @@
 /// final guidelines = provider.getGuidelinesForCondition('E11');
 /// final medications = provider.getMedicationsForCondition('E11');
 /// ```
+
 
 import 'dart:convert';
 import 'dart:io';
