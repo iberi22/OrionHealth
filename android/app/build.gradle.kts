@@ -10,11 +10,14 @@ android {
     ndkVersion = "25.1.8937393"
 
     packaging {
+        resources {
+            pickFirsts.add("lib/arm64-v8a/libonnxruntime.so")
+            pickFirsts.add("lib/armeabi-v7a/libonnxruntime.so")
+            pickFirsts.add("lib/x86_64/libonnxruntime.so")
+            pickFirsts.add("lib/x86/libonnxruntime.so")
+        }
         jniLibs {
             pickFirsts.add("**/libc++_shared.so")
-            pickFirsts.add("**/libarm64-v8a/libonnxruntime.so")
-            pickFirsts.add("**/libarmeabi-v7a/libonnxruntime.so")
-            pickFirsts.add("**/libx86_64/libonnxruntime.so")
         }
     }
 
