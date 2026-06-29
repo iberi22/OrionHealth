@@ -12,6 +12,9 @@ android {
     packaging {
         jniLibs {
             pickFirsts.add("**/libc++_shared.so")
+            pickFirsts.add("**/libarm64-v8a/libonnxruntime.so")
+            pickFirsts.add("**/libarmeabi-v7a/libonnxruntime.so")
+            pickFirsts.add("**/libx86_64/libonnxruntime.so")
         }
     }
 
