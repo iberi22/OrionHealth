@@ -1,8 +1,10 @@
+// ignore_for_file: dangling_library_doc_comments
 /// The local subset of medical knowledge relevant to a user.
 ///
 /// This is the downloaded and cached context that the AI assistant
 /// uses for inference. Instead of loading a full 3GB standards database,
 /// only the categories relevant to the user are stored locally (~50-200MB).
+
 
 import 'package:equatable/equatable.dart';
 
@@ -227,5 +229,5 @@ class LocalMedicalContext {
   @override
   String toString() =>
       'LocalMedicalContext(${downloadedCategories.length} categories, '
-      '${totalEntries} entries)';
+      '$totalEntries entries)';
 }

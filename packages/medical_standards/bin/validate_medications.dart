@@ -1,10 +1,13 @@
 #!/usr/bin/env dart
+// ignore_for_file: dangling_library_doc_comments
 /// Validates that all medications have RxNorm codes in the medical_standards package.
 /// Checks for:
 /// - All medications have a non-empty RxNorm code
 /// - No duplicate RxNorm codes
 
 import 'dart:io';
+
+// ignore_for_file: avoid_print
 
 void main() async {
   final issues = <String>[];

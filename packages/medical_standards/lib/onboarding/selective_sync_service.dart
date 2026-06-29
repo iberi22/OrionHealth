@@ -1,8 +1,10 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Service for selectively syncing only relevant medical data.
 ///
 /// Downloads and caches only the medical standards relevant to a user's
 /// profile, avoiding the full ~3GB download. Supports on-demand fetching
 /// when the AI needs context beyond what was pre-downloaded.
+
 
 import 'dart:convert';
 import 'dart:io';

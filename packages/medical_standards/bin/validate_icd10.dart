@@ -1,10 +1,13 @@
 #!/usr/bin/env dart
+// ignore_for_file: dangling_library_doc_comments
 /// Validates ICD-10 codes in the medical_standards package.
 /// Checks for:
 /// - Duplicate codes
 /// - Correct format (letter + 2+ digits, optionally with decimal)
 
 import 'dart:io';
+
+// ignore_for_file: avoid_print
 
 void main() async {
   final icd10Codes = <String, Set<String>>{};

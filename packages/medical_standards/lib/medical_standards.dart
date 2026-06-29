@@ -1,7 +1,9 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Core interfaces and base models for medical standards.
 ///
 /// All standards in this package implement these interfaces
 /// to ensure interoperability.
+
 
 import 'package:equatable/equatable.dart';
 
@@ -120,7 +122,7 @@ class ClinicalGuideline extends Equatable {
   final DateTime lastUpdated;
   final List<String> applicableConditions;
 
-  ClinicalGuideline({
+  const ClinicalGuideline({
     required this.id,
     required this.title,
     required this.organization,

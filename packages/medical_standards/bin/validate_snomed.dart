@@ -1,10 +1,13 @@
 #!/usr/bin/env dart
+// ignore_for_file: dangling_library_doc_comments
 /// Validates SNOMED CT codes in the medical_standards package.
 /// Checks for:
 /// - Duplicate codes
 /// - Valid format (numeric string)
 
 import 'dart:io';
+
+// ignore_for_file: avoid_print
 
 void main() async {
   final snomedCodes = <String, Set<String>>{};

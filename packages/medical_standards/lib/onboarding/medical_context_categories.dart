@@ -1,3 +1,4 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Medical context categories that can be selectively downloaded.
 ///
 /// Each category maps to specific ICD-10 codes, LOINC labs, and medication

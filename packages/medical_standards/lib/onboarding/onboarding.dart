@@ -1,3 +1,4 @@
+// ignore_for_file: dangling_library_doc_comments
 /// Smart onboarding module for selective medical context download.
 ///
 /// This module enables downloading only the medical standards relevant to
@@ -32,6 +33,7 @@
 /// }
 /// final result = context.getContextFor('metformin');
 /// ```
+
 
 export 'medical_context_categories.dart';
 export 'profile_analyzer.dart';
