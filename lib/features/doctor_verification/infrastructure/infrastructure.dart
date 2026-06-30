@@ -1,6 +1,6 @@
-/// Infrastructure layer for doctor_verification feature.
-///
-/// Exports infrastructure implementations migrated from legacy data/ layer.
+// Infrastructure layer for doctor_verification feature.
+//
+// Exports infrastructure implementations migrated from legacy data/ layer.
 export 'datasources/license_registry_local.dart';
 export 'models/doctor_profile_model.dart';
 export 'models/doctor_rating_model.dart';

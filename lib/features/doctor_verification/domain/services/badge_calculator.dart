@@ -24,7 +24,6 @@ class BadgeCalculator {
     final avgRating = await _ratingRepository.getAverageForDoctor(doctorId);
     final vouches = await _vouchRepository.getByDoctor(doctorId);
 
-    final totalVerifiedLicenses = 1; // Base verified profile
     final vouchCount = vouches.length;
     final ratingCount = ratings.length;
 

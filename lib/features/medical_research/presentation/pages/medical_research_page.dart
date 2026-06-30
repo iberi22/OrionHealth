@@ -149,7 +149,7 @@ class _MedicalResearchPageState extends State<MedicalResearchPage> with SingleTi
               ),
             ),
             if (state.status == MedicalResearchStatus.loading &&
-                state.loadingMessage?.contains('Buscando evidencia') == true)
+                state.loadingMessage!.contains('Buscando evidencia'))
               const SliverFillRemaining(
                 child: Center(
                   child: CircularProgressIndicator(color: CyberTheme.primary),
@@ -264,7 +264,7 @@ class _MedicalResearchPageState extends State<MedicalResearchPage> with SingleTi
               ),
               const SizedBox(height: 24),
               if (state.status == MedicalResearchStatus.loading &&
-                  state.loadingMessage?.contains('ICD-10') == true)
+                  state.loadingMessage!.contains('ICD-10'))
                 const Center(
                   child: CircularProgressIndicator(color: CyberTheme.secondary),
                 )
