@@ -123,7 +123,7 @@ class RdaParser {
   /// Extract a human-readable display from a reference
   static String? _extractDisplay(dynamic reference) {
     if (reference == null || reference is! Map) return 'Unknown';
-    final ref = reference as Map;
+    final ref = reference;
     if (ref['display'] != null) return ref['display'] as String;
     if (ref['text'] != null) return ref['text'] as String;
     if (ref['reference'] != null) return ref['reference'] as String;
@@ -184,7 +184,7 @@ class RdaParser {
           final given = (first['given'] as List?)?.join(' ') ?? '';
           final family = first['family'] as String? ?? '';
           patientName = '$given $family'.trim();
-          if (patientName!.isEmpty) patientName = null;
+          if (patientName.isEmpty) patientName = null;
         }
         break;
       }

@@ -1,6 +1,8 @@
 /// Infrastructure layer for sync feature.
 ///
 /// Exports infrastructure implementations.
+library;
+
 export 'datasources/filecoin_datasource.dart';
 export 'datasources/ipfs_datasource.dart';
 export 'repositories/sync_repository_impl.dart';

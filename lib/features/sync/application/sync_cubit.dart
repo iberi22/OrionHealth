@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../domain/services/sync_service.dart';
 import '../domain/services/node_discovery_service.dart';
-import '../domain/entities/sync_node.dart';
 import 'sync_state.dart';
 
 @injectable

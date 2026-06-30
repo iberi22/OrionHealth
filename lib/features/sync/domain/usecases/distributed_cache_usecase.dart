@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:injectable/injectable.dart';
+import 'package:orionhealth_health/core/services/app_logger.dart';
 import '../services/distributed_storage_service.dart';
 
 @lazySingleton
@@ -14,7 +15,7 @@ class DistributedCacheUsecase {
       return await _storageService.cacheData(data);
     } catch (e) {
       // Gracefully degrade if distributed storage is unavailable
-      print('Distributed cache failed: $e. Falling back to direct storage/download.');
+      AppLogger.e('DistributedCacheUsecase', 'Distributed cache failed. Falling back to direct storage/download.', error: e);
       return null;
     }
   }
@@ -24,7 +25,7 @@ class DistributedCacheUsecase {
     try {
       return await _storageService.getData(cid, expectedHash);
     } catch (e) {
-      print('Distributed storage retrieval failed: $e. Using fallback.');
+      AppLogger.e('DistributedCacheUsecase', 'Distributed storage retrieval failed. Using fallback.', error: e);
       return await fallback();
     }
   }
