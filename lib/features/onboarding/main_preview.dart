@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:orionhealth_health/core/services/app_logger.dart';
 import 'package:orionhealth_health/core/theme/cyber_theme.dart';
 import 'package:orionhealth_health/features/onboarding/presentation/pages/onboarding_main_page.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
@@ -21,7 +22,7 @@ class OnboardingPreview extends StatelessWidget {
       theme: CyberTheme.darkTheme,
       home: OnboardingMainPage(
         onFinish: () {
-          print('Onboarding Finished');
+          AppLogger.i('OnboardingPreview', 'Onboarding Finished');
         },
       ),
     );

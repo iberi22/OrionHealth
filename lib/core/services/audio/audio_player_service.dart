@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:orionhealth_health/core/services/app_logger.dart';
 import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
 import 'package:orionhealth_health/core/services/tts/tts_adapter.dart';
 import 'package:orionhealth_health/core/services/tts/sherpa_onnx_adapter.dart';
@@ -15,13 +16,11 @@ class AudioService extends AudioPlayerService {
   late final AudioRecorderService _recorder;
   final StreamController<AudioState> _audioStateController =
       StreamController<AudioState>.broadcast();
-  final StreamController<double> _volumeController =
-      StreamController<double>.broadcast();
 
   AudioService({super.player, AudioRecorderService? recorder})
     : _recorder = recorder ?? AudioRecorderService();
 
-  Stream<double> get currentVolumeStream => _volumeController.stream;
+  Stream<double> get currentVolumeStream => _recorder.currentVolumeStream;
   Stream<AudioState> get stateStream => _audioStateController.stream;
 
   SherpaOnnxTTSAdapter? _tts;
@@ -50,7 +49,7 @@ class AudioService extends AudioPlayerService {
       await _tts!.initialize();
       _ttsInitialized = true;
     } catch (e) {
-      if (kDebugMode) print('TTS init failed: $e — using playAudioBytes fallback');
+      AppLogger.e('AudioService', 'TTS init failed — using playAudioBytes fallback', error: e);
       _ttsInitialized = false;
     }
   }
@@ -92,7 +91,6 @@ class AudioService extends AudioPlayerService {
   void dispose() {
     _recorder.dispose();
     _audioStateController.close();
-    _volumeController.close();
     super.dispose();
   }
 }
