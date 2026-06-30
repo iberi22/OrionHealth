@@ -25,7 +25,7 @@ class HomeModuleModel extends HomeModule {
     return {
       'title': title,
       'icon': icon.codePoint,
-      'color': color.value,
+      'color': color.toARGB32(),
       'route': route,
     };
   }

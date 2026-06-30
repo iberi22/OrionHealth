@@ -31,8 +31,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
         ),
       );
 
-      if (result != null) {
-        final currentRefreshToken = await _localDataSource.getRefreshToken(provider.id);
+      final currentRefreshToken = await _localDataSource.getRefreshToken(provider.id);
         final refreshToken = result.refreshToken ?? currentRefreshToken;
 
         final token = OAuthToken(
@@ -67,9 +66,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
           await _localDataSource.savePatientId(provider.id, patientId);
         }
 
-        return OAuthLoginResult(token: token, patientId: patientId);
-      }
-      throw OAuthException('Login failed: no response from provider');
+      return OAuthLoginResult(token: token, patientId: patientId);
     } catch (e) {
       if (e is OAuthException) rethrow;
       throw OAuthException('Login failed', e);
@@ -192,8 +189,7 @@ class OAuthRepositoryImpl implements OAuthRepository {
         ),
       );
 
-      if (result != null) {
-        final newRefreshToken = result.refreshToken ?? currentRefreshToken;
+      final newRefreshToken = result.refreshToken ?? currentRefreshToken;
         final token = OAuthToken(
           accessToken: result.accessToken ?? '',
           idToken: result.idToken,
@@ -207,10 +203,8 @@ class OAuthRepositoryImpl implements OAuthRepository {
           token.idToken ?? '',
           newRefreshToken,
           expiresAt: token.expiresAt,
-        );
-        return token;
-      }
-      throw OAuthException('Token refresh failed: no response from provider');
+      );
+      return token;
     } catch (e) {
       if (e is OAuthException) rethrow;
       throw OAuthException('Token refresh failed', e);
