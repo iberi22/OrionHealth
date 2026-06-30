@@ -10,6 +10,11 @@ import '../../../vitals/domain/repositories/vital_sign_repository.dart';
 import '../../../appointments/domain/repositories/appointment_repository.dart';
 
 import '../../../../core/services/app_logger.dart';
+import '../../../health_record/domain/entities/medical_record.dart';
+import '../../../medications/domain/entities/medication.dart';
+import '../../../allergies/domain/entities/allergy.dart';
+import '../../../vitals/domain/entities/vital_sign.dart';
+import '../../../appointments/domain/entities/appointment.dart';
 
 /// Service that indexes patient health records into the vector store.
 ///
