@@ -1,8 +1,8 @@
 import '../entities/app_settings.dart';
-import '../repositories/llm_settings_repository.dart';
+import '../repositories/settings_repository.dart';
 
 class UpdateNotifications {
-  final LlmSettingsRepository repository;
+  final SettingsRepository repository;
   UpdateNotifications(this.repository);
 
   Future<void> call(bool enabled) async {

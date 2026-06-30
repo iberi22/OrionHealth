@@ -7,10 +7,10 @@ import 'package:orionhealth_health/features/local_agent/domain/services/llm_adap
 import 'package:orionhealth_health/features/settings/application/llm_settings_cubit.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/app_settings.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
-import 'package:orionhealth_health/features/settings/domain/repositories/llm_settings_repository.dart';
+import 'package:orionhealth_health/features/settings/domain/repositories/settings_repository.dart';
 import 'package:orionhealth_health/features/settings/domain/services/device_capability_service.dart';
 
-class MockLlmSettingsRepository extends Mock implements LlmSettingsRepository {}
+class MockSettingsRepository extends Mock implements SettingsRepository {}
 class MockDeviceCapabilityService extends Mock implements DeviceCapabilityService {}
 class MockLlmAdapter extends Mock implements LlmAdapter {}
 
@@ -90,7 +90,7 @@ class _MockHttpClientResponse extends Mock implements HttpClientResponse {
 
 void main() {
   late LlmSettingsCubit cubit;
-  late MockLlmSettingsRepository mockRepository;
+  late MockSettingsRepository mockRepository;
   late MockDeviceCapabilityService mockDeviceCapabilityService;
   late MockLlmAdapter mockLlmAdapter;
 
@@ -115,7 +115,7 @@ void main() {
   });
 
   setUp(() {
-    mockRepository = MockLlmSettingsRepository();
+    mockRepository = MockSettingsRepository();
     mockDeviceCapabilityService = MockDeviceCapabilityService();
     mockLlmAdapter = MockLlmAdapter();
 

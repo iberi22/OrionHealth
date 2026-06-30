@@ -1,8 +1,8 @@
 import '../entities/app_settings.dart';
-import '../repositories/llm_settings_repository.dart';
+import '../repositories/settings_repository.dart';
 
 class UpdateLanguage {
-  final LlmSettingsRepository repository;
+  final SettingsRepository repository;
   UpdateLanguage(this.repository);
 
   Future<void> call(String languageCode) async {

@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import '../domain/entities/llm_config.dart';
 import '../domain/entities/app_settings.dart';
-import '../domain/repositories/llm_settings_repository.dart';
+import '../domain/repositories/settings_repository.dart';
 import '../domain/services/device_capability_service.dart';
 import '../../local_agent/domain/services/llm_adapter.dart';
 import '../../local_agent/domain/entities/local_model_descriptor.dart';
@@ -35,7 +35,7 @@ const List<String> availableOpenaiModels = [
 
 @injectable
 class LlmSettingsCubit extends Cubit<LlmSettingsState> {
-  final LlmSettingsRepository _repository;
+  final SettingsRepository _repository;
   final DeviceCapabilityService _deviceCapabilityService;
   final LlmAdapter _llmAdapter;
 

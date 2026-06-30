@@ -1,21 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/app_settings.dart';
-import 'package:orionhealth_health/features/settings/domain/repositories/llm_settings_repository.dart';
+import 'package:orionhealth_health/features/settings/domain/repositories/settings_repository.dart';
 import 'package:orionhealth_health/features/settings/domain/usecases/update_notifications.dart';
 
-class MockLlmSettingsRepository extends Mock implements LlmSettingsRepository {}
+class MockSettingsRepository extends Mock implements SettingsRepository {}
 
 void main() {
   late UpdateNotifications usecase;
-  late MockLlmSettingsRepository mockRepository;
+  late MockSettingsRepository mockRepository;
 
   setUpAll(() {
     registerFallbackValue(AppSettings());
   });
 
   setUp(() {
-    mockRepository = MockLlmSettingsRepository();
+    mockRepository = MockSettingsRepository();
     usecase = UpdateNotifications(mockRepository);
   });
 
