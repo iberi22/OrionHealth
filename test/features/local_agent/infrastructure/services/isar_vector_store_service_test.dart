@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/local_agent/domain/entities/medical_code.dart';
 import 'package:orionhealth_health/features/local_agent/domain/repositories/medical_knowledge_repository.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/vector_store_service.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/services/isar_vector_store_service.dart';

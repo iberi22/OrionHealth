@@ -34,7 +34,7 @@ void main() {
 }
 
 class _MockSettingsPage extends StatefulWidget {
-  const _MockSettingsPage({super.key});
+  const _MockSettingsPage();
   @override
   State<_MockSettingsPage> createState() => _MockSettingsPageState();
 }

@@ -44,8 +44,8 @@ class _AudioWaveformVisualizerState extends State<AudioWaveformVisualizer>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
-  List<AnimationController> _barControllers = [];
-  List<Animation<double>> _barAnimations = [];
+  final List<AnimationController> _barControllers = [];
+  final List<Animation<double>> _barAnimations = [];
 
   @override
   void initState() {
@@ -177,10 +177,10 @@ class _AudioWaveformVisualizerState extends State<AudioWaveformVisualizer>
       decoration:
           widget.showBackground
               ? BoxDecoration(
-                color: widget.secondaryColor.withOpacity(0.1),
+                color: widget.secondaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.0),
                 border: Border.all(
-                  color: widget.secondaryColor.withOpacity(0.3),
+                  color: widget.secondaryColor.withValues(alpha: 0.3),
                   width: 1.0,
                 ),
               )
@@ -224,10 +224,10 @@ class _AudioWaveformVisualizerState extends State<AudioWaveformVisualizer>
                 decoration: BoxDecoration(
                   color:
                       widget.isActive
-                          ? widget.primaryColor.withOpacity(
-                            0.7 + (_barAnimations[index].value * 0.3),
+                          ? widget.primaryColor.withValues(
+                            alpha: 0.7 + (_barAnimations[index].value * 0.3),
                           )
-                          : widget.secondaryColor.withOpacity(0.3),
+                          : widget.secondaryColor.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(widget.barWidth / 2),
                 ),
               );
@@ -267,10 +267,10 @@ class _AudioWaveformVisualizerState extends State<AudioWaveformVisualizer>
                 decoration: BoxDecoration(
                   color:
                       widget.isActive
-                          ? widget.primaryColor.withOpacity(
-                            0.7 + (_barAnimations[index].value * 0.3),
+                          ? widget.primaryColor.withValues(
+                            alpha: 0.7 + (_barAnimations[index].value * 0.3),
                           )
-                          : widget.secondaryColor.withOpacity(0.3),
+                          : widget.secondaryColor.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
               );
@@ -310,7 +310,7 @@ class LineWaveformPainter extends CustomPainter {
 
     final paint =
         Paint()
-          ..color = color.withOpacity(isActive ? 0.8 : 0.3)
+          ..color = color.withValues(alpha: isActive ? 0.8 : 0.3)
           ..strokeWidth = 2.0
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round;

@@ -74,7 +74,7 @@ void main() {
     when(() => mockCubit.state).thenReturn(const VoiceChatState(status: VoiceChatStatus.initial));
     when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockCubit.startRecording()).thenAnswer((_) async {});
-    when(() => mockCubit.stopRecording()).thenAnswer((_) async => null);
+    when(() => mockCubit.stopRecording()).thenAnswer((_) async {});
 
     await tester.pumpWidget(createWidgetUnderTest());
 

@@ -31,7 +31,7 @@ void main() {
 }
 
 class _MockMeditationPage extends StatefulWidget {
-  const _MockMeditationPage({super.key});
+  const _MockMeditationPage();
   @override
   State<_MockMeditationPage> createState() => _MockMeditationPageState();
 }

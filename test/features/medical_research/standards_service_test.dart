@@ -25,7 +25,7 @@ void main() {
       final result = await standardsService.lookupIcd10('diabetes');
 
       expect(result!.code, equals('E11'));
-      expect(result!.displayName, equals('Diabetes'));
+      expect(result.displayName, equals('Diabetes'));
     });
 
     test('checkDrugInteractions detects Warfarin + Aspirin', () async {

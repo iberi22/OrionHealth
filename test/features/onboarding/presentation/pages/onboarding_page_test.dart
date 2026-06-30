@@ -8,7 +8,6 @@ import 'package:orionhealth_health/features/onboarding/domain/entities/user_prof
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_cubit.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_state.dart';
-import 'package:orionhealth_health/features/home/presentation/pages/main_navigation_page.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'dart:async';
 

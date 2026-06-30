@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/email-citas/presentation/email_connect_page.dart';
 import 'package:orionhealth_health/features/email-citas/application/email_citas_cubit.dart';
 import 'package:orionhealth_health/features/email-citas/application/email_citas_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 
 class MockEmailCitasCubit extends Mock implements EmailCitasCubit {}

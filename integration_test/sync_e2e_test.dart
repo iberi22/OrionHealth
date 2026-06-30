@@ -87,7 +87,6 @@ class _MockSyncPage extends StatefulWidget {
   final bool isLargeDataset;
 
   const _MockSyncPage({
-    super.key,
     this.simulateConflict = false,
     this.simulateInterruption = false,
     this.isLargeDataset = false,

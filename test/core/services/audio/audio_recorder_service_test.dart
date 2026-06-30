@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -24,9 +22,9 @@ void main() {
     recorderService = AudioRecorderService(recorder: mockRecorder);
 
     when(() => mockRecorder.hasPermission()).thenAnswer((_) async => true);
-    when(() => mockRecorder.start(any(), path: any(named: 'path'))).thenAnswer((_) async => null);
+    when(() => mockRecorder.start(any(), path: any(named: 'path'))).thenAnswer((_) async {});
     when(() => mockRecorder.stop()).thenAnswer((_) async => null);
-    when(() => mockRecorder.dispose()).thenAnswer((_) async => null);
+    when(() => mockRecorder.dispose()).thenAnswer((_) async {});
 
     // Mock permission handler channel
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

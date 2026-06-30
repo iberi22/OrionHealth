@@ -100,8 +100,9 @@ class SherpaOnnxTTSAdapter implements TTSAdapter {
       final tokensPath = p.join(modelDir, 'tokens.txt');
       final tokensFile = File(tokensPath);
       if (!await tokensFile.exists()) {
-        if (kDebugMode)
+        if (kDebugMode) {
           print('SherpaOnnxTTSAdapter: generating tokens.txt for $voiceKey');
+        }
         final cfgStr = await File(jsonPath).readAsString();
         final cfg = jsonDecode(cfgStr) as Map<String, dynamic>;
         final idMap = cfg['phoneme_id_map'] as Map<String, dynamic>?;
@@ -252,25 +253,25 @@ class SherpaOnnxTTSAdapter implements TTSAdapter {
     final dataLength = pcmBytes.lengthInBytes;
     final chunkSize = 36 + dataLength;
 
-    Uint8List _le16(int v) =>
+    Uint8List le16(int v) =>
         Uint8List(2)..buffer.asByteData().setUint16(0, v, Endian.little);
-    Uint8List _le32(int v) =>
+    Uint8List le32(int v) =>
         Uint8List(4)..buffer.asByteData().setUint32(0, v, Endian.little);
 
     final header = BytesBuilder();
     header.add(ascii.encode('RIFF'));
-    header.add(_le32(chunkSize));
+    header.add(le32(chunkSize));
     header.add(ascii.encode('WAVE'));
     header.add(ascii.encode('fmt '));
-    header.add(_le32(16));
-    header.add(_le16(1));
-    header.add(_le16(1));
-    header.add(_le32(sampleRate));
-    header.add(_le32(byteRate));
-    header.add(_le16(blockAlign));
-    header.add(_le16(16));
+    header.add(le32(16));
+    header.add(le16(1));
+    header.add(le16(1));
+    header.add(le32(sampleRate));
+    header.add(le32(byteRate));
+    header.add(le16(blockAlign));
+    header.add(le16(16));
     header.add(ascii.encode('data'));
-    header.add(_le32(dataLength));
+    header.add(le32(dataLength));
 
     final bytes = BytesBuilder();
     bytes.add(header.takeBytes());

@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:orionhealth_health/core/services/asr/asr_service.dart';
 import 'package:orionhealth_health/core/services/asr/asr_types.dart';
-import 'package:orionhealth_health/core/services/asr/asr_settings.dart';
 
 void main() {
   group('AsrService', () {

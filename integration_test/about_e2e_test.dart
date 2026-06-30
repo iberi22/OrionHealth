@@ -30,7 +30,7 @@ void main() {
 }
 
 class _MockAboutPage extends StatefulWidget {
-  const _MockAboutPage({super.key});
+  const _MockAboutPage();
   @override
   State<_MockAboutPage> createState() => _MockAboutPageState();
 }

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -88,7 +87,9 @@ void main() {
 
     test('setupPin should save credentials and emit AuthAuthenticated', () async {
       when(mockEncryption.hashPin(any, any)).thenAnswer((_) async => 'hashed');
-      when(mockRepository.saveCredentials(any)).thenAnswer((_) async {});
+      when(mockRepository.saveCredentials(any)).thenAnswer((_) async {
+        return;
+      });
 
       await authCubit.setupPin('1234');
 
@@ -112,7 +113,9 @@ void main() {
       when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
       when(mockBiometric.authenticate(localizedReason: anyNamed('localizedReason')))
           .thenAnswer((_) async => true);
-      when(mockRepository.saveCredentials(any)).thenAnswer((_) async {});
+      when(mockRepository.saveCredentials(any)).thenAnswer((_) async {
+        return;
+      });
 
       await authCubit.toggleBiometrics(true);
 

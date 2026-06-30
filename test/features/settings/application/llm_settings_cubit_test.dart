@@ -63,6 +63,7 @@ class _MockHttpHeaders extends Mock implements HttpHeaders {
 }
 
 class _MockHttpClientResponse extends Mock implements HttpClientResponse {
+  @override
   final int statusCode;
   _MockHttpClientResponse({required this.statusCode});
 

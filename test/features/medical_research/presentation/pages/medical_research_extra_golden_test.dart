@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/pages/scraper_config_page.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/pages/standards_viewer_page.dart';
-import 'package:orionhealth_health/core/theme/cyber_theme.dart';
 
 void main() {
   group('Medical Research Extra Pages Golden Tests', () {

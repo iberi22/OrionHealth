@@ -1,7 +1,6 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/calendar_import/infrastructure/models/calendar_source_dto.dart';
-import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_source.dart';
 
 void main() {
   group('CalendarSourceDto', () {

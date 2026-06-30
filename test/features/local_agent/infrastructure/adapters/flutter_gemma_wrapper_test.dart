@@ -1,7 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_gemma/flutter_gemma.dart' hide ModelType;
-import 'package:flutter_gemma/flutter_gemma.dart' as gemma;
-import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart';
 
 /// No mocks needed — the wrapper delegates to static FlutterGemma methods.

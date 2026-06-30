@@ -42,7 +42,7 @@ class _CreateProposalPageState extends State<CreateProposalPage> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<int>(
-                value: _days,
+                initialValue: _days,
                 decoration: const InputDecoration(labelText: 'Duration (days)'),
                 items: [3, 7, 14, 30].map((d) {
                   return DropdownMenuItem(value: d, child: Text('$d Days'));

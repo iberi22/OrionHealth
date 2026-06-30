@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:crypto/crypto.dart' show sha256;
 

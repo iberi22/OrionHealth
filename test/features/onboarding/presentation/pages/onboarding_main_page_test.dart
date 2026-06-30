@@ -4,7 +4,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/onboarding/presentation/pages/onboarding_main_page.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
-import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 
 class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 

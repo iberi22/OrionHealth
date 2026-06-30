@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_connection.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/oauth_token.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/repositories/oauth_repository.dart';

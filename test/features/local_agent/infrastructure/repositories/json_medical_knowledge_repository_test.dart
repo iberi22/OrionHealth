@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/local_agent/domain/entities/medical_code.dart';
 import 'package:orionhealth_health/features/local_agent/domain/repositories/medical_knowledge_repository.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart';
 

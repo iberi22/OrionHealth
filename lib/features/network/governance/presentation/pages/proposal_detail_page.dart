@@ -104,7 +104,7 @@ class _StatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Chip(
       label: Text(status.name.toUpperCase()),
-      backgroundColor: _getStatusColor(status).withOpacity(0.2),
+      backgroundColor: _getStatusColor(status).withValues(alpha: 0.2),
       labelStyle: TextStyle(color: _getStatusColor(status)),
     );
   }

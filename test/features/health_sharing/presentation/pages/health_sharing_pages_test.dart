@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
@@ -9,7 +8,6 @@ import 'package:orionhealth_health/features/health_sharing/presentation/pages/sh
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/receive_page.dart';
 import 'package:orionhealth_health/features/health_sharing/application/sharing_cubit.dart';
 import 'package:orionhealth_health/features/health_sharing/domain/entities/shared_health_package.dart';
-import 'package:orionhealth_health/features/health_sharing/infrastructure/wifi_direct_service.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/golden_test_utils.dart';
 

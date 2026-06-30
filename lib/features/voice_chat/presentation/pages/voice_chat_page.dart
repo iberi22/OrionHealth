@@ -137,7 +137,7 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
           shape: BoxShape.circle,
           gradient: RadialGradient(
             colors: [
-              Colors.blue.withOpacity(0.4),
+              Colors.blue.withValues(alpha: 0.4),
               Colors.transparent,
             ],
           ),

@@ -31,6 +31,8 @@
 /// Does NOT use Faker (no external dependency). Generates structurally
 /// realistic surrogates using format-preserving replacement and built-in
 /// generators.
+library;
+
 
 import 'dart:math';
 

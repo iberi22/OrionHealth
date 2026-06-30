@@ -24,7 +24,7 @@ void main() {
       );
 
       when(() => mockPlayer.playerStateStream).thenAnswer((_) => const Stream.empty());
-      when(() => mockPlayer.stop()).thenAnswer((_) async => null);
+      when(() => mockPlayer.stop()).thenAnswer((_) async {});
       when(() => mockPlayer.playing).thenReturn(false);
     });
 

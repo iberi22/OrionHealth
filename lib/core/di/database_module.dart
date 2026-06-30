@@ -10,7 +10,6 @@ import '../../features/local_agent/domain/chat_message.dart';
 import '../../features/health_record/domain/entities/medical_record.dart';
 import '../../features/reports/domain/entities/report.dart';
 import '../../features/medications/domain/entities/medication.dart';
-import '../../features/vitals/domain/entities/vital_sign.dart';
 import '../../features/appointments/domain/entities/appointment.dart';
 import '../../features/allergies/domain/entities/allergy.dart';
 import '../../features/doctor_verification/domain/entities/doctor_profile.dart';

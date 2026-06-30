@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart';
-import 'package:openai_dart/openai_dart.dart';
 
 /// We test the OpenaiCompatibleAdapter by checking its public contract
 /// without mocking OpenAIClient, since it's external. We verify:

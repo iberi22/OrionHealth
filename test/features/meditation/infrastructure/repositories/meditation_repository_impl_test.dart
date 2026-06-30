@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/meditation/domain/entities/meditation_category.dart';
 import 'package:orionhealth_health/features/meditation/domain/entities/meditation_preferences.dart';
-import 'package:orionhealth_health/features/meditation/domain/entities/meditation_script.dart';
 import 'package:orionhealth_health/features/meditation/domain/entities/meditation_session.dart';
 import 'package:orionhealth_health/features/meditation/infrastructure/datasources/meditation_local_datasource.dart';
 import 'package:orionhealth_health/features/meditation/infrastructure/repositories/meditation_repository_impl.dart';

@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/services/model_download_service.dart';
 import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart';

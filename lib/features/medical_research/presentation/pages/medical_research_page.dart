@@ -310,7 +310,7 @@ class _MedicalResearchPageState extends State<MedicalResearchPage> with SingleTi
                           'Categoría: ${state.icd10Result!.category}',
                           style: const TextStyle(color: Colors.white54),
                         ),
-                        if (state.icd10Result!.synonyms != null && state.icd10Result!.synonyms!.isNotEmpty) ...[
+                        if (state.icd10Result!.synonyms.isNotEmpty) ...[
                           const SizedBox(height: 12),
                           const Text(
                             'Sinónimos:',
@@ -318,7 +318,7 @@ class _MedicalResearchPageState extends State<MedicalResearchPage> with SingleTi
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            state.icd10Result!.synonyms!.join(', '),
+                            state.icd10Result!.synonyms.join(', '),
                             style: const TextStyle(color: Colors.white54, fontSize: 13),
                           ),
                         ],
