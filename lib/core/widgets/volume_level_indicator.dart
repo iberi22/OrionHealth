@@ -188,7 +188,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
               size: Size(widget.size, widget.size),
               painter: CircularVolumePainter(
                 level: 1.0,
-                color: widget.backgroundColor.withOpacity(0.3),
+                color: widget.backgroundColor.withValues(alpha: 0.3),
                 thickness: widget.thickness,
                 showOptimalRange: false,
               ),
@@ -203,7 +203,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
                 painter: CircularVolumePainter(
                   level: 0.7,
                   startLevel: 0.3,
-                  color: widget.primaryColor.withOpacity(0.2),
+                  color: widget.primaryColor.withValues(alpha: 0.2),
                   thickness: widget.thickness,
                   showOptimalRange: true,
                 ),
@@ -269,7 +269,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
       height: widget.thickness * 2,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(widget.thickness),
-        color: widget.backgroundColor.withOpacity(0.3),
+        color: widget.backgroundColor.withValues(alpha: 0.3),
       ),
       child: Stack(
         children: [
@@ -283,7 +283,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(widget.thickness),
-                  color: widget.primaryColor.withOpacity(0.2),
+                  color: widget.primaryColor.withValues(alpha: 0.2),
                 ),
               ),
             ),
@@ -358,7 +358,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
                     color:
                         isActive || isPeak
                             ? _getVolumeColor(segmentLevel)
-                            : widget.backgroundColor.withOpacity(0.3),
+                            : widget.backgroundColor.withValues(alpha: 0.3),
                   ),
                 ),
               );

@@ -11,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/sync_node.dart';
 import '../../domain/repositories/sync_repository.dart';
 import '../../domain/services/node_discovery_service.dart';
-import '../../../user_profile/domain/entities/user_profile.dart';
 import '../../../medications/domain/entities/medication.dart' as app_med;
 import '../../../allergies/domain/entities/allergy.dart';
 import '../../../vitals/domain/entities/vital_sign.dart' as app_vital;

@@ -107,7 +107,7 @@ void main() {
       expect(results.length, 1);
       expect(results[0].title, 'Advil');
       expect(results[0].source, 'FDA (openFDA)');
-      expect(results[0].metadata?['manufacturer'], 'Pfizer');
+      expect(results[0].metadata['manufacturer'], 'Pfizer');
     });
 
     test('search returns empty list on error', () async {

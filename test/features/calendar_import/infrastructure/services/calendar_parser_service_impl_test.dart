@@ -1,6 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
 import 'package:orionhealth_health/features/calendar_import/infrastructure/services/calendar_parser_service_impl.dart';
 
 void main() {

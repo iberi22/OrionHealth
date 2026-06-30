@@ -48,7 +48,7 @@ class InputValidator {
 
     // Check size limits
     if (audioData.length < minAudioSizeBytes) {
-      return ValidationResult.error('Audio data too small (min ${minAudioSizeBytes} bytes)');
+      return ValidationResult.error('Audio data too small (min $minAudioSizeBytes bytes)');
     }
 
     if (audioData.length > maxAudioSizeBytes) {

@@ -10,7 +10,7 @@ class PiiEntity extends Equatable {
   final int end;
   final double score;
 
-  PiiEntity({
+  const PiiEntity({
     required this.type,
     required this.text,
     required this.start,

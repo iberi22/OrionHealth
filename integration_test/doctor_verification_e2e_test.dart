@@ -10,7 +10,6 @@ import 'package:orionhealth_health/features/doctor_verification/presentation/wid
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/rating_dialog.dart';
 import 'package:mocktail/mocktail.dart';
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_rating.dart';
 import 'utils/video_recorder.dart';

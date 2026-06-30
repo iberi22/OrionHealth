@@ -4,7 +4,7 @@
 /// - Encrypted local storage of health records via Isar
 /// - AES-256-GCM encryption for sensitive fields
 /// - P2P encrypted sync between Orion nodes
-library health_wallet;
+library;
 
 export 'models/health_record.dart';
 export 'models/lab_result.dart';

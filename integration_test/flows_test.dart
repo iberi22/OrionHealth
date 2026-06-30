@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:orionhealth_health/main.dart' as app;
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/home/presentation/widgets/health_status_grid.dart';
-import 'package:orionhealth_health/features/home/presentation/widgets/module_cards.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/share_page.dart';
 import 'package:orionhealth_health/features/eps_connection/presentation/pages/eps_connection_page.dart';
 import 'package:orionhealth_health/features/auth/presentation/auth_gate.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
-import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'utils/video_recorder.dart';
 

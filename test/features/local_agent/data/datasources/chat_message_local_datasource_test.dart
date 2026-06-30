@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/local_agent/data/datasources/chat_message_local_datasource.dart';
 import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 

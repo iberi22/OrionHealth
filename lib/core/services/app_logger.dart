@@ -12,6 +12,8 @@
 /// AppLogger.w('IsarVector', 'Node $id not found in index');
 /// AppLogger.e('LlmAdapter', 'Generation failed', error: e);
 /// ```
+library;
+
 import 'package:flutter/foundation.dart' show kReleaseMode;
 
 class AppLogger {

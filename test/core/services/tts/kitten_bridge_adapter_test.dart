@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -37,8 +36,8 @@ void main() {
 
       when(() => mockPlayer.playerStateStream).thenAnswer((_) => Stream.empty());
       when(() => mockPlayer.setFilePath(any())).thenAnswer((_) async => null);
-      when(() => mockPlayer.play()).thenAnswer((_) async => null);
-      when(() => mockPlayer.stop()).thenAnswer((_) async => null);
+      when(() => mockPlayer.play()).thenAnswer((_) async {});
+      when(() => mockPlayer.stop()).thenAnswer((_) async {});
       when(() => mockPlayer.playing).thenReturn(false);
     });
 

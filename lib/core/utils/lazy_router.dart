@@ -105,7 +105,7 @@ class LazyModuleLoader {
 
   void disposeAll() {
     _cache.clear();
-    _loaded.updateAll((_, __) => false);
+    _loaded.updateAll((_, _) => false);
   }
 }
 

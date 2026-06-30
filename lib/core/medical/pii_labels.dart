@@ -7,6 +7,8 @@
 ///
 /// This module provides a single [CANONICAL_LABELS] taxonomy in UPPER_SNAKE_CASE
 /// and a [normalizeLabel] helper that maps various input forms to its canonical name.
+library;
+
 
 // People-related entities
 const String PERSON = 'PERSON';

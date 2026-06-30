@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -22,9 +21,9 @@ void main() {
 
     when(() => mockPlayer.playerStateStream).thenAnswer((_) => playerStateController.stream);
     when(() => mockPlayer.setFilePath(any())).thenAnswer((_) async => null);
-    when(() => mockPlayer.play()).thenAnswer((_) async => null);
-    when(() => mockPlayer.stop()).thenAnswer((_) async => null);
-    when(() => mockPlayer.dispose()).thenAnswer((_) async => null);
+    when(() => mockPlayer.play()).thenAnswer((_) async {});
+    when(() => mockPlayer.stop()).thenAnswer((_) async {});
+    when(() => mockPlayer.dispose()).thenAnswer((_) async {});
 
     playerService = AudioPlayerService(player: mockPlayer);
   });
@@ -87,8 +86,8 @@ void main() {
       mockPlayer = MockAudioPlayer();
       mockRecorder = MockAudioRecorder();
       when(() => mockPlayer.playerStateStream).thenAnswer((_) => const Stream.empty());
-      when(() => mockPlayer.dispose()).thenAnswer((_) async => null);
-      when(() => mockRecorder.dispose()).thenAnswer((_) async => null);
+      when(() => mockPlayer.dispose()).thenAnswer((_) async {});
+      when(() => mockRecorder.dispose()).thenAnswer((_) async {});
 
       audioService = AudioService(
         player: mockPlayer,
@@ -105,7 +104,7 @@ void main() {
     });
 
     test('AudioService stopAll calls stopPlayback', () async {
-      when(() => mockPlayer.stop()).thenAnswer((_) async => null);
+      when(() => mockPlayer.stop()).thenAnswer((_) async {});
       // We didn't set isPlaying to true, so stopPlayback might not call player.stop()
       // But let's verify speakText logic at least
       expect(audioService.stopAll(), completes);

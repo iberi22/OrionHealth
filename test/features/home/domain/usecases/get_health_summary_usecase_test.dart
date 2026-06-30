@@ -4,7 +4,6 @@ import 'package:orionhealth_health/features/home/domain/entities/home_health_sum
 import 'package:orionhealth_health/features/home/domain/repositories/home_repository.dart';
 import 'package:orionhealth_health/features/home/domain/usecases/get_health_summary_usecase.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
-import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 
 class MockHomeRepository extends Mock implements HomeRepository {}
 

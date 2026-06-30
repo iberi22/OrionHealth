@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/vitals/presentation/pages/vitals_monitor_page.dart';
 import 'package:orionhealth_health/features/health_sharing/infrastructure/ble_sharing_service.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
