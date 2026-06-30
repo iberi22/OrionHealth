@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/settings/data/models/llm_config_dto.dart';
+import 'package:orionhealth_health/features/settings/infrastructure/models/llm_config_dto.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
 
 void main() {

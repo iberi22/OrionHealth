@@ -1,7 +1,7 @@
 import '../entities/llm_config.dart';
 import '../entities/app_settings.dart';
 
-abstract class LlmSettingsRepository {
+abstract class SettingsRepository {
   Future<LlmConfig?> getLlmConfig();
   Future<void> saveLlmConfig(LlmConfig config);
 

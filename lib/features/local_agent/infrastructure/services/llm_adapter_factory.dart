@@ -1,12 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import '../../../settings/domain/repositories/llm_settings_repository.dart';
+import '../../../settings/domain/repositories/settings_repository.dart';
 import '../../domain/services/llm_adapter.dart';
 
 @lazySingleton
 class LlmAdapterFactory {
   final GetIt _getIt = GetIt.instance;
-  final LlmSettingsRepository _settingsRepository;
+  final SettingsRepository _settingsRepository;
 
   LlmAdapterFactory(this._settingsRepository);
 

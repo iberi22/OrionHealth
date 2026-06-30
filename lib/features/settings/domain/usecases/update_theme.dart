@@ -1,8 +1,8 @@
 import '../entities/app_settings.dart';
-import '../repositories/llm_settings_repository.dart';
+import '../repositories/settings_repository.dart';
 
 class UpdateTheme {
-  final LlmSettingsRepository repository;
+  final SettingsRepository repository;
   UpdateTheme(this.repository);
 
   Future<void> call(String themeMode) async {

@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import '../../domain/entities/app_settings.dart';
 import '../../domain/entities/llm_config.dart';
-import '../../domain/repositories/llm_settings_repository.dart';
+import '../../domain/repositories/settings_repository.dart';
 import '../datasources/settings_local_datasource.dart';
 import '../models/llm_config_dto.dart';
 
-@LazySingleton(as: LlmSettingsRepository)
-class LlmSettingsRepositoryImpl implements LlmSettingsRepository {
+@LazySingleton(as: SettingsRepository)
+class SettingsRepositoryImpl implements SettingsRepository {
   final SettingsLocalDataSource _localDataSource;
 
-  LlmSettingsRepositoryImpl(this._localDataSource);
+  SettingsRepositoryImpl(this._localDataSource);
 
   @override
   Future<LlmConfig?> getLlmConfig() => _localDataSource.getLlmConfig();
