@@ -238,9 +238,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i173;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i210;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i65;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i64;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i65;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i113;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -512,15 +512,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i62.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i63.MedicalKnowledgeRepository>(
-      () => _i64.JsonMedicalKnowledgeRepository(),
+      () => _i64.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
+    );
+    gh.factory<_i63.MedicalKnowledgeRepository>(
+      () => _i65.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
-    );
-    gh.factory<_i63.MedicalKnowledgeRepository>(
-      () => _i65.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
     );
     gh.lazySingleton<_i66.MedicalScraperService>(
         () => _i67.MedicalScraperServiceImpl(
