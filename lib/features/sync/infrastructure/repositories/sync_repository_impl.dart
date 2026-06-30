@@ -6,6 +6,7 @@ library;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
+import 'package:orionhealth_health/core/services/app_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/sync_node.dart';
 import '../../domain/repositories/sync_repository.dart';
@@ -75,7 +76,7 @@ class SyncRepositoryImpl implements SyncRepository {
         await _isar.userProfiles.put(updatedProfile);
       });
     } catch (e) {
-      print('Error syncing patient: $e');
+      AppLogger.e('SyncRepositoryImpl', 'Error syncing patient', error: e);
     }
   }
 
@@ -175,7 +176,7 @@ class SyncRepositoryImpl implements SyncRepository {
         }
       });
     } catch (e) {
-      print('Error syncing RDA: $e');
+      AppLogger.e('SyncRepositoryImpl', 'Error syncing RDA', error: e);
     }
   }
 
