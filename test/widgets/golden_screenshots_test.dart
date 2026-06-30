@@ -191,7 +191,7 @@ class _MockLoginPage extends StatelessWidget {
             const SizedBox(height: 32),
             const Text('Acceso Seguro', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 32),
-            const TextField(decoration: InputDecoration(labelText: 'PIN de 6 dígitos', border: OutlineInputBorder()), obscureText: true),
+            const TextField(decoration: InputDecoration(labelText: 'pin de 6 dígitos', border: OutlineInputBorder()), obscureText: true),
             const SizedBox(height: 16),
             ElevatedButton(onPressed: () {}, child: const Text('Entrar')),
             const SizedBox(height: 24),

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
+import '../services/app_logger.dart';
 import 'cache_manager.dart';
 import '../../features/sync/domain/services/sync_service.dart';
 
@@ -41,23 +42,19 @@ class ConnectivityManager {
       _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
         _updateStatus,
         onError: (error) {
-          if (kDebugMode) {
-            print(
-              'ConnectivityManager: Error listening to connectivity changes - $error',
-            );
-          }
+          AppLogger.e(
+            'ConnectivityManager',
+            'Error listening to connectivity changes - $error',
+          );
         },
       );
 
-      if (kDebugMode) {
-        print(
-          'ConnectivityManager: Initialized with status ${_currentStatus.name}',
-        );
-      }
+      AppLogger.i(
+        'ConnectivityManager',
+        'Initialized with status ${_currentStatus.name}',
+      );
     } catch (e) {
-      if (kDebugMode) {
-        print('ConnectivityManager: Error during initialization - $e');
-      }
+      AppLogger.e('ConnectivityManager', 'Error during initialization - $e');
       _currentStatus = ConnectivityStatus.unknown;
     }
   }
@@ -82,11 +79,10 @@ class ConnectivityManager {
 
       _statusController.add(_currentStatus);
 
-      if (kDebugMode) {
-        print(
-          'ConnectivityManager: Status changed from ${previousStatus.name} to ${_currentStatus.name}',
-        );
-      }
+      AppLogger.i(
+        'ConnectivityManager',
+        'Status changed from ${previousStatus.name} to ${_currentStatus.name}',
+      );
 
       // Trigger callbacks for status changes
       _handleStatusChange(previousStatus, _currentStatus);
@@ -109,9 +105,7 @@ class ConnectivityManager {
 
   /// Called when connection is restored
   void _onConnectionRestored() {
-    if (kDebugMode) {
-      print('ConnectivityManager: Connection restored');
-    }
+    AppLogger.i('ConnectivityManager', 'Connection restored');
 
     // Trigger sync operations, retry failed requests, etc.
     triggerDataSync();
@@ -119,9 +113,10 @@ class ConnectivityManager {
 
   /// Called when connection is lost
   void _onConnectionLost() {
-    if (kDebugMode) {
-      print('ConnectivityManager: Connection lost - switching to offline mode');
-    }
+    AppLogger.i(
+      'ConnectivityManager',
+      'Connection lost - switching to offline mode',
+    );
 
     // Enable offline mode, cache data, etc.
     enableOfflineMode();
@@ -133,21 +128,15 @@ class ConnectivityManager {
     try {
       // 1. Sync clinical data via SyncService
       GetIt.instance<SyncService>().performFullSync().catchError((e) {
-        if (kDebugMode) {
-          print('ConnectivityManager: Error during data sync - $e');
-        }
+        AppLogger.e('ConnectivityManager', 'Error during data sync - $e');
       });
 
       // 2. Ensure CacheManager is ready
       CacheManager().initialize().catchError((e) {
-        if (kDebugMode) {
-          print('ConnectivityManager: Error initializing CacheManager - $e');
-        }
+        AppLogger.e('ConnectivityManager', 'Error initializing CacheManager - $e');
       });
     } catch (e) {
-      if (kDebugMode) {
-        print('ConnectivityManager: Failed to trigger data sync - $e');
-      }
+      AppLogger.e('ConnectivityManager', 'Failed to trigger data sync - $e');
     }
   }
 
@@ -157,20 +146,15 @@ class ConnectivityManager {
     try {
       // Ensure CacheManager is initialized for offline access
       CacheManager().initialize().catchError((e) {
-        if (kDebugMode) {
-          print(
-            'ConnectivityManager: Error initializing CacheManager in offline mode - $e',
-          );
-        }
+        AppLogger.e(
+          'ConnectivityManager',
+          'Error initializing CacheManager in offline mode - $e',
+        );
       });
 
-      if (kDebugMode) {
-        print('ConnectivityManager: Offline mode enabled');
-      }
+      AppLogger.i('ConnectivityManager', 'Offline mode enabled');
     } catch (e) {
-      if (kDebugMode) {
-        print('ConnectivityManager: Failed to enable offline mode - $e');
-      }
+      AppLogger.e('ConnectivityManager', 'Failed to enable offline mode - $e');
     }
   }
 
@@ -199,11 +183,10 @@ class ConnectivityManager {
       } catch (e) {
         // If online task fails and we have offline fallback, try it
         if (offlineTask != null) {
-          if (kDebugMode) {
-            print(
-              'ConnectivityManager: Online task failed, trying offline fallback for $operation',
-            );
-          }
+          AppLogger.w(
+            'ConnectivityManager',
+            'Online task failed, trying offline fallback for $operation',
+          );
           return await offlineTask();
         }
         rethrow;
@@ -211,9 +194,10 @@ class ConnectivityManager {
     } else {
       // We're offline
       if (offlineTask != null) {
-        if (kDebugMode) {
-          print('ConnectivityManager: Executing offline task for $operation');
-        }
+        AppLogger.i(
+          'ConnectivityManager',
+          'Executing offline task for $operation',
+        );
         return await offlineTask();
       } else {
         throw ConnectivityException(

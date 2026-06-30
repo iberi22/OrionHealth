@@ -121,7 +121,7 @@ void main() {
       expect(result, isNull);
     });
 
-    test('scrape extracts source from URL host', () async {
+    test('scrape extracts source from url host', () async {
       final html = '<html><head><title>Test</title></head></html>';
 
       when(() => mockDio.get(

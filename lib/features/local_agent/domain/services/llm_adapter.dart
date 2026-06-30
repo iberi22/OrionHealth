@@ -15,7 +15,7 @@ abstract class LlmAdapter {
   /// Optional: Check if the adapter is available/configured
   Future<bool> isAvailable();
 
-  /// Install a model from a network URL.
+  /// Install a model from a network url.
   /// Returns a stream of progress percentages (0–100).
   Stream<int> installModel({
     required String modelId,

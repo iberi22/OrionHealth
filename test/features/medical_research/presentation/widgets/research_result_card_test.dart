@@ -93,7 +93,7 @@ void main() {
       ),
     );
 
-    expect(find.text('OTHER'), findsOneWidget);
+    expect(find.text('other'), findsOneWidget);
   });
 
   testWidgets('ResearchResultCard renders content text', (tester) async {

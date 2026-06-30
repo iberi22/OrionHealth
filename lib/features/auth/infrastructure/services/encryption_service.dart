@@ -10,7 +10,7 @@ import 'package:hex/hex.dart';
 class EncryptionService {
   final _algorithm = AesGcm.with256bits();
 
-  /// Hashes a PIN using Argon2id
+  /// Hashes a pin using Argon2id
   Future<String> hashPin(String pin, String salt) async {
     final parameters = Argon2Parameters(
       Argon2Parameters.ARGON2_id,
@@ -129,14 +129,14 @@ class EncryptionService {
     return utf8.decode(clearText);
   }
 
-  /// Generate a random PIN salt as a hex string
+  /// Generate a random pin salt as a hex string
   Future<String> generatePinSalt() async {
     final rand = Random.secure();
     final bytes = Uint8List.fromList(List<int>.generate(16, (i) => rand.nextInt(256)));
     return HEX.encode(bytes);
   }
 
-  /// Verify a PIN against a stored hash and salt
+  /// Verify a pin against a stored hash and salt
   Future<bool> verifyPin(String pin, String storedHash, String salt) async {
     final hash = await hashPin(pin, salt);
     return hash == storedHash;

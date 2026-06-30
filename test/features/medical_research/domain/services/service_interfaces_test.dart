@@ -43,7 +43,7 @@ void main() {
       service = TestMedicalScraperService();
     });
 
-    test('scrape returns ResearchResult for valid URL', () async {
+    test('scrape returns ResearchResult for valid url', () async {
       final result = await service.scrape('https://valid-example.com/article');
       expect(result, isNotNull);
       expect(result!.title, 'Scraped Article');
@@ -51,7 +51,7 @@ void main() {
       expect(result.url, 'https://valid-example.com/article');
     });
 
-    test('scrape returns null for invalid URL', () async {
+    test('scrape returns null for invalid url', () async {
       final result = await service.scrape('https://example.com/invalid');
       expect(result, isNull);
     });

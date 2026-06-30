@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
+import '../../../core/services/app_logger.dart';
 
 /// NFC method channel name used by [NfcSharingService].
 const String kNfcChannelName = 'orionhealth/nfc';
@@ -46,16 +47,14 @@ class NfcHandler {
       return _nativeAvailable;
     } on MissingPluginException {
       _nativeAvailable = false;
-      // ignore: avoid_print
-      print(
-        '[NfcHandler] Native NFC plugin not registered. '
-        'NFC features will be unavailable.',
+      AppLogger.w(
+        'NfcHandler',
+        'Native NFC plugin not registered. NFC features will be unavailable.',
       );
       return false;
     } catch (e) {
       _nativeAvailable = false;
-      // ignore: avoid_print
-      print('[NfcHandler] NFC initialization error: $e');
+      AppLogger.e('NfcHandler', 'NFC initialization error: $e');
       return false;
     }
   }
@@ -73,8 +72,7 @@ class NfcHandler {
       _nativeAvailable = false;
       return false;
     } catch (e) {
-      // ignore: avoid_print
-      print('[NfcHandler] startNfcSession error: $e');
+      AppLogger.e('NfcHandler', 'startNfcSession error: $e');
       return false;
     }
   }

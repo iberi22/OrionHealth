@@ -122,7 +122,7 @@ void main() {
       final result = PiiResult(entities: entities, originalText: originalText);
       expect(
         result.scrubbedText,
-        'My name is [PERSON] and my email is [EMAIL]',
+        'My name is [person] and my email is [email]',
       );
     });
 
@@ -172,7 +172,7 @@ void main() {
       final fromJson = PiiResult.fromJson(json);
 
       expect(fromJson, result);
-      expect(json['scrubbedText'], 'My name is [PERSON] and my email is [EMAIL]');
+      expect(json['scrubbedText'], 'My name is [person] and my email is [email]');
     });
   });
 }

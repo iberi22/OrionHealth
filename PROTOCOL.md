@@ -3,7 +3,7 @@
 > Adaptación de GitCore Protocol para flujo Jules + Claw
 
 ## Repositorio
-- **URL:** `iberi22/OrionHealth`
+- **url:** `iberi22/OrionHealth`
 - **Rama única:** `main`
 - **Workflow:** GitHub Flow simplificado (main + feature branches temporales)
 

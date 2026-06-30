@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
+import '../app_logger.dart';
 
 
 import 'tts_adapter.dart';
@@ -85,7 +86,7 @@ class KittenBridgeAdapter implements TTSAdapter {
     } catch (e) {
       state = TTSState.error;
       callbacks.onError?.call('Kitten bridge speak error: $e');
-      if (kDebugMode) print('KittenBridgeAdapter error: $e');
+      AppLogger.e('KittenBridgeAdapter', 'speak error: $e');
     }
   }
 

@@ -16,8 +16,8 @@ class HealthDataImportService {
     HealthDataType.BLOOD_GLUCOSE,
     HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
     HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-    HealthDataType.HEIGHT,
-    HealthDataType.WEIGHT,
+    HealthDataType.height,
+    HealthDataType.weight,
     HealthDataType.BLOOD_OXYGEN,
   ];
 
@@ -109,8 +109,8 @@ class HealthDataImportService {
     return [...systolicData, ...diastolicData];
   }
 
-  Future<List<HealthDataPoint>> fetchHeight() => _fetchData(HealthDataType.HEIGHT);
-  Future<List<HealthDataPoint>> fetchWeight() => _fetchData(HealthDataType.WEIGHT);
+  Future<List<HealthDataPoint>> fetchHeight() => _fetchData(HealthDataType.height);
+  Future<List<HealthDataPoint>> fetchWeight() => _fetchData(HealthDataType.weight);
   Future<List<HealthDataPoint>> fetchOxygenSaturation() => _fetchData(HealthDataType.BLOOD_OXYGEN);
 
   Future<List<VitalSign>> convertToVitalSigns(
@@ -231,7 +231,7 @@ class HealthDataImportService {
           source: sourceString,
         );
 
-      case HealthDataType.HEIGHT:
+      case HealthDataType.height:
         // Height comes in meters, convert to cm
         return VitalSign(
           type: VitalSignType.temperature,
@@ -242,7 +242,7 @@ class HealthDataImportService {
           notes: 'Height',
         );
 
-      case HealthDataType.WEIGHT:
+      case HealthDataType.weight:
         return VitalSign(
           type: VitalSignType.temperature,
           value: value,

@@ -41,7 +41,7 @@ void main() {
       verify(() => mockSearch.search('diabetes')).called(1);
     });
 
-    test('performResearch scrapes top result if it is a valid URL', () async {
+    test('performResearch scrapes top result if it is a valid url', () async {
       final searchResults = [
         const ResearchResult(
           title: 'Top Result',

@@ -89,7 +89,7 @@ flutter build apk --release
 
 ### Documentation Site
 The site is automatically deployed to GitHub Pages via `.github/workflows/deploy-docs.yml`.
-Live URL: [https://iberi22.github.io/OrionHealth](https://iberi22.github.io/OrionHealth)
+Live url: [https://iberi22.github.io/OrionHealth](https://iberi22.github.io/OrionHealth)
 
 ## ⚖️ License
 

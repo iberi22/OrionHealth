@@ -30,7 +30,7 @@ void main() {
   });
 
   group('AuthServiceImpl', () {
-    test('setPin should hash and store PIN', () async {
+    test('setPin should hash and store pin', () async {
       when(() => mockEncryptionService.generatePinSalt()).thenAnswer((_) async => 'salt');
       when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => 'hashed');
 
@@ -42,16 +42,16 @@ void main() {
       verify(() => mockEncryptionService.hashPin('1234', 'salt')).called(1);
     });
 
-    test('setPin should return error for invalid PIN length', () async {
+    test('setPin should return error for invalid pin length', () async {
       final result = await authService.setPin('123');
 
       expect(result.success, isFalse);
-      expect(result.error, 'PIN must be 4-6 digits');
+      expect(result.error, 'pin must be 4-6 digits');
       verifyNever(() => mockEncryptionService.hashPin(any(), any()));
     });
 
-    test('verifyPin should return true for valid PIN', () async {
-      // Set PIN first to cache it
+    test('verifyPin should return true for valid pin', () async {
+      // Set pin first to cache it
       when(() => mockEncryptionService.generatePinSalt()).thenAnswer((_) async => 'salt');
       when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => 'hashed');
       await authService.setPin('1234');
@@ -63,7 +63,7 @@ void main() {
       expect(result.success, isTrue);
     });
 
-    test('verifyPin should return error for invalid PIN', () async {
+    test('verifyPin should return error for invalid pin', () async {
       when(() => mockEncryptionService.generatePinSalt()).thenAnswer((_) async => 'salt');
       when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => 'hashed');
       await authService.setPin('1234');
@@ -73,7 +73,7 @@ void main() {
       final result = await authService.verifyPin('4321');
 
       expect(result.success, isFalse);
-      expect(result.error, 'Invalid PIN');
+      expect(result.error, 'Invalid pin');
     });
 
     test('isBiometricAvailable should return true when channel returns true', () async {

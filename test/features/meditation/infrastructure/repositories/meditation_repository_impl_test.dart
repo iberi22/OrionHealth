@@ -132,6 +132,7 @@ void main() {
     test('should return first script if category list is empty and no lastScriptId', () async {
       // To reach the last line of recommendScript, we need scripts to be loaded but no matches.
       final localRepo = MeditationRepositoryImpl(mockLocalDataSource);
+      expect(localRepo, isNotNull);
 
       // We'll use a trick: MeditationRepositoryImpl.scripts is what's used.
       // But _bundledScripts is private.
@@ -149,6 +150,7 @@ void main() {
       // return _scripts.first;
 
       final localRepo = MeditationRepositoryImpl(mockLocalDataSource);
+      expect(localRepo, isNotNull);
       // Mock preferences with invalid lastScriptId and a category that will be made empty?
       // Actually I can't make a category empty because it's hardcoded.
 

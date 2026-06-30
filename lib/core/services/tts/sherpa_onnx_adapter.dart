@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path/path.dart' as p;
 import 'package:sherpa_onnx/sherpa_onnx.dart';
+import '../app_logger.dart';
 
 import 'model_manager.dart';
 import 'tts_adapter.dart';
@@ -71,9 +72,7 @@ class SherpaOnnxTTSAdapter implements TTSAdapter {
         'TTS model for "$voiceKey" is not downloaded. '
         'Go to Settings > TTS Models to download it.',
       );
-      if (kDebugMode) {
-        print('SherpaOnnxTTSAdapter: model missing for voice=$voiceKey');
-      }
+      AppLogger.w('SherpaOnnxTTSAdapter', 'model missing for voice=$voiceKey');
       return;
     }
 
@@ -100,9 +99,7 @@ class SherpaOnnxTTSAdapter implements TTSAdapter {
       final tokensPath = p.join(modelDir, 'tokens.txt');
       final tokensFile = File(tokensPath);
       if (!await tokensFile.exists()) {
-        if (kDebugMode) {
-          print('SherpaOnnxTTSAdapter: generating tokens.txt for $voiceKey');
-        }
+        AppLogger.i('SherpaOnnxTTSAdapter', 'generating tokens.txt for $voiceKey');
         final cfgStr = await File(jsonPath).readAsString();
         final cfg = jsonDecode(cfgStr) as Map<String, dynamic>;
         final idMap = cfg['phoneme_id_map'] as Map<String, dynamic>?;
@@ -124,11 +121,10 @@ class SherpaOnnxTTSAdapter implements TTSAdapter {
       if (await espeakDir.exists()) {
         dataDir = espeakDir.path;
       } else {
-        if (kDebugMode) {
-          print(
-            'SherpaOnnxTTSAdapter: espeak-ng-data not found; proceeding without dataDir',
-          );
-        }
+        AppLogger.w(
+          'SherpaOnnxTTSAdapter',
+          'espeak-ng-data not found; proceeding without dataDir',
+        );
       }
 
       // Build VITS config
@@ -177,7 +173,7 @@ class SherpaOnnxTTSAdapter implements TTSAdapter {
     } catch (e) {
       state = TTSState.error;
       callbacks.onError?.call('On-device TTS error: $e');
-      if (kDebugMode) print('SherpaOnnxTTSAdapter error: $e');
+      AppLogger.e('SherpaOnnxTTSAdapter', 'error: $e');
     }
   }
 

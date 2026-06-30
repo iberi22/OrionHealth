@@ -329,7 +329,7 @@ class LlmSettingsCubit extends Cubit<LlmSettingsState> {
           final verified = await _testOpenAIConnection(baseUrl, apiKey);
           emit(currentState.copyWith(
             connectionVerified: verified,
-            connectionError: verified ? null : 'Connection failed. Check URL and API key.',
+            connectionError: verified ? null : 'Connection failed. Check url and API key.',
           ));
         } else if (config.providerType == 'gemini') {
           final hasKey = Platform.environment['GEMINI_API_KEY']?.isNotEmpty ?? false;

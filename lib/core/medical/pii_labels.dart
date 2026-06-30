@@ -5,267 +5,319 @@
 /// Canonical PII/PHI label taxonomy.
 /// Ported from OpenMed (Apache 2.0).
 ///
-/// This module provides a single [CANONICAL_LABELS] taxonomy in UPPER_SNAKE_CASE
+/// This module provides a single [canonicalLabels] taxonomy in lowerCamelCase
 /// and a [normalizeLabel] helper that maps various input forms to its canonical name.
 library;
 
-
 // People-related entities
-const String PERSON = 'PERSON';
-const String FIRST_NAME = 'FIRST_NAME';
-const String LAST_NAME = 'LAST_NAME';
-const String MIDDLE_NAME = 'MIDDLE_NAME';
-const String PREFIX = 'PREFIX';
-const String USERNAME = 'USERNAME';
+const String person = 'PERSON';
+const String firstName = 'FIRST_NAME';
+const String lastName = 'LAST_NAME';
+const String middleName = 'MIDDLE_NAME';
+const String prefix = 'PREFIX';
+const String username = 'USERNAME';
 
 // Contact
-const String EMAIL = 'EMAIL';
-const String PHONE = 'PHONE';
-const String URL = 'URL';
+const String email = 'EMAIL';
+const String phone = 'PHONE';
+const String url = 'URL';
 
 // Location
-const String LOCATION = 'LOCATION';
-const String ADDRESS = 'STREET_ADDRESS';
-const String STREET_ADDRESS = 'STREET_ADDRESS';
-const String BUILDING_NUMBER = 'BUILDING_NUMBER';
-const String ZIP_CODE = 'ZIP_CODE';
-const String ZIPCODE = 'ZIPCODE';
-const String GPS_COORDINATES = 'GPS_COORDINATES';
-const String ORDINAL_DIRECTION = 'ORDINAL_DIRECTION';
-const String COUNTRY = 'COUNTRY';
-const String STATE = 'STATE';
-const String CITY = 'CITY';
+const String location = 'LOCATION';
+const String streetAddress = 'STREET_ADDRESS';
+const String buildingNumber = 'BUILDING_NUMBER';
+const String zipCode = 'ZIP_CODE';
+const String zipcode = 'ZIPCODE';
+const String gpsCoordinates = 'GPS_COORDINATES';
+const String ordinalDirection = 'ORDINAL_DIRECTION';
+const String country = 'COUNTRY';
+const String state = 'STATE';
+const String city = 'CITY';
 
 // Time
-const String DATE = 'DATE';
-const String DATE_OF_BIRTH = 'DATE_OF_BIRTH';
-const String TIME = 'TIME';
-const String AGE = 'AGE';
+const String date = 'DATE';
+const String dateOfBirth = 'DATE_OF_BIRTH';
+const String time = 'TIME';
+const String age = 'AGE';
 
 // Identifiers
-const String ID_NUM = 'ID_NUM';
-const String SSN = 'SSN';
-const String NPI = 'NPI';
-const String MEDICAL_RECORD_NUMBER = 'MEDICAL_RECORD_NUMBER';
-const String HEALTH_PLAN_ID = 'HEALTH_PLAN_ID';
-const String ACCOUNT_NUMBER = 'ACCOUNT_NUMBER';
-const String PASSWORD = 'PASSWORD';
-const String PIN = 'PIN';
-const String API_KEY = 'API_KEY';
+const String idNum = 'ID_NUM';
+const String ssn = 'SSN';
+const String npi = 'NPI';
+const String medicalRecordNumber = 'MEDICAL_RECORD_NUMBER';
+const String healthPlanId = 'HEALTH_PLAN_ID';
+const String accountNumber = 'ACCOUNT_NUMBER';
+const String password = 'PASSWORD';
+const String pin = 'PIN';
+const String apiKey = 'API_KEY';
 
 // Financial
-const String CREDIT_CARD = 'CREDIT_CARD';
-const String CREDIT_CARD_ISSUER = 'CREDIT_CARD_ISSUER';
-const String CVV = 'CVV';
-const String IBAN = 'IBAN';
-const String BIC = 'BIC';
-const String AMOUNT = 'AMOUNT';
-const String CURRENCY = 'CURRENCY';
-const String BITCOIN_ADDRESS = 'BITCOIN_ADDRESS';
-const String ETHEREUM_ADDRESS = 'ETHEREUM_ADDRESS';
-const String LITECOIN_ADDRESS = 'LITECOIN_ADDRESS';
-const String MASKED_NUMBER = 'MASKED_NUMBER';
+const String creditCard = 'CREDIT_CARD';
+const String creditCardIssuer = 'CREDIT_CARD_ISSUER';
+const String cvv = 'CVV';
+const String iban = 'IBAN';
+const String bic = 'BIC';
+const String amount = 'AMOUNT';
+const String currency = 'CURRENCY';
+const String bitcoinAddress = 'BITCOIN_ADDRESS';
+const String ethereumAddress = 'ETHEREUM_ADDRESS';
+const String litecoinAddress = 'LITECOIN_ADDRESS';
+const String maskedNumber = 'MASKED_NUMBER';
 
 // Demographics
-const String GENDER = 'GENDER';
-const String EYE_COLOR = 'EYE_COLOR';
-const String HEIGHT = 'HEIGHT';
-const String WEIGHT = 'WEIGHT';
+const String gender = 'GENDER';
+const String eyeColor = 'EYE_COLOR';
+const String height = 'HEIGHT';
+const String weight = 'WEIGHT';
 
 // Work
-const String ORGANIZATION = 'ORGANIZATION';
-const String JOB_TITLE = 'JOB_TITLE';
-const String JOB_DEPARTMENT = 'JOB_DEPARTMENT';
-const String OCCUPATION = 'OCCUPATION';
+const String organization = 'ORGANIZATION';
+const String jobTitle = 'JOB_TITLE';
+const String jobDepartment = 'JOB_DEPARTMENT';
+const String occupation = 'OCCUPATION';
 
 // Tech
-const String IP_ADDRESS = 'IP_ADDRESS';
-const String MAC_ADDRESS = 'MAC_ADDRESS';
-const String USER_AGENT = 'USER_AGENT';
-const String VIN = 'VIN';
-const String LICENSE_PLATE = 'LICENSE_PLATE';
-const String VEHICLE_REGISTRATION = 'VEHICLE_REGISTRATION';
-const String IMEI = 'IMEI';
+const String ipAddress = 'IP_ADDRESS';
+const String macAddress = 'MAC_ADDRESS';
+const String userAgent = 'USER_AGENT';
+const String vin = 'VIN';
+const String licensePlate = 'LICENSE_PLATE';
+const String vehicleRegistration = 'VEHICLE_REGISTRATION';
+const String imei = 'IMEI';
 
 // Medical specific
-const String PATIENT_ID = 'PATIENT_ID';
-const String PROVIDER_ID = 'PROVIDER_ID';
-const String DRUG_NAME = 'DRUG_NAME';
-const String DIAGNOSIS_CODE = 'DIAGNOSIS_CODE';
-const String PROCEDURE_CODE = 'PROCEDURE_CODE';
-const String LAB_RESULT = 'LAB_RESULT';
-const String VITAL_SIGN = 'VITAL_SIGN';
-const String ALLERGY = 'ALLERGY';
-const String CONDITION = 'CONDITION';
-const String INSURANCE_ID = 'INSURANCE_ID';
+const String patientId = 'PATIENT_ID';
+const String providerId = 'PROVIDER_ID';
+const String drugName = 'DRUG_NAME';
+const String diagnosisCode = 'DIAGNOSIS_CODE';
+const String procedureCode = 'PROCEDURE_CODE';
+const String labResult = 'LAB_RESULT';
+const String vitalSign = 'VITAL_SIGN';
+const String allergy = 'ALLERGY';
+const String condition = 'CONDITION';
+const String insuranceId = 'INSURANCE_ID';
 
-const String OTHER = 'OTHER';
+const String other = 'OTHER';
 
-const Set<String> CANONICAL_LABELS = {
-  PERSON, FIRST_NAME, LAST_NAME, MIDDLE_NAME, PREFIX, USERNAME,
-  EMAIL, PHONE, URL,
-  LOCATION, STREET_ADDRESS, BUILDING_NUMBER, ZIP_CODE, ZIPCODE, GPS_COORDINATES,
-  ORDINAL_DIRECTION, COUNTRY, STATE, CITY,
-  DATE, DATE_OF_BIRTH, TIME, AGE,
-  ID_NUM, SSN, NPI, MEDICAL_RECORD_NUMBER, HEALTH_PLAN_ID, ACCOUNT_NUMBER,
-  PASSWORD, PIN, API_KEY,
-  CREDIT_CARD, CREDIT_CARD_ISSUER, CVV, IBAN, BIC, AMOUNT, CURRENCY,
-  BITCOIN_ADDRESS, ETHEREUM_ADDRESS, LITECOIN_ADDRESS, MASKED_NUMBER,
-  GENDER, EYE_COLOR, HEIGHT, WEIGHT,
-  ORGANIZATION, JOB_TITLE, JOB_DEPARTMENT, OCCUPATION,
-  IP_ADDRESS, MAC_ADDRESS, USER_AGENT, VIN, LICENSE_PLATE, VEHICLE_REGISTRATION, IMEI,
-  PATIENT_ID, PROVIDER_ID, DRUG_NAME, DIAGNOSIS_CODE, PROCEDURE_CODE,
-  LAB_RESULT, VITAL_SIGN, ALLERGY, CONDITION, INSURANCE_ID,
-  OTHER,
+const Set<String> canonicalLabels = {
+  person,
+  firstName,
+  lastName,
+  middleName,
+  prefix,
+  username,
+  email,
+  phone,
+  url,
+  location,
+  streetAddress,
+  buildingNumber,
+  zipCode,
+  zipcode,
+  gpsCoordinates,
+  ordinalDirection,
+  country,
+  state,
+  city,
+  date,
+  dateOfBirth,
+  time,
+  age,
+  idNum,
+  ssn,
+  npi,
+  medicalRecordNumber,
+  healthPlanId,
+  accountNumber,
+  password,
+  pin,
+  apiKey,
+  creditCard,
+  creditCardIssuer,
+  cvv,
+  iban,
+  bic,
+  amount,
+  currency,
+  bitcoinAddress,
+  ethereumAddress,
+  litecoinAddress,
+  maskedNumber,
+  gender,
+  eyeColor,
+  height,
+  weight,
+  organization,
+  jobTitle,
+  jobDepartment,
+  occupation,
+  ipAddress,
+  macAddress,
+  userAgent,
+  vin,
+  licensePlate,
+  vehicleRegistration,
+  imei,
+  patientId,
+  providerId,
+  drugName,
+  diagnosisCode,
+  procedureCode,
+  labResult,
+  vitalSign,
+  allergy,
+  condition,
+  insuranceId,
+  other,
 };
 
-const Map<String, String> ALIAS_MAP = {
+const Map<String, String> aliasMap = {
   // People
-  "name": PERSON,
-  "person": PERSON,
-  "patient": PERSON,
-  "doctor": PERSON,
-  "fullname": PERSON,
-  "firstname": FIRST_NAME,
-  "givenname": FIRST_NAME,
-  "lastname": LAST_NAME,
-  "surname": LAST_NAME,
-  "familyname": LAST_NAME,
-  "middlename": MIDDLE_NAME,
-  "prefix": PREFIX,
-  "title": PREFIX,
-  "username": USERNAME,
-  "userhandle": USERNAME,
+  "name": person,
+  "person": person,
+  "patient": person,
+  "doctor": person,
+  "fullname": person,
+  "firstname": firstName,
+  "givenname": firstName,
+  "lastname": lastName,
+  "surname": lastName,
+  "familyname": lastName,
+  "middlename": middleName,
+  "prefix": prefix,
+  "title": prefix,
+  "username": username,
+  "userhandle": username,
 
   // Contact
-  "email": EMAIL,
-  "emailaddress": EMAIL,
-  "phone": PHONE,
-  "phonenumber": PHONE,
-  "telephone": PHONE,
-  "fax": PHONE,
-  "url": URL,
-  "urlpersonal": URL,
-  "website": URL,
-  "personalurl": URL,
+  "email": email,
+  "emailaddress": email,
+  "phone": phone,
+  "phonenumber": phone,
+  "telephone": phone,
+  "fax": phone,
+  "url": url,
+  "urlpersonal": url,
+  "website": url,
+  "personalurl": url,
 
   // Location
-  "location": LOCATION,
-  "city": CITY,
-  "state": STATE,
-  "country": COUNTRY,
-  "county": LOCATION,
-  "region": LOCATION,
-  "place": LOCATION,
-  "address": STREET_ADDRESS,
-  "street": STREET_ADDRESS,
-  "streetaddress": STREET_ADDRESS,
-  "secondaryaddress": STREET_ADDRESS,
-  "buildingnumber": BUILDING_NUMBER,
-  "zipcode": ZIP_CODE,
-  "zip_code": ZIP_CODE,
-  "zip": ZIP_CODE,
-  "postcode": ZIP_CODE,
-  "postalcode": ZIP_CODE,
-  "gpscoordinates": GPS_COORDINATES,
-  "gps": GPS_COORDINATES,
-  "ordinaldirection": ORDINAL_DIRECTION,
+  "location": location,
+  "city": city,
+  "state": state,
+  "country": country,
+  "county": location,
+  "region": location,
+  "place": location,
+  "address": streetAddress,
+  "street": streetAddress,
+  "streetaddress": streetAddress,
+  "secondaryaddress": streetAddress,
+  "buildingnumber": buildingNumber,
+  "zipcode": zipCode,
+  "zip_code": zipCode,
+  "zip": zipCode,
+  "postcode": zipCode,
+  "postalcode": zipCode,
+  "gpscoordinates": gpsCoordinates,
+  "gps": gpsCoordinates,
+  "ordinaldirection": ordinalDirection,
 
   // Time
-  "date": DATE,
-  "dateofbirth": DATE_OF_BIRTH,
-  "dob": DATE_OF_BIRTH,
-  "birthdate": DATE_OF_BIRTH,
-  "time": TIME,
-  "age": AGE,
+  "date": date,
+  "dateofbirth": dateOfBirth,
+  "dob": dateOfBirth,
+  "birthdate": dateOfBirth,
+  "time": time,
+  "age": age,
 
   // Identifiers
-  "idnum": ID_NUM,
-  "id": ID_NUM,
-  "identifier": ID_NUM,
-  "medicalrecordnumber": MEDICAL_RECORD_NUMBER,
-  "mrn": MEDICAL_RECORD_NUMBER,
-  "nationalid": ID_NUM,
-  "cpf": ID_NUM,
-  "cnpj": ID_NUM,
-  "nir": ID_NUM,
-  "steuerid": ID_NUM,
-  "codicefiscale": ID_NUM,
-  "dni": ID_NUM,
-  "nie": ID_NUM,
-  "bsn": ID_NUM,
-  "aadhaar": ID_NUM,
-  "npi": NPI,
-  "ssn": SSN,
-  "socialsecuritynumber": SSN,
-  "accountnumber": ACCOUNT_NUMBER,
-  "accountname": ACCOUNT_NUMBER,
-  "bankaccount": ACCOUNT_NUMBER,
-  "password": PASSWORD,
-  "pin": PIN,
-  "apikey": API_KEY,
+  "idnum": idNum,
+  "id": idNum,
+  "identifier": idNum,
+  "medicalrecordnumber": medicalRecordNumber,
+  "mrn": medicalRecordNumber,
+  "nationalid": idNum,
+  "cpf": idNum,
+  "cnpj": idNum,
+  "nir": idNum,
+  "steuerid": idNum,
+  "codicefiscale": idNum,
+  "dni": idNum,
+  "nie": idNum,
+  "bsn": idNum,
+  "aadhaar": idNum,
+  "npi": npi,
+  "ssn": ssn,
+  "socialsecuritynumber": ssn,
+  "accountnumber": accountNumber,
+  "accountname": accountNumber,
+  "bankaccount": accountNumber,
+  "password": password,
+  "pin": pin,
+  "apikey": apiKey,
 
   // Financial
-  "creditcard": CREDIT_CARD,
-  "creditdebitcard": CREDIT_CARD,
-  "creditcardnumber": CREDIT_CARD,
-  "creditcardissuer": CREDIT_CARD_ISSUER,
-  "cvv": CVV,
-  "iban": IBAN,
-  "bic": BIC,
-  "swift": BIC,
-  "amount": AMOUNT,
-  "currency": CURRENCY,
-  "currencycode": CURRENCY,
-  "currencyname": CURRENCY,
-  "currencysymbol": CURRENCY,
-  "bitcoinaddress": BITCOIN_ADDRESS,
-  "ethereumaddress": ETHEREUM_ADDRESS,
-  "litecoinaddress": LITECOIN_ADDRESS,
-  "maskednumber": MASKED_NUMBER,
+  "creditcard": creditCard,
+  "creditdebitcard": creditCard,
+  "creditcardnumber": creditCard,
+  "creditcardissuer": creditCardIssuer,
+  "cvv": cvv,
+  "iban": iban,
+  "bic": bic,
+  "swift": bic,
+  "amount": amount,
+  "currency": currency,
+  "currencycode": currency,
+  "currencyname": currency,
+  "currencysymbol": currency,
+  "bitcoinaddress": bitcoinAddress,
+  "ethereumaddress": ethereumAddress,
+  "litecoinaddress": litecoinAddress,
+  "maskednumber": maskedNumber,
 
   // Demographics
-  "gender": GENDER,
-  "sex": GENDER,
-  "eyecolor": EYE_COLOR,
-  "height": HEIGHT,
-  "weight": WEIGHT,
+  "gender": gender,
+  "sex": gender,
+  "eyecolor": eyeColor,
+  "height": height,
+  "weight": weight,
 
   // Work
-  "organization": ORGANIZATION,
-  "company": ORGANIZATION,
-  "employer": ORGANIZATION,
-  "jobtitle": JOB_TITLE,
-  "jobdepartment": JOB_DEPARTMENT,
-  "department": JOB_DEPARTMENT,
-  "occupation": OCCUPATION,
-  "profession": OCCUPATION,
+  "organization": organization,
+  "company": organization,
+  "employer": organization,
+  "jobtitle": jobTitle,
+  "jobdepartment": jobDepartment,
+  "department": jobDepartment,
+  "occupation": occupation,
+  "profession": occupation,
 
   // Tech
-  "ipaddress": IP_ADDRESS,
-  "ip": IP_ADDRESS,
-  "macaddress": MAC_ADDRESS,
-  "useragent": USER_AGENT,
-  "vin": VIN,
-  "vrm": VEHICLE_REGISTRATION,
-  "licenseplate": LICENSE_PLATE,
-  "vehicleregistration": VEHICLE_REGISTRATION,
-  "imei": IMEI,
+  "ipaddress": ipAddress,
+  "ip": ipAddress,
+  "macaddress": macAddress,
+  "useragent": userAgent,
+  "vin": vin,
+  "vrm": vehicleRegistration,
+  "licenseplate": licensePlate,
+  "vehicleregistration": vehicleRegistration,
+  "imei": imei,
 
   // Medical specific aliases
-  "patientid": PATIENT_ID,
-  "providerid": PROVIDER_ID,
-  "drugname": DRUG_NAME,
-  "diagcode": DIAGNOSIS_CODE,
-  "diagnosiscode": DIAGNOSIS_CODE,
-  "proccode": PROCEDURE_CODE,
-  "procedurecode": PROCEDURE_CODE,
-  "labresult": LAB_RESULT,
-  "vitalsign": VITAL_SIGN,
-  "allergy": ALLERGY,
-  "condition": CONDITION,
-  "insuranceid": INSURANCE_ID,
-  "healthplanid": HEALTH_PLAN_ID,
+  "patientid": patientId,
+  "providerid": providerId,
+  "drugname": drugName,
+  "diagcode": diagnosisCode,
+  "diagnosiscode": diagnosisCode,
+  "proccode": procedureCode,
+  "procedurecode": procedureCode,
+  "labresult": labResult,
+  "vitalsign": vitalSign,
+  "allergy": allergy,
+  "condition": condition,
+  "insuranceid": insuranceId,
+  "healthplanid": healthPlanId,
 };
 
 final RegExp _bioesPrefixRe = RegExp(r"^[BIES]-");
@@ -288,25 +340,26 @@ String _key(String label) {
 /// - Mixed case with separators (First-Name, First Name)
 String normalizeLabel(String label, {String lang = "en"}) {
   if (label.isEmpty) {
-    return OTHER;
+    return other;
   }
   final key = _key(label);
   if (key.isEmpty) {
-    return OTHER;
+    return other;
   }
-  final canonical = ALIAS_MAP[key];
+  final canonical = aliasMap[key];
   if (canonical != null) {
     return canonical;
   }
 
-  final upper = label.toUpperCase()
+  final upper = label
+      .toUpperCase()
       .replaceAll("-", "_")
       .replaceAll(" ", "_")
       .replaceAll(RegExp(r"[^A-Z0-9_]"), "");
-  if (CANONICAL_LABELS.contains(upper)) {
+  if (canonicalLabels.contains(upper)) {
     return upper;
   }
-  return OTHER;
+  return other;
 }
 
 /// Static class providing access to PII labels for use with PII detection.
@@ -314,372 +367,372 @@ String normalizeLabel(String label, {String lang = "en"}) {
 class PiiLabel {
   PiiLabel._();
 
-  static String get date => DATE;
-  static String get ssn => SSN;
-  static String get email => EMAIL;
-  static String get phoneNumber => PHONE;
-  static String get url => URL;
-  static String get ipv4 => IP_ADDRESS;
-  static String get ipv6 => IP_ADDRESS;
-  static String get macAddress => MAC_ADDRESS;
-  static String get streetAddress => STREET_ADDRESS;
-  static String get postcode => ZIP_CODE;
-  static String get fullName => PERSON;
-  static String get organization => ORGANIZATION;
-  static String get creditCard => CREDIT_CARD;
-  static String get password => PASSWORD;
-  static String get npi => NPI;
-  static String get mrn => MEDICAL_RECORD_NUMBER;
-  static String get driverLicense => ID_NUM;
-  static String get passportNumber => ID_NUM;
-  static String get encounterNumber => ID_NUM;
-  static String get insuranceId => INSURANCE_ID;
-  static String get accountNumber => ACCOUNT_NUMBER;
-  static String get routingNumber => ACCOUNT_NUMBER;
+  static String get date => date;
+  static String get ssn => ssn;
+  static String get email => email;
+  static String get phoneNumber => phone;
+  static String get url => url;
+  static String get ipv4 => ipAddress;
+  static String get ipv6 => ipAddress;
+  static String get macAddress => macAddress;
+  static String get streetAddress => streetAddress;
+  static String get postcode => zipCode;
+  static String get fullName => person;
+  static String get organization => organization;
+  static String get creditCard => creditCard;
+  static String get password => password;
+  static String get npi => npi;
+  static String get mrn => medicalRecordNumber;
+  static String get driverLicense => idNum;
+  static String get passportNumber => idNum;
+  static String get encounterNumber => idNum;
+  static String get insuranceId => insuranceId;
+  static String get accountNumber => accountNumber;
+  static String get routingNumber => accountNumber;
 }
 
-const Map<String, Map<String, dynamic>> PII_ENTITY_META = {
-  PERSON: {
+const Map<String, Map<String, dynamic>> piiEntityMeta = {
+  person: {
     'category': 'PII',
     'description': 'Full name of a person',
     'color': 'blue',
   },
-  FIRST_NAME: {
+  firstName: {
     'category': 'PII',
     'description': 'First name of a person',
     'color': 'blue',
   },
-  LAST_NAME: {
+  lastName: {
     'category': 'PII',
     'description': 'Last name of a person',
     'color': 'blue',
   },
-  MIDDLE_NAME: {
+  middleName: {
     'category': 'PII',
     'description': 'Middle name of a person',
     'color': 'blue',
   },
-  PREFIX: {
+  prefix: {
     'category': 'PII',
     'description': 'Prefix or title (e.g. Mr, Ms, Dr)',
     'color': 'blue',
   },
-  USERNAME: {
+  username: {
     'category': 'PII',
     'description': 'Username or handle',
     'color': 'blue',
   },
-  EMAIL: {
+  email: {
     'category': 'PII',
     'description': 'Email address',
     'color': 'blue',
   },
-  PHONE: {
+  phone: {
     'category': 'PII',
     'description': 'Phone or fax number',
     'color': 'blue',
   },
-  URL: {
+  url: {
     'category': 'PII',
     'description': 'URL or website address',
     'color': 'blue',
   },
-  LOCATION: {
+  location: {
     'category': 'PII',
     'description': 'Geographic location',
     'color': 'green',
   },
-  STREET_ADDRESS: {
+  streetAddress: {
     'category': 'PII',
     'description': 'Street address',
     'color': 'green',
   },
-  BUILDING_NUMBER: {
+  buildingNumber: {
     'category': 'PII',
     'description': 'Building or house number',
     'color': 'green',
   },
-  ZIP_CODE: {
+  zipCode: {
     'category': 'PII',
     'description': 'Zip or postal code',
     'color': 'green',
   },
-  ZIPCODE: {
+  zipcode: {
     'category': 'PII',
     'description': 'Zip or postal code',
     'color': 'green',
   },
-  GPS_COORDINATES: {
+  gpsCoordinates: {
     'category': 'PII',
     'description': 'GPS coordinates',
     'color': 'green',
   },
-  ORDINAL_DIRECTION: {
+  ordinalDirection: {
     'category': 'PII',
     'description': 'Ordinal direction (e.g. North, South)',
     'color': 'green',
   },
-  COUNTRY: {
+  country: {
     'category': 'PII',
     'description': 'Country name',
     'color': 'green',
   },
-  STATE: {
+  state: {
     'category': 'PII',
     'description': 'State or province name',
     'color': 'green',
   },
-  CITY: {
+  city: {
     'category': 'PII',
     'description': 'City name',
     'color': 'green',
   },
-  DATE: {
+  date: {
     'category': 'PII',
     'description': 'Specific date',
     'color': 'cyan',
   },
-  DATE_OF_BIRTH: {
+  dateOfBirth: {
     'category': 'PII',
     'description': 'Date of birth',
     'color': 'cyan',
   },
-  TIME: {
+  time: {
     'category': 'PII',
     'description': 'Specific time',
     'color': 'cyan',
   },
-  AGE: {
+  age: {
     'category': 'PII',
     'description': 'Age of a person',
     'color': 'cyan',
   },
-  ID_NUM: {
+  idNum: {
     'category': 'PII',
     'description': 'Identification number',
     'color': 'red',
   },
-  SSN: {
+  ssn: {
     'category': 'PII',
     'description': 'Social Security Number',
     'color': 'red',
   },
-  NPI: {
+  npi: {
     'category': 'MEDICAL',
     'description': 'National Provider Identifier',
     'color': 'purple',
   },
-  MEDICAL_RECORD_NUMBER: {
+  medicalRecordNumber: {
     'category': 'PHI',
     'description': 'Medical Record Number (MRN)',
     'color': 'purple',
   },
-  HEALTH_PLAN_ID: {
+  healthPlanId: {
     'category': 'PHI',
     'description': 'Health plan beneficiary number',
     'color': 'purple',
   },
-  ACCOUNT_NUMBER: {
+  accountNumber: {
     'category': 'FINANCIAL',
     'description': 'Bank or other account number',
     'color': 'orange',
   },
-  PASSWORD: {
+  password: {
     'category': 'PII',
     'description': 'Password',
     'color': 'red',
   },
-  PIN: {
+  pin: {
     'category': 'PII',
     'description': 'Personal Identification Number',
     'color': 'red',
   },
-  API_KEY: {
+  apiKey: {
     'category': 'PII',
     'description': 'API key or token',
     'color': 'red',
   },
-  CREDIT_CARD: {
+  creditCard: {
     'category': 'FINANCIAL',
     'description': 'Credit or debit card number',
     'color': 'orange',
   },
-  CREDIT_CARD_ISSUER: {
+  creditCardIssuer: {
     'category': 'FINANCIAL',
     'description': 'Credit card issuing bank',
     'color': 'orange',
   },
-  CVV: {
+  cvv: {
     'category': 'FINANCIAL',
     'description': 'Credit card verification value',
     'color': 'orange',
   },
-  IBAN: {
+  iban: {
     'category': 'FINANCIAL',
     'description': 'International Bank Account Number',
     'color': 'orange',
   },
-  BIC: {
+  bic: {
     'category': 'FINANCIAL',
     'description': 'Bank Identifier Code (SWIFT)',
     'color': 'orange',
   },
-  AMOUNT: {
+  amount: {
     'category': 'FINANCIAL',
     'description': 'Monetary amount',
     'color': 'orange',
   },
-  CURRENCY: {
+  currency: {
     'category': 'FINANCIAL',
     'description': 'Currency name or symbol',
     'color': 'orange',
   },
-  BITCOIN_ADDRESS: {
+  bitcoinAddress: {
     'category': 'FINANCIAL',
     'description': 'Bitcoin wallet address',
     'color': 'orange',
   },
-  ETHEREUM_ADDRESS: {
+  ethereumAddress: {
     'category': 'FINANCIAL',
     'description': 'Ethereum wallet address',
     'color': 'orange',
   },
-  LITECOIN_ADDRESS: {
+  litecoinAddress: {
     'category': 'FINANCIAL',
     'description': 'Litecoin wallet address',
     'color': 'orange',
   },
-  MASKED_NUMBER: {
+  maskedNumber: {
     'category': 'PII',
     'description': 'Masked identification number',
     'color': 'grey',
   },
-  GENDER: {
+  gender: {
     'category': 'PII',
     'description': 'Gender or sex',
     'color': 'teal',
   },
-  EYE_COLOR: {
+  eyeColor: {
     'category': 'PII',
     'description': 'Eye color',
     'color': 'teal',
   },
-  HEIGHT: {
+  height: {
     'category': 'PII',
     'description': 'Height',
     'color': 'teal',
   },
-  WEIGHT: {
+  weight: {
     'category': 'PII',
     'description': 'Weight',
     'color': 'teal',
   },
-  ORGANIZATION: {
+  organization: {
     'category': 'PII',
     'description': 'Organization or company name',
     'color': 'indigo',
   },
-  JOB_TITLE: {
+  jobTitle: {
     'category': 'PII',
     'description': 'Job title',
     'color': 'indigo',
   },
-  JOB_DEPARTMENT: {
+  jobDepartment: {
     'category': 'PII',
     'description': 'Job department',
     'color': 'indigo',
   },
-  OCCUPATION: {
+  occupation: {
     'category': 'PII',
     'description': 'Occupation or profession',
     'color': 'indigo',
   },
-  IP_ADDRESS: {
+  ipAddress: {
     'category': 'PII',
     'description': 'IP address',
     'color': 'brown',
   },
-  MAC_ADDRESS: {
+  macAddress: {
     'category': 'PII',
     'description': 'MAC address',
     'color': 'brown',
   },
-  USER_AGENT: {
+  userAgent: {
     'category': 'PII',
     'description': 'Browser user agent string',
     'color': 'brown',
   },
-  VIN: {
+  vin: {
     'category': 'PII',
     'description': 'Vehicle Identification Number',
     'color': 'brown',
   },
-  LICENSE_PLATE: {
+  licensePlate: {
     'category': 'PII',
     'description': 'Vehicle license plate number',
     'color': 'brown',
   },
-  VEHICLE_REGISTRATION: {
+  vehicleRegistration: {
     'category': 'PII',
     'description': 'Vehicle registration details',
     'color': 'brown',
   },
-  IMEI: {
+  imei: {
     'category': 'PII',
     'description': 'Mobile device IMEI number',
     'color': 'brown',
   },
-  PATIENT_ID: {
+  patientId: {
     'category': 'PHI',
     'description': 'Unique identifier for a patient',
     'color': 'purple',
   },
-  PROVIDER_ID: {
+  providerId: {
     'category': 'MEDICAL',
     'description': 'Unique identifier for a provider',
     'color': 'purple',
   },
-  DRUG_NAME: {
+  drugName: {
     'category': 'MEDICAL',
     'description': 'Name of a drug or medication',
     'color': 'purple',
   },
-  DIAGNOSIS_CODE: {
+  diagnosisCode: {
     'category': 'PHI',
     'description': 'Medical diagnosis code (e.g. ICD-10)',
     'color': 'purple',
   },
-  PROCEDURE_CODE: {
+  procedureCode: {
     'category': 'PHI',
     'description': 'Medical procedure code (e.g. CPT)',
     'color': 'purple',
   },
-  LAB_RESULT: {
+  labResult: {
     'category': 'PHI',
     'description': 'Laboratory test result',
     'color': 'purple',
   },
-  VITAL_SIGN: {
+  vitalSign: {
     'category': 'PHI',
     'description': 'Vital sign measurement',
     'color': 'purple',
   },
-  ALLERGY: {
+  allergy: {
     'category': 'PHI',
     'description': 'Allergy information',
     'color': 'purple',
   },
-  CONDITION: {
+  condition: {
     'category': 'PHI',
     'description': 'Medical condition',
     'color': 'purple',
   },
-  INSURANCE_ID: {
+  insuranceId: {
     'category': 'PHI',
     'description': 'Medical insurance policy ID',
     'color': 'purple',
   },
-  OTHER: {
+  other: {
     'category': 'OTHER',
     'description': 'Other non-categorized entity',
     'color': 'grey',

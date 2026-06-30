@@ -269,7 +269,7 @@ class DefaultPIIDetector implements PIIDetector {
       ));
     }
 
-    // SSN
+    // ssn
     for (final match in ssnPattern.allMatches(text)) {
       detected.putIfAbsent('ssn', () => []);
       detected['ssn']!.add(PIIMatch(

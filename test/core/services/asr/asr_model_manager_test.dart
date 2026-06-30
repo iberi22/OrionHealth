@@ -25,6 +25,7 @@ void main() {
     manager.debugSetBaseDirForTesting(tempDir);
 
     // Mock rootBundle for manifest
+    // ignore: unused_local_variable
     const manifestJson = '''
     {
       "models": [

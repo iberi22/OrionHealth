@@ -94,7 +94,7 @@ void main() {
         HealthDataPoint(
           uuid: 'uuid6',
           value: NumericHealthValue(numericValue: 1.75), // 1.75 meters
-          type: HealthDataType.HEIGHT,
+          type: HealthDataType.height,
           unit: HealthDataUnit.METER,
           dateFrom: date,
           dateTo: date,
@@ -106,7 +106,7 @@ void main() {
         HealthDataPoint(
           uuid: 'uuid7',
           value: NumericHealthValue(numericValue: 70), // 70 kg
-          type: HealthDataType.WEIGHT,
+          type: HealthDataType.weight,
           unit: HealthDataUnit.KILOGRAM,
           dateFrom: date,
           dateTo: date,

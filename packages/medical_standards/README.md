@@ -18,7 +18,7 @@ This package contains **public medical knowledge** that powers the OrionHealth A
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     INFERENCE TIME (LOCAL)                       │
+│                     INFERENCE time (LOCAL)                       │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐               │
 │  │  full_icd10 │  │ full_loinc  │  │ full_snomed │  ...          │
 │  │   (~20MB)   │  │  (~10MB)    │  │  (~30MB)    │               │
@@ -30,7 +30,7 @@ This package contains **public medical knowledge** that powers the OrionHealth A
                     Sync (background)
                            │
 ┌─────────────────────────────────────────────────────────────────┐
-│                     UPDATE TIME (NETWORK)                        │
+│                     UPDATE time (NETWORK)                        │
 │  GitHub releases → Download → Cache locally → Done               │
 │  Run: SyncService().syncAll()                                     │
 └─────────────────────────────────────────────────────────────────┘

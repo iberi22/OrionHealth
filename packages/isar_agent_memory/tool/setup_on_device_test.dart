@@ -16,7 +16,7 @@ void main() async {
   // Using a reliable source (e.g. from optimum-js or similar exports)
   // For this example, we'll try to use a direct link to a hosted file if possible,
   // or instruct the user. Since I cannot guarantee a permanent direct link without a proper CDN,
-  // I will use a standard HF Hub URL format.
+  // I will use a standard HF Hub url format.
 
   // Example: Xenova/all-MiniLM-L6-v2
   // model_quantized.onnx (~23MB)

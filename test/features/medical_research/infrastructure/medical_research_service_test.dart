@@ -24,7 +24,7 @@ void main() {
   });
 
   group('MedicalResearchService', () {
-    test('performResearch scrapes top result when URL starts with http', () async {
+    test('performResearch scrapes top result when url starts with http', () async {
       final results = [
         const ResearchResult(
           title: 'Result 1',
@@ -84,7 +84,7 @@ void main() {
       expect(actual[1].title, 'Result 2');
     });
 
-    test('performResearch does not scrape when top result has no http URL', () async {
+    test('performResearch does not scrape when top result has no http url', () async {
       final results = [
         const ResearchResult(
           title: 'Local Result',

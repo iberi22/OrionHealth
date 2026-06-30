@@ -133,7 +133,7 @@ OrionHealth/
 |---------|--------|---------|
 | NFC Receiving | ✅ | Receive packages from other Orion nodes |
 | BLE Transfer | ✅ | Bluetooth Low Energy P2P |
-| WiFi Server | ✅ | Local HTTPS server with PIN |
+| WiFi Server | ✅ | Local HTTPS server with pin |
 | Encrypted Packages | ✅ | AES-256 + ECDH key exchange |
 | Consent Flow | ✅ | User approves before receiving |
 
@@ -240,13 +240,13 @@ OrionHealth/
 │  • AI insights (derived from private data)                                 │
 │  • Doctor concepts (professional notes)                                     │
 │  • Stored: Encrypted locally in Isar                                        │
-│  • Key: User's PIN + biometric + Google Sign-In                           │
+│  • Key: User's pin + biometric + Google Sign-In                           │
 │                                                                              │
 │  SHARED (Explicit Consent Required)                                         │
 │  ══════════════════════════════════                                        │
 │  • Medical packages sent to other Orion nodes                              │
 │  • Encrypted with recipient's public key                                    │
-│  • Requires: PIN + biometric + Google Auth                                  │
+│  • Requires: pin + biometric + Google Auth                                  │
 │  • Auto-expires after 3 minutes                                            │
 │  • Audit log maintained                                                    │
 │                                                                              │
@@ -313,10 +313,10 @@ OrionHealth/
 |--------|---------------|
 | Data at Rest | AES-256-GCM (Isar encryption) |
 | Data in Transit | TLS 1.3 + ECDHE |
-| Key Derivation | Argon2id (for PIN) |
+| Key Derivation | Argon2id (for pin) |
 | Biometric Auth | Platform-native (Android/iOS) |
 | External Auth | Google Sign-In (OAuth2 + 2FA) |
-| Multi-Factor | 2 of 3: PIN + Biometric + Google |
+| Multi-Factor | 2 of 3: pin + Biometric + Google |
 
 ### Compliance
 

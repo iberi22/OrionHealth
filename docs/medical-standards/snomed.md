@@ -10,7 +10,7 @@ wikipediaBase: "https://en.wikipedia.org/wiki/"
 
 # SNOMED Standards
 
-| Code | Display Name | Category | Wikipedia URL | Search Terms |
+| Code | Display Name | Category | Wikipedia url | Search Terms |
 |---|---|---|---|---|
 | 76684001 | Diabetes mellitus type 1 | General | https://en.wikipedia.org/wiki/Diabetes_mellitus_type_1 |  |
 | 44054006 | Diabetes mellitus type 2 | General | https://en.wikipedia.org/wiki/Diabetes_mellitus_type_2 |  |

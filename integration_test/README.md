@@ -21,7 +21,7 @@ integration_test/
 ├── smoke_injectable_test.dart  # Smoke test REAL sin mocks
 ├── screenshots/           # Capturas de pantalla (Golden Files)
 │   └── 01_launch/        # Onboarding & launch
-│   └── 02_auth/          # Auth, PIN setup
+│   └── 02_auth/          # Auth, pin setup
 │   └── 03_dashboard/     # Dashboard & home
 │   └── 04_records/       # Health records
 │   └── 05_reports/       # Reports & analytics
@@ -93,7 +93,7 @@ flutter test integration_test/screenshot_flow_e2e_test.dart -d windows
 | # | Flow | Descripción |
 |---|------|-------------|
 | 01 | Launch & Onboarding | Splash, welcome screens, profile setup |
-| 02 | Auth & PIN | Login, PIN setup, locked states |
+| 02 | Auth & pin | Login, pin setup, locked states |
 | 03 | Dashboard & Home | Health status grid, module cards |
 | 04 | Health Records | Record list, upload options |
 | 05 | Reports | Report list, detail view |

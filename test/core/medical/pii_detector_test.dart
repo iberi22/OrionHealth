@@ -12,8 +12,8 @@ void main() {
     detector = PiiDetector();
   });
 
-  test('detects SSN', () {
-    final result = detector.detectPii('My SSN is 123-45-6789');
+  test('detects ssn', () {
+    final result = detector.detectPii('My ssn is 123-45-6789');
     expect(result.entities.any((e) => e.label == PiiLabel.ssn), isTrue);
   });
 
@@ -29,33 +29,33 @@ void main() {
   });
 
   test('context boosting', () {
-    final result = detector.detectPii('SSN: 123-45-6789');
+    final result = detector.detectPii('ssn: 123-45-6789');
     final entity = result.entities.firstWhere((e) => e.label == PiiLabel.ssn);
     expect(entity.confidence, greaterThan(0.5)); // base 0.3 + boost 0.55 = 0.85
   });
 
   test('no false positive on non-PII number (low confidence)', () {
     final result = detector.detectPii('The total is 123-45-6789');
-    // Without SSN context, score should be low
+    // Without ssn context, score should be low
     final entity = result.entities.firstWhere((e) => e.label == PiiLabel.ssn);
     expect(entity.confidence, lessThan(0.5)); // base 0.3
   });
 
   test('detects multiple PII types', () {
-    final text = 'Patient Jane Doe (DOB: 01/01/1980) called from 555-123-4567 regarding her SSN 999-00-1111';
+    final text = 'Patient Jane Doe (DOB: 01/01/1980) called from 555-123-4567 regarding her ssn 999-00-1111';
     final result = detector.detectPii(text);
 
     final labels = result.entities.map((e) => e.label).toSet();
     expect(labels.contains(PiiLabel.date), isTrue);
     expect(labels.contains(PiiLabel.phoneNumber), isTrue);
-    // SSN 999-00-1111 starts with 9, so it should fail validation and have low confidence
+    // ssn 999-00-1111 starts with 9, so it should fail validation and have low confidence
     final ssn = result.entities.firstWhere((e) => e.label == PiiLabel.ssn);
     expect(ssn.confidence, lessThan(0.5));
   });
 
   test('scrubbing works', () {
     final result = detector.detectPii('Email me at test@example.com');
-    expect(result.scrubbedText, contains('[EMAIL]'));
+    expect(result.scrubbedText, contains('[email]'));
     expect(result.scrubbedText, isNot(contains('test@example.com')));
   });
 

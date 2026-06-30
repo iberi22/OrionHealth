@@ -10,7 +10,7 @@ wikipediaBase: "https://en.wikipedia.org/wiki/"
 
 # RxNorm Standards
 
-| Code | Display Name | Category | Wikipedia URL | Search Terms |
+| Code | Display Name | Category | Wikipedia url | Search Terms |
 |---|---|---|---|---|
 | 6809 | Metformin | General | https://en.wikipedia.org/wiki/Metformin |  |
 | 5487 | Glipizide | General | https://en.wikipedia.org/wiki/Glipizide |  |

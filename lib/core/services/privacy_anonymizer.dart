@@ -4,7 +4,7 @@
 // PII/PHI detection powered by PiiDetector ported from OpenMed
 // (https://github.com/maziyarpanahi/openmed) — Apache 2.0.
 //
-// The regex patterns, label taxonomy, and validation logic (SSN Luhn, NPI,
+// The regex patterns, label taxonomy, and validation logic (ssn Luhn, npi,
 // US Phone) originate from OpenMed and have been ported to native Dart
 // for on-device, offline execution within OrionHealth (AGPL-3.0-only).
 
@@ -17,23 +17,23 @@ import '../medical/pii_entity.dart';
 
 /// Formats a PII/PHI entity text into a compact placeholder string.
 ///
-/// * `SSN` → `[XXX-XX-1234]` (last 4 visible, format-preserving)
-/// * `CREDIT_CARD` → `[XXXX-XXXX-XXXX-2424]` (last 4 visible)
-/// * All other types → `[TYPE]` (e.g. `[EMAIL]`, `[PHONE]`, `[IP_ADDRESS]`)
+/// * `ssn` → `[XXX-XX-1234]` (last 4 visible, format-preserving)
+/// * `creditCard` → `[XXXX-XXXX-XXXX-2424]` (last 4 visible)
+/// * All other types → `[TYPE]` (e.g. `[email]`, `[phone]`, `[ipAddress]`)
 String _defaultMaskBuilder(PiiEntity entity) {
-  if (entity.label == 'SSN') {
+  if (entity.label == 'ssn') {
     final digits = entity.text.replaceAll(RegExp(r'[^0-9]'), '');
     if (digits.length >= 4) {
       return '[XXX-XX-${digits.substring(digits.length - 4)}]';
     }
-    return '[SSN]';
+    return '[ssn]';
   }
-  if (entity.label == 'CREDIT_CARD' || entity.label == 'CREDIT_DEBIT_CARD') {
+  if (entity.label == 'creditCard' || entity.label == 'CREDIT_DEBIT_CARD') {
     final digits = entity.text.replaceAll(RegExp(r'[^0-9]'), '');
     if (digits.length >= 4) {
       return '[XXXX-XXXX-XXXX-${digits.substring(digits.length - 4)}]';
     }
-    return '[CREDIT_CARD]';
+    return '[creditCard]';
   }
   return '[${entity.label}]';
 }
@@ -70,7 +70,7 @@ extension PiiResultMask on PiiResult {
 /// trail to Isar.
 ///
 /// Backed by [PiiDetector] which implements 30+ regex patterns with context
-/// boosting and validation (SSN checksum, Luhn, NPI, US Phone).
+/// boosting and validation (ssn checksum, Luhn, npi, US Phone).
 @lazySingleton
 class PromptScrubber {
   final Isar _isar;

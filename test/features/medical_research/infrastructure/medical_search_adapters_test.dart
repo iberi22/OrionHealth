@@ -68,7 +68,7 @@ void main() {
             requestOptions: RequestOptions(path: ''),
           );
         }
-        throw Exception('Unexpected URL: $url');
+        throw Exception('Unexpected url: $url');
       });
 
       final results = await pubMedAdapter.search('diabetes');

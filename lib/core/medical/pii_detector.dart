@@ -31,7 +31,7 @@ class PiiPattern {
   }) : pattern = RegExp(pattern, caseSensitive: caseSensitive, multiLine: multiLine);
 }
 
-/// Validation function for SSN
+/// Validation function for ssn
 bool validateSsn(String ssnText) {
   final digits = ssnText.replaceAll(RegExp(r'[^0-9]'), '');
   if (digits.length != 9) return false;
@@ -66,12 +66,12 @@ bool validateLuhn(String numberText) {
   return sum % 10 == 0;
 }
 
-/// Validation function for NPI
+/// Validation function for npi
 bool validateNpi(String npiText) {
   final digits = npiText.replaceAll(RegExp(r'[^0-9]'), '');
   if (digits.length != 10) return false;
 
-  // NPI uses Luhn with 80840 prefix
+  // npi uses Luhn with 80840 prefix
   final fullString = '80840$digits';
   int sum = 0;
   bool alternate = false;
@@ -147,7 +147,7 @@ final List<PiiPattern> defaultPiiPatterns = [
     contextWords: ['dob', 'birth', 'born', 'date of birth', 'birthdate', 'deceased', 'died', 'admitted', 'discharged'],
   ),
 
-  // SSN
+  // ssn
   PiiPattern(
     pattern: r'\b\d{3}-\d{2}-\d{4}\b',
     entityType: PiiLabel.ssn,
@@ -197,7 +197,7 @@ final List<PiiPattern> defaultPiiPatterns = [
     validator: validatePhoneUs,
   ),
 
-  // NPI
+  // npi
   PiiPattern(
     pattern: r'\b\d{10}\b',
     entityType: PiiLabel.npi,

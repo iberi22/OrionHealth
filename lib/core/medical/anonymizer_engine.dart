@@ -85,8 +85,8 @@ class AnonymizerEngine {
 
   /// Generate a surrogate for [original] of type [label].
   ///
-  /// Uses format-preserving replacement by default; specific labels (EMAIL,
-  /// PHONE, SSN, CREDIT_CARD) get dedicated generators when registered.
+  /// Uses format-preserving replacement by default; specific labels (email,
+  /// phone, ssn, creditCard) get dedicated generators when registered.
   ///
   /// If [_consistent] is true, the RNG is seeded from `(label, original)`
   /// so repeated calls return the same surrogate.
@@ -186,22 +186,22 @@ class AnonymizerEngine {
 
   /// Register the built-in label->generator mappings.
   void _registerDefaults() {
-    _generators['PERSON'] = _genName;
-    _generators['FIRST_NAME'] = _genName;
-    _generators['LAST_NAME'] = _genName;
-    _generators['PHONE'] = _genPhone;
+    _generators['person'] = _genName;
+    _generators['firstName'] = _genName;
+    _generators['lastName'] = _genName;
+    _generators['phone'] = _genPhone;
     _generators['PHONE_NUMBER'] = _genPhone;
-    _generators['EMAIL'] = _genEmail;
-    _generators['SSN'] = _genSsn;
-    _generators['CREDIT_CARD'] = _genCreditCard;
+    _generators['email'] = _genEmail;
+    _generators['ssn'] = _genSsn;
+    _generators['creditCard'] = _genCreditCard;
     _generators['CREDIT_DEBIT_CARD'] = _genCreditCard;
-    _generators['DATE'] = _genDate;
-    _generators['DATE_OF_BIRTH'] = _genDate;
-    _generators['AGE'] = _genAge;
-    _generators['LOCATION'] = _genLocation;
-    _generators['STREET_ADDRESS'] = _genLocation;
-    _generators['CITY'] = _genLocation;
-    _generators['COUNTRY'] = _genLocation;
+    _generators['date'] = _genDate;
+    _generators['dateOfBirth'] = _genDate;
+    _generators['age'] = _genAge;
+    _generators['location'] = _genLocation;
+    _generators['streetAddress'] = _genLocation;
+    _generators['city'] = _genLocation;
+    _generators['country'] = _genLocation;
   }
 
   /// Returns a random digit string of [length].

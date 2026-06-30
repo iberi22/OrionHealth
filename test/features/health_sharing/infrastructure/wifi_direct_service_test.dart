@@ -101,14 +101,14 @@ void main() {
     });
 
     test(
-      'full transfer with PIN verification success',
+      'full transfer with pin verification success',
       () async {
         // Requires real network — skip in CI mode
         // Run with `flutter test` to execute
         await service.initialize();
         const pin = '1234';
 
-        // Start server with PIN
+        // Start server with pin
         await service.startServer(port: 0);
         final address = service.serverAddress!;
 

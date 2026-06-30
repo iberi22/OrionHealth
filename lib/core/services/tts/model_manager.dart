@@ -156,7 +156,7 @@ class OnDeviceTTSModelManager {
     }
   }
 
-  /// Get local file path by remote URL for a voice (after install).
+  /// Get local file path by remote url for a voice (after install).
   Future<String?> getLocalPath(String voiceKey, String remoteUrl) async {
     final filePath = await _localPathFor(voiceKey, remoteUrl);
     return (await File(filePath).exists()) ? filePath : null;

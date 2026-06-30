@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart';
+import '../app_logger.dart';
 import 'asr_types.dart';
 import 'local_asr_service.dart';
 import 'asr_model_manager.dart';
@@ -44,7 +45,7 @@ class SherpaOnnxAsrService implements LocalAsrService {
       if (!isInstalled) {
         state = AsrState.unavailable;
         _stateController.add(state);
-        if (kDebugMode) print('SherpaOnnxAsrService: Model $modelKey not installed');
+        AppLogger.w('SherpaOnnxAsrService', 'Model $modelKey not installed');
         return;
       }
 
@@ -78,12 +79,12 @@ class SherpaOnnxAsrService implements LocalAsrService {
       _recognizer = OfflineRecognizer(config);
       state = AsrState.ready;
       _stateController.add(state);
-      if (kDebugMode) print('SherpaOnnxAsrService: Initialized with $modelKey');
+      AppLogger.i('SherpaOnnxAsrService', 'Initialized with $modelKey');
     } catch (e) {
       state = AsrState.error;
       _stateController.add(state);
       _errorController.add('ASR Init Error: $e');
-      if (kDebugMode) print('SherpaOnnxAsrService Init Error: $e');
+      AppLogger.e('SherpaOnnxAsrService', 'Init Error: $e');
     }
   }
 

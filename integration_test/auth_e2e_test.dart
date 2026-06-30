@@ -33,7 +33,7 @@ void main() {
   });
 
   group('Auth Flow - E2E Tests', () {
-    testWidgets('E2E: Login with PIN', (WidgetTester tester) async {
+    testWidgets('E2E: Login with pin', (WidgetTester tester) async {
       when(() => mockCubit.state).thenReturn(const AuthUnauthenticated());
       when(() => mockCubit.loginWithPin(any())).thenAnswer((_) async {});
 
@@ -51,15 +51,15 @@ void main() {
       await VideoRecorder.recordStep(tester, 'auth', '02_pin_entered');
     });
 
-    testWidgets('Edge Case: Wrong PIN - shows error message', (WidgetTester tester) async {
-      when(() => mockCubit.state).thenReturn(const AuthUnauthenticated(errorMessage: 'PIN incorrecto. Inténtalo de nuevo.'));
+    testWidgets('Edge Case: Wrong pin - shows error message', (WidgetTester tester) async {
+      when(() => mockCubit.state).thenReturn(const AuthUnauthenticated(errorMessage: 'pin incorrecto. Inténtalo de nuevo.'));
 
       await tester.pumpWidget(MaterialApp(
         home: BlocProvider<AuthCubit>.value(value: mockCubit, child: const LoginPage()),
       ));
       await tester.pumpAndSettle();
 
-      expect(find.text('PIN incorrecto. Inténtalo de nuevo.'), findsOneWidget);
+      expect(find.text('pin incorrecto. Inténtalo de nuevo.'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'auth', '04_wrong_pin_error');
     });
 
@@ -88,10 +88,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Simulate biometry failure resulting in unauthenticated with message
-      stateController.add(const AuthUnauthenticated(errorMessage: 'Biometría fallida. Usa tu PIN.'));
+      stateController.add(const AuthUnauthenticated(errorMessage: 'Biometría fallida. Usa tu pin.'));
       await tester.pump();
 
-      expect(find.text('Biometría fallida. Usa tu PIN.'), findsOneWidget);
+      expect(find.text('Biometría fallida. Usa tu pin.'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'auth', '06_biometry_failure');
     });
 

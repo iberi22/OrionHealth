@@ -4,11 +4,10 @@ import 'dart:convert';
 void main() async {
   final featuresDir = Directory('lib/features');
   if (!featuresDir.existsSync()) {
-    print('Error: lib/features directory not found');
+    stdout.writeln('Error: lib/features directory not found');
     exit(1);
   }
 
-  final testFeaturesDir = Directory('test/features');
   final features = featuresDir
       .listSync()
       .whereType<Directory>()
@@ -35,7 +34,7 @@ void main() async {
   // Output JSON
   final jsonFile = File('coverage_report.json');
   await jsonFile.writeAsString(const JsonEncoder.withIndent('  ').convert(report));
-  print('Generated coverage_report.json');
+  stdout.writeln('Generated coverage_report.json');
 
   // Output Markdown
   final mdFile = File('coverage_report.md');
@@ -51,7 +50,7 @@ void main() async {
   }
 
   await sink.close();
-  print('Generated coverage_report.md');
+  stdout.writeln('Generated coverage_report.md');
 }
 
 bool _checkLayer(String feature, String layer) {

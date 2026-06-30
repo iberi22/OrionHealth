@@ -10,7 +10,7 @@ wikipediaBase: "https://en.wikipedia.org/wiki/"
 
 # ICD-10 Standards
 
-| Code | Display Name | Category | Wikipedia URL | Search Terms |
+| Code | Display Name | Category | Wikipedia url | Search Terms |
 |---|---|---|---|---|
 | E10 | Type 1 diabetes mellitus | Endocrine | https://en.wikipedia.org/wiki/Type_1_diabetes_mellitus | DM1, Diabetes tipo 1, Diabetes mellitus type I |
 | E11 | Type 2 diabetes mellitus | Endocrine | https://en.wikipedia.org/wiki/Type_2_diabetes_mellitus | DM2, Diabetes tipo 2, Diabetes mellitus type II |

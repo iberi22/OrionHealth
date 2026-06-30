@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:orionhealth_health/core/services/app_logger.dart';
 import 'package:orionhealth_health/core/services/audio/audio_recorder_service.dart';
 import 'package:orionhealth_health/core/services/tts/tts_adapter.dart';
 import 'package:orionhealth_health/core/services/tts/sherpa_onnx_adapter.dart';
@@ -42,7 +43,7 @@ class AudioService extends AudioPlayerService {
             _audioStateController.add(AudioState.ttsStopped);
           },
           onError: (msg) {
-            _errorController.add(msg ?? 'TTS error');
+            _errorController.add(msg);
             _audioStateController.add(AudioState.error);
           },
         ),
@@ -50,7 +51,7 @@ class AudioService extends AudioPlayerService {
       await _tts!.initialize();
       _ttsInitialized = true;
     } catch (e) {
-      if (kDebugMode) print('TTS init failed: $e — using playAudioBytes fallback');
+      AppLogger.e('AudioService', 'TTS init failed: $e — using playAudioBytes fallback');
       _ttsInitialized = false;
     }
   }

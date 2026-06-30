@@ -16,12 +16,12 @@ void main() {
     test('fromJson/toJson', () {
       final json = {
         'defaultMinConfidence': 0.8,
-        'labelThresholds': {'PERSON': 0.9, 'EMAIL': 0.95},
+        'labelThresholds': {'person': 0.9, 'email': 0.95},
       };
       final config = QualityGateConfig.fromJson(json);
       expect(config.defaultMinConfidence, 0.8);
-      expect(config.labelThresholds['PERSON'], 0.9);
-      expect(config.labelThresholds['EMAIL'], 0.95);
+      expect(config.labelThresholds['person'], 0.9);
+      expect(config.labelThresholds['email'], 0.95);
 
       expect(config.toJson(), json);
     });
@@ -33,7 +33,7 @@ void main() {
     test('valid spans', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: 'John Doe',
           confidence: 0.9,
           start: 6,
@@ -41,7 +41,7 @@ void main() {
           source: 'test',
         ),
         const PiiEntity(
-          label: 'EMAIL',
+          label: 'email',
           text: 'john@example.com',
           confidence: 1.0,
           start: 30,
@@ -58,7 +58,7 @@ void main() {
     test('inverted span', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: 'John Doe',
           confidence: 0.9,
           start: 14,
@@ -74,7 +74,7 @@ void main() {
     test('zero-length span', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: '',
           confidence: 0.9,
           start: 6,
@@ -90,7 +90,7 @@ void main() {
     test('out of bounds (negative)', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: 'Hello',
           confidence: 0.9,
           start: -5,
@@ -106,7 +106,7 @@ void main() {
     test('out of bounds (exceeds length)', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: '!',
           confidence: 0.9,
           start: 46,
@@ -122,7 +122,7 @@ void main() {
     test('text mismatch', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: 'Jane Doe',
           confidence: 0.9,
           start: 6,
@@ -138,7 +138,7 @@ void main() {
     test('whitespace-only mismatch (should be valid)', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: 'John  Doe', // extra space
           confidence: 0.9,
           start: 6,
@@ -156,7 +156,7 @@ void main() {
     test('detects overlaps', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: 'John Doe',
           confidence: 0.9,
           start: 6,
@@ -164,7 +164,7 @@ void main() {
           source: 'test',
         ),
         const PiiEntity(
-          label: 'FIRST_NAME',
+          label: 'firstName',
           text: 'John',
           confidence: 0.8,
           start: 6,
@@ -172,7 +172,7 @@ void main() {
           source: 'test',
         ),
         const PiiEntity(
-          label: 'EMAIL',
+          label: 'email',
           text: 'john@example.com',
           confidence: 1.0,
           start: 30,
@@ -183,14 +183,14 @@ void main() {
 
       final overlaps = QualityGate.detectOverlaps(entities);
       expect(overlaps, hasLength(1));
-      expect(overlaps[0].$1.label, 'PERSON');
-      expect(overlaps[0].$2.label, 'FIRST_NAME');
+      expect(overlaps[0].$1.label, 'person');
+      expect(overlaps[0].$2.label, 'firstName');
     });
 
     test('no overlaps', () {
       final entities = [
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: 'John',
           confidence: 0.9,
           start: 0,
@@ -198,7 +198,7 @@ void main() {
           source: 'test',
         ),
         const PiiEntity(
-          label: 'PERSON',
+          label: 'person',
           text: 'Doe',
           confidence: 0.9,
           start: 5,
@@ -215,7 +215,7 @@ void main() {
   group('QualityGate.applyGates', () {
     final entities = [
       const PiiEntity(
-        label: 'PERSON',
+        label: 'person',
         text: 'John Doe',
         confidence: 0.65,
         start: 0,
@@ -223,7 +223,7 @@ void main() {
         source: 'test',
       ),
       const PiiEntity(
-        label: 'EMAIL',
+        label: 'email',
         text: 'john@example.com',
         confidence: 0.95,
         start: 20,
@@ -235,7 +235,7 @@ void main() {
     test('default confidence filtering', () {
       final filtered = QualityGate.applyGates(entities);
       expect(filtered, hasLength(1));
-      expect(filtered[0].label, 'EMAIL');
+      expect(filtered[0].label, 'email');
     });
 
     test('custom default confidence filtering', () {
@@ -251,7 +251,7 @@ void main() {
         entities,
         config: const QualityGateConfig(
           defaultMinConfidence: 0.8,
-          labelThresholds: {'PERSON': 0.6},
+          labelThresholds: {'person': 0.6},
         ),
       );
       expect(filtered, hasLength(2));
@@ -260,7 +260,7 @@ void main() {
     test('span validation filtering', () {
       final invalidEntities = [
         const PiiEntity(
-          label: 'EMAIL',
+          label: 'email',
           text: 'wrong',
           confidence: 0.95,
           start: 0,

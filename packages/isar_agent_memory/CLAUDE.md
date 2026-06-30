@@ -123,7 +123,7 @@ git push -u origin branch
 
 ## 🔗 Resources & Links
 
-| Resource | URL/Path |
+| Resource | url/Path |
 |----------|----------|
 | Documentation | ./docs |
 | Repository | N/A |

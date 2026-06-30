@@ -441,10 +441,10 @@ final detected = await privacy.piiDetector.detectPII(
 
 // Mask PII
 final masked = await privacy.maskPII(
-  'My SSN is 123-45-6789',
+  'My ssn is 123-45-6789',
   maskChar: '[REDACTED]',
 );
-// Result: "My SSN is [REDACTED]"
+// Result: "My ssn is [REDACTED]"
 
 // Store with automatic masking
 final id = await privacy.storeWithPIIMasking(

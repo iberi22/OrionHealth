@@ -38,7 +38,7 @@ enum AppEnvironment {
   /// Whether verbose logging should be enabled.
   bool get verboseLogging => this != AppEnvironment.production;
 
-  /// Base URL for the FHIR backend.
+  /// Base url for the FHIR backend.
   String get fhirBaseUrl {
     switch (this) {
       case AppEnvironment.development:
@@ -50,7 +50,7 @@ enum AppEnvironment {
     }
   }
 
-  /// Base URL for the AI inference endpoint.
+  /// Base url for the AI inference endpoint.
   String get aiBaseUrl {
     switch (this) {
       case AppEnvironment.development:
@@ -62,7 +62,7 @@ enum AppEnvironment {
     }
   }
 
-  /// Base URL for the CMS content.
+  /// Base url for the CMS content.
   String get cmsBaseUrl {
     switch (this) {
       case AppEnvironment.development:

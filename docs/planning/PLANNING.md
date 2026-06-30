@@ -72,7 +72,7 @@ Medical standards data should be **PUBLIC, VERIFIABLE, and COMMUNITY ACCESSIBLE*
 
 ### Access Patterns
 
-| Context | URL/Path | Use Case |
+| Context | url/Path | Use Case |
 |---------|----------|----------|
 | **Online/API** | `https://raw.githubusercontent.com/iberi22/OrionHealth/main/medical-standards/icd10.json` | Apps fetching latest data |
 | **Versioned** | `https://raw.githubusercontent.com/iberi22/OrionHealth/v1.0.0/medical-standards/icd10.json` | Pinned releases |
@@ -173,7 +173,7 @@ lib/
 │   │
 │   ├── health_sharing/     # Feature: BLE/NFC/WiFi P2P
 │   │   ├── encryption (AES-256-GCM)
-│   │   ├── 2-of-3 auth (PIN + Biometric + Google Sign-In)
+│   │   ├── 2-of-3 auth (pin + Biometric + Google Sign-In)
 │   │   └── 3-minute package expiry
 │   │
 │   └── onboarding/         # Feature: 5-step profile setup
@@ -244,7 +244,7 @@ packages/
 │                                                             │
 │  Security:                                                  │
 │  - AES-256-GCM encryption                                   │
-│  - 2-of-3 authentication (PIN + Biometric + Google Sign-In)│
+│  - 2-of-3 authentication (pin + Biometric + Google Sign-In)│
 │  - Package expires after 3 minutes                          │
 │  - Recipient sees preview before accepting                  │
 │                                                             │
@@ -263,7 +263,7 @@ packages/
 - [x] Hexagonal architecture setup
 - [x] Isar database configuration
 - [x] User profile data model & UI
-- [x] Authentication (PIN + Biometric)
+- [x] Authentication (pin + Biometric)
 
 ### Phase 2: Data Ingestion ✅
 - [x] File/Image Pickers

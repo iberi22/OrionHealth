@@ -33,43 +33,43 @@ void main() {
   }
 
   group('SetupPinPage', () {
-    testWidgets('renders PIN and confirm fields', (tester) async {
+    testWidgets('renders pin and confirm fields', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      expect(find.text('Nuevo PIN'), findsOneWidget);
-      expect(find.text('Confirmar PIN'), findsOneWidget);
-      expect(find.text('Guardar PIN'), findsOneWidget);
+      expect(find.text('Nuevo pin'), findsOneWidget);
+      expect(find.text('Confirmar pin'), findsOneWidget);
+      expect(find.text('Guardar pin'), findsOneWidget);
     });
 
-    testWidgets('shows error when PIN too short', (tester) async {
+    testWidgets('shows error when pin too short', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '123');
-      await tester.tap(find.text('Guardar PIN'));
+      await tester.enterText(find.widgetWithText(TextField, 'Nuevo pin'), '123');
+      await tester.tap(find.text('Guardar pin'));
       await tester.pump();
 
-      expect(find.text('El PIN debe tener al menos 4 dígitos'), findsOneWidget);
+      expect(find.text('El pin debe tener al menos 4 dígitos'), findsOneWidget);
     });
 
     testWidgets('shows error when PINs do not match', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '1234');
-      await tester.enterText(find.widgetWithText(TextField, 'Confirmar PIN'), '1235');
-      await tester.tap(find.text('Guardar PIN'));
+      await tester.enterText(find.widgetWithText(TextField, 'Nuevo pin'), '1234');
+      await tester.enterText(find.widgetWithText(TextField, 'Confirmar pin'), '1235');
+      await tester.tap(find.text('Guardar pin'));
       await tester.pump();
 
       expect(find.text('Los PINs no coinciden'), findsOneWidget);
     });
 
-    testWidgets('calls setupPin when valid PIN entered', (tester) async {
+    testWidgets('calls setupPin when valid pin entered', (tester) async {
       when(() => mockCubit.setupPin(any())).thenAnswer((_) async {});
 
       await tester.pumpWidget(createWidgetUnderTest());
 
-      await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '1234');
-      await tester.enterText(find.widgetWithText(TextField, 'Confirmar PIN'), '1234');
-      await tester.tap(find.text('Guardar PIN'));
+      await tester.enterText(find.widgetWithText(TextField, 'Nuevo pin'), '1234');
+      await tester.enterText(find.widgetWithText(TextField, 'Confirmar pin'), '1234');
+      await tester.tap(find.text('Guardar pin'));
       await tester.pump();
 
       verify(() => mockCubit.setupPin('1234')).called(1);

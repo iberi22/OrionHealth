@@ -39,7 +39,7 @@ void main() {
       const prompt = 'My email is test@example.com, please help.';
       final result = await scrubber.detectAndScrub(prompt, apiName: 'test-api');
 
-      expect(result, contains('[EMAIL]'));
+      expect(result, contains('[email]'));
       expect(result, isNot(contains('test@example.com')));
     });
 
@@ -47,7 +47,7 @@ void main() {
       const prompt = 'My phone is (213) 456-7890.';
       final result = await scrubber.detectAndScrub(prompt, apiName: 'test-api');
 
-      expect(result, contains('[PHONE]'));
+      expect(result, contains('[phone]'));
       expect(result, isNot(contains('(213) 456-7890')));
     });
 
@@ -55,7 +55,7 @@ void main() {
       const prompt = 'My server is at 192.168.1.1.';
       final result = await scrubber.detectAndScrub(prompt, apiName: 'test-api');
 
-      expect(result, contains('[IP_ADDRESS]'));
+      expect(result, contains('[ipAddress]'));
       expect(result, isNot(contains('192.168.1.1')));
     });
 
@@ -68,7 +68,7 @@ void main() {
       expect(result, isNot(contains(uuid)));
     });
 
-    test('should scrub SSN with format preservation and context', () async {
+    test('should scrub ssn with format preservation and context', () async {
       const prompt = 'ssn 213-45-6789.';
       final result = await scrubber.detectAndScrub(prompt, apiName: 'test-api');
 
@@ -89,7 +89,7 @@ void main() {
       const prompt = 'Email: test@example.com';
       final result = await scrubber.scrub(prompt, apiName: 'test-api');
 
-      expect(result, contains('[EMAIL]'));
+      expect(result, contains('[email]'));
     });
 
     test('should log scrub operation in Isar', () async {
@@ -101,14 +101,14 @@ void main() {
       final detector = PiiDetector();
       final result = detector.detectPii('phone number: (213) 456-7890');
       expect(result.entities, isNotEmpty);
-      expect(result.entities.first.label, equals('PHONE'));
+      expect(result.entities.first.label, equals('phone'));
     });
 
     test('PiiResult mask extension works', () {
       final detector = PiiDetector();
       final result = detector.detectPii('email: test@test.com');
       final masked = result.mask();
-      expect(masked, contains('[EMAIL]'));
+      expect(masked, contains('[email]'));
       expect(masked, isNot(contains('test@test.com')));
     });
   });
@@ -124,7 +124,7 @@ void main() {
 
       expect(result, isNot(contains('john@hospital.org')));
       expect(result, contains('@hospital.org'));
-      expect(result, isNot(contains('[EMAIL]')));
+      expect(result, isNot(contains('[email]')));
     });
 
     test('should replace phone with surrogate preserving format', () async {
@@ -136,7 +136,7 @@ void main() {
       );
 
       expect(result, isNot(contains('(213) 555-1234')));
-      expect(result, isNot(contains('[PHONE]')));
+      expect(result, isNot(contains('[phone]')));
       // Format should be preserved (parentheses, spaces, dashes)
       expect(
         RegExp(r'\(\d{3}\) \d{3}-\d{4}').hasMatch(result),
@@ -144,8 +144,8 @@ void main() {
       );
     });
 
-    test('should replace SSN with surrogate preserving last 4', () async {
-      const prompt = 'SSN 123-45-6789';
+    test('should replace ssn with surrogate preserving last 4', () async {
+      const prompt = 'ssn 123-45-6789';
       final result = await scrubber.detectAndScrub(
         prompt,
         apiName: 'test-api',
@@ -153,7 +153,7 @@ void main() {
       );
 
       expect(result, isNot(contains('123-45-6789')));
-      expect(result, isNot(contains('[SSN]')));
+      expect(result, isNot(contains('[ssn]')));
       expect(result, contains('-6789'));
     });
 
@@ -181,7 +181,7 @@ void main() {
         useSurrogates: false,
       );
 
-      expect(result, contains('[EMAIL]'));
+      expect(result, contains('[email]'));
     });
 
     test('detectAndScrubWithSurrogates convenience method works', () async {
@@ -193,7 +193,7 @@ void main() {
 
       expect(result, isNot(contains('bob@site.org')));
       expect(result, contains('@site.org'));
-      expect(result, isNot(contains('[EMAIL]')));
+      expect(result, isNot(contains('[email]')));
     });
   });
 }

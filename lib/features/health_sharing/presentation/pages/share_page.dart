@@ -157,8 +157,8 @@ class _SharePageContentState extends State<_SharePageContent> {
               TextField(
                 controller: _pinController,
                 decoration: const InputDecoration(
-                  labelText: 'PIN de seguridad (opcional)',
-                  hintText: 'Ingresa el PIN del destinatario',
+                  labelText: 'pin de seguridad (opcional)',
+                  hintText: 'Ingresa el pin del destinatario',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.lock),
                 ),

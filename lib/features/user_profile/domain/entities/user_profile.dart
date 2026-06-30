@@ -16,7 +16,7 @@ class UserProfile {
 
   String? bloodType;
 
-  String? avatarUrl; // Profile picture URL
+  String? avatarUrl; // Profile picture url
 
   String? uniqueId; // User ID like "ORION-XXX"
 

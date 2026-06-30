@@ -33,24 +33,24 @@ void main() {
   }
 
   group('LoginPage', () {
-    testWidgets('shows PIN setup UI when isPinSet is false', (tester) async {
+    testWidgets('shows pin setup UI when isPinSet is false', (tester) async {
       when(() => mockAuthCubit.state).thenReturn(const AuthState(isPinSet: false));
 
       await tester.pumpWidget(createWidgetUnderTest());
 
-      expect(find.text('Set up your PIN'), findsOneWidget);
-      expect(find.text('New PIN'), findsOneWidget);
-      expect(find.text('PIN must be 4-6 digits'), findsOneWidget);
+      expect(find.text('Set up your pin'), findsOneWidget);
+      expect(find.text('New pin'), findsOneWidget);
+      expect(find.text('pin must be 4-6 digits'), findsOneWidget);
     });
 
-    testWidgets('calls authCubit.setPin when Set PIN button is pressed with valid PIN', (tester) async {
+    testWidgets('calls authCubit.setPin when Set pin button is pressed with valid pin', (tester) async {
       when(() => mockAuthCubit.state).thenReturn(const AuthState(isPinSet: false));
       when(() => mockAuthCubit.setPin(any())).thenAnswer((_) async {});
 
       await tester.pumpWidget(createWidgetUnderTest());
 
       await tester.enterText(find.byType(TextField), '1234');
-      await tester.tap(find.text('Set PIN'));
+      await tester.tap(find.text('Set pin'));
       await tester.pump();
 
       verify(() => mockAuthCubit.setPin('1234')).called(1);
@@ -61,11 +61,11 @@ void main() {
 
       await tester.pumpWidget(createWidgetUnderTest());
 
-      expect(find.text('Enter PIN'), findsOneWidget);
+      expect(find.text('Enter pin'), findsOneWidget);
       expect(find.text('Login'), findsOneWidget);
     });
 
-    testWidgets('calls authCubit.submitPin when Login button is pressed with valid PIN', (tester) async {
+    testWidgets('calls authCubit.submitPin when Login button is pressed with valid pin', (tester) async {
       when(() => mockAuthCubit.state).thenReturn(const AuthState(isPinSet: true));
       when(() => mockAuthCubit.submitPin(any())).thenAnswer((_) async {});
 

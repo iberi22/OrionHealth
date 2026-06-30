@@ -49,7 +49,7 @@ class AuthGate extends StatelessWidget {
 }
 
 /// Validates actual auth state before granting access to the main app.
-/// Uses AuthCubit to check PIN/biometric authentication, not just UI state.
+/// Uses AuthCubit to check pin/biometric authentication, not just UI state.
 class AuthenticatedGate extends StatelessWidget {
   const AuthenticatedGate({super.key});
 
@@ -65,18 +65,18 @@ class AuthenticatedGate extends StatelessWidget {
             );
 
           case AuthNotSetup():
-            // PIN has not been set up yet — prompt user to create one
+            // pin has not been set up yet — prompt user to create one
             return const SetupPinPage();
 
           case AuthLocked():
             return const LoginPage();
 
           case AuthUnauthenticated():
-            // User has PIN/biometric set but is not authenticated
+            // User has pin/biometric set but is not authenticated
             return const LoginPage();
 
           case AuthAuthenticated():
-            // Properly authenticated via PIN or biometrics — grant access
+            // Properly authenticated via pin or biometrics — grant access
             return const MainNavigationPage();
         }
       },

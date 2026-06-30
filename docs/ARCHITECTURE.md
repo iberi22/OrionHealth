@@ -73,7 +73,7 @@ Isar Database (on-device encrypted storage)
 ### Encryption
 - **Data at Rest**: Isar database with AES encryption enabled
 - **No cloud storage**: All data stays on-device
-- **Biometric/PIN**: App access protected by biometric or PIN authentication
+- **Biometric/pin**: App access protected by biometric or pin authentication
 
 ### Privacy
 - **Zero telemetry**: No analytics, no crash reporting to third parties
@@ -82,7 +82,7 @@ Isar Database (on-device encrypted storage)
 
 ### Authentication Flow
 ```
-App Launch → PIN/Biometric Check → Authenticated Session
+App Launch → pin/Biometric Check → Authenticated Session
                                 ↓
                         Session token stored in
                         SecureStorage (flutter_secure_storage)
@@ -103,7 +103,7 @@ Currently, the project contains 25 feature modules. Clean Architecture Completio
 | `features/ai_assistant` | AI Assistant UI | Partial |
 | `features/allergies` | Allergy tracking | Partial |
 | `features/appointments` | Appointment scheduling and reminders | Partial |
-| `features/auth` | Authentication, PIN/biometric, session management | Full |
+| `features/auth` | Authentication, pin/biometric, session management | Full |
 | `features/calendar_import` | Import appointments from calendar | Partial |
 | `features/dashboard` | Home screen with health summary | Partial |
 | `features/doctor_verification` | Doctor verification flow | Full |

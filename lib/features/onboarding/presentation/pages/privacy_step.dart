@@ -105,7 +105,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
                 const SizedBox(height: 8),
                 _buildPrivacyPoint(Icons.delete_outline, 'Control total: borra tus datos cuando quieras.'),
                 const SizedBox(height: 8),
-                _buildPrivacyPoint(Icons.pin, 'Acceso protegido por PIN y biometría.'),
+                _buildPrivacyPoint(Icons.pin, 'Acceso protegido por pin y biometría.'),
               ],
             ),
           ),

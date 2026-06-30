@@ -31,7 +31,7 @@ extension HealthDataSourceExtension on HealthDataSource {
   }
 }
 
-// ============== STATE CLASSES ==============
+// ============== state CLASSES ==============
 
 abstract class HealthImportState extends Equatable {
   const HealthImportState();

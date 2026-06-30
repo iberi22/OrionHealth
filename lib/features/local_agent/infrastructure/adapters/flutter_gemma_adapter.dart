@@ -83,7 +83,7 @@ class FlutterGemmaAdapter implements LlmAdapter {
     _initialized = true;
   }
 
-  /// Install a model from a network URL.
+  /// Install a model from a network url.
   ///
   /// Returns a stream of progress percentages (0–100).
   /// On completion the model becomes the active inference model.

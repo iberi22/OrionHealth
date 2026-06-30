@@ -34,7 +34,7 @@ void main() {
   }
 
   group('LoginPage', () {
-    testWidgets('renders PIN input and login button', (tester) async {
+    testWidgets('renders pin input and login button', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
       expect(find.byType(TextField), findsOneWidget);
@@ -42,11 +42,11 @@ void main() {
     });
 
     testWidgets('shows error message from state', (tester) async {
-      when(() => mockCubit.state).thenReturn(const AuthUnauthenticated(errorMessage: 'Invalid PIN'));
+      when(() => mockCubit.state).thenReturn(const AuthUnauthenticated(errorMessage: 'Invalid pin'));
 
       await tester.pumpWidget(createWidgetUnderTest());
 
-      expect(find.text('Invalid PIN'), findsOneWidget);
+      expect(find.text('Invalid pin'), findsOneWidget);
     });
 
     testWidgets('calls loginWithPin when form submitted', (tester) async {

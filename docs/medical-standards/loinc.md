@@ -10,7 +10,7 @@ wikipediaBase: "https://en.wikipedia.org/wiki/"
 
 # LOINC Standards
 
-| Code | Display Name | Category | Wikipedia URL | Search Terms |
+| Code | Display Name | Category | Wikipedia url | Search Terms |
 |---|---|---|---|---|
 | 718-7 | Hemoglobin [Mass/volume] in Blood | General | https://en.wikipedia.org/wiki/Hemoglobin_[Mass/volume]_in_Blood |  |
 | 4544-3 | Hematocrit [Volume fraction] of Blood | General | https://en.wikipedia.org/wiki/Hematocrit_[Volume_fraction]_of_Blood |  |

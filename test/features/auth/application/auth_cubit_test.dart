@@ -25,7 +25,7 @@ void main() {
     });
 
     group('checkAuth', () {
-      test('emits loading and then unauthenticated when PIN is not set', () async {
+      test('emits loading and then unauthenticated when pin is not set', () async {
         when(() => mockAuthService.isPinSet()).thenAnswer((_) async => false);
         when(() => mockAuthService.isBiometricAvailable()).thenAnswer((_) async => true);
 
@@ -44,7 +44,7 @@ void main() {
         await expectation;
       });
 
-      test('emits correct states when PIN is set and biometric succeeds', () async {
+      test('emits correct states when pin is set and biometric succeeds', () async {
         when(() => mockAuthService.isPinSet()).thenAnswer((_) async => true);
         when(() => mockAuthService.isBiometricAvailable()).thenAnswer((_) async => true);
         when(() => mockAuthService.verifyBiometric()).thenAnswer((_) async => AuthResult(success: true, method: AuthMethod.biometric));

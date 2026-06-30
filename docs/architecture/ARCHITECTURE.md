@@ -52,7 +52,7 @@ lib/features/
 ├── ai_assistant/             # AI Assistant UI
 ├── allergies/                # Allergy tracking
 ├── appointments/             # Appointment scheduling and reminders
-├── auth/                     # Authentication, PIN/biometric, session management
+├── auth/                     # Authentication, pin/biometric, session management
 ├── calendar_import/          # Import appointments from calendar
 ├── dashboard/                # Home screen with health summary
 ├── doctor_verification/      # Doctor verification flow
@@ -120,7 +120,7 @@ lib/features/
 
 ### Access Patterns
 
-| Mode | URL | Use Case |
+| Mode | url | Use Case |
 |------|-----|----------|
 | **Raw API** | `https://raw.githubusercontent.com/.../icd10.json` | Runtime fetch |
 | **Versioned** | `https://raw.githubusercontent.com/.../v1.0.0/icd10.json` | Pinned release |
@@ -192,7 +192,7 @@ class AiResponse {
 │  Security:                                                   │
 │  • AES-256-GCM encryption                                  │
 │  • 2-of-3 authentication:                                  │
-│    - PIN code                                               │
+│    - pin code                                               │
 │    - Biometric (fingerprint/face)                          │
 │    - Google Sign-In                                         │
 │  • Package expires after 3 minutes                         │

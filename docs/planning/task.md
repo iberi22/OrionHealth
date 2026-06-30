@@ -80,7 +80,7 @@ Para evitar conflictos de merge, el trabajo se divide en 3 pistas independientes
 
 ### 📋 Estado Actual: ✅ COMPLETADO
 
-**URL Producción:** `https://iberi22.github.io/OrionHealth/`
+**url Producción:** `https://iberi22.github.io/OrionHealth/`
 
 **Stack Implementado:**
 - **Framework:** Astro 5.0 (Static Site Generator)
@@ -90,7 +90,7 @@ Para evitar conflictos de merge, el trabajo se divide en 3 pistas independientes
 
 ### ✅ Páginas Implementadas
 
-| Página | Estado | URL | Componentes |
+| Página | Estado | url | Componentes |
 |--------|--------|-----|-------------|
 | **Home** | ✅ Completa | `/` | Hero, Features, Screenshots, Privacy, Support, Sponsors, Download |
 | **Vision** | ✅ Completa | `/vision` | Mission, 5-Phase Roadmap, Why This Matters, CTA |
@@ -146,7 +146,7 @@ Para evitar conflictos de merge, el trabajo se divide en 3 pistas independientes
 
 - [x] **GP-17**: Deploy automático vía GitHub Actions
 - [x] **GP-18**: Testing cross-browser (Chrome, Firefox, Safari simulado)
-- [x] **GP-19**: URL actualizada a `/OrionHealth` (repo renombrado)
+- [x] **GP-19**: url actualizada a `/OrionHealth` (repo renombrado)
 
 ### 📋 Tareas Futuras (Backlog)
 
@@ -257,7 +257,7 @@ _Tareas que se realizan una vez las 3 pistas convergen._
   - ✅ Cyber-Minimalism design system
   - ✅ Home page completa con 7 secciones
   - ✅ CI/CD automático (deploy on push)
-  - ✅ URL actualizada: iberi22.github.io/OrionHealth/
+  - ✅ url actualizada: iberi22.github.io/OrionHealth/
 
 ---
 
@@ -285,7 +285,7 @@ _Tareas que se realizan una vez las 3 pistas convergen._
 | GP-05 | Página Vision (medicina personalizada)       | MEDIA     | ✅ Completado | 2025-11-26 | Copilot     |
 | GP-17 | CI/CD GitHub Actions (deploy)                | MEDIA     | ✅ Completado | 2025-11-26 | Copilot     |
 | GP-18 | Fix Rollup bug (npm ci → npm install)        | ALTA      | ✅ Completado | 2025-11-26 | Copilot     |
-| GP-19 | URL update (repo rename)                     | ALTA      | ✅ Completado | 2025-11-26 | Copilot     |
+| GP-19 | url update (repo rename)                     | ALTA      | ✅ Completado | 2025-11-26 | Copilot     |
 
 ---
 

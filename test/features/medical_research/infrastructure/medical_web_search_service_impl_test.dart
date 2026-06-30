@@ -41,7 +41,7 @@ void main() {
             requestOptions: RequestOptions(path: url),
           );
         }
-        throw Exception('Unexpected URL: $url');
+        throw Exception('Unexpected url: $url');
       });
 
       // FDA adapter call

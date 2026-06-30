@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                 TextField(
                   controller: _pinController,
                   decoration: InputDecoration(
-                    labelText: 'Introduce tu PIN',
+                    labelText: 'Introduce tu pin',
                     border: const OutlineInputBorder(),
                     errorText: state is AuthUnauthenticated ? state.errorMessage : null,
                   ),

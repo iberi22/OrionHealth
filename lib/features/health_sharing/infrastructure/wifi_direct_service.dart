@@ -138,9 +138,9 @@ class WifiDirectService {
         return;
       }
 
-      // Verify PIN if provided
+      // Verify pin if provided
       if (package.metadata.pinHash != null) {
-        // PIN verification would happen here
+        // pin verification would happen here
       }
 
       _dataController.add(package);

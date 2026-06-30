@@ -34,6 +34,10 @@ void main() {
   });
 
   group('DashboardLocalDataSource', () {
+    test('instance is not null', () {
+      expect(datasource, isNotNull);
+    });
+
     test('savePreference puts preference in collection', () async {
       when(() => mockCollection.put(any())).thenAnswer((_) async => 1);
       // Note: testing with filter() is complex without a real isar,

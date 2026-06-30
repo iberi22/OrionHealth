@@ -166,7 +166,7 @@ void main() {
       await captureScreenshot(tester, '01_launch', '04_onboarding_complete');
     });
 
-    testWidgets('FLOW 02: Auth & PIN Setup', (tester) async {
+    testWidgets('FLOW 02: Auth & pin Setup', (tester) async {
       // Re-initialize and navigate to auth
       await di.getIt.reset();
       await di.configureDependencies();
@@ -177,14 +177,14 @@ void main() {
       // Capture whatever auth screen is showing
       await captureScreenshot(tester, '02_auth', '01_auth_screen');
 
-      // If PIN setup is visible, try to fill it
+      // If pin setup is visible, try to fill it
       final pinFields = find.byWidgetPredicate(
         (w) => w is TextField && (w.obscureText == true),
       );
       if (pinFields.evaluate().isNotEmpty) {
         await captureScreenshot(tester, '02_auth', '02_pin_setup_empty');
 
-        // Try to type into PIN fields
+        // Try to type into pin fields
         if (pinFields.evaluate().length >= 2) {
           await tester.enterText(pinFields.at(0), '123456');
           await tester.enterText(pinFields.at(1), '123456');

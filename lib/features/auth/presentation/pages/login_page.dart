@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
             LengthLimitingTextInputFormatter(6),
           ],
           decoration: InputDecoration(
-            labelText: 'Enter PIN',
+            labelText: 'Enter pin',
             border: const OutlineInputBorder(),
             suffixIcon: IconButton(
               icon: Icon(_obscurePin ? Icons.visibility : Icons.visibility_off),
@@ -117,11 +117,11 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: [
         Text(
-          'Set up your PIN',
+          'Set up your pin',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
-        const Text('PIN must be 4-6 digits'),
+        const Text('pin must be 4-6 digits'),
         const SizedBox(height: 24),
         TextField(
           controller: _pinController,
@@ -132,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
             LengthLimitingTextInputFormatter(6),
           ],
           decoration: InputDecoration(
-            labelText: 'New PIN',
+            labelText: 'New pin',
             border: const OutlineInputBorder(),
             suffixIcon: IconButton(
               icon: Icon(_obscurePin ? Icons.visibility : Icons.visibility_off),
@@ -148,11 +148,11 @@ class _LoginPageState extends State<LoginPage> {
               context.read<AuthCubit>().setPin(pin);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('PIN must be at least 4 digits')),
+                const SnackBar(content: Text('pin must be at least 4 digits')),
               );
             }
           },
-          child: const Text('Set PIN'),
+          child: const Text('Set pin'),
         ),
       ],
     );

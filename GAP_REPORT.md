@@ -14,7 +14,7 @@
 | Clean Architecture parcial | 17 (68%) |
 | Con tests unitarios | 10 (40%) |
 | Sin tests | 15 (60%) |
-| Bugs conocidos | 2 (WiFi Direct protocol mismatch, user_profile hardcoded image URL) |
+| Bugs conocidos | 2 (WiFi Direct protocol mismatch, user_profile hardcoded image url) |
 | Tests skipped | 2 (network-dependent) |
 
 ---
@@ -69,7 +69,7 @@
 | # | Feature | Ticket | Esfuerzo |
 |---|---------|--------|----------|
 | 1 | **health_sharing** | Arquitectura de red: HTTP server ↔ Socket connect incompatible. `sendData` usa `Socket.connect(targetIp, kDefaultPort)` pero el servidor es `HttpServer`. Arreglar protocolo. | 3h |
-| 2 | **user_profile** | URL de imagen hardcodeada (`lh3.googleusercontent.com`) en `_ProfileHeader`. Debe ser configurable o usar asset placeholder. | 1h |
+| 2 | **user_profile** | url de imagen hardcodeada (`lh3.googleusercontent.com`) en `_ProfileHeader`. Debe ser configurable o usar asset placeholder. | 1h |
 | 3 | **wifi_direct_service_test** | 2 tests skipped (`skip: true`) por depender de red real. Si se arregla #1, des-skippear. | 2h |
 
 ### Prioridad Media (capas faltantes — implementación)
@@ -126,7 +126,7 @@
 | Bug | Feature | Impacto | Archivo |
 |-----|---------|---------|---------|
 | HTTP ↔ Socket protocol mismatch | health_sharing | Funcional — `sendData` no puede comunicarse con `startServer` | `wifi_direct_service.dart` |
-| Hardcoded image URL | user_profile | Golden test falla por NetworkImageLoadException | `user_profile_page.dart` |
+| Hardcoded image url | user_profile | Golden test falla por NetworkImageLoadException | `user_profile_page.dart` |
 | Sync cubit no mockeado en golden tests | sync, home | Golden screenshots requieren mock adicional | `main_navigation_page_golden_test.dart` |
 
 ---

@@ -44,14 +44,14 @@ void main() {
         'values': [1, 2, 3],
       };
 
-      test('encryptPayload without PIN returns plain data', () async {
+      test('encryptPayload without pin returns plain data', () async {
         final payload = await encryptionService.encryptPayload(testData, null);
 
         expect(payload['pinProtected'], isFalse);
         expect(payload['data'], equals(testData));
       });
 
-      test('encryptPayload with PIN returns encrypted data', () async {
+      test('encryptPayload with pin returns encrypted data', () async {
         const pin = '1234';
         final payload = await encryptionService.encryptPayload(testData, pin);
 
@@ -62,7 +62,7 @@ void main() {
         expect(decrypted, equals(testData));
       });
 
-      test('decryptPayload with wrong PIN should fail', () async {
+      test('decryptPayload with wrong pin should fail', () async {
         const pin = '1234';
         const wrongPin = '4321';
         final payload = await encryptionService.encryptPayload(testData, pin);

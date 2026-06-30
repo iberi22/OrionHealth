@@ -39,7 +39,7 @@ void main() {
     when(() => mockSharingCubit.close()).thenAnswer((_) async {});
   });
 
-  testWidgets('Setup PIN Page - Golden', (WidgetTester tester) async {
+  testWidgets('Setup pin Page - Golden', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(360, 640);
     tester.view.devicePixelRatio = 1.0;
 

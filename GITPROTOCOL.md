@@ -63,7 +63,7 @@ Jules is our primary AI software engineer for automated tasks.
 The documentation site (located in the `docs/` folder) is an Astro-based site.
 - **Trigger**: Pushes to `main` with changes in the `docs/` folder.
 - **Action**: A GitHub Action (`deploy-docs.yml`) builds the site and deploys it to GitHub Pages.
-- **URL**: [https://iberi22.github.io/OrionHealth/](https://iberi22.github.io/OrionHealth/)
+- **url**: [https://iberi22.github.io/OrionHealth/](https://iberi22.github.io/OrionHealth/)
 
 ### Continuous Integration
 - **GitHub Actions**: Every push and PR triggers the `ci.yml` workflow.

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../services/app_logger.dart';
 
 /// Input validation and sanitization utilities
 /// Provides security validation for user inputs, audio data, and AI responses
@@ -109,9 +110,7 @@ class InputValidator {
       }
 
       if (_containsSuspiciousContent(trimmed)) {
-        if (kDebugMode) {
-          print('InputValidator: Skipping suspicious context item');
-        }
+        AppLogger.w('InputValidator', 'Skipping suspicious context item');
         continue;
       }
 
@@ -223,7 +222,7 @@ class InputValidator {
   static bool _containsHarmfulContent(String text) {
     final harmfulPatterns = [
       // Personal information patterns
-      RegExp(r'\b\d{3}-\d{2}-\d{4}\b'), // SSN
+      RegExp(r'\b\d{3}-\d{2}-\d{4}\b'), // ssn
       RegExp(r'\b\d{4}\s?\d{4}\s?\d{4}\s?\d{4}\b'), // Credit card
       RegExp(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'), // Email (if not expected)
       
@@ -255,9 +254,10 @@ class InputValidator {
     if (header[0] == 0x1A && header[1] == 0x45 && header[2] == 0xDF && header[3] == 0xA3) return true;
     
     // Allow unknown formats but log warning
-    if (kDebugMode) {
-      print('InputValidator: Unknown audio format, allowing but monitoring');
-    }
+    AppLogger.w(
+      'InputValidator',
+      'Unknown audio format, allowing but monitoring',
+    );
     
     return true;
   }

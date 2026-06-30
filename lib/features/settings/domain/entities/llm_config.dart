@@ -27,7 +27,7 @@ class LlmConfig {
   /// User-provided API key for custom provider (OpenAI-compatible or Anthropic)
   String? apiKey;
 
-  /// Base URL for custom provider (e.g., https://api.openai.com/v1)
+  /// Base url for custom provider (e.g., https://api.openai.com/v1)
   String? baseUrl;
 
   /// Selected cloud model name (e.g., 'gpt-4o', 'claude-3-opus')

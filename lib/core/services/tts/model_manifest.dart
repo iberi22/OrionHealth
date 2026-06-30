@@ -2,7 +2,7 @@ import 'dart:convert';
 
 /// Voice file metadata for a TTS model asset.
 class VoiceFileMeta {
-  /// Remote URL to download the file.
+  /// Remote url to download the file.
   final String url;
 
   /// Expected MD5 checksum in hex lowercase.

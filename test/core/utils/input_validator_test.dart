@@ -99,7 +99,7 @@ void main() {
       });
 
       test('returns error for harmful content', () {
-        final result = InputValidator.validateAIResponse('Call me at 123-45-6789'); // SSN pattern
+        final result = InputValidator.validateAIResponse('Call me at 123-45-6789'); // ssn pattern
         expect(result.isValid, isFalse);
         expect(result.error, contains('harmful'));
       });

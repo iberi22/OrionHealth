@@ -9,7 +9,7 @@ void main() {
       expect(ClinicalGuidelines.ahaHypertension.url, isNotEmpty);
     });
 
-    test('guideline has valid URL format', () {
+    test('guideline has valid url format', () {
       expect(ClinicalGuidelines.ahaHypertension.url, contains('http'));
     });
   });

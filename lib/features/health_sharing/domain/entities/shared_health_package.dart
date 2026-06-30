@@ -63,7 +63,7 @@ class SharedHealthPackage extends Equatable {
     return SharedHealthPackage.fromJson(jsonDecode(utf8.decode(base64Decode(encoded))));
   }
 
-  /// Hashes a PIN using SHA-256
+  /// Hashes a pin using SHA-256
   static String hashPin(String pin) {
     final bytes = utf8.encode(pin);
     final digest = sha256.convert(bytes);
@@ -113,7 +113,7 @@ class PackageMetadata extends Equatable {
   final String packageType; // 'full' or 'selective'
   final bool consentVerified;
   final Set<DataCategory> includedCategories;
-  final String? pinHash; // Hash of PIN for verification
+  final String? pinHash; // Hash of pin for verification
   final String appVersion;
 
   const PackageMetadata({
@@ -144,9 +144,9 @@ class PackageMetadata extends Equatable {
     );
   }
 
-  /// Verifies a PIN against the stored hash
+  /// Verifies a pin against the stored hash
   bool verifyPin(String pin) {
-    if (pinHash == null) return true; // No PIN required
+    if (pinHash == null) return true; // No pin required
     final hashed = SharedHealthPackage.hashPin(pin);
     return hashed == pinHash;
   }

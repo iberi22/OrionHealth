@@ -125,7 +125,7 @@ class _ReceivePageContentState extends State<_ReceivePageContent> {
           TextField(
             controller: _pinController,
             decoration: const InputDecoration(
-              labelText: 'PIN para esta sesión',
+              labelText: 'pin para esta sesión',
               hintText: 'Ej: 1234',
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.lock),

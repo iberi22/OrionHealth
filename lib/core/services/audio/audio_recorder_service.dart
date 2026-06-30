@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../app_logger.dart';
 
 class AudioRecorderService {
   late final AudioRecorder _recorder;
@@ -95,7 +96,7 @@ class AudioRecorderService {
           try {
             await file.delete();
           } catch (e) {
-            if (kDebugMode) print('AudioRecorderService: Failed to delete temp file: $e');
+            AppLogger.e('AudioRecorderService', 'Failed to delete temp file: $e');
           }
           return audioData;
         }

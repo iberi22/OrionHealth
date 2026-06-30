@@ -221,7 +221,7 @@ class SyncService {
     return false;
   }
 
-  /// Download a dataset from a URL.
+  /// Download a dataset from a url.
   Future<String?> _downloadDataset(String url) async {
     try {
       final response = await _client

@@ -57,7 +57,7 @@ void main() {
 
     test('generate calls wrapper with scrubbed prompt', () async {
       const originalPrompt = 'My email is secret@example.com';
-      const scrubbedPrompt = 'My email is [EMAIL]';
+      const scrubbedPrompt = 'My email is [email]';
       const mockAnswer = 'I received your prompt.';
 
       when(() => mockScrubber.scrub(originalPrompt, apiName: 'gemini'))

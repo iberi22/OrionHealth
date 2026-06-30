@@ -69,7 +69,7 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       emit(state.copyWith(
         status: AuthStatus.error,
-        error: result.error ?? 'Failed to set PIN',
+        error: result.error ?? 'Failed to set pin',
       ));
     }
   }

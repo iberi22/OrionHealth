@@ -78,14 +78,14 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));
       await VideoRecorder.recordStep(tester, 'auth_onboarding', '04_onboarding_finished');
 
-      // 2. Auth Flow: PIN Setup (should appear after onboarding profile is saved)
+      // 2. Auth Flow: pin Setup (should appear after onboarding profile is saved)
       // Re-pumping the gate to reflect saved profile
       await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(find.text('Configurar PIN'), findsOneWidget);
+      expect(find.text('Configurar pin'), findsOneWidget);
 
-      await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '1234');
-      await tester.enterText(find.widgetWithText(TextField, 'Confirmar PIN'), '1234');
-      await tester.tap(find.text('Guardar PIN'));
+      await tester.enterText(find.widgetWithText(TextField, 'Nuevo pin'), '1234');
+      await tester.enterText(find.widgetWithText(TextField, 'Confirmar pin'), '1234');
+      await tester.tap(find.text('Guardar pin'));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'auth_onboarding', '05_pin_setup_complete');
 

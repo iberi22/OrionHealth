@@ -18,7 +18,7 @@
 ### Security
 - [x] No API keys in source code
 - [ ] Encryption properly implemented (Isar encryption PENDING)
-- [x] PIN/biometric auth in place
+- [x] pin/biometric auth in place
 - [ ] Data at rest is encrypted (PENDING)
 
 ### Medical Standards

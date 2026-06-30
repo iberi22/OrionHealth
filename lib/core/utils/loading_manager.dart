@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../services/app_logger.dart';
 
 /// Centralized loading state management for the Orion app
 class LoadingManager extends ChangeNotifier {
@@ -47,9 +48,7 @@ class LoadingManager extends ChangeNotifier {
 
     _notifyListeners();
 
-    if (kDebugMode) {
-      print('LoadingManager: Started loading for $operation');
-    }
+    AppLogger.d('LoadingManager', 'Started loading for $operation');
   }
 
   /// Stop loading for an operation
@@ -63,12 +62,11 @@ class LoadingManager extends ChangeNotifier {
 
       _notifyListeners();
 
-      if (kDebugMode) {
-        final duration = DateTime.now().difference(currentState.startTime);
-        print(
-          'LoadingManager: Stopped loading for $operation (${duration.inMilliseconds}ms)',
-        );
-      }
+      final duration = DateTime.now().difference(currentState.startTime);
+      AppLogger.d(
+        'LoadingManager',
+        'Stopped loading for $operation (${duration.inMilliseconds}ms)',
+      );
     }
   }
 
@@ -79,9 +77,7 @@ class LoadingManager extends ChangeNotifier {
       _loadingStates[operation] = currentState.copyWith(message: message);
       _notifyListeners();
 
-      if (kDebugMode) {
-        print('LoadingManager: Updated message for $operation: $message');
-      }
+      AppLogger.d('LoadingManager', 'Updated message for $operation: $message');
     }
   }
 
@@ -90,9 +86,7 @@ class LoadingManager extends ChangeNotifier {
     _loadingStates.clear();
     _notifyListeners();
 
-    if (kDebugMode) {
-      print('LoadingManager: Cleared all loading states');
-    }
+    AppLogger.d('LoadingManager', 'Cleared all loading states');
   }
 
   /// Remove a specific loading state
@@ -100,9 +94,7 @@ class LoadingManager extends ChangeNotifier {
     _loadingStates.remove(operation);
     _notifyListeners();
 
-    if (kDebugMode) {
-      print('LoadingManager: Removed loading state for $operation');
-    }
+    AppLogger.d('LoadingManager', 'Removed loading state for $operation');
   }
 
   /// Execute an operation with automatic loading management
@@ -118,9 +110,10 @@ class LoadingManager extends ChangeNotifier {
       final result = await task();
       stopLoading(operation);
 
-      if (successMessage != null && kDebugMode) {
-        print(
-          'LoadingManager: $operation completed successfully - $successMessage',
+      if (successMessage != null) {
+        AppLogger.i(
+          'LoadingManager',
+          '$operation completed successfully - $successMessage',
         );
       }
 
@@ -128,8 +121,8 @@ class LoadingManager extends ChangeNotifier {
     } catch (error) {
       stopLoading(operation);
 
-      if (errorMessage != null && kDebugMode) {
-        print('LoadingManager: $operation failed - $errorMessage: $error');
+      if (errorMessage != null) {
+        AppLogger.e('LoadingManager', '$operation failed - $errorMessage: $error');
       }
 
       rethrow;

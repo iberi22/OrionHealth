@@ -9,7 +9,7 @@ import '../../domain/services/llm_adapter.dart';
 /// OpenRouter, Ollama with OpenAI proxy, etc.) via the `openai_dart` package.
 ///
 /// ## Configuration
-/// Call [configure] before first use with the user-provided API key, base URL,
+/// Call [configure] before first use with the user-provided API key, base url,
 /// and model name. The adapter is disabled until configured.
 @LazySingleton(as: LlmAdapter)
 @Named('openai')

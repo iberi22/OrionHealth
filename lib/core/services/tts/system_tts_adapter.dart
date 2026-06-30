@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../app_logger.dart';
 
 import 'tts_adapter.dart';
 import 'tts_types.dart';
@@ -26,11 +27,10 @@ class SystemTTSAdapter implements TTSAdapter {
       'System TTS not available — use sherpa_onnx adapter instead',
     );
     state = TTSState.error;
-    if (kDebugMode) {
-      print(
-        'SystemTTSAdapter: flutter_tts not available, stubbed out. Use sherpa_onnx.',
-      );
-    }
+    AppLogger.w(
+      'SystemTTSAdapter',
+      'flutter_tts not available, stubbed out. Use sherpa_onnx.',
+    );
   }
 
   @override

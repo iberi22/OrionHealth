@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
+import '../../../../core/services/app_logger.dart';
 
 import '../../../appointments/domain/entities/appointment.dart';
 import '../../../appointments/domain/repositories/appointment_repository.dart';
@@ -166,7 +167,6 @@ class ImportCalendarUseCase {
     );
 
     // Mock FHIR sync log
-    // ignore: avoid_print
-    print('Syncing to FHIR: ${fhirAppointment.toJson()}');
+    AppLogger.i('ImportCalendarUseCase', 'Syncing to FHIR: ${fhirAppointment.toJson()}');
   }
 }

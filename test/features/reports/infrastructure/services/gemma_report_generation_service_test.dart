@@ -53,7 +53,7 @@ void main() {
 
     test('scrubs prompt before processing', () async {
       const originalPrompt = 'Mi correo es test@example.com';
-      const scrubbedPrompt = 'Mi correo es [EMAIL]';
+      const scrubbedPrompt = 'Mi correo es [email]';
 
       when(() => mockScrubber.scrub(originalPrompt, apiName: any(named: 'apiName')))
           .thenAnswer((_) async => scrubbedPrompt);

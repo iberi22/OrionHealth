@@ -317,7 +317,7 @@ class SharingCubit extends Cubit<SharingState> {
 
   /// Send via WiFi Direct
   Future<void> sendViaWifi(String targetIp, SharedHealthPackage package, {String? pin}) async {
-    // If PIN is provided, ensure it's hashed in the package metadata
+    // If pin is provided, ensure it's hashed in the package metadata
     SharedHealthPackage packageToSend = package;
     if (pin != null) {
       final pinHash = SharedHealthPackage.hashPin(pin);
@@ -387,13 +387,13 @@ class SharingCubit extends Cubit<SharingState> {
       Map<String, dynamic> data;
       if (package.metadata.pinHash != null) {
         if (_sessionPin == null) {
-          emit(const SharingError('PIN required to decrypt data'));
+          emit(const SharingError('pin required to decrypt data'));
           return;
         }
 
-        // Re-verify PIN hash
+        // Re-verify pin hash
         if (!package.metadata.verifyPin(_sessionPin!)) {
-          emit(const SharingError('Invalid PIN'));
+          emit(const SharingError('Invalid pin'));
           return;
         }
 
@@ -404,7 +404,7 @@ class SharingCubit extends Cubit<SharingState> {
         };
         data = await _walletEncryption.decryptPayload(payloadMap, _sessionPin!);
       } else {
-        // Not PIN protected
+        // Not pin protected
         final payloadMap = {
           'pinProtected': false,
           'data': jsonDecode(package.payload.encryptedData),

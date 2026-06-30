@@ -16,7 +16,7 @@ class _SetupPinPageState extends State<SetupPinPage> {
 
   void _submit() {
     if (_pinController.text.length < 4) {
-      setState(() => _error = 'El PIN debe tener al menos 4 dígitos');
+      setState(() => _error = 'El pin debe tener al menos 4 dígitos');
       return;
     }
     if (_pinController.text != _confirmController.text) {
@@ -29,14 +29,14 @@ class _SetupPinPageState extends State<SetupPinPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Configurar PIN')),
+      appBar: AppBar(title: const Text('Configurar pin')),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Establece un PIN de seguridad para proteger tus datos médicos.',
+              'Establece un pin de seguridad para proteger tus datos médicos.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16),
             ),
@@ -44,7 +44,7 @@ class _SetupPinPageState extends State<SetupPinPage> {
             TextField(
               controller: _pinController,
               decoration: const InputDecoration(
-                labelText: 'Nuevo PIN',
+                labelText: 'Nuevo pin',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
@@ -55,7 +55,7 @@ class _SetupPinPageState extends State<SetupPinPage> {
             TextField(
               controller: _confirmController,
               decoration: const InputDecoration(
-                labelText: 'Confirmar PIN',
+                labelText: 'Confirmar pin',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
@@ -69,7 +69,7 @@ class _SetupPinPageState extends State<SetupPinPage> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _submit,
-              child: const Text('Guardar PIN'),
+              child: const Text('Guardar pin'),
             ),
           ],
         ),

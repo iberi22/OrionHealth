@@ -42,7 +42,7 @@ class AuthServiceImpl implements AuthService {
     if (pin.length < 4 || pin.length > 6) {
       return AuthResult(
         success: false,
-        error: 'PIN must be 4-6 digits',
+        error: 'pin must be 4-6 digits',
         method: AuthMethod.pin,
       );
     }
@@ -65,7 +65,7 @@ class AuthServiceImpl implements AuthService {
     if (storedHash == null) {
       return AuthResult(
         success: false,
-        error: 'PIN not set',
+        error: 'pin not set',
         method: AuthMethod.pin,
       );
     }
@@ -77,7 +77,7 @@ class AuthServiceImpl implements AuthService {
 
     return AuthResult(
       success: false,
-      error: 'Invalid PIN',
+      error: 'Invalid pin',
       method: AuthMethod.pin,
     );
   }

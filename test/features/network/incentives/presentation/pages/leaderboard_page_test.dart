@@ -71,9 +71,6 @@ void main() {
     expect(find.text('100 pts'), findsOneWidget);
 
     // Verify order (User B should be first)
-    final textB = tester.widget<Text>(find.text('User B'));
-    final textC = tester.widget<Text>(find.text('User C'));
-
     final posB = tester.getCenter(find.text('User B'));
     final posC = tester.getCenter(find.text('User C'));
 

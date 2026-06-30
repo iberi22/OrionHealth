@@ -777,7 +777,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
 
                     if (isCustom) ...[
                       _labeledField(
-                        label: 'Base URL',
+                        label: 'Base url',
                         child: TextField(
                           controller: TextEditingController(text: baseUrl),
                           style: const TextStyle(color: Colors.white),
@@ -891,7 +891,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                         child: Text(
                           providerType == 'custom'
                               ? 'Usa cualquier endpoint compatible con OpenAI. '
-                                  'Asegúrate de que la URL termine en /v1.'
+                                  'Asegúrate de que la url termine en /v1.'
                               : providerType == 'gemini'
                                   ? 'Gemini API de Google. '
                                       'Obtén tu API Key en ai.google.dev.'

@@ -21,7 +21,7 @@ class OnboardingPreview extends StatelessWidget {
       theme: CyberTheme.darkTheme,
       home: OnboardingMainPage(
         onFinish: () {
-          print('Onboarding Finished');
+          debugPrint('Onboarding Finished');
         },
       ),
     );

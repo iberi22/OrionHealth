@@ -58,7 +58,7 @@ class MedicalDocument  {
   @Index()
   final DocumentType documentType;
 
-  /// Local path or remote URL to the document file.
+  /// Local path or remote url to the document file.
   final String filePath;
 
   /// MIME type (e.g. "application/pdf", "image/jpeg").

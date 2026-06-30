@@ -78,9 +78,9 @@ void main() {
     test('all models have non-empty URLs', () {
       for (final model in kAvailableLocalModels) {
         expect(model.url.isNotEmpty, isTrue,
-          reason: 'Model ${model.id} has empty URL');
+          reason: 'Model ${model.id} has empty url');
         expect(model.url.startsWith('http'), isTrue,
-          reason: 'Model ${model.id} URL does not start with http');
+          reason: 'Model ${model.id} url does not start with http');
       }
     });
 

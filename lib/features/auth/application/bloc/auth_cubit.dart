@@ -87,7 +87,7 @@ class AuthCubit extends Cubit<AuthState> {
         await _repository.saveCredentials(credentials);
         emit(AuthUnauthenticated(
           failedAttempts: credentials.failedAttempts,
-          errorMessage: 'PIN incorrecto',
+          errorMessage: 'pin incorrecto',
         ));
       }
     }

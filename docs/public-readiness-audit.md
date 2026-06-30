@@ -200,9 +200,9 @@ GitHub looks for `CONTRIBUTING.md` at the **root** by default when users open is
 |---------|--------|-------|
 | GitHub description | ? | Not verifiable from local audit |
 | GitHub topics | ? | Not verifiable from local audit |
-| GitHub website URL | ? | Not verifiable from local audit |
+| GitHub website url | ? | Not verifiable from local audit |
 
-> **Action:** Visit `https://github.com/iberi22/OrionHealth` and verify the repo has: description, website URL, and relevant topics (e.g., `health`, `flutter`, `privacy`, `medical-records`, `health-data`, `on-device-ai`, `agpl-3.0`).
+> **Action:** Visit `https://github.com/iberi22/OrionHealth` and verify the repo has: description, website url, and relevant topics (e.g., `health`, `flutter`, `privacy`, `medical-records`, `health-data`, `on-device-ai`, `agpl-3.0`).
 
 ---
 

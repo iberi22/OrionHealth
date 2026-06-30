@@ -36,13 +36,13 @@
 
 ```bash
 # Modelo E2B (2B params)
-# URL: https://huggingface.co/google/gemma-4-E2B
+# url: https://huggingface.co/google/gemma-4-E2B
 # Formatos disponibles: FP16, GGUF, SafeTensors
 git lfs install
 git clone https://huggingface.co/google/gemma-4-E2B
 
 # Modelo E4B (4B params)
-# URL: https://huggingface.co/google/gemma-4-E4B
+# url: https://huggingface.co/google/gemma-4-E4B
 git clone https://huggingface.co/google/gemma-4-E4B
 ```
 

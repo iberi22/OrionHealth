@@ -136,7 +136,7 @@ class PiiDetector {
       contextWords: ['dob', 'birth', 'born', 'date of birth', 'birthdate', 'deceased', 'died', 'admitted', 'discharged'],
     ),
 
-    // SSN
+    // ssn
     PiiPattern(
       pattern: r'\b\d{3}-\d{2}-\d{4}\b',
       entityType: PiiLabels.ssn,
@@ -184,7 +184,7 @@ class PiiDetector {
       validator: validatePhoneUs,
     ),
 
-    // NPI
+    // npi
     PiiPattern(
       pattern: r'\b\d{10}\b',
       entityType: PiiLabels.npi,
