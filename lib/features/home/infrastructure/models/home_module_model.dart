@@ -7,7 +7,9 @@ import '../../domain/entities/home_module.dart';
 class HomeModuleModel extends HomeModule {
   const HomeModuleModel({
     required super.title,
-    required super.icon,
+    required super.iconCode,
+    super.iconFontFamily,
+    super.iconFontPackage,
     required super.color,
     required super.route,
   });
@@ -15,7 +17,9 @@ class HomeModuleModel extends HomeModule {
   factory HomeModuleModel.fromJson(Map<String, dynamic> json) {
     return HomeModuleModel(
       title: json['title'] as String,
-      icon: IconData(json['icon'] as int, fontFamily: 'MaterialIcons'),
+      iconCode: json['icon'] as int,
+      iconFontFamily: json['iconFontFamily'] as String?,
+      iconFontPackage: json['iconFontPackage'] as String?,
       color: Color(json['color'] as int),
       route: json['route'] as String,
     );
@@ -24,7 +28,9 @@ class HomeModuleModel extends HomeModule {
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'icon': icon.codePoint,
+      'icon': iconCode,
+      'iconFontFamily': iconFontFamily,
+      'iconFontPackage': iconFontPackage,
       'color': color.toARGB32(),
       'route': route,
     };
@@ -33,7 +39,9 @@ class HomeModuleModel extends HomeModule {
   factory HomeModuleModel.fromEntity(HomeModule entity) {
     return HomeModuleModel(
       title: entity.title,
-      icon: entity.icon,
+      iconCode: entity.iconCode,
+      iconFontFamily: entity.iconFontFamily,
+      iconFontPackage: entity.iconFontPackage,
       color: entity.color,
       route: entity.route,
     );
