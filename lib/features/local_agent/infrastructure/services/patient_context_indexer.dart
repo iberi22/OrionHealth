@@ -3,10 +3,15 @@ import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 
 import '../../domain/services/vector_store_service.dart';
+import '../../../health_record/domain/entities/medical_record.dart';
 import '../../../health_record/domain/repositories/health_record_repository.dart';
+import '../../../medications/domain/entities/medication.dart';
 import '../../../medications/domain/repositories/medication_repository.dart';
+import '../../../allergies/domain/entities/allergy.dart';
 import '../../../allergies/domain/repositories/allergy_repository.dart';
+import '../../../vitals/domain/entities/vital_sign.dart';
 import '../../../vitals/domain/repositories/vital_sign_repository.dart';
+import '../../../appointments/domain/entities/appointment.dart';
 import '../../../appointments/domain/repositories/appointment_repository.dart';
 
 import '../../../../core/services/app_logger.dart';

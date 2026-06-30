@@ -8,6 +8,7 @@ import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/core/services/app_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../user_profile/domain/entities/user_profile.dart';
 import '../../domain/entities/sync_node.dart';
 import '../../domain/repositories/sync_repository.dart';
 import '../../domain/services/node_discovery_service.dart';
