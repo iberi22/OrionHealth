@@ -7,11 +7,9 @@ class MockIsar extends Mock implements Isar {}
 
 void main() {
   late HealthSharingLocalDataSource datasource;
-  late MockIsar mockIsar;
 
   setUp(() {
-    mockIsar = MockIsar();
-    datasource = HealthSharingLocalDataSource(mockIsar);
+    datasource = HealthSharingLocalDataSource();
   });
 
   group('HealthSharingLocalDataSource', () {
