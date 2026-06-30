@@ -78,15 +78,18 @@ class MedicalCode extends Equatable {
   }
 
   /// All searchable text strings for embedding.
-  List<String> get allSearchableTerms => [
-        displayName,
-        ...searchTerms,
-        ?definition,
-        ?firstLineTreatment,
-        ?alternatives,
-        ?redFlags,
-        ?followUp,
-      ];
+  List<String> get allSearchableTerms {
+    final list = [
+      displayName,
+      ...searchTerms,
+    ];
+    if (definition != null) list.add(definition!);
+    if (firstLineTreatment != null) list.add(firstLineTreatment!);
+    if (alternatives != null) list.add(alternatives!);
+    if (redFlags != null) list.add(redFlags!);
+    if (followUp != null) list.add(followUp!);
+    return list;
+  }
 
   /// Single text block for vector embedding.
   String get embeddingText {
