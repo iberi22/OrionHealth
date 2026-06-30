@@ -49,17 +49,15 @@ class WifiDirectService {
 
       _discovery!.eventStream!.listen((event) {
         if (event is BonsoirDiscoveryServiceFoundEvent) {
-          event.service.resolve(_discovery!.serviceResolver!);
+          event.service.resolve(_discovery!.serviceResolver);
         } else if (event is BonsoirDiscoveryServiceResolvedEvent) {
           final service = event.service;
-          if (service != null) {
-            final host = service.hostname ?? 'localhost';
-            final port = service.port;
-            results.add(WifiDirectDevice(
-              name: service.name,
-              address: '$host:$port',
-            ));
-          }
+          final host = service.hostname ?? 'localhost';
+          final port = service.port;
+          results.add(WifiDirectDevice(
+            name: service.name,
+            address: '$host:$port',
+          ));
         }
       });
 
