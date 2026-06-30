@@ -69,19 +69,28 @@ class PatientContextIndexer {
 
   void _setupWatchers() {
     _healthRecordSub?.cancel();
-    _healthRecordSub = _isar.medicalRecords.watchLazy().listen((_) => _debouncedIndex());
+    _healthRecordSub = _isar
+        .collection<MedicalRecord>()
+        .watchLazy()
+        .listen((_) => _debouncedIndex());
 
     _medicationSub?.cancel();
-    _medicationSub = _isar.medications.watchLazy().listen((_) => _debouncedIndex());
+    _medicationSub =
+        _isar.collection<Medication>().watchLazy().listen((_) => _debouncedIndex());
 
     _allergySub?.cancel();
-    _allergySub = _isar.allergys.watchLazy().listen((_) => _debouncedIndex());
+    _allergySub =
+        _isar.collection<Allergy>().watchLazy().listen((_) => _debouncedIndex());
 
     _vitalSub?.cancel();
-    _vitalSub = _isar.vitalSigns.watchLazy().listen((_) => _debouncedIndex());
+    _vitalSub =
+        _isar.collection<VitalSign>().watchLazy().listen((_) => _debouncedIndex());
 
     _appointmentSub?.cancel();
-    _appointmentSub = _isar.appointments.watchLazy().listen((_) => _debouncedIndex());
+    _appointmentSub = _isar
+        .collection<Appointment>()
+        .watchLazy()
+        .listen((_) => _debouncedIndex());
   }
 
   void _debouncedIndex() {
