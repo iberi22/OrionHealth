@@ -4,20 +4,20 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/llm_adapter.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/services/llm_adapter_factory.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
-import 'package:orionhealth_health/features/settings/domain/repositories/llm_settings_repository.dart';
+import 'package:orionhealth_health/features/settings/domain/repositories/settings_repository.dart';
 
-class MockLlmSettingsRepository extends Mock implements LlmSettingsRepository {}
+class MockSettingsRepository extends Mock implements SettingsRepository {}
 class MockLlmAdapter extends Mock implements LlmAdapter {}
 
 void main() {
   late LlmAdapterFactory factory;
-  late MockLlmSettingsRepository mockSettingsRepo;
+  late MockSettingsRepository mockSettingsRepo;
   late GetIt getIt;
 
   setUp(() {
     getIt = GetIt.instance;
     getIt.reset();
-    mockSettingsRepo = MockLlmSettingsRepository();
+    mockSettingsRepo = MockSettingsRepository();
     factory = LlmAdapterFactory(mockSettingsRepo);
   });
 

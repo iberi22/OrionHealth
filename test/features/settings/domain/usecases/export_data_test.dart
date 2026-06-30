@@ -1,16 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/settings/domain/repositories/llm_settings_repository.dart';
+import 'package:orionhealth_health/features/settings/domain/repositories/settings_repository.dart';
 import 'package:orionhealth_health/features/settings/domain/usecases/export_data.dart';
 
-class MockLlmSettingsRepository extends Mock implements LlmSettingsRepository {}
+class MockSettingsRepository extends Mock implements SettingsRepository {}
 
 void main() {
   late ExportData usecase;
-  late MockLlmSettingsRepository mockRepository;
+  late MockSettingsRepository mockRepository;
 
   setUp(() {
-    mockRepository = MockLlmSettingsRepository();
+    mockRepository = MockSettingsRepository();
     usecase = ExportData(mockRepository);
   });
 
