@@ -117,7 +117,7 @@ void main() {
     test('syncPatient updates user profile in Isar', () async {
       // Setup existing profile
       final profile = UserProfile(uniqueId: 'user1', epsPatientId: 'eps123', name: 'Old Name');
-      await isar.writeTxn(() => isar.userProfiles.put(profile));
+      await isar.writeTxn(() => isar.collection<UserProfile>().put(profile));
 
       final patientData = {
         'resourceType': 'Patient',
@@ -135,14 +135,14 @@ void main() {
 
       await syncRepository.syncPatient('eps123', 'token');
 
-      final updatedProfile = await isar.userProfiles.where().findFirst();
+      final updatedProfile = await isar.collection<UserProfile>().where().findFirst();
       expect(updatedProfile?.name, 'New Name');
     });
 
     test('syncAll coordinates patient and rda sync', () async {
       // Setup profile with token
       final profile = UserProfile(uniqueId: 'user1', epsPatientId: 'eps123');
-      await isar.writeTxn(() => isar.userProfiles.put(profile));
+      await isar.writeTxn(() => isar.collection<UserProfile>().put(profile));
 
       when(() => mockSecureStorage.read(key: 'ihce_access_token'))
           .thenAnswer((_) async => 'token');
@@ -198,11 +198,11 @@ void main() {
 
       // Perform first sync
       await syncRepository.syncRda('pat123', 'fake_token');
-      expect(await isar.medications.count(), 1);
+      expect(await isar.collection<Medication>().count(), 1);
 
       // Perform second sync with same data
       await syncRepository.syncRda('pat123', 'fake_token');
-      expect(await isar.medications.count(), 1, reason: 'Should not create duplicate medication');
+      expect(await isar.collection<Medication>().count(), 1, reason: 'Should not create duplicate medication');
     });
 
     test('syncRda should update existing medication if data changed', () async {
@@ -232,7 +232,7 @@ void main() {
       when(() => mockFhirClient.getRDA(any(), any())).thenAnswer((_) async => rdaBundle1);
 
       await syncRepository.syncRda('pat123', 'fake_token');
-      var med = await isar.medications.where().findFirst();
+      var med = await isar.collection<Medication>().where().findFirst();
       expect(med?.notes, 'Initial note');
 
       // Second sync with updated note
@@ -245,8 +245,8 @@ void main() {
 
       await syncRepository.syncRda('pat123', 'fake_token');
 
-      expect(await isar.medications.count(), 1);
-      med = await isar.medications.where().findFirst();
+      expect(await isar.collection<Medication>().count(), 1);
+      med = await isar.collection<Medication>().where().findFirst();
       expect(med?.notes, 'Updated note');
     });
 
@@ -276,10 +276,10 @@ void main() {
       when(() => mockFhirClient.getRDA(any(), any())).thenAnswer((_) async => rdaBundle);
 
       await syncRepository.syncRda('pat123', 'fake_token');
-      expect(await isar.vitalSigns.count(), 1);
+      expect(await isar.collection<VitalSign>().count(), 1);
 
       await syncRepository.syncRda('pat123', 'fake_token');
-      expect(await isar.vitalSigns.count(), 1);
+      expect(await isar.collection<VitalSign>().count(), 1);
     });
   });
 }

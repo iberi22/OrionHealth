@@ -65,7 +65,7 @@ class SyncRepositoryImpl implements SyncRepository {
     String patientId,
     String token,
   ) async {
-    final existingProfile = await _isar.userProfiles.where().findFirst();
+    final existingProfile = await _isar.collection<UserProfile>().where().findFirst();
     if (existingProfile == null) return;
 
     try {
@@ -73,7 +73,7 @@ class SyncRepositoryImpl implements SyncRepository {
       final updatedProfile = FhirMapper.mapPatient(patientData, existingProfile);
 
       await _isar.writeTxn(() async {
-        await _isar.userProfiles.put(updatedProfile);
+        await _isar.collection<UserProfile>().put(updatedProfile);
       });
     } catch (e) {
       AppLogger.e('SyncRepositoryImpl', 'Error syncing patient', error: e);
@@ -128,7 +128,7 @@ class SyncRepositoryImpl implements SyncRepository {
       await _isar.writeTxn(() async {
         if (medications.isNotEmpty) {
           for (final med in medications) {
-            final existing = await _isar.medications
+            final existing = await _isar.collection<app_med.Medication>()
                 .filter()
                 .nameEqualTo(med.name)
                 .startDateEqualTo(med.startDate)
@@ -136,24 +136,24 @@ class SyncRepositoryImpl implements SyncRepository {
             if (existing != null) {
               med.id = existing.id; // Update existing
             }
-            await _isar.medications.put(med);
+            await _isar.collection<app_med.Medication>().put(med);
           }
         }
         if (allergies.isNotEmpty) {
           for (final allergy in allergies) {
-            final existing = await _isar.allergys
+            final existing = await _isar.collection<Allergy>()
                 .filter()
                 .allergenEqualTo(allergy.allergen)
                 .findFirst();
             if (existing != null) {
               allergy.id = existing.id; // Update existing
             }
-            await _isar.allergys.put(allergy);
+            await _isar.collection<Allergy>().put(allergy);
           }
         }
         if (vitals.isNotEmpty) {
           for (final vital in vitals) {
-            final existing = await _isar.vitalSigns
+            final existing = await _isar.collection<app_vital.VitalSign>()
                 .filter()
                 .typeEqualTo(vital.type)
                 .dateTimeEqualTo(vital.dateTime)
@@ -161,15 +161,15 @@ class SyncRepositoryImpl implements SyncRepository {
             if (existing != null) {
               vital.id = existing.id;
             }
-            await _isar.vitalSigns.put(vital);
+            await _isar.collection<app_vital.VitalSign>().put(vital);
           }
         }
         if (conditions.isNotEmpty) {
-          final profile = await _isar.userProfiles.where().findFirst();
+          final profile = await _isar.collection<UserProfile>().where().findFirst();
           if (profile != null) {
             final existing = profile.medicalConditions;
             final updated = {...existing, ...conditions}.toList();
-            await _isar.userProfiles.put(
+            await _isar.collection<UserProfile>().put(
               profile.copyWith(medicalConditions: updated),
             );
           }
@@ -192,7 +192,7 @@ class SyncRepositoryImpl implements SyncRepository {
     final token = await getAccessToken();
     if (token == null) return;
     // Get patient ID from user profile
-    final profile = await _isar.userProfiles.where().findFirst();
+    final profile = await _isar.collection<UserProfile>().where().findFirst();
     final patientId = profile?.epsPatientId ?? profile?.uniqueId ?? '';
     if (patientId.isEmpty) return;
     await syncPatient(patientId, token);
