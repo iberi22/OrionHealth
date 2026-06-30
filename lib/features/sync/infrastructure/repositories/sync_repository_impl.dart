@@ -18,7 +18,6 @@ import '../../../vitals/domain/entities/vital_sign.dart' as app_vital;
 import '../services/fhir_client.dart';
 import '../services/fhir_mapper.dart';
 import '../services/rda_parser.dart';
-import '../../../user_profile/domain/entities/user_profile.dart';
 
 @LazySingleton(as: SyncRepository)
 class SyncRepositoryImpl implements SyncRepository {
