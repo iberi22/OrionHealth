@@ -225,11 +225,11 @@ import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i35;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i171;
+    as _i170;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
     as _i37;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i170;
+    as _i171;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
     as _i59;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
@@ -393,9 +393,9 @@ import 'memory_module.dart' as _i218;
 import 'network_module.dart' as _i217;
 import 'service_module.dart' as _i216;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -756,17 +756,17 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i126.AppointmentRepository>(),
           gh<_i109.UserProfileRepository>(),
         ));
-    gh.factory<_i57.LlmAdapter>(
-      () => _i170.MockLlmAdapter(gh<_i89.PromptScrubber>()),
-      instanceName: 'mock',
-    );
     gh.lazySingleton<_i57.LlmAdapter>(
-      () => _i171.GeminiLlmAdapter(
+      () => _i170.GeminiLlmAdapter(
         scrubber: gh<_i89.PromptScrubber>(),
         userProfileRepository: gh<_i109.UserProfileRepository>(),
         modelWrapper: gh<_i37.GeminiModelWrapper>(),
       ),
       instanceName: 'gemini',
+    );
+    gh.factory<_i57.LlmAdapter>(
+      () => _i171.MockLlmAdapter(gh<_i89.PromptScrubber>()),
+      instanceName: 'mock',
     );
     gh.lazySingleton<_i172.LlmAdapterFactory>(
         () => _i172.LlmAdapterFactory(gh<_i100.SettingsRepository>()));
