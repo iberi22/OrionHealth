@@ -81,11 +81,11 @@ class MedicalCode extends Equatable {
   List<String> get allSearchableTerms => [
         displayName,
         ...searchTerms,
-        if (definition != null) definition!,
-        if (firstLineTreatment != null) firstLineTreatment!,
-        if (alternatives != null) alternatives!,
-        if (redFlags != null) redFlags!,
-        if (followUp != null) followUp!,
+        ?definition,
+        ?firstLineTreatment,
+        ?alternatives,
+        ?redFlags,
+        ?followUp,
       ];
 
   /// Single text block for vector embedding.
