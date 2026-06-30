@@ -51,7 +51,7 @@ class AuthGate extends StatelessWidget {
 /// Validates actual auth state before granting access to the main app.
 /// Uses AuthCubit to check PIN/biometric authentication, not just UI state.
 class AuthenticatedGate extends StatelessWidget {
-  const AuthenticatedGate();
+  const AuthenticatedGate({super.key});
 
   @override
   Widget build(BuildContext context) {

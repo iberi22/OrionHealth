@@ -2,7 +2,6 @@ import 'package:injectable/injectable.dart';
 import '../../domain/entities/activity_item.dart';
 import '../../domain/entities/dashboard_stats.dart';
 import '../../domain/repositories/dashboard_repository.dart';
-import '../datasources/dashboard_local_datasource.dart';
 import '../datasources/dashboard_remote_datasource.dart';
 import '../../../vitals/domain/repositories/vital_sign_repository.dart';
 import '../../../medications/domain/repositories/medication_repository.dart';
@@ -14,14 +13,12 @@ import '../../../reports/domain/repositories/report_repository.dart';
 /// dashboard stats and recent activity items.
 @LazySingleton(as: DashboardRepository)
 class DashboardRepositoryImpl implements DashboardRepository {
-  final DashboardLocalDataSource _localDataSource;
   final DashboardRemoteDataSource _remoteDataSource;
   final VitalSignRepository _vitalSignRepository;
   final MedicationRepository _medicationRepository;
   final ReportRepository _reportRepository;
 
   DashboardRepositoryImpl(
-    this._localDataSource,
     this._remoteDataSource,
     this._vitalSignRepository,
     this._medicationRepository,

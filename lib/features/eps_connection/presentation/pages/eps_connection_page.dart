@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/bloc/eps_connection_cubit.dart';
 import '../../application/bloc/eps_connection_state.dart';
-import '../../domain/entities/eps_provider.dart';
 import '../widgets/eps_connection_status_card.dart';
 
 import '../../../../core/widgets/page_header.dart';

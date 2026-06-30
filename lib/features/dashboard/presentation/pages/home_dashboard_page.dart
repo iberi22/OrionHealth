@@ -6,7 +6,7 @@ import 'package:orionhealth_health/core/widgets/glassmorphic_card.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
 import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart';
 import 'package:orionhealth_health/features/vitals/presentation/pages/vitals_page.dart';
-import 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart' hide getIt;
+import 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart';
 import 'package:orionhealth_health/features/reports/presentation/pages/reports_page.dart';
 import 'package:orionhealth_health/features/health_record/presentation/pages/timeline_page.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/pages/medical_research_page.dart';
