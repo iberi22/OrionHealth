@@ -45,7 +45,6 @@ class ApiAuditLog {
   }
 
   @override
-  @ignore
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ApiAuditLog &&
@@ -57,7 +56,6 @@ class ApiAuditLog {
           piiFound == other.piiFound;
 
   @override
-  @ignore
   int get hashCode =>
       timestamp.hashCode ^
       apiName.hashCode ^
