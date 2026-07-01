@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code, dead_null_aware_expression
+
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
