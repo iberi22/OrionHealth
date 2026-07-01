@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 // Portions Ported from OpenMed: https://github.com/maziyarpanahi/openmed/blob/master/openmed/core/labels.py
 
+// ignore_for_file: constant_identifier_names
+
 /// Canonical PII/PHI label taxonomy.
 /// Ported from OpenMed (Apache 2.0).
 ///
