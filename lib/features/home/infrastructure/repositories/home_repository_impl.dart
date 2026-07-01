@@ -72,27 +72,35 @@ class HomeRepositoryImpl implements HomeRepository {
 
     // 3. Fallback to default modules
     final defaultModules = [
-      const HomeModuleModel(
+      HomeModuleModel(
         title: 'AI Assistant',
-        icon: Icons.psychology,
+        iconCode: Icons.psychology.codePoint,
+        iconFontFamily: Icons.psychology.fontFamily,
+        iconFontPackage: Icons.psychology.fontPackage,
         color: Colors.blue,
         route: '/chat',
       ),
-      const HomeModuleModel(
+      HomeModuleModel(
         title: 'Salud',
-        icon: Icons.favorite,
+        iconCode: Icons.favorite.codePoint,
+        iconFontFamily: Icons.favorite.fontFamily,
+        iconFontPackage: Icons.favorite.fontPackage,
         color: Colors.red,
         route: '/vitals',
       ),
-      const HomeModuleModel(
+      HomeModuleModel(
         title: 'Medicamentos',
-        icon: Icons.medication,
+        iconCode: Icons.medication.codePoint,
+        iconFontFamily: Icons.medication.fontFamily,
+        iconFontPackage: Icons.medication.fontPackage,
         color: Colors.orange,
         route: '/medications',
       ),
-      const HomeModuleModel(
+      HomeModuleModel(
         title: 'Línea de tiempo',
-        icon: Icons.timeline,
+        iconCode: Icons.timeline.codePoint,
+        iconFontFamily: Icons.timeline.fontFamily,
+        iconFontPackage: Icons.timeline.fontPackage,
         color: Colors.teal,
         route: '/timeline',
       ),

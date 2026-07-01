@@ -41,9 +41,9 @@ void main() {
   );
 
   final tModules = [
-    const HomeModule(
+    HomeModule(
       title: 'Medications',
-      icon: Icons.medication,
+      iconCode: Icons.medication.codePoint,
       color: Colors.blue,
       route: '/medications',
     ),

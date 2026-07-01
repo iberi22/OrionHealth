@@ -5,15 +5,15 @@ import 'package:orionhealth_health/features/home/presentation/widgets/module_car
 
 void main() {
   final tModules = [
-    const HomeModule(
+    HomeModule(
       title: 'Module 1',
-      icon: Icons.add,
+      iconCode: Icons.add.codePoint,
       color: Colors.red,
       route: '/1',
     ),
-    const HomeModule(
+    HomeModule(
       title: 'Module 2',
-      icon: Icons.remove,
+      iconCode: Icons.remove.codePoint,
       color: Colors.blue,
       route: '/2',
     ),
