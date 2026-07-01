@@ -22,10 +22,18 @@ class SherpaOnnxAsrService implements LocalAsrService {
   @override
   Stream<String> get errorStream => _errorController.stream;
 
-  SherpaOnnxAsrService({AsrCallbacks? callbacks})
-      : callbacks = callbacks ?? const AsrCallbacks();
+  final OnDeviceAsrModelManager _manager;
+
+  SherpaOnnxAsrService({
+    AsrCallbacks? callbacks,
+    OnDeviceAsrModelManager? manager,
+  }) : callbacks = callbacks ?? const AsrCallbacks(),
+       _manager = manager ?? OnDeviceAsrModelManager();
 
   OfflineRecognizer? _recognizer;
+
+  @visibleForTesting
+  set recognizer(OfflineRecognizer? value) => _recognizer = value;
 
   @override
   Future<void> initialize() async {
@@ -35,11 +43,10 @@ class SherpaOnnxAsrService implements LocalAsrService {
       state = AsrState.initializing;
       _stateController.add(state);
 
-      final manager = OnDeviceAsrModelManager();
-      await manager.initialize();
+      await _manager.initialize();
 
       final modelKey = await AsrSettings.getPreferredModel();
-      final isInstalled = await manager.isInstalled(modelKey);
+      final isInstalled = await _manager.isInstalled(modelKey);
 
       if (!isInstalled) {
         state = AsrState.unavailable;
@@ -48,15 +55,15 @@ class SherpaOnnxAsrService implements LocalAsrService {
         return;
       }
 
-      final modelEntry = manager.manifest.models.firstWhere((m) => m.key == modelKey);
+      final modelEntry = _manager.manifest.models.firstWhere((m) => m.key == modelKey);
 
       // Basic SenseVoice/Paraformer configuration (adjust based on actual manifest)
       // For SenseVoiceSmall as in manifest:
       final onnxMeta = modelEntry.files.firstWhere((f) => f.url.endsWith('.onnx'));
       final tokensMeta = modelEntry.files.firstWhere((f) => f.url.endsWith('tokens.txt'));
 
-      final onnxPath = await manager.getLocalPath(modelKey, onnxMeta.url);
-      final tokensPath = await manager.getLocalPath(modelKey, tokensMeta.url);
+      final onnxPath = await _manager.getLocalPath(modelKey, onnxMeta.url);
+      final tokensPath = await _manager.getLocalPath(modelKey, tokensMeta.url);
 
       if (onnxPath == null || tokensPath == null) {
         throw Exception('Model files missing despite isInstalled returning true');
