@@ -30,18 +30,18 @@ class _VitalsPageState extends State<VitalsPage> {
     try {
       final latest = await _repository.getLatestVitals();
       final all = await _repository.getAllVitalSigns();
+      if (!mounted) return;
       setState(() {
         _latestVitals = latest;
         _allVitals = all;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading vitals: $e')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading vitals: $e')),
+      );
     }
   }
 
@@ -282,7 +282,7 @@ class _VitalsPageState extends State<VitalsPage> {
       builder: (context) => _AddVitalBottomSheet(
         onSave: (vital) async {
           await _repository.saveVitalSign(vital);
-          if (context.mounted) {
+          if (mounted) {
             _loadData();
           }
         },
@@ -361,12 +361,13 @@ class _AddVitalBottomSheetState extends State<_AddVitalBottomSheet> {
                 firstDate: DateTime(2000),
                 lastDate: DateTime.now().add(const Duration(days: 1)),
               );
-              if (date != null && mounted) {
+              if (date != null) {
+                if (!context.mounted) return;
                 final time = await showTimePicker(
                   context: context,
                   initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
                 );
-                if (time != null) {
+                if (time != null && mounted) {
                   setState(() {
                     _selectedDateTime = DateTime(
                       date.year,
