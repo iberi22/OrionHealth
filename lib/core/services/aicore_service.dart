@@ -133,7 +133,7 @@ enum AIServiceState { loading, ready, error }
 class AgentMemoryService {
   Future<void> initialize() async {}
 
-  Future<List<_MemoryNode>> searchMemories({
+  Future<List<MemoryNode>> searchMemories({
     required String query,
     int limit = 5,
     double minScore = 0.6,
@@ -161,9 +161,9 @@ class AgentMemoryService {
   void dispose() {}
 }
 
-class _MemoryNode {
+class MemoryNode {
   final String userInput;
   final String aiResponse;
 
-  _MemoryNode({required this.userInput, required this.aiResponse});
+  MemoryNode({required this.userInput, required this.aiResponse});
 }

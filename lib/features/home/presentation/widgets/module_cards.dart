@@ -17,6 +17,7 @@ class ModuleCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore_for_file: non_const_argument_for_const_parameter
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
