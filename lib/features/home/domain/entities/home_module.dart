@@ -6,17 +6,28 @@ import 'package:flutter/material.dart';
 
 class HomeModule extends Equatable {
   final String title;
-  final IconData icon;
+  final int iconCode;
+  final String? iconFontFamily;
+  final String? iconFontPackage;
   final Color color;
   final String route;
 
   const HomeModule({
     required this.title,
-    required this.icon,
+    required this.iconCode,
+    this.iconFontFamily,
+    this.iconFontPackage,
     required this.color,
     required this.route,
   });
 
   @override
-  List<Object?> get props => [title, icon, color, route];
+  List<Object?> get props => [
+    title,
+    iconCode,
+    iconFontFamily,
+    iconFontPackage,
+    color,
+    route,
+  ];
 }

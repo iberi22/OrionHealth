@@ -11,7 +11,7 @@ void main() {
 
   setUp(() {
     mockDio = MockDio();
-    datasource = HomeRemoteDataSource(mockDio);
+    datasource = HomeRemoteDataSource();
   });
 
   group('HomeRemoteDataSource', () {

@@ -5,15 +5,15 @@ import 'package:orionhealth_health/features/home/domain/entities/home_module.dar
 void main() {
   group('HomeModule', () {
     test('should support value equality', () {
-      const module1 = HomeModule(
+      final module1 = HomeModule(
         title: 'Title',
-        icon: Icons.add,
+        iconCode: Icons.add.codePoint,
         color: Colors.red,
         route: '/route',
       );
-      const module2 = HomeModule(
+      final module2 = HomeModule(
         title: 'Title',
-        icon: Icons.add,
+        iconCode: Icons.add.codePoint,
         color: Colors.red,
         route: '/route',
       );
@@ -22,14 +22,23 @@ void main() {
     });
 
     test('should have correct props', () {
-      const module = HomeModule(
+      final module = HomeModule(
         title: 'Title',
-        icon: Icons.add,
+        iconCode: Icons.add.codePoint,
+        iconFontFamily: 'MaterialIcons',
+        iconFontPackage: 'package',
         color: Colors.red,
         route: '/route',
       );
 
-      expect(module.props, ['Title', Icons.add, Colors.red, '/route']);
+      expect(module.props, [
+        'Title',
+        Icons.add.codePoint,
+        'MaterialIcons',
+        'package',
+        Colors.red,
+        '/route',
+      ]);
     });
   });
 }

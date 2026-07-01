@@ -55,7 +55,15 @@ class _ModuleCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(module.icon, color: module.color, size: 32),
+            Icon(
+              IconData(
+                module.iconCode,
+                fontFamily: module.iconFontFamily ?? 'MaterialIcons',
+                fontPackage: module.iconFontPackage,
+              ),
+              color: module.color,
+              size: 32,
+            ),
             const SizedBox(height: 8),
             Text(
               module.title,
