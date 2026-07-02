@@ -71,7 +71,9 @@ void main() {
     expect(find.text('100 pts'), findsOneWidget);
 
     // Verify order (User B should be first)
+    // ignore: unused_local_variable
     final textB = tester.widget<Text>(find.text('User B'));
+    // ignore: unused_local_variable
     final textC = tester.widget<Text>(find.text('User C'));
 
     final posB = tester.getCenter(find.text('User B'));

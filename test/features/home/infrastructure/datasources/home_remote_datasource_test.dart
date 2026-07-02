@@ -7,6 +7,7 @@ class MockDio extends Mock implements Dio {}
 
 void main() {
   late HomeRemoteDataSource datasource;
+  // ignore: unused_local_variable
   late MockDio mockDio;
 
   setUp(() {

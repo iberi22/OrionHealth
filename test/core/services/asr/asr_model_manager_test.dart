@@ -24,7 +24,8 @@ void main() {
     tempDir = await Directory.systemTemp.createTemp('asr_test');
     manager.debugSetBaseDirForTesting(tempDir);
 
-    // Mock rootBundle for manifest
+    // Mock rootBundle for manifest (kept for reference)
+    // ignore: unused_local_variable, no_leading_underscores_for_local_identifiers
     const manifestJson = '''
     {
       "models": [
