@@ -447,31 +447,37 @@ class _AppointmentFormState extends State<_AppointmentForm> {
             Row(
               children: [
                 Expanded(
-                  child: ListTile(
-                    title: const Text('Fecha'),
-                    subtitle: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: _selectedDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-                      if (picked != null) setState(() => _selectedDate = picked);
-                    },
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: ListTile(
+                      title: const Text('Fecha'),
+                      subtitle: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: _selectedDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (picked != null) setState(() => _selectedDate = picked);
+                      },
+                    ),
                   ),
                 ),
                 Expanded(
-                  child: ListTile(
-                    title: const Text('Hora'),
-                    subtitle: Text(_selectedTime.format(context)),
-                    onTap: () async {
-                      final picked = await showTimePicker(
-                        context: context,
-                        initialTime: _selectedTime,
-                      );
-                      if (picked != null) setState(() => _selectedTime = picked);
-                    },
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: ListTile(
+                      title: const Text('Hora'),
+                      subtitle: Text(_selectedTime.format(context)),
+                      onTap: () async {
+                        final picked = await showTimePicker(
+                          context: context,
+                          initialTime: _selectedTime,
+                        );
+                        if (picked != null) setState(() => _selectedTime = picked);
+                      },
+                    ),
                   ),
                 ),
               ],
