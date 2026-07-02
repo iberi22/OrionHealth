@@ -19,17 +19,20 @@ class GlassmorphicCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
             padding: padding ?? const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white.withAlpha(30),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.white.withAlpha(40)),
             ),
-            child: child,
+              child: child,
+            ),
           ),
         ),
       ),
