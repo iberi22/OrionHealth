@@ -125,25 +125,29 @@ class _CalendarEventsListState extends State<_CalendarEventsList> {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
                 child: GlassmorphicCard(
-                  child: CheckboxListTile(
-                    value: _selected[index],
-                    onChanged: (val) => setState(() => _selected[index] = val!),
-                    title: Text(
-                      app.doctorName,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                  padding: EdgeInsets.zero,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: CheckboxListTile(
+                      value: _selected[index],
+                      onChanged: (val) => setState(() => _selected[index] = val!),
+                      title: Text(
+                        app.doctorName,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(app.specialty, style: const TextStyle(color: CyberTheme.secondary)),
+                          Text(
+                            DateFormat('dd MMM yyyy, hh:mm a', 'es').format(app.dateTime),
+                            style: const TextStyle(fontSize: 12, color: Colors.white54),
+                          ),
+                        ],
+                      ),
+                      activeColor: CyberTheme.primary,
+                      checkColor: Colors.black,
                     ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(app.specialty, style: const TextStyle(color: CyberTheme.secondary)),
-                        Text(
-                          DateFormat('dd MMM yyyy, hh:mm a', 'es').format(app.dateTime),
-                          style: const TextStyle(fontSize: 12, color: Colors.white54),
-                        ),
-                      ],
-                    ),
-                    activeColor: CyberTheme.primary,
-                    checkColor: Colors.black,
                   ),
                 ),
               );
