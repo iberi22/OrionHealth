@@ -19,6 +19,7 @@ class FakeDashboardPreference extends Fake implements DashboardPreference {}
 void main() {
   late MockIsar mockIsar;
   late MockIsarCollection mockCollection;
+  // ignore: unused_local_variable
   late DashboardLocalDataSource datasource;
 
   setUpAll(() {

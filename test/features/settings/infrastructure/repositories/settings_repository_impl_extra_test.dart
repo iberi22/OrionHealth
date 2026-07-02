@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/app_settings.dart';
 import 'package:orionhealth_health/features/settings/domain/entities/llm_config.dart';
-import 'package:orionhealth_health/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:orionhealth_health/features/settings/infrastructure/repositories/settings_repository_impl.dart';
 import 'package:orionhealth_health/features/settings/infrastructure/datasources/settings_local_datasource.dart';
 
 void main() {

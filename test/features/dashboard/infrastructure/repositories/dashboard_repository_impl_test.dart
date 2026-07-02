@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/activity_item.dart';
-import 'package:orionhealth_health/features/dashboard/data/datasources/dashboard_local_datasource.dart';
 import 'package:orionhealth_health/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
 import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'package:orionhealth_health/features/medications/domain/repositories/medication_repository.dart';
@@ -11,7 +10,6 @@ import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.da
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
 import 'package:orionhealth_health/features/reports/domain/entities/report.dart';
 
-class MockDashboardLocalDataSource extends Mock implements DashboardLocalDataSource {}
 class MockDashboardRemoteDataSource extends Mock implements DashboardRemoteDataSource {}
 class MockVitalSignRepository extends Mock implements VitalSignRepository {}
 class MockMedicationRepository extends Mock implements MedicationRepository {}
@@ -19,20 +17,17 @@ class MockReportRepository extends Mock implements ReportRepository {}
 
 void main() {
   late DashboardRepositoryImpl repository;
-  late MockDashboardLocalDataSource mockLocalDataSource;
   late MockDashboardRemoteDataSource mockRemoteDataSource;
   late MockVitalSignRepository mockVitalSignRepository;
   late MockMedicationRepository mockMedicationRepository;
   late MockReportRepository mockReportRepository;
 
   setUp(() {
-    mockLocalDataSource = MockDashboardLocalDataSource();
     mockRemoteDataSource = MockDashboardRemoteDataSource();
     mockVitalSignRepository = MockVitalSignRepository();
     mockMedicationRepository = MockMedicationRepository();
     mockReportRepository = MockReportRepository();
     repository = DashboardRepositoryImpl(
-      mockLocalDataSource,
       mockRemoteDataSource,
       mockVitalSignRepository,
       mockMedicationRepository,

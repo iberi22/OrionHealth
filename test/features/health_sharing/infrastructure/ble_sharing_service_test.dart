@@ -137,6 +137,7 @@ void main() {
   });
 
   group('BleSharingService Data Transfer', () {
+    // ignore: unused_local_variable
     late SharedHealthPackage testPackage;
 
     setUp(() {

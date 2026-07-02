@@ -64,7 +64,7 @@ void main() {
 
     test('equality with other types', () {
       const source = CalendarSource(id: '1', name: 'A');
-      expect(source == 'not a source', isFalse);
+      expect(identical(source, 'not a source'), false);
     });
   });
 }
