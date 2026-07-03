@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../domain/services/health_data_import_service.dart';
 import '../../vitals/domain/repositories/vital_sign_repository.dart';
+import '../domain/entities/health_data_source.dart';
+import '../domain/entities/health_import_result.dart';
 import 'health_import_state.dart';
 
 @injectable
@@ -163,8 +165,10 @@ class HealthImportCubit extends Cubit<HealthImportState> {
           oxygenVitalSigns.length;
 
       emit(HealthImportSuccess(
-        importedCount: totalImported,
-        source: source,
+        HealthImportResult(
+          source: source,
+          importedCount: totalImported,
+        ),
       ));
     } catch (e) {
       emit(HealthImportError('Import failed: $e'));

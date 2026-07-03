@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../domain/entities/health_data_source.dart';
 import '../../application/health_import_state.dart';
 
 class ImportProgressDialog extends StatelessWidget {

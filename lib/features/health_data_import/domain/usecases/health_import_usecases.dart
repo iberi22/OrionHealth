@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 import '../services/health_data_import_service.dart';
-import '../../application/health_import_state.dart';
+import '../entities/health_data_source.dart';
 
 @injectable
 class GetAvailableSourcesUseCase {

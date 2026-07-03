@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
+import 'package:orionhealth_health/features/health_data_import/domain/entities/health_import_result.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_state.dart';
 
 void main() {
@@ -12,11 +14,16 @@ void main() {
     });
 
     test('HealthImportReady supports value equality', () {
-      const state = HealthImportReady(
-        availableSources: [HealthDataSource.googleFit],
-        availability: {HealthDataSource.googleFit: true},
+      expect(
+        const HealthImportReady(
+          availableSources: [HealthDataSource.googleFit],
+          availability: {HealthDataSource.googleFit: true},
+        ),
+        const HealthImportReady(
+          availableSources: [HealthDataSource.googleFit],
+          availability: {HealthDataSource.googleFit: true},
+        ),
       );
-      expect(state, state);
     });
 
     test('HealthImportAuthenticating supports value equality', () {
@@ -39,11 +46,18 @@ void main() {
     });
 
     test('HealthImportSuccess supports value equality', () {
-      const state = HealthImportSuccess(
-        importedCount: 10,
+      final result1 = HealthImportResult(
         source: HealthDataSource.googleFit,
+        importedCount: 10,
       );
-      expect(state, state);
+      final result2 = HealthImportResult(
+        source: HealthDataSource.googleFit,
+        importedCount: 10,
+      );
+      expect(
+        HealthImportSuccess(result1),
+        HealthImportSuccess(result2),
+      );
     });
 
     test('HealthImportError supports value equality', () {

@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'package:equatable/equatable.dart';
-import '../../application/health_import_state.dart';
+import '../../domain/entities/health_data_source.dart';
 
 abstract class HealthImportEvent extends Equatable {
   const HealthImportEvent();
