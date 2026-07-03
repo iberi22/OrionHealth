@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_state.dart';
 import 'package:orionhealth_health/features/health_data_import/presentation/widgets/import_progress_dialog.dart';
 

@@ -6,6 +6,7 @@ import 'package:orionhealth_health/features/health_data_import/presentation/page
 import 'package:orionhealth_health/features/health_data_import/presentation/widgets/data_source_card.dart';
 import 'package:orionhealth_health/features/health_data_import/presentation/widgets/import_progress_dialog.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_cubit.dart';
+import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_state.dart';
 import '../../../../core/golden_test_utils.dart';
 

@@ -1,7 +1,7 @@
 import 'package:health/health.dart';
 import 'package:injectable/injectable.dart';
 import '../../../vitals/domain/entities/vital_sign.dart';
-import '../../application/health_import_state.dart';
+import '../entities/health_data_source.dart';
 
 @lazySingleton
 class HealthDataImportService {

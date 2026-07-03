@@ -5,6 +5,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/health_import_cubit.dart';
+import '../../domain/entities/health_data_source.dart';
 import '../../application/health_import_state.dart';
 import '../widgets/data_source_card.dart';
 import '../widgets/import_progress_dialog.dart';
@@ -67,7 +68,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Successfully imported ${state.importedCount} records from ${state.source.displayName}',
+                'Successfully imported ${state.result.importedCount} records from ${state.result.source.displayName}',
               ),
               backgroundColor: AppColors.primary,
             ),

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/health_data_import/application/bloc/health_import_bloc.dart';
 import 'package:orionhealth_health/features/health_data_import/application/bloc/health_import_event.dart';
+import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_state.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_import_service.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/usecases/health_import_usecases.dart';
