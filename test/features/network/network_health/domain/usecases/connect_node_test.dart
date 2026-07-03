@@ -28,4 +28,14 @@ void main() {
     verify(() => mockRepository.connectNode(tNodeId));
     verifyNoMoreInteractions(mockRepository);
   });
+
+  test('should propagate error when repository fails', () async {
+    // arrange
+    when(() => mockRepository.connectNode(any()))
+        .thenThrow(Exception('Failed to connect'));
+
+    // act & assert
+    expect(() => usecase(tNodeId), throwsException);
+    verify(() => mockRepository.connectNode(tNodeId));
+  });
 }

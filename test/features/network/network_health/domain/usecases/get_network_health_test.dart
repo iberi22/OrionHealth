@@ -36,4 +36,14 @@ void main() {
     verify(() => mockRepository.getNetworkHealth());
     verifyNoMoreInteractions(mockRepository);
   });
+
+  test('should propagate error when repository fails', () async {
+    // arrange
+    when(() => mockRepository.getNetworkHealth())
+        .thenThrow(Exception('Failed to get health'));
+
+    // act & assert
+    expect(() => usecase(), throwsException);
+    verify(() => mockRepository.getNetworkHealth());
+  });
 }
