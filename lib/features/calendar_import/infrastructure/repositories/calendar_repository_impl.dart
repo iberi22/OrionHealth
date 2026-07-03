@@ -6,7 +6,6 @@ import '../datasources/calendar_api_datasource.dart';
 import '../models/calendar_event_dto.dart';
 import '../models/calendar_source_dto.dart';
 
-@LazySingleton(as: CalendarRepository)
 class CalendarRepositoryImpl implements CalendarRepository {
   final CalendarApiDatasource _datasource;
 
