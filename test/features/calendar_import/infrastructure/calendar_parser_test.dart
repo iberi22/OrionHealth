@@ -111,5 +111,44 @@ Cita Médica,2023-10-27,10:00:00,
       final results = parser.parseCsv(csv);
       expect(results.length, 1);
     });
+
+    test('should handle empty CSV', () {
+      expect(parser.parseCsv(''), isEmpty);
+    });
+
+    test('should handle malformed date in CSV', () {
+      const csv = 'Cita,invalid-date,10:00:00';
+      expect(parser.parseCsv(csv), isEmpty);
+    });
+  });
+
+  group('CalendarParser - Extra Cases', () {
+    test('parseIcs handles empty string', () {
+      expect(parser.parseIcs(''), isEmpty);
+    });
+
+    test('parseIcs handles malformed date', () {
+      const ics = '''
+BEGIN:VEVENT
+SUMMARY:Cita
+DTSTART:INVALID
+END:VEVENT
+''';
+      expect(parser.parseIcs(ics), isEmpty);
+    });
+
+    test('parseIcs handles local time (no Z suffix)', () {
+      const ics = '''
+BEGIN:VEVENT
+SUMMARY:Cita
+DTSTART:20231027T100000
+END:VEVENT
+''';
+      final results = parser.parseIcs(ics);
+      expect(results.length, 1);
+      expect(results[0].startDateTime.year, 2023);
+      expect(results[0].startDateTime.month, 10);
+      expect(results[0].startDateTime.day, 27);
+    });
   });
 }

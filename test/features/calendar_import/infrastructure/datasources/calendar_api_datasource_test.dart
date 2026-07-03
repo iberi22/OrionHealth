@@ -63,5 +63,53 @@ void main() {
 
       expect(result, events);
     });
+
+    test('hasPermissions returns false on failure', () async {
+      final resultData = Result<bool>()..errors = [const ResultError(500, 'Error')];
+      when(() => mockPlugin.hasPermissions()).thenAnswer(
+        (_) async => resultData,
+      );
+
+      final result = await datasource.hasPermissions();
+
+      expect(result, isFalse);
+    });
+
+    test('requestPermissions returns false on failure', () async {
+      final resultData = Result<bool>()..errors = [const ResultError(500, 'Error')];
+      when(() => mockPlugin.requestPermissions()).thenAnswer(
+        (_) async => resultData,
+      );
+
+      final result = await datasource.requestPermissions();
+
+      expect(result, isFalse);
+    });
+
+    test('getCalendars returns empty list on failure', () async {
+      final resultData = Result<UnmodifiableListView<Calendar>>()
+        ..errors = [const ResultError(500, 'Error')];
+
+      when(() => mockPlugin.retrieveCalendars()).thenAnswer(
+        (_) async => resultData,
+      );
+
+      final result = await datasource.getCalendars();
+
+      expect(result, isEmpty);
+    });
+
+    test('getEvents returns empty list on failure', () async {
+      final resultData = Result<UnmodifiableListView<Event>>()
+        ..errors = [const ResultError(500, 'Error')];
+
+      when(() => mockPlugin.retrieveEvents(any(), any())).thenAnswer(
+        (_) async => resultData,
+      );
+
+      final result = await datasource.getEvents('1');
+
+      expect(result, isEmpty);
+    });
   });
 }
