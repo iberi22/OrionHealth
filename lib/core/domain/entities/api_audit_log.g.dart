@@ -22,23 +22,28 @@ const ApiAuditLogSchema = CollectionSchema(
       name: r'apiName',
       type: IsarType.string,
     ),
-    r'originalPromptLength': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 1,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'originalPromptLength': PropertySchema(
+      id: 2,
       name: r'originalPromptLength',
       type: IsarType.long,
     ),
     r'piiFound': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'piiFound',
       type: IsarType.bool,
     ),
     r'scrubbedPromptLength': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'scrubbedPromptLength',
       type: IsarType.long,
     ),
     r'timestamp': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'timestamp',
       type: IsarType.dateTime,
     )
@@ -74,10 +79,11 @@ void _apiAuditLogSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.apiName);
-  writer.writeLong(offsets[1], object.originalPromptLength);
-  writer.writeBool(offsets[2], object.piiFound);
-  writer.writeLong(offsets[3], object.scrubbedPromptLength);
-  writer.writeDateTime(offsets[4], object.timestamp);
+  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeLong(offsets[2], object.originalPromptLength);
+  writer.writeBool(offsets[3], object.piiFound);
+  writer.writeLong(offsets[4], object.scrubbedPromptLength);
+  writer.writeDateTime(offsets[5], object.timestamp);
 }
 
 ApiAuditLog _apiAuditLogDeserialize(
@@ -88,10 +94,10 @@ ApiAuditLog _apiAuditLogDeserialize(
 ) {
   final object = ApiAuditLog(
     apiName: reader.readString(offsets[0]),
-    originalPromptLength: reader.readLong(offsets[1]),
-    piiFound: reader.readBool(offsets[2]),
-    scrubbedPromptLength: reader.readLong(offsets[3]),
-    timestamp: reader.readDateTime(offsets[4]),
+    originalPromptLength: reader.readLong(offsets[2]),
+    piiFound: reader.readBool(offsets[3]),
+    scrubbedPromptLength: reader.readLong(offsets[4]),
+    timestamp: reader.readDateTime(offsets[5]),
   );
   object.id = id;
   return object;
@@ -109,10 +115,12 @@ P _apiAuditLogDeserializeProp<P>(
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readBool(offset)) as P;
-    case 3:
       return (reader.readLong(offset)) as P;
+    case 3:
+      return (reader.readBool(offset)) as P;
     case 4:
+      return (reader.readLong(offset)) as P;
+    case 5:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -342,6 +350,61 @@ extension ApiAuditLogQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'apiName',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterFilterCondition> hashCodeEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterFilterCondition>
+      hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterFilterCondition>
+      hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterFilterCondition> hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -598,6 +661,18 @@ extension ApiAuditLogQuerySortBy
     });
   }
 
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterSortBy> sortByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterSortBy> sortByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
   QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterSortBy>
       sortByOriginalPromptLength() {
     return QueryBuilder.apply(this, (query) {
@@ -662,6 +737,18 @@ extension ApiAuditLogQuerySortThenBy
   QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterSortBy> thenByApiNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'apiName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterSortBy> thenByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QAfterSortBy> thenByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
@@ -739,6 +826,12 @@ extension ApiAuditLogQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ApiAuditLog, ApiAuditLog, QDistinct> distinctByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hashCode');
+    });
+  }
+
   QueryBuilder<ApiAuditLog, ApiAuditLog, QDistinct>
       distinctByOriginalPromptLength() {
     return QueryBuilder.apply(this, (query) {
@@ -777,6 +870,12 @@ extension ApiAuditLogQueryProperty
   QueryBuilder<ApiAuditLog, String, QQueryOperations> apiNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'apiName');
+    });
+  }
+
+  QueryBuilder<ApiAuditLog, int, QQueryOperations> hashCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hashCode');
     });
   }
 

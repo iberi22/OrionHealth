@@ -56,8 +56,8 @@ import '../../features/appointments/domain/usecases/save_appointment_usecase.dar
     as _i181;
 import '../../features/appointments/infrastructure/repositories/isar_appointment_repository.dart'
     as _i125;
-import '../../features/auth/application/auth_cubit.dart' as _i198;
-import '../../features/auth/application/bloc/auth_cubit.dart' as _i197;
+import '../../features/auth/application/auth_cubit.dart' as _i197;
+import '../../features/auth/application/bloc/auth_cubit.dart' as _i198;
 import '../../features/auth/domain/auth_service.dart' as _i129;
 import '../../features/auth/domain/repositories/auth_repository.dart' as _i127;
 import '../../features/auth/infrastructure/repositories/auth_repository_impl.dart'
@@ -242,9 +242,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i170;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i210;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i64;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i65;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i64;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i111;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -319,13 +319,13 @@ import '../../features/network/incentives/infrastructure/datasources/incentive_d
     as _i50;
 import '../../features/network/incentives/infrastructure/repositories/incentive_repository_impl.dart'
     as _i52;
-import '../../features/onboarding/application/onboarding_cubit.dart' as _i214;
+import '../../features/onboarding/application/onboarding_cubit.dart' as _i213;
 import '../../features/onboarding/application/sync_cubit.dart' as _i187;
 import '../../features/onboarding/domain/repositories/onboarding_repository.dart'
     as _i176;
 import '../../features/onboarding/infrastructure/repositories/onboarding_repository_impl.dart'
     as _i177;
-import '../../features/reports/application/bloc/report_bloc.dart' as _i215;
+import '../../features/reports/application/bloc/report_bloc.dart' as _i214;
 import '../../features/reports/domain/repositories/report_repository.dart'
     as _i93;
 import '../../features/reports/domain/services/report_generation_service.dart'
@@ -629,7 +629,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i116.VoiceChatRepositoryImpl(gh<_i20.ChatAiDatasource>()));
     gh.lazySingleton<_i117.VouchRepository>(
         () => _i118.IsarVouchRepository(gh<_i54.Isar>()));
-    gh.lazySingleton<_i30.WalletService>(() => databaseModule.walletService(
+    gh.lazySingleton<_i29.WalletService>(() => databaseModule.walletService(
           gh<_i54.Isar>(),
           gh<_i29.EncryptionService>(),
         ));
@@ -647,7 +647,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i127.AuthRepository>(
         () => _i128.AuthRepositoryImpl(gh<_i54.Isar>()));
     gh.lazySingleton<_i129.AuthService>(
-        () => _i129.AuthServiceImpl(gh<_i29.EncryptionService>()));
+        () => _i129.AuthServiceImpl(gh<_i30.EncryptionService>()));
     gh.lazySingleton<_i130.BleSharingService>(
         () => _i130.BleSharingService(gh<_i12.BleWrapper>()));
     gh.lazySingleton<_i131.CancelSharingUseCase>(
@@ -871,12 +871,12 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i195.AllergyBloc(gh<_i122.AllergyRepository>()));
     gh.factory<_i196.AppointmentBloc>(
         () => _i196.AppointmentBloc(gh<_i124.AppointmentRepository>()));
-    gh.factory<_i197.AuthCubit>(() => _i197.AuthCubit(
+    gh.factory<_i197.AuthCubit>(() => _i197.AuthCubit(gh<_i129.AuthService>()));
+    gh.factory<_i198.AuthCubit>(() => _i198.AuthCubit(
           gh<_i127.AuthRepository>(),
-          gh<_i29.EncryptionService>(),
+          gh<_i30.EncryptionService>(),
           gh<_i11.BiometricService>(),
         ));
-    gh.factory<_i198.AuthCubit>(() => _i198.AuthCubit(gh<_i129.AuthService>()));
     gh.lazySingleton<_i199.BadgeCalculator>(() => _i199.BadgeCalculator(
           gh<_i142.DoctorProfileRepository>(),
           gh<_i90.RatingRepository>(),
@@ -936,28 +936,25 @@ extension GetItInjectableX on _i1.GetIt {
               gh<_i110.VectorStoreService>(),
               gh<_i178.PatientContextIndexer>(),
             ));
-    gh.lazySingleton<_i212.MedicalResearchRepository>(
-        () => _i213.MedicalResearchRepositoryImpl(
-              gh<_i173.MedicalResearchService>(),
-              gh<_i54.Isar>(),
-            ));
-    gh.factory<_i214.OnboardingCubit>(
-        () => _i214.OnboardingCubit(gh<_i176.OnboardingRepository>()));
-    gh.factory<_i215.ReportBloc>(() => _i215.ReportBloc(
+    gh.factory<_i212.MedicalResearchCubit>(() => _i212.MedicalResearchCubit(
+          gh<_i173.MedicalResearchService>(),
+          gh<_i68.MedicalStandardsService>(),
+        ));
+    gh.factory<_i213.OnboardingCubit>(
+        () => _i213.OnboardingCubit(gh<_i176.OnboardingRepository>()));
+    gh.factory<_i214.ReportBloc>(() => _i214.ReportBloc(
           gh<_i93.ReportRepository>(),
           gh<_i179.ReportGenerationService>(),
         ));
-    gh.factory<_i216.SearchMedicalResearch>(() =>
-        _i216.SearchMedicalResearch(gh<_i212.MedicalResearchRepository>()));
-    gh.factory<_i217.SharingCubit>(() => _i217.SharingCubit(
+    gh.factory<_i215.SharingCubit>(() => _i215.SharingCubit(
           bleService: gh<_i130.BleSharingService>(),
           nfcService: gh<_i82.NfcSharingService>(),
           wifiService: gh<_i119.WifiDirectService>(),
           startSharingUseCase: gh<_i186.StartSharingUseCase>(),
           startListeningUseCase: gh<_i185.StartListeningUseCase>(),
           cancelSharingUseCase: gh<_i131.CancelSharingUseCase>(),
-          walletService: gh<_i30.WalletService>(),
-          walletEncryption: gh<_i30.EncryptionService>(),
+          walletService: gh<_i29.WalletService>(),
+          walletEncryption: gh<_i29.EncryptionService>(),
         ));
     gh.factory<_i218.GetResearchHistory>(
         () => _i218.GetResearchHistory(gh<_i212.MedicalResearchRepository>()));

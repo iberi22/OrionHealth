@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
@@ -32,10 +33,11 @@ void main() {
     registerFallbackValue(TransferMethod.nfc);
     registerFallbackValue(FakeSharedHealthPackage());
     HttpOverrides.global = null;
+
+    getIt.allowReassignment = true;
   });
 
   setUp(() async {
-    getIt.reset();
     mockCubit = MockSharingCubit();
     stateController = StreamController<SharingState>.broadcast();
 
@@ -45,17 +47,32 @@ void main() {
     when(() => mockCubit.close()).thenAnswer((_) async => {});
     when(() => mockCubit.stream).thenAnswer((_) => stateController.stream);
     when(() => mockCubit.state).thenReturn(SharingReady());
+    when(() => mockCubit.startListening(any(), pin: any(named: 'pin')))
+          .thenAnswer((_) async => {});
+    when(() => mockCubit.startSharing(
+        method: any(named: 'method'),
+        package: any(named: 'package'),
+        pin: any(named: 'pin'),
+      )).thenAnswer((_) async => {});
   });
 
   tearDown(() {
     stateController.close();
   });
 
+  Widget createTestWidget(Widget child) {
+    return wrapWithMaterial(
+      child,
+      sharingCubit: mockCubit,
+    );
+  }
+
   group('SharePage Interaction Tests', () {
     testWidgets('should allow selecting data categories', (tester) async {
+      setupGoldenTest(tester); // Use same size as golden tests
       when(() => mockCubit.state).thenReturn(SharingReady());
 
-      await tester.pumpWidget(wrapWithMaterial(const SharePage()));
+      await tester.pumpWidget(createTestWidget(const SharePage()));
       await tester.pump();
 
       final chip = find.text('Laboratorios');
@@ -65,23 +82,21 @@ void main() {
       await tester.pump();
 
       expect(find.text('1 categorías seleccionadas'), findsOneWidget);
+      resetGoldenTest(tester);
     });
 
     testWidgets('should call startSharing when Share button is pressed', (tester) async {
+      setupGoldenTest(tester);
       when(() => mockCubit.state).thenReturn(SharingReady());
-      when(() => mockCubit.startSharing(
-        method: any(named: 'method'),
-        package: any(named: 'package'),
-        pin: any(named: 'pin'),
-      )).thenAnswer((_) async => {});
 
-      await tester.pumpWidget(wrapWithMaterial(const SharePage()));
+      await tester.pumpWidget(createTestWidget(const SharePage()));
       await tester.pump();
 
       await tester.tap(find.text('Laboratorios'));
       await tester.pump();
 
       final shareButton = find.text('Compartir');
+      await tester.ensureVisible(shareButton);
       await tester.tap(shareButton);
       await tester.pump();
 
@@ -90,16 +105,16 @@ void main() {
         package: any(named: 'package'),
         pin: any(named: 'pin'),
       )).called(1);
+      resetGoldenTest(tester);
     });
   });
 
   group('ReceivePage Interaction Tests', () {
     testWidgets('should call startListening when a method is selected', (tester) async {
+      setupGoldenTest(tester);
       when(() => mockCubit.state).thenReturn(SharingReady());
-      when(() => mockCubit.startListening(any(), pin: any(named: 'pin')))
-          .thenAnswer((_) async => {});
 
-      await tester.pumpWidget(wrapWithMaterial(const ReceivePage()));
+      await tester.pumpWidget(createTestWidget(const ReceivePage()));
       await tester.pump();
 
       expect(find.text('NFC'), findsOneWidget);
@@ -107,6 +122,7 @@ void main() {
       await tester.pump();
 
       verify(() => mockCubit.startListening(TransferMethod.nfc, pin: any(named: 'pin'))).called(1);
+      resetGoldenTest(tester);
     });
   });
 }
