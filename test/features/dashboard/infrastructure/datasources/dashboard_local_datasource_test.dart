@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/dashboard/data/datasources/dashboard_local_datasource.dart';
+import 'package:orionhealth_health/features/dashboard/infrastructure/datasources/dashboard_local_datasource.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/dashboard_preference.dart';
 
 class MockIsar extends Mock implements Isar {
