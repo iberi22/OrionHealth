@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
-import 'package:orionhealth_health/features/calendar_import/domain/repositories/calendar_repository.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/repositories/calendar_import_repository.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/usecases/sync_calendar_usecase.dart';
 
-class MockCalendarRepo extends Mock implements CalendarRepository {}
+class MockCalendarRepo extends Mock implements CalendarImportRepository {}
 
 void main() {
   late MockCalendarRepo mockCalendarRepo;

@@ -1,21 +1,27 @@
 import 'package:device_calendar/device_calendar.dart' as device;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:orionhealth_health/features/calendar_import/infrastructure/datasources/calendar_api_datasource.dart';
-import 'package:orionhealth_health/features/calendar_import/infrastructure/repositories/calendar_repository_impl.dart';
+import 'package:orionhealth_health/features/calendar_import/infrastructure/repositories/calendar_import_repository_impl.dart';
 
 class MockCalendarApiDatasource extends Mock implements CalendarApiDatasource {}
 
 void main() {
-  late CalendarRepositoryImpl repository;
+  setUpAll(() {
+    tz.initializeTimeZones();
+  });
+
+  late CalendarImportRepositoryImpl repository;
   late MockCalendarApiDatasource mockDatasource;
 
   setUp(() {
     mockDatasource = MockCalendarApiDatasource();
-    repository = CalendarRepositoryImpl(mockDatasource);
+    repository = CalendarImportRepositoryImpl(mockDatasource);
   });
 
-  group('CalendarRepositoryImpl', () {
+  group('CalendarImportRepositoryImpl', () {
     test('hasPermissions proxies to datasource', () async {
       when(() => mockDatasource.hasPermissions()).thenAnswer((_) async => true);
       expect(await repository.hasPermissions(), isTrue);
@@ -34,6 +40,24 @@ void main() {
 
       expect(result.length, 1);
       expect(result.first.title, 'Cita médica');
+    });
+
+    test('fetchMedicalAppointments returns mapped appointments', () async {
+      final medicalCalendar = device.Calendar(id: '1', name: 'Health');
+      final medicalEvent = device.Event('1',
+          title: 'Cita con Dr. Smith',
+          description: 'Control anual',
+          start: tz.TZDateTime.now(tz.local));
+
+      when(() => mockDatasource.getCalendars())
+          .thenAnswer((_) async => [medicalCalendar]);
+      when(() => mockDatasource.getEvents(any(), startDate: any(named: 'startDate'), endDate: any(named: 'endDate')))
+          .thenAnswer((_) async => [medicalEvent]);
+
+      final result = await repository.fetchMedicalAppointments();
+
+      expect(result.length, 1);
+      expect(result.first.doctorName, 'Dr. Smith');
     });
 
     test('requestPermissions proxies to datasource', () async {

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_appointment.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
 import 'package:orionhealth_health/features/calendar_import/presentation/calendar_import_page.dart';
 import 'package:orionhealth_health/features/calendar_import/application/calendar_import_cubit.dart';
@@ -25,12 +26,20 @@ void main() {
       ),
     );
     registerFallbackValue(
+      CalendarAppointment(
+        doctorName: '',
+        specialty: '',
+        dateTime: DateTime.now(),
+      ),
+    );
+    registerFallbackValue(
       CalendarEvent(
         title: 'test',
         startDateTime: DateTime.now(),
       ),
     );
     registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(<CalendarAppointment>[]);
     registerFallbackValue(<CalendarEvent>[]);
     registerFallbackValue(AppointmentStatus.upcoming);
     registerFallbackValue(CalendarEventSource.unknown);
@@ -76,26 +85,20 @@ void main() {
 
       final now = DateTime(2026, 6, 15, 10, 0);
       final appointments = [
-        Appointment(
-          id: 1,
+        CalendarAppointment(
           doctorName: 'Dr. Andrés Martínez',
           specialty: 'Cardiología',
           dateTime: now.add(const Duration(days: 1, hours: 4)),
-          status: AppointmentStatus.upcoming,
         ),
-        Appointment(
-          id: 2,
+        CalendarAppointment(
           doctorName: 'Dra. María González',
           specialty: 'Endocrinología',
           dateTime: now.add(const Duration(days: 3)),
-          status: AppointmentStatus.upcoming,
         ),
-        Appointment(
-          id: 3,
+        CalendarAppointment(
           doctorName: 'Dr. Carlos Pérez',
           specialty: 'Neurología',
           dateTime: now.add(const Duration(days: 7, hours: 2)),
-          status: AppointmentStatus.upcoming,
         ),
       ];
 

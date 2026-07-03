@@ -4,11 +4,12 @@ import 'package:orionhealth_health/features/appointments/domain/entities/appoint
 import 'package:orionhealth_health/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_appointment.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
-import 'package:orionhealth_health/features/calendar_import/domain/repositories/calendar_repository.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/repositories/calendar_import_repository.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/usecases/import_calendar_usecase.dart';
 
-class MockCalendarRepo extends Mock implements CalendarRepository {}
+class MockCalendarRepo extends Mock implements CalendarImportRepository {}
 class MockAppointmentRepo extends Mock implements AppointmentRepository {}
 class MockUserProfileRepo extends Mock implements UserProfileRepository {}
 
@@ -28,7 +29,15 @@ void main() {
         startDateTime: DateTime.now(),
       ),
     );
+    registerFallbackValue(
+      CalendarAppointment(
+        doctorName: 'test',
+        specialty: 'test',
+        dateTime: DateTime.now(),
+      ),
+    );
     registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(<CalendarAppointment>[]);
     registerFallbackValue(<CalendarEvent>[]);
     registerFallbackValue(AppointmentStatus.upcoming);
     registerFallbackValue(CalendarEventSource.unknown);
@@ -89,23 +98,24 @@ void main() {
   });
 
   group('scanForMedicalEvents', () {
-    test('should return events from repository', () async {
-      final events = [
-        CalendarEvent(
-          title: 'Cita',
-          startDateTime: DateTime.now(),
+    test('should return appointments from repository', () async {
+      final appointments = [
+        CalendarAppointment(
+          doctorName: 'Dr. House',
+          specialty: 'Cita',
+          dateTime: DateTime.now(),
         ),
       ];
-      when(() => mockCalendarRepo.fetchMedicalEvents())
-          .thenAnswer((_) async => events);
+      when(() => mockCalendarRepo.fetchMedicalAppointments())
+          .thenAnswer((_) async => appointments);
 
       final result = await useCase.scanForMedicalEvents();
 
-      expect(result, events);
+      expect(result, appointments);
     });
 
     test('should return empty list when no events', () async {
-      when(() => mockCalendarRepo.fetchMedicalEvents())
+      when(() => mockCalendarRepo.fetchMedicalAppointments())
           .thenAnswer((_) async => []);
 
       final result = await useCase.scanForMedicalEvents();
@@ -116,11 +126,12 @@ void main() {
 
   group('execute', () {
     test('should import events as appointments', () async {
-      final events = [
-        CalendarEvent(
-          title: 'Cita con Dr. House',
-          startDateTime: DateTime(2026, 6, 10, 10, 0),
-          description: 'Revisión general',
+      final appointments = [
+        CalendarAppointment(
+          doctorName: 'Dr. House',
+          specialty: 'Cita',
+          dateTime: DateTime(2026, 6, 10, 10, 0),
+          notes: 'Revisión general',
           source: CalendarEventSource.deviceCalendar,
         ),
       ];
@@ -131,14 +142,14 @@ void main() {
           .thenAnswer((_) async => {});
 
       final result = await useCase.execute(
-        ImportCalendarParams(events: events),
+        ImportCalendarParams(appointments: appointments),
       );
 
       expect(result.importedCount, 1);
       expect(result.appointments.length, 1);
       expect(result.syncedToFhirCount, 0);
       expect(result.appointments[0].doctorName, 'Dr. House');
-      expect(result.appointments[0].specialty, 'cita');
+      expect(result.appointments[0].specialty, 'Cita');
       expect(result.appointments[0].dateTime,
           DateTime(2026, 6, 10, 10, 0));
       expect(result.appointments[0].source, 'DEVICE_CALENDAR');
@@ -148,10 +159,11 @@ void main() {
     });
 
     test('should sync to FHIR when user is connected', () async {
-      final events = [
-        CalendarEvent(
-          title: 'Consulta Médica',
-          startDateTime: DateTime(2026, 6, 10, 14, 30),
+      final appointments = [
+        CalendarAppointment(
+          doctorName: 'Médico',
+          specialty: 'Consulta Médica',
+          dateTime: DateTime(2026, 6, 10, 14, 30),
           source: CalendarEventSource.deviceCalendar,
         ),
       ];
@@ -162,7 +174,7 @@ void main() {
           .thenAnswer((_) async => {});
 
       final result = await useCase.execute(
-        ImportCalendarParams(events: events),
+        ImportCalendarParams(appointments: appointments),
       );
 
       expect(result.importedCount, 1);
@@ -172,15 +184,17 @@ void main() {
     });
 
     test('should import multiple events', () async {
-      final events = [
-        CalendarEvent(
-          title: 'Cita Dr. A',
-          startDateTime: DateTime(2026, 6, 10, 9, 0),
+      final appointments = [
+        CalendarAppointment(
+          doctorName: 'Dr. A',
+          specialty: 'Cita',
+          dateTime: DateTime(2026, 6, 10, 9, 0),
           source: CalendarEventSource.deviceCalendar,
         ),
-        CalendarEvent(
-          title: 'Control con Dra. B',
-          startDateTime: DateTime(2026, 6, 11, 10, 0),
+        CalendarAppointment(
+          doctorName: 'Dra. B',
+          specialty: 'Control',
+          dateTime: DateTime(2026, 6, 11, 10, 0),
           source: CalendarEventSource.icsFile,
         ),
       ];
@@ -191,7 +205,7 @@ void main() {
           .thenAnswer((_) async => {});
 
       final result = await useCase.execute(
-        ImportCalendarParams(events: events),
+        ImportCalendarParams(appointments: appointments),
       );
 
       expect(result.importedCount, 2);
@@ -200,72 +214,6 @@ void main() {
       expect(result.appointments[1].doctorName, 'Dra. B');
 
       verify(() => mockAppointmentRepo.saveAppointment(any())).called(2);
-    });
-
-    test('should handle unknown doctor name', () async {
-      final events = [
-        CalendarEvent(
-          title: 'Cita Médica',
-          startDateTime: DateTime(2026, 6, 10, 10, 0),
-          source: CalendarEventSource.unknown,
-        ),
-      ];
-
-      when(() => mockUserProfileRepo.getUserProfile())
-          .thenAnswer((_) async => null);
-      when(() => mockAppointmentRepo.saveAppointment(any()))
-          .thenAnswer((_) async => {});
-
-      final result = await useCase.execute(
-        ImportCalendarParams(events: events),
-      );
-
-      expect(result.importedCount, 1);
-      expect(result.appointments[0].doctorName, 'Médico');
-      expect(result.appointments[0].source, 'UNKNOWN_IMPORT');
-    });
-
-    test('should cover all specialty keywords', () async {
-      final keywords = [
-        'cita',
-        'médico',
-        'consulta',
-        'EPS',
-        'Sura',
-        'Comfama',
-        'Sanitas',
-        'doctor',
-        'especialista',
-        'control',
-        'examen',
-        'procedimiento',
-        'odontología',
-        'terapia',
-        'laboratorio',
-        'vacuna',
-      ];
-
-      when(() => mockUserProfileRepo.getUserProfile()).thenAnswer((_) async => null);
-      when(() => mockAppointmentRepo.saveAppointment(any())).thenAnswer((_) async => {});
-
-      for (final keyword in keywords) {
-        final result = await useCase.execute(ImportCalendarParams(events: [
-          CalendarEvent(
-            title: 'Mi $keyword',
-            startDateTime: DateTime.now(),
-          )
-        ]));
-        expect(result.appointments[0].specialty, keyword);
-      }
-
-      // Default case
-      final resultDefault = await useCase.execute(ImportCalendarParams(events: [
-        CalendarEvent(
-          title: 'Algo diferente',
-          startDateTime: DateTime.now(),
-        )
-      ]));
-      expect(resultDefault.appointments[0].specialty, 'Consulta General');
     });
 
     test('should cover all source tags', () async {
@@ -288,28 +236,16 @@ void main() {
       when(() => mockAppointmentRepo.saveAppointment(any())).thenAnswer((_) async => {});
 
       for (int i = 0; i < sources.length; i++) {
-        final result = await useCase.execute(ImportCalendarParams(events: [
-          CalendarEvent(
-            title: 'Cita',
-            startDateTime: DateTime.now(),
+        final result = await useCase.execute(ImportCalendarParams(appointments: [
+          CalendarAppointment(
+            doctorName: 'Médico',
+            specialty: 'Cita',
+            dateTime: DateTime.now(),
             source: sources[i],
           )
         ]));
         expect(result.appointments[0].source, expectedTags[i]);
       }
-    });
-
-    test('should handle doctor name with multiple parts', () async {
-      when(() => mockUserProfileRepo.getUserProfile()).thenAnswer((_) async => null);
-      when(() => mockAppointmentRepo.saveAppointment(any())).thenAnswer((_) async => {});
-
-      final result = await useCase.execute(ImportCalendarParams(events: [
-        CalendarEvent(
-          title: 'Cita con Dr. Juan Perez Rodriguez',
-          startDateTime: DateTime.now(),
-        )
-      ]));
-      expect(result.appointments[0].doctorName, 'Dr. Juan Perez Rodriguez');
     });
   });
 }

@@ -3,12 +3,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 import 'package:orionhealth_health/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_appointment.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
-import 'package:orionhealth_health/features/calendar_import/domain/repositories/calendar_repository.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/repositories/calendar_import_repository.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/usecases/import_calendar_usecase.dart';
 import 'package:orionhealth_health/features/calendar_import/application/calendar_import_cubit.dart';
 
-class MockCalendarRepository extends Mock implements CalendarRepository {}
+class MockCalendarRepository extends Mock implements CalendarImportRepository {}
 
 class MockAppointmentRepository extends Mock implements AppointmentRepository {}
 
@@ -27,7 +28,15 @@ void main() {
     registerFallbackValue(
       CalendarEvent(title: 'test', startDateTime: DateTime.now()),
     );
+    registerFallbackValue(
+      CalendarAppointment(
+        doctorName: 'test',
+        specialty: 'test',
+        dateTime: DateTime.now(),
+      ),
+    );
     registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(<CalendarAppointment>[]);
     registerFallbackValue(<CalendarEvent>[]);
     registerFallbackValue(AppointmentStatus.upcoming);
     registerFallbackValue(CalendarEventSource.unknown);
@@ -61,10 +70,11 @@ void main() {
     test(
       'emits [Loading, Loaded] when permissions are granted and events found',
       () async {
-        final calendarEvents = [
-          CalendarEvent(
-            title: 'Cita con Dr. Smith',
-            startDateTime: DateTime.now(),
+        final appointments = [
+          CalendarAppointment(
+            doctorName: 'Dr. Smith',
+            specialty: 'Cita',
+            dateTime: DateTime.now(),
             source: CalendarEventSource.deviceCalendar,
           ),
         ];
@@ -73,8 +83,8 @@ void main() {
           () => mockCalendarRepository.hasPermissions(),
         ).thenAnswer((_) async => true);
         when(
-          () => mockCalendarRepository.fetchMedicalEvents(),
-        ).thenAnswer((_) async => calendarEvents);
+          () => mockCalendarRepository.fetchMedicalAppointments(),
+        ).thenAnswer((_) async => appointments);
 
         final expectedStates = [
           isA<CalendarImportLoading>(),
@@ -117,7 +127,7 @@ void main() {
         () => mockCalendarRepository.hasPermissions(),
       ).thenAnswer((_) async => true);
       when(
-        () => mockCalendarRepository.fetchMedicalEvents(),
+        () => mockCalendarRepository.fetchMedicalAppointments(),
       ).thenThrow(Exception('Network error'));
 
       final expectedStates = [
@@ -134,11 +144,10 @@ void main() {
   group('importAppointments', () {
     test('emits [Loading, Success] when appointments are imported', () async {
       final appointments = [
-        Appointment(
+        CalendarAppointment(
           doctorName: 'Dr. Smith',
           specialty: 'Cardiology',
           dateTime: DateTime.now(),
-          status: AppointmentStatus.upcoming,
         ),
       ];
 
@@ -163,11 +172,10 @@ void main() {
 
     test('emits [Loading, Error] when save fails', () async {
       final appointments = [
-        Appointment(
+        CalendarAppointment(
           doctorName: 'Dr. Smith',
           specialty: 'Cardiology',
           dateTime: DateTime.now(),
-          status: AppointmentStatus.upcoming,
         ),
       ];
 
