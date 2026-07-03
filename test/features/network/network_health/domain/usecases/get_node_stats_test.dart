@@ -37,4 +37,14 @@ void main() {
     verify(() => mockRepository.getNodeStats(tNodeId));
     verifyNoMoreInteractions(mockRepository);
   });
+
+  test('should propagate error when repository fails', () async {
+    // arrange
+    when(() => mockRepository.getNodeStats(any()))
+        .thenThrow(Exception('Failed to get stats'));
+
+    // act & assert
+    expect(() => usecase(tNodeId), throwsException);
+    verify(() => mockRepository.getNodeStats(tNodeId));
+  });
 }
