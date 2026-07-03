@@ -39,8 +39,8 @@ void main() {
   group('SettingsRepositoryImpl Extra', () {
     test('exportData returns a JSON string', () async {
       final result = await repository.exportData();
-      expect(result, contains('"version"'));
-      expect(result, contains('"data"'));
+      expect(result, contains('"llmConfig"'));
+      expect(result, contains('"appSettings"'));
     });
 
     test('importData completes (mock)', () async {

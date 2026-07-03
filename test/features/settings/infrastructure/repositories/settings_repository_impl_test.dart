@@ -64,7 +64,7 @@ void main() {
       expect(retrieved2!.selectedModel, 'model2');
       expect(retrieved2.id, originalId);
 
-      final count = await isar.llmConfigs.count();
+      final count = await isar.collection<LlmConfig>().count();
       expect(count, 1);
     });
 
@@ -105,20 +105,21 @@ void main() {
         expect(retrieved2!.themeMode, 'light');
         expect(retrieved2.id, originalId);
 
-        final count = await isar.appSettings.count();
+        final count = await isar.collection<AppSettings>().count();
         expect(count, 1);
       });
     });
 
     group('Data Portability', () {
-      test('exportData returns a mock FHIR bundle string', () async {
+      test('exportData returns a JSON string', () async {
         final result = await repository.exportData();
         expect(result, isA<String>());
-        expect(result, contains('FHIR Bundle Mock'));
+        expect(result, contains('"llmConfig"'));
+        expect(result, contains('"appSettings"'));
       });
 
       test('importData completes without error', () async {
-        expect(repository.importData('dummy data'), completes);
+        expect(repository.importData('{}'), completes);
       });
     });
   });
