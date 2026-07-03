@@ -96,17 +96,20 @@ class EpsConnectionPage extends StatelessWidget {
         },
         child: const Padding(
           padding: EdgeInsets.all(20),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.qr_code_scanner, color: AppColors.primary),
               SizedBox(width: 12),
-              Text(
-                'Connect via QR Code',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+              Flexible(
+                child: Text(
+                  'Connect via QR Code',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

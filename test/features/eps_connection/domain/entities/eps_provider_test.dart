@@ -30,12 +30,13 @@ void main() {
         id: '1',
         name: 'N',
         discoveryUrl: 'D',
+        revocationUrl: 'RV',
         clientId: 'C',
         redirectUrl: 'R',
         scopes: ['S'],
         type: EPSProviderType.fhir,
       );
-      expect(p.props, ['1', 'N', 'D', 'C', 'R', ['S'], EPSProviderType.fhir]);
+      expect(p.props, ['1', 'N', 'D', 'RV', 'C', 'R', ['S'], EPSProviderType.fhir]);
     });
   });
 
