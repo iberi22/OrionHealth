@@ -448,7 +448,7 @@ class _AppointmentFormState extends State<_AppointmentForm> {
               children: [
                 Expanded(
                   child: Material(
-                    type: MaterialType.transparency,
+                    color: Colors.transparent,
                     child: ListTile(
                       title: const Text('Fecha'),
                       subtitle: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
@@ -466,7 +466,7 @@ class _AppointmentFormState extends State<_AppointmentForm> {
                 ),
                 Expanded(
                   child: Material(
-                    type: MaterialType.transparency,
+                    color: Colors.transparent,
                     child: ListTile(
                       title: const Text('Hora'),
                       subtitle: Text(_selectedTime.format(context)),
