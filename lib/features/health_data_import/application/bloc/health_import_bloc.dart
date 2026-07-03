@@ -82,13 +82,13 @@ class HealthImportBloc extends Bloc<HealthImportEvent, HealthImportState> {
       for (int i = 0; i < steps.length; i++) {
         emit(HealthImportImporting(
           source: source,
-          currentStep: steps[i].,
+          currentStep: steps[i].$1,
           totalSteps: steps.length,
           currentStepNum: i + 1,
           importedCount: totalImported,
         ));
 
-        final data = await steps[i].();
+        final data = await steps[i].$2();
         final vitals = await _importService.convertToVitalSigns(data, source);
         await _vitalSignRepository.saveVitalSigns(vitals);
         totalImported += vitals.length;

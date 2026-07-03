@@ -5,7 +5,15 @@ import 'package:orionhealth_health/features/health_data_import/application/healt
 
 void main() {
   group('HealthImportState', () {
-    test('HealthImportReady support value equality', () {
+    test('HealthImportInitial supports value equality', () {
+      expect(const HealthImportInitial(), const HealthImportInitial());
+    });
+
+    test('HealthImportLoading supports value equality', () {
+      expect(const HealthImportLoading(), const HealthImportLoading());
+    });
+
+    test('HealthImportReady supports value equality', () {
       expect(
         const HealthImportReady(
           availableSources: [HealthDataSource.googleFit],
@@ -18,14 +26,26 @@ void main() {
       );
     });
 
-    test('HealthImportAuthenticating support value equality', () {
+    test('HealthImportAuthenticating supports value equality', () {
       expect(
         const HealthImportAuthenticating(HealthDataSource.googleFit),
         const HealthImportAuthenticating(HealthDataSource.googleFit),
       );
     });
 
-    test('HealthImportSuccess support value equality', () {
+    test('HealthImportImporting supports value equality', () {
+      const state = HealthImportImporting(
+        source: HealthDataSource.googleFit,
+        currentStep: 'Step 1',
+        totalSteps: 5,
+        currentStepNum: 1,
+        importedCount: 0,
+      );
+      expect(state, state);
+      expect(state.progress, 0.2);
+    });
+
+    test('HealthImportSuccess supports value equality', () {
       final result1 = HealthImportResult(
         source: HealthDataSource.googleFit,
         importedCount: 10,
@@ -38,6 +58,10 @@ void main() {
         HealthImportSuccess(result1),
         HealthImportSuccess(result2),
       );
+    });
+
+    test('HealthImportError supports value equality', () {
+      expect(const HealthImportError('error'), const HealthImportError('error'));
     });
   });
 }
