@@ -76,4 +76,32 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
   });
+
+  testWidgets('AboutPage displays loading indicator', (WidgetTester tester) async {
+    when(() => mockAboutCubit.state).thenReturn(AboutLoading());
+    when(() => mockAboutCubit.loadAboutInfo()).thenAnswer((_) async {});
+    when(() => mockAboutCubit.stream).thenAnswer((_) => const Stream.empty());
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: AboutPage(),
+      ),
+    );
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
+  testWidgets('AboutPage displays error message', (WidgetTester tester) async {
+    when(() => mockAboutCubit.state).thenReturn(const AboutError('Error loading info'));
+    when(() => mockAboutCubit.loadAboutInfo()).thenAnswer((_) async {});
+    when(() => mockAboutCubit.stream).thenAnswer((_) => const Stream.empty());
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: AboutPage(),
+      ),
+    );
+
+    expect(find.text('Error: Error loading info'), findsOneWidget);
+  });
 }
