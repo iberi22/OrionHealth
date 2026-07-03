@@ -3,7 +3,6 @@ import 'package:isar/isar.dart';
 import '../../domain/entities/allergy.dart';
 import '../../domain/repositories/allergy_repository.dart';
 
-@LazySingleton(as: AllergyRepository)
 class IsarAllergyRepository implements AllergyRepository {
   final Isar _isar;
 
