@@ -4,13 +4,26 @@ import '../../../../core/di/injection.dart';
 import '../../../health_sharing/application/sharing_cubit.dart';
 import '../../../health_sharing/domain/entities/shared_health_package.dart';
 
-class ReceiveMedicalDataPage extends StatelessWidget {
+class ReceiveMedicalDataPage extends StatefulWidget {
   const ReceiveMedicalDataPage({super.key});
 
   @override
+  State<ReceiveMedicalDataPage> createState() => _ReceiveMedicalDataPageState();
+}
+
+class _ReceiveMedicalDataPageState extends State<ReceiveMedicalDataPage> {
+  late final SharingCubit _sharingCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _sharingCubit = getIt<SharingCubit>()..initialize();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<SharingCubit>()..initialize(),
+    return BlocProvider.value(
+      value: _sharingCubit,
       child: const _ReceiveMedicalDataContent(),
     );
   }
