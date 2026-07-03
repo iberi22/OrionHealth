@@ -41,7 +41,7 @@ void main() {
 
     group('LoadAppointments', () {
       test('emits [Loading, Loaded] when success', () async {
-        when(() => mockRepository.getAllAppointments()).thenAnswer((_) async => tAppointments);
+        when(() => mockRepository.getAppointments()).thenAnswer((_) async => tAppointments);
 
         appointmentBloc.add(LoadAppointments());
 
@@ -55,7 +55,7 @@ void main() {
       });
 
       test('emits [Loading, Error] when fails', () async {
-        when(() => mockRepository.getAllAppointments()).thenThrow(Exception('DB Error'));
+        when(() => mockRepository.getAppointments()).thenThrow(Exception('DB Error'));
 
         appointmentBloc.add(LoadAppointments());
 
@@ -72,7 +72,7 @@ void main() {
     group('SaveAppointment', () {
       test('calls repository and reloads', () async {
         when(() => mockRepository.saveAppointment(any())).thenAnswer((_) async {});
-        when(() => mockRepository.getAllAppointments()).thenAnswer((_) async => tAppointments);
+        when(() => mockRepository.getAppointments()).thenAnswer((_) async => tAppointments);
 
         appointmentBloc.add(SaveAppointment(tAppointment));
 
@@ -84,7 +84,7 @@ void main() {
     group('DeleteAppointment', () {
       test('calls repository and reloads', () async {
         when(() => mockRepository.deleteAppointment(any())).thenAnswer((_) async {});
-        when(() => mockRepository.getAllAppointments()).thenAnswer((_) async => []);
+        when(() => mockRepository.getAppointments()).thenAnswer((_) async => []);
 
         appointmentBloc.add(DeleteAppointment(1));
 

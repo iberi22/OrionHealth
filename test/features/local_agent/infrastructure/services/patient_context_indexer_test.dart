@@ -119,7 +119,7 @@ void main() {
       when(() => mockMedicationRepo.getAllMedications()).thenAnswer((_) async => medications);
       when(() => mockAllergyRepo.getAllergies()).thenAnswer((_) async => allergies);
       when(() => mockVitalRepo.getAllVitalSigns()).thenAnswer((_) async => vitals);
-      when(() => mockAppointmentRepo.getAllAppointments()).thenAnswer((_) async => appointments);
+      when(() => mockAppointmentRepo.getAppointments()).thenAnswer((_) async => appointments);
 
       when(() => mockVectorStore.addDocument(any(), any(), any())).thenAnswer((_) async => {});
 
@@ -131,7 +131,7 @@ void main() {
       verify(() => mockMedicationRepo.getAllMedications()).called(1);
       verify(() => mockAllergyRepo.getAllergies()).called(1);
       verify(() => mockVitalRepo.getAllVitalSigns()).called(1);
-      verify(() => mockAppointmentRepo.getAllAppointments()).called(1);
+      verify(() => mockAppointmentRepo.getAppointments()).called(1);
 
       // Verify vector store calls (one for each type)
       verify(() => mockVectorStore.addDocument(

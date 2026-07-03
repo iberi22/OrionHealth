@@ -193,7 +193,7 @@ class PatientContextIndexer {
 
   Future<void> _indexAppointments() async {
     try {
-      final appointments = await _appointmentRepo.getAllAppointments();
+      final appointments = await _appointmentRepo.getAppointments();
       for (final appt in appointments) {
         final dateStr = appt.dateTime.toIso8601String();
         final typeLabel = appt.doctorName.isNotEmpty ? 'Consulta con ${appt.doctorName}' : 'Cita';

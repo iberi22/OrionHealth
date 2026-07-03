@@ -9,7 +9,7 @@ class IsarAppointmentRepository implements AppointmentRepository {
   IsarAppointmentRepository(this._isar);
 
   @override
-  Future<List<Appointment>> getAllAppointments() async {
+  Future<List<Appointment>> getAppointments() async {
     return await _isar.appointments.where().findAll();
   }
 
@@ -21,7 +21,7 @@ class IsarAppointmentRepository implements AppointmentRepository {
   }
 
   @override
-  Future<void> deleteAppointment(int id) async {
+  Future<void> deleteAppointment(Id id) async {
     await _isar.writeTxn(() async {
       await _isar.appointments.delete(id);
     });
