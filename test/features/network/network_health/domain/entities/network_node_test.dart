@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/network/domain/entities/network_node.dart';
+import 'package:orionhealth_health/features/network/network_health/domain/entities/network_node.dart';
 
 void main() {
   final lastSeen = DateTime(2023, 1, 1);

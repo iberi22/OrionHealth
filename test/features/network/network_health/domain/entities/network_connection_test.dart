@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/network/domain/entities/network_connection.dart';
+import 'package:orionhealth_health/features/network/network_health/domain/entities/network_connection.dart';
 
 void main() {
   const connection1 = NetworkConnection(
