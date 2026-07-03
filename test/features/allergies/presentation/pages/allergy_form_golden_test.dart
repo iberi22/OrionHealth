@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/allergies/presentation/pages/allergies_page.dart';
+import 'package:orionhealth_health/features/allergies/presentation/widgets/allergy_form.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
 
 void main() {
