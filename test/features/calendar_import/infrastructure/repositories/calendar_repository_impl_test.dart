@@ -35,5 +35,39 @@ void main() {
       expect(result.length, 1);
       expect(result.first.title, 'Cita médica');
     });
+
+    test('requestPermissions proxies to datasource', () async {
+      when(() => mockDatasource.requestPermissions()).thenAnswer((_) async => true);
+      expect(await repository.requestPermissions(), isTrue);
+    });
+
+    test('getCalendarSources returns list of sources', () async {
+      final calendar = device.Calendar(id: '1', name: 'Personal', isReadOnly: false);
+      when(() => mockDatasource.getCalendars()).thenAnswer((_) async => [calendar]);
+
+      final result = await repository.getCalendarSources();
+
+      expect(result.length, 1);
+      expect(result.first.id, '1');
+      expect(result.first.name, 'Personal');
+    });
+
+    test('fetchMedicalEvents handles null calendar ID', () async {
+      final calendar = device.Calendar(id: null, name: 'Null ID');
+      when(() => mockDatasource.getCalendars()).thenAnswer((_) async => [calendar]);
+
+      final result = await repository.fetchMedicalEvents();
+
+      expect(result, isEmpty);
+      verifyNever(() => mockDatasource.getEvents(any(), startDate: any(named: 'startDate'), endDate: any(named: 'endDate')));
+    });
+
+    test('fetchMedicalEvents handles no calendars', () async {
+      when(() => mockDatasource.getCalendars()).thenAnswer((_) async => []);
+
+      final result = await repository.fetchMedicalEvents();
+
+      expect(result, isEmpty);
+    });
   });
 }
