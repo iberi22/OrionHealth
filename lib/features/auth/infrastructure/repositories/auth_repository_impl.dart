@@ -3,7 +3,6 @@ import 'package:isar/isar.dart';
 import '../../domain/entities/auth_credentials.dart';
 import '../../domain/repositories/auth_repository.dart';
 
-@LazySingleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final Isar _isar;
 
