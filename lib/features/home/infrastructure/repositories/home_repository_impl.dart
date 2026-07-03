@@ -37,7 +37,7 @@ class HomeRepositoryImpl implements HomeRepository {
         .where((v) => v != null)
         .toList();
 
-    final appointments = await _appointmentRepository.getAllAppointments();
+    final appointments = await _appointmentRepository.getAppointments();
     final upcomingAppointments = appointments
         .where((a) => a.dateTime.isAfter(DateTime.now()))
         .toList();

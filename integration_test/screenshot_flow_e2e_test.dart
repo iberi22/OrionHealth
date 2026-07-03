@@ -35,9 +35,10 @@ Future<void> captureScreenshot(
   await tester.pumpAndSettle(const Duration(seconds: 2));
 
   // Capture the full MaterialApp widget
+  // matchesGoldenFile expects a path relative to the test file or a Uri
   await expectLater(
     find.byType(MaterialApp),
-    matchesGoldenFile('../screenshots/$flow/$stepName.png'),
+    matchesGoldenFile('screenshots/$flow/$stepName.png'),
   );
 
   // Print to CI logs
@@ -242,9 +243,10 @@ void main() {
       // Check for upload buttons
       final uploadButtons = find.byWidgetPredicate(
         (w) => w is IconButton && 
-               (w.icon == Icons.add || 
-                w.icon == Icons.camera_alt ||
-                w.icon == Icons.picture_as_pdf),
+               w.icon is Icon &&
+               ((w.icon as Icon).icon == Icons.add ||
+                (w.icon as Icon).icon == Icons.camera_alt ||
+                (w.icon as Icon).icon == Icons.picture_as_pdf),
       );
 
       if (uploadButtons.evaluate().isNotEmpty) {
@@ -298,7 +300,7 @@ void main() {
 
       // Try to tap edit button
       final editButtons = find.byWidgetPredicate(
-        (w) => w is IconButton && w.icon == Icons.edit,
+        (w) => w is IconButton && w.icon is Icon && (w.icon as Icon).icon == Icons.edit,
       );
       if (editButtons.evaluate().isNotEmpty) {
         await tester.tap(editButtons.first);

@@ -26,13 +26,13 @@ void main() {
 
   test('should get all appointments from the repository', () async {
     // arrange
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => tAppointments);
     // act
     final result = await useCase();
     // assert
     expect(result, tAppointments);
-    verify(() => mockRepository.getAllAppointments());
+    verify(() => mockRepository.getAppointments());
     verifyNoMoreInteractions(mockRepository);
   });
 

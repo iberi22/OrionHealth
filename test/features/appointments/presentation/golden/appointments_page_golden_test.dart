@@ -29,7 +29,7 @@ void main() {
   group('Appointments Page Golden Tests', () {
     testWidgets('Appointments Page - Empty State', (tester) async {
       setupGoldenTest(tester);
-      when(() => mockRepository.getAllAppointments())
+      when(() => mockRepository.getAppointments())
           .thenAnswer((_) async => <Appointment>[]);
 
       await tester.pumpWidget(wrapWithMaterial(const AppointmentsPage()));
@@ -72,7 +72,7 @@ void main() {
         ),
       ];
 
-      when(() => mockRepository.getAllAppointments())
+      when(() => mockRepository.getAppointments())
           .thenAnswer((_) async => appointments);
 
       await tester.pumpWidget(wrapWithMaterial(const AppointmentsPage()));

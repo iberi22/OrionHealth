@@ -33,7 +33,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
   Future<void> _loadAppointments() async {
     setState(() => _isLoading = true);
     try {
-      final appointments = await _repository.getAllAppointments();
+      final appointments = await _repository.getAppointments();
       setState(() {
         _allAppointments = appointments;
         _isLoading = false;

@@ -9,6 +9,6 @@ class GetAllAppointmentsUseCase {
   GetAllAppointmentsUseCase(this.repository);
 
   Future<List<Appointment>> call() async {
-    return repository.getAllAppointments();
+    return repository.getAppointments();
   }
 }

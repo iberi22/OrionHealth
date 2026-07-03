@@ -67,7 +67,7 @@ void main() {
 
     group('loadAppointments', () {
       test('emits loading then loaded on success', () async {
-        when(() => repository.getAllAppointments()).thenAnswer((_) async => tAppointments);
+        when(() => repository.getAppointments()).thenAnswer((_) async => tAppointments);
 
         expectLater(cubit.stream, emitsInOrder([
           isA<AppointmentsLoading>(),
@@ -77,7 +77,7 @@ void main() {
       });
 
       test('emits loading then error on failure', () async {
-        when(() => repository.getAllAppointments()).thenThrow(Exception('db error'));
+        when(() => repository.getAppointments()).thenThrow(Exception('db error'));
 
         expectLater(cubit.stream, emitsInOrder([
           isA<AppointmentsLoading>(),
@@ -90,7 +90,7 @@ void main() {
     group('saveAppointment', () {
       test('saves and reloads on success', () async {
         when(() => repository.saveAppointment(any())).thenAnswer((_) async {});
-        when(() => repository.getAllAppointments()).thenAnswer((_) async => tAppointments);
+        when(() => repository.getAppointments()).thenAnswer((_) async => tAppointments);
 
         expectLater(cubit.stream, emitsInOrder([
           isA<AppointmentsLoading>(),
@@ -112,7 +112,7 @@ void main() {
     group('deleteAppointment', () {
       test('deletes and reloads on success', () async {
         when(() => repository.deleteAppointment(1)).thenAnswer((_) async {});
-        when(() => repository.getAllAppointments()).thenAnswer((_) async => tAppointments);
+        when(() => repository.getAppointments()).thenAnswer((_) async => tAppointments);
 
         expectLater(cubit.stream, emitsInOrder([
           isA<AppointmentsLoading>(),

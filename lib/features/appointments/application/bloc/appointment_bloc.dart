@@ -24,7 +24,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     emit(const AppointmentLoading());
     try {
-      final appointments = await _repository.getAllAppointments();
+      final appointments = await _repository.getAppointments();
       emit(AppointmentLoaded(appointments));
     } catch (e) {
       emit(AppointmentError(e.toString()));
