@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
-import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_detail_page.dart';
-import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/rating_dialog.dart';
-import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_cubit.dart';
-import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
+import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_profile_page.dart';
+import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_verification_card.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
 import '../../../../core/golden_test_utils.dart';
 
-class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {
-  @override
-  Future<void> close() async {}
-}
-
 void main() {
-  late MockDoctorVerificationCubit mockCubit;
   final now = DateTime.now();
   final doctorVerified = DoctorProfile(
     id: '1',
@@ -50,90 +40,51 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
     SharedPreferences.setMockInitialValues({});
     await GetIt.I.reset();
-    mockCubit = MockDoctorVerificationCubit();
-    GetIt.I.registerSingleton<DoctorVerificationCubit>(mockCubit);
   });
 
-  tearDown(() {
-    if (GetIt.I.isRegistered<DoctorVerificationCubit>()) {
-      GetIt.I.unregister<DoctorVerificationCubit>();
-    }
-  });
-
-  group('Doctor Verification Golden Tests', () {
-    testWidgets('Doctor List Page', (tester) async {
+  group('Doctor Profile Page Golden Tests', () {
+    testWidgets('Profile Page with Verified Doctor', (tester) async {
       setupGoldenTest(tester);
-      when(() => mockCubit.state).thenReturn(DoctorVerificationLoaded(
-        doctors: [doctorVerified, doctorUnverified],
-        averageRatings: {'1': 4.5, '2': 3.8},
-      ));
-      when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-
-      await tester.pumpWidget(wrapWithMaterial(const DoctorListPage()));
+      await tester.pumpWidget(wrapWithMaterial(DoctorProfilePage(doctor: doctorVerified)));
       await tester.pumpAndSettle();
 
       await expectLater(
-        find.byType(DoctorListPage),
-        matchesGoldenFile("../../../../golden/reference/doctor_list_page.png"),
+        find.byType(DoctorProfilePage),
+        matchesGoldenFile("../../../../golden/reference/doctor_profile_page.png"),
       );
       resetGoldenTest(tester);
     });
 
-    testWidgets('Doctor Detail Page - Verified', (tester) async {
+    testWidgets('Doctor Verification Card - Verified', (tester) async {
       setupGoldenTest(tester);
-      when(() => mockCubit.state).thenReturn(DoctorVerificationLoaded(
-        doctors: [doctorVerified],
-        averageRatings: {'1': 4.5},
-      ));
-      when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-
-      await tester.pumpWidget(wrapWithMaterial(DoctorDetailPage(doctor: doctorVerified)));
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(DoctorDetailPage),
-        matchesGoldenFile("../../../../golden/reference/doctor_detail_verified.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
-    testWidgets('Doctor Detail Page - Unverified', (tester) async {
-      setupGoldenTest(tester);
-      when(() => mockCubit.state).thenReturn(DoctorVerificationLoaded(
-        doctors: [doctorUnverified],
-        averageRatings: {'2': 3.8},
-      ));
-      when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-
-      await tester.pumpWidget(wrapWithMaterial(DoctorDetailPage(doctor: doctorUnverified)));
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(DoctorDetailPage),
-        matchesGoldenFile("../../../../golden/reference/doctor_detail_unverified.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
-    testWidgets('Rating Dialog', (tester) async {
-      setupGoldenTest(tester);
-
       await tester.pumpWidget(wrapWithMaterial(
-        Scaffold(
-          body: RatingDialog(
-            doctorId: '1',
-            onSubmitted: (_) {},
-          ),
-        ),
+        Scaffold(body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: DoctorVerificationCard(doctor: doctorVerified),
+        )),
       ));
       await tester.pumpAndSettle();
 
       await expectLater(
-        find.byType(RatingDialog),
-        matchesGoldenFile("../../../../golden/reference/rating_dialog.png"),
+        find.byType(DoctorVerificationCard),
+        matchesGoldenFile("../../../../golden/reference/doctor_profile_card.png"),
+      );
+      resetGoldenTest(tester);
+    });
+
+    testWidgets('Doctor Verification Card - Unverified', (tester) async {
+      setupGoldenTest(tester);
+      await tester.pumpWidget(wrapWithMaterial(
+        Scaffold(body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: DoctorVerificationCard(doctor: doctorUnverified),
+        )),
+      ));
+      await tester.pumpAndSettle();
+
+      await expectLater(
+        find.byType(DoctorVerificationCard),
+        matchesGoldenFile("../../../../golden/reference/doctor_verification_form.png"),
       );
       resetGoldenTest(tester);
     });
