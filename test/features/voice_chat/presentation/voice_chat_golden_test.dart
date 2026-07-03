@@ -58,7 +58,7 @@ void main() {
 
       await expectLater(
         find.byType(ChatPage),
-        matchesGoldenFile("../../../../golden/reference/chat_page.png"),
+        matchesGoldenFile("../../../../golden/reference/voice_chat_page_alt.png"),
       );
       resetGoldenTest(tester);
     });
@@ -109,7 +109,7 @@ void main() {
 
       await expectLater(
         find.byType(MessageBubble),
-        matchesGoldenFile("../../../../golden/reference/message_bubble_user.png"),
+        matchesGoldenFile("../../../../golden/reference/voice_message_bubble_user.png"),
       );
       resetGoldenTest(tester);
     });
@@ -128,7 +128,7 @@ void main() {
 
       await expectLater(
         find.byType(MessageBubble),
-        matchesGoldenFile("../../../../golden/reference/message_bubble_ai.png"),
+        matchesGoldenFile("../../../../golden/reference/voice_message_bubble_ai.png"),
       );
       resetGoldenTest(tester);
     });
@@ -149,7 +149,7 @@ void main() {
 
       await expectLater(
         find.byType(VoiceInputButton),
-        matchesGoldenFile("../../../../golden/reference/voice_input_button.png"),
+        matchesGoldenFile("../../../../golden/reference/voice_chat_input_button.png"),
       );
       resetGoldenTest(tester);
     });
