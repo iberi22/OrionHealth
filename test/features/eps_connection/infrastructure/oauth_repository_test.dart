@@ -2,10 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/eps_connection/data/datasources/oauth_local_datasource.dart';
+import 'package:orionhealth_health/features/eps_connection/infrastructure/datasources/oauth_local_datasource.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/repositories/oauth_repository.dart';
-import 'package:orionhealth_health/features/eps_connection/infrastructure/oauth_repository.dart';
+import 'package:orionhealth_health/features/eps_connection/infrastructure/repositories/oauth_repository_impl.dart';
 
 class MockOAuthLocalDataSource extends Mock implements OAuthLocalDataSource {}
 class MockFlutterAppAuth extends Mock implements FlutterAppAuth {}
