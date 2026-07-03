@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_appointment.dart';
 import 'package:orionhealth_health/features/calendar_import/presentation/calendar_import_page.dart';
 import 'package:orionhealth_health/features/calendar_import/application/calendar_import_cubit.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
@@ -26,8 +27,16 @@ void main() {
         status: AppointmentStatus.upcoming,
       ),
     );
+    registerFallbackValue(
+      CalendarAppointment(
+        doctorName: '',
+        specialty: '',
+        dateTime: DateTime.now(),
+      ),
+    );
     registerFallbackValue(FakeRoute());
     registerFallbackValue(<Appointment>[]);
+    registerFallbackValue(<CalendarAppointment>[]);
     registerFallbackValue(AppointmentStatus.upcoming);
   });
 
@@ -87,12 +96,10 @@ void main() {
 
     testWidgets('should list appointments and handle selection and import', (tester) async {
       final appointments = [
-        Appointment(
-          id: 1,
+        CalendarAppointment(
           doctorName: 'Dr. House',
           specialty: 'Diagnóstico',
           dateTime: DateTime.now(),
-          status: AppointmentStatus.upcoming,
         ),
       ];
       when(() => mockCubit.state).thenReturn(CalendarImportLoaded(appointments));
