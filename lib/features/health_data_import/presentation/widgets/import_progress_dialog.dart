@@ -54,19 +54,27 @@ class ImportProgressDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Step ${state.currentStepNum} of ${state.totalSteps}',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.6),
-                      fontSize: 12,
+                  Flexible(
+                    child: Text(
+                      'Step ${state.currentStepNum} of ${state.totalSteps}',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.6),
+                        fontSize: 12,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Text(
-                    '${state.importedCount} imported',
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      '${state.importedCount} imported',
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
                     ),
                   ),
                 ],
