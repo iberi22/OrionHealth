@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/network/domain/entities/network_health.dart';
-import 'package:orionhealth_health/features/network/domain/repositories/network_repository.dart';
-import 'package:orionhealth_health/features/network/domain/usecases/get_network_health.dart';
+import 'package:orionhealth_health/features/network/network_health/domain/entities/network_health.dart';
+import 'package:orionhealth_health/features/network/network_health/domain/repositories/network_repository.dart';
+import 'package:orionhealth_health/features/network/network_health/domain/usecases/get_network_health.dart';
 
 class MockNetworkRepository extends Mock implements NetworkRepository {}
 

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/network/domain/entities/node_stats.dart';
+import 'package:orionhealth_health/features/network/network_health/domain/entities/node_stats.dart';
 
 void main() {
   const stats1 = NodeStats(
