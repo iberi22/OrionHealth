@@ -13,7 +13,7 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
   Future<void> loadAppointments() async {
     emit(AppointmentsLoading());
     try {
-      final appointments = await _repository.getAllAppointments();
+      final appointments = await _repository.getAppointments();
       emit(AppointmentsLoaded(appointments));
     } catch (e) {
       emit(AppointmentsError(e.toString()));

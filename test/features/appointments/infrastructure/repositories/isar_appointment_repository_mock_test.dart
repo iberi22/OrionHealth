@@ -54,7 +54,7 @@ void main() {
       verify(() => mockCollection.delete(1)).called(1);
     });
 
-    // Note: getAllAppointments is harder to test without native library because .where() returns a QueryBuilder
+    // Note: getAppointments is harder to test without native library because .where() returns a QueryBuilder
     // and its extensions are not easily mockable without the underlying native _query getter.
     // For now, we focus on the actions that use put/delete.
   });

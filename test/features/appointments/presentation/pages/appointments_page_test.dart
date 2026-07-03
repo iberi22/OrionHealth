@@ -65,7 +65,7 @@ void main() {
   }
 
   testWidgets('shows loading state initially', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -79,7 +79,7 @@ void main() {
   });
 
   testWidgets('can trigger refresh indicator', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -90,11 +90,11 @@ void main() {
     await tester.pump(const Duration(seconds: 1)); // Wait for animation
     await tester.pumpAndSettle();
 
-    verify(() => mockRepository.getAllAppointments()).called(2);
+    verify(() => mockRepository.getAppointments()).called(2);
   });
 
   testWidgets('email import button navigates to EmailConnectPage', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -111,7 +111,7 @@ void main() {
   });
 
   testWidgets('calendar import button navigates to CalendarImportPage', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -138,7 +138,7 @@ void main() {
       status: AppointmentStatus.upcoming,
     );
 
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => [appointment]);
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -152,7 +152,7 @@ void main() {
   });
 
   testWidgets('shows empty state when no appointments exist', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -163,7 +163,7 @@ void main() {
   });
 
   testWidgets('opens floating action button to add appointment', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -183,7 +183,7 @@ void main() {
   });
 
   testWidgets('shows error snackbar when loading fails', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => throw Exception('Test Error'));
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -195,7 +195,7 @@ void main() {
   });
 
   testWidgets('can create a new appointment', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
     when(() => mockRepository.saveAppointment(any()))
         .thenAnswer((_) async => {});
@@ -217,7 +217,7 @@ void main() {
           .having((a) => a.doctorName, 'doctorName', 'Dr. Watson')
           .having((a) => a.specialty, 'specialty', 'General'),
     ))).called(1);
-    verify(() => mockRepository.getAllAppointments()).called(2);
+    verify(() => mockRepository.getAppointments()).called(2);
   });
 
   testWidgets('can edit an existing appointment', (WidgetTester tester) async {
@@ -233,7 +233,7 @@ void main() {
       status: AppointmentStatus.upcoming,
     );
 
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => [appointment]);
     when(() => mockRepository.saveAppointment(any()))
         .thenAnswer((_) async => {});
@@ -271,7 +271,7 @@ void main() {
       status: AppointmentStatus.upcoming,
     );
 
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => [appointment]);
     when(() => mockRepository.deleteAppointment(any()))
         .thenAnswer((_) async => {});
@@ -289,7 +289,7 @@ void main() {
   });
 
   testWidgets('can navigate calendar months', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -310,7 +310,7 @@ void main() {
   });
 
   testWidgets('can change date and time in _AppointmentForm', (WidgetTester tester) async {
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => <Appointment>[]);
     when(() => mockRepository.saveAppointment(any()))
         .thenAnswer((_) async => {});

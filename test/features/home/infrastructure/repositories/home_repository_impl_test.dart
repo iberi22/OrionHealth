@@ -44,7 +44,7 @@ void main() {
       when(() => mockVitals.getLatestVitals()).thenAnswer((_) async => {
         VitalSignType.heartRate: VitalSign(type: VitalSignType.heartRate, value: 70, dateTime: DateTime.now())
       });
-      when(() => mockAppointments.getAllAppointments()).thenAnswer((_) async => [
+      when(() => mockAppointments.getAppointments()).thenAnswer((_) async => [
         Appointment(
           doctorName: 'Dr. Smith',
           specialty: 'Med',
