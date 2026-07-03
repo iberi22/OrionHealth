@@ -2,8 +2,13 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/calendar_import/infrastructure/models/calendar_event_dto.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_event.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() {
+  setUpAll(() {
+    tz.initializeTimeZones();
+  });
+
   group('CalendarEventDto', () {
     test('fromDeviceCalendar converts device_calendar.Event to DTO', () {
       final now = DateTime.now();
