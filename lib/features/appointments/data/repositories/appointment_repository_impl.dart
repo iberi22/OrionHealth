@@ -11,7 +11,7 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   AppointmentRepositoryImpl(this._localDataSource);
 
   @override
-  Future<List<Appointment>> getAppointments() {
+  Future<List<Appointment>> getAllAppointments() {
     return _localDataSource.getAppointments();
   }
 

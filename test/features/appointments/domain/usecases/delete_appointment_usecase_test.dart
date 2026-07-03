@@ -26,4 +26,15 @@ void main() {
     verify(() => mockRepository.deleteAppointment(tId));
     verifyNoMoreInteractions(mockRepository);
   });
+
+  test('should throw exception when repository fails to delete', () async {
+    // arrange
+    when(() => mockRepository.deleteAppointment(any()))
+        .thenThrow(Exception('Delete failed'));
+    // act
+    final call = useCase(tId);
+    // assert
+    expect(() => call, throwsException);
+    verify(() => mockRepository.deleteAppointment(tId));
+  });
 }

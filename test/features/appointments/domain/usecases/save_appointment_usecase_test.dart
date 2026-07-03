@@ -40,4 +40,15 @@ void main() {
     verify(() => mockRepository.saveAppointment(tAppointment));
     verifyNoMoreInteractions(mockRepository);
   });
+
+  test('should throw exception when repository fails to save', () async {
+    // arrange
+    when(() => mockRepository.saveAppointment(any()))
+        .thenThrow(Exception('Save failed'));
+    // act
+    final call = useCase(tAppointment);
+    // assert
+    expect(() => call, throwsException);
+    verify(() => mockRepository.saveAppointment(tAppointment));
+  });
 }
