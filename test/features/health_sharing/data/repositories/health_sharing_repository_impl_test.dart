@@ -6,15 +6,15 @@ import 'package:orionhealth_health/features/health_sharing/data/datasources/heal
 class MockLocalDataSource extends Mock implements HealthSharingLocalDataSource {}
 
 void main() {
-  late HealthSharingRepository repository;
+  late HealthSharingRepositoryImpl repository;
   late MockLocalDataSource mockLocal;
 
   setUp(() {
     mockLocal = MockLocalDataSource();
-    repository = HealthSharingRepository(mockLocal);
+    repository = HealthSharingRepositoryImpl(mockLocal);
   });
 
-  group('HealthSharingRepository', () {
+  group('HealthSharingRepositoryImpl', () {
     test('getSentPackages proxies to local data source', () async {
       when(() => mockLocal.getSentPackages()).thenAnswer((_) async => []);
       final result = await repository.getSentPackages();
