@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../domain/entities/doctor_profile.dart';
+import 'verification_badge.dart';
 
 class DoctorCard extends StatelessWidget {
   final DoctorProfile doctor;
@@ -36,19 +37,7 @@ class DoctorCard extends StatelessWidget {
               fit: BoxFit.scaleDown,
               child: Row(
                 children: [
-                  Icon(
-                    doctor.verified ? Icons.verified : Icons.warning_amber_rounded,
-                    size: 14,
-                    color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    doctor.verified ? 'Verificado' : 'Sin verificar',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: doctor.verified ? Colors.greenAccent : Colors.orangeAccent,
-                    ),
-                  ),
+                  VerificationBadge(isVerified: doctor.verified),
                   const SizedBox(width: 12),
                   const Icon(Icons.star, size: 14, color: Colors.amber),
                   const SizedBox(width: 4),
