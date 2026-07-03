@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
-import '../../application/health_import_state.dart';
+import '../../domain/entities/health_data_source.dart';
 
 class DataSourceCard extends StatelessWidget {
   final HealthDataSource source;

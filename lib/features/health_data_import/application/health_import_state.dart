@@ -1,35 +1,6 @@
 import 'package:equatable/equatable.dart';
-
-/// Represents a health data source (Google Fit/Health Connect, Apple Health)
-enum HealthDataSource {
-  googleFit,
-  appleHealth,
-  samsungHealth,
-}
-
-extension HealthDataSourceExtension on HealthDataSource {
-  String get displayName {
-    switch (this) {
-      case HealthDataSource.googleFit:
-        return 'Google Fit / Health Connect';
-      case HealthDataSource.appleHealth:
-        return 'Apple Health';
-      case HealthDataSource.samsungHealth:
-        return 'Samsung Health';
-    }
-  }
-
-  String get sourceKey {
-    switch (this) {
-      case HealthDataSource.googleFit:
-        return 'google_fit';
-      case HealthDataSource.appleHealth:
-        return 'apple_health';
-      case HealthDataSource.samsungHealth:
-        return 'samsung_health';
-    }
-  }
-}
+import '../domain/entities/health_data_source.dart';
+import '../domain/entities/health_import_result.dart';
 
 // ============== STATE CLASSES ==============
 
@@ -98,16 +69,12 @@ class HealthImportImporting extends HealthImportState {
 }
 
 class HealthImportSuccess extends HealthImportState {
-  final int importedCount;
-  final HealthDataSource source;
+  final HealthImportResult result;
 
-  const HealthImportSuccess({
-    required this.importedCount,
-    required this.source,
-  });
+  const HealthImportSuccess(this.result);
 
   @override
-  List<Object?> get props => [importedCount, source];
+  List<Object?> get props => [result];
 }
 
 class HealthImportError extends HealthImportState {

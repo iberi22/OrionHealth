@@ -1,0 +1,115 @@
+lib/features/health_data_import/infrastructure/data_source.dart:abstract class SensorHealthDataSource {
+lib/features/health_data_import/infrastructure/data_source.dart:@LazySingleton(as: SensorHealthDataSource)
+lib/features/health_data_import/infrastructure/data_source.dart:class SensorHealthDataSourceImpl implements SensorHealthDataSource {
+lib/features/health_data_import/infrastructure/data_source.dart:abstract class FileHealthDataSource {
+lib/features/health_data_import/infrastructure/data_source.dart:@LazySingleton(as: FileHealthDataSource)
+lib/features/health_data_import/infrastructure/data_source.dart:class FileHealthDataSourceImpl implements FileHealthDataSource {
+lib/features/health_data_import/infrastructure/data_source.dart:  FileHealthDataSourceImpl(this._filePickerService, this._ocrService);
+lib/features/health_data_import/infrastructure/health_data_import_repository_impl.dart:  final SensorHealthDataSource _sensorDataSource;
+lib/features/health_data_import/infrastructure/health_data_import_repository_impl.dart:  final FileHealthDataSource _fileDataSource;
+lib/features/health_data_import/presentation/widgets/data_source_card.dart:  final HealthDataSource source;
+lib/features/health_data_import/presentation/widgets/data_source_card.dart:      case HealthDataSource.googleFit:
+lib/features/health_data_import/presentation/widgets/data_source_card.dart:      case HealthDataSource.appleHealth:
+lib/features/health_data_import/presentation/widgets/data_source_card.dart:      case HealthDataSource.samsungHealth:
+lib/features/health_data_import/presentation/widgets/data_source_card.dart:      case HealthDataSource.googleFit:
+lib/features/health_data_import/presentation/widgets/data_source_card.dart:      case HealthDataSource.appleHealth:
+lib/features/health_data_import/presentation/widgets/data_source_card.dart:      case HealthDataSource.samsungHealth:
+lib/features/health_data_import/presentation/pages/health_import_page.dart:            ...HealthDataSource.values.map((source) {
+lib/features/health_data_import/presentation/pages/health_import_page.dart:    HealthDataSource source,
+lib/features/health_data_import/domain/usecases/health_import_usecases.dart:  Future<List<HealthDataSource>> call() => _service.getAvailableSources();
+lib/features/health_data_import/domain/usecases/health_import_usecases.dart:  Future<bool> call(HealthDataSource source) => _service.requestAuthorization(source);
+lib/features/health_data_import/domain/services/health_data_import_service.dart:  Future<List<HealthDataSource>> getAvailableSources() async {
+lib/features/health_data_import/domain/services/health_data_import_service.dart:    final List<HealthDataSource> available = [];
+lib/features/health_data_import/domain/services/health_data_import_service.dart:        available.add(HealthDataSource.googleFit);
+lib/features/health_data_import/domain/services/health_data_import_service.dart:    if (!available.contains(HealthDataSource.googleFit)) {
+lib/features/health_data_import/domain/services/health_data_import_service.dart:      available.add(HealthDataSource.googleFit);
+lib/features/health_data_import/domain/services/health_data_import_service.dart:  Future<bool> requestAuthorization(HealthDataSource source) async {
+lib/features/health_data_import/domain/services/health_data_import_service.dart:    HealthDataSource source,
+lib/features/health_data_import/domain/services/health_data_import_service.dart:    HealthDataSource source,
+lib/features/health_data_import/application/bloc/health_import_event.dart:  final HealthDataSource source;
+lib/features/health_data_import/application/bloc/health_import_bloc.dart:      final availability = <HealthDataSource, bool>{};
+lib/features/health_data_import/application/bloc/health_import_bloc.dart:      for (final source in HealthDataSource.values) {
+lib/features/health_data_import/application/health_import_state.dart:enum HealthDataSource {
+lib/features/health_data_import/application/health_import_state.dart:extension HealthDataSourceExtension on HealthDataSource {
+lib/features/health_data_import/application/health_import_state.dart:      case HealthDataSource.googleFit:
+lib/features/health_data_import/application/health_import_state.dart:      case HealthDataSource.appleHealth:
+lib/features/health_data_import/application/health_import_state.dart:      case HealthDataSource.samsungHealth:
+lib/features/health_data_import/application/health_import_state.dart:      case HealthDataSource.googleFit:
+lib/features/health_data_import/application/health_import_state.dart:      case HealthDataSource.appleHealth:
+lib/features/health_data_import/application/health_import_state.dart:      case HealthDataSource.samsungHealth:
+lib/features/health_data_import/application/health_import_state.dart:  final List<HealthDataSource> availableSources;
+lib/features/health_data_import/application/health_import_state.dart:  final Map<HealthDataSource, bool> availability;
+lib/features/health_data_import/application/health_import_state.dart:  final HealthDataSource source;
+lib/features/health_data_import/application/health_import_state.dart:  final HealthDataSource source;
+lib/features/health_data_import/application/health_import_state.dart:  final HealthDataSource source;
+lib/features/health_data_import/application/health_import_cubit.dart:      final availability = <HealthDataSource, bool>{};
+lib/features/health_data_import/application/health_import_cubit.dart:      for (final source in HealthDataSource.values) {
+lib/features/health_data_import/application/health_import_cubit.dart:  Future<void> importFromSource(HealthDataSource source) async {
+test/features/health_data_import/infrastructure/health_data_repository_impl_test.dart:class MockSensorHealthDataSource extends Mock implements SensorHealthDataSource {}
+test/features/health_data_import/infrastructure/health_data_repository_impl_test.dart:class MockFileHealthDataSource extends Mock implements FileHealthDataSource {}
+test/features/health_data_import/infrastructure/health_data_repository_impl_test.dart:  late MockSensorHealthDataSource mockSensorDataSource;
+test/features/health_data_import/infrastructure/health_data_repository_impl_test.dart:  late MockFileHealthDataSource mockFileDataSource;
+test/features/health_data_import/infrastructure/health_data_repository_impl_test.dart:    mockSensorDataSource = MockSensorHealthDataSource();
+test/features/health_data_import/infrastructure/health_data_repository_impl_test.dart:    mockFileDataSource = MockFileHealthDataSource();
+test/features/health_data_import/infrastructure/health_data_repository_impl_extra_test.dart:class MockSensorHealthDataSource extends Mock implements SensorHealthDataSource {}
+test/features/health_data_import/infrastructure/health_data_repository_impl_extra_test.dart:class MockFileHealthDataSource extends Mock implements FileHealthDataSource {}
+test/features/health_data_import/infrastructure/health_data_repository_impl_extra_test.dart:  late MockSensorHealthDataSource mockSensorDataSource;
+test/features/health_data_import/infrastructure/health_data_repository_impl_extra_test.dart:  late MockFileHealthDataSource mockFileDataSource;
+test/features/health_data_import/infrastructure/health_data_repository_impl_extra_test.dart:    mockSensorDataSource = MockSensorHealthDataSource();
+test/features/health_data_import/infrastructure/health_data_repository_impl_extra_test.dart:    mockFileDataSource = MockFileHealthDataSource();
+test/features/health_data_import/infrastructure/sensor_health_data_source_impl_test.dart:  late SensorHealthDataSourceImpl dataSource;
+test/features/health_data_import/infrastructure/sensor_health_data_source_impl_test.dart:    dataSource = SensorHealthDataSourceImpl();
+test/features/health_data_import/infrastructure/sensor_health_data_source_impl_test.dart:  group('SensorHealthDataSourceImpl', () {
+test/features/health_data_import/infrastructure/repositories/health_data_import_repository_impl_test.dart:class MockSensorHealthDataSource extends Mock implements SensorHealthDataSource {}
+test/features/health_data_import/infrastructure/repositories/health_data_import_repository_impl_test.dart:class MockFileHealthDataSource extends Mock implements FileHealthDataSource {}
+test/features/health_data_import/infrastructure/repositories/health_data_import_repository_impl_test.dart:  late MockSensorHealthDataSource mockSensor;
+test/features/health_data_import/infrastructure/repositories/health_data_import_repository_impl_test.dart:  late MockFileHealthDataSource mockFile;
+test/features/health_data_import/infrastructure/repositories/health_data_import_repository_impl_test.dart:    mockSensor = MockSensorHealthDataSource();
+test/features/health_data_import/infrastructure/repositories/health_data_import_repository_impl_test.dart:    mockFile = MockFileHealthDataSource();
+test/features/health_data_import/infrastructure/data_source_test.dart:  late FileHealthDataSourceImpl dataSource;
+test/features/health_data_import/infrastructure/data_source_test.dart:    dataSource = FileHealthDataSourceImpl(
+test/features/health_data_import/infrastructure/data_source_test.dart:  group('FileHealthDataSourceImpl', () {
+test/features/health_data_import/presentation/widgets/import_progress_dialog_test.dart:        source: HealthDataSource.googleFit,
+test/features/health_data_import/presentation/widgets/import_progress_dialog_test.dart:        source: HealthDataSource.googleFit,
+test/features/health_data_import/presentation/widgets/data_source_card_test.dart:    required HealthDataSource source,
+test/features/health_data_import/presentation/widgets/data_source_card_test.dart:        source: HealthDataSource.googleFit,
+test/features/health_data_import/presentation/widgets/data_source_card_test.dart:        source: HealthDataSource.appleHealth,
+test/features/health_data_import/presentation/widgets/data_source_card_test.dart:        source: HealthDataSource.googleFit,
+test/features/health_data_import/presentation/widgets/data_source_card_test.dart:        source: HealthDataSource.googleFit,
+test/features/health_data_import/presentation/widgets/data_source_card_test.dart:        source: HealthDataSource.googleFit,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:        HealthDataSource.googleFit: true,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:        HealthDataSource.appleHealth: false,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:        HealthDataSource.samsungHealth: true,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:            HealthDataSource.googleFit,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:            HealthDataSource.samsungHealth,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:        HealthDataSource.googleFit: false,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:        HealthDataSource.appleHealth: false,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:        HealthDataSource.samsungHealth: false,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:        const HealthImportAuthenticating(HealthDataSource.googleFit),
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:          source: HealthDataSource.googleFit,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:                source: HealthDataSource.googleFit,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:                source: HealthDataSource.appleHealth,
+test/features/health_data_import/presentation/pages/health_import_golden_test.dart:        source: HealthDataSource.samsungHealth,
+test/features/health_data_import/domain/services/health_data_import_service_test.dart:      final results = await service.convertToVitalSigns(healthData, HealthDataSource.googleFit);
+test/features/health_data_import/domain/services/health_data_import_service_test.dart:      final results = await service.convertToVitalSigns(healthData, HealthDataSource.googleFit);
+test/features/health_data_import/application/bloc/health_import_event_test.dart:        const ImportFromSource(HealthDataSource.googleFit),
+test/features/health_data_import/application/bloc/health_import_event_test.dart:        const ImportFromSource(HealthDataSource.googleFit),
+test/features/health_data_import/application/bloc/health_import_bloc_test.dart:      when(() => mockGetAvailableSources()).thenAnswer((_) async => [HealthDataSource.googleFit]);
+test/features/health_data_import/application/bloc/health_import_bloc_test.dart:          availableSources: [HealthDataSource.googleFit],
+test/features/health_data_import/application/bloc/health_import_bloc_test.dart:            HealthDataSource.googleFit: true,
+test/features/health_data_import/application/bloc/health_import_bloc_test.dart:            HealthDataSource.appleHealth: false,
+test/features/health_data_import/application/bloc/health_import_bloc_test.dart:            HealthDataSource.samsungHealth: false,
+test/features/health_data_import/application/bloc/health_import_bloc_test.dart:        const HealthImportAuthenticating(HealthDataSource.googleFit),
+test/features/health_data_import/application/bloc/health_import_bloc_test.dart:      bloc.add(const ImportFromSource(HealthDataSource.googleFit));
+test/features/health_data_import/application/health_import_state_test.dart:        availableSources: [HealthDataSource.googleFit],
+test/features/health_data_import/application/health_import_state_test.dart:        availability: {HealthDataSource.googleFit: true},
+test/features/health_data_import/application/health_import_state_test.dart:        const HealthImportAuthenticating(HealthDataSource.googleFit),
+test/features/health_data_import/application/health_import_state_test.dart:        const HealthImportAuthenticating(HealthDataSource.googleFit),
+test/features/health_data_import/application/health_import_state_test.dart:        source: HealthDataSource.googleFit,
+test/features/health_data_import/application/health_import_state_test.dart:        source: HealthDataSource.googleFit,
+test/features/health_data_import/application/health_import_cubit_test.dart:    registerFallbackValue(HealthDataSource.googleFit);
+test/features/health_data_import/application/health_import_cubit_test.dart:          .thenAnswer((_) async => [HealthDataSource.googleFit]);
+test/features/health_data_import/application/health_import_cubit_test.dart:          [HealthDataSource.googleFit],
+test/features/health_data_import/application/health_import_cubit_test.dart:      await cubit.importFromSource(HealthDataSource.googleFit);
+test/features/health_data_import/application/health_import_cubit_test.dart:      await cubit.importFromSource(HealthDataSource.googleFit);
+test/features/health_data_import/application/health_import_cubit_test.dart:      await cubit.importFromSource(HealthDataSource.googleFit);
