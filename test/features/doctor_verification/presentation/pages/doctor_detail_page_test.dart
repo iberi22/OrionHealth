@@ -6,8 +6,12 @@ import 'package:orionhealth_health/features/doctor_verification/application/doct
 import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_detail_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
+import 'package:get_it/get_it.dart';
 
-class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {}
+class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {
+  @override
+  Future<void> close() async {}
+}
 class FakeDoctorProfile extends Fake implements DoctorProfile {}
 
 void main() {
@@ -20,13 +24,15 @@ void main() {
     registerFallbackValue(FakeDoctorProfile());
   });
 
-  setUp(() {
+  setUp(() async {
+    await GetIt.I.reset();
     mockCubit = MockDoctorVerificationCubit();
+    GetIt.I.registerSingleton<DoctorVerificationCubit>(mockCubit);
+
     when(() => mockCubit.stream).thenAnswer(
       (_) => const Stream.empty(),
     );
     when(() => mockCubit.state).thenReturn(const DoctorVerificationInitial());
-    when(() => mockCubit.close()).thenAnswer((_) async {});
     when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
 
     verifiedDoctor = DoctorProfile(
@@ -60,10 +66,7 @@ void main() {
 
   Widget createWidgetUnderTest(DoctorProfile doctor) {
     return MaterialApp(
-      home: BlocProvider<DoctorVerificationCubit>.value(
-        value: mockCubit,
-        child: DoctorDetailPage(doctor: doctor),
-      ),
+      home: DoctorDetailPage(doctor: doctor),
     );
   }
 
@@ -105,11 +108,17 @@ void main() {
     });
 
     testWidgets('calls verifyDoctor when verify button is pressed', (tester) async {
+      tester.view.physicalSize = const Size(1200, 1600);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
+      addTearDown(() => tester.view.resetDevicePixelRatio());
+
       when(() => mockCubit.verifyDoctor(any())).thenAnswer((_) async {});
       
       await tester.pumpWidget(createWidgetUnderTest(unverifiedDoctor));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
+      await tester.ensureVisible(find.text('VERIFICAR LICENCIA AHORA'));
       await tester.tap(find.text('VERIFICAR LICENCIA AHORA'));
       await tester.pump();
 
