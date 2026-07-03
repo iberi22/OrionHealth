@@ -2,7 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import '../domain/entities/about_info.dart';
-import '../domain/repositories/i_about_repository.dart';
+import '../domain/usecases/check_updates.dart';
+import '../domain/usecases/get_app_info.dart';
 
 abstract class AboutState extends Equatable {
   const AboutState();
@@ -39,17 +40,29 @@ class AboutError extends AboutState {
 
 @injectable
 class AboutCubit extends Cubit<AboutState> {
-  final IAboutRepository _repository;
+  final GetAppInfo _getAppInfo;
+  final CheckUpdates _checkUpdates;
 
-  AboutCubit(this._repository) : super(AboutInitial());
+  AboutCubit(
+    this._getAppInfo,
+    this._checkUpdates,
+  ) : super(const AboutInitial());
 
   Future<void> loadAboutInfo() async {
-    emit(AboutLoading());
+    emit(const AboutLoading());
     try {
-      final info = await _repository.getAboutInfo();
+      final info = await _getAppInfo.execute();
       emit(AboutLoaded(info));
     } catch (e) {
       emit(AboutError(e.toString()));
+    }
+  }
+
+  Future<bool> checkForUpdates() async {
+    try {
+      return await _checkUpdates.execute();
+    } catch (_) {
+      return false;
     }
   }
 }

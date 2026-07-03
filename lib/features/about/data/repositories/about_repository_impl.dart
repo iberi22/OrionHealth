@@ -21,4 +21,10 @@ class AboutRepositoryImpl implements IAboutRepository {
       activities: List<String>.from(data['activities'] as List),
     );
   }
+
+  @override
+  Future<bool> checkUpdates() async {
+    // Basic implementation for the data layer repository
+    return false;
+  }
 }

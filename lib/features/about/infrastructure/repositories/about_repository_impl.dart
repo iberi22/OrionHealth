@@ -25,6 +25,14 @@ class AboutRepositoryImpl implements IAboutRepository {
       ],
     );
   }
+
+  @override
+  Future<bool> checkUpdates() async {
+    // Simulating an update check. In a real app, this would compare
+    // the local version with a remote version.
+    await Future.delayed(const Duration(seconds: 1));
+    return false;
+  }
 }
 
 const List<BlogPost> _staticBlogPosts = [

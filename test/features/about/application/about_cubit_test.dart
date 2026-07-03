@@ -2,13 +2,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/about/application/about_cubit.dart';
 import 'package:orionhealth_health/features/about/domain/entities/about_info.dart';
-import 'package:orionhealth_health/features/about/domain/repositories/i_about_repository.dart';
+import 'package:orionhealth_health/features/about/domain/usecases/check_updates.dart';
+import 'package:orionhealth_health/features/about/domain/usecases/get_app_info.dart';
 
-class MockAboutRepository extends Mock implements IAboutRepository {}
+class MockGetAppInfo extends Mock implements GetAppInfo {}
+class MockCheckUpdates extends Mock implements CheckUpdates {}
 
 void main() {
   late AboutCubit cubit;
-  late MockAboutRepository mockRepository;
+  late MockGetAppInfo mockGetAppInfo;
+  late MockCheckUpdates mockCheckUpdates;
 
   const tAboutInfo = AboutInfo(
     blogPosts: [],
@@ -18,8 +21,9 @@ void main() {
   );
 
   setUp(() {
-    mockRepository = MockAboutRepository();
-    cubit = AboutCubit(mockRepository);
+    mockGetAppInfo = MockGetAppInfo();
+    mockCheckUpdates = MockCheckUpdates();
+    cubit = AboutCubit(mockGetAppInfo, mockCheckUpdates);
   });
 
   tearDown(() {
@@ -32,10 +36,10 @@ void main() {
 
   group('loadAboutInfo', () {
     test(
-      'emits [AboutLoading, AboutLoaded] when repository returns data',
+      'emits [AboutLoading, AboutLoaded] when usecase returns data',
       () async {
         when(
-          () => mockRepository.getAboutInfo(),
+          () => mockGetAppInfo.execute(),
         ).thenAnswer((_) async => tAboutInfo);
 
         final expectedStates = [
@@ -50,11 +54,11 @@ void main() {
     );
 
     test(
-      'emits [AboutLoading, AboutError] when repository throws error',
+      'emits [AboutLoading, AboutError] when usecase throws error',
       () async {
         const errorMessage = 'Exception: Error fetching data';
         when(
-          () => mockRepository.getAboutInfo(),
+          () => mockGetAppInfo.execute(),
         ).thenThrow(Exception('Error fetching data'));
 
         final expectedStates = [
@@ -67,6 +71,23 @@ void main() {
         await cubit.loadAboutInfo();
       },
     );
+   group('checkForUpdates', () {
+    test('returns true when usecase returns true', () async {
+      when(() => mockCheckUpdates.execute()).thenAnswer((_) async => true);
+
+      final result = await cubit.checkForUpdates();
+
+      expect(result, true);
+    });
+
+    test('returns false when usecase throws', () async {
+      when(() => mockCheckUpdates.execute()).thenThrow(Exception());
+
+      final result = await cubit.checkForUpdates();
+
+      expect(result, false);
+    });
+  });
   });
 
   group('AboutState Equatable', () {
