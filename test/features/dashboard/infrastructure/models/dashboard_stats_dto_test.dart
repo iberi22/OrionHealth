@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/dashboard/data/models/dashboard_stats_dto.dart';
+import 'package:orionhealth_health/features/dashboard/infrastructure/models/dashboard_stats_dto.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/dashboard_stats.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/activity_item.dart';
 

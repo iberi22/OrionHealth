@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:orionhealth_health/features/dashboard/infrastructure/repositories/dashboard_repository_impl.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/activity_item.dart';
-import 'package:orionhealth_health/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
+import 'package:orionhealth_health/features/dashboard/infrastructure/datasources/dashboard_remote_datasource.dart';
 import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'package:orionhealth_health/features/medications/domain/repositories/medication_repository.dart';
 import 'package:orionhealth_health/features/reports/domain/repositories/report_repository.dart';
