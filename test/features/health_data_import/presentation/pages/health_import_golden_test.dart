@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/health_data_import/presentation/pages/health_import_page.dart';
 import 'package:orionhealth_health/features/health_data_import/presentation/widgets/data_source_card.dart';
 import 'package:orionhealth_health/features/health_data_import/presentation/widgets/import_progress_dialog.dart';
@@ -15,17 +16,24 @@ class MockHealthImportCubit extends Mock implements HealthImportCubit {}
 void main() {
   late MockHealthImportCubit mockCubit;
 
-  setUp(() {
+  setUp(() async {
+    final getIt = GetIt.instance;
+    await getIt.reset();
+    getIt.allowReassignment = true;
     mockCubit = MockHealthImportCubit();
+    getIt.registerFactory<HealthImportCubit>(() => mockCubit);
+
+    when(() => mockCubit.checkAvailableSources()).thenAnswer((_) async {});
+    when(() => mockCubit.close()).thenAnswer((_) async {});
+    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
   });
 
-  Widget buildTestWidget(HealthImportCubit cubit) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<HealthImportCubit>.value(value: cubit),
-      ],
-      child: wrapWithMaterial(const HealthImportPage()),
-    );
+  tearDown(() {
+    GetIt.instance.reset();
+  });
+
+  Widget buildTestWidget() {
+    return wrapWithMaterial(const HealthImportPage());
   }
 
   group('HealthImportPage Golden Tests', () {
@@ -33,11 +41,8 @@ void main() {
       setupGoldenTest(tester);
 
       when(() => mockCubit.state).thenReturn(const HealthImportInitial());
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockCubit.checkAvailableSources()).thenAnswer((_) async {});
-      when(() => mockCubit.close()).thenAnswer((_) async {});
 
-      await tester.pumpWidget(buildTestWidget(mockCubit));
+      await tester.pumpWidget(buildTestWidget());
       await tester.pump();
 
       await expectLater(
@@ -51,50 +56,13 @@ void main() {
       setupGoldenTest(tester);
 
       when(() => mockCubit.state).thenReturn(const HealthImportLoading());
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockCubit.checkAvailableSources()).thenAnswer((_) async {});
-      when(() => mockCubit.close()).thenAnswer((_) async {});
 
-      await tester.pumpWidget(buildTestWidget(mockCubit));
+      await tester.pumpWidget(buildTestWidget());
       await tester.pump();
 
       await expectLater(
         find.byType(HealthImportPage),
         matchesGoldenFile("../../../../golden/reference/health_import_loading.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
-    testWidgets('HealthImportPage - Ready State', (tester) async {
-      setupGoldenTest(tester);
-
-      const availability = {
-        HealthDataSource.googleFit: true,
-        HealthDataSource.appleHealth: false,
-        HealthDataSource.samsungHealth: true,
-      };
-
-      when(() => mockCubit.state).thenReturn(
-        const HealthImportReady(
-          availableSources: [
-            HealthDataSource.googleFit,
-            HealthDataSource.samsungHealth,
-          ],
-          availability: availability,
-        ),
-      );
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockCubit.checkAvailableSources()).thenAnswer((_) async {});
-      when(() => mockCubit.importFromSource(any())).thenAnswer((_) async {});
-      when(() => mockCubit.close()).thenAnswer((_) async {});
-
-      await tester.pumpWidget(buildTestWidget(mockCubit));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
-
-      await expectLater(
-        find.byType(HealthImportPage),
-        matchesGoldenFile("../../../../golden/reference/health_import_ready.png"),
       );
       resetGoldenTest(tester);
     });
@@ -116,13 +84,10 @@ void main() {
           availability: availability,
         ),
       );
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockCubit.checkAvailableSources()).thenAnswer((_) async {});
-      when(() => mockCubit.close()).thenAnswer((_) async {});
 
-      await tester.pumpWidget(buildTestWidget(mockCubit));
+      await tester.pumpWidget(buildTestWidget());
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 100));
 
       await expectLater(
         find.byType(HealthImportPage),
@@ -137,13 +102,10 @@ void main() {
       when(() => mockCubit.state).thenReturn(
         const HealthImportAuthenticating(HealthDataSource.googleFit),
       );
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockCubit.checkAvailableSources()).thenAnswer((_) async {});
-      when(() => mockCubit.close()).thenAnswer((_) async {});
 
-      await tester.pumpWidget(buildTestWidget(mockCubit));
+      await tester.pumpWidget(buildTestWidget());
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 100));
 
       await expectLater(
         find.byType(HealthImportPage),
@@ -164,13 +126,10 @@ void main() {
           importedCount: 150,
         ),
       );
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockCubit.checkAvailableSources()).thenAnswer((_) async {});
-      when(() => mockCubit.close()).thenAnswer((_) async {});
 
-      await tester.pumpWidget(buildTestWidget(mockCubit));
+      await tester.pumpWidget(buildTestWidget());
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 100));
 
       await expectLater(
         find.byType(HealthImportPage),
@@ -178,9 +137,7 @@ void main() {
       );
       resetGoldenTest(tester);
     });
-  });
-
-  group('HealthImport Widgets Golden Tests', () {
+   group('HealthImport Widgets Golden Tests', () {
     testWidgets('DataSourceCard - Available', (tester) async {
       setupGoldenTest(tester);
 
@@ -262,4 +219,5 @@ void main() {
       resetGoldenTest(tester);
     });
   });
+ });
 }

@@ -14,6 +14,10 @@ class MockHealthDataImportService extends Mock implements HealthDataImportServic
 class MockVitalSignRepository extends Mock implements VitalSignRepository {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(HealthDataSource.googleFit);
+  });
+
   late HealthImportBloc bloc;
   late MockGetAvailableSourcesUseCase mockGetAvailableSources;
   late MockRequestHealthAuthUseCase mockRequestHealthAuth;
