@@ -1,4 +1,4 @@
-import '../../../appointments/domain/entities/appointment.dart';
+import '../entities/calendar_appointment.dart';
 
 abstract class CalendarImportState {
   const CalendarImportState();
@@ -13,7 +13,7 @@ class CalendarImportLoading extends CalendarImportState {
 }
 
 class CalendarImportLoaded extends CalendarImportState {
-  final List<Appointment> foundAppointments;
+  final List<CalendarAppointment> foundAppointments;
   const CalendarImportLoaded(this.foundAppointments);
 }
 

@@ -1,5 +1,5 @@
 import '../entities/calendar_event.dart';
-import '../repositories/calendar_repository.dart';
+import '../repositories/calendar_import_repository.dart';
 
 /// Parameters for the sync calendar use case.
 class SyncCalendarParams {
@@ -25,7 +25,7 @@ class SyncCalendarResult {
 ///
 /// This is designed to be called by a background worker or on app resume.
 class SyncCalendarUseCase {
-  final CalendarRepository _calendarRepository;
+  final CalendarImportRepository _calendarRepository;
 
   SyncCalendarUseCase(this._calendarRepository);
 

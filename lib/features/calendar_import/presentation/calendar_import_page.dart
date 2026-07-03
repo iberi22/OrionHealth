@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
-import '../../appointments/domain/entities/appointment.dart';
 import '../application/calendar_import_cubit.dart';
+import '../domain/entities/calendar_appointment.dart';
 
 class CalendarImportPage extends StatelessWidget {
   const CalendarImportPage({super.key});
@@ -71,7 +71,7 @@ class CalendarImportPage extends StatelessWidget {
 }
 
 class _CalendarEventsList extends StatefulWidget {
-  final List<Appointment> appointments;
+  final List<CalendarAppointment> appointments;
 
   const _CalendarEventsList({required this.appointments});
 
@@ -159,7 +159,7 @@ class _CalendarEventsListState extends State<_CalendarEventsList> {
           child: ElevatedButton(
             onPressed: _selected.contains(true)
                 ? () {
-                    final toImport = <Appointment>[];
+                    final toImport = <CalendarAppointment>[];
                     for (int i = 0; i < _selected.length; i++) {
                       if (_selected[i]) {
                         toImport.add(widget.appointments[i]);

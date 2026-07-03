@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_appointment.dart';
 import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_import_state.dart';
-import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 
 void main() {
   group('CalendarImportState', () {
@@ -19,13 +19,11 @@ void main() {
     group('CalendarImportLoaded', () {
       test('creates with appointments', () {
         final now = DateTime.now();
-        final apps = <Appointment>[
-          Appointment(
-            id: 1,
-            doctorName: 'Dr. P�rez',
-            specialty: 'Cardiolog��a',
+        final apps = <CalendarAppointment>[
+          CalendarAppointment(
+            doctorName: 'Dr. Pérez',
+            specialty: 'Cardiología',
             dateTime: now,
-            status: AppointmentStatus.upcoming,
           ),
         ];
         expect(CalendarImportLoaded(apps).foundAppointments, apps);

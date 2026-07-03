@@ -4,14 +4,15 @@ import 'package:medical_standards/medical_standards.dart';
 import '../../../appointments/domain/entities/appointment.dart';
 import '../../../appointments/domain/repositories/appointment_repository.dart';
 import '../../../user_profile/domain/repositories/user_profile_repository.dart';
+import '../entities/calendar_appointment.dart';
 import '../entities/calendar_event.dart';
-import '../repositories/calendar_repository.dart';
+import '../repositories/calendar_import_repository.dart';
 
 /// Parameters for the import calendar use case.
 class ImportCalendarParams {
-  final List<CalendarEvent> events;
+  final List<CalendarAppointment> appointments;
 
-  const ImportCalendarParams({required this.events});
+  const ImportCalendarParams({required this.appointments});
 }
 
 /// Result returned after importing calendar events.
@@ -32,12 +33,12 @@ class ImportCalendarResult {
 /// Orchestrates:
 /// 1. Checking / requesting calendar permissions
 /// 2. Fetching medical events from the device calendar
-/// 3. Mapping [CalendarEvent]s to [Appointment]s
+/// 3. Mapping [CalendarAppointment]s to [Appointment]s
 /// 4. Saving each appointment via [AppointmentRepository]
 /// 5. Optionally syncing to FHIR if the user is connected
 @injectable
 class ImportCalendarUseCase {
-  final CalendarRepository _calendarRepository;
+  final CalendarImportRepository _calendarRepository;
   final AppointmentRepository _appointmentRepository;
   final UserProfileRepository _userProfileRepository;
 
@@ -56,12 +57,12 @@ class ImportCalendarUseCase {
   }
 
   /// Scans the device calendar for medical events.
-  /// Returns a list of raw [CalendarEvent]s.
-  Future<List<CalendarEvent>> scanForMedicalEvents() async {
-    return await _calendarRepository.fetchMedicalEvents();
+  /// Returns a list of [CalendarAppointment]s.
+  Future<List<CalendarAppointment>> scanForMedicalEvents() async {
+    return await _calendarRepository.fetchMedicalAppointments();
   }
 
-  /// Imports the given [CalendarEvent]s by converting them to [Appointment]s
+  /// Imports the given [CalendarAppointment]s by converting them to [Appointment]s
   /// and persisting them. Returns a result with the import count.
   Future<ImportCalendarResult> execute(ImportCalendarParams params) async {
     final profile = await _userProfileRepository.getUserProfile();
@@ -70,8 +71,8 @@ class ImportCalendarUseCase {
     final List<Appointment> appointments = [];
     int syncedToFhirCount = 0;
 
-    for (final event in params.events) {
-      final appointment = _mapToAppointment(event);
+    for (final calendarApp in params.appointments) {
+      final appointment = _mapToAppointment(calendarApp);
       await _appointmentRepository.saveAppointment(appointment);
       appointments.add(appointment);
 
@@ -88,55 +89,16 @@ class ImportCalendarUseCase {
     );
   }
 
-  /// Maps a [CalendarEvent] domain entity to the [Appointment] entity.
-  Appointment _mapToAppointment(CalendarEvent event) {
+  /// Maps a [CalendarAppointment] domain entity to the [Appointment] entity.
+  Appointment _mapToAppointment(CalendarAppointment calendarApp) {
     return Appointment(
-      doctorName: _extractDoctorName(event.title),
-      specialty: _extractSpecialty(event.title),
-      dateTime: event.startDateTime,
-      notes: event.description,
-      source: _sourceToImportTag(event.source),
+      doctorName: calendarApp.doctorName,
+      specialty: calendarApp.specialty,
+      dateTime: calendarApp.dateTime,
+      notes: calendarApp.notes,
+      source: _sourceToImportTag(calendarApp.source),
       status: AppointmentStatus.upcoming,
     );
-  }
-
-  String _extractDoctorName(String title) {
-    if (title.contains('Dr.') || title.contains('Dra.')) {
-      final parts = title.split(' ');
-      final drIndex =
-          parts.indexWhere((p) => p.contains('Dr.') || p.contains('Dra.'));
-      if (drIndex != -1 && drIndex + 1 < parts.length) {
-        return parts.sublist(drIndex).join(' ');
-      }
-    }
-    return 'Médico';
-  }
-
-  String _extractSpecialty(String title) {
-    const keywords = [
-      'cita',
-      'médico',
-      'consulta',
-      'EPS',
-      'Sura',
-      'Comfama',
-      'Sanitas',
-      'doctor',
-      'especialista',
-      'control',
-      'examen',
-      'procedimiento',
-      'odontología',
-      'terapia',
-      'laboratorio',
-      'vacuna',
-    ];
-    for (final keyword in keywords) {
-      if (title.toLowerCase().contains(keyword.toLowerCase())) {
-        return keyword;
-      }
-    }
-    return 'Consulta General';
   }
 
   String _sourceToImportTag(CalendarEventSource source) {
