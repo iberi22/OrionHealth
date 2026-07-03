@@ -35,4 +35,26 @@ void main() {
     verify(() => mockRepository.getAllAppointments());
     verifyNoMoreInteractions(mockRepository);
   });
+
+  test('should return empty list when repository returns empty', () async {
+    // arrange
+    when(() => mockRepository.getAllAppointments())
+        .thenAnswer((_) async => []);
+    // act
+    final result = await useCase();
+    // assert
+    expect(result, []);
+    verify(() => mockRepository.getAllAppointments());
+  });
+
+  test('should throw exception when repository fails', () async {
+    // arrange
+    when(() => mockRepository.getAllAppointments())
+        .thenThrow(Exception('DB Error'));
+    // act
+    final call = useCase();
+    // assert
+    expect(() => call, throwsException);
+    verify(() => mockRepository.getAllAppointments());
+  });
 }
