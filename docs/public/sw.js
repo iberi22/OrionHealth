@@ -1,21 +1,35 @@
 // OrionHealth PWA Service Worker - Offline Cache Strategy
 // Cache-first for medical standards data, network-first for docs
 
-const CACHE_NAME = 'orionhealth-v1';
+const CACHE_NAME = 'orionhealth-v1.1.0';
 const STATIC_ASSETS = [
   '/OrionHealth/',
   '/OrionHealth/dashboard',
   '/OrionHealth/medical-standards',
+  '/OrionHealth/medical-standards/guidelines',
+  '/OrionHealth/medical-standards/interactions',
   '/OrionHealth/about',
   '/OrionHealth/privacy',
+  '/OrionHealth/favicon.svg',
+  '/OrionHealth/manifest.json'
 ];
 
-// Install: cache critical pages
+const MEDICAL_DATA = [
+  '/OrionHealth/icd10.json',
+  '/OrionHealth/icd10_expanded.json',
+  '/OrionHealth/loinc.json',
+  '/OrionHealth/rxnorm.json',
+  '/OrionHealth/snomed.json',
+  '/OrionHealth/clinical_guidelines.json',
+  '/OrionHealth/rxnorm_interactions.json'
+];
+
+// Install: cache critical pages and medical data
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS).catch(() => {
-        // Ignore errors for optional pages
+      return cache.addAll([...STATIC_ASSETS, ...MEDICAL_DATA]).catch((err) => {
+        console.error('SW: Cache install error', err);
       });
     })
   );
@@ -36,12 +50,12 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: cache-first for medical data, network-first for everything else
+// Fetch: specialized strategies
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Medical standards data: cache-first (offline accessible)
-  if (url.pathname.includes('/medical-standards/')) {
+  // Medical standards data & assets: cache-first (offline accessible)
+  if (url.pathname.endsWith('.json') || url.pathname.includes('/medical-standards/')) {
     event.respondWith(
       caches.match(event.request).then((cached) => {
         return cached || fetch(event.request).then((response) => {
@@ -50,6 +64,20 @@ self.addEventListener('fetch', (event) => {
             return response;
           });
         });
+      })
+    );
+    return;
+  }
+
+  // Feature documentation: network-first, fallback to cache
+  if (url.pathname.includes('/docs/features/')) {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        const cloned = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, cloned));
+        return response;
+      }).catch(() => {
+        return caches.match(event.request);
       })
     );
     return;

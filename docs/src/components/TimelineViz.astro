@@ -1,24 +1,41 @@
 ---
-// TimelineViz.astro - Development milestones timeline
+// TimelineViz.astro - Interactive development milestones timeline
 import timeline from "../data/timeline.json";
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 function formatDate(d) {
   const [y, m] = d.split("-");
   return `${months[parseInt(m)-1]} ${y}`;
 }
+
+// Separate past vs future (simulated)
+const currentYear = 2026;
+const currentMonth = 6;
+const milestones = timeline.map(m => {
+  const [y, mon] = m.date.split("-").map(Number);
+  const isFuture = y > currentYear || (y === currentYear && mon > currentMonth);
+  return { ...m, isFuture };
+});
 ---
 
-<div class="tl-section">
+<div class="tl-section" id="timeline-viz">
   <div class="tl-header">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-    </svg>
-    <h3>Development Timeline</h3>
+    <div class="flex items-center gap-3">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <h3>Development Roadmap</h3>
+    </div>
+    <div class="tl-filters">
+      <button class="tl-filter active" data-filter="all">All</button>
+      <button class="tl-filter" data-filter="completed">Completed</button>
+      <button class="tl-filter" data-filter="planned">Planned</button>
+    </div>
   </div>
+
   <div class="tl-track">
     <div class="tl-line"></div>
-    {timeline.map((m, i) => (
-      <div class="tl-item" style={`--i: ${i}`}>
+    {milestones.map((m, i) => (
+      <div class={`tl-item ${m.isFuture ? 'is-planned' : 'is-completed'}`} data-status={m.isFuture ? 'planned' : 'completed'} style={`--i: ${i}`}>
         <div class="tl-dot">
           <div class="tl-dot-inner"></div>
         </div>
@@ -32,28 +49,77 @@ function formatDate(d) {
   </div>
 </div>
 
+<script>
+  const filters = document.querySelectorAll('.tl-filter');
+  const items = document.querySelectorAll('.tl-item');
+
+  filters.forEach(filter => {
+    filter.addEventListener('click', () => {
+      const type = filter.getAttribute('data-filter');
+
+      // Update buttons
+      filters.forEach(f => f.classList.remove('active'));
+      filter.classList.add('active');
+
+      // Filter items
+      items.forEach(item => {
+        const status = item.getAttribute('data-status');
+        if (type === 'all' || status === type) {
+          (item as HTMLElement).style.display = 'block';
+        } else {
+          (item as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+
 <style is:global>
   .tl-section { margin: 2.5rem 0; }
-  .tl-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .tl-header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 2rem; }
   .tl-header h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #E5E7EB; }
+
+  .tl-filters { display: flex; gap: 0.5rem; }
+  .tl-filter {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.05);
+    color: #6B7280;
+    transition: all 0.3s ease;
+  }
+  .tl-filter.active { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: #10B981; }
+  .tl-filter:hover:not(.active) { background: rgba(255,255,255,0.05); color: #E5E7EB; }
+
   .tl-track { position: relative; padding-left: 2rem; }
   .tl-line {
     position: absolute; left: 1rem; top: 0; bottom: 0;
     width: 2px;
     background: linear-gradient(to bottom, #10B981, rgba(16,185,129,0.2));
   }
-  .tl-item { position: relative; padding-bottom: 1.5rem; opacity: 0; animation: tlFadeIn 0.5s ease forwards; animation-delay: calc(var(--i) * 0.15s); }
+  .tl-item { position: relative; padding-bottom: 2rem; opacity: 0; animation: tlFadeIn 0.5s ease forwards; animation-delay: calc(var(--i) * 0.1s); }
   .tl-item:last-child { padding-bottom: 0; }
+
   .tl-dot {
     position: absolute; left: -1.5rem; top: 0.25rem;
     width: 1rem; height: 1rem; border-radius: 50%;
     background: rgba(16,185,129,0.2);
     display: flex; align-items: center; justify-content: center;
+    z-index: 10;
   }
   .tl-dot-inner { width: 6px; height: 6px; border-radius: 50%; background: #10B981; }
+
+  .tl-item.is-planned .tl-dot { background: rgba(255,255,255,0.05); }
+  .tl-item.is-planned .tl-dot-inner { background: #6B7280; }
+  .tl-item.is-planned .tl-title { color: #6B7280; }
+
   .tl-content { padding-left: 0.5rem; }
   .tl-date { font-size: 0.7rem; color: #6B7280; font-family: 'Fira Code', 'Cascadia Code', monospace; margin-bottom: 0.1rem; }
   .tl-title { font-size: 0.95rem; font-weight: 600; color: #E5E7EB; margin-bottom: 0.2rem; }
   .tl-desc { font-size: 0.8rem; color: #9CA3AF; line-height: 1.4; }
+
   @keyframes tlFadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 </style>
