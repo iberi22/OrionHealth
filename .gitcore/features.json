@@ -1,45 +1,46 @@
 ﻿{
-    "harness":  {
-                    "implementation_pct":  84.4,
-                    "report_command":  "\u0026 .gitcore\\orionhealth-harness.ps1 -Report",
-                    "scan_command":  "\u0026 .gitcore\\orionhealth-harness.ps1 -Scan",
-                    "metrics":  {
-                                    "golden_weight":  10,
-                                    "arch_weight":  25,
-                                    "test_weight":  30,
-                                    "e2e_weight":  10,
-                                    "human_weight":  1,
-                                    "ci_weight":  5,
-                                    "doc_weight":  10
-                                },
-                    "details_dir":  ".gitcore\\features.details\\",
-                    "human_review_pct":  1
-                },
-    "gaps":  {
-                 "incomplete_architecture":  [
-                                                 "network"
-                                             ],
-                 "low_coverage_features":  [
-
-                                           ],
-                 "missing_readmes":  19
-             },
-    "metadata":  {
-                     "flutter_analyze":  "0 issues (assumed clean after PR #1014)",
-                     "packages":  {
-                                      "medical_standards":  "0.1.0",
-                                      "health_wallet":  "0.1.0",
-                                      "isar_agent_memory":  "0.5.0-beta"
-                                  },
-                     "total_dart_files":  1238,
-                     "branches":  [
-                                      "main: 6b6b0f7",
-                                      "26 PRs: #976 -\u003e #1016"
-                                  ],
-                     "last_scan":  "2026-07-03 22:17:53",
-                     "last_updated":  "2026-07-03"
-                 },
+    "documentation":  {
+                          "translations_arb":  26,
+                          "readme_count":  6,
+                          "architecture":  true,
+                          "readme_features_pct":  24,
+                          "contributing":  true
+                      },
     "version":  "0.9.0",
+    "commands":  {
+                     "approve_human":  "echo \u0027pending: update features.details/\u003cfeature\u003e.json humanApproved=true\u0027",
+                     "details_dir":  ".gitcore\\features.details\\",
+                     "scan":  "\u0026 .gitcore\\orionhealth-harness.ps1 -Scan",
+                     "report":  "\u0026 .gitcore\\orionhealth-harness.ps1 -Report"
+                 },
+    "harness":  {
+                    "human_final_pct":  1,
+                    "loop":  "Agent code -\u003e Harness scan -\u003e E2E validate -\u003e Auto score -\u003e Human final (at 100%)",
+                    "active":  true,
+                    "type":  "goal-driven-implementation",
+                    "human_trigger":  "feature reaches 99% auto -\u003e PENDING_HUMAN_REVIEW",
+                    "max_auto_score":  99
+                },
+    "protocol_version":  "3",
+    "features":  {
+                     "gap_network_health_incomplete":  1,
+                     "complete_layers":  24,
+                     "total":  25
+                 },
+    "name":  "OrionHealth",
+    "human_review":  {
+                         "total_features_pending":  3,
+                         "status":  "waiting_for_auto_completion",
+                         "approved_features":  [
+
+                                               ],
+                         "pending_features":  [
+                                                  "appointments",
+                                                  "health_sharing",
+                                                  "sync"
+                                              ],
+                         "total_features_approved":  0
+                     },
     "bugs":  [
                  {
                      "severity":  "medium",
@@ -91,6 +92,47 @@
                      "feature":  "calendar_import"
                  }
              ],
+    "test_suite":  {
+                       "test_ratio_pct":  45.4,
+                       "integration_tests":  33,
+                       "test_files":  562,
+                       "golden_screenshots":  146
+                   },
+    "gaps":  {
+                 "incomplete_architecture":  [
+                                                 "network"
+                                             ],
+                 "low_coverage_features":  [
+
+                                           ],
+                 "missing_readmes":  19
+             },
+    "metadata":  {
+                     "flutter_analyze":  "0 issues (assumed clean after PR #1014)",
+                     "packages":  {
+                                      "medical_standards":  "0.1.0",
+                                      "health_wallet":  "0.1.0",
+                                      "isar_agent_memory":  "0.5.0-beta"
+                                  },
+                     "total_dart_files":  1238,
+                     "branches":  [
+                                      "main: 347cb89",
+                                      "harness v1 deployed"
+                                  ],
+                     "last_scan":  "2026-07-03 22:47:04",
+                     "last_updated":  "2026-07-03"
+                 },
+    "metrics":  {
+                    "doc_weight":  9.9,
+                    "e2e_weight":  9.9,
+                    "arch_weight":  25,
+                    "global_pct":  82.8,
+                    "test_weight":  29.7,
+                    "golden_weight":  9.9,
+                    "ci_weight":  4.95,
+                    "human_final_weight":  1,
+                    "auto_score":  82.8
+                },
     "ci_cd":  {
                   "ci_tests":  true,
                   "release":  true,
@@ -98,25 +140,5 @@
                   "medical_standards":  true,
                   "workflows":  5,
                   "android_build":  true
-              },
-    "protocol_version":  "3",
-    "name":  "OrionHealth",
-    "documentation":  {
-                          "translations_arb":  26,
-                          "readme_count":  6,
-                          "architecture":  true,
-                          "readme_features_pct":  24,
-                          "contributing":  true
-                      },
-    "test_suite":  {
-                       "test_ratio_pct":  45.4,
-                       "integration_tests":  33,
-                       "test_files":  562,
-                       "golden_screenshots":  146
-                   },
-    "features":  {
-                     "gap_network_health_incomplete":  1,
-                     "complete_layers":  24,
-                     "total":  25
-                 }
+              }
 }
