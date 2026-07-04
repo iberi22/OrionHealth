@@ -27,8 +27,24 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/OrionHealth/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ],
-  "splash_pages": null,
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Medical Standards",
+      "url": "/OrionHealth/medical-standards",
+      "icons": [{ "src": "/OrionHealth/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Dashboard",
+      "url": "/OrionHealth/dashboard",
+      "icons": [{ "src": "/OrionHealth/favicon.svg", "sizes": "any" }]
+    }
+  ]
 }

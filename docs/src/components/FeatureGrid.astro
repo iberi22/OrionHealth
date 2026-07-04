@@ -26,15 +26,16 @@ const inProgress = features.filter(f => f.status === "in_progress").length;
       features.map(f => {
         const c = layerColors[f.layer] || layerColors.presentation;
         const cls = f.status === "completed" ? "fg-card" : "fg-card fg-wip";
+        const featureSlug = f.name.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
         return (
-          <div class={cls} style={`border-color: ${c.border}`}>
+          <a href={`/OrionHealth/docs/features/${featureSlug}`} class={cls} style={`border-color: ${c.border}; display: block; text-decoration: none;`}>
             <div class="fg-card-top">
               <span class="fg-layer" style={`background: ${c.bg}; color: ${c.text}`}>{f.layer}</span>
               <span class={`fg-status ${f.status}`}></span>
             </div>
             <div class="fg-name">{f.name}</div>
             <div class="fg-tests">{f.tests} tests</div>
-          </div>
+          </a>
         );
       })
     }
