@@ -42,7 +42,7 @@ class AboutPage extends StatelessWidget {
                         const SizedBox(height: 40),
                         _buildBlogHeader(),
                         const SizedBox(height: 16),
-                        ...info.blogPosts.map((post) => _BlogTile(post: post)),
+                        ...info.blogPosts.map((post) => BlogTile(post: post)),
                         const SizedBox(height: 40),
                       ]),
                     ),
@@ -97,9 +97,9 @@ class AboutPage extends StatelessWidget {
   }
 }
 
-class _BlogTile extends StatelessWidget {
+class BlogTile extends StatelessWidget {
   final BlogPost post;
-  const _BlogTile({required this.post});
+  const BlogTile({required this.post});
 
   @override
   Widget build(BuildContext context) {
