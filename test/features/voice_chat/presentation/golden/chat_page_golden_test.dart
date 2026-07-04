@@ -50,7 +50,7 @@ void main() {
 
       await expectLater(
         find.byType(ChatPage),
-        matchesGoldenFile("../../../../../golden/reference/voice_chat_page_alt.png"),
+        matchesGoldenFile("goldens/chat_page.png"),
       );
       resetGoldenTest(tester);
     });
