@@ -13,6 +13,8 @@ import 'package:orionhealth_health/features/medical_research/presentation/pages/
 import 'package:orionhealth_health/features/dashboard/application/dashboard_cubit.dart';
 import 'package:orionhealth_health/features/dashboard/application/dashboard_state.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/activity_item.dart';
+import 'package:orionhealth_health/features/dashboard/presentation/widgets/quick_action_card.dart';
+import 'package:orionhealth_health/features/dashboard/presentation/widgets/activity_tile.dart';
 
 class HomeDashboardPage extends StatefulWidget {
   const HomeDashboardPage({super.key});
@@ -91,7 +93,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
                         else
                           ...state.activities.map((activity) => Padding(
                                 padding: const EdgeInsets.only(bottom: 12.0),
-                                child: _ActivityTile(
+                                child: ActivityTile(
                                   title: activity.title,
                                   time: _formatTimestamp(activity.timestamp),
                                   icon: _getIconForActivity(activity.type),
@@ -160,7 +162,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
       mainAxisSpacing: 16,
       childAspectRatio: 1.1,
       children: [
-        _QuickActionCard(
+        QuickActionCard(
           title: 'AI Assistant',
           icon: Icons.psychology,
           color: CyberTheme.primary,
@@ -171,7 +173,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
             ),
           ),
         ),
-        _QuickActionCard(
+        QuickActionCard(
           title: 'Salud',
           icon: Icons.favorite,
           color: Colors.redAccent,
@@ -182,7 +184,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
             ),
           ),
         ),
-        _QuickActionCard(
+        QuickActionCard(
           title: 'Estadísticas',
           icon: Icons.bar_chart,
           color: CyberTheme.secondary,
@@ -193,7 +195,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
             ),
           ),
         ),
-        _QuickActionCard(
+        QuickActionCard(
           title: 'Medicamentos',
           icon: Icons.medication,
           color: Colors.orangeAccent,
@@ -204,7 +206,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
             ),
           ),
         ),
-        _QuickActionCard(
+        QuickActionCard(
           title: 'Timeline',
           icon: Icons.timeline,
           color: Colors.tealAccent,
@@ -215,7 +217,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
             ),
           ),
         ),
-        _QuickActionCard(
+        QuickActionCard(
           title: 'Investigación',
           icon: Icons.science,
           color: Colors.purpleAccent,
@@ -248,70 +250,3 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
   }
 }
 
-class _QuickActionCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _QuickActionCard({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: GlassmorphicCard(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ActivityTile extends StatelessWidget {
-  final String title;
-  final String time;
-  final IconData icon;
-
-  const _ActivityTile({
-    required this.title,
-    required this.time,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassmorphicCard(
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: CyberTheme.secondary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: CyberTheme.secondary),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(time, style: TextStyle(color: Colors.white.withValues(alpha: 0.6))),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white54),
-      ),
-    );
-  }
-}
