@@ -3,6 +3,7 @@ import 'package:isar/isar.dart';
 import '../../domain/entities/appointment.dart';
 import '../../domain/repositories/appointment_repository.dart';
 
+@LazySingleton(as: AppointmentRepository)
 class IsarAppointmentRepository implements AppointmentRepository {
   final Isar _isar;
 
