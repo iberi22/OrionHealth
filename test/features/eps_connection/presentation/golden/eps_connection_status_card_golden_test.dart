@@ -45,7 +45,7 @@ void main() {
 
       await expectLater(
         find.byType(EpsConnectionStatusCard),
-        matchesGoldenFile("../../../../golden/reference/eps_connection_status_card.png"),
+        matchesGoldenFile("goldens/eps_connection_status_card.png"),
       );
       resetGoldenTest(tester);
     });

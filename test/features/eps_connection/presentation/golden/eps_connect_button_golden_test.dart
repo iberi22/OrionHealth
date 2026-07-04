@@ -55,7 +55,7 @@ void main() {
 
       await expectLater(
         find.byType(EpsConnectButton),
-        matchesGoldenFile("../../../../golden/reference/eps_connect_button_connected.png"),
+        matchesGoldenFile("goldens/eps_connect_button_connected.png"),
       );
       resetGoldenTest(tester);
     });
@@ -70,7 +70,7 @@ void main() {
 
       await expectLater(
         find.byType(EpsConnectButton),
-        matchesGoldenFile("../../../../golden/reference/eps_connect_button_disconnected.png"),
+        matchesGoldenFile("goldens/eps_connect_button_disconnected.png"),
       );
       resetGoldenTest(tester);
     });
@@ -85,7 +85,7 @@ void main() {
 
       await expectLater(
         find.byType(EpsConnectButton),
-        matchesGoldenFile("../../../../golden/reference/eps_connect_button_loading.png"),
+        matchesGoldenFile("goldens/eps_connect_button_loading.png"),
       );
       resetGoldenTest(tester);
     });
