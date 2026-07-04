@@ -71,7 +71,8 @@ class ReportCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildStatusBadge(),
+                    Flexible(child: _buildStatusBadge()),
+                    const SizedBox(width: 8),
                     const Text(
                       'Ver Informe',
                       style: TextStyle(
