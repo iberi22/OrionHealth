@@ -10,9 +10,10 @@ Gestión de la red de nodos de OrionHealth: gobernanza descentralizada, incentiv
 
 ## Capas
 - **Domain**: Entidades de red, nodos, gobernanza e incentivos.
-- **Infrastructure**: Comunicación P2P, sincronización.
-- ⚠️ **Faltan**: capas application y presentation para network_health.
+- **Application**: Lógica de negocio y gestión de estado (Cubits).
+- **Infrastructure**: Comunicación P2P, sincronización e implementación de repositorios.
+- **Presentation**: Páginas y widgets para gobernanza, incentivos y salud de red.
 
 ## Estado
-- **Tests**: 32 unit tests.
-- **Arquitectura**: Parcial (3/4 capas) — falta application/presentation para network_health.
+- **Tests**: unit tests y golden tests implementados.
+- **Arquitectura**: Completa (4/4 capas).

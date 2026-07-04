@@ -9,32 +9,32 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:device_calendar/device_calendar.dart' as _i18;
-import 'package:dio/dio.dart' as _i31;
-import 'package:flutter/services.dart' as _i89;
-import 'package:flutter_appauth/flutter_appauth.dart' as _i40;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i42;
+import 'package:dio/dio.dart' as _i29;
+import 'package:flutter/services.dart' as _i87;
+import 'package:flutter_appauth/flutter_appauth.dart' as _i38;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i40;
 import 'package:get_it/get_it.dart' as _i1;
-import 'package:google_generative_ai/google_generative_ai.dart' as _i44;
-import 'package:health_wallet/health_wallet.dart' as _i36;
+import 'package:google_generative_ai/google_generative_ai.dart' as _i42;
+import 'package:health_wallet/health_wallet.dart' as _i33;
 import 'package:http/http.dart' as _i24;
 import 'package:injectable/injectable.dart' as _i2;
-import 'package:isar/isar.dart' as _i62;
-import 'package:isar_agent_memory/isar_agent_memory.dart' as _i34;
+import 'package:isar/isar.dart' as _i58;
+import 'package:isar_agent_memory/isar_agent_memory.dart' as _i32;
 import 'package:just_audio/just_audio.dart' as _i12;
-import 'package:medical_standards/medical_standards.dart' as _i70;
-import 'package:shared_preferences/shared_preferences.dart' as _i53;
+import 'package:medical_standards/medical_standards.dart' as _i66;
+import 'package:shared_preferences/shared_preferences.dart' as _i49;
 
 import '../../features/about/application/about_cubit.dart' as _i131;
 import '../../features/about/domain/repositories/i_about_repository.dart'
-    as _i55;
+    as _i51;
 import '../../features/about/infrastructure/datasources/about_local_datasource.dart'
     as _i4;
 import '../../features/about/infrastructure/datasources/about_remote_datasource.dart'
     as _i132;
 import '../../features/about/infrastructure/repositories/about_repository_impl.dart'
-    as _i56;
-import '../../features/allergies/application/allergies_cubit.dart' as _i200;
-import '../../features/allergies/application/bloc/allergy_bloc.dart' as _i201;
+    as _i52;
+import '../../features/allergies/application/allergies_cubit.dart' as _i203;
+import '../../features/allergies/application/bloc/allergy_bloc.dart' as _i204;
 import '../../features/allergies/data/datasources/allergy_local_datasource.dart'
     as _i133;
 import '../../features/allergies/data/repositories/allergy_repository_impl.dart'
@@ -50,13 +50,13 @@ import '../../features/appointments/domain/repositories/appointment_repository.d
 import '../../features/appointments/domain/services/appointment_service.dart'
     as _i8;
 import '../../features/appointments/domain/usecases/delete_appointment_usecase.dart'
-    as _i28;
+    as _i26;
 import '../../features/appointments/domain/usecases/get_all_appointments_usecase.dart'
-    as _i45;
+    as _i43;
 import '../../features/appointments/domain/usecases/save_appointment_usecase.dart'
-    as _i104;
-import '../../features/auth/application/auth_cubit.dart' as _i203;
-import '../../features/auth/application/bloc/auth_cubit.dart' as _i202;
+    as _i102;
+import '../../features/auth/application/auth_cubit.dart' as _i205;
+import '../../features/auth/application/bloc/auth_cubit.dart' as _i206;
 import '../../features/auth/data/datasources/auth_local_datasource.dart'
     as _i136;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
@@ -66,313 +66,317 @@ import '../../features/auth/domain/repositories/auth_repository.dart' as _i137;
 import '../../features/auth/infrastructure/services/biometric_service.dart'
     as _i14;
 import '../../features/auth/infrastructure/services/encryption_service.dart'
-    as _i35;
+    as _i34;
 import '../../features/calendar_import/application/calendar_import_cubit.dart'
-    as _i206;
+    as _i209;
 import '../../features/calendar_import/domain/repositories/calendar_import_repository.dart'
     as _i19;
 import '../../features/calendar_import/domain/services/calendar_parser_service.dart'
     as _i21;
 import '../../features/calendar_import/domain/usecases/import_calendar_usecase.dart'
-    as _i173;
+    as _i177;
 import '../../features/calendar_import/infrastructure/datasources/calendar_api_datasource.dart'
     as _i17;
 import '../../features/calendar_import/infrastructure/repositories/calendar_import_repository_impl.dart'
     as _i20;
 import '../../features/calendar_import/infrastructure/services/calendar_parser_service_impl.dart'
     as _i22;
-import '../../features/dashboard/application/dashboard_cubit.dart' as _i207;
+import '../../features/dashboard/application/dashboard_cubit.dart' as _i210;
 import '../../features/dashboard/domain/repositories/dashboard_repository.dart'
-    as _i146;
-import '../../features/dashboard/domain/usecases/get_dashboard_stats_usecase.dart'
-    as _i158;
-import '../../features/dashboard/domain/usecases/get_recent_activity_usecase.dart'
-    as _i160;
-import '../../features/dashboard/infrastructure/datasources/dashboard_local_datasource.dart'
-    as _i145;
-import '../../features/dashboard/infrastructure/datasources/dashboard_remote_datasource.dart'
-    as _i27;
-import '../../features/dashboard/infrastructure/repositories/dashboard_repository_impl.dart'
     as _i147;
+import '../../features/dashboard/domain/usecases/get_dashboard_stats_usecase.dart'
+    as _i160;
+import '../../features/dashboard/domain/usecases/get_recent_activity_usecase.dart'
+    as _i164;
+import '../../features/dashboard/infrastructure/datasources/dashboard_local_datasource.dart'
+    as _i146;
+import '../../features/dashboard/infrastructure/datasources/dashboard_remote_datasource.dart'
+    as _i25;
+import '../../features/dashboard/infrastructure/repositories/dashboard_repository_impl.dart'
+    as _i148;
 import '../../features/doctor_verification/application/badge_cubit.dart'
-    as _i205;
+    as _i208;
 import '../../features/doctor_verification/application/doctor_verification_cubit.dart'
-    as _i153;
+    as _i154;
 import '../../features/doctor_verification/application/second_opinion_cubit.dart'
-    as _i188;
+    as _i193;
 import '../../features/doctor_verification/application/vouch_cubit.dart'
-    as _i199;
+    as _i202;
 import '../../features/doctor_verification/domain/repositories/doctor_profile_repository.dart'
-    as _i151;
+    as _i152;
 import '../../features/doctor_verification/domain/repositories/rating_repository.dart'
-    as _i98;
+    as _i96;
 import '../../features/doctor_verification/domain/repositories/second_opinion_repository.dart'
-    as _i105;
+    as _i103;
 import '../../features/doctor_verification/domain/repositories/vouch_repository.dart'
     as _i128;
 import '../../features/doctor_verification/domain/services/badge_calculator.dart'
-    as _i204;
+    as _i207;
 import '../../features/doctor_verification/domain/services/license_verifier.dart'
-    as _i64;
+    as _i60;
 import '../../features/doctor_verification/infrastructure/datasources/license_registry_local.dart'
-    as _i63;
+    as _i59;
 import '../../features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository.dart'
-    as _i152;
+    as _i153;
 import '../../features/doctor_verification/infrastructure/repositories/isar_rating_repository.dart'
-    as _i99;
+    as _i97;
 import '../../features/doctor_verification/infrastructure/repositories/isar_second_opinion_repository.dart'
-    as _i106;
+    as _i104;
 import '../../features/doctor_verification/infrastructure/repositories/isar_vouch_repository.dart'
     as _i129;
 import '../../features/email-citas/application/bloc/email_citas_bloc.dart'
-    as _i154;
-import '../../features/email-citas/application/email_citas_cubit.dart' as _i155;
+    as _i155;
+import '../../features/email-citas/application/email_citas_cubit.dart' as _i156;
 import '../../features/email-citas/domain/repositories/email_repository.dart'
-    as _i32;
+    as _i30;
 import '../../features/email-citas/domain/usecases/email_citas_usecases.dart'
-    as _i114;
+    as _i112;
 import '../../features/email-citas/infrastructure/repositories/email_repository_impl.dart'
-    as _i33;
+    as _i31;
 import '../../features/eps_connection/application/bloc/eps_connection_bloc.dart'
-    as _i209;
+    as _i212;
 import '../../features/eps_connection/application/bloc/eps_connection_cubit.dart'
-    as _i210;
-import '../../features/eps_connection/domain/repositories/oauth_repository.dart'
-    as _i94;
-import '../../features/eps_connection/domain/usecases/connect_provider_usecase.dart'
-    as _i144;
-import '../../features/eps_connection/domain/usecases/disconnect_provider_usecase.dart'
-    as _i148;
-import '../../features/eps_connection/domain/usecases/get_connections_usecase.dart'
-    as _i157;
-import '../../features/eps_connection/infrastructure/datasources/oauth_local_datasource.dart'
-    as _i93;
-import '../../features/eps_connection/infrastructure/repositories/oauth_repository_impl.dart'
-    as _i95;
-import '../../features/health_data_import/application/bloc/health_import_bloc.dart'
-    as _i167;
-import '../../features/health_data_import/application/health_import_cubit.dart'
-    as _i168;
-import '../../features/health_data_import/domain/repositories/health_data_import_repository.dart'
-    as _i165;
-import '../../features/health_data_import/domain/services/health_data_import_service.dart'
-    as _i48;
-import '../../features/health_data_import/domain/usecases/health_import_usecases.dart'
-    as _i103;
-import '../../features/health_data_import/infrastructure/data_source.dart'
-    as _i107;
-import '../../features/health_data_import/infrastructure/health_data_import_repository_impl.dart'
-    as _i166;
-import '../../features/health_record/application/bloc/health_record_cubit.dart'
     as _i213;
-import '../../features/health_record/domain/repositories/health_record_repository.dart'
+import '../../features/eps_connection/domain/repositories/oauth_repository.dart'
+    as _i92;
+import '../../features/eps_connection/domain/usecases/connect_provider_usecase.dart'
+    as _i145;
+import '../../features/eps_connection/domain/usecases/disconnect_provider_usecase.dart'
+    as _i149;
+import '../../features/eps_connection/domain/usecases/get_connections_usecase.dart'
+    as _i159;
+import '../../features/eps_connection/infrastructure/datasources/oauth_local_datasource.dart'
+    as _i91;
+import '../../features/eps_connection/infrastructure/repositories/oauth_repository_impl.dart'
+    as _i93;
+import '../../features/health_data_import/application/bloc/health_import_bloc.dart'
+    as _i171;
+import '../../features/health_data_import/application/health_import_cubit.dart'
+    as _i172;
+import '../../features/health_data_import/domain/repositories/health_data_import_repository.dart'
     as _i169;
-import '../../features/health_record/infrastructure/repositories/health_record_repository_impl.dart'
+import '../../features/health_data_import/domain/services/health_data_import_service.dart'
+    as _i44;
+import '../../features/health_data_import/domain/usecases/health_import_usecases.dart'
+    as _i101;
+import '../../features/health_data_import/infrastructure/data_source.dart'
+    as _i105;
+import '../../features/health_data_import/infrastructure/health_data_import_repository_impl.dart'
     as _i170;
+import '../../features/health_record/application/bloc/health_record_cubit.dart'
+    as _i215;
+import '../../features/health_record/domain/repositories/health_record_repository.dart'
+    as _i173;
+import '../../features/health_record/infrastructure/repositories/health_record_repository_impl.dart'
+    as _i174;
 import '../../features/health_record/infrastructure/services/file_picker_service.dart'
-    as _i38;
+    as _i36;
 import '../../features/health_record/infrastructure/services/image_picker_service.dart'
-    as _i57;
+    as _i53;
 import '../../features/health_record/infrastructure/services/ocr_service.dart'
-    as _i96;
-import '../../features/health_sharing/application/sharing_cubit.dart' as _i222;
+    as _i94;
+import '../../features/health_sharing/application/sharing_cubit.dart' as _i224;
 import '../../features/health_sharing/domain/repositories/sharing_repository.dart'
-    as _i111;
+    as _i109;
 import '../../features/health_sharing/domain/usecases/cancel_sharing_usecase.dart'
     as _i141;
 import '../../features/health_sharing/domain/usecases/start_listening_usecase.dart'
-    as _i191;
+    as _i196;
 import '../../features/health_sharing/domain/usecases/start_sharing_usecase.dart'
-    as _i192;
+    as _i197;
 import '../../features/health_sharing/infrastructure/ble_sharing_service.dart'
     as _i140;
 import '../../features/health_sharing/infrastructure/ble_wrapper.dart' as _i15;
 import '../../features/health_sharing/infrastructure/datasources/health_sharing_local_datasource.dart'
-    as _i49;
+    as _i45;
 import '../../features/health_sharing/infrastructure/datasources/health_sharing_remote_datasource.dart'
-    as _i50;
-import '../../features/health_sharing/infrastructure/nfc_handler.dart' as _i88;
+    as _i46;
+import '../../features/health_sharing/infrastructure/nfc_handler.dart' as _i86;
 import '../../features/health_sharing/infrastructure/nfc_sharing_service.dart'
-    as _i90;
+    as _i88;
 import '../../features/health_sharing/infrastructure/repositories/health_sharing_repository_impl.dart'
-    as _i112;
+    as _i110;
 import '../../features/health_sharing/infrastructure/wifi_direct_service.dart'
     as _i130;
-import '../../features/home/application/home_cubit.dart' as _i214;
-import '../../features/home/domain/repositories/home_repository.dart' as _i171;
+import '../../features/home/application/home_cubit.dart' as _i216;
+import '../../features/home/domain/repositories/home_repository.dart' as _i175;
 import '../../features/home/domain/usecases/get_health_summary_usecase.dart'
-    as _i212;
+    as _i214;
 import '../../features/home/infrastructure/datasources/health_summary_datasource.dart'
-    as _i51;
+    as _i47;
 import '../../features/home/infrastructure/datasources/home_local_datasource.dart'
-    as _i52;
+    as _i48;
 import '../../features/home/infrastructure/datasources/home_remote_datasource.dart'
-    as _i54;
+    as _i50;
 import '../../features/home/infrastructure/repositories/home_repository_impl.dart'
-    as _i172;
+    as _i176;
 import '../../features/local_agent/application/use_cases/smart_search_use_case.dart'
-    as _i190;
+    as _i195;
 import '../../features/local_agent/data/datasources/chat_message_local_datasource.dart'
     as _i142;
 import '../../features/local_agent/data/datasources/local_model_local_datasource.dart'
-    as _i69;
+    as _i65;
 import '../../features/local_agent/domain/repositories/medical_knowledge_repository.dart'
-    as _i71;
-import '../../features/local_agent/domain/services/llm_adapter.dart' as _i65;
+    as _i67;
+import '../../features/local_agent/domain/services/llm_adapter.dart' as _i61;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i121;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
-    as _i67;
+    as _i62;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
-    as _i41;
+    as _i39;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i174;
+    as _i179;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
-    as _i43;
+    as _i41;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i175;
-import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
-    as _i66;
-import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
     as _i178;
-import '../../features/local_agent/infrastructure/llm_service.dart' as _i177;
+import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
+    as _i63;
+import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
+    as _i182;
+import '../../features/local_agent/infrastructure/llm_service.dart' as _i181;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
-    as _i215;
+    as _i217;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i73;
+    as _i69;
 import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
-    as _i72;
+    as _i68;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i122;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
-    as _i176;
+    as _i180;
 import '../../features/local_agent/infrastructure/services/local_llm_service.dart'
-    as _i68;
+    as _i64;
 import '../../features/local_agent/infrastructure/services/medical_indexing_service.dart'
-    as _i216;
+    as _i218;
 import '../../features/local_agent/infrastructure/services/model_download_service.dart'
-    as _i87;
+    as _i83;
 import '../../features/local_agent/infrastructure/services/patient_context_indexer.dart'
-    as _i185;
+    as _i190;
 import '../../features/medical_research/application/medical_research_cubit.dart'
-    as _i224;
+    as _i226;
 import '../../features/medical_research/domain/repositories/medical_research_repository.dart'
-    as _i217;
+    as _i219;
 import '../../features/medical_research/domain/services/medical_scraper_service.dart'
-    as _i74;
+    as _i70;
 import '../../features/medical_research/domain/services/medical_standards_service.dart'
-    as _i76;
+    as _i72;
 import '../../features/medical_research/domain/services/medical_web_search_service.dart'
-    as _i78;
+    as _i74;
 import '../../features/medical_research/domain/usecases/get_research_history.dart'
-    as _i223;
+    as _i225;
 import '../../features/medical_research/domain/usecases/search_medical_research.dart'
-    as _i221;
+    as _i223;
 import '../../features/medical_research/infrastructure/bot_bypass_handler.dart'
     as _i16;
 import '../../features/medical_research/infrastructure/medical_research_service.dart'
-    as _i180;
+    as _i184;
 import '../../features/medical_research/infrastructure/medical_scraper_service_impl.dart'
-    as _i75;
+    as _i71;
 import '../../features/medical_research/infrastructure/medical_standards_service_impl.dart'
-    as _i77;
+    as _i73;
 import '../../features/medical_research/infrastructure/medical_web_search_service_impl.dart'
-    as _i79;
+    as _i75;
 import '../../features/medical_research/infrastructure/repositories/medical_research_repository_impl.dart'
-    as _i218;
+    as _i220;
 import '../../features/medications/application/bloc/medication_bloc.dart'
-    as _i181;
-import '../../features/medications/application/medications_cubit.dart' as _i82;
+    as _i185;
+import '../../features/medications/application/medications_cubit.dart' as _i78;
 import '../../features/medications/domain/repositories/medication_repository.dart'
-    as _i80;
+    as _i76;
 import '../../features/medications/infrastructure/repositories/isar_medication_repository.dart'
-    as _i81;
-import '../../features/meditation/application/meditation_cubit.dart' as _i182;
+    as _i77;
+import '../../features/meditation/application/meditation_cubit.dart' as _i186;
 import '../../features/meditation/domain/repositories/meditation_repository.dart'
-    as _i84;
+    as _i80;
 import '../../features/meditation/domain/usecases/complete_session_usecase.dart'
     as _i143;
 import '../../features/meditation/domain/usecases/get_progress_usecase.dart'
-    as _i159;
-import '../../features/meditation/domain/usecases/get_scripts_usecase.dart'
-    as _i161;
-import '../../features/meditation/domain/usecases/recommend_script_usecase.dart'
-    as _i100;
-import '../../features/meditation/domain/usecases/start_session_usecase.dart'
-    as _i113;
-import '../../features/meditation/infrastructure/datasources/meditation_local_datasource.dart'
-    as _i83;
-import '../../features/meditation/infrastructure/repositories/meditation_repository_impl.dart'
-    as _i85;
-import '../../features/network/governance/domain/repositories/governance_repository.dart'
     as _i163;
+import '../../features/meditation/domain/usecases/get_scripts_usecase.dart'
+    as _i165;
+import '../../features/meditation/domain/usecases/recommend_script_usecase.dart'
+    as _i98;
+import '../../features/meditation/domain/usecases/start_session_usecase.dart'
+    as _i111;
+import '../../features/meditation/infrastructure/datasources/meditation_local_datasource.dart'
+    as _i79;
+import '../../features/meditation/infrastructure/repositories/meditation_repository_impl.dart'
+    as _i81;
+import '../../features/network/governance/domain/repositories/governance_repository.dart'
+    as _i167;
 import '../../features/network/governance/infrastructure/datasources/governance_ipfs_datasource.dart'
-    as _i162;
+    as _i166;
 import '../../features/network/governance/infrastructure/repositories/governance_repository_impl.dart'
-    as _i164;
+    as _i168;
 import '../../features/network/incentives/domain/repositories/incentive_repository.dart'
-    as _i59;
+    as _i55;
 import '../../features/network/incentives/infrastructure/datasources/incentive_datasource.dart'
-    as _i58;
+    as _i54;
 import '../../features/network/incentives/infrastructure/repositories/incentive_repository_impl.dart'
-    as _i60;
-import '../../features/network/network_health/domain/repositories/network_repository.dart'
-    as _i26;
-import '../../features/network/network_health/domain/usecases/connect_node.dart'
-    as _i25;
-import '../../features/network/network_health/domain/usecases/get_network_health.dart'
-    as _i46;
-import '../../features/network/network_health/domain/usecases/get_node_stats.dart'
-    as _i47;
-import '../../features/onboarding/application/onboarding_cubit.dart' as _i219;
-import '../../features/onboarding/application/sync_cubit.dart' as _i193;
-import '../../features/onboarding/domain/repositories/onboarding_repository.dart'
-    as _i183;
-import '../../features/onboarding/infrastructure/repositories/onboarding_repository_impl.dart'
-    as _i184;
-import '../../features/reports/application/bloc/report_bloc.dart' as _i220;
-import '../../features/reports/domain/repositories/report_repository.dart'
-    as _i101;
-import '../../features/reports/domain/services/report_generation_service.dart'
-    as _i186;
-import '../../features/reports/infrastructure/repositories/isar_report_repository.dart'
-    as _i102;
-import '../../features/reports/infrastructure/services/gemma_report_generation_service.dart'
+    as _i56;
+import '../../features/network/network_health/application/network_health_cubit.dart'
     as _i187;
+import '../../features/network/network_health/domain/repositories/network_repository.dart'
+    as _i84;
+import '../../features/network/network_health/domain/usecases/connect_node.dart'
+    as _i144;
+import '../../features/network/network_health/domain/usecases/get_network_health.dart'
+    as _i161;
+import '../../features/network/network_health/domain/usecases/get_node_stats.dart'
+    as _i162;
+import '../../features/network/network_health/infrastructure/repositories/network_repository_impl.dart'
+    as _i85;
+import '../../features/onboarding/application/onboarding_cubit.dart' as _i221;
+import '../../features/onboarding/application/sync_cubit.dart' as _i198;
+import '../../features/onboarding/domain/repositories/onboarding_repository.dart'
+    as _i188;
+import '../../features/onboarding/infrastructure/repositories/onboarding_repository_impl.dart'
+    as _i189;
+import '../../features/reports/application/bloc/report_bloc.dart' as _i222;
+import '../../features/reports/domain/repositories/report_repository.dart'
+    as _i99;
+import '../../features/reports/domain/services/report_generation_service.dart'
+    as _i191;
+import '../../features/reports/infrastructure/repositories/isar_report_repository.dart'
+    as _i100;
+import '../../features/reports/infrastructure/services/gemma_report_generation_service.dart'
+    as _i192;
 import '../../features/reports/infrastructure/services/mock_report_generation_service.dart'
-    as _i86;
-import '../../features/settings/application/llm_settings_cubit.dart' as _i179;
+    as _i82;
+import '../../features/settings/application/llm_settings_cubit.dart' as _i183;
 import '../../features/settings/domain/repositories/settings_repository.dart'
-    as _i109;
+    as _i107;
 import '../../features/settings/domain/services/device_capability_service.dart'
-    as _i30;
+    as _i27;
 import '../../features/settings/infrastructure/datasources/settings_local_datasource.dart'
-    as _i108;
+    as _i106;
 import '../../features/settings/infrastructure/repositories/settings_repository_impl.dart'
-    as _i110;
-import '../../features/sync/application/sync_cubit.dart' as _i211;
-import '../../features/sync/domain/repositories/sync_repository.dart' as _i115;
+    as _i108;
+import '../../features/sync/application/sync_cubit.dart' as _i157;
+import '../../features/sync/domain/repositories/sync_repository.dart' as _i113;
 import '../../features/sync/domain/services/distributed_storage_service.dart'
-    as _i149;
+    as _i150;
 import '../../features/sync/domain/services/node_discovery_service.dart'
-    as _i91;
-import '../../features/sync/domain/services/sync_service.dart' as _i194;
+    as _i89;
+import '../../features/sync/domain/services/sync_service.dart' as _i115;
 import '../../features/sync/domain/usecases/distributed_cache_usecase.dart'
-    as _i208;
+    as _i211;
 import '../../features/sync/infrastructure/datasources/filecoin_datasource.dart'
-    as _i39;
+    as _i37;
 import '../../features/sync/infrastructure/datasources/ipfs_datasource.dart'
-    as _i61;
+    as _i57;
 import '../../features/sync/infrastructure/repositories/sync_repository_impl.dart'
-    as _i116;
-import '../../features/sync/infrastructure/services/fhir_client.dart' as _i37;
-import '../../features/sync/infrastructure/services/ipfs_service.dart' as _i150;
+    as _i114;
+import '../../features/sync/infrastructure/services/fhir_client.dart' as _i35;
+import '../../features/sync/infrastructure/services/ipfs_service.dart' as _i151;
 import '../../features/sync/infrastructure/services/node_discovery_service.dart'
-    as _i92;
+    as _i90;
 import '../../features/sync/infrastructure/services/sync_service_impl.dart'
-    as _i195;
+    as _i116;
 import '../../features/user_profile/application/bloc/user_profile_cubit.dart'
-    as _i196;
+    as _i199;
 import '../../features/user_profile/data/datasources/user_profile_local_datasource.dart'
     as _i117;
 import '../../features/user_profile/domain/repositories/user_profile_repository.dart'
@@ -381,19 +385,19 @@ import '../../features/user_profile/domain/services/user_profile_service.dart'
     as _i120;
 import '../../features/user_profile/infrastructure/repositories/user_profile_repository_impl.dart'
     as _i119;
-import '../../features/vitals/application/bloc/vital_sign_bloc.dart' as _i197;
+import '../../features/vitals/application/bloc/vital_sign_bloc.dart' as _i200;
 import '../../features/vitals/application/vitals_cubit.dart' as _i125;
 import '../../features/vitals/domain/repositories/vital_sign_repository.dart'
     as _i123;
 import '../../features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart'
     as _i124;
-import '../../features/voice_chat/application/voice_chat_cubit.dart' as _i198;
+import '../../features/voice_chat/application/voice_chat_cubit.dart' as _i201;
 import '../../features/voice_chat/domain/repositories/voice_chat_repository.dart'
     as _i126;
 import '../../features/voice_chat/domain/usecases/get_chat_history_usecase.dart'
-    as _i156;
+    as _i158;
 import '../../features/voice_chat/domain/usecases/send_message_usecase.dart'
-    as _i189;
+    as _i194;
 import '../../features/voice_chat/infrastructure/datasources/chat_ai_datasource.dart'
     as _i23;
 import '../../features/voice_chat/infrastructure/repositories/voice_chat_repository_impl.dart'
@@ -402,13 +406,13 @@ import '../services/aicore_service.dart' as _i3;
 import '../services/asr/asr_service.dart' as _i10;
 import '../services/audio/audio_player_service.dart' as _i11;
 import '../services/audio/audio_recorder_service.dart' as _i13;
-import '../services/device_capability_service.dart' as _i29;
-import '../services/privacy_anonymizer.dart' as _i97;
-import 'database_module.dart' as _i228;
-import 'fhir_module.dart' as _i229;
-import 'memory_module.dart' as _i227;
-import 'network_module.dart' as _i226;
-import 'service_module.dart' as _i225;
+import '../services/device_capability_service.dart' as _i28;
+import '../services/privacy_anonymizer.dart' as _i95;
+import 'database_module.dart' as _i230;
+import 'fhir_module.dart' as _i231;
+import 'memory_module.dart' as _i229;
+import 'network_module.dart' as _i228;
+import 'service_module.dart' as _i227;
 
 const String _desktop = 'desktop';
 const String _test = 'test';
@@ -460,525 +464,529 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i3.AgentMemoryService>(),
         ));
     gh.lazySingleton<_i24.Client>(() => serviceModule.httpClient);
-    gh.lazySingleton<_i25.ConnectNode>(
-        () => _i25.ConnectNode(gh<_i26.NetworkRepository>()));
-    gh.lazySingleton<_i27.DashboardRemoteDataSource>(
-        () => _i27.DashboardRemoteDataSourceImpl());
-    gh.factory<_i28.DeleteAppointmentUseCase>(
-        () => _i28.DeleteAppointmentUseCase(gh<_i7.AppointmentRepository>()));
-    gh.lazySingleton<_i29.DeviceCapabilityService>(
-        () => _i29.DeviceCapabilityService());
-    gh.lazySingleton<_i30.DeviceCapabilityService>(
-        () => _i30.DeviceCapabilityService());
-    gh.lazySingleton<_i31.Dio>(() => networkModule.dio);
-    gh.lazySingleton<_i32.EmailRepository>(() => _i33.EmailRepositoryImpl(
+    gh.lazySingleton<_i25.DashboardRemoteDataSource>(
+        () => _i25.DashboardRemoteDataSourceImpl());
+    gh.factory<_i26.DeleteAppointmentUseCase>(
+        () => _i26.DeleteAppointmentUseCase(gh<_i7.AppointmentRepository>()));
+    gh.lazySingleton<_i27.DeviceCapabilityService>(
+        () => _i27.DeviceCapabilityService());
+    gh.lazySingleton<_i28.DeviceCapabilityService>(
+        () => _i28.DeviceCapabilityService());
+    gh.lazySingleton<_i29.Dio>(() => networkModule.dio);
+    gh.lazySingleton<_i30.EmailRepository>(() => _i31.EmailRepositoryImpl(
           gh<_i24.Client>(),
           gh<_i18.DeviceCalendarPlugin>(),
         ));
-    gh.lazySingleton<_i34.EmbeddingsAdapter>(
+    gh.lazySingleton<_i32.EmbeddingsAdapter>(
         () => memoryModule.embeddingsAdapter);
-    gh.lazySingleton<_i35.EncryptionService>(() => _i35.EncryptionService());
-    gh.lazySingleton<_i36.EncryptionService>(
+    gh.lazySingleton<_i33.EncryptionService>(
         () => databaseModule.walletEncryptionService);
-    gh.lazySingleton<_i37.FhirClient>(() => fhirModule.fhirClient);
-    gh.lazySingleton<_i38.FilePickerService>(
-        () => _i38.FilePickerServiceImpl());
-    gh.lazySingleton<_i39.FilecoinDatasource>(() => _i39.FilecoinDatasource());
-    gh.lazySingleton<_i40.FlutterAppAuth>(() => serviceModule.appAuth);
-    gh.lazySingleton<_i41.FlutterGemmaWrapper>(
-        () => _i41.FlutterGemmaWrapper());
-    gh.lazySingleton<_i42.FlutterSecureStorage>(() => serviceModule.storage);
-    gh.lazySingleton<_i43.GeminiModelWrapper>(
-        () => _i43.GeminiModelWrapper(gh<_i44.GenerativeModel>()));
-    gh.factory<_i45.GetAllAppointmentsUseCase>(
-        () => _i45.GetAllAppointmentsUseCase(gh<_i7.AppointmentRepository>()));
-    gh.lazySingleton<_i46.GetNetworkHealth>(
-        () => _i46.GetNetworkHealth(gh<_i26.NetworkRepository>()));
-    gh.lazySingleton<_i47.GetNodeStats>(
-        () => _i47.GetNodeStats(gh<_i26.NetworkRepository>()));
-    gh.lazySingleton<_i48.HealthDataImportService>(
-        () => _i48.HealthDataImportService());
-    gh.lazySingleton<_i49.HealthSharingLocalDataSource>(
-        () => _i49.HealthSharingLocalDataSource());
-    gh.lazySingleton<_i50.HealthSharingRemoteDataSource>(
-        () => _i50.HealthSharingRemoteDataSource());
-    gh.factory<_i51.HealthSummaryDatasource>(
-        () => _i51.HealthSummaryDatasource());
-    gh.factory<_i52.HomeLocalDataSource>(
-        () => _i52.HomeLocalDataSource(gh<_i53.SharedPreferences>()));
-    gh.factory<_i54.HomeRemoteDataSource>(() => _i54.HomeRemoteDataSource());
-    gh.lazySingleton<_i55.IAboutRepository>(
-        () => _i56.AboutRepositoryImpl(gh<_i4.AboutLocalDataSource>()));
-    gh.lazySingleton<_i57.ImagePickerService>(
-        () => _i57.ImagePickerServiceImpl());
-    gh.lazySingleton<_i58.IncentiveDatasource>(
-        () => _i58.IncentiveDatasource());
-    gh.lazySingleton<_i59.IncentiveRepository>(
-        () => _i60.IncentiveRepositoryImpl(gh<_i58.IncentiveDatasource>()));
-    gh.lazySingleton<_i61.IpfsDatasource>(
-        () => _i61.IpfsDatasource(gh<_i31.Dio>()));
-    await gh.factoryAsync<_i62.Isar>(
+    gh.lazySingleton<_i34.EncryptionService>(() => _i34.EncryptionService());
+    gh.lazySingleton<_i35.FhirClient>(() => fhirModule.fhirClient);
+    gh.lazySingleton<_i36.FilePickerService>(
+        () => _i36.FilePickerServiceImpl());
+    gh.lazySingleton<_i37.FilecoinDatasource>(() => _i37.FilecoinDatasource());
+    gh.lazySingleton<_i38.FlutterAppAuth>(() => serviceModule.appAuth);
+    gh.lazySingleton<_i39.FlutterGemmaWrapper>(
+        () => _i39.FlutterGemmaWrapper());
+    gh.lazySingleton<_i40.FlutterSecureStorage>(() => serviceModule.storage);
+    gh.lazySingleton<_i41.GeminiModelWrapper>(
+        () => _i41.GeminiModelWrapper(gh<_i42.GenerativeModel>()));
+    gh.factory<_i43.GetAllAppointmentsUseCase>(
+        () => _i43.GetAllAppointmentsUseCase(gh<_i7.AppointmentRepository>()));
+    gh.lazySingleton<_i44.HealthDataImportService>(
+        () => _i44.HealthDataImportService());
+    gh.lazySingleton<_i45.HealthSharingLocalDataSource>(
+        () => _i45.HealthSharingLocalDataSource());
+    gh.lazySingleton<_i46.HealthSharingRemoteDataSource>(
+        () => _i46.HealthSharingRemoteDataSource());
+    gh.factory<_i47.HealthSummaryDatasource>(
+        () => _i47.HealthSummaryDatasource());
+    gh.factory<_i48.HomeLocalDataSource>(
+        () => _i48.HomeLocalDataSource(gh<_i49.SharedPreferences>()));
+    gh.factory<_i50.HomeRemoteDataSource>(() => _i50.HomeRemoteDataSource());
+    gh.lazySingleton<_i51.IAboutRepository>(
+        () => _i52.AboutRepositoryImpl(gh<_i4.AboutLocalDataSource>()));
+    gh.lazySingleton<_i53.ImagePickerService>(
+        () => _i53.ImagePickerServiceImpl());
+    gh.lazySingleton<_i54.IncentiveDatasource>(
+        () => _i54.IncentiveDatasource());
+    gh.lazySingleton<_i55.IncentiveRepository>(
+        () => _i56.IncentiveRepositoryImpl(gh<_i54.IncentiveDatasource>()));
+    gh.lazySingleton<_i57.IpfsDatasource>(
+        () => _i57.IpfsDatasource(gh<_i29.Dio>()));
+    await gh.factoryAsync<_i58.Isar>(
       () => databaseModule.isar,
       preResolve: true,
     );
-    gh.lazySingletonAsync<_i63.LicenseRegistryLocalDataSource>(() {
-      final i = _i63.LicenseRegistryLocalDataSource(gh<_i62.Isar>());
+    gh.lazySingletonAsync<_i59.LicenseRegistryLocalDataSource>(() {
+      final i = _i59.LicenseRegistryLocalDataSource(gh<_i58.Isar>());
       return i.load().then((_) => i);
     });
-    gh.lazySingletonAsync<_i64.LicenseVerifier>(() async =>
-        _i64.LicenseVerifier(
-            await getAsync<_i63.LicenseRegistryLocalDataSource>()));
-    gh.lazySingleton<_i65.LlmAdapter>(
-      () => _i66.OpenaiCompatibleAdapter(),
-      instanceName: 'openai',
-    );
-    gh.lazySingleton<_i65.LlmAdapter>(
-      () => _i67.FlutterGemmaAdapter(wrapper: gh<_i41.FlutterGemmaWrapper>()),
+    gh.lazySingletonAsync<_i60.LicenseVerifier>(() async =>
+        _i60.LicenseVerifier(
+            await getAsync<_i59.LicenseRegistryLocalDataSource>()));
+    gh.lazySingleton<_i61.LlmAdapter>(
+      () => _i62.FlutterGemmaAdapter(wrapper: gh<_i39.FlutterGemmaWrapper>()),
       instanceName: 'gemma',
     );
-    gh.lazySingleton<_i68.LocalLlmService>(() => _i68.LocalLlmService());
-    gh.lazySingleton<_i69.LocalModelLocalDataSource>(
-        () => _i69.LocalModelLocalDataSource());
-    gh.lazySingleton<_i70.MedicalContextProvider>(
+    gh.lazySingleton<_i61.LlmAdapter>(
+      () => _i63.OpenaiCompatibleAdapter(),
+      instanceName: 'openai',
+    );
+    gh.lazySingleton<_i64.LocalLlmService>(() => _i64.LocalLlmService());
+    gh.lazySingleton<_i65.LocalModelLocalDataSource>(
+        () => _i65.LocalModelLocalDataSource());
+    gh.lazySingleton<_i66.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
-    gh.factory<_i71.MedicalKnowledgeRepository>(
-      () => _i72.JsonMedicalKnowledgeRepository(),
+    gh.factory<_i67.MedicalKnowledgeRepository>(
+      () => _i68.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
     );
-    gh.factory<_i71.MedicalKnowledgeRepository>(
-      () => _i73.AssetMedicalKnowledgeRepository(),
+    gh.factory<_i67.MedicalKnowledgeRepository>(
+      () => _i69.AssetMedicalKnowledgeRepository(),
       registerFor: {_mobile},
     );
-    gh.lazySingleton<_i74.MedicalScraperService>(
-        () => _i75.MedicalScraperServiceImpl(
-              gh<_i31.Dio>(),
+    gh.lazySingleton<_i70.MedicalScraperService>(
+        () => _i71.MedicalScraperServiceImpl(
+              gh<_i29.Dio>(),
               gh<_i16.BotBypassHandler>(),
             ));
-    gh.lazySingleton<_i76.MedicalStandardsService>(() =>
-        _i77.MedicalStandardsServiceImpl(gh<_i70.MedicalContextProvider>()));
-    gh.lazySingleton<_i78.MedicalWebSearchService>(
-        () => _i79.MedicalWebSearchServiceImpl(gh<_i31.Dio>()));
-    gh.lazySingleton<_i80.MedicationRepository>(
-        () => _i81.IsarMedicationRepository(gh<_i62.Isar>()));
-    gh.factory<_i82.MedicationsCubit>(
-        () => _i82.MedicationsCubit(gh<_i80.MedicationRepository>()));
-    gh.lazySingleton<_i83.MeditationLocalDataSource>(
-        () => _i83.MeditationLocalDataSource());
-    gh.lazySingleton<_i84.MeditationRepository>(() =>
-        _i85.MeditationRepositoryImpl(gh<_i83.MeditationLocalDataSource>()));
-    await gh.lazySingletonAsync<_i34.MemoryGraph>(
+    gh.lazySingleton<_i72.MedicalStandardsService>(() =>
+        _i73.MedicalStandardsServiceImpl(gh<_i66.MedicalContextProvider>()));
+    gh.lazySingleton<_i74.MedicalWebSearchService>(
+        () => _i75.MedicalWebSearchServiceImpl(gh<_i29.Dio>()));
+    gh.lazySingleton<_i76.MedicationRepository>(
+        () => _i77.IsarMedicationRepository(gh<_i58.Isar>()));
+    gh.factory<_i78.MedicationsCubit>(
+        () => _i78.MedicationsCubit(gh<_i76.MedicationRepository>()));
+    gh.lazySingleton<_i79.MeditationLocalDataSource>(
+        () => _i79.MeditationLocalDataSource());
+    gh.lazySingleton<_i80.MeditationRepository>(() =>
+        _i81.MeditationRepositoryImpl(gh<_i79.MeditationLocalDataSource>()));
+    await gh.lazySingletonAsync<_i32.MemoryGraph>(
       () => memoryModule.memoryGraph(
-        gh<_i62.Isar>(),
-        gh<_i34.EmbeddingsAdapter>(),
+        gh<_i58.Isar>(),
+        gh<_i32.EmbeddingsAdapter>(),
       ),
       preResolve: true,
     );
-    gh.lazySingleton<_i86.MockReportGenerationService>(
-      () => _i86.MockReportGenerationService(),
+    gh.lazySingleton<_i82.MockReportGenerationService>(
+      () => _i82.MockReportGenerationService(),
       instanceName: 'mock',
     );
-    gh.lazySingleton<_i87.ModelDownloadService>(
-        () => _i87.ModelDownloadService());
-    gh.lazySingleton<_i88.NfcHandler>(
-        () => _i88.NfcHandler(channel: gh<_i89.MethodChannel>()));
-    gh.lazySingleton<_i90.NfcSharingService>(
-        () => _i90.NfcSharingService(gh<_i88.NfcHandler>()));
-    gh.lazySingleton<_i91.NodeDiscoveryService>(
-        () => _i92.NodeDiscoveryService());
-    gh.lazySingleton<_i93.OAuthLocalDataSource>(
-        () => _i93.OAuthLocalDataSource(gh<_i42.FlutterSecureStorage>()));
-    gh.lazySingleton<_i94.OAuthRepository>(() => _i95.OAuthRepositoryImpl(
-          gh<_i93.OAuthLocalDataSource>(),
-          gh<_i31.Dio>(),
-          gh<_i40.FlutterAppAuth>(),
+    gh.lazySingleton<_i83.ModelDownloadService>(
+        () => _i83.ModelDownloadService());
+    gh.lazySingleton<_i84.NetworkRepository>(
+        () => _i85.NetworkRepositoryImpl());
+    gh.lazySingleton<_i86.NfcHandler>(
+        () => _i86.NfcHandler(channel: gh<_i87.MethodChannel>()));
+    gh.lazySingleton<_i88.NfcSharingService>(
+        () => _i88.NfcSharingService(gh<_i86.NfcHandler>()));
+    gh.lazySingleton<_i89.NodeDiscoveryService>(
+        () => _i90.NodeDiscoveryService());
+    gh.lazySingleton<_i91.OAuthLocalDataSource>(
+        () => _i91.OAuthLocalDataSource(gh<_i40.FlutterSecureStorage>()));
+    gh.lazySingleton<_i92.OAuthRepository>(() => _i93.OAuthRepositoryImpl(
+          gh<_i91.OAuthLocalDataSource>(),
+          gh<_i29.Dio>(),
+          gh<_i38.FlutterAppAuth>(),
         ));
-    gh.lazySingleton<_i96.OcrService>(() => _i96.MlKitOcrService());
-    gh.lazySingleton<_i97.PromptScrubber>(
-        () => _i97.PromptScrubber(gh<_i62.Isar>()));
-    gh.lazySingleton<_i98.RatingRepository>(
-        () => _i99.IsarRatingRepository(gh<_i62.Isar>()));
-    gh.lazySingleton<_i100.RecommendScriptUseCase>(
-        () => _i100.RecommendScriptUseCase(gh<_i84.MeditationRepository>()));
-    gh.lazySingleton<_i101.ReportRepository>(
-        () => _i102.IsarReportRepository(gh<_i62.Isar>()));
-    gh.factory<_i103.RequestHealthAuthUseCase>(() =>
-        _i103.RequestHealthAuthUseCase(gh<_i48.HealthDataImportService>()));
-    gh.factory<_i104.SaveAppointmentUseCase>(
-        () => _i104.SaveAppointmentUseCase(gh<_i7.AppointmentRepository>()));
-    gh.lazySingleton<_i105.SecondOpinionRepository>(
-        () => _i106.IsarSecondOpinionRepository(gh<_i62.Isar>()));
-    gh.lazySingleton<_i107.SensorHealthDataSource>(
-        () => _i107.SensorHealthDataSourceImpl());
-    gh.lazySingleton<_i108.SettingsLocalDataSource>(
-        () => _i108.SettingsLocalDataSource(gh<_i62.Isar>()));
-    gh.lazySingleton<_i109.SettingsRepository>(() =>
-        _i110.SettingsRepositoryImpl(gh<_i108.SettingsLocalDataSource>()));
-    gh.lazySingleton<_i111.SharingRepository>(() =>
-        _i112.HealthSharingRepositoryImpl(
-            gh<_i49.HealthSharingLocalDataSource>()));
-    gh.lazySingleton<_i113.StartSessionUseCase>(
-        () => _i113.StartSessionUseCase(gh<_i84.MeditationRepository>()));
-    gh.factory<_i114.SyncEmailAppointmentsUseCase>(
-        () => _i114.SyncEmailAppointmentsUseCase(gh<_i32.EmailRepository>()));
-    gh.lazySingleton<_i115.SyncRepository>(() => _i116.SyncRepositoryImpl(
-          gh<_i37.FhirClient>(),
-          gh<_i62.Isar>(),
-          gh<_i42.FlutterSecureStorage>(),
-          gh<_i91.NodeDiscoveryService>(),
+    gh.lazySingleton<_i94.OcrService>(() => _i94.MlKitOcrService());
+    gh.lazySingleton<_i95.PromptScrubber>(
+        () => _i95.PromptScrubber(gh<_i58.Isar>()));
+    gh.lazySingleton<_i96.RatingRepository>(
+        () => _i97.IsarRatingRepository(gh<_i58.Isar>()));
+    gh.lazySingleton<_i98.RecommendScriptUseCase>(
+        () => _i98.RecommendScriptUseCase(gh<_i80.MeditationRepository>()));
+    gh.lazySingleton<_i99.ReportRepository>(
+        () => _i100.IsarReportRepository(gh<_i58.Isar>()));
+    gh.factory<_i101.RequestHealthAuthUseCase>(() =>
+        _i101.RequestHealthAuthUseCase(gh<_i44.HealthDataImportService>()));
+    gh.factory<_i102.SaveAppointmentUseCase>(
+        () => _i102.SaveAppointmentUseCase(gh<_i7.AppointmentRepository>()));
+    gh.lazySingleton<_i103.SecondOpinionRepository>(
+        () => _i104.IsarSecondOpinionRepository(gh<_i58.Isar>()));
+    gh.lazySingleton<_i105.SensorHealthDataSource>(
+        () => _i105.SensorHealthDataSourceImpl());
+    gh.lazySingleton<_i106.SettingsLocalDataSource>(
+        () => _i106.SettingsLocalDataSource(gh<_i58.Isar>()));
+    gh.lazySingleton<_i107.SettingsRepository>(() =>
+        _i108.SettingsRepositoryImpl(gh<_i106.SettingsLocalDataSource>()));
+    gh.lazySingleton<_i109.SharingRepository>(() =>
+        _i110.HealthSharingRepositoryImpl(
+            gh<_i45.HealthSharingLocalDataSource>()));
+    gh.lazySingleton<_i111.StartSessionUseCase>(
+        () => _i111.StartSessionUseCase(gh<_i80.MeditationRepository>()));
+    gh.factory<_i112.SyncEmailAppointmentsUseCase>(
+        () => _i112.SyncEmailAppointmentsUseCase(gh<_i30.EmailRepository>()));
+    gh.lazySingleton<_i113.SyncRepository>(() => _i114.SyncRepositoryImpl(
+          gh<_i35.FhirClient>(),
+          gh<_i58.Isar>(),
+          gh<_i40.FlutterSecureStorage>(),
+          gh<_i89.NodeDiscoveryService>(),
         ));
-    gh.lazySingleton<_i70.SyncService>(() => networkModule.syncService);
+    gh.lazySingleton<_i66.SyncService>(() => networkModule.syncService);
+    gh.lazySingleton<_i115.SyncService>(() => _i116.SyncServiceImpl(
+          gh<_i113.SyncRepository>(),
+          gh<_i66.SyncService>(),
+        ));
     gh.lazySingleton<_i117.UserProfileLocalDataSource>(
-        () => _i117.UserProfileLocalDataSource(gh<_i62.Isar>()));
+        () => _i117.UserProfileLocalDataSource(gh<_i58.Isar>()));
     gh.lazySingleton<_i118.UserProfileRepository>(
-        () => _i119.UserProfileRepositoryImpl(gh<_i62.Isar>()));
+        () => _i119.UserProfileRepositoryImpl(gh<_i58.Isar>()));
     gh.lazySingleton<_i120.UserProfileService>(
         () => _i120.UserProfileService(gh<_i118.UserProfileRepository>()));
     gh.lazySingleton<_i121.VectorStoreService>(
         () => _i122.IsarVectorStoreService(
-              gh<_i34.MemoryGraph>(),
-              gh<_i71.MedicalKnowledgeRepository>(),
+              gh<_i32.MemoryGraph>(),
+              gh<_i67.MedicalKnowledgeRepository>(),
             ));
     gh.lazySingleton<_i123.VitalSignRepository>(
-        () => _i124.VitalSignRepositoryImpl(gh<_i62.Isar>()));
+        () => _i124.VitalSignRepositoryImpl(gh<_i58.Isar>()));
     gh.factory<_i125.VitalsCubit>(
         () => _i125.VitalsCubit(gh<_i123.VitalSignRepository>()));
     gh.lazySingleton<_i126.VoiceChatRepository>(
         () => _i127.VoiceChatRepositoryImpl(gh<_i23.ChatAiDatasource>()));
     gh.lazySingleton<_i128.VouchRepository>(
-        () => _i129.IsarVouchRepository(gh<_i62.Isar>()));
-    gh.lazySingleton<_i36.WalletService>(() => databaseModule.walletService(
-          gh<_i62.Isar>(),
-          gh<_i36.EncryptionService>(),
+        () => _i129.IsarVouchRepository(gh<_i58.Isar>()));
+    gh.lazySingleton<_i33.WalletService>(() => databaseModule.walletService(
+          gh<_i58.Isar>(),
+          gh<_i33.EncryptionService>(),
         ));
     gh.lazySingleton<_i130.WifiDirectService>(() => _i130.WifiDirectService());
     gh.factory<_i131.AboutCubit>(
-        () => _i131.AboutCubit(gh<_i55.IAboutRepository>()));
+        () => _i131.AboutCubit(gh<_i51.IAboutRepository>()));
     gh.lazySingleton<_i132.AboutRemoteDataSource>(
-        () => _i132.AboutRemoteDataSource(gh<_i31.Dio>()));
+        () => _i132.AboutRemoteDataSource(gh<_i29.Dio>()));
     gh.lazySingleton<_i133.AllergyLocalDataSource>(
-        () => _i133.AllergyLocalDataSource(gh<_i62.Isar>()));
+        () => _i133.AllergyLocalDataSource(gh<_i58.Isar>()));
     gh.lazySingleton<_i134.AllergyRepository>(
         () => _i135.AllergyRepositoryImpl(gh<_i133.AllergyLocalDataSource>()));
     gh.lazySingleton<_i136.AuthLocalDataSource>(
-        () => _i136.AuthLocalDataSource(gh<_i62.Isar>()));
+        () => _i136.AuthLocalDataSource(gh<_i58.Isar>()));
     gh.lazySingleton<_i137.AuthRepository>(
         () => _i138.AuthRepositoryImpl(gh<_i136.AuthLocalDataSource>()));
     gh.lazySingleton<_i139.AuthService>(
-        () => _i139.AuthServiceImpl(gh<_i35.EncryptionService>()));
+        () => _i139.AuthServiceImpl(gh<_i34.EncryptionService>()));
     gh.lazySingleton<_i140.BleSharingService>(
         () => _i140.BleSharingService(gh<_i15.BleWrapper>()));
     gh.lazySingleton<_i141.CancelSharingUseCase>(
         () => _i141.CancelSharingUseCase(
               gh<_i140.BleSharingService>(),
-              gh<_i90.NfcSharingService>(),
+              gh<_i88.NfcSharingService>(),
               gh<_i130.WifiDirectService>(),
             ));
     gh.lazySingleton<_i142.ChatMessageLocalDataSource>(
-        () => _i142.ChatMessageLocalDataSource(gh<_i62.Isar>()));
+        () => _i142.ChatMessageLocalDataSource(gh<_i58.Isar>()));
     gh.lazySingleton<_i143.CompleteSessionUseCase>(
-        () => _i143.CompleteSessionUseCase(gh<_i84.MeditationRepository>()));
-    gh.factory<_i114.ConnectEmailProviderUseCase>(
-        () => _i114.ConnectEmailProviderUseCase(gh<_i32.EmailRepository>()));
-    gh.factory<_i144.ConnectProviderUseCase>(() => _i144.ConnectProviderUseCase(
-          gh<_i94.OAuthRepository>(),
+        () => _i143.CompleteSessionUseCase(gh<_i80.MeditationRepository>()));
+    gh.factory<_i112.ConnectEmailProviderUseCase>(
+        () => _i112.ConnectEmailProviderUseCase(gh<_i30.EmailRepository>()));
+    gh.lazySingleton<_i144.ConnectNode>(
+        () => _i144.ConnectNode(gh<_i84.NetworkRepository>()));
+    gh.factory<_i145.ConnectProviderUseCase>(() => _i145.ConnectProviderUseCase(
+          gh<_i92.OAuthRepository>(),
           gh<_i118.UserProfileRepository>(),
         ));
-    gh.lazySingleton<_i145.DashboardLocalDataSource>(
-        () => _i145.DashboardLocalDataSource(gh<_i62.Isar>()));
-    gh.lazySingleton<_i146.DashboardRepository>(
-        () => _i147.DashboardRepositoryImpl(
-              gh<_i27.DashboardRemoteDataSource>(),
+    gh.lazySingleton<_i146.DashboardLocalDataSource>(
+        () => _i146.DashboardLocalDataSource(gh<_i58.Isar>()));
+    gh.lazySingleton<_i147.DashboardRepository>(
+        () => _i148.DashboardRepositoryImpl(
+              gh<_i25.DashboardRemoteDataSource>(),
               gh<_i123.VitalSignRepository>(),
-              gh<_i80.MedicationRepository>(),
-              gh<_i101.ReportRepository>(),
+              gh<_i76.MedicationRepository>(),
+              gh<_i99.ReportRepository>(),
             ));
-    gh.factory<_i148.DisconnectProviderUseCase>(
-        () => _i148.DisconnectProviderUseCase(
-              gh<_i94.OAuthRepository>(),
+    gh.factory<_i149.DisconnectProviderUseCase>(
+        () => _i149.DisconnectProviderUseCase(
+              gh<_i92.OAuthRepository>(),
               gh<_i118.UserProfileRepository>(),
             ));
-    gh.lazySingleton<_i149.DistributedStorageService>(() => _i150.IpfsService(
-          gh<_i61.IpfsDatasource>(),
-          gh<_i39.FilecoinDatasource>(),
+    gh.lazySingleton<_i150.DistributedStorageService>(() => _i151.IpfsService(
+          gh<_i57.IpfsDatasource>(),
+          gh<_i37.FilecoinDatasource>(),
         ));
-    gh.lazySingleton<_i151.DoctorProfileRepository>(
-        () => _i152.IsarDoctorProfileRepository(gh<_i62.Isar>()));
-    gh.factoryAsync<_i153.DoctorVerificationCubit>(
-        () async => _i153.DoctorVerificationCubit(
-              gh<_i151.DoctorProfileRepository>(),
-              gh<_i98.RatingRepository>(),
-              await getAsync<_i64.LicenseVerifier>(),
+    gh.lazySingleton<_i152.DoctorProfileRepository>(
+        () => _i153.IsarDoctorProfileRepository(gh<_i58.Isar>()));
+    gh.factoryAsync<_i154.DoctorVerificationCubit>(
+        () async => _i154.DoctorVerificationCubit(
+              gh<_i152.DoctorProfileRepository>(),
+              gh<_i96.RatingRepository>(),
+              await getAsync<_i60.LicenseVerifier>(),
             ));
-    gh.factory<_i154.EmailCitasBloc>(() => _i154.EmailCitasBloc(
-          gh<_i114.ConnectEmailProviderUseCase>(),
-          gh<_i114.SyncEmailAppointmentsUseCase>(),
-          gh<_i32.EmailRepository>(),
+    gh.factory<_i155.EmailCitasBloc>(() => _i155.EmailCitasBloc(
+          gh<_i112.ConnectEmailProviderUseCase>(),
+          gh<_i112.SyncEmailAppointmentsUseCase>(),
+          gh<_i30.EmailRepository>(),
           gh<_i7.AppointmentRepository>(),
         ));
-    gh.factory<_i155.EmailCitasCubit>(() => _i155.EmailCitasCubit(
-          gh<_i32.EmailRepository>(),
+    gh.factory<_i156.EmailCitasCubit>(() => _i156.EmailCitasCubit(
+          gh<_i30.EmailRepository>(),
           gh<_i7.AppointmentRepository>(),
         ));
-    gh.lazySingleton<_i107.FileHealthDataSource>(
-        () => _i107.FileHealthDataSourceImpl(
-              gh<_i38.FilePickerService>(),
-              gh<_i96.OcrService>(),
+    gh.factory<_i157.FhirSyncCubit>(() => _i157.FhirSyncCubit(
+          gh<_i115.SyncService>(),
+          gh<_i89.NodeDiscoveryService>(),
+        ));
+    gh.lazySingleton<_i105.FileHealthDataSource>(
+        () => _i105.FileHealthDataSourceImpl(
+              gh<_i36.FilePickerService>(),
+              gh<_i94.OcrService>(),
             ));
-    gh.factory<_i103.GetAvailableSourcesUseCase>(() =>
-        _i103.GetAvailableSourcesUseCase(gh<_i48.HealthDataImportService>()));
-    gh.factory<_i156.GetChatHistoryUseCase>(
-        () => _i156.GetChatHistoryUseCase(gh<_i126.VoiceChatRepository>()));
-    gh.factory<_i157.GetConnectionsUseCase>(
-        () => _i157.GetConnectionsUseCase(gh<_i94.OAuthRepository>()));
-    gh.factory<_i158.GetDashboardStatsUseCase>(
-        () => _i158.GetDashboardStatsUseCase(gh<_i146.DashboardRepository>()));
-    gh.lazySingleton<_i159.GetProgressUseCase>(
-        () => _i159.GetProgressUseCase(gh<_i84.MeditationRepository>()));
-    gh.factory<_i160.GetRecentActivityUseCase>(
-        () => _i160.GetRecentActivityUseCase(gh<_i146.DashboardRepository>()));
-    gh.lazySingleton<_i161.GetScriptsUseCase>(
-        () => _i161.GetScriptsUseCase(gh<_i84.MeditationRepository>()));
-    gh.lazySingleton<_i162.GovernanceIpfsDatasource>(
-        () => _i162.GovernanceIpfsDatasource(gh<_i61.IpfsDatasource>()));
-    gh.lazySingleton<_i163.GovernanceRepository>(() =>
-        _i164.GovernanceRepositoryImpl(gh<_i162.GovernanceIpfsDatasource>()));
-    gh.lazySingleton<_i165.HealthDataImportRepository>(
-        () => _i166.HealthDataImportRepositoryImpl(
-              gh<_i107.SensorHealthDataSource>(),
-              gh<_i107.FileHealthDataSource>(),
+    gh.factory<_i101.GetAvailableSourcesUseCase>(() =>
+        _i101.GetAvailableSourcesUseCase(gh<_i44.HealthDataImportService>()));
+    gh.factory<_i158.GetChatHistoryUseCase>(
+        () => _i158.GetChatHistoryUseCase(gh<_i126.VoiceChatRepository>()));
+    gh.factory<_i159.GetConnectionsUseCase>(
+        () => _i159.GetConnectionsUseCase(gh<_i92.OAuthRepository>()));
+    gh.factory<_i160.GetDashboardStatsUseCase>(
+        () => _i160.GetDashboardStatsUseCase(gh<_i147.DashboardRepository>()));
+    gh.lazySingleton<_i161.GetNetworkHealth>(
+        () => _i161.GetNetworkHealth(gh<_i84.NetworkRepository>()));
+    gh.lazySingleton<_i162.GetNodeStats>(
+        () => _i162.GetNodeStats(gh<_i84.NetworkRepository>()));
+    gh.lazySingleton<_i163.GetProgressUseCase>(
+        () => _i163.GetProgressUseCase(gh<_i80.MeditationRepository>()));
+    gh.factory<_i164.GetRecentActivityUseCase>(
+        () => _i164.GetRecentActivityUseCase(gh<_i147.DashboardRepository>()));
+    gh.lazySingleton<_i165.GetScriptsUseCase>(
+        () => _i165.GetScriptsUseCase(gh<_i80.MeditationRepository>()));
+    gh.lazySingleton<_i166.GovernanceIpfsDatasource>(
+        () => _i166.GovernanceIpfsDatasource(gh<_i57.IpfsDatasource>()));
+    gh.lazySingleton<_i167.GovernanceRepository>(() =>
+        _i168.GovernanceRepositoryImpl(gh<_i166.GovernanceIpfsDatasource>()));
+    gh.lazySingleton<_i169.HealthDataImportRepository>(
+        () => _i170.HealthDataImportRepositoryImpl(
+              gh<_i105.SensorHealthDataSource>(),
+              gh<_i105.FileHealthDataSource>(),
             ));
-    gh.factory<_i167.HealthImportBloc>(() => _i167.HealthImportBloc(
-          gh<_i103.GetAvailableSourcesUseCase>(),
-          gh<_i103.RequestHealthAuthUseCase>(),
-          gh<_i48.HealthDataImportService>(),
+    gh.factory<_i171.HealthImportBloc>(() => _i171.HealthImportBloc(
+          gh<_i101.GetAvailableSourcesUseCase>(),
+          gh<_i101.RequestHealthAuthUseCase>(),
+          gh<_i44.HealthDataImportService>(),
           gh<_i123.VitalSignRepository>(),
         ));
-    gh.factory<_i168.HealthImportCubit>(() => _i168.HealthImportCubit(
-          gh<_i48.HealthDataImportService>(),
+    gh.factory<_i172.HealthImportCubit>(() => _i172.HealthImportCubit(
+          gh<_i44.HealthDataImportService>(),
           gh<_i123.VitalSignRepository>(),
         ));
-    gh.lazySingleton<_i169.HealthRecordRepository>(
-        () => _i170.HealthRecordRepositoryImpl(gh<_i62.Isar>()));
-    gh.lazySingleton<_i171.HomeRepository>(() => _i172.HomeRepositoryImpl(
+    gh.lazySingleton<_i173.HealthRecordRepository>(
+        () => _i174.HealthRecordRepositoryImpl(gh<_i58.Isar>()));
+    gh.lazySingleton<_i175.HomeRepository>(() => _i176.HomeRepositoryImpl(
           gh<_i123.VitalSignRepository>(),
           gh<_i7.AppointmentRepository>(),
-          gh<_i80.MedicationRepository>(),
-          gh<_i52.HomeLocalDataSource>(),
-          gh<_i54.HomeRemoteDataSource>(),
+          gh<_i76.MedicationRepository>(),
+          gh<_i48.HomeLocalDataSource>(),
+          gh<_i50.HomeRemoteDataSource>(),
         ));
-    gh.factory<_i173.ImportCalendarUseCase>(() => _i173.ImportCalendarUseCase(
+    gh.factory<_i177.ImportCalendarUseCase>(() => _i177.ImportCalendarUseCase(
           gh<_i19.CalendarImportRepository>(),
           gh<_i7.AppointmentRepository>(),
           gh<_i118.UserProfileRepository>(),
         ));
-    gh.lazySingleton<_i65.LlmAdapter>(
-      () => _i174.GeminiLlmAdapter(
-        scrubber: gh<_i97.PromptScrubber>(),
+    gh.factory<_i61.LlmAdapter>(
+      () => _i178.MockLlmAdapter(gh<_i95.PromptScrubber>()),
+      instanceName: 'mock',
+    );
+    gh.lazySingleton<_i61.LlmAdapter>(
+      () => _i179.GeminiLlmAdapter(
+        scrubber: gh<_i95.PromptScrubber>(),
         userProfileRepository: gh<_i118.UserProfileRepository>(),
-        modelWrapper: gh<_i43.GeminiModelWrapper>(),
+        modelWrapper: gh<_i41.GeminiModelWrapper>(),
       ),
       instanceName: 'gemini',
     );
-    gh.factory<_i65.LlmAdapter>(
-      () => _i175.MockLlmAdapter(gh<_i97.PromptScrubber>()),
-      instanceName: 'mock',
-    );
-    gh.lazySingleton<_i176.LlmAdapterFactory>(
-        () => _i176.LlmAdapterFactory(gh<_i109.SettingsRepository>()));
-    gh.lazySingleton<_i177.LlmService>(() => _i178.GemmaLlmService(
+    gh.lazySingleton<_i180.LlmAdapterFactory>(
+        () => _i180.LlmAdapterFactory(gh<_i107.SettingsRepository>()));
+    gh.lazySingleton<_i181.LlmService>(() => _i182.GemmaLlmService(
           gh<_i121.VectorStoreService>(),
           gh<_i118.UserProfileRepository>(),
-          gh<_i65.LlmAdapter>(instanceName: 'gemma'),
+          gh<_i61.LlmAdapter>(instanceName: 'gemma'),
         ));
-    gh.factory<_i179.LlmSettingsCubit>(() => _i179.LlmSettingsCubit(
-          gh<_i109.SettingsRepository>(),
-          gh<_i30.DeviceCapabilityService>(),
-          gh<_i65.LlmAdapter>(instanceName: 'gemma'),
+    gh.factory<_i183.LlmSettingsCubit>(() => _i183.LlmSettingsCubit(
+          gh<_i107.SettingsRepository>(),
+          gh<_i27.DeviceCapabilityService>(),
+          gh<_i61.LlmAdapter>(instanceName: 'gemma'),
         ));
-    gh.lazySingleton<_i180.MedicalResearchService>(
-        () => _i180.MedicalResearchService(
-              gh<_i78.MedicalWebSearchService>(),
-              gh<_i74.MedicalScraperService>(),
+    gh.lazySingleton<_i184.MedicalResearchService>(
+        () => _i184.MedicalResearchService(
+              gh<_i74.MedicalWebSearchService>(),
+              gh<_i70.MedicalScraperService>(),
             ));
-    gh.factory<_i181.MedicationBloc>(
-        () => _i181.MedicationBloc(gh<_i80.MedicationRepository>()));
-    gh.factory<_i182.MeditationCubit>(() => _i182.MeditationCubit(
-          gh<_i100.RecommendScriptUseCase>(),
-          gh<_i113.StartSessionUseCase>(),
+    gh.factory<_i185.MedicationBloc>(
+        () => _i185.MedicationBloc(gh<_i76.MedicationRepository>()));
+    gh.factory<_i186.MeditationCubit>(() => _i186.MeditationCubit(
+          gh<_i98.RecommendScriptUseCase>(),
+          gh<_i111.StartSessionUseCase>(),
           gh<_i143.CompleteSessionUseCase>(),
-          gh<_i159.GetProgressUseCase>(),
+          gh<_i163.GetProgressUseCase>(),
           gh<_i11.AudioService>(),
         ));
-    gh.lazySingleton<_i183.OnboardingRepository>(() =>
-        _i184.OnboardingRepositoryImpl(gh<_i118.UserProfileRepository>()));
-    gh.lazySingleton<_i185.PatientContextIndexer>(
-      () => _i185.PatientContextIndexer(
-        gh<_i62.Isar>(),
+    gh.factory<_i187.NetworkHealthCubit>(
+        () => _i187.NetworkHealthCubit(gh<_i84.NetworkRepository>()));
+    gh.lazySingleton<_i188.OnboardingRepository>(() =>
+        _i189.OnboardingRepositoryImpl(gh<_i118.UserProfileRepository>()));
+    gh.lazySingleton<_i190.PatientContextIndexer>(
+      () => _i190.PatientContextIndexer(
+        gh<_i58.Isar>(),
         gh<_i121.VectorStoreService>(),
-        gh<_i169.HealthRecordRepository>(),
-        gh<_i80.MedicationRepository>(),
+        gh<_i173.HealthRecordRepository>(),
+        gh<_i76.MedicationRepository>(),
         gh<_i134.AllergyRepository>(),
         gh<_i123.VitalSignRepository>(),
         gh<_i7.AppointmentRepository>(),
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i186.ReportGenerationService>(
-        () => _i187.GemmaReportGenerationService(
-              gh<_i65.LlmAdapter>(instanceName: 'gemma'),
+    gh.lazySingleton<_i191.ReportGenerationService>(
+        () => _i192.GemmaReportGenerationService(
+              gh<_i61.LlmAdapter>(instanceName: 'gemma'),
               gh<_i121.VectorStoreService>(),
               gh<_i118.UserProfileRepository>(),
-              gh<_i97.PromptScrubber>(),
+              gh<_i95.PromptScrubber>(),
             ));
-    gh.factory<_i188.SecondOpinionCubit>(
-        () => _i188.SecondOpinionCubit(gh<_i105.SecondOpinionRepository>()));
-    gh.factory<_i189.SendMessageUseCase>(
-        () => _i189.SendMessageUseCase(gh<_i126.VoiceChatRepository>()));
-    gh.lazySingleton<_i190.SmartSearchUseCase>(
-        () => _i190.SmartSearchUseCase(gh<_i121.VectorStoreService>()));
-    gh.lazySingleton<_i191.StartListeningUseCase>(
-        () => _i191.StartListeningUseCase(
+    gh.factory<_i193.SecondOpinionCubit>(
+        () => _i193.SecondOpinionCubit(gh<_i103.SecondOpinionRepository>()));
+    gh.factory<_i194.SendMessageUseCase>(
+        () => _i194.SendMessageUseCase(gh<_i126.VoiceChatRepository>()));
+    gh.lazySingleton<_i195.SmartSearchUseCase>(
+        () => _i195.SmartSearchUseCase(gh<_i121.VectorStoreService>()));
+    gh.lazySingleton<_i196.StartListeningUseCase>(
+        () => _i196.StartListeningUseCase(
               gh<_i140.BleSharingService>(),
-              gh<_i90.NfcSharingService>(),
+              gh<_i88.NfcSharingService>(),
               gh<_i130.WifiDirectService>(),
             ));
-    gh.lazySingleton<_i192.StartSharingUseCase>(() => _i192.StartSharingUseCase(
+    gh.lazySingleton<_i197.StartSharingUseCase>(() => _i197.StartSharingUseCase(
           gh<_i140.BleSharingService>(),
-          gh<_i90.NfcSharingService>(),
+          gh<_i88.NfcSharingService>(),
           gh<_i130.WifiDirectService>(),
         ));
-    gh.factory<_i193.SyncCubit>(() => _i193.SyncCubit(
-          gh<_i70.SyncService>(),
+    gh.factory<_i198.SyncCubit>(() => _i198.SyncCubit(
+          gh<_i66.SyncService>(),
           gh<_i121.VectorStoreService>(),
         ));
-    gh.lazySingleton<_i194.SyncService>(() => _i195.SyncServiceImpl(
-          gh<_i115.SyncRepository>(),
-          gh<_i70.SyncService>(),
-        ));
-    gh.factory<_i196.UserProfileCubit>(
-        () => _i196.UserProfileCubit(gh<_i118.UserProfileRepository>()));
-    gh.factory<_i197.VitalSignBloc>(
-        () => _i197.VitalSignBloc(gh<_i123.VitalSignRepository>()));
-    gh.factory<_i198.VoiceChatCubit>(() => _i198.VoiceChatCubit(
-          gh<_i189.SendMessageUseCase>(),
-          gh<_i156.GetChatHistoryUseCase>(),
+    gh.factory<_i199.UserProfileCubit>(
+        () => _i199.UserProfileCubit(gh<_i118.UserProfileRepository>()));
+    gh.factory<_i200.VitalSignBloc>(
+        () => _i200.VitalSignBloc(gh<_i123.VitalSignRepository>()));
+    gh.factory<_i201.VoiceChatCubit>(() => _i201.VoiceChatCubit(
+          gh<_i194.SendMessageUseCase>(),
+          gh<_i158.GetChatHistoryUseCase>(),
           gh<_i126.VoiceChatRepository>(),
           gh<_i11.AudioService>(),
         ));
-    gh.factory<_i199.VouchCubit>(
-        () => _i199.VouchCubit(gh<_i128.VouchRepository>()));
-    gh.factory<_i200.AllergiesCubit>(
-        () => _i200.AllergiesCubit(gh<_i134.AllergyRepository>()));
-    gh.factory<_i201.AllergyBloc>(
-        () => _i201.AllergyBloc(gh<_i134.AllergyRepository>()));
-    gh.factory<_i202.AuthCubit>(() => _i202.AuthCubit(
+    gh.factory<_i202.VouchCubit>(
+        () => _i202.VouchCubit(gh<_i128.VouchRepository>()));
+    gh.factory<_i203.AllergiesCubit>(
+        () => _i203.AllergiesCubit(gh<_i134.AllergyRepository>()));
+    gh.factory<_i204.AllergyBloc>(
+        () => _i204.AllergyBloc(gh<_i134.AllergyRepository>()));
+    gh.factory<_i205.AuthCubit>(() => _i205.AuthCubit(gh<_i139.AuthService>()));
+    gh.factory<_i206.AuthCubit>(() => _i206.AuthCubit(
           gh<_i137.AuthRepository>(),
-          gh<_i35.EncryptionService>(),
+          gh<_i34.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
-    gh.factory<_i203.AuthCubit>(() => _i203.AuthCubit(gh<_i139.AuthService>()));
-    gh.lazySingleton<_i204.BadgeCalculator>(() => _i204.BadgeCalculator(
-          gh<_i151.DoctorProfileRepository>(),
-          gh<_i98.RatingRepository>(),
+    gh.lazySingleton<_i207.BadgeCalculator>(() => _i207.BadgeCalculator(
+          gh<_i152.DoctorProfileRepository>(),
+          gh<_i96.RatingRepository>(),
           gh<_i128.VouchRepository>(),
         ));
-    gh.factory<_i205.BadgeCubit>(
-        () => _i205.BadgeCubit(gh<_i204.BadgeCalculator>()));
-    gh.factory<_i206.CalendarImportCubit>(() => _i206.CalendarImportCubit(
+    gh.factory<_i208.BadgeCubit>(
+        () => _i208.BadgeCubit(gh<_i207.BadgeCalculator>()));
+    gh.factory<_i209.CalendarImportCubit>(() => _i209.CalendarImportCubit(
           gh<_i19.CalendarImportRepository>(),
-          gh<_i173.ImportCalendarUseCase>(),
+          gh<_i177.ImportCalendarUseCase>(),
         ));
-    gh.factory<_i207.DashboardCubit>(() => _i207.DashboardCubit(
-          gh<_i158.GetDashboardStatsUseCase>(),
-          gh<_i160.GetRecentActivityUseCase>(),
+    gh.factory<_i210.DashboardCubit>(() => _i210.DashboardCubit(
+          gh<_i160.GetDashboardStatsUseCase>(),
+          gh<_i164.GetRecentActivityUseCase>(),
         ));
-    gh.lazySingleton<_i208.DistributedCacheUsecase>(() =>
-        _i208.DistributedCacheUsecase(gh<_i149.DistributedStorageService>()));
-    gh.factory<_i209.EpsConnectionBloc>(() => _i209.EpsConnectionBloc(
-          gh<_i157.GetConnectionsUseCase>(),
-          gh<_i144.ConnectProviderUseCase>(),
-          gh<_i148.DisconnectProviderUseCase>(),
+    gh.lazySingleton<_i211.DistributedCacheUsecase>(() =>
+        _i211.DistributedCacheUsecase(gh<_i150.DistributedStorageService>()));
+    gh.factory<_i212.EpsConnectionBloc>(() => _i212.EpsConnectionBloc(
+          gh<_i159.GetConnectionsUseCase>(),
+          gh<_i145.ConnectProviderUseCase>(),
+          gh<_i149.DisconnectProviderUseCase>(),
         ));
-    gh.factory<_i210.EpsConnectionCubit>(() => _i210.EpsConnectionCubit(
-          gh<_i157.GetConnectionsUseCase>(),
-          gh<_i144.ConnectProviderUseCase>(),
-          gh<_i148.DisconnectProviderUseCase>(),
+    gh.factory<_i213.EpsConnectionCubit>(() => _i213.EpsConnectionCubit(
+          gh<_i159.GetConnectionsUseCase>(),
+          gh<_i145.ConnectProviderUseCase>(),
+          gh<_i149.DisconnectProviderUseCase>(),
         ));
-    gh.factory<_i211.FhirSyncCubit>(() => _i211.FhirSyncCubit(
-          gh<_i194.SyncService>(),
-          gh<_i91.NodeDiscoveryService>(),
-        ));
-    gh.factory<_i212.GetHealthSummaryUseCase>(
-        () => _i212.GetHealthSummaryUseCase(gh<_i171.HomeRepository>()));
-    gh.factory<_i213.HealthRecordCubit>(() => _i213.HealthRecordCubit(
-          gh<_i169.HealthRecordRepository>(),
-          gh<_i38.FilePickerService>(),
-          gh<_i57.ImagePickerService>(),
-          gh<_i96.OcrService>(),
+    gh.factory<_i214.GetHealthSummaryUseCase>(
+        () => _i214.GetHealthSummaryUseCase(gh<_i175.HomeRepository>()));
+    gh.factory<_i215.HealthRecordCubit>(() => _i215.HealthRecordCubit(
+          gh<_i173.HealthRecordRepository>(),
+          gh<_i36.FilePickerService>(),
+          gh<_i53.ImagePickerService>(),
+          gh<_i94.OcrService>(),
           gh<_i121.VectorStoreService>(),
         ));
-    gh.factory<_i214.HomeCubit>(() => _i214.HomeCubit(
-          gh<_i212.GetHealthSummaryUseCase>(),
-          gh<_i171.HomeRepository>(),
+    gh.factory<_i216.HomeCubit>(() => _i216.HomeCubit(
+          gh<_i214.GetHealthSummaryUseCase>(),
+          gh<_i175.HomeRepository>(),
         ));
-    gh.lazySingleton<_i177.LlmService>(
-      () => _i215.RagLlmService(
+    gh.lazySingleton<_i181.LlmService>(
+      () => _i217.RagLlmService(
         gh<_i121.VectorStoreService>(),
-        gh<_i180.MedicalResearchService>(),
+        gh<_i184.MedicalResearchService>(),
         gh<_i118.UserProfileRepository>(),
-        gh<_i65.LlmAdapter>(instanceName: 'gemma'),
+        gh<_i61.LlmAdapter>(instanceName: 'gemma'),
       ),
       instanceName: 'rag',
     );
-    gh.lazySingleton<_i216.MedicalIndexingService>(
-        () => _i216.MedicalIndexingService(
-              gh<_i71.MedicalKnowledgeRepository>(),
+    gh.lazySingleton<_i218.MedicalIndexingService>(
+        () => _i218.MedicalIndexingService(
+              gh<_i67.MedicalKnowledgeRepository>(),
               gh<_i121.VectorStoreService>(),
-              gh<_i185.PatientContextIndexer>(),
+              gh<_i190.PatientContextIndexer>(),
             ));
-    gh.lazySingleton<_i217.MedicalResearchRepository>(
-        () => _i218.MedicalResearchRepositoryImpl(
-              gh<_i180.MedicalResearchService>(),
-              gh<_i62.Isar>(),
+    gh.lazySingleton<_i219.MedicalResearchRepository>(
+        () => _i220.MedicalResearchRepositoryImpl(
+              gh<_i184.MedicalResearchService>(),
+              gh<_i58.Isar>(),
             ));
-    gh.factory<_i219.OnboardingCubit>(
-        () => _i219.OnboardingCubit(gh<_i183.OnboardingRepository>()));
-    gh.factory<_i220.ReportBloc>(() => _i220.ReportBloc(
-          gh<_i101.ReportRepository>(),
-          gh<_i186.ReportGenerationService>(),
+    gh.factory<_i221.OnboardingCubit>(
+        () => _i221.OnboardingCubit(gh<_i188.OnboardingRepository>()));
+    gh.factory<_i222.ReportBloc>(() => _i222.ReportBloc(
+          gh<_i99.ReportRepository>(),
+          gh<_i191.ReportGenerationService>(),
         ));
-    gh.factory<_i221.SearchMedicalResearch>(() =>
-        _i221.SearchMedicalResearch(gh<_i217.MedicalResearchRepository>()));
-    gh.factory<_i222.SharingCubit>(() => _i222.SharingCubit(
+    gh.factory<_i223.SearchMedicalResearch>(() =>
+        _i223.SearchMedicalResearch(gh<_i219.MedicalResearchRepository>()));
+    gh.factory<_i224.SharingCubit>(() => _i224.SharingCubit(
           bleService: gh<_i140.BleSharingService>(),
-          nfcService: gh<_i90.NfcSharingService>(),
+          nfcService: gh<_i88.NfcSharingService>(),
           wifiService: gh<_i130.WifiDirectService>(),
-          startSharingUseCase: gh<_i192.StartSharingUseCase>(),
-          startListeningUseCase: gh<_i191.StartListeningUseCase>(),
+          startSharingUseCase: gh<_i197.StartSharingUseCase>(),
+          startListeningUseCase: gh<_i196.StartListeningUseCase>(),
           cancelSharingUseCase: gh<_i141.CancelSharingUseCase>(),
-          walletService: gh<_i36.WalletService>(),
-          walletEncryption: gh<_i36.EncryptionService>(),
+          walletService: gh<_i33.WalletService>(),
+          walletEncryption: gh<_i33.EncryptionService>(),
         ));
-    gh.factory<_i223.GetResearchHistory>(
-        () => _i223.GetResearchHistory(gh<_i217.MedicalResearchRepository>()));
-    gh.factory<_i224.MedicalResearchCubit>(() => _i224.MedicalResearchCubit(
-          gh<_i221.SearchMedicalResearch>(),
-          gh<_i223.GetResearchHistory>(),
-          gh<_i76.MedicalStandardsService>(),
+    gh.factory<_i225.GetResearchHistory>(
+        () => _i225.GetResearchHistory(gh<_i219.MedicalResearchRepository>()));
+    gh.factory<_i226.MedicalResearchCubit>(() => _i226.MedicalResearchCubit(
+          gh<_i223.SearchMedicalResearch>(),
+          gh<_i225.GetResearchHistory>(),
+          gh<_i72.MedicalStandardsService>(),
         ));
     return this;
   }
 }
 
-class _$ServiceModule extends _i225.ServiceModule {}
+class _$ServiceModule extends _i227.ServiceModule {}
 
-class _$NetworkModule extends _i226.NetworkModule {}
+class _$NetworkModule extends _i228.NetworkModule {}
 
-class _$MemoryModule extends _i227.MemoryModule {}
+class _$MemoryModule extends _i229.MemoryModule {}
 
-class _$DatabaseModule extends _i228.DatabaseModule {}
+class _$DatabaseModule extends _i230.DatabaseModule {}
 
-class _$FhirModule extends _i229.FhirModule {}
+class _$FhirModule extends _i231.FhirModule {}
