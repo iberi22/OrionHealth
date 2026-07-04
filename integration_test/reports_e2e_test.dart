@@ -6,6 +6,8 @@ import 'package:orionhealth_health/features/reports/presentation/pages/reports_p
 import 'package:orionhealth_health/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:orionhealth_health/features/reports/domain/repositories/report_repository.dart';
 import 'package:orionhealth_health/features/reports/domain/entities/report.dart';
+import 'package:orionhealth_health/features/reports/domain/services/report_generation_service.dart';
+import 'package:orionhealth_health/features/reports/infrastructure/services/mock_report_generation_service.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
@@ -16,6 +18,10 @@ void main() {
 
   setUpAll(() async {
     await di.configureDependencies();
+    di.getIt.allowReassignment = true;
+    di.getIt.registerLazySingleton<ReportGenerationService>(
+      () => MockReportGenerationService(),
+    );
     await initializeDateFormatting('es', null);
   });
 
@@ -48,6 +54,8 @@ void main() {
 
       // 2. Verify empty state
       expect(find.text('No hay informes disponibles'), findsOneWidget);
+      expect(find.text('Tus informes generados aparecerán aquí.'), findsOneWidget);
+      expect(find.byIcon(Icons.assignment_outlined), findsOneWidget);
 
       // 3. GENERATE REPORT
       final generateButton = find.text('Generar Ahora');
@@ -97,6 +105,79 @@ void main() {
       await tester.tap(find.text('Todos'));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'reports', '06_filter_all');
+
+      // 8. TEST SPECIFIC FILTERS WITH SEEDED DATA
+      // Seed an urgent report
+      final urgentReport = Report(
+        title: 'Informe Urgente Test',
+        content: 'Contenido urgente',
+        status: ReportStatus.urgent,
+        generatedAt: DateTime.now(),
+      );
+      await repo.saveReport(urgentReport);
+
+      // Seed a finalized report
+      final finalizedReport = Report(
+        title: 'Informe Finalizado Test',
+        content: 'Contenido finalizado',
+        status: ReportStatus.finalized,
+        generatedAt: DateTime.now(),
+      );
+      await repo.saveReport(finalizedReport);
+
+      // Refresh the list (via Bloc)
+      await tester.tap(find.text('Todos')); // Just to trigger a rebuild/state change if needed,
+      // but ReportsPage uses BlocBuilder, we might need to trigger LoadReports again.
+      // Tapping "Todos" doesn't trigger LoadReports in current implementation.
+      // RefreshIndicator can do it.
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, 300));
+      await tester.pumpAndSettle();
+
+      // Verify both are present
+      expect(find.text('Informe Urgente Test'), findsOneWidget);
+      expect(find.text('Informe Finalizado Test'), findsOneWidget);
+
+      // Filter by Urgent
+      await tester.tap(find.text('Urgentes'));
+      await tester.pumpAndSettle();
+      expect(find.text('Informe Urgente Test'), findsOneWidget);
+      expect(find.text('Informe Finalizado Test'), findsNothing);
+      await VideoRecorder.recordStep(tester, 'reports', '07_filter_urgent_verified');
+
+      // Filter by Finalized
+      await tester.tap(find.text('Finalizados'));
+      await tester.pumpAndSettle();
+      expect(find.text('Informe Urgente Test'), findsNothing);
+      expect(find.text('Informe Finalizado Test'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'reports', '08_filter_finalized_verified');
+
+      // Filter by Pendiente (should be empty if we didn't seed one)
+      await tester.tap(find.text('Pendientes'));
+      await tester.pumpAndSettle();
+      expect(find.text('Informe Urgente Test'), findsNothing);
+      expect(find.text('Informe Finalizado Test'), findsNothing);
+      expect(find.text('No hay resultados'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'reports', '09_filter_pending_empty');
+
+      // Back to All
+      await tester.tap(find.text('Todos'));
+      await tester.pumpAndSettle();
+      expect(find.text('Informe Urgente Test'), findsOneWidget);
+      expect(find.text('Informe Finalizado Test'), findsOneWidget);
+
+      // 9. TEST EXPORT FHIR
+      final exportChip = find.text('Exportar FHIR');
+      expect(exportChip, findsOneWidget);
+      await tester.tap(exportChip);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Exportación FHIR R4'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'reports', '10_fhir_export_dialog');
+
+      // Close dialog
+      await tester.tap(find.text('Cerrar'));
+      await tester.pumpAndSettle();
+      expect(find.text('Exportación FHIR R4'), findsNothing);
     });
   });
 }
