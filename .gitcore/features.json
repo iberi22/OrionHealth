@@ -29,7 +29,7 @@
                  },
     "name":  "OrionHealth",
     "human_review":  {
-                         "total_features_pending":  9,
+                         "total_features_pending":  11,
                          "status":  "waiting_for_auto_completion",
                          "approved_features":  [
 
@@ -38,6 +38,8 @@
                                                   "appointments",
                                                   "calendar_import",
                                                   "dashboard",
+                                                  "email-citas",
+                                                  "health_data_import",
                                                   "health_sharing",
                                                   "home",
                                                   "medical_research",
@@ -99,10 +101,10 @@
                  }
              ],
     "test_suite":  {
-                       "test_ratio_pct":  45.8,
+                       "test_ratio_pct":  46.1,
                        "integration_tests":  33,
-                       "test_files":  571,
-                       "golden_screenshots":  146
+                       "test_files":  587,
+                       "golden_screenshots":  186
                    },
     "gaps":  {
                  "incomplete_architecture":  [
@@ -120,24 +122,24 @@
                                       "health_wallet":  "0.1.0",
                                       "isar_agent_memory":  "0.5.0-beta"
                                   },
-                     "total_dart_files":  1247,
+                     "total_dart_files":  1273,
                      "branches":  [
                                       "main: 347cb89",
                                       "harness v1 deployed"
                                   ],
-                     "last_scan":  "2026-07-04 04:09:09",
+                     "last_scan":  "2026-07-04 07:49:59",
                      "last_updated":  "2026-07-04"
                  },
     "metrics":  {
                     "doc_weight":  9.9,
                     "e2e_weight":  9.9,
                     "arch_weight":  25,
-                    "global_pct":  88.1,
+                    "global_pct":  88.4,
                     "test_weight":  29.7,
                     "golden_weight":  9.9,
                     "ci_weight":  4.95,
                     "human_final_weight":  1,
-                    "auto_score":  88.1
+                    "auto_score":  88.4
                 },
     "ci_cd":  {
                   "ci_tests":  true,

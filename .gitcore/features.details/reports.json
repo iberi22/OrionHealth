@@ -1,8 +1,8 @@
 ﻿{
     "humanReviewPending":  false,
     "humanApproved":  false,
-    "lastUpdated":  "2026-07-04 04:09:10",
-    "implementationPct":  86.0,
+    "lastUpdated":  "2026-07-04 07:49:59",
+    "implementationPct":  90.9,
     "steps":  [
                   {
                       "id":  1,
@@ -97,11 +97,11 @@
                   {
                       "id":  10,
                       "weight":  4.9,
-                      "evidence":  "0 goldens",
+                      "evidence":  "6 goldens",
                       "description":  "Golden reference screenshots",
-                      "completed":  false,
+                      "completed":  true,
                       "name":  "Golden Tests (\u003e=2)",
-                      "progress":  0,
+                      "progress":  100,
                       "evaluator":  "scan:goldens:count\u003e=2"
                   },
                   {
@@ -145,6 +145,6 @@
                       "evaluator":  "human:approval"
                   }
               ],
-    "autoScore":  86.0,
+    "autoScore":  90.9,
     "feature":  "reports"
 }
