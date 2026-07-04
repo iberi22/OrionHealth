@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/allergies/presentation/pages/allergies_page.dart';
 import 'package:orionhealth_health/features/allergies/application/allergies_cubit.dart';
 import 'package:orionhealth_health/features/allergies/application/allergies_state.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
+import '../../../../core/golden_test_utils.dart';
 
 class MockAllergiesCubit extends Mock implements AllergiesCubit {}
 
@@ -26,17 +26,11 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AllergiesCubit>.value(value: mockAllergiesCubit),
-      ],
-      child: const MaterialApp(
-        home: AllergiesPage(),
-      ),
-    );
+    return wrapWithMaterial(const AllergiesPage());
   }
 
   testWidgets('AllergiesPage golden test', (tester) async {
+    setupGoldenTest(tester);
     final allergies = [
       Allergy(id: 1, allergen: 'Peanuts', severity: AllergySeverity.severe, notes: 'Anaphylaxis risk'),
       Allergy(id: 2, allergen: 'Pollen', severity: AllergySeverity.mild),
@@ -52,7 +46,8 @@ void main() {
 
     await expectLater(
       find.byType(AllergiesPage),
-      matchesGoldenFile("../../../../golden/reference/allergies_page.png"),
+      matchesGoldenFile("goldens/allergies_page.png"),
     );
+    resetGoldenTest(tester);
   });
 }

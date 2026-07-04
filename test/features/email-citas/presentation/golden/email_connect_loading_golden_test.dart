@@ -36,51 +36,19 @@ void main() {
     await GetIt.I.reset();
   });
 
-  group('Email Citas Golden Tests', () {
-    testWidgets('Email Connect Page - Disconnected', (tester) async {
-      setupGoldenTest(tester);
-      when(() => mockCubit.state).thenReturn(EmailCitasInitial());
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-
-      await tester.pumpWidget(wrapWithMaterial(const EmailConnectPage()));
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(EmailConnectPage),
-        matchesGoldenFile("../../../../../golden/reference/email_connect_disconnected.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
-    testWidgets('Email Connect Page - Connected', (tester) async {
-      setupGoldenTest(tester);
-      when(() => mockCubit.state).thenReturn(const EmailCitasConnected(
-        isGmailConnected: true,
-        isOutlookConnected: false,
-      ));
-      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-
-      await tester.pumpWidget(wrapWithMaterial(const EmailConnectPage()));
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(EmailConnectPage),
-        matchesGoldenFile("../../../../../golden/reference/email_connect_connected.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
+  group('Email Citas Loading Golden Tests', () {
     testWidgets('Email Connect Page - Loading', (tester) async {
       setupGoldenTest(tester);
       when(() => mockCubit.state).thenReturn(EmailCitasLoading());
       when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
 
       await tester.pumpWidget(wrapWithMaterial(const EmailConnectPage()));
+      // We don't use pumpAndSettle because of the loading indicator
       await tester.pump(const Duration(milliseconds: 100));
 
       await expectLater(
         find.byType(EmailConnectPage),
-        matchesGoldenFile("../../../../../golden/reference/email_connect_loading.png"),
+        matchesGoldenFile("goldens/email_connect_loading.png"),
       );
       resetGoldenTest(tester);
     });

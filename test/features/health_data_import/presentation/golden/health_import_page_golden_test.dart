@@ -53,7 +53,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile("../../../../../golden/reference/health_import_page_ready.png"),
+        matchesGoldenFile("goldens/health_import_page_ready.png"),
       );
       resetGoldenTest(tester);
     });
@@ -77,7 +77,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile("../../../../../golden/reference/health_import_page_importing.png"),
+        matchesGoldenFile("goldens/health_import_page_importing.png"),
       );
       resetGoldenTest(tester);
     });

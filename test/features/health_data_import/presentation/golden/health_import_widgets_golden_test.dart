@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/health_data_import/presentation/pages/health_import_page.dart';
@@ -36,7 +35,7 @@ void main() {
     return wrapWithMaterial(const HealthImportPage());
   }
 
-  group('HealthImportPage Golden Tests', () {
+  group('HealthImport Widgets Golden Tests', () {
     testWidgets('HealthImportPage - Initial State', (tester) async {
       setupGoldenTest(tester);
 
@@ -47,7 +46,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile("../../../../golden/reference/health_import_initial.png"),
+        matchesGoldenFile("goldens/health_import_initial.png"),
       );
       resetGoldenTest(tester);
     });
@@ -62,7 +61,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile("../../../../golden/reference/health_import_loading.png"),
+        matchesGoldenFile("goldens/health_import_loading.png"),
       );
       resetGoldenTest(tester);
     });
@@ -91,7 +90,7 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile("../../../../golden/reference/health_import_ready_all_unavailable.png"),
+        matchesGoldenFile("goldens/health_import_ready_all_unavailable.png"),
       );
       resetGoldenTest(tester);
     });
@@ -109,35 +108,11 @@ void main() {
 
       await expectLater(
         find.byType(HealthImportPage),
-        matchesGoldenFile("../../../../golden/reference/health_import_authenticating.png"),
+        matchesGoldenFile("goldens/health_import_authenticating.png"),
       );
       resetGoldenTest(tester);
     });
 
-    testWidgets('HealthImportPage - Importing State', (tester) async {
-      setupGoldenTest(tester);
-
-      when(() => mockCubit.state).thenReturn(
-        const HealthImportImporting(
-          source: HealthDataSource.googleFit,
-          currentStep: 'Importing steps data...',
-          totalSteps: 8,
-          currentStepNum: 2,
-          importedCount: 150,
-        ),
-      );
-
-      await tester.pumpWidget(buildTestWidget());
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
-
-      await expectLater(
-        find.byType(HealthImportPage),
-        matchesGoldenFile("../../../../golden/reference/health_import_importing.png"),
-      );
-      resetGoldenTest(tester);
-    });
-   group('HealthImport Widgets Golden Tests', () {
     testWidgets('DataSourceCard - Available', (tester) async {
       setupGoldenTest(tester);
 
@@ -149,7 +124,7 @@ void main() {
               child: DataSourceCard(
                 source: HealthDataSource.googleFit,
                 isAvailable: true,
-                lastSync: DateTime.now().subtract(const Duration(hours: 2)),
+                lastSync: DateTime(2025, 1, 1, 10, 0),
                 onImport: () {},
               ),
             ),
@@ -160,7 +135,7 @@ void main() {
 
       await expectLater(
         find.byType(DataSourceCard),
-        matchesGoldenFile("../../../../golden/reference/data_source_card_available.png"),
+        matchesGoldenFile("goldens/data_source_card_available.png"),
       );
       resetGoldenTest(tester);
     });
@@ -187,7 +162,7 @@ void main() {
 
       await expectLater(
         find.byType(DataSourceCard),
-        matchesGoldenFile("../../../../golden/reference/data_source_card_unavailable.png"),
+        matchesGoldenFile("goldens/data_source_card_unavailable.png"),
       );
       resetGoldenTest(tester);
     });
@@ -214,10 +189,9 @@ void main() {
 
       await expectLater(
         find.byType(ImportProgressDialog),
-        matchesGoldenFile("../../../../golden/reference/import_progress_dialog.png"),
+        matchesGoldenFile("goldens/import_progress_dialog.png"),
       );
       resetGoldenTest(tester);
     });
   });
- });
 }
