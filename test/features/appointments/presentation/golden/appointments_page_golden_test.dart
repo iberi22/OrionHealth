@@ -37,7 +37,7 @@ void main() {
 
       await expectLater(
         find.byType(AppointmentsPage),
-        matchesGoldenFile("../../../../../golden/reference/appointments_page_empty.png"),
+        matchesGoldenFile("goldens/appointments_page_empty.png"),
       );
       resetGoldenTest(tester);
     });
@@ -80,7 +80,7 @@ void main() {
 
       await expectLater(
         find.byType(AppointmentsPage),
-        matchesGoldenFile("../../../../../golden/reference/appointments_page_with_data.png"),
+        matchesGoldenFile("goldens/appointments_page_with_data.png"),
       );
       resetGoldenTest(tester);
     });
