@@ -1,135 +1,122 @@
-{
-  "name": "OrionHealth",
-  "version": "0.8.0",
-  "protocol_version": "2",
-  "metadata": {
-    "last_updated": "2026-06-17",
-    "flutter_analyze": "0 issues",
-    "total_dart_files": 640,
-    "total_loc": 0,
-    "packages": {
-      "isar_agent_memory": "0.5.0-beta",
-      "health_wallet": "0.1.0",
-      "medical_standards": "0.1.0"
-    }
-  },
-  "features": {
-    "total": 25,
-    "complete_layers": 24,
-    "gap_domain": 1,
-    "needs_golden_tests": 3,
-    "needs_data_migration": 2
-  },
-  "test_suite": {
-    "test_files": 180,
-    "golden_screenshots": 512,
-    "integration_tests": 11,
-    "test_ratio_pct": 27.7
-  },
-  "ci_cd": {
-    "workflows": 5,
-    "android_build": true,
-    "ci_tests": true,
-    "deploy_docs": true,
-    "medical_standards": true,
-    "release": true
-  },
-  "documentation": {
-    "readme": true,
-    "architecture": true,
-    "contributing": true,
-    "translations_arb": 26
-  },
-  "implementation_pct": 63.2,
-  "bugs": [
-    {
-      "id": 1,
-      "feature": "health_sharing",
-      "description": "BLE startAdvertising() stub",
-      "severity": "medium",
-      "status": "fixed"
-    },
-    {
-      "id": 2,
-      "feature": "health_sharing",
-      "description": "WiFi discoverDevices() mock data",
-      "severity": "medium",
-      "status": "fixed"
-    },
-    {
-      "id": 3,
-      "feature": "health_sharing",
-      "description": "NFC sharing sin setup nativo",
-      "severity": "medium",
-      "status": "fixed"
-    },
-    {
-      "id": 4,
-      "feature": "allergies",
-      "description": "Unused equatable import",
-      "severity": "low",
-      "status": "open"
-    },
-    {
-      "id": 5,
-      "feature": "sync",
-      "description": "Legacy data/ dir needs migration to infrastructure/",
-      "severity": "low",
-      "status": "open"
-    },
-    {
-      "id": 6,
-      "feature": "doctor_verification",
-      "description": "Legacy data/ dir needs migration to infrastructure/",
-      "severity": "low",
-      "status": "open"
-    },
-    {
-      "id": 7,
-      "feature": "calendar_import",
-      "description": "Domain layer empty - entities inline in cubit",
-      "severity": "medium",
-      "status": "open"
-    }
-  ],
-  "gaps": {
-    "missing_golden_tests": [
-      "calendar_import",
-      "health_data_import"
-    ],
-    "needs_bloc_state_management": [
-      "ai_assistant",
-      "calendar_import",
-      "dashboard",
-      "eps_connection",
-      "health_data_import",
-      "home",
-      "medications",
-      "settings",
-      "user_profile",
-      "vitals"
-    ]
-  },
-  "plan_to_80plus": {
-    "phase_1_data_layer": {
-      "description": "Add data layer to all features (repositories, datasources)",
-      "features_affected": 23,
-      "impact_pct": "+10%"
-    },
-    "phase_2_golden_tests": {
-      "description": "Add golden tests for about, calendar_import, health_data_import",
-      "features_affected": 3,
-      "impact_pct": "+3%"
-    },
-    "phase_3_test_coverage": {
-      "description": "Increase test coverage from 27.7% to 60%+",
-      "target_test_files": 380,
-      "impact_pct": "+10%"
-    },
-    "phase_4_bloc_state": {
-      "description": "Add proper BLoC/Cubit state management where missing",
-      "features_affected": 11,
-      "impact_pct": "+5%"
-    }
-  }
+﻿{
+    "harness":  {
+                    "implementation_pct":  84.4,
+                    "report_command":  "\u0026 .gitcore\\orionhealth-harness.ps1 -Report",
+                    "scan_command":  "\u0026 .gitcore\\orionhealth-harness.ps1 -Scan",
+                    "metrics":  {
+                                    "golden_weight":  10,
+                                    "arch_weight":  25,
+                                    "test_weight":  30,
+                                    "e2e_weight":  10,
+                                    "human_weight":  1,
+                                    "ci_weight":  5,
+                                    "doc_weight":  10
+                                },
+                    "details_dir":  ".gitcore\\features.details\\",
+                    "human_review_pct":  1
+                },
+    "gaps":  {
+                 "incomplete_architecture":  [
+                                                 "network"
+                                             ],
+                 "low_coverage_features":  [
+
+                                           ],
+                 "missing_readmes":  19
+             },
+    "metadata":  {
+                     "flutter_analyze":  "0 issues (assumed clean after PR #1014)",
+                     "packages":  {
+                                      "medical_standards":  "0.1.0",
+                                      "health_wallet":  "0.1.0",
+                                      "isar_agent_memory":  "0.5.0-beta"
+                                  },
+                     "total_dart_files":  1238,
+                     "branches":  [
+                                      "main: 6b6b0f7",
+                                      "26 PRs: #976 -\u003e #1016"
+                                  ],
+                     "last_scan":  "2026-07-03 22:17:53",
+                     "last_updated":  "2026-07-03"
+                 },
+    "version":  "0.9.0",
+    "bugs":  [
+                 {
+                     "severity":  "medium",
+                     "status":  "fixed",
+                     "description":  "BLE startAdvertising() stub",
+                     "id":  1,
+                     "feature":  "health_sharing"
+                 },
+                 {
+                     "severity":  "medium",
+                     "status":  "fixed",
+                     "description":  "WiFi discoverDevices() mock data",
+                     "id":  2,
+                     "feature":  "health_sharing"
+                 },
+                 {
+                     "severity":  "medium",
+                     "status":  "fixed",
+                     "description":  "NFC sharing sin setup nativo",
+                     "id":  3,
+                     "feature":  "health_sharing"
+                 },
+                 {
+                     "severity":  "low",
+                     "status":  "fixed",
+                     "description":  "Unused equatable import",
+                     "id":  4,
+                     "feature":  "allergies"
+                 },
+                 {
+                     "severity":  "low",
+                     "status":  "fixed",
+                     "description":  "Legacy data/ dir needs migration to infrastructure/",
+                     "id":  5,
+                     "feature":  "sync"
+                 },
+                 {
+                     "severity":  "low",
+                     "status":  "fixed",
+                     "description":  "Legacy data/ dir needs migration to infrastructure/",
+                     "id":  6,
+                     "feature":  "doctor_verification"
+                 },
+                 {
+                     "severity":  "medium",
+                     "status":  "fixed",
+                     "description":  "Domain layer empty - entities inline in cubit",
+                     "id":  7,
+                     "feature":  "calendar_import"
+                 }
+             ],
+    "ci_cd":  {
+                  "ci_tests":  true,
+                  "release":  true,
+                  "deploy_docs":  true,
+                  "medical_standards":  true,
+                  "workflows":  5,
+                  "android_build":  true
+              },
+    "protocol_version":  "3",
+    "name":  "OrionHealth",
+    "documentation":  {
+                          "translations_arb":  26,
+                          "readme_count":  6,
+                          "architecture":  true,
+                          "readme_features_pct":  24,
+                          "contributing":  true
+                      },
+    "test_suite":  {
+                       "test_ratio_pct":  45.4,
+                       "integration_tests":  33,
+                       "test_files":  562,
+                       "golden_screenshots":  146
+                   },
+    "features":  {
+                     "gap_network_health_incomplete":  1,
+                     "complete_layers":  24,
+                     "total":  25
+                 }
 }

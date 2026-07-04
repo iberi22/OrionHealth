@@ -1,0 +1,148 @@
+﻿{
+    "steps":  [
+                  {
+                      "id":  1,
+                      "weight":  15,
+                      "evidence":  "",
+                      "description":  "app/domain/infra/presentation layers exist",
+                      "completed":  true,
+                      "name":  "Architecture Definition",
+                      "progress":  100,
+                      "evaluator":  "scan:layers"
+                  },
+                  {
+                      "id":  2,
+                      "weight":  10,
+                      "evidence":  "3 entities",
+                      "description":  "Domain entities defined and typed",
+                      "completed":  true,
+                      "name":  "Domain Layer Entities",
+                      "progress":  100,
+                      "evaluator":  "scan:files:domain/entities/*.dart"
+                  },
+                  {
+                      "id":  3,
+                      "weight":  10,
+                      "evidence":  "1 repository files",
+                      "description":  "Repository abstract class in domain",
+                      "completed":  true,
+                      "name":  "Domain Layer Repository Abstract",
+                      "progress":  100,
+                      "evaluator":  "scan:files:domain/*_repository*.dart"
+                  },
+                  {
+                      "id":  4,
+                      "weight":  10,
+                      "evidence":  "1 usecases",
+                      "description":  "Use cases in domain layer",
+                      "completed":  true,
+                      "name":  "Domain Layer Use Cases",
+                      "progress":  100,
+                      "evaluator":  "scan:files:domain/usecases/*.dart"
+                  },
+                  {
+                      "id":  5,
+                      "weight":  10,
+                      "evidence":  "4 infra files",
+                      "description":  "Repository implementation + datasources",
+                      "completed":  true,
+                      "name":  "Infrastructure Layer Implementation",
+                      "progress":  100,
+                      "evaluator":  "scan:files:infrastructure/**/*.dart"
+                  },
+                  {
+                      "id":  6,
+                      "weight":  10,
+                      "evidence":  "4 app files",
+                      "description":  "State management in application layer",
+                      "completed":  true,
+                      "name":  "Application Layer (BLoC/Cubit/State)",
+                      "progress":  100,
+                      "evaluator":  "scan:files:application/*.dart"
+                  },
+                  {
+                      "id":  7,
+                      "weight":  10,
+                      "evidence":  "3 pres files",
+                      "description":  "UI widgets and pages",
+                      "completed":  true,
+                      "name":  "Presentation Layer Widgets",
+                      "progress":  100,
+                      "evaluator":  "scan:files:presentation/**/*.dart"
+                  },
+                  {
+                      "id":  8,
+                      "weight":  5,
+                      "evidence":  "",
+                      "description":  "GetIt/DI registration",
+                      "completed":  true,
+                      "name":  "Dependency Injection Config",
+                      "progress":  100,
+                      "evaluator":  "scan:file:injection.config.dart"
+                  },
+                  {
+                      "id":  9,
+                      "weight":  10,
+                      "evidence":  "21 tests",
+                      "description":  "Minimum 15 test files",
+                      "completed":  true,
+                      "name":  "Unit Tests (\u003e=15)",
+                      "progress":  100,
+                      "evaluator":  "scan:tests:count\u003e=15"
+                  },
+                  {
+                      "id":  10,
+                      "weight":  5,
+                      "evidence":  "0 goldens",
+                      "description":  "Golden reference screenshots",
+                      "completed":  false,
+                      "name":  "Golden Tests (\u003e=2)",
+                      "progress":  0,
+                      "evaluator":  "scan:goldens:count\u003e=2"
+                  },
+                  {
+                      "id":  11,
+                      "weight":  5,
+                      "evidence":  "",
+                      "description":  "Feature covered in integration tests",
+                      "completed":  false,
+                      "name":  "E2E/Integration Tests",
+                      "progress":  0,
+                      "evaluator":  "scan:e2e:true"
+                  },
+                  {
+                      "id":  12,
+                      "weight":  4,
+                      "evidence":  "",
+                      "description":  "Feature README.md exists",
+                      "completed":  false,
+                      "name":  "README Documentation",
+                      "progress":  0,
+                      "evaluator":  "scan:readme:true"
+                  },
+                  {
+                      "id":  13,
+                      "weight":  3,
+                      "evidence":  "Not verified (assume ~80%)",
+                      "description":  "Zero flutter analyze issues",
+                      "completed":  false,
+                      "name":  "Flutter Analyze Clean",
+                      "progress":  80,
+                      "evaluator":  "external:flutter_analyze:0"
+                  },
+                  {
+                      "id":  14,
+                      "weight":  1,
+                      "evidence":  "PENDING HUMAN REVIEW",
+                      "description":  "Human verified the feature",
+                      "completed":  false,
+                      "name":  "Human Review",
+                      "progress":  0,
+                      "evaluator":  "human:approval"
+                  }
+              ],
+    "lastUpdated":  "2026-07-03 22:17:53",
+    "implementationPct":  92.4,
+    "humanReviewPending":  true,
+    "feature":  "health_data_import"
+}
