@@ -30,7 +30,7 @@ void main() {
 
       await expectLater(
         find.byType(BlogTile),
-        matchesGoldenFile("../../../../../golden/reference/blog_tile.png"),
+        matchesGoldenFile("goldens/blog_tile.png"),
       );
       resetGoldenTest(tester);
     });
