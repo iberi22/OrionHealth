@@ -1,8 +1,8 @@
 ﻿{
-    "humanReviewPending":  false,
+    "humanReviewPending":  true,
     "humanApproved":  false,
-    "lastUpdated":  "2026-07-04 04:09:09",
-    "implementationPct":  96.0,
+    "lastUpdated":  "2026-07-04 07:49:59",
+    "implementationPct":  100.9,
     "steps":  [
                   {
                       "id":  1,
@@ -87,7 +87,7 @@
                   {
                       "id":  9,
                       "weight":  9.9,
-                      "evidence":  "21 tests",
+                      "evidence":  "23 tests",
                       "description":  "Minimum 15 test files",
                       "completed":  true,
                       "name":  "Unit Tests (\u003e=15)",
@@ -97,11 +97,11 @@
                   {
                       "id":  10,
                       "weight":  4.9,
-                      "evidence":  "0 goldens",
+                      "evidence":  "4 goldens",
                       "description":  "Golden reference screenshots",
-                      "completed":  false,
+                      "completed":  true,
                       "name":  "Golden Tests (\u003e=2)",
-                      "progress":  0,
+                      "progress":  100,
                       "evaluator":  "scan:goldens:count\u003e=2"
                   },
                   {
@@ -145,6 +145,6 @@
                       "evaluator":  "human:approval"
                   }
               ],
-    "autoScore":  96.0,
+    "autoScore":  100.9,
     "feature":  "health_data_import"
 }
