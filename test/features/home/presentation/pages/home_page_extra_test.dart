@@ -19,6 +19,13 @@ void main() {
   });
 
   testWidgets('HomePageView shows progress indicator when loading', (tester) async {
+    tester.view.physicalSize = const Size(1200, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     when(() => mockHomeCubit.state).thenReturn(const HomeState(status: HomeStatus.loading, modules: []));
 
     await tester.pumpWidget(
@@ -29,6 +36,7 @@ void main() {
         ),
       ),
     );
+    await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });

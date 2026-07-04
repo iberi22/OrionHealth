@@ -63,6 +63,7 @@ void main() {
     test('getHomeModules returns cached modules if available', () async {
       when(() => mockLocal.getCachedHomeModules()).thenAnswer((_) async => []);
       when(() => mockRemote.getHomeModules()).thenAnswer((_) async => []);
+      when(() => mockLocal.cacheHomeModules(any())).thenAnswer((_) async {});
 
       final result = await repository.getHomeModules();
       expect(result, isNotEmpty); // Returns defaults if cache empty

@@ -57,10 +57,12 @@ void main() {
     when(() => mockReportBloc.close()).thenAnswer((_) async {});
 
     when(() => mockUserProfileCubit.state).thenReturn(const UserProfileInitial());
+    when(() => mockUserProfileCubit.loadUserProfile()).thenAnswer((_) async {});
     when(() => mockUserProfileCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockUserProfileCubit.close()).thenAnswer((_) async {});
 
     when(() => mockHealthRecordCubit.state).thenReturn(const HealthRecordInitial());
+    when(() => mockHealthRecordCubit.loadRecords()).thenAnswer((_) async {});
     when(() => mockHealthRecordCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockHealthRecordCubit.close()).thenAnswer((_) async {});
   });
