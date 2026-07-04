@@ -1,99 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:orionhealth_health/core/di/injection.dart' as di;
+import 'package:orionhealth_health/features/user_profile/presentation/pages/user_profile_page.dart';
+import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'utils/video_recorder.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('User Profile Flow - E2E Tests', () {
-    testWidgets('E2E: Edit and Save Profile', (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: _MockProfilePage()));
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'user_profile', '01_view');
-
-      // Edit
-      await tester.tap(find.text('Editar Perfil'));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.widgetWithText(TextField, 'Nombre'), 'Maria Lopez');
-      await tester.enterText(find.widgetWithText(TextField, 'Correo'), 'maria@example.com');
-      await VideoRecorder.recordStep(tester, 'user_profile', '02_editing');
-
-      // Save
-      await tester.tap(find.text('Guardar'));
-      await tester.pumpAndSettle();
-      expect(find.text('Maria Lopez'), findsOneWidget);
-      expect(find.text('Perfil guardado exitosamente'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'user_profile', '03_saved');
-    });
+  setUpAll(() async {
+    await di.configureDependencies();
+    await initializeDateFormatting('es', null);
   });
-}
 
-class _MockProfilePage extends StatefulWidget {
-  const _MockProfilePage();
-  @override
-  State<_MockProfilePage> createState() => _MockProfilePageState();
-}
+  group('User Profile Flow - E2E Tests', () {
+    testWidgets('E2E: Update profile preferences and save', (WidgetTester tester) async {
+      final repo = di.getIt<UserProfileRepository>();
 
-class _MockProfilePageState extends State<_MockProfilePage> {
-  String name = 'Maria Garcia';
-  String email = 'maria@garcia.com';
-  bool _isEditing = false;
-  bool _showSaved = false;
+      // Clean start for the test
+      await repo.deleteUserProfile();
 
-  @override
-  Widget build(BuildContext context) {
-    if (_isEditing) {
-      final nameCtrl = TextEditingController(text: name);
-      final emailCtrl = TextEditingController(text: email);
-      return Scaffold(
-        appBar: AppBar(title: const Text('Editar Perfil')),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Nombre')),
-              TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: 'Correo')),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    name = nameCtrl.text;
-                    email = emailCtrl.text;
-                    _isEditing = false;
-                    _showSaved = true;
-                  });
-                  Future.delayed(const Duration(seconds: 2), () {
-                    if (mounted) setState(() => _showSaved = false);
-                  });
-                },
-                child: const Text('Guardar'),
-              ),
-            ],
-          ),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: const UserProfilePage(),
+          theme: ThemeData.dark(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
         ),
       );
-    }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Mi Perfil')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50)),
-            const SizedBox(height: 16),
-            Text(name, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            Text(email),
-            const SizedBox(height: 32),
-            ElevatedButton(onPressed: () => setState(() => _isEditing = true), child: const Text('Editar Perfil')),
-            if (_showSaved) ...[
-              const SizedBox(height: 16),
-              const Text('Perfil guardado exitosamente', style: TextStyle(color: Colors.green)),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
+      // Wait for the profile to load
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'user_profile', '01_initial_view');
+
+      // Verify initial state (assuming default allowCloudApi is true)
+      final cloudApiSwitch = find.byType(Switch).at(2);
+      expect(tester.widget<Switch>(cloudApiSwitch).value, isTrue);
+
+      // 1. TOGGLE PREFERENCE
+      await tester.tap(cloudApiSwitch);
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'user_profile', '02_after_toggle');
+
+      // Verify it toggled locally
+      expect(tester.widget<Switch>(cloudApiSwitch).value, isFalse);
+
+      // 2. SAVE CHANGES
+      final saveButton = find.widgetWithText(ElevatedButton, 'Guardar Cambios');
+      await tester.tap(saveButton);
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'user_profile', '03_after_save');
+
+      // Verify success message
+      expect(find.text('Perfil guardado'), findsOneWidget);
+
+      // 3. PERSISTENCE CHECK
+      // Re-load the profile from repository to ensure it saved
+      final savedProfile = await repo.getUserProfile();
+      expect(savedProfile?.allowCloudApi, isFalse);
+    });
+  });
 }
