@@ -1,8 +1,8 @@
 ﻿{
-    "humanReviewPending":  false,
+    "humanReviewPending":  true,
     "humanApproved":  false,
-    "lastUpdated":  "2026-07-04 08:09:14",
-    "implementationPct":  90.9,
+    "lastUpdated":  "2026-07-04 12:14:35",
+    "implementationPct":  105.8,
     "steps":  [
                   {
                       "id":  1,
@@ -37,11 +37,11 @@
                   {
                       "id":  4,
                       "weight":  10,
-                      "evidence":  "0 usecases",
+                      "evidence":  "2 usecases",
                       "description":  "Use cases in domain layer",
-                      "completed":  false,
+                      "completed":  true,
                       "name":  "Domain Layer Use Cases",
-                      "progress":  0,
+                      "progress":  100,
                       "evaluator":  "scan:files:domain/usecases/*.dart"
                   },
                   {
@@ -87,7 +87,7 @@
                   {
                       "id":  9,
                       "weight":  9.9,
-                      "evidence":  "27 tests",
+                      "evidence":  "28 tests",
                       "description":  "Minimum 15 test files",
                       "completed":  true,
                       "name":  "Unit Tests (\u003e=15)",
@@ -97,11 +97,11 @@
                   {
                       "id":  10,
                       "weight":  4.9,
-                      "evidence":  "0 goldens",
+                      "evidence":  "7 goldens",
                       "description":  "Golden reference screenshots",
-                      "completed":  false,
+                      "completed":  true,
                       "name":  "Golden Tests (\u003e=2)",
-                      "progress":  0,
+                      "progress":  100,
                       "evaluator":  "scan:goldens:count\u003e=2"
                   },
                   {
@@ -145,6 +145,6 @@
                       "evaluator":  "human:approval"
                   }
               ],
-    "autoScore":  90.9,
+    "autoScore":  105.8,
     "feature":  "onboarding"
 }
