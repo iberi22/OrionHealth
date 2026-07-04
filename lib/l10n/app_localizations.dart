@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_ar.dart';
 import 'app_localizations_bn.dart';
+import 'app_localizations_ca.dart';
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
@@ -22,9 +23,12 @@ import 'app_localizations_pa.dart';
 import 'app_localizations_pcm.dart';
 import 'app_localizations_pl.dart';
 import 'app_localizations_pt.dart';
+import 'app_localizations_ro.dart';
 import 'app_localizations_ru.dart';
+import 'app_localizations_sw.dart';
 import 'app_localizations_ta.dart';
 import 'app_localizations_te.dart';
+import 'app_localizations_th.dart';
 import 'app_localizations_tr.dart';
 import 'app_localizations_uk.dart';
 import 'app_localizations_ur.dart';
@@ -120,6 +124,7 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
     Locale('bn'),
+    Locale('ca'),
     Locale('de'),
     Locale('en'),
     Locale('es'),
@@ -135,9 +140,12 @@ abstract class AppLocalizations {
     Locale('pcm'),
     Locale('pl'),
     Locale('pt'),
+    Locale('ro'),
     Locale('ru'),
+    Locale('sw'),
     Locale('ta'),
     Locale('te'),
+    Locale('th'),
     Locale('tr'),
     Locale('uk'),
     Locale('ur'),
@@ -790,6 +798,7 @@ class _AppLocalizationsDelegate
   bool isSupported(Locale locale) => <String>[
     'ar',
     'bn',
+    'ca',
     'de',
     'en',
     'es',
@@ -805,9 +814,12 @@ class _AppLocalizationsDelegate
     'pcm',
     'pl',
     'pt',
+    'ro',
     'ru',
+    'sw',
     'ta',
     'te',
+    'th',
     'tr',
     'uk',
     'ur',
@@ -827,6 +839,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsAr();
     case 'bn':
       return AppLocalizationsBn();
+    case 'ca':
+      return AppLocalizationsCa();
     case 'de':
       return AppLocalizationsDe();
     case 'en':
@@ -857,12 +871,18 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsPl();
     case 'pt':
       return AppLocalizationsPt();
+    case 'ro':
+      return AppLocalizationsRo();
     case 'ru':
       return AppLocalizationsRu();
+    case 'sw':
+      return AppLocalizationsSw();
     case 'ta':
       return AppLocalizationsTa();
     case 'te':
       return AppLocalizationsTe();
+    case 'th':
+      return AppLocalizationsTh();
     case 'tr':
       return AppLocalizationsTr();
     case 'uk':
