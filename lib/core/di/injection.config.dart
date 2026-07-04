@@ -55,8 +55,8 @@ import '../../features/appointments/domain/usecases/get_all_appointments_usecase
     as _i45;
 import '../../features/appointments/domain/usecases/save_appointment_usecase.dart'
     as _i104;
-import '../../features/auth/application/auth_cubit.dart' as _i203;
-import '../../features/auth/application/bloc/auth_cubit.dart' as _i202;
+import '../../features/auth/application/auth_cubit.dart' as _i202;
+import '../../features/auth/application/bloc/auth_cubit.dart' as _i203;
 import '../../features/auth/data/datasources/auth_local_datasource.dart'
     as _i136;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
@@ -874,12 +874,12 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i200.AllergiesCubit(gh<_i134.AllergyRepository>()));
     gh.factory<_i201.AllergyBloc>(
         () => _i201.AllergyBloc(gh<_i134.AllergyRepository>()));
-    gh.factory<_i202.AuthCubit>(() => _i202.AuthCubit(
+    gh.factory<_i202.AuthCubit>(() => _i202.AuthCubit(gh<_i139.AuthService>()));
+    gh.factory<_i203.AuthCubit>(() => _i203.AuthCubit(
           gh<_i137.AuthRepository>(),
           gh<_i35.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
-    gh.factory<_i203.AuthCubit>(() => _i203.AuthCubit(gh<_i139.AuthService>()));
     gh.lazySingleton<_i204.BadgeCalculator>(() => _i204.BadgeCalculator(
           gh<_i151.DoctorProfileRepository>(),
           gh<_i98.RatingRepository>(),
