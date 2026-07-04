@@ -38,23 +38,23 @@ void main() {
 
   test('should return empty list when repository returns empty', () async {
     // arrange
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenAnswer((_) async => []);
     // act
     final result = await useCase();
     // assert
     expect(result, []);
-    verify(() => mockRepository.getAllAppointments());
+    verify(() => mockRepository.getAppointments());
   });
 
   test('should throw exception when repository fails', () async {
     // arrange
-    when(() => mockRepository.getAllAppointments())
+    when(() => mockRepository.getAppointments())
         .thenThrow(Exception('DB Error'));
     // act
     final call = useCase();
     // assert
     expect(() => call, throwsException);
-    verify(() => mockRepository.getAllAppointments());
+    verify(() => mockRepository.getAppointments());
   });
 }
