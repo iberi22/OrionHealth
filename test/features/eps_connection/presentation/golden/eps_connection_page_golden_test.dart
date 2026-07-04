@@ -57,7 +57,7 @@ void main() {
 
       await expectLater(
         find.byType(EpsConnectionPage),
-        matchesGoldenFile("../../../../golden/reference/eps_connection_page_loaded.png"),
+        matchesGoldenFile("goldens/eps_connection_page_loaded.png"),
       );
       resetGoldenTest(tester);
     });
@@ -72,7 +72,7 @@ void main() {
 
       await expectLater(
         find.byType(EpsConnectionPage),
-        matchesGoldenFile("../../../../golden/reference/eps_connection_page_empty.png"),
+        matchesGoldenFile("goldens/eps_connection_page_empty.png"),
       );
       resetGoldenTest(tester);
     });
@@ -92,7 +92,7 @@ void main() {
 
       await expectLater(
         find.byType(SnackBar),
-        matchesGoldenFile("../../../../golden/reference/eps_connection_qr_snackbar.png"),
+        matchesGoldenFile("goldens/eps_connection_qr_snackbar.png"),
       );
       resetGoldenTest(tester);
     });
