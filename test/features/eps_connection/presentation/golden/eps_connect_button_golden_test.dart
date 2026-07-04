@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
-import 'package:orionhealth_health/features/eps_connection/presentation/pages/eps_connection_page.dart';
 import 'package:orionhealth_health/features/eps_connection/presentation/eps_connect_button.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_cubit.dart';
 import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_connection_state.dart';
@@ -19,7 +17,6 @@ void main() {
 
   setUp(() {
     mockCubit = MockEpsConnectionCubit();
-    // Default mock behavior
     when(() => mockCubit.close()).thenAnswer((_) async => {});
   });
 
@@ -32,7 +29,7 @@ void main() {
     );
   }
 
-  group('EPS Connection Golden Tests', () {
+  group('EpsConnectButton Golden Tests', () {
     final connection = EPSConnection(
       provider: const EPSProvider(
         id: 'ihce-1',
@@ -48,7 +45,7 @@ void main() {
       connectedAt: DateTime(2025, 1, 1),
     );
 
-    testWidgets('EpsConnectButton - Connected', (tester) async {
+    testWidgets('Connected', (tester) async {
       setupGoldenTest(tester);
       when(() => mockCubit.state).thenReturn(EpsConnectionLoaded([connection]));
       when(() => mockCubit.stream).thenAnswer((_) => Stream.value(EpsConnectionLoaded([connection])));
@@ -63,7 +60,7 @@ void main() {
       resetGoldenTest(tester);
     });
 
-    testWidgets('EpsConnectButton - Disconnected', (tester) async {
+    testWidgets('Disconnected', (tester) async {
       setupGoldenTest(tester);
       when(() => mockCubit.state).thenReturn(const EpsConnectionLoaded([]));
       when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionLoaded([])));
@@ -78,48 +75,17 @@ void main() {
       resetGoldenTest(tester);
     });
 
-    testWidgets('EpsConnectButton - Loading', (tester) async {
+    testWidgets('Loading', (tester) async {
       setupGoldenTest(tester);
       when(() => mockCubit.state).thenReturn(const EpsConnectionLoading());
       when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionLoading()));
 
       await tester.pumpWidget(createWidgetUnderTest(const Scaffold(body: EpsConnectButton())));
-      // Don't use pumpAndSettle with CircularProgressIndicator as it might time out or not stop
       await tester.pump(const Duration(milliseconds: 100));
 
       await expectLater(
         find.byType(EpsConnectButton),
         matchesGoldenFile("../../../../golden/reference/eps_connect_button_loading.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
-    testWidgets('EpsConnectionPage - Loaded', (tester) async {
-      setupGoldenTest(tester);
-      when(() => mockCubit.state).thenReturn(EpsConnectionLoaded([connection]));
-      when(() => mockCubit.stream).thenAnswer((_) => Stream.value(EpsConnectionLoaded([connection])));
-
-      await tester.pumpWidget(createWidgetUnderTest(const EpsConnectionPage()));
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(EpsConnectionPage),
-        matchesGoldenFile("../../../../golden/reference/eps_connection_page_loaded.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
-    testWidgets('EpsConnectionPage - Empty', (tester) async {
-      setupGoldenTest(tester);
-      when(() => mockCubit.state).thenReturn(const EpsConnectionLoaded([]));
-      when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionLoaded([])));
-
-      await tester.pumpWidget(createWidgetUnderTest(const EpsConnectionPage()));
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(EpsConnectionPage),
-        matchesGoldenFile("../../../../golden/reference/eps_connection_page_empty.png"),
       );
       resetGoldenTest(tester);
     });
