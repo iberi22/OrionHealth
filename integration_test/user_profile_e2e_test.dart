@@ -69,5 +69,95 @@ void main() {
       final savedProfile = await repo.getUserProfile();
       expect(savedProfile?.allowCloudApi, isFalse);
     });
+
+    testWidgets('E2E: Navigate to Medications from Profile', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: const UserProfilePage(),
+          theme: ThemeData.dark(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Find "Medicamentos" section/tile
+      final medicationsTile = find.text('Medicamentos');
+      expect(medicationsTile, findsOneWidget);
+
+      await tester.tap(medicationsTile);
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'user_profile', '04_medications_page');
+
+      // Verify we are on MedicationsPage (Checking AppBar title)
+      expect(find.descendant(of: find.byType(AppBar), matching: find.text('Medicamentos')), findsOneWidget);
+    });
+
+    testWidgets('E2E: Navigate to Allergies from Profile', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: const UserProfilePage(),
+          theme: ThemeData.dark(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Find "Alergias" section/tile
+      final allergiesTile = find.text('Alergias');
+      expect(allergiesTile, findsOneWidget);
+
+      await tester.tap(allergiesTile);
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'user_profile', '05_allergies_page');
+
+      // Verify we are on AllergiesPage
+      expect(find.descendant(of: find.byType(AppBar), matching: find.text('Alergias')), findsOneWidget);
+    });
+
+    testWidgets('E2E: Navigate to Appointments from Profile', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: const UserProfilePage(),
+          theme: ThemeData.dark(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Find "Citas" section/tile
+      final appointmentsTile = find.text('Citas');
+      expect(appointmentsTile, findsOneWidget);
+
+      await tester.tap(appointmentsTile);
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'user_profile', '06_appointments_page');
+
+      // Verify we are on AppointmentsPage
+      expect(find.descendant(of: find.byType(AppBar), matching: find.text('Citas')), findsOneWidget);
+    });
   });
 }
