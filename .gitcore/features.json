@@ -1,9 +1,9 @@
 ﻿{
     "documentation":  {
                           "translations_arb":  26,
-                          "readme_count":  6,
+                          "readme_count":  25,
                           "architecture":  true,
-                          "readme_features_pct":  24,
+                          "readme_features_pct":  100,
                           "contributing":  true
                       },
     "version":  "0.9.0",
@@ -29,14 +29,20 @@
                  },
     "name":  "OrionHealth",
     "human_review":  {
-                         "total_features_pending":  3,
+                         "total_features_pending":  9,
                          "status":  "waiting_for_auto_completion",
                          "approved_features":  [
 
                                                ],
                          "pending_features":  [
                                                   "appointments",
+                                                  "calendar_import",
+                                                  "dashboard",
                                                   "health_sharing",
+                                                  "home",
+                                                  "medical_research",
+                                                  "meditation",
+                                                  "settings",
                                                   "sync"
                                               ],
                          "total_features_approved":  0
@@ -105,7 +111,7 @@
                  "low_coverage_features":  [
 
                                            ],
-                 "missing_readmes":  19
+                 "missing_readmes":  0
              },
     "metadata":  {
                      "flutter_analyze":  "0 issues (assumed clean after PR #1014)",
@@ -119,19 +125,19 @@
                                       "main: 347cb89",
                                       "harness v1 deployed"
                                   ],
-                     "last_scan":  "2026-07-03 22:47:04",
-                     "last_updated":  "2026-07-03"
+                     "last_scan":  "2026-07-04 00:30:14",
+                     "last_updated":  "2026-07-04"
                  },
     "metrics":  {
                     "doc_weight":  9.9,
                     "e2e_weight":  9.9,
                     "arch_weight":  25,
-                    "global_pct":  82.8,
+                    "global_pct":  86.5,
                     "test_weight":  29.7,
                     "golden_weight":  9.9,
                     "ci_weight":  4.95,
                     "human_final_weight":  1,
-                    "auto_score":  82.8
+                    "auto_score":  86.5
                 },
     "ci_cd":  {
                   "ci_tests":  true,
