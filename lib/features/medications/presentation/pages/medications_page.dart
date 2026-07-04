@@ -151,6 +151,8 @@ class _MedicationsPageState extends State<MedicationsPage> {
                       children: [
                         Text(
                           medication.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -162,6 +164,8 @@ class _MedicationsPageState extends State<MedicationsPage> {
                         if (medication.dosage != null && medication.dosage!.isNotEmpty)
                           Text(
                             medication.dosage!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: isArchived ? Colors.grey[600] : AppColors.secondary,
                               fontWeight: FontWeight.w500,
@@ -170,6 +174,8 @@ class _MedicationsPageState extends State<MedicationsPage> {
                         const SizedBox(height: 8),
                         Text(
                           medication.frequency ?? 'Sin frecuencia especificada',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 13,
                             color: isArchived ? Colors.grey[600] : Colors.grey[400],
@@ -184,11 +190,15 @@ class _MedicationsPageState extends State<MedicationsPage> {
                               color: isArchived ? Colors.grey[600] : AppColors.secondary,
                             ),
                             const SizedBox(width: 4),
-                            Text(
-                              DateFormat('dd MMM yyyy').format(medication.startDate),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: isArchived ? Colors.grey[600] : Colors.grey[400],
+                            Expanded(
+                              child: Text(
+                                DateFormat('dd MMM yyyy').format(medication.startDate),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: isArchived ? Colors.grey[600] : Colors.grey[400],
+                                ),
                               ),
                             ),
                           ],
