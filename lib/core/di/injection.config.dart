@@ -653,9 +653,9 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i126.VoiceChatRepositoryImpl(gh<_i23.ChatAiDatasource>()));
     gh.lazySingleton<_i127.VouchRepository>(
         () => _i128.IsarVouchRepository(gh<_i58.Isar>()));
-    gh.lazySingleton<_i33.WalletService>(() => databaseModule.walletService(
+    gh.lazySingleton<_i34.WalletService>(() => databaseModule.walletService(
           gh<_i58.Isar>(),
-          gh<_i33.EncryptionService>(),
+          gh<_i34.EncryptionService>(),
         ));
     gh.lazySingleton<_i129.WifiDirectService>(() => _i129.WifiDirectService());
     gh.factory<_i130.AboutCubit>(
@@ -671,7 +671,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i136.AuthRepository>(
         () => _i137.AuthRepositoryImpl(gh<_i135.AuthLocalDataSource>()));
     gh.lazySingleton<_i138.AuthService>(
-        () => _i138.AuthServiceImpl(gh<_i34.EncryptionService>()));
+        () => _i138.AuthServiceImpl(gh<_i33.EncryptionService>()));
     gh.lazySingleton<_i139.BleSharingService>(
         () => _i139.BleSharingService(gh<_i15.BleWrapper>()));
     gh.lazySingleton<_i140.CancelSharingUseCase>(
@@ -892,7 +892,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i205.AuthCubit>(() => _i205.AuthCubit(gh<_i138.AuthService>()));
     gh.factory<_i206.AuthCubit>(() => _i206.AuthCubit(
           gh<_i136.AuthRepository>(),
-          gh<_i34.EncryptionService>(),
+          gh<_i33.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
     gh.lazySingleton<_i207.BadgeCalculator>(() => _i207.BadgeCalculator(
@@ -974,8 +974,8 @@ extension GetItInjectableX on _i1.GetIt {
           startSharingUseCase: gh<_i195.StartSharingUseCase>(),
           startListeningUseCase: gh<_i194.StartListeningUseCase>(),
           cancelSharingUseCase: gh<_i140.CancelSharingUseCase>(),
-          walletService: gh<_i33.WalletService>(),
-          walletEncryption: gh<_i33.EncryptionService>(),
+          walletService: gh<_i34.WalletService>(),
+          walletEncryption: gh<_i34.EncryptionService>(),
         ));
     gh.factory<_i226.GetResearchHistory>(
         () => _i226.GetResearchHistory(gh<_i220.MedicalResearchRepository>()));
