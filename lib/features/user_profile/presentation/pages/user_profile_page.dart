@@ -10,11 +10,11 @@ import '../../../../features/allergies/presentation/pages/allergies_page.dart';
 import '../../../../features/appointments/presentation/pages/appointments_page.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/bloc/user_profile_cubit.dart';
 import '../../domain/entities/user_profile.dart';
-// Sync status widget removed temporarily
-// import '../../../sync/presentation/sync_status_widget.dart';
+import '../widgets/profile_header.dart';
+import '../widgets/profile_section.dart';
+import '../widgets/profile_info_tile.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -66,24 +66,23 @@ class _UserProfileView extends StatelessWidget {
             delegate: SliverChildListDelegate(
               [
                 const SizedBox(height: 24),
-                _ProfileHeader(userProfile: userProfile),
-                // SyncStatusWidget removed temporarily
+                ProfileHeader(userProfile: userProfile),
                 const SizedBox.shrink(),
                 const SizedBox(height: 32),
-                _Section(
+                ProfileSection(
                   title: AppLocalizations.of(context)!.personalInfo,
                   children: [
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.person,
                       title: AppLocalizations.of(context)!.fullName,
                       subtitle: userProfile.name,
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.cake,
                       title: AppLocalizations.of(context)!.birthDate,
                       subtitle: '15 de Agosto, 1988',
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.call,
                       title: AppLocalizations.of(context)!.contactNumber,
                       subtitle: '+1 (555) 123-4567',
@@ -91,10 +90,10 @@ class _UserProfileView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 32),
-                _Section(
+                ProfileSection(
                   title: AppLocalizations.of(context)!.medicalInformation,
                   children: [
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.medication,
                       title: AppLocalizations.of(context)!.medications,
                       onTap: () {
@@ -106,7 +105,7 @@ class _UserProfileView extends StatelessWidget {
                         );
                       },
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.warning_amber_rounded,
                       title: AppLocalizations.of(context)!.allergies,
                       onTap: () {
@@ -118,7 +117,7 @@ class _UserProfileView extends StatelessWidget {
                         );
                       },
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.event,
                       title: AppLocalizations.of(context)!.appointments,
                       onTap: () {
@@ -133,10 +132,10 @@ class _UserProfileView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 32),
-                _Section(
+                ProfileSection(
                   title: AppLocalizations.of(context)!.bleDataExchange,
                   children: [
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.bluetooth_audio,
                       title: AppLocalizations.of(context)!.shareMyData,
                       subtitle: AppLocalizations.of(context)!.sendHistoryToDoctor,
@@ -149,7 +148,7 @@ class _UserProfileView extends StatelessWidget {
                         );
                       },
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.download_for_offline,
                       title: AppLocalizations.of(context)!.receiveData,
                       subtitle: AppLocalizations.of(context)!.receiverMode,
@@ -165,20 +164,20 @@ class _UserProfileView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 32),
-                _Section(
+                ProfileSection(
                   title: AppLocalizations.of(context)!.appPreferences,
                   children: [
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.notifications,
                       title: AppLocalizations.of(context)!.pushNotifications,
                       trailing: Switch(value: true, onChanged: (v) {}),
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.dark_mode,
                       title: AppLocalizations.of(context)!.theme,
                       subtitle: 'Dark Mode',
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.smart_toy,
                       title: AppLocalizations.of(context)!.llmSettings,
                       subtitle: AppLocalizations.of(context)!.aiModelPreferences,
@@ -191,7 +190,7 @@ class _UserProfileView extends StatelessWidget {
                         );
                       },
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.info_outline,
                       title: AppLocalizations.of(context)!.aboutOrionHealth,
                       subtitle: AppLocalizations.of(context)!.ourMissionVision,
@@ -207,15 +206,15 @@ class _UserProfileView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 32),
-                _Section(
+                ProfileSection(
                   title: AppLocalizations.of(context)!.privacySecurity,
                   children: [
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.fingerprint,
                       title: AppLocalizations.of(context)!.biometricAuth,
                       trailing: Switch(value: false, onChanged: (v) {}),
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.cloud_off,
                       title: AppLocalizations.of(context)!.allowCloudApi,
                       subtitle: AppLocalizations.of(context)!.anonymizationActive,
@@ -228,7 +227,7 @@ class _UserProfileView extends StatelessWidget {
                         },
                       ),
                     ),
-                    _InfoTile(
+                    ProfileInfoTile(
                       icon: Icons.password,
                       title: AppLocalizations.of(context)!.changePassword,
                     ),
@@ -237,8 +236,6 @@ class _UserProfileView extends StatelessWidget {
                 const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () {
-                    // In a real app, you would collect data from editing screens
-                    // For now, just save the existing profile to show functionality
                     context.read<UserProfileCubit>().saveUserProfile(userProfile);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context)!.profileSaved)),
@@ -264,111 +261,6 @@ class _UserProfileView extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ProfileHeader extends StatelessWidget {
-  final UserProfile userProfile;
-  const _ProfileHeader({required this.userProfile});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 128,
-          width: 128,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: (userProfile.avatarUrl != null && userProfile.avatarUrl!.isNotEmpty)
-                  ? NetworkImage(userProfile.avatarUrl!)
-                  : const AssetImage('assets/images/user_placeholder.png') as ImageProvider,
-              fit: BoxFit.cover,
-            ),
-            border: Border.all(color: AppColors.primary, width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.3),
-                blurRadius: 15,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          userProfile.name ?? 'Usuario',
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 4),
-        const Text(
-          'alex.damon@orion.health',
-          style: TextStyle(fontSize: 16, color: AppColors.secondary),
-        ),
-      ],
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const _Section({required this.title, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        GlassmorphicCard(
-          child: Column(
-            children: ListTile.divideTiles(
-              context: context,
-              tiles: children,
-              color: Colors.white.withValues(alpha: 0.1),
-            ).toList(),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _InfoTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String? subtitle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-
-  const _InfoTile({
-    required this.icon,
-    required this.title,
-    this.subtitle,
-    this.trailing,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: AppColors.secondary),
-      title: Text(title),
-      onTap: onTap,
-      subtitle: subtitle != null
-          ? Text(subtitle!, style: TextStyle(color: Colors.white.withValues(alpha: 0.7)))
-          : null,
-      trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.white54),
     );
   }
 }
