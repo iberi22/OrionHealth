@@ -50,7 +50,7 @@ void main() {
 
       await expectLater(
         find.byType(PrivacyPolicyPage),
-        matchesGoldenFile("../../../../../golden/reference/voice_chat_privacy_policy.png"),
+        matchesGoldenFile("goldens/privacy_policy_page.png"),
       );
       resetGoldenTest(tester);
     });
