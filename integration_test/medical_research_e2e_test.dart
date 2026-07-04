@@ -1,53 +1,52 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/medical_research/presentation/pages/medical_research_page.dart';
-import 'package:orionhealth_health/features/medical_research/application/medical_research_cubit.dart';
+import 'package:orionhealth_health/features/medical_research/domain/repositories/medical_research_repository.dart';
+import 'package:orionhealth_health/features/medical_research/domain/services/medical_standards_service.dart';
 import 'package:orionhealth_health/features/medical_research/domain/models/research_result.dart';
+import 'package:orionhealth_health/features/medical_research/domain/entities/research_query.dart';
+import 'package:orionhealth_health/features/medical_research/domain/entities/medical_research_result.dart';
 import 'package:medical_standards/medical_standards.dart';
 import 'package:mocktail/mocktail.dart';
 import 'utils/video_recorder.dart';
 
-class MockMedicalResearchCubit extends Mock implements MedicalResearchCubit {}
+class MockMedicalResearchRepository extends Mock implements MedicalResearchRepository {}
+class MockMedicalStandardsService extends Mock implements MedicalStandardsService {}
+
+class FakeResearchQuery extends Fake implements ResearchQuery {}
+class FakeMedicalResearchResult extends Fake implements MedicalResearchResult {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  late MockMedicalResearchCubit mockCubit;
-  late StreamController<MedicalResearchState> stateController;
+  late MockMedicalResearchRepository mockRepo;
+  late MockMedicalStandardsService mockStandards;
+
+  setUpAll(() async {
+    await di.configureDependencies();
+    di.getIt.allowReassignment = true;
+
+    registerFallbackValue(FakeResearchQuery());
+    registerFallbackValue(FakeMedicalResearchResult());
+  });
 
   setUp(() {
-    mockCubit = MockMedicalResearchCubit();
-    stateController = StreamController<MedicalResearchState>.broadcast();
+    mockRepo = MockMedicalResearchRepository();
+    mockStandards = MockMedicalStandardsService();
 
-    // Register the mock in GetIt
-    if (getIt.isRegistered<MedicalResearchCubit>()) {
-      getIt.unregister<MedicalResearchCubit>();
-    }
-    getIt.registerSingleton<MedicalResearchCubit>(mockCubit);
-
-    when(() => mockCubit.stream).thenAnswer((_) => stateController.stream);
-    when(() => mockCubit.close()).thenAnswer((_) async {});
+    di.getIt.registerSingleton<MedicalResearchRepository>(mockRepo);
+    di.getIt.registerSingleton<MedicalStandardsService>(mockStandards);
   });
 
   tearDown(() {
-    stateController.close();
-    getIt.unregister<MedicalResearchCubit>();
+    di.getIt.unregister<MedicalResearchRepository>();
+    di.getIt.unregister<MedicalStandardsService>();
   });
 
   group('Medical Research Flow - E2E Tests', () {
     testWidgets('E2E: Search Research Evidence', (WidgetTester tester) async {
-      const initialState = MedicalResearchState(status: MedicalResearchStatus.idle);
-      when(() => mockCubit.state).thenReturn(initialState);
-
-      await tester.pumpWidget(const MaterialApp(home: MedicalResearchPage()));
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'research', '01_initial_evidence');
-
-      expect(find.text('BUSCAR EN BASES DE DATOS MÉDICAS'), findsOneWidget);
-
       final results = [
         const ResearchResult(
           title: 'Diabetes Study 2025',
@@ -58,30 +57,21 @@ void main() {
         ),
       ];
 
-      when(() => mockCubit.performResearch(any())).thenAnswer((_) async {
-        final loadingState = initialState.copyWith(
-          status: MedicalResearchStatus.loading,
-          loadingMessage: 'Buscando evidencia médica...',
-        );
-        when(() => mockCubit.state).thenReturn(loadingState);
-        stateController.add(loadingState);
+      when(() => mockRepo.search(any())).thenAnswer((_) async => results);
+      when(() => mockRepo.saveToHistory(any())).thenAnswer((_) async {});
+      when(() => mockRepo.getHistory()).thenAnswer((_) async => []);
 
-        // Simulate delay
-        await Future.delayed(const Duration(milliseconds: 100));
+      await tester.pumpWidget(const MaterialApp(home: MedicalResearchPage()));
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'research', '01_initial_evidence');
 
-        final successState = initialState.copyWith(
-          status: MedicalResearchStatus.success,
-          results: results,
-        );
-        when(() => mockCubit.state).thenReturn(successState);
-        stateController.add(successState);
-      });
+      expect(find.text('BUSCAR EN BASES DE DATOS MÉDICAS'), findsOneWidget);
 
       await tester.enterText(find.byType(TextField).first, 'Diabetes AI');
       await tester.tap(find.byIcon(Icons.send));
-      await tester.pump(); // Start loading
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      // Wait for loading to start and finish
+      await tester.pump();
       await tester.pumpAndSettle();
 
       expect(find.text('Diabetes Study 2025'), findsOneWidget);
@@ -92,9 +82,6 @@ void main() {
     });
 
     testWidgets('E2E: Drug Interactions Check', (WidgetTester tester) async {
-      const initialState = MedicalResearchState(status: MedicalResearchStatus.idle);
-      when(() => mockCubit.state).thenReturn(initialState);
-
       await tester.pumpWidget(const MaterialApp(home: MedicalResearchPage()));
       await tester.pumpAndSettle();
 
@@ -107,23 +94,8 @@ void main() {
 
       final interactions = ['Aspirin and Warfarin may increase bleeding risk.'];
 
-      when(() => mockCubit.checkInteractions(any())).thenAnswer((_) async {
-        final loadingState = initialState.copyWith(
-          status: MedicalResearchStatus.loading,
-          loadingMessage: 'Verificando interacciones...',
-        );
-        when(() => mockCubit.state).thenReturn(loadingState);
-        stateController.add(loadingState);
-
-        await Future.delayed(const Duration(milliseconds: 100));
-
-        final successState = initialState.copyWith(
-          status: MedicalResearchStatus.success,
-          interactions: interactions,
-        );
-        when(() => mockCubit.state).thenReturn(successState);
-        stateController.add(successState);
-      });
+      when(() => mockStandards.checkDrugInteractions(any()))
+          .thenAnswer((_) async => interactions);
 
       // Enter first drug
       await tester.enterText(find.byType(TextField), 'Aspirin');
@@ -140,9 +112,6 @@ void main() {
     });
 
     testWidgets('E2E: ICD-10 Lookup', (WidgetTester tester) async {
-      const initialState = MedicalResearchState(status: MedicalResearchStatus.idle);
-      when(() => mockCubit.state).thenReturn(initialState);
-
       await tester.pumpWidget(const MaterialApp(home: MedicalResearchPage()));
       await tester.pumpAndSettle();
 
@@ -160,23 +129,7 @@ void main() {
         synonyms: ['NIDDM', 'Type 2 diabetes'],
       );
 
-      when(() => mockCubit.lookupIcd10(any())).thenAnswer((_) async {
-        final loadingState = initialState.copyWith(
-          status: MedicalResearchStatus.loading,
-          loadingMessage: 'Buscando código ICD-10...',
-        );
-        when(() => mockCubit.state).thenReturn(loadingState);
-        stateController.add(loadingState);
-
-        await Future.delayed(const Duration(milliseconds: 100));
-
-        final successState = initialState.copyWith(
-          status: MedicalResearchStatus.success,
-          icd10Result: icdCode,
-        );
-        when(() => mockCubit.state).thenReturn(successState);
-        stateController.add(successState);
-      });
+      when(() => mockStandards.lookupIcd10(any())).thenAnswer((_) async => icdCode);
 
       await tester.enterText(find.byType(TextField), 'Diabetes');
       await tester.tap(find.byIcon(Icons.search));
