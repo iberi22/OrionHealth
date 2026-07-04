@@ -32,9 +32,9 @@ Widget wrapWithMaterial(Widget child, {SharingCubit? sharingCubit, AuthCubit? au
   );
 }
 
-void setupGoldenTest(WidgetTester tester) {
+void setupGoldenTest(WidgetTester tester, {Size size = const Size(360, 640)}) {
   GoogleFonts.config.allowRuntimeFetching = false;
-  tester.view.physicalSize = const Size(360, 640);
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
 }
 
