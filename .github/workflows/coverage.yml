@@ -1,0 +1,61 @@
+name: OrionHealth Code Coverage
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
+  workflow_dispatch:
+    inputs:
+      report_only:
+        description: 'Generate report only without failing'
+        required: false
+        default: 'true'
+        type: boolean
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests with coverage
+        run: |
+          flutter test --coverage --reporter expanded || echo "Tests had non-fatal failures"
+
+      - name: Generate coverage report
+        run: |
+          dart pub global activate coverage
+          flutter test --coverage
+          dart run coverage:format_coverage --lcov -i coverage/lcov.info -o coverage/lcov.info
+          echo "Coverage data generated at coverage/lcov.info"
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+
+      - name: Coverage summary
+        if: always()
+        run: |
+          if [ -f coverage/lcov.info ]; then
+            LINES=$(wc -l < coverage/lcov.info)
+            echo "Coverage report generated: ${LINES} lines in lcov.info"
+          else
+            echo "No coverage data generated"
+          fi
