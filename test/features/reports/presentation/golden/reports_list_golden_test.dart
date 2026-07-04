@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/reports/application/bloc/report_bloc.dart';
 import 'package:orionhealth_health/features/reports/domain/entities/report.dart';
 import 'package:orionhealth_health/features/reports/presentation/pages/reports_page.dart';
-import 'package:orionhealth_health/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'package:orionhealth_health/core/theme/app_theme.dart';
 import 'package:health_wallet/health_wallet.dart';
@@ -30,16 +29,29 @@ void main() {
     when(() => mockBloc.close()).thenAnswer((_) async {});
   });
 
-  testWidgets('Reports Page - List Golden', (WidgetTester tester) async {
+  testWidgets('Reports Page - List Loaded Golden', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
 
+    final now = DateTime.now();
     final reports = [
       Report(
-        title: 'Informe Mensual de Salud',
-        content: 'Todo parece estar en orden.',
+        title: 'Informe de Salud Semanal',
+        content: 'Resumen de actividad física y nutrición.',
         status: ReportStatus.finalized,
-        generatedAt: DateTime(2023, 6, 1),
+        generatedAt: now,
+      ),
+      Report(
+        title: 'Alerta de Presión Arterial',
+        content: 'Se detectaron valores inusuales.',
+        status: ReportStatus.urgent,
+        generatedAt: now.subtract(const Duration(days: 1)),
+      ),
+      Report(
+        title: 'Chequeo Mensual',
+        content: 'Pendiente de revisión por el médico.',
+        status: ReportStatus.pending,
+        generatedAt: now.subtract(const Duration(days: 10)),
       ),
     ];
 
@@ -55,11 +67,11 @@ void main() {
       ),
     );
 
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     await expectLater(
       find.byType(ReportsPage),
-      matchesGoldenFile("../../../golden/reference/reports_page_list.png"),
+      matchesGoldenFile("../../../../../golden/reference/reports_page_list_loaded.png"),
     );
 
     addTearDown(() {
@@ -68,16 +80,11 @@ void main() {
     });
   });
 
-  testWidgets('Report Detail Page - Golden', (WidgetTester tester) async {
+  testWidgets('Reports Page - Empty State Golden', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 1920);
     tester.view.devicePixelRatio = 1.0;
 
-    final report = Report(
-      title: 'Alerta de Presión Arterial',
-      content: 'El análisis de tus signos vitales de la última semana indica una tendencia al alza en la presión sistólica. Se recomienda consultar con un profesional.',
-      status: ReportStatus.urgent,
-      generatedAt: DateTime(2023, 6, 5),
-    );
+    when(() => mockBloc.state).thenReturn(ReportLoaded(const []));
 
     await tester.pumpWidget(
       MaterialApp(
@@ -85,15 +92,15 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('es'),
-        home: ReportDetailPage(report: report),
+        home: const ReportsPage(),
       ),
     );
 
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     await expectLater(
-      find.byType(ReportDetailPage),
-      matchesGoldenFile("../../../golden/reference/report_detail_page.png"),
+      find.byType(ReportsPage),
+      matchesGoldenFile("../../../../../golden/reference/reports_page_empty.png"),
     );
 
     addTearDown(() {

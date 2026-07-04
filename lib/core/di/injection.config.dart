@@ -55,8 +55,8 @@ import '../../features/appointments/domain/usecases/get_all_appointments_usecase
     as _i45;
 import '../../features/appointments/domain/usecases/save_appointment_usecase.dart'
     as _i104;
-import '../../features/auth/application/auth_cubit.dart' as _i203;
-import '../../features/auth/application/bloc/auth_cubit.dart' as _i202;
+import '../../features/auth/application/auth_cubit.dart' as _i202;
+import '../../features/auth/application/bloc/auth_cubit.dart' as _i203;
 import '../../features/auth/data/datasources/auth_local_datasource.dart'
     as _i136;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
@@ -239,9 +239,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i177;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i215;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i73;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i72;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i73;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i122;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -345,7 +345,7 @@ import '../../features/settings/application/llm_settings_cubit.dart' as _i179;
 import '../../features/settings/domain/repositories/settings_repository.dart'
     as _i109;
 import '../../features/settings/domain/services/device_capability_service.dart'
-    as _i30;
+    as _i29;
 import '../../features/settings/infrastructure/datasources/settings_local_datasource.dart'
     as _i108;
 import '../../features/settings/infrastructure/repositories/settings_repository_impl.dart'
@@ -402,7 +402,7 @@ import '../services/aicore_service.dart' as _i3;
 import '../services/asr/asr_service.dart' as _i10;
 import '../services/audio/audio_player_service.dart' as _i11;
 import '../services/audio/audio_recorder_service.dart' as _i13;
-import '../services/device_capability_service.dart' as _i29;
+import '../services/device_capability_service.dart' as _i30;
 import '../services/privacy_anonymizer.dart' as _i97;
 import 'database_module.dart' as _i228;
 import 'fhir_module.dart' as _i229;
@@ -542,15 +542,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i70.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i71.MedicalKnowledgeRepository>(
-      () => _i72.JsonMedicalKnowledgeRepository(),
+      () => _i72.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
+    );
+    gh.factory<_i71.MedicalKnowledgeRepository>(
+      () => _i73.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
-    );
-    gh.factory<_i71.MedicalKnowledgeRepository>(
-      () => _i73.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
     );
     gh.lazySingleton<_i74.MedicalScraperService>(
         () => _i75.MedicalScraperServiceImpl(
@@ -795,7 +795,7 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i179.LlmSettingsCubit>(() => _i179.LlmSettingsCubit(
           gh<_i109.SettingsRepository>(),
-          gh<_i30.DeviceCapabilityService>(),
+          gh<_i29.DeviceCapabilityService>(),
           gh<_i65.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.lazySingleton<_i180.MedicalResearchService>(
@@ -874,12 +874,12 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i200.AllergiesCubit(gh<_i134.AllergyRepository>()));
     gh.factory<_i201.AllergyBloc>(
         () => _i201.AllergyBloc(gh<_i134.AllergyRepository>()));
-    gh.factory<_i202.AuthCubit>(() => _i202.AuthCubit(
+    gh.factory<_i202.AuthCubit>(() => _i202.AuthCubit(gh<_i139.AuthService>()));
+    gh.factory<_i203.AuthCubit>(() => _i203.AuthCubit(
           gh<_i137.AuthRepository>(),
           gh<_i35.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
-    gh.factory<_i203.AuthCubit>(() => _i203.AuthCubit(gh<_i139.AuthService>()));
     gh.lazySingleton<_i204.BadgeCalculator>(() => _i204.BadgeCalculator(
           gh<_i151.DoctorProfileRepository>(),
           gh<_i98.RatingRepository>(),
