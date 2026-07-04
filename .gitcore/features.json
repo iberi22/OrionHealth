@@ -1,6 +1,6 @@
 ﻿{
     "documentation":  {
-                          "translations_arb":  26,
+                          "translations_arb":  30,
                           "readme_count":  25,
                           "architecture":  true,
                           "readme_features_pct":  100,
@@ -99,9 +99,9 @@
                  }
              ],
     "test_suite":  {
-                       "test_ratio_pct":  45.4,
+                       "test_ratio_pct":  45.8,
                        "integration_tests":  33,
-                       "test_files":  562,
+                       "test_files":  571,
                        "golden_screenshots":  146
                    },
     "gaps":  {
@@ -120,31 +120,31 @@
                                       "health_wallet":  "0.1.0",
                                       "isar_agent_memory":  "0.5.0-beta"
                                   },
-                     "total_dart_files":  1238,
+                     "total_dart_files":  1247,
                      "branches":  [
                                       "main: 347cb89",
                                       "harness v1 deployed"
                                   ],
-                     "last_scan":  "2026-07-04 00:30:14",
+                     "last_scan":  "2026-07-04 04:09:09",
                      "last_updated":  "2026-07-04"
                  },
     "metrics":  {
                     "doc_weight":  9.9,
                     "e2e_weight":  9.9,
                     "arch_weight":  25,
-                    "global_pct":  86.5,
+                    "global_pct":  88.1,
                     "test_weight":  29.7,
                     "golden_weight":  9.9,
                     "ci_weight":  4.95,
                     "human_final_weight":  1,
-                    "auto_score":  86.5
+                    "auto_score":  88.1
                 },
     "ci_cd":  {
                   "ci_tests":  true,
                   "release":  true,
                   "deploy_docs":  true,
                   "medical_standards":  true,
-                  "workflows":  5,
+                  "workflows":  6,
                   "android_build":  true
               }
 }
