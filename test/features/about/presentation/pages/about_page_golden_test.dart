@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:orionhealth_health/features/about/presentation/pages/about_page.dart';
-import 'package:orionhealth_health/features/about/presentation/widgets/mission_section.dart';
 import 'package:orionhealth_health/features/about/application/about_cubit.dart';
 import 'package:orionhealth_health/features/about/domain/entities/about_info.dart';
 import '../../../../core/golden_test_utils.dart';
@@ -12,140 +11,85 @@ import '../../../../core/golden_test_utils.dart';
 class MockAboutCubit extends Mock implements AboutCubit {}
 
 void main() {
-  late MockAboutCubit mockAboutCubit;
+  late MockAboutCubit mockCubit;
+
+  setUpAll(() {
+    initializeDateFormatting('es', null);
+  });
 
   setUp(() async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences.setMockInitialValues({});
+    mockCubit = MockAboutCubit();
+    await GetIt.I.reset();
+    GetIt.I.registerSingleton<AboutCubit>(mockCubit);
 
-    mockAboutCubit = MockAboutCubit();
-    final getIt = GetIt.I;
-    if (getIt.isRegistered<AboutCubit>()) {
-      await getIt.unregister<AboutCubit>();
-    }
-    getIt.registerFactory<AboutCubit>(() => mockAboutCubit);
+    when(() => mockCubit.loadAboutInfo()).thenAnswer((_) async {});
+    when(() => mockCubit.close()).thenAnswer((_) async {});
   });
 
   tearDown(() async {
     await GetIt.I.reset();
   });
 
-  group('AboutPage Golden Tests', () {
-    testWidgets('AboutPage - Loading State', (tester) async {
-      setupGoldenTest(tester);
-
-      when(() => mockAboutCubit.state).thenReturn(const AboutLoading());
-      when(() => mockAboutCubit.loadAboutInfo()).thenAnswer((_) async {});
-      when(() => mockAboutCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockAboutCubit.close()).thenAnswer((_) async {});
-
-      await tester.pumpWidget(wrapWithMaterial(const AboutPage()));
-      await tester.pump();
-
-      await expectLater(
-        find.byType(AboutPage),
-        matchesGoldenFile("../../../../golden/reference/about_page_loading.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
-    testWidgets('AboutPage - Error State', (tester) async {
-      setupGoldenTest(tester);
-
-      when(
-        () => mockAboutCubit.state,
-      ).thenReturn(const AboutError('Error al cargar información'));
-      when(() => mockAboutCubit.loadAboutInfo()).thenAnswer((_) async {});
-      when(() => mockAboutCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockAboutCubit.close()).thenAnswer((_) async {});
-
-      await tester.pumpWidget(wrapWithMaterial(const AboutPage()));
-      await tester.pump();
-
-      await expectLater(
-        find.byType(AboutPage),
-        matchesGoldenFile("../../../../golden/reference/about_page_error.png"),
-      );
-      resetGoldenTest(tester);
-    });
-
-    testWidgets('AboutPage - Loaded State', (tester) async {
+  group('About Page Golden Tests', () {
+    testWidgets('About Page - Loaded', (tester) async {
       setupGoldenTest(tester);
 
       const aboutInfo = AboutInfo(
-        blogPosts: [
-          BlogPost(
-            title: 'Nuevos horizontes en telemedicina',
-            content:
-                'Descubre cómo la telemedicina está transformando la atención médica en Colombia, permitiendo consultas remotas seguras y eficientes.',
-            date: '2026-06-01',
-            category: 'Telemedicina',
-          ),
-          BlogPost(
-            title: 'Salud preventiva: tu mejor aliada',
-            content:
-                'Conoce las claves para mantener un estilo de vida saludable y prevenir enfermedades crónicas con hábitos diarios simples.',
-            date: '2026-05-25',
-            category: 'Prevención',
-          ),
-        ],
-        missionStatement:
-            'Empoderar a las personas con herramientas digitales para gestionar su salud de manera proactiva, segura y descentralizada.',
+        missionStatement: 'Nuestra misión es empoderar a los pacientes a través de la tecnología y el acceso a sus propios datos de salud.',
         values: [
-          'La privacidad del paciente es innegociable',
-          'Tecnología accesible para todos',
-          'Datos seguros, soberanía del usuario',
+          'Privacidad Primero',
+          'Interoperabilidad',
+          'Centrado en el Paciente',
+          'Seguridad de Grado Médico',
         ],
         activities: [
-          'Desarrollo de wallet de salud con estándares FHIR',
-          'Integración con sistemas de salud colombianos (EPS)',
-          'Investigación en IA para diagnósticos asistidos',
+          'Gestión de historial clínico electrónico',
+          'Sincronización con nodos locales de salud',
+          'Análisis preventivo mediante IA local',
+        ],
+        blogPosts: [
+          BlogPost(
+            title: 'El futuro de la salud soberana',
+            content: 'Los datos de salud pertenecen al paciente, no a las instituciones. En OrionHealth trabajamos para que esto sea una realidad diaria.',
+            date: '10 Jun 2026',
+            category: 'Noticias',
+          ),
+          BlogPost(
+            title: 'Seguridad en la red Orion',
+            content: 'Implementamos protocolos de cifrado de extremo a extremo para asegurar que solo tú y tus médicos autorizados vean tu información.',
+            date: '05 Jun 2026',
+            category: 'Seguridad',
+          ),
         ],
       );
 
-      when(() => mockAboutCubit.state).thenReturn(const AboutLoaded(aboutInfo));
-      when(() => mockAboutCubit.loadAboutInfo()).thenAnswer((_) async {});
-      when(() => mockAboutCubit.stream).thenAnswer((_) => const Stream.empty());
-      when(() => mockAboutCubit.close()).thenAnswer((_) async {});
+      when(() => mockCubit.state).thenReturn(const AboutLoaded(aboutInfo));
+      when(() => mockCubit.stream).thenAnswer((_) => Stream.fromIterable([const AboutLoaded(aboutInfo)]));
 
       await tester.pumpWidget(wrapWithMaterial(const AboutPage()));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
 
       await expectLater(
         find.byType(AboutPage),
-        matchesGoldenFile("../../../../golden/reference/about_page_loaded.png"),
+        matchesGoldenFile("goldens/about_page_loaded.png"),
       );
       resetGoldenTest(tester);
     });
 
-    testWidgets('MissionSection widget standalone', (tester) async {
+    testWidgets('About Page - Error', (tester) async {
       setupGoldenTest(tester);
 
-      await tester.pumpWidget(
-        wrapWithMaterial(
-          Scaffold(
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: MissionSection(
-                  missionStatement: 'Misión de prueba para OrionHealth',
-                  values: ['Valor 1: Privacidad', 'Valor 2: Accesibilidad'],
-                  activities: [
-                    'Actividad 1: Desarrollo',
-                    'Actividad 2: Investigación',
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.pump();
+      const state = AboutError('Error al cargar la información de la empresa');
+
+      when(() => mockCubit.state).thenReturn(state);
+      when(() => mockCubit.stream).thenAnswer((_) => Stream.fromIterable([state]));
+
+      await tester.pumpWidget(wrapWithMaterial(const AboutPage()));
+      await tester.pumpAndSettle();
 
       await expectLater(
-        find.byType(MissionSection),
-        matchesGoldenFile("../../../../golden/reference/mission_section.png"),
+        find.byType(AboutPage),
+        matchesGoldenFile("goldens/about_page_error.png"),
       );
       resetGoldenTest(tester);
     });

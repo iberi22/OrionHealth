@@ -52,7 +52,7 @@ void main() {
     await tester.pumpAndSettle();
     await expectLater(
       find.byType(MeditationView),
-      matchesGoldenFile('../../../golden/reference/meditation_welcome.png'),
+      matchesGoldenFile('goldens/meditation_welcome.png'),
     );
   });
 
@@ -93,7 +93,7 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await expectLater(
       find.byType(MeditationView),
-      matchesGoldenFile('../../../golden/reference/meditation_active.png'),
+      matchesGoldenFile('goldens/meditation_active.png'),
     );
   });
 
@@ -131,7 +131,37 @@ void main() {
     await tester.pumpAndSettle();
     await expectLater(
       find.byType(MeditationView),
-      matchesGoldenFile('../../../golden/reference/meditation_completed.png'),
+      matchesGoldenFile('goldens/meditation_completed.png'),
+    );
+  });
+
+  testWidgets('Meditation screen golden test - Error View', (WidgetTester tester) async {
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(
+        status: MeditationStatus.error,
+        error: 'No se pudo cargar la sesión de meditación',
+      ),
+    );
+
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1.0;
+
+    await tester.pumpWidget(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<MeditationCubit>.value(value: mockCubit),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.darkTheme,
+          home: const MeditationView(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(MeditationView),
+      matchesGoldenFile('goldens/meditation_error.png'),
     );
   });
 }

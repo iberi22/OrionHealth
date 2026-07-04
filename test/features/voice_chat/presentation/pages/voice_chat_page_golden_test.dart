@@ -13,7 +13,7 @@ import 'package:orionhealth_health/features/voice_chat/application/voice_chat_cu
 import 'package:orionhealth_health/features/voice_chat/application/voice_chat_state.dart';
 import 'package:orionhealth_health/core/services/aicore_service.dart';
 import 'package:orionhealth_health/features/voice_chat/domain/entities/voice_chat_message.dart';
-import '../../../core/golden_test_utils.dart';
+import '../../../../core/golden_test_utils.dart';
 
 class MockVoiceChatCubit extends Mock implements VoiceChatCubit {}
 class MockAIService extends Mock implements AIService {}
@@ -29,15 +29,10 @@ void main() {
   setUp(() async {
     mockCubit = MockVoiceChatCubit();
     mockAIService = MockAIService();
-    final getIt = GetIt.I;
-    if (getIt.isRegistered<VoiceChatCubit>()) {
-      await getIt.unregister<VoiceChatCubit>();
-    }
-    if (getIt.isRegistered<AIService>()) {
-      await getIt.unregister<AIService>();
-    }
-    getIt.registerSingleton<VoiceChatCubit>(mockCubit);
-    getIt.registerSingleton<AIService>(mockAIService);
+
+    await GetIt.I.reset();
+    GetIt.I.registerSingleton<VoiceChatCubit>(mockCubit);
+    GetIt.I.registerSingleton<AIService>(mockAIService);
 
     when(() => mockCubit.state).thenReturn(const VoiceChatState());
     when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
@@ -58,7 +53,7 @@ void main() {
 
       await expectLater(
         find.byType(ChatPage),
-        matchesGoldenFile("../../../../golden/reference/voice_chat_page_alt.png"),
+        matchesGoldenFile("goldens/chat_page.png"),
       );
       resetGoldenTest(tester);
     });
@@ -70,14 +65,14 @@ void main() {
 
       await expectLater(
         find.byType(PrivacyPolicyPage),
-        matchesGoldenFile("../../../../golden/reference/voice_chat_privacy_policy.png"),
+        matchesGoldenFile("goldens/privacy_policy_page.png"),
       );
       resetGoldenTest(tester);
     });
 
     testWidgets('VoiceChatPage', (tester) async {
       setupGoldenTest(tester);
-      // Even larger size to avoid overflow in ConnectionStatusIndicator
+      // Large size to avoid overflow
       tester.view.physicalSize = const Size(600, 1000);
 
       when(() => mockCubit.state).thenReturn(const VoiceChatState(
@@ -90,7 +85,7 @@ void main() {
 
       await expectLater(
         find.byType(VoiceChatPage),
-        matchesGoldenFile("../../../../golden/reference/voice_chat_page.png"),
+        matchesGoldenFile("goldens/voice_chat_page.png"),
       );
       resetGoldenTest(tester);
     });
@@ -109,7 +104,7 @@ void main() {
 
       await expectLater(
         find.byType(MessageBubble),
-        matchesGoldenFile("../../../../golden/reference/voice_message_bubble_user.png"),
+        matchesGoldenFile("../widgets/goldens/message_bubble_user.png"),
       );
       resetGoldenTest(tester);
     });
@@ -128,7 +123,7 @@ void main() {
 
       await expectLater(
         find.byType(MessageBubble),
-        matchesGoldenFile("../../../../golden/reference/voice_message_bubble_ai.png"),
+        matchesGoldenFile("../widgets/goldens/message_bubble_ai.png"),
       );
       resetGoldenTest(tester);
     });
@@ -149,7 +144,7 @@ void main() {
 
       await expectLater(
         find.byType(VoiceInputButton),
-        matchesGoldenFile("../../../../golden/reference/voice_chat_input_button.png"),
+        matchesGoldenFile("../widgets/goldens/voice_input_button.png"),
       );
       resetGoldenTest(tester);
     });

@@ -24,10 +24,6 @@ void main() {
     mockDashboardCubit = MockDashboardCubit();
 
     when(() => mockDashboardCubit.loadDashboardData()).thenAnswer((_) async {});
-    when(() => mockDashboardCubit.state).thenReturn(const DashboardLoaded(
-      stats: DashboardStats(totalMedications: 0, reportsCount: 0),
-      activities: [],
-    ));
     when(() => mockDashboardCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockDashboardCubit.close()).thenAnswer((_) async {});
 
@@ -42,8 +38,13 @@ void main() {
   });
 
   group('Dashboard Golden Tests', () {
-    testWidgets('Home Dashboard Page', (tester) async {
+    testWidgets('Home Dashboard Page - Loaded', (tester) async {
       setupGoldenTest(tester);
+
+      when(() => mockDashboardCubit.state).thenReturn(const DashboardLoaded(
+        stats: DashboardStats(totalMedications: 5, reportsCount: 3),
+        activities: [],
+      ));
 
       await tester.pumpWidget(
         BlocProvider<DashboardCubit>.value(
@@ -55,7 +56,27 @@ void main() {
 
       await expectLater(
         find.byType(HomeDashboardPage),
-        matchesGoldenFile("../../../../golden/reference/home_dashboard_page.png"),
+        matchesGoldenFile("goldens/dashboard_page_loaded.png"),
+      );
+      resetGoldenTest(tester);
+    });
+
+    testWidgets('Home Dashboard Page - Loading', (tester) async {
+      setupGoldenTest(tester);
+
+      when(() => mockDashboardCubit.state).thenReturn(const DashboardLoading());
+
+      await tester.pumpWidget(
+        BlocProvider<DashboardCubit>.value(
+          value: mockDashboardCubit,
+          child: wrapWithMaterial(const HomeDashboardPage()),
+        ),
+      );
+      await tester.pump();
+
+      await expectLater(
+        find.byType(HomeDashboardPage),
+        matchesGoldenFile("goldens/dashboard_page_loading.png"),
       );
       resetGoldenTest(tester);
     });
