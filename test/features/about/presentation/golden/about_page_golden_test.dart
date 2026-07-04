@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:orionhealth_health/features/about/presentation/pages/about_page.dart';
 import 'package:orionhealth_health/features/about/application/about_cubit.dart';
 import 'package:orionhealth_health/features/about/domain/entities/about_info.dart';
@@ -13,14 +11,10 @@ class MockAboutCubit extends Mock implements AboutCubit {}
 void main() {
   late MockAboutCubit mockCubit;
 
-  setUpAll(() {
-    initializeDateFormatting('es', null);
-  });
-
   setUp(() async {
     mockCubit = MockAboutCubit();
     await GetIt.I.reset();
-    GetIt.I.registerSingleton<AboutCubit>(mockCubit);
+    GetIt.I.registerFactory<AboutCubit>(() => mockCubit);
 
     when(() => mockCubit.loadAboutInfo()).thenAnswer((_) async {});
     when(() => mockCubit.close()).thenAnswer((_) async {});
@@ -31,6 +25,22 @@ void main() {
   });
 
   group('About Page Golden Tests', () {
+    testWidgets('About Page - Loading', (tester) async {
+      setupGoldenTest(tester);
+
+      when(() => mockCubit.state).thenReturn(const AboutLoading());
+      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+
+      await tester.pumpWidget(wrapWithMaterial(const AboutPage()));
+      await tester.pump();
+
+      await expectLater(
+        find.byType(AboutPage),
+        matchesGoldenFile("../../../../../golden/reference/about_page_loading.png"),
+      );
+      resetGoldenTest(tester);
+    });
+
     testWidgets('About Page - Loaded', (tester) async {
       setupGoldenTest(tester);
 
@@ -64,7 +74,7 @@ void main() {
       );
 
       when(() => mockCubit.state).thenReturn(const AboutLoaded(aboutInfo));
-      when(() => mockCubit.stream).thenAnswer((_) => Stream.fromIterable([const AboutLoaded(aboutInfo)]));
+      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
 
       await tester.pumpWidget(wrapWithMaterial(const AboutPage()));
       await tester.pumpAndSettle();
@@ -82,7 +92,7 @@ void main() {
       const state = AboutError('Error al cargar la información de la empresa');
 
       when(() => mockCubit.state).thenReturn(state);
-      when(() => mockCubit.stream).thenAnswer((_) => Stream.fromIterable([state]));
+      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
 
       await tester.pumpWidget(wrapWithMaterial(const AboutPage()));
       await tester.pumpAndSettle();
