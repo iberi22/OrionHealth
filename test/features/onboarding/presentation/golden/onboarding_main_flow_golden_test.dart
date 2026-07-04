@@ -5,20 +5,17 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/onboarding/application/onboarding_cubit.dart';
 import 'package:orionhealth_health/features/onboarding/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:orionhealth_health/l10n/app_localizations.dart';
-import 'package:orionhealth_health/core/theme/app_theme.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/golden_test_utils.dart';
 
 class MockOnboardingCubit extends Mock implements OnboardingCubit {}
 
 void main() {
-  GoogleFonts.config.allowRuntimeFetching = false;
   late MockOnboardingCubit mockOnboardingCubit;
   late UserProfile sampleProfile;
 
   setUp(() {
     mockOnboardingCubit = MockOnboardingCubit();
-    final now = DateTime.now();
+    final now = DateTime(2023, 1, 1);
     sampleProfile = UserProfile(
       name: 'Test User',
       onboardingCompleted: false,
@@ -40,25 +37,28 @@ void main() {
     );
     when(() => mockOnboardingCubit.currentStep).thenReturn(step);
 
-    return MaterialApp(
-      theme: AppTheme.darkTheme,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('es'),
-      home: BlocProvider<OnboardingCubit>.value(
-        value: mockOnboardingCubit,
-        child: const OnboardingPage(),
-      ),
+    return BlocProvider<OnboardingCubit>.value(
+      value: mockOnboardingCubit,
+      child: const OnboardingPage(),
     );
   }
 
-  group('Onboarding Page Golden Screenshots', () {
-    for (int i = 0; i < 7; i++) {
-      testWidgets('Onboarding Step $i', (WidgetTester tester) async {
-        tester.view.physicalSize = const Size(1080, 1920);
-        tester.view.devicePixelRatio = 1.0;
+  group('Onboarding Main Flow Golden Tests', () {
+    final steps = [
+      'Welcome',
+      'Basic Info',
+      'Conditions',
+      'Family History',
+      'Medications',
+      'Privacy',
+      'Complete',
+    ];
 
-        await tester.pumpWidget(createOnboardingPage(i));
+    for (int i = 0; i < steps.length; i++) {
+      testWidgets('Onboarding Step $i - ${steps[i]}', (WidgetTester tester) async {
+        setupGoldenTest(tester);
+
+        await tester.pumpWidget(wrapWithMaterial(createOnboardingPage(i)));
         await tester.pumpAndSettle();
 
         await expectLater(
@@ -66,10 +66,7 @@ void main() {
           matchesGoldenFile("../../../../../golden/reference/onboarding_step_$i.png"),
         );
 
-        addTearDown(() {
-          tester.view.resetPhysicalSize();
-          tester.view.resetDevicePixelRatio();
-        });
+        resetGoldenTest(tester);
       });
     }
   });
