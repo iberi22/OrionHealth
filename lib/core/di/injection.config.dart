@@ -655,7 +655,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i128.IsarVouchRepository(gh<_i58.Isar>()));
     gh.lazySingleton<_i33.WalletService>(() => databaseModule.walletService(
           gh<_i58.Isar>(),
-          gh<_i34.EncryptionService>(),
+          gh<_i33.EncryptionService>(),
         ));
     gh.lazySingleton<_i129.WifiDirectService>(() => _i129.WifiDirectService());
     gh.factory<_i130.AboutCubit>(

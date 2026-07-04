@@ -318,15 +318,18 @@ class LocalConnectionStatus extends StatelessWidget {
             children: [
               const Icon(Icons.wifi_tethering, color: Colors.white54, size: 20),
               const SizedBox(width: 8),
-              const Text(
-                'Estado del Sistema',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white70,
+              const Expanded(
+                child: Text(
+                  'Estado del Sistema',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white70,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const Spacer(),
+              const SizedBox(width: 8),
               if (onRetry != null)
                 IconButton(
                   icon: const Icon(Icons.refresh, color: Colors.white38, size: 18),
@@ -348,11 +351,14 @@ class LocalConnectionStatus extends StatelessWidget {
                 showLabel: false,
               ),
               const SizedBox(width: 8),
-              const Text(
-                'IA Local (LM Studio)',
-                style: TextStyle(color: Colors.white60, fontSize: 13),
+              const Expanded(
+                child: Text(
+                  'IA Local (LM Studio)',
+                  style: TextStyle(color: Colors.white60, fontSize: 13),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              const Spacer(),
+              const SizedBox(width: 8),
               Text(
                 isLocalAIReady ? 'Conectado' : 'No disponible',
                 style: TextStyle(
@@ -379,11 +385,14 @@ class LocalConnectionStatus extends StatelessWidget {
                 showLabel: false,
               ),
               const SizedBox(width: 8),
-              Text(
-                'Memoria Local (Isar)',
-                style: TextStyle(color: Colors.white60, fontSize: 13),
+              const Expanded(
+                child: Text(
+                  'Memoria Local (Isar)',
+                  style: TextStyle(color: Colors.white60, fontSize: 13),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              const Spacer(),
+              const SizedBox(width: 8),
               Text(
                 isMemoryReady ? '$memoryCount recuerdos' : 'No disponible',
                 style: TextStyle(
