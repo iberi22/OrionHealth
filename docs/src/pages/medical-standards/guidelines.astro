@@ -1,0 +1,51 @@
+---
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import guidelinesData from "../../../public/clinical_guidelines.json";
+
+const { guidelines } = guidelinesData;
+---
+
+<BaseLayout title="Clinical Guidelines - OrionHealth Knowledge Base" description="Evidence-based clinical guidelines from WHO, CDC, and major medical associations.">
+
+  <Header lang="en" />
+
+  <main class="pt-20 pb-16 px-4">
+    <div class="container-custom max-w-6xl mx-auto">
+
+      <div class="mb-12">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter uppercase mb-4">
+          Clinical <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600">Guidelines</span>
+        </h1>
+        <p class="text-lg text-bone-dark opacity-80">
+          Recomendaciones basadas en evidencia para el manejo de condiciones comunes.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {guidelines.map(g => (
+          <div class="glass rounded-xl p-6 border border-emerald-500/10">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-bold px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 uppercase tracking-widest">{g.source}</span>
+              <div class="flex gap-2">
+                {g.relatedCodes.map(code => (
+                  <span class="text-[10px] font-mono text-bone-dark opacity-50">{code}</span>
+                ))}
+              </div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-white">{g.topic}</h3>
+            <p class="text-sm text-bone-dark leading-relaxed mb-4">{g.summary}</p>
+            <div class="p-4 rounded-lg bg-white/5 border border-white/5">
+              <h4 class="text-xs font-bold text-accent uppercase mb-2">Holistic Focus</h4>
+              <p class="text-xs text-bone-dark italic">{g.holisticFocus}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </main>
+
+  <Footer lang="en" />
+</BaseLayout>

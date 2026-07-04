@@ -37,6 +37,41 @@ import Footer from "../components/Footer.astro";
             </p>
           </div>
 
+          <!-- Push Notifications Placeholder -->
+          <div id="pwa-notification-panel" class="hidden glass rounded-xl p-4 mb-8 border border-accent/20 bg-accent/5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white uppercase tracking-wider">Enable Notifications</h4>
+                  <p class="text-[10px] text-bone-dark opacity-70">Get updates on new medical standards and feature docs.</p>
+                </div>
+              </div>
+              <button id="enable-notifications" class="px-4 py-1.5 rounded-full bg-accent text-background text-[10px] font-bold uppercase tracking-widest hover:scale-105 transition-transform">
+                Enable
+              </button>
+            </div>
+          </div>
+
+          <script>
+            // Simple PWA Notification logic placeholder
+            if ('Notification' in window && Notification.permission !== 'granted') {
+              const panel = document.getElementById('pwa-notification-panel');
+              if (panel) panel.classList.remove('hidden');
+
+              document.getElementById('enable-notifications')?.addEventListener('click', () => {
+                Notification.requestPermission().then(permission => {
+                  if (permission === 'granted') {
+                    panel?.classList.add('hidden');
+                    console.log('Notifications enabled');
+                  }
+                });
+              });
+            }
+          </script>
+
           <!-- Stats Quick Row -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             <div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">

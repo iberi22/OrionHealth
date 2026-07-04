@@ -1,0 +1,68 @@
+---
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import interactionsData from "../../../public/rxnorm_interactions.json";
+
+const { interactions } = interactionsData;
+
+const severityColors = {
+  "High": "text-red-400 bg-red-400/10 border-red-400/20",
+  "Moderate": "text-amber-400 bg-amber-400/10 border-amber-400/20",
+  "Low": "text-blue-400 bg-blue-400/10 border-blue-400/20"
+};
+---
+
+<BaseLayout title="Drug Interactions - OrionHealth Knowledge Base" description="Analyze potential drug-drug interactions between common medications.">
+
+  <Header lang="en" />
+
+  <main class="pt-20 pb-16 px-4">
+    <div class="container-custom max-w-6xl mx-auto">
+
+      <div class="mb-12">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter uppercase mb-4">
+          Drug <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600">Interactions</span>
+        </h1>
+        <p class="text-lg text-bone-dark opacity-80">
+          Base de conocimiento de interacciones farmacológicas procesadas localmente.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        {interactions.map(i => (
+          <div class="glass rounded-xl p-6 border border-white/5">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+              <div class="flex items-center gap-3">
+                <div class="flex -space-x-3">
+                  <div class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center border-2 border-charcoal text-xs font-bold">{i.names[0][0]}</div>
+                  <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center border-2 border-charcoal text-xs font-bold">{i.names[1][0]}</div>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-white">
+                  {i.names[0]} + {i.names[1]}
+                </h3>
+              </div>
+              <span class={`text-xs font-bold px-3 py-1 rounded-full border ${severityColors[i.severity]}`}>
+                {i.severity} Severity
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 class="text-xs font-bold text-bone-dark uppercase tracking-widest mb-2 opacity-50">Description</h4>
+                <p class="text-sm text-bone-dark leading-relaxed">{i.description}</p>
+              </div>
+              <div class="p-4 rounded-lg bg-white/5 border border-white/5">
+                <h4 class="text-xs font-bold text-secondary uppercase mb-2">Holistic Note</h4>
+                <p class="text-sm text-bone-dark italic">{i.holisticNote}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </main>
+
+  <Footer lang="en" />
+</BaseLayout>
