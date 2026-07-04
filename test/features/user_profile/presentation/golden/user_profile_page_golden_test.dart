@@ -13,14 +13,14 @@ class MockUserProfileCubit extends Mock implements UserProfileCubit {}
 void main() {
   late MockUserProfileCubit mockCubit;
 
-  setUpAll(() {
-    initializeDateFormatting('es', null);
+  setUpAll(() async {
+    await initializeDateFormatting('es', null);
   });
 
   setUp(() async {
     mockCubit = MockUserProfileCubit();
     await GetIt.I.reset();
-    GetIt.I.registerSingleton<UserProfileCubit>(mockCubit);
+    GetIt.I.registerFactory<UserProfileCubit>(() => mockCubit);
 
     when(() => mockCubit.loadUserProfile()).thenAnswer((_) async {});
     when(() => mockCubit.close()).thenAnswer((_) async {});
@@ -51,7 +51,7 @@ void main() {
 
       await expectLater(
         find.byType(UserProfilePage),
-        matchesGoldenFile("../../../../../golden/reference/user_profile_page_loaded.png"),
+        matchesGoldenFile("goldens/user_profile_page_loaded.png"),
       );
       resetGoldenTest(tester);
     });
@@ -68,7 +68,7 @@ void main() {
 
       await expectLater(
         find.byType(UserProfilePage),
-        matchesGoldenFile("../../../../../golden/reference/user_profile_page_loading.png"),
+        matchesGoldenFile("goldens/user_profile_page_loading.png"),
       );
       resetGoldenTest(tester);
     });
@@ -86,7 +86,7 @@ void main() {
 
       await expectLater(
         find.byType(UserProfilePage),
-        matchesGoldenFile("../../../../../golden/reference/user_profile_page_error.png"),
+        matchesGoldenFile("goldens/user_profile_page_error.png"),
       );
       resetGoldenTest(tester);
     });
