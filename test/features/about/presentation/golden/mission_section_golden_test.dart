@@ -36,7 +36,7 @@ void main() {
 
       await expectLater(
         find.byType(MissionSection),
-        matchesGoldenFile("../../../../../golden/reference/mission_section.png"),
+        matchesGoldenFile("goldens/mission_section.png"),
       );
       resetGoldenTest(tester);
     });
