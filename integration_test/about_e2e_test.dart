@@ -1,61 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/features/about/presentation/pages/about_page.dart';
+import 'package:orionhealth_health/features/about/application/about_cubit.dart';
+import 'package:orionhealth_health/features/about/domain/entities/about_info.dart';
 import 'utils/video_recorder.dart';
+
+class MockAboutCubit extends Mock implements AboutCubit {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  late MockAboutCubit mockCubit;
+
+  setUp(() async {
+    mockCubit = MockAboutCubit();
+    await GetIt.I.reset();
+    GetIt.I.registerFactory<AboutCubit>(() => mockCubit);
+
+    when(() => mockCubit.loadAboutInfo()).thenAnswer((_) async {});
+    when(() => mockCubit.close()).thenAnswer((_) async {});
+  });
+
+  tearDown(() async {
+    await GetIt.I.reset();
+  });
+
   group('About Flow - E2E Tests', () {
-    testWidgets('E2E: Legal Info Flow', (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: _MockAboutPage()));
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'about', '01_main');
+    testWidgets('E2E: About Page Loading State', (WidgetTester tester) async {
+      when(() => mockCubit.state).thenReturn(const AboutLoading());
+      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
 
-      // Terms
-      await tester.tap(find.text('Términos y Condiciones'));
-      await tester.pumpAndSettle();
-      expect(find.text('Términos de Uso'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'about', '02_terms');
-      await tester.tap(find.byIcon(Icons.arrow_back));
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(const MaterialApp(home: AboutPage()));
+      await VideoRecorder.recordStep(tester, 'about', '01_loading');
 
-      // Privacy
-      await tester.tap(find.text('Política de Privacidad'));
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('E2E: About Page Loaded State', (WidgetTester tester) async {
+      const aboutInfo = AboutInfo(
+        missionStatement: 'Nuestra misión es empoderar a los pacientes a través de la tecnología.',
+        values: ['Privacidad Primero', 'Seguridad'],
+        activities: ['Gestión de historial', 'IA local'],
+        blogPosts: [
+          BlogPost(
+            title: 'El futuro de la salud soberana',
+            content: 'Los datos de salud pertenecen al paciente.',
+            date: '10 Jun 2026',
+            category: 'Noticias',
+          ),
+        ],
+      );
+
+      when(() => mockCubit.state).thenReturn(const AboutLoaded(aboutInfo));
+      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+
+      await tester.pumpWidget(const MaterialApp(home: AboutPage()));
       await tester.pumpAndSettle();
-      expect(find.text('Privacidad de Datos'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'about', '03_privacy');
+      await VideoRecorder.recordStep(tester, 'about', '02_loaded');
+
+      expect(find.text('Sobre OrionHealth'), findsOneWidget);
+      expect(find.text(aboutInfo.missionStatement), findsOneWidget);
+      expect(find.text('Privacidad Primero'), findsOneWidget);
+      expect(find.text('El futuro de la salud soberana'), findsOneWidget);
+    });
+
+    testWidgets('E2E: About Page Error State', (WidgetTester tester) async {
+      const errorMessage = 'No se pudo cargar la información';
+      when(() => mockCubit.state).thenReturn(const AboutError(errorMessage));
+      when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+
+      await tester.pumpWidget(const MaterialApp(home: AboutPage()));
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'about', '03_error');
+
+      expect(find.text('Error: $errorMessage'), findsOneWidget);
     });
   });
-}
-
-class _MockAboutPage extends StatefulWidget {
-  const _MockAboutPage();
-  @override
-  State<_MockAboutPage> createState() => _MockAboutPageState();
-}
-
-class _MockAboutPageState extends State<_MockAboutPage> {
-  String? _subPage;
-
-  @override
-  Widget build(BuildContext context) {
-    if (_subPage != null) {
-      return Scaffold(
-        appBar: AppBar(title: Text(_subPage!), leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => setState(() => _subPage = null))),
-        body: Padding(padding: const EdgeInsets.all(16.0), child: Text('Contenido legal de $_subPage...')),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Acerca de OrionHealth')),
-      body: ListView(
-        children: [
-          const ListTile(title: Text('Versión'), subtitle: Text('1.0.0')),
-          ListTile(title: const Text('Términos y Condiciones'), onTap: () => setState(() => _subPage = 'Términos de Uso')),
-          ListTile(title: const Text('Política de Privacidad'), onTap: () => setState(() => _subPage = 'Privacidad de Datos')),
-        ],
-      ),
-    );
-  }
 }
