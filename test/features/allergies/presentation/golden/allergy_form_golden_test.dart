@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/allergies/presentation/widgets/allergy_form.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
+import '../../../../core/golden_test_utils.dart';
 
 void main() {
   group('Allergy Form Golden Tests', () {
     testWidgets('AllergyForm (New) Golden Test', (WidgetTester tester) async {
-      tester.view.physicalSize = const Size(360, 640);
-      tester.view.devicePixelRatio = 1.0;
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData.dark(), // Use a default dark theme for simplicity or CyberTheme
-          home: Scaffold(
+        wrapWithMaterial(
+          Scaffold(
             body: AllergyForm(
               onSave: (_) {},
             ),
@@ -24,18 +23,13 @@ void main() {
 
       await expectLater(
         find.byType(AllergyForm),
-        matchesGoldenFile("../../../../golden/reference/allergy_form_new.png"),
+        matchesGoldenFile("goldens/allergy_form_new.png"),
       );
-
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
+      resetGoldenTest(tester);
     });
 
     testWidgets('AllergyForm (Edit) Golden Test', (WidgetTester tester) async {
-      tester.view.physicalSize = const Size(360, 640);
-      tester.view.devicePixelRatio = 1.0;
+      setupGoldenTest(tester);
 
       final allergy = Allergy(
         id: 1,
@@ -45,9 +39,8 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData.dark(),
-          home: Scaffold(
+        wrapWithMaterial(
+          Scaffold(
             body: AllergyForm(
               allergy: allergy,
               onSave: (_) {},
@@ -61,13 +54,9 @@ void main() {
 
       await expectLater(
         find.byType(AllergyForm),
-        matchesGoldenFile("../../../../golden/reference/allergy_form_edit.png"),
+        matchesGoldenFile("goldens/allergy_form_edit.png"),
       );
-
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
+      resetGoldenTest(tester);
     });
   });
 }
