@@ -28,7 +28,7 @@ Widget wrapWithMaterial(Widget child, {SharingCubit? sharingCubit, AuthCubit? au
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     locale: const Locale('es'),
-    home: result,
+    home: Material(child: result),
   );
 }
 

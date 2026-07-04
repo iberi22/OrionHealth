@@ -47,9 +47,9 @@ class _MedicalNodeOnboardingState extends State<MedicalNodeOnboarding> {
                   });
                 },
                 children: const [
-                  _WhatIsMedicalNetworkStep(),
-                  _SecureDataSharingStep(),
-                  _PatientBenefitsStep(),
+                  SingleChildScrollView(child: _WhatIsMedicalNetworkStep()),
+                  SingleChildScrollView(child: _SecureDataSharingStep()),
+                  SingleChildScrollView(child: _PatientBenefitsStep()),
                 ],
               ),
             ),
@@ -131,7 +131,7 @@ class _WhatIsMedicalNetworkStep extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Spacer(),
+          const SizedBox(height: 24),
           Container(
             width: 100,
             height: 100,
@@ -177,7 +177,7 @@ class _WhatIsMedicalNetworkStep extends StatelessWidget {
             Icons.access_time,
             'Agenda de citas en línea',
           ),
-          const Spacer(),
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -217,7 +217,7 @@ class _SecureDataSharingStep extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Spacer(),
+          const SizedBox(height: 24),
           Container(
             width: 100,
             height: 100,
@@ -267,7 +267,7 @@ class _SecureDataSharingStep extends StatelessWidget {
             Icons.rule,
             'Cumplimiento HIPAA',
           ),
-          const Spacer(),
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -307,7 +307,7 @@ class _PatientBenefitsStep extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Spacer(),
+          const SizedBox(height: 24),
           Container(
             width: 100,
             height: 100,
@@ -357,7 +357,7 @@ class _PatientBenefitsStep extends StatelessWidget {
             Icons.support_agent,
             'Asistente de salud 24/7',
           ),
-          const Spacer(),
+          const SizedBox(height: 24),
         ],
       ),
     );

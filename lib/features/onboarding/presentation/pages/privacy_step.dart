@@ -61,13 +61,15 @@ class _PrivacyStepState extends State<PrivacyStep> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
-                    const Icon(Icons.shield, color: AppColors.primary, size: 22),
-                    const SizedBox(width: 10),
-                    const Text(
-                      'Protección de acceso',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
+                    Icon(Icons.shield, color: AppColors.primary, size: 22),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Protección de acceso',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -84,11 +86,11 @@ class _PrivacyStepState extends State<PrivacyStep> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
-                    const Icon(Icons.lock_outline, color: AppColors.secondary, size: 22),
-                    const SizedBox(width: 10),
-                    const Expanded(
+                    Icon(Icons.lock_outline, color: AppColors.secondary, size: 22),
+                    SizedBox(width: 10),
+                    Expanded(
                       child: Text(
                         'Tus datos están protegidos',
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
@@ -117,11 +119,11 @@ class _PrivacyStepState extends State<PrivacyStep> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
-                    const Icon(Icons.favorite, color: Colors.pinkAccent, size: 22),
-                    const SizedBox(width: 10),
-                    const Expanded(
+                    Icon(Icons.favorite, color: Colors.pinkAccent, size: 22),
+                    SizedBox(width: 10),
+                    Expanded(
                       child: Text(
                         'Proyecto Libre y Gratuito',
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
@@ -147,11 +149,11 @@ class _PrivacyStepState extends State<PrivacyStep> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
-                    const Icon(Icons.analytics_outlined, color: Colors.amber, size: 22),
-                    const SizedBox(width: 10),
-                    const Expanded(
+                    Icon(Icons.analytics_outlined, color: Colors.amber, size: 22),
+                    SizedBox(width: 10),
+                    Expanded(
                       child: Text(
                         'Procesamiento de datos',
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
@@ -183,11 +185,11 @@ class _PrivacyStepState extends State<PrivacyStep> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
-                    const Icon(Icons.description_outlined, color: Colors.purple, size: 22),
-                    const SizedBox(width: 10),
-                    const Expanded(
+                    Icon(Icons.description_outlined, color: Colors.purple, size: 22),
+                    SizedBox(width: 10),
+                    Expanded(
                       child: Text(
                         'Política de privacidad',
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
