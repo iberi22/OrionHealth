@@ -124,14 +124,20 @@ class _SearchBar extends StatelessWidget {
 class _FilterChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Chip(label: const Text('Todos'), backgroundColor: AppColors.primary.withValues(alpha: 0.3)),
-        Chip(label: const Text('Diagnóstico'), backgroundColor: Colors.white10),
-        Chip(label: const Text('Medicación'), backgroundColor: Colors.white10),
-        Chip(label: const Text('Documentos'), backgroundColor: Colors.white10),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Chip(label: const Text('Todos'), backgroundColor: AppColors.primary.withValues(alpha: 0.3)),
+          const SizedBox(width: 8),
+          Chip(label: const Text('Diagnóstico'), backgroundColor: Colors.white10),
+          const SizedBox(width: 8),
+          Chip(label: const Text('Medicación'), backgroundColor: Colors.white10),
+          const SizedBox(width: 8),
+          Chip(label: const Text('Documentos'), backgroundColor: Colors.white10),
+        ],
+      ),
     );
   }
 }
