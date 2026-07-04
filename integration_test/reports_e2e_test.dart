@@ -1,81 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:orionhealth_health/core/di/injection.dart' as di;
+import 'package:orionhealth_health/features/reports/presentation/pages/reports_page.dart';
+import 'package:orionhealth_health/features/reports/presentation/pages/report_detail_page.dart';
+import 'package:orionhealth_health/features/reports/domain/repositories/report_repository.dart';
+import 'package:orionhealth_health/features/reports/domain/entities/report.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'utils/video_recorder.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Reports Flow - E2E Tests', () {
-    testWidgets('E2E: Generate and View Report', (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: _MockReportsPage()));
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'reports', '01_list');
+  setUpAll(() async {
+    await di.configureDependencies();
+    await initializeDateFormatting('es', null);
+  });
 
-      // Generate
-      await tester.tap(find.text('Generar Reporte Mensual'));
+  group('Reports Flow - E2E Tests', () {
+    testWidgets('E2E: Full reports flow with real database', (WidgetTester tester) async {
+      final repo = di.getIt<ReportRepository>();
+
+      // 1. Clean start for the test
+      final existingReports = await repo.getReports();
+      for (final report in existingReports) {
+        await repo.deleteReport(report.id);
+      }
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: const ReportsPage(),
+          theme: ThemeData.dark(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'reports', '01_initial_empty_list');
+
+      // 2. Verify empty state
+      expect(find.text('No hay informes disponibles'), findsOneWidget);
+
+      // 3. GENERATE REPORT
+      final generateButton = find.text('Generar Ahora');
+      expect(generateButton, findsOneWidget);
+      await tester.tap(generateButton);
+
+      // The generation might take some time (especially if using mock delay or real LLM)
+      // We pump but don't settle immediately because of the loading indicator
       await tester.pump();
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'reports', '02_generating');
 
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(find.text('Reporte Noviembre 2023'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'reports', '03_generated');
+      // Wait for generation to complete (Mock delay is 2s, real might be more)
+      // pumpAndSettle might timeout if there are infinite animations, but here it should be fine
+      await tester.pumpAndSettle(const Duration(seconds: 5));
 
-      // View
-      await tester.tap(find.text('Reporte Noviembre 2023'));
+      // 4. Verify report is listed
+      // The report title starts with 'Informe de Salud'
+      expect(find.textContaining('Informe de Salud'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'reports', '03_after_generation');
+
+      // 5. VIEW DETAIL
+      await tester.tap(find.textContaining('Informe de Salud'));
       await tester.pumpAndSettle();
-      expect(find.text('Detalle de Reporte'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'reports', '04_view_detail');
+
+      expect(find.byType(ReportDetailPage), findsOneWidget);
+      expect(find.textContaining('Informe de Salud'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'reports', '04_report_detail');
+
+      // 6. GO BACK
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+      expect(find.byType(ReportsPage), findsOneWidget);
+
+      // 7. TEST FILTERS
+      // Since generation assigns a random status, we might need to know which one it is
+      // to test filters accurately, or just test that the chips are there.
+      expect(find.text('Todos'), findsOneWidget);
+      expect(find.text('Urgentes'), findsOneWidget);
+      expect(find.text('Finalizados'), findsOneWidget);
+      expect(find.text('Pendientes'), findsOneWidget);
+
+      await tester.tap(find.text('Urgentes'));
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'reports', '05_filter_urgent');
+
+      await tester.tap(find.text('Todos'));
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'reports', '06_filter_all');
     });
   });
-}
-
-class _MockReportsPage extends StatefulWidget {
-  const _MockReportsPage();
-  @override
-  State<_MockReportsPage> createState() => _MockReportsPageState();
-}
-
-class _MockReportsPageState extends State<_MockReportsPage> {
-  List<String> reports = ['Reporte Octubre 2023'];
-  bool _isLoading = false;
-  bool _isDetail = false;
-
-  @override
-  Widget build(BuildContext context) {
-    if (_isDetail) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Detalle de Reporte'), leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => setState(() => _isDetail = false))),
-        body: const Center(child: Text('Gráficos de salud y métricas')),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Reportes de Salud')),
-      body: ListView.builder(
-        itemCount: reports.length,
-        itemBuilder: (context, i) => ListTile(title: Text(reports[i]), onTap: () => setState(() => _isDetail = true)),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _isLoading
-          ? const LinearProgressIndicator()
-          : ElevatedButton(
-              onPressed: () {
-                setState(() => _isLoading = true);
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  if (mounted) {
-                    setState(() {
-                      reports.insert(0, 'Reporte Noviembre 2023');
-                      _isLoading = false;
-                    });
-                  }
-                });
-              },
-              child: const Text('Generar Reporte Mensual'),
-            ),
-      ),
-    );
-  }
 }
