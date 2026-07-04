@@ -1,9 +1,12 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2025 SouthWest AI Labs
+
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/features/voice_chat/presentation/pages/voice_chat_page.dart';
-import 'package:orionhealth_health/features/voice_chat/application/voice_chat_cubit.dart';
 import 'package:orionhealth_health/core/services/audio/audio_player_service.dart';
 import 'package:orionhealth_health/core/services/aicore_service.dart';
 import 'package:mocktail/mocktail.dart';
@@ -20,27 +23,18 @@ void main() {
   late MockAIService mockAIService;
 
   setUpAll(() async {
-    // Basic setup before all tests
+    di.getIt.allowReassignment = true;
   });
 
   setUp(() async {
     await di.getIt.reset();
+    await di.configureDependencies();
 
     mockAudioService = MockAudioService();
     mockAIService = MockAIService();
 
-    // Register mocks before configuring dependencies or override them after
-    // Actually, it's better to configure then override or register manually.
-    // In this project's pattern, we often use di.configureDependencies()
-    // and then manually register singleton overrides if needed.
-
-    await di.configureDependencies();
-
-    // Override services that require hardware/native features
-    di.getIt.unregister<AudioService>();
+    // Register mocks as overrides
     di.getIt.registerSingleton<AudioService>(mockAudioService);
-
-    di.getIt.unregister<AIService>();
     di.getIt.registerSingleton<AIService>(mockAIService);
 
     // Default mock behaviors
@@ -49,10 +43,15 @@ void main() {
     when(() => mockAudioService.initialize()).thenAnswer((_) async {});
     when(() => mockAudioService.stopAll()).thenAnswer((_) async {});
     when(() => mockAudioService.speakText(any())).thenAnswer((_) async {});
+    when(() => mockAudioService.startRecording()).thenAnswer((_) async {});
+    when(() => mockAudioService.stopRecording()).thenAnswer((_) async => Uint8List.fromList([1, 2, 3]));
 
     when(() => mockAIService.currentState).thenReturn(AIServiceState.ready);
     when(() => mockAIService.stateStream).thenAnswer((_) => const Stream.empty());
     when(() => mockAIService.initialize()).thenAnswer((_) async {});
+    when(() => mockAIService.transcribeAudio(any())).thenAnswer((_) async => 'Consulta por voz');
+    when(() => mockAIService.getResponse(any(), context: any(named: 'context')))
+        .thenAnswer((_) async => 'Respuesta simulada');
   });
 
   group('Voice Chat - Integrated E2E Tests', () {
@@ -60,24 +59,23 @@ void main() {
       await tester.pumpWidget(const MaterialApp(
         home: VoiceChatPage(),
       ));
-      await tester.pumpAndSettle();
+
+      // Use pump() instead of pumpAndSettle() due to infinite pulse animation
+      await tester.pump(const Duration(milliseconds: 500));
       await VideoRecorder.recordStep(tester, 'voice_chat', '01_initial_state');
 
       expect(find.text('Orion — Chat de Voz'), findsOneWidget);
-      // Wait for cubit initialization
-      await tester.pump(const Duration(milliseconds: 500));
       expect(find.text('Listo para conversar'), findsOneWidget);
     });
 
     testWidgets('E2E: Text Message Flow', (WidgetTester tester) async {
-      // Mock AI response
       when(() => mockAIService.getResponse(any(), context: any(named: 'context')))
           .thenAnswer((_) async => 'Hola, ¿en qué puedo ayudarte?');
 
       await tester.pumpWidget(const MaterialApp(
         home: VoiceChatPage(),
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       final textField = find.byType(TextField);
       expect(textField, findsOneWidget);
@@ -86,18 +84,20 @@ void main() {
       await tester.enterText(textField, 'Hola Orion');
       await tester.testTextInput.receiveAction(TextInputAction.done);
 
-      // We use pump() instead of pumpAndSettle because of the infinite animation in VoiceChatPage
+      // Processing state
       await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('Generando respuesta...'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'voice_chat', '02_message_sent');
 
       // Verify message appears in UI
       expect(find.text('Hola Orion'), findsOneWidget);
 
-      // Wait for AI response processing
+      // Wait for AI response processing and speaking state
       await tester.pump(const Duration(seconds: 1));
 
       // Verify AI response appears
       expect(find.text('Hola, ¿en qué puedo ayudarte?'), findsOneWidget);
+      expect(find.text('Respondiendo...'), findsOneWidget);
 
       // Verify TTS was called
       verify(() => mockAudioService.speakText('Hola, ¿en qué puedo ayudarte?')).called(1);
@@ -106,9 +106,6 @@ void main() {
     });
 
     testWidgets('E2E: Voice Recording and Transcription', (WidgetTester tester) async {
-      // Mock behaviors
-      when(() => mockAudioService.startRecording()).thenAnswer((_) async {});
-      when(() => mockAudioService.stopRecording()).thenAnswer((_) async => Uint8List.fromList([1, 2, 3]));
       when(() => mockAIService.transcribeAudio(any())).thenAnswer((_) async => 'Consulta por voz');
       when(() => mockAIService.getResponse(any(), context: any(named: 'context')))
           .thenAnswer((_) async => 'Recibido por voz');
@@ -116,7 +113,7 @@ void main() {
       await tester.pumpWidget(const MaterialApp(
         home: VoiceChatPage(),
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       // Find mic button (VoiceInputButton uses GestureDetector for long press)
       final micIcon = find.byIcon(Icons.mic_none);
@@ -136,6 +133,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
 
       verify(() => mockAudioService.stopRecording()).called(1);
+      expect(find.text('Transcribiendo audio...'), findsOneWidget);
 
       // Wait for transcription and response
       await tester.pump(const Duration(seconds: 1));
@@ -146,14 +144,10 @@ void main() {
     });
 
     testWidgets('E2E: Clear Chat History', (WidgetTester tester) async {
-       // Mock AI response to have some messages
-      when(() => mockAIService.getResponse(any(), context: any(named: 'context')))
-          .thenAnswer((_) async => 'Respuesta');
-
       await tester.pumpWidget(const MaterialApp(
         home: VoiceChatPage(),
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       // Send a message to populate history
       await tester.enterText(find.byType(TextField), 'Test');
@@ -167,9 +161,9 @@ void main() {
       expect(deleteIcon, findsOneWidget);
 
       await tester.tap(deleteIcon);
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
-      // Verify history is cleared
+      // Verify history is cleared (message should be gone)
       expect(find.text('Test'), findsNothing);
       expect(find.text('Conversación limpiada'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'voice_chat', '06_history_cleared');
