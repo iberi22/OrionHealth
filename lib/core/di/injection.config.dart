@@ -222,26 +222,26 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i65;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i121;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
-    as _i67;
+    as _i66;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i41;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i174;
+    as _i175;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
     as _i43;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i175;
+    as _i174;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
-    as _i66;
+    as _i67;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
     as _i178;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i177;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i215;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i73;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i72;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i73;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i122;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -529,12 +529,12 @@ extension GetItInjectableX on _i1.GetIt {
         _i64.LicenseVerifier(
             await getAsync<_i63.LicenseRegistryLocalDataSource>()));
     gh.lazySingleton<_i65.LlmAdapter>(
-      () => _i66.OpenaiCompatibleAdapter(),
-      instanceName: 'openai',
+      () => _i66.FlutterGemmaAdapter(wrapper: gh<_i41.FlutterGemmaWrapper>()),
+      instanceName: 'gemma',
     );
     gh.lazySingleton<_i65.LlmAdapter>(
-      () => _i67.FlutterGemmaAdapter(wrapper: gh<_i41.FlutterGemmaWrapper>()),
-      instanceName: 'gemma',
+      () => _i67.OpenaiCompatibleAdapter(),
+      instanceName: 'openai',
     );
     gh.lazySingleton<_i68.LocalLlmService>(() => _i68.LocalLlmService());
     gh.lazySingleton<_i69.LocalModelLocalDataSource>(
@@ -542,15 +542,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i70.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i71.MedicalKnowledgeRepository>(
-      () => _i72.JsonMedicalKnowledgeRepository(),
+      () => _i72.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
+    );
+    gh.factory<_i71.MedicalKnowledgeRepository>(
+      () => _i73.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
-    );
-    gh.factory<_i71.MedicalKnowledgeRepository>(
-      () => _i73.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
     );
     gh.lazySingleton<_i74.MedicalScraperService>(
         () => _i75.MedicalScraperServiceImpl(
@@ -774,17 +774,17 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i7.AppointmentRepository>(),
           gh<_i118.UserProfileRepository>(),
         ));
+    gh.factory<_i65.LlmAdapter>(
+      () => _i174.MockLlmAdapter(gh<_i97.PromptScrubber>()),
+      instanceName: 'mock',
+    );
     gh.lazySingleton<_i65.LlmAdapter>(
-      () => _i174.GeminiLlmAdapter(
+      () => _i175.GeminiLlmAdapter(
         scrubber: gh<_i97.PromptScrubber>(),
         userProfileRepository: gh<_i118.UserProfileRepository>(),
         modelWrapper: gh<_i43.GeminiModelWrapper>(),
       ),
       instanceName: 'gemini',
-    );
-    gh.factory<_i65.LlmAdapter>(
-      () => _i175.MockLlmAdapter(gh<_i97.PromptScrubber>()),
-      instanceName: 'mock',
     );
     gh.lazySingleton<_i176.LlmAdapterFactory>(
         () => _i176.LlmAdapterFactory(gh<_i109.SettingsRepository>()));
