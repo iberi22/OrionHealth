@@ -6,7 +6,7 @@
     "fullArch":  25,
     "i18nFiles":  30,
     "testScore":  29.7,
-    "scanTime":  "2026-07-05 01:13:42",
+    "scanTime":  "2026-07-05 14:51:28",
     "goldenFiles":  249,
     "autoScore":  89.4,
     "implementationPct":  89.4,
@@ -425,7 +425,7 @@
                                            "hasFullArch":  true
                                        }
                        },
-    "totalDartFiles":  1324,
-    "e2eFiles":  33,
+    "totalDartFiles":  1325,
+    "e2eFiles":  34,
     "readmeCount":  25
 }
