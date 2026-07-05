@@ -3,56 +3,102 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/features/calendar_import/presentation/calendar_import_page.dart';
-import 'package:orionhealth_health/features/calendar_import/application/calendar_import_cubit.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/entities/calendar_appointment.dart';
+import 'package:orionhealth_health/features/calendar_import/domain/repositories/calendar_import_repository.dart';
+import 'package:orionhealth_health/features/appointments/domain/repositories/appointment_repository.dart';
+import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'utils/video_recorder.dart';
 
-class MockCalendarImportCubit extends Mock implements CalendarImportCubit {}
+class MockCalendarImportRepository extends Mock implements CalendarImportRepository {}
+class MockAppointmentRepository extends Mock implements AppointmentRepository {}
+class MockUserProfileRepository extends Mock implements UserProfileRepository {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  late MockCalendarImportCubit mockCubit;
+  late MockCalendarImportRepository mockCalendarRepository;
+  late MockAppointmentRepository mockAppointmentRepository;
+  late MockUserProfileRepository mockUserProfileRepository;
 
-  setUpAll(() {
-    registerFallbackValue(<Appointment>[]);
+  setUpAll(() async {
+    await configureDependencies();
+    registerFallbackValue(Appointment(
+      doctorName: '',
+      specialty: '',
+      dateTime: DateTime.now(),
+      status: AppointmentStatus.upcoming,
+    ));
+    await initializeDateFormatting('es', null);
   });
 
   setUp(() {
-    mockCubit = MockCalendarImportCubit();
-    getIt.registerSingleton<CalendarImportCubit>(mockCubit);
+    getIt.allowReassignment = true;
+    mockCalendarRepository = MockCalendarImportRepository();
+    mockAppointmentRepository = MockAppointmentRepository();
+    mockUserProfileRepository = MockUserProfileRepository();
 
-    when(() => mockCubit.scanCalendar()).thenAnswer((_) async {});
-    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-  });
+    getIt.registerSingleton<CalendarImportRepository>(mockCalendarRepository);
+    getIt.registerSingleton<AppointmentRepository>(mockAppointmentRepository);
+    getIt.registerSingleton<UserProfileRepository>(mockUserProfileRepository);
 
-  tearDown(() {
-    getIt.unregister<CalendarImportCubit>();
+    // Default mocks
+    when(() => mockUserProfileRepository.getUserProfile())
+        .thenAnswer((_) async => null);
   });
 
   group('Calendar Import Flow - E2E Tests', () {
-    testWidgets('E2E: Import Calendar', (WidgetTester tester) async {
-      final appointments = [
-        Appointment(
+    testWidgets('E2E: Success Flow - Found and Import Appointments', (WidgetTester tester) async {
+      final now = DateTime.now();
+      final calendarAppointments = [
+        CalendarAppointment(
           doctorName: 'Dr. Smith',
-          specialty: 'Cardiology',
-          dateTime: DateTime.now().add(const Duration(days: 1)),
-          status: AppointmentStatus.upcoming,
+          specialty: 'Cardiología',
+          dateTime: now.add(const Duration(days: 1)),
         ),
       ];
 
-      when(() => mockCubit.state).thenReturn(CalendarImportLoaded(appointments));
+      when(() => mockCalendarRepository.hasPermissions()).thenAnswer((_) async => true);
+      when(() => mockCalendarRepository.fetchMedicalAppointments()).thenAnswer((_) async => calendarAppointments);
+      when(() => mockAppointmentRepository.saveAppointment(any())).thenAnswer((_) async {});
 
       await tester.pumpWidget(const MaterialApp(home: CalendarImportPage()));
       await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'calendar', '01_loaded');
+      await VideoRecorder.recordStep(tester, 'calendar_import', '01_loaded');
 
       expect(find.text('Dr. Smith'), findsOneWidget);
-      expect(find.text('Cardiology'), findsOneWidget);
+      expect(find.text('Cardiología'), findsOneWidget);
 
       await tester.tap(find.text('IMPORTAR SELECCIONADOS'));
-      verify(() => mockCubit.importAppointments(any())).called(1);
+      await tester.pumpAndSettle();
+
+      verify(() => mockAppointmentRepository.saveAppointment(any())).called(1);
+      expect(find.text('Se importaron 1 citas con éxito'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'calendar_import', '02_success');
+    });
+
+    testWidgets('E2E: Empty Flow - No Appointments Found', (WidgetTester tester) async {
+      when(() => mockCalendarRepository.hasPermissions()).thenAnswer((_) async => true);
+      when(() => mockCalendarRepository.fetchMedicalAppointments()).thenAnswer((_) async => []);
+
+      await tester.pumpWidget(const MaterialApp(home: CalendarImportPage()));
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'calendar_import', '03_empty');
+
+      expect(find.text('No se encontraron citas médicas en tu calendario'), findsOneWidget);
+    });
+
+    testWidgets('E2E: Permission Denied Flow', (WidgetTester tester) async {
+      when(() => mockCalendarRepository.hasPermissions()).thenAnswer((_) async => false);
+      when(() => mockCalendarRepository.requestPermissions()).thenAnswer((_) async => false);
+
+      await tester.pumpWidget(const MaterialApp(home: CalendarImportPage()));
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'calendar_import', '04_permission_denied');
+
+      expect(find.text('Se requiere permiso para acceder al calendario'), findsOneWidget);
     });
   });
 }
