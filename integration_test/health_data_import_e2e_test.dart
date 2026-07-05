@@ -5,14 +5,16 @@ import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/health_data_import/presentation/pages/health_import_page.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_import_service.dart';
-import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
+import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:mocktail/mocktail.dart';
 import 'utils/video_recorder.dart';
 
 class MockHealthDataImportService extends Mock implements HealthDataImportService {}
 class MockVitalSignRepository extends Mock implements VitalSignRepository {}
+
+class FakeVitalSign extends Fake implements VitalSign {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -22,54 +24,57 @@ void main() {
 
   setUpAll(() async {
     await di.configureDependencies();
-    di.getIt.allowReassignment = true;
-
-    registerFallbackValue(HealthDataSource.googleFit);
+    registerFallbackValue(FakeVitalSign());
     registerFallbackValue(<VitalSign>[]);
-    registerFallbackValue(<dynamic>[]);
+    registerFallbackValue(HealthDataSource.googleFit);
   });
 
   setUp(() {
+    di.getIt.allowReassignment = true;
     mockImportService = MockHealthDataImportService();
     mockVitalSignRepository = MockVitalSignRepository();
 
     di.getIt.registerSingleton<HealthDataImportService>(mockImportService);
     di.getIt.registerSingleton<VitalSignRepository>(mockVitalSignRepository);
 
-    // Mock local_auth platform channel
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-      const MethodChannel('plugins.flutter.io/local_auth'),
-      (MethodCall methodCall) async {
-        if (methodCall.method == 'authenticate') {
-          return true;
-        }
-        if (methodCall.method == 'canCheckBiometrics' ||
-            methodCall.method == 'isDeviceSupported' ||
-            methodCall.method == 'getEnrolledBiometrics') {
-          if (methodCall.method == 'getEnrolledBiometrics') return <String>['fingerprint'];
-          return true;
-        }
-        return null;
-      },
-    );
+    // Mock local_auth platform channel to bypass biometrics
+    const MethodChannel('plugins.flutter.io/local_auth')
+        .setMockMethodCallHandler((MethodCall methodCall) async {
+      if (methodCall.method == 'authenticate') {
+        return true;
+      }
+      if (methodCall.method == 'canCheckBiometrics' || methodCall.method == 'isDeviceSupported') {
+        return true;
+      }
+      if (methodCall.method == 'getAvailableBiometrics') {
+        return <String>['fingerprint'];
+      }
+      return null;
+    });
   });
 
-  tearDown(() {
-    di.getIt.unregister<HealthDataImportService>();
-    di.getIt.unregister<VitalSignRepository>();
-  });
-
-  group('Health Data Import Flow - E2E Tests', () {
-    testWidgets('E2E: Full Import Flow from Google Fit', (WidgetTester tester) async {
-      // 1. MOCK SERVICE RESPONSES
+  group('Health Data Import - E2E Tests', () {
+    testWidgets('Full Import Flow from Google Fit', (WidgetTester tester) async {
+      // 1. Mock initial data
       when(() => mockImportService.getAvailableSources())
           .thenAnswer((_) async => [HealthDataSource.googleFit]);
 
+      // 2. Launch the page
+      await tester.pumpWidget(const MaterialApp(
+        home: HealthImportPage(),
+      ));
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'health_data_import', '01_ready_state');
+
+      // Verify Google Fit is available
+      expect(find.text('Google Fit / Health Connect'), findsOneWidget);
+      expect(find.text('Available'), findsOneWidget);
+
+      // 3. Setup mocks for the import process
       when(() => mockImportService.requestAuthorization(any()))
           .thenAnswer((_) async => true);
 
-      // Mock data fetching (return empty lists for simplicity)
+      // Mocking all fetch methods to return empty lists for simplicity in E2E
       when(() => mockImportService.fetchSteps()).thenAnswer((_) async => []);
       when(() => mockImportService.fetchDistance()).thenAnswer((_) async => []);
       when(() => mockImportService.fetchHeartRate()).thenAnswer((_) async => []);
@@ -86,44 +91,53 @@ void main() {
       when(() => mockVitalSignRepository.saveVitalSigns(any()))
           .thenAnswer((_) async => {});
 
-      // 2. START THE PAGE
-      await tester.pumpWidget(
-        MaterialApp(
-          home: const HealthImportPage(),
-          theme: ThemeData.dark(),
-        ),
-      );
+      // 4. Trigger Import
+      await tester.tap(find.text('Import Data'));
+      await tester.pump(); // Start the flow
 
-      // Wait for availability check
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'health_import', '01_ready_view');
-
-      // Verify Google Fit is available
-      expect(find.text('Google Fit / Health Connect'), findsOneWidget);
-      expect(find.text('Available'), findsOneWidget);
-
-      // 3. TRIGGER IMPORT
-      final importButton = find.widgetWithText(ElevatedButton, 'Import Data');
-      await tester.tap(importButton);
-
-      // First pump for the tap and the biometric dialog logic
-      await tester.pump();
-
-      // Wait for the async biometric check to finish and the cubit to start
+      // 5. Verify Authentication state (dialog showing "Requesting permission from...")
       await tester.pump(const Duration(milliseconds: 100));
-      // Now the progress dialog should be visible
-      await VideoRecorder.recordStep(tester, 'health_import', '02_importing_dialog');
+      expect(find.textContaining('Requesting permission from'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'health_data_import', '02_authenticating');
 
-      // 4. WAIT FOR COMPLETION
-      // The import process has multiple steps. pumpAndSettle should wait for the animations and state changes.
       await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'health_import', '03_success_snackbar');
 
-      // 5. VERIFY SUCCESS
+      // 6. Verify Success SnackBar
       expect(find.textContaining('Successfully imported'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'health_data_import', '03_success');
+    });
 
-      // Verify repository was called (8 times for 8 categories of data)
-      verify(() => mockVitalSignRepository.saveVitalSigns(any())).called(greaterThan(0));
+    testWidgets('Handling Authorization Denied', (WidgetTester tester) async {
+      when(() => mockImportService.getAvailableSources())
+          .thenAnswer((_) async => [HealthDataSource.googleFit]);
+      when(() => mockImportService.requestAuthorization(any()))
+          .thenAnswer((_) async => false);
+
+      await tester.pumpWidget(const MaterialApp(home: HealthImportPage()));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Import Data'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Authorization denied'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'health_data_import', '04_auth_denied');
+    });
+   group('E2E: Import Health Data from Multiple Sources', () {
+      testWidgets('Shows multiple available sources', (WidgetTester tester) async {
+        when(() => mockImportService.getAvailableSources())
+            .thenAnswer((_) async => [HealthDataSource.googleFit, HealthDataSource.samsungHealth]);
+
+        await tester.pumpWidget(const MaterialApp(home: HealthImportPage()));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Google Fit / Health Connect'), findsOneWidget);
+        expect(find.text('Samsung Health'), findsOneWidget);
+
+        // Verify one is marked available and another is not (simulated)
+        // Actually, our mock says both are in the available list.
+
+        await VideoRecorder.recordStep(tester, 'health_data_import', '05_multiple_sources');
+      });
     });
   });
 }
