@@ -1,0 +1,17 @@
+Starting targeted search for 'jules-harness'...
+Scanning target subfolder: openclaw-indexer
+Scanning target subfolder: swal-agent-systems
+Scanning target subfolder: swal-benchmark
+Scanning target subfolder: swal-eval
+Scanning target subfolder: swal-openclaw-backup
+Scanning target subfolder: swal-openclaw-backup-files
+Scanning target subfolder: swal-pentest-agent
+Scanning target subfolder: swal-skills-old
+Scanning target subfolder: zeroclaw-enhanced
+Scanning target subfolder: zeroclaw-swan-node
+Scanning target subfolder: zeroclaw-termux-dev-setup
+Scanning target subfolder: agent-memory
+Scanning target subfolder: agent-work
+Scanning target subfolder: hermes-agent
+Scanning target subfolder: page-agent
+Done.
