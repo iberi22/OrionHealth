@@ -5,22 +5,46 @@ import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/reports/presentation/pages/reports_page.dart';
 import 'package:orionhealth_health/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:orionhealth_health/features/reports/domain/repositories/report_repository.dart';
-import 'package:orionhealth_health/features/reports/domain/entities/report.dart';
+import 'package:orionhealth_health/features/reports/domain/services/report_generation_service.dart';
+import 'package:orionhealth_health/features/reports/infrastructure/services/mock_report_generation_service.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
+import 'package:health_wallet/health_wallet.dart';
+import 'package:mocktail/mocktail.dart';
 import 'utils/video_recorder.dart';
+
+class MockWalletService extends Mock implements WalletService {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  late MockWalletService mockWalletService;
+
   setUpAll(() async {
+    di.getIt.allowReassignment = true;
     await di.configureDependencies();
     await initializeDateFormatting('es', null);
+
+    // Override with Mock implementation for deterministic E2E
+    // The 'mock' instance is registered as MockReportGenerationService specifically
+    final mockGenerationService = di.getIt<MockReportGenerationService>(instanceName: 'mock');
+    di.getIt.registerSingleton<ReportGenerationService>(mockGenerationService);
+  });
+
+  setUp(() {
+    mockWalletService = MockWalletService();
+    di.getIt.registerSingleton<WalletService>(mockWalletService);
+
+    when(() => mockWalletService.exportToFhir()).thenAnswer((_) async => '{"resourceType": "Bundle"}');
+  });
+
+  tearDown(() {
+    di.getIt.unregister<WalletService>();
   });
 
   group('Reports Flow - E2E Tests', () {
-    testWidgets('E2E: Full reports flow with real database', (WidgetTester tester) async {
+    testWidgets('E2E: Full reports flow with real database and mocked boundaries', (WidgetTester tester) async {
       final repo = di.getIt<ReportRepository>();
 
       // 1. Clean start for the test
@@ -48,6 +72,7 @@ void main() {
 
       // 2. Verify empty state
       expect(find.text('No hay informes disponibles'), findsOneWidget);
+      expect(find.text('Tus informes generados aparecerán aquí.'), findsOneWidget);
 
       // 3. GENERATE REPORT
       final generateButton = find.text('Generar Ahora');
@@ -55,17 +80,14 @@ void main() {
       await tester.tap(generateButton);
 
       // The generation might take some time (especially if using mock delay or real LLM)
-      // We pump but don't settle immediately because of the loading indicator
       await tester.pump();
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'reports', '02_generating');
 
-      // Wait for generation to complete (Mock delay is 2s, real might be more)
-      // pumpAndSettle might timeout if there are infinite animations, but here it should be fine
+      // Wait for generation to complete (Mock delay is 2s)
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
       // 4. Verify report is listed
-      // The report title starts with 'Informe de Salud'
       expect(find.textContaining('Informe de Salud'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'reports', '03_after_generation');
 
@@ -83,8 +105,6 @@ void main() {
       expect(find.byType(ReportsPage), findsOneWidget);
 
       // 7. TEST FILTERS
-      // Since generation assigns a random status, we might need to know which one it is
-      // to test filters accurately, or just test that the chips are there.
       expect(find.text('Todos'), findsOneWidget);
       expect(find.text('Urgentes'), findsOneWidget);
       expect(find.text('Finalizados'), findsOneWidget);
@@ -97,6 +117,21 @@ void main() {
       await tester.tap(find.text('Todos'));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'reports', '06_filter_all');
+
+      // 8. TEST FHIR EXPORT
+      final exportChip = find.text('Exportar FHIR');
+      expect(exportChip, findsOneWidget);
+      await tester.tap(exportChip);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Exportación FHIR R4'), findsOneWidget);
+      expect(find.text('Copiar'), findsOneWidget);
+      expect(find.text('Cerrar'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'reports', '07_fhir_export_dialog');
+
+      await tester.tap(find.text('Cerrar'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
     });
   });
 }
