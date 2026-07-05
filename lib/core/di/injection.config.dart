@@ -15,7 +15,7 @@ import 'package:flutter_appauth/flutter_appauth.dart' as _i38;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i40;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:google_generative_ai/google_generative_ai.dart' as _i42;
-import 'package:health_wallet/health_wallet.dart' as _i34;
+import 'package:health_wallet/health_wallet.dart' as _i33;
 import 'package:http/http.dart' as _i24;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:isar/isar.dart' as _i58;
@@ -76,7 +76,7 @@ import '../../features/auth/domain/usecases/save_credentials_usecase.dart'
 import '../../features/auth/infrastructure/services/biometric_service.dart'
     as _i14;
 import '../../features/auth/infrastructure/services/encryption_service.dart'
-    as _i33;
+    as _i34;
 import '../../features/calendar_import/application/calendar_import_cubit.dart'
     as _i227;
 import '../../features/calendar_import/domain/repositories/calendar_import_repository.dart'
@@ -240,7 +240,7 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i61;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i123;
 import '../../features/local_agent/domain/usecases/get_chat_history_usecase.dart'
-    as _i164;
+    as _i165;
 import '../../features/local_agent/domain/usecases/send_chat_message_usecase.dart'
     as _i108;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
@@ -248,11 +248,11 @@ import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i39;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i190;
+    as _i189;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
     as _i41;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i189;
+    as _i190;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
     as _i63;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
@@ -439,7 +439,7 @@ import '../../features/voice_chat/application/voice_chat_cubit.dart' as _i219;
 import '../../features/voice_chat/domain/repositories/voice_chat_repository.dart'
     as _i128;
 import '../../features/voice_chat/domain/usecases/get_chat_history_usecase.dart'
-    as _i165;
+    as _i164;
 import '../../features/voice_chat/domain/usecases/send_message_usecase.dart'
     as _i210;
 import '../../features/voice_chat/infrastructure/datasources/chat_ai_datasource.dart'
@@ -458,9 +458,9 @@ import 'memory_module.dart' as _i251;
 import 'network_module.dart' as _i250;
 import 'service_module.dart' as _i249;
 
+const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
-const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -523,9 +523,9 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.lazySingleton<_i32.EmbeddingsAdapter>(
         () => memoryModule.embeddingsAdapter);
-    gh.lazySingleton<_i33.EncryptionService>(() => _i33.EncryptionService());
-    gh.lazySingleton<_i34.EncryptionService>(
+    gh.lazySingleton<_i33.EncryptionService>(
         () => databaseModule.walletEncryptionService);
+    gh.lazySingleton<_i34.EncryptionService>(() => _i34.EncryptionService());
     gh.lazySingleton<_i35.FhirClient>(() => fhirModule.fhirClient);
     gh.lazySingleton<_i36.FilePickerService>(
         () => _i36.FilePickerServiceImpl());
@@ -703,9 +703,9 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i129.VoiceChatRepositoryImpl(gh<_i23.ChatAiDatasource>()));
     gh.lazySingleton<_i130.VouchRepository>(
         () => _i131.IsarVouchRepository(gh<_i58.Isar>()));
-    gh.lazySingleton<_i34.WalletService>(() => databaseModule.walletService(
+    gh.lazySingleton<_i33.WalletService>(() => databaseModule.walletService(
           gh<_i58.Isar>(),
-          gh<_i34.EncryptionService>(),
+          gh<_i33.EncryptionService>(),
         ));
     gh.lazySingleton<_i132.WifiDirectService>(() => _i132.WifiDirectService());
     gh.factory<_i133.AboutCubit>(
@@ -721,7 +721,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i139.AuthRepository>(
         () => _i140.AuthRepositoryImpl(gh<_i138.AuthLocalDataSource>()));
     gh.lazySingleton<_i141.AuthService>(
-        () => _i141.AuthServiceImpl(gh<_i33.EncryptionService>()));
+        () => _i141.AuthServiceImpl(gh<_i34.EncryptionService>()));
     gh.lazySingleton<_i142.BleSharingService>(
         () => _i142.BleSharingService(gh<_i15.BleWrapper>()));
     gh.lazySingleton<_i143.CancelSharingUseCase>(
@@ -796,9 +796,9 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i102.GetAvailableSourcesUseCase>(() =>
         _i102.GetAvailableSourcesUseCase(gh<_i44.HealthDataImportService>()));
     gh.factory<_i164.GetChatHistoryUseCase>(
-        () => _i164.GetChatHistoryUseCase(gh<_i123.VectorStoreService>()));
+        () => _i164.GetChatHistoryUseCase(gh<_i128.VoiceChatRepository>()));
     gh.factory<_i165.GetChatHistoryUseCase>(
-        () => _i165.GetChatHistoryUseCase(gh<_i128.VoiceChatRepository>()));
+        () => _i165.GetChatHistoryUseCase(gh<_i123.VectorStoreService>()));
     gh.factory<_i166.GetConnectionsUseCase>(
         () => _i166.GetConnectionsUseCase(gh<_i93.OAuthRepository>()));
     gh.factory<_i167.GetCredentialsUseCase>(
@@ -859,12 +859,16 @@ extension GetItInjectableX on _i1.GetIt {
       instanceName: 'mock',
     );
     gh.lazySingleton<_i61.LlmAdapter>(
-      () => _i190.GeminiLlmAdapter(
+      () => _i189.GeminiLlmAdapter(
         scrubber: gh<_i96.PromptScrubber>(),
         userProfileRepository: gh<_i120.UserProfileRepository>(),
         modelWrapper: gh<_i41.GeminiModelWrapper>(),
       ),
       instanceName: 'gemini',
+    );
+    gh.factory<_i61.LlmAdapter>(
+      () => _i190.MockLlmAdapter(gh<_i96.PromptScrubber>()),
+      instanceName: 'mock',
     );
     gh.lazySingleton<_i191.LlmAdapterFactory>(
         () => _i191.LlmAdapterFactory(gh<_i111.SettingsRepository>()));
@@ -959,7 +963,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i218.VitalSignBloc(gh<_i125.VitalSignRepository>()));
     gh.factory<_i219.VoiceChatCubit>(() => _i219.VoiceChatCubit(
           gh<_i210.SendMessageUseCase>(),
-          gh<_i165.GetChatHistoryUseCase>(),
+          gh<_i164.GetChatHistoryUseCase>(),
           gh<_i128.VoiceChatRepository>(),
           gh<_i11.AudioService>(),
         ));
@@ -971,7 +975,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i222.AllergyBloc(gh<_i136.AllergyRepository>()));
     gh.factory<_i223.AuthCubit>(() => _i223.AuthCubit(
           gh<_i139.AuthRepository>(),
-          gh<_i33.EncryptionService>(),
+          gh<_i34.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
     gh.factory<_i224.AuthCubit>(() => _i224.AuthCubit(gh<_i141.AuthService>()));
@@ -1060,8 +1064,8 @@ extension GetItInjectableX on _i1.GetIt {
           startSharingUseCase: gh<_i213.StartSharingUseCase>(),
           startListeningUseCase: gh<_i212.StartListeningUseCase>(),
           cancelSharingUseCase: gh<_i143.CancelSharingUseCase>(),
-          walletService: gh<_i34.WalletService>(),
-          walletEncryption: gh<_i34.EncryptionService>(),
+          walletService: gh<_i33.WalletService>(),
+          walletEncryption: gh<_i33.EncryptionService>(),
         ));
     gh.factory<_i247.GetResearchHistory>(
         () => _i247.GetResearchHistory(gh<_i241.MedicalResearchRepository>()));
