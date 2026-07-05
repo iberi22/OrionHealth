@@ -5,6 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
+import '../../../local_agent/infrastructure/llm_service.dart';
+import '../../../local_agent/presentation/chat_page.dart';
+import '../../../vitals/presentation/pages/vitals_page.dart';
+import '../../../medications/presentation/pages/medications_page.dart';
+import '../../../health_record/presentation/pages/timeline_page.dart';
+import '../../../meditation/presentation/meditation_page.dart';
+import '../../../reports/presentation/pages/reports_page.dart';
 import '../../application/home_cubit.dart';
 import '../../application/home_state.dart';
 import '../widgets/health_status_grid.dart';
@@ -67,7 +74,7 @@ class HomePageView extends StatelessWidget {
                       return ModuleCards(
                         modules: state.modules,
                         onModuleTap: (module) {
-                          // Handle navigation
+                          _handleNavigation(context, module.route);
                         },
                       );
                     },
@@ -81,6 +88,37 @@ class HomePageView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _handleNavigation(BuildContext context, String route) {
+    Widget? page;
+    switch (route) {
+      case '/chat':
+        page = ChatPage(llmService: getIt<LlmService>());
+        break;
+      case '/vitals':
+        page = const VitalsPage();
+        break;
+      case '/medications':
+        page = const MedicationsPage();
+        break;
+      case '/timeline':
+        page = const TimelinePage();
+        break;
+      case '/meditation':
+        page = const MeditationPage();
+        break;
+      case '/reports':
+        page = const ReportsPage();
+        break;
+    }
+
+    if (page != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => page!),
+      );
+    }
   }
 
   Widget _buildSectionHeader(String title, IconData icon) {

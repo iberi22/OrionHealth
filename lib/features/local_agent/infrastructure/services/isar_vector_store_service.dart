@@ -315,6 +315,27 @@ class IsarVectorStoreService implements VectorStoreService {
   }
 
   @override
+  Future<List<ChatMessage>> getRecentMessages({int limit = 20}) async {
+    final nodes = await _memoryGraph.isar.memoryNodes
+        .filter()
+        .typeEqualTo('chat_message')
+        .sortByCreatedAtDesc()
+        .limit(limit)
+        .findAll();
+
+    return nodes.map((node) {
+      final metadata = node.metadata ?? {};
+      return ChatMessage(
+        id: node.id,
+        role: metadata['role'] == 'assistant' ? ChatRole.assistant : ChatRole.user,
+        content: node.content,
+        timestamp: node.createdAt,
+        citations: List<String>.from(metadata['citations'] ?? []),
+      );
+    }).toList();
+  }
+
+  @override
   Future<List<Map<String, dynamic>>> multiHopSearch(
     String query, {
     int maxHops = 2,

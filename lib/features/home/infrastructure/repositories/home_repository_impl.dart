@@ -104,6 +104,14 @@ class HomeRepositoryImpl implements HomeRepository {
         color: Colors.teal,
         route: '/timeline',
       ),
+      HomeModuleModel(
+        title: 'Meditación',
+        iconCode: Icons.spa.codePoint,
+        iconFontFamily: Icons.spa.fontFamily,
+        iconFontPackage: Icons.spa.fontPackage,
+        color: Colors.purple,
+        route: '/meditation',
+      ),
     ];
 
     await _localDataSource.cacheHomeModules(defaultModules);
