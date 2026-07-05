@@ -707,7 +707,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i131.VoiceChatRepositoryImpl(gh<_i23.ChatAiDatasource>()));
     gh.lazySingleton<_i132.VouchRepository>(
         () => _i133.IsarVouchRepository(gh<_i58.Isar>()));
-    gh.lazySingleton<_i34.WalletService>(() => databaseModule.walletService(
+    gh.lazySingleton<_i33.WalletService>(() => databaseModule.walletService(
           gh<_i58.Isar>(),
           gh<_i33.EncryptionService>(),
         ));
@@ -725,7 +725,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i141.AuthRepository>(
         () => _i142.AuthRepositoryImpl(gh<_i140.AuthLocalDataSource>()));
     gh.lazySingleton<_i143.AuthService>(
-        () => _i143.AuthServiceImpl(gh<_i33.EncryptionService>()));
+        () => _i143.AuthServiceImpl(gh<_i34.EncryptionService>()));
     gh.lazySingleton<_i144.BleSharingService>(
         () => _i144.BleSharingService(gh<_i15.BleWrapper>()));
     gh.lazySingleton<_i145.CancelSharingUseCase>(
@@ -975,7 +975,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i223.AllergyBloc(gh<_i138.AllergyRepository>()));
     gh.factory<_i224.AuthCubit>(() => _i224.AuthCubit(
           gh<_i141.AuthRepository>(),
-          gh<_i33.EncryptionService>(),
+          gh<_i34.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
     gh.factory<_i225.AuthCubit>(() => _i225.AuthCubit(gh<_i143.AuthService>()));
@@ -1060,8 +1060,8 @@ extension GetItInjectableX on _i1.GetIt {
           startSharingUseCase: gh<_i216.StartSharingUseCase>(),
           startListeningUseCase: gh<_i215.StartListeningUseCase>(),
           cancelSharingUseCase: gh<_i145.CancelSharingUseCase>(),
-          walletService: gh<_i34.WalletService>(),
-          walletEncryption: gh<_i34.EncryptionService>(),
+          walletService: gh<_i33.WalletService>(),
+          walletEncryption: gh<_i33.EncryptionService>(),
         ));
     gh.factory<_i247.GetResearchHistory>(
         () => _i247.GetResearchHistory(gh<_i241.MedicalResearchRepository>()));
