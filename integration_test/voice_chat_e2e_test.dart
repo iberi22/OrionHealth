@@ -1,23 +1,33 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/features/voice_chat/presentation/pages/voice_chat_page.dart';
-import 'package:orionhealth_health/features/voice_chat/application/voice_chat_cubit.dart';
 import 'package:orionhealth_health/core/services/audio/audio_player_service.dart';
 import 'package:orionhealth_health/core/services/aicore_service.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'utils/video_recorder.dart';
 
+import 'package:orionhealth_health/core/services/asr/asr_service.dart';
+import 'package:orionhealth_health/core/services/asr/asr_types.dart';
+
 class MockAudioService extends Mock implements AudioService {}
 class MockAIService extends Mock implements AIService {}
+class MockAsrService extends Mock implements AsrService {}
+class MockAgentMemoryService extends Mock implements AgentMemoryService {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   late MockAudioService mockAudioService;
   late MockAIService mockAIService;
+  late MockAsrService mockAsrService;
+  late MockAgentMemoryService mockAgentMemoryService;
+
+  late StreamController<AudioState> audioStateController;
+  late StreamController<double> volumeController;
 
   setUpAll(() async {
     // Basic setup before all tests
@@ -25,34 +35,50 @@ void main() {
 
   setUp(() async {
     await di.getIt.reset();
+    di.getIt.allowReassignment = true;
 
     mockAudioService = MockAudioService();
     mockAIService = MockAIService();
+    mockAsrService = MockAsrService();
+    mockAgentMemoryService = MockAgentMemoryService();
 
-    // Register mocks before configuring dependencies or override them after
-    // Actually, it's better to configure then override or register manually.
-    // In this project's pattern, we often use di.configureDependencies()
-    // and then manually register singleton overrides if needed.
+    audioStateController = StreamController<AudioState>.broadcast();
+    volumeController = StreamController<double>.broadcast();
 
     await di.configureDependencies();
 
     // Override services that require hardware/native features
-    di.getIt.unregister<AudioService>();
     di.getIt.registerSingleton<AudioService>(mockAudioService);
-
-    di.getIt.unregister<AIService>();
     di.getIt.registerSingleton<AIService>(mockAIService);
+    di.getIt.registerSingleton<AsrService>(mockAsrService);
+    di.getIt.registerSingleton<AgentMemoryService>(mockAgentMemoryService);
 
     // Default mock behaviors
-    when(() => mockAudioService.currentVolumeStream).thenAnswer((_) => const Stream.empty());
-    when(() => mockAudioService.stateStream).thenAnswer((_) => const Stream.empty());
+    when(() => mockAudioService.currentVolumeStream).thenAnswer((_) => volumeController.stream);
+    when(() => mockAudioService.stateStream).thenAnswer((_) => audioStateController.stream);
     when(() => mockAudioService.initialize()).thenAnswer((_) async {});
     when(() => mockAudioService.stopAll()).thenAnswer((_) async {});
-    when(() => mockAudioService.speakText(any())).thenAnswer((_) async {});
+    when(() => mockAudioService.speakText(any())).thenAnswer((_) async {
+      audioStateController.add(AudioState.speaking);
+    });
 
     when(() => mockAIService.currentState).thenReturn(AIServiceState.ready);
     when(() => mockAIService.stateStream).thenAnswer((_) => const Stream.empty());
     when(() => mockAIService.initialize()).thenAnswer((_) async {});
+
+    when(() => mockAsrService.currentState).thenReturn(AsrState.ready);
+    when(() => mockAsrService.initialize()).thenAnswer((_) async {});
+    when(() => mockAsrService.stateStream).thenAnswer((_) => const Stream.empty());
+
+    when(() => mockAgentMemoryService.initialize()).thenAnswer((_) async {});
+    when(() => mockAgentMemoryService.getContextForQuery(any())).thenAnswer((_) async => '');
+    when(() => mockAgentMemoryService.getRecentHistory(limit: any(named: 'limit'))).thenAnswer((_) async => []);
+    when(() => mockAgentMemoryService.addMemory(input: any(named: 'input'), output: any(named: 'output'))).thenAnswer((_) async {});
+  });
+
+  tearDown(() {
+    audioStateController.close();
+    volumeController.close();
   });
 
   group('Voice Chat - Integrated E2E Tests', () {
