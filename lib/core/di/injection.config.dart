@@ -240,11 +240,7 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i61;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i123;
 import '../../features/local_agent/domain/usecases/get_chat_history_usecase.dart'
-<<<<<<< HEAD
-    as _i168;
-=======
     as _i164;
->>>>>>> c110025 (test(meditation): add E2E integration test)
 import '../../features/local_agent/domain/usecases/send_chat_message_usecase.dart'
     as _i108;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
@@ -252,19 +248,11 @@ import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i39;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-<<<<<<< HEAD
-    as _i192;
-import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
-    as _i41;
-import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i193;
-=======
     as _i189;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
     as _i41;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
     as _i190;
->>>>>>> c110025 (test(meditation): add E2E integration test)
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
     as _i63;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
@@ -273,9 +261,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i192;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i239;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i68;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i69;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i68;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i124;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -397,7 +385,7 @@ import '../../features/settings/application/llm_settings_cubit.dart' as _i194;
 import '../../features/settings/domain/repositories/settings_repository.dart'
     as _i111;
 import '../../features/settings/domain/services/device_capability_service.dart'
-    as _i28;
+    as _i27;
 import '../../features/settings/infrastructure/datasources/settings_local_datasource.dart'
     as _i110;
 import '../../features/settings/infrastructure/repositories/settings_repository_impl.dart'
@@ -451,11 +439,7 @@ import '../../features/voice_chat/application/voice_chat_cubit.dart' as _i219;
 import '../../features/voice_chat/domain/repositories/voice_chat_repository.dart'
     as _i128;
 import '../../features/voice_chat/domain/usecases/get_chat_history_usecase.dart'
-<<<<<<< HEAD
-    as _i167;
-=======
     as _i165;
->>>>>>> c110025 (test(meditation): add E2E integration test)
 import '../../features/voice_chat/domain/usecases/send_message_usecase.dart'
     as _i210;
 import '../../features/voice_chat/infrastructure/datasources/chat_ai_datasource.dart'
@@ -466,7 +450,7 @@ import '../services/aicore_service.dart' as _i3;
 import '../services/asr/asr_service.dart' as _i10;
 import '../services/audio/audio_player_service.dart' as _i11;
 import '../services/audio/audio_recorder_service.dart' as _i13;
-import '../services/device_capability_service.dart' as _i27;
+import '../services/device_capability_service.dart' as _i28;
 import '../services/privacy_anonymizer.dart' as _i96;
 import 'database_module.dart' as _i252;
 import 'fhir_module.dart' as _i253;
@@ -474,9 +458,9 @@ import 'memory_module.dart' as _i251;
 import 'network_module.dart' as _i250;
 import 'service_module.dart' as _i249;
 
+const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
-const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -600,15 +584,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i66.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i67.MedicalKnowledgeRepository>(
-      () => _i68.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
-    );
-    gh.factory<_i67.MedicalKnowledgeRepository>(
-      () => _i69.JsonMedicalKnowledgeRepository(),
+      () => _i68.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
+    );
+    gh.factory<_i67.MedicalKnowledgeRepository>(
+      () => _i69.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
     );
     gh.lazySingleton<_i70.MedicalScraperService>(
         () => _i71.MedicalScraperServiceImpl(
@@ -711,16 +695,6 @@ extension GetItInjectableX on _i1.GetIt {
               gh<_i32.MemoryGraph>(),
               gh<_i67.MedicalKnowledgeRepository>(),
             ));
-<<<<<<< HEAD
-    gh.lazySingleton<_i127.VitalSignRepository>(
-        () => _i128.VitalSignRepositoryImpl(gh<_i58.Isar>()));
-    gh.factory<_i129.VitalsCubit>(
-        () => _i129.VitalsCubit(gh<_i127.VitalSignRepository>()));
-    gh.lazySingleton<_i130.VoiceChatRepository>(
-        () => _i131.VoiceChatRepositoryImpl(gh<_i23.ChatAiDatasource>()));
-    gh.lazySingleton<_i132.VouchRepository>(
-        () => _i133.IsarVouchRepository(gh<_i58.Isar>()));
-=======
     gh.lazySingleton<_i125.VitalSignRepository>(
         () => _i126.VitalSignRepositoryImpl(gh<_i58.Isar>()));
     gh.factory<_i127.VitalsCubit>(
@@ -729,33 +703,10 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i129.VoiceChatRepositoryImpl(gh<_i23.ChatAiDatasource>()));
     gh.lazySingleton<_i130.VouchRepository>(
         () => _i131.IsarVouchRepository(gh<_i58.Isar>()));
->>>>>>> c110025 (test(meditation): add E2E integration test)
     gh.lazySingleton<_i34.WalletService>(() => databaseModule.walletService(
           gh<_i58.Isar>(),
           gh<_i34.EncryptionService>(),
         ));
-<<<<<<< HEAD
-    gh.lazySingleton<_i134.WifiDirectService>(() => _i134.WifiDirectService());
-    gh.factory<_i135.AboutCubit>(
-        () => _i135.AboutCubit(gh<_i51.IAboutRepository>()));
-    gh.lazySingleton<_i136.AboutRemoteDataSource>(
-        () => _i136.AboutRemoteDataSource(gh<_i29.Dio>()));
-    gh.lazySingleton<_i137.AllergyLocalDataSource>(
-        () => _i137.AllergyLocalDataSource(gh<_i58.Isar>()));
-    gh.lazySingleton<_i138.AllergyRepository>(
-        () => _i139.AllergyRepositoryImpl(gh<_i137.AllergyLocalDataSource>()));
-    gh.lazySingleton<_i140.AuthLocalDataSource>(
-        () => _i140.AuthLocalDataSource(gh<_i58.Isar>()));
-    gh.lazySingleton<_i141.AuthRepository>(
-        () => _i142.AuthRepositoryImpl(gh<_i140.AuthLocalDataSource>()));
-    gh.lazySingleton<_i143.AuthService>(
-        () => _i143.AuthServiceImpl(gh<_i33.EncryptionService>()));
-    gh.lazySingleton<_i144.BleSharingService>(
-        () => _i144.BleSharingService(gh<_i15.BleWrapper>()));
-    gh.lazySingleton<_i145.CancelSharingUseCase>(
-        () => _i145.CancelSharingUseCase(
-              gh<_i144.BleSharingService>(),
-=======
     gh.lazySingleton<_i132.WifiDirectService>(() => _i132.WifiDirectService());
     gh.factory<_i133.AboutCubit>(
         () => _i133.AboutCubit(gh<_i51.IAboutRepository>()));
@@ -776,7 +727,6 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i143.CancelSharingUseCase>(
         () => _i143.CancelSharingUseCase(
               gh<_i142.BleSharingService>(),
->>>>>>> c110025 (test(meditation): add E2E integration test)
               gh<_i89.NfcSharingService>(),
               gh<_i132.WifiDirectService>(),
             ));
@@ -845,40 +795,6 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i163.GetAllergiesUseCase(gh<_i136.AllergyRepository>()));
     gh.factory<_i102.GetAvailableSourcesUseCase>(() =>
         _i102.GetAvailableSourcesUseCase(gh<_i44.HealthDataImportService>()));
-<<<<<<< HEAD
-    gh.factory<_i167.GetChatHistoryUseCase>(
-        () => _i167.GetChatHistoryUseCase(gh<_i130.VoiceChatRepository>()));
-    gh.factory<_i168.GetChatHistoryUseCase>(
-        () => _i168.GetChatHistoryUseCase(gh<_i125.VectorStoreService>()));
-    gh.factory<_i169.GetConnectionsUseCase>(
-        () => _i169.GetConnectionsUseCase(gh<_i93.OAuthRepository>()));
-    gh.factory<_i170.GetCredentialsUseCase>(
-        () => _i170.GetCredentialsUseCase(gh<_i141.AuthRepository>()));
-    gh.factory<_i171.GetDashboardStatsUseCase>(
-        () => _i171.GetDashboardStatsUseCase(gh<_i151.DashboardRepository>()));
-    gh.factory<_i172.GetDoctorProfileUseCase>(() =>
-        _i172.GetDoctorProfileUseCase(gh<_i156.DoctorProfileRepository>()));
-    gh.lazySingleton<_i173.GetNetworkHealth>(
-        () => _i173.GetNetworkHealth(gh<_i85.NetworkRepository>()));
-    gh.lazySingleton<_i174.GetNodeStats>(
-        () => _i174.GetNodeStats(gh<_i85.NetworkRepository>()));
-    gh.lazySingleton<_i175.GetProgressUseCase>(
-        () => _i175.GetProgressUseCase(gh<_i80.MeditationRepository>()));
-    gh.factory<_i176.GetRecentActivityUseCase>(
-        () => _i176.GetRecentActivityUseCase(gh<_i151.DashboardRepository>()));
-    gh.factory<_i177.GetReportsUseCase>(
-        () => _i177.GetReportsUseCase(gh<_i100.ReportRepository>()));
-    gh.lazySingleton<_i178.GetScriptsUseCase>(
-        () => _i178.GetScriptsUseCase(gh<_i80.MeditationRepository>()));
-    gh.factory<_i179.GetUserProfileUseCase>(
-        () => _i179.GetUserProfileUseCase(gh<_i122.UserProfileRepository>()));
-    gh.lazySingleton<_i180.GovernanceIpfsDatasource>(
-        () => _i180.GovernanceIpfsDatasource(gh<_i57.IpfsDatasource>()));
-    gh.lazySingleton<_i181.GovernanceRepository>(() =>
-        _i182.GovernanceRepositoryImpl(gh<_i180.GovernanceIpfsDatasource>()));
-    gh.lazySingleton<_i183.HealthDataImportRepository>(
-        () => _i184.HealthDataImportRepositoryImpl(
-=======
     gh.factory<_i164.GetChatHistoryUseCase>(
         () => _i164.GetChatHistoryUseCase(gh<_i123.VectorStoreService>()));
     gh.factory<_i165.GetChatHistoryUseCase>(
@@ -911,7 +827,6 @@ extension GetItInjectableX on _i1.GetIt {
         _i179.GovernanceRepositoryImpl(gh<_i177.GovernanceIpfsDatasource>()));
     gh.lazySingleton<_i180.HealthDataImportRepository>(
         () => _i181.HealthDataImportRepositoryImpl(
->>>>>>> c110025 (test(meditation): add E2E integration test)
               gh<_i109.SensorHealthDataSource>(),
               gh<_i109.FileHealthDataSource>(),
             ));
@@ -940,11 +855,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i120.UserProfileRepository>(),
         ));
     gh.lazySingleton<_i61.LlmAdapter>(
-<<<<<<< HEAD
-      () => _i192.GeminiLlmAdapter(
-=======
       () => _i189.GeminiLlmAdapter(
->>>>>>> c110025 (test(meditation): add E2E integration test)
         scrubber: gh<_i96.PromptScrubber>(),
         userProfileRepository: gh<_i120.UserProfileRepository>(),
         modelWrapper: gh<_i41.GeminiModelWrapper>(),
@@ -952,16 +863,6 @@ extension GetItInjectableX on _i1.GetIt {
       instanceName: 'gemini',
     );
     gh.factory<_i61.LlmAdapter>(
-<<<<<<< HEAD
-      () => _i193.MockLlmAdapter(gh<_i96.PromptScrubber>()),
-      instanceName: 'mock',
-    );
-    gh.lazySingleton<_i194.LlmAdapterFactory>(
-        () => _i194.LlmAdapterFactory(gh<_i111.SettingsRepository>()));
-    gh.lazySingleton<_i195.LlmService>(() => _i196.GemmaLlmService(
-          gh<_i125.VectorStoreService>(),
-          gh<_i122.UserProfileRepository>(),
-=======
       () => _i190.MockLlmAdapter(gh<_i96.PromptScrubber>()),
       instanceName: 'mock',
     );
@@ -970,12 +871,11 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i192.LlmService>(() => _i193.GemmaLlmService(
           gh<_i123.VectorStoreService>(),
           gh<_i120.UserProfileRepository>(),
->>>>>>> c110025 (test(meditation): add E2E integration test)
           gh<_i61.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.factory<_i194.LlmSettingsCubit>(() => _i194.LlmSettingsCubit(
           gh<_i111.SettingsRepository>(),
-          gh<_i28.DeviceCapabilityService>(),
+          gh<_i27.DeviceCapabilityService>(),
           gh<_i61.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.lazySingleton<_i195.MedicalResearchService>(
@@ -1049,16 +949,6 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i66.SyncService>(),
           gh<_i123.VectorStoreService>(),
         ));
-<<<<<<< HEAD
-    gh.factory<_i218.UserProfileCubit>(
-        () => _i218.UserProfileCubit(gh<_i122.UserProfileRepository>()));
-    gh.factory<_i219.VitalSignBloc>(
-        () => _i219.VitalSignBloc(gh<_i127.VitalSignRepository>()));
-    gh.factory<_i220.VoiceChatCubit>(() => _i220.VoiceChatCubit(
-          gh<_i213.SendMessageUseCase>(),
-          gh<_i167.GetChatHistoryUseCase>(),
-          gh<_i130.VoiceChatRepository>(),
-=======
     gh.lazySingleton<_i215.SyncService>(() => _i216.SyncServiceImpl(
           gh<_i117.SyncRepository>(),
           gh<_i66.SyncService>(),
@@ -1071,7 +961,6 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i210.SendMessageUseCase>(),
           gh<_i165.GetChatHistoryUseCase>(),
           gh<_i128.VoiceChatRepository>(),
->>>>>>> c110025 (test(meditation): add E2E integration test)
           gh<_i11.AudioService>(),
         ));
     gh.factory<_i220.VouchCubit>(
@@ -1082,11 +971,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i222.AllergyBloc(gh<_i136.AllergyRepository>()));
     gh.factory<_i223.AuthCubit>(() => _i223.AuthCubit(gh<_i141.AuthService>()));
     gh.factory<_i224.AuthCubit>(() => _i224.AuthCubit(
-<<<<<<< HEAD
-          gh<_i141.AuthRepository>(),
-=======
           gh<_i139.AuthRepository>(),
->>>>>>> c110025 (test(meditation): add E2E integration test)
           gh<_i33.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
@@ -1171,17 +1056,10 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i246.SharingCubit>(() => _i246.SharingCubit(
           bleService: gh<_i142.BleSharingService>(),
           nfcService: gh<_i89.NfcSharingService>(),
-<<<<<<< HEAD
-          wifiService: gh<_i134.WifiDirectService>(),
-          startSharingUseCase: gh<_i216.StartSharingUseCase>(),
-          startListeningUseCase: gh<_i215.StartListeningUseCase>(),
-          cancelSharingUseCase: gh<_i145.CancelSharingUseCase>(),
-=======
           wifiService: gh<_i132.WifiDirectService>(),
           startSharingUseCase: gh<_i213.StartSharingUseCase>(),
           startListeningUseCase: gh<_i212.StartListeningUseCase>(),
           cancelSharingUseCase: gh<_i143.CancelSharingUseCase>(),
->>>>>>> c110025 (test(meditation): add E2E integration test)
           walletService: gh<_i34.WalletService>(),
           walletEncryption: gh<_i34.EncryptionService>(),
         ));

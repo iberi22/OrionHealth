@@ -292,6 +292,14 @@ class JsonMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
   }
 
   @override
+  Future<String> getRelevantContext(String query) async {
+    _ensureInitialized();
+    final codes = await searchByTerm(query);
+    if (codes.isEmpty) return 'No context found.';
+    return codes.take(3).map((c) => c.displayName).join('. ');
+  }
+
+  @override
   Map<String, dynamic> getStats() {
     final perStandard = <String, int>{};
     for (final code in _allCodes) {

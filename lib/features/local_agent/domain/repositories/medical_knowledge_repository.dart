@@ -46,4 +46,7 @@ abstract class MedicalKnowledgeRepository {
 
   /// Get statistics — count per standard, total, initialization state.
   Map<String, dynamic> getStats();
+
+  /// Gets relevant context for a given query (Added for compatibility).
+  Future<String> getRelevantContext(String query);
 }
