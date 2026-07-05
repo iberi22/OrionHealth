@@ -1,5 +1,7 @@
 import 'package:injectable/injectable.dart';
 import '../../../../core/services/privacy_anonymizer.dart';
+import '../../domain/chat_message.dart';
+import '../../domain/entities/local_model_descriptor.dart';
 import '../../domain/services/llm_adapter.dart';
 
 /// Mock LLM Adapter for testing and development
@@ -27,6 +29,20 @@ class MockLlmAdapter implements LlmAdapter {
 
   @override
   Future<bool> isModelInstalled(String modelId) async => false;
+
+  @override
+  Future<ChatMessage> generateResponse(
+    String userMessage,
+    String context,
+    LocalModelDescriptor model,
+  ) async {
+    final response = await generate('User: $userMessage\nContext: $context');
+    return ChatMessage(
+      role: ChatRole.assistant,
+      content: response,
+      timestamp: DateTime.now(),
+    );
+  }
 
   @override
   Future<String> generate(String prompt) async {

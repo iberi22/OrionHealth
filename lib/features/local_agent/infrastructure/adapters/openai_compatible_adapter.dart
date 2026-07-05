@@ -1,3 +1,5 @@
+import '../../domain/chat_message.dart';
+import '../../domain/entities/local_model_descriptor.dart';
 import 'package:injectable/injectable.dart';
 import 'package:openai_dart/openai_dart.dart';
 

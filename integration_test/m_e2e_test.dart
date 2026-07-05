@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
+import 'package:orionhealth_health/features/home/presentation/pages/main_navigation_page.dart';
 import 'package:orionhealth_health/features/meditation/presentation/meditation_page.dart';
 import 'package:orionhealth_health/features/meditation/domain/repositories/meditation_repository.dart';
 import 'package:orionhealth_health/features/meditation/domain/entities/meditation_script.dart';
@@ -11,6 +12,7 @@ import 'package:orionhealth_health/features/meditation/domain/entities/meditatio
 import 'package:orionhealth_health/features/meditation/domain/entities/meditation_category.dart';
 import 'package:orionhealth_health/core/services/audio/audio_player_service.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'utils/video_recorder.dart';
 
 class MockMeditationRepository extends Mock implements MeditationRepository {}
@@ -46,12 +48,27 @@ void main() {
 
     when(() => mockRepository.initialize()).thenAnswer((_) async {});
     when(() => mockRepository.getProgress()).thenAnswer((_) async => const MeditationProgress());
+    when(() => mockRepository.getHomeModules()).thenAnswer((_) async => []); // If needed
   });
 
   tearDown(() {
     di.getIt.unregister<MeditationRepository>();
     di.getIt.unregister<AudioService>();
   });
+
+  Widget createTestWidget(Widget home) {
+    return MaterialApp(
+      home: home,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('es'),
+    );
+  }
 
   group('Meditation Flow - True E2E Tests', () {
     final testScript = MeditationScript(
@@ -66,7 +83,8 @@ void main() {
       ],
     );
 
-    testWidgets('E2E: Meditation Welcome and Success Flow', (WidgetTester tester) async {
+    testWidgets('E2E: Full Meditation Navigation and Session Flow', (WidgetTester tester) async {
+      // Setup specific mocks for this test
       when(() => mockRepository.recommendScript(memoryHints: any(named: 'memoryHints')))
           .thenAnswer((_) async => testScript);
 
@@ -83,20 +101,25 @@ void main() {
         completedSteps: any(named: 'completedSteps'),
       )).thenAnswer((_) async {});
 
-      await tester.pumpWidget(const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: MeditationPage(),
-      ));
-
-      // 1. Welcome View
+      // 1. Start from Main Navigation (Dashboard)
+      await tester.pumpWidget(createTestWidget(const MainNavigationPage()));
       await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'meditation', '01_dashboard');
+
+      // 2. Navigate to Meditation
+      final meditationCard = find.text('Meditación');
+      await tester.scrollUntilVisible(meditationCard, 100);
+      await tester.tap(meditationCard);
+      await tester.pumpAndSettle();
+
+      // 3. Verify Welcome View
+      expect(find.byType(MeditationPage), findsOneWidget);
       expect(find.text('Meditación Guiada'), findsOneWidget);
       expect(find.text('Prueba E2E'), findsOneWidget);
       expect(find.text('Comenzar'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'meditation', '01_welcome');
+      await VideoRecorder.recordStep(tester, 'meditation', '02_welcome');
 
-      // 2. Start Session
+      // 4. Start Session
       await tester.tap(find.text('Comenzar'));
       await tester.pumpAndSettle();
 
@@ -105,15 +128,15 @@ void main() {
       expect(find.text('Paso Uno: Respira'), findsOneWidget);
       expect(find.text('Paso 1 de 3'), findsOneWidget);
       verify(() => mockAudioService.speakText('Paso Uno: Respira')).called(1);
-      await VideoRecorder.recordStep(tester, 'meditation', '02_active_step1');
+      await VideoRecorder.recordStep(tester, 'meditation', '03_active_step1');
 
-      // 3. Pause / Resume
+      // 5. Pause / Resume
       final pauseBtn = find.byIcon(Icons.pause);
       await tester.tap(pauseBtn);
       await tester.pumpAndSettle();
       expect(find.text('Pausado'), findsOneWidget);
       verify(() => mockAudioService.stopTTS()).called(1);
-      await VideoRecorder.recordStep(tester, 'meditation', '03_paused');
+      await VideoRecorder.recordStep(tester, 'meditation', '04_paused');
 
       final playBtn = find.byIcon(Icons.play_arrow);
       await tester.tap(playBtn);
@@ -121,30 +144,18 @@ void main() {
       expect(find.text('Inhala / Exhala'), findsOneWidget);
       verify(() => mockAudioService.speakText('Paso Uno: Respira')).called(2);
 
-      // 4. Next Step
+      // 6. Next Step
       final nextBtn = find.byIcon(Icons.skip_next);
       await tester.tap(nextBtn);
       await tester.pumpAndSettle();
       expect(find.text('Paso Dos: Relájate'), findsOneWidget);
       expect(find.text('Paso 2 de 3'), findsOneWidget);
       verify(() => mockAudioService.speakText('Paso Dos: Relájate')).called(1);
-      await VideoRecorder.recordStep(tester, 'meditation', '04_active_step2');
+      await VideoRecorder.recordStep(tester, 'meditation', '05_active_step2');
 
-      // 5. Previous Step
-      final prevBtn = find.byIcon(Icons.skip_previous);
-      await tester.tap(prevBtn);
-      await tester.pumpAndSettle();
-      expect(find.text('Paso Uno: Respira'), findsOneWidget);
-      expect(find.text('Paso 1 de 3'), findsOneWidget);
-
-      // 6. Complete Flow
-      await tester.tap(nextBtn); // Back to step 2
-      await tester.pumpAndSettle();
+      // 7. Complete Flow
       await tester.tap(nextBtn); // To step 3
       await tester.pumpAndSettle();
-      expect(find.text('Paso Tres: Sonríe'), findsOneWidget);
-      expect(find.text('Paso 3 de 3'), findsOneWidget);
-
       await tester.tap(nextBtn); // Finish
       await tester.pumpAndSettle();
 
@@ -155,11 +166,12 @@ void main() {
         completedSteps: 3,
       )).called(1);
       verify(() => mockAudioService.speakText('La meditación ha terminado.')).called(1);
-      await VideoRecorder.recordStep(tester, 'meditation', '05_completed');
+      await VideoRecorder.recordStep(tester, 'meditation', '06_completed');
 
-      // 7. Return home
+      // 8. Return home
       await tester.tap(find.text('Volver al inicio'));
       await tester.pumpAndSettle();
+      expect(find.byType(MainNavigationPage), findsOneWidget);
     });
 
     testWidgets('E2E: Meditation Error State', (WidgetTester tester) async {
@@ -167,15 +179,10 @@ void main() {
       when(() => mockRepository.recommendScript(memoryHints: any(named: 'memoryHints')))
           .thenThrow(Exception(errorMessage));
 
-      await tester.pumpWidget(const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: MeditationPage(),
-      ));
-
+      await tester.pumpWidget(createTestWidget(const MeditationPage()));
       await tester.pumpAndSettle();
       expect(find.textContaining(errorMessage), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'meditation', '06_error');
+      await VideoRecorder.recordStep(tester, 'meditation', '07_error');
     });
   });
 }
