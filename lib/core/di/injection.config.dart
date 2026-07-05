@@ -61,8 +61,8 @@ import '../../features/appointments/domain/usecases/get_all_appointments_usecase
     as _i43;
 import '../../features/appointments/domain/usecases/save_appointment_usecase.dart'
     as _i103;
-import '../../features/auth/application/auth_cubit.dart' as _i224;
-import '../../features/auth/application/bloc/auth_cubit.dart' as _i225;
+import '../../features/auth/application/auth_cubit.dart' as _i225;
+import '../../features/auth/application/bloc/auth_cubit.dart' as _i224;
 import '../../features/auth/data/datasources/auth_local_datasource.dart'
     as _i140;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
@@ -240,7 +240,7 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i61;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i125;
 import '../../features/local_agent/domain/usecases/get_chat_history_usecase.dart'
-    as _i168;
+    as _i167;
 import '../../features/local_agent/domain/usecases/send_chat_message_usecase.dart'
     as _i108;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
@@ -248,11 +248,11 @@ import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i39;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i192;
+    as _i193;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
     as _i41;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i193;
+    as _i192;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
     as _i62;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
@@ -439,7 +439,7 @@ import '../../features/voice_chat/application/voice_chat_cubit.dart' as _i220;
 import '../../features/voice_chat/domain/repositories/voice_chat_repository.dart'
     as _i130;
 import '../../features/voice_chat/domain/usecases/get_chat_history_usecase.dart'
-    as _i167;
+    as _i168;
 import '../../features/voice_chat/domain/usecases/send_message_usecase.dart'
     as _i213;
 import '../../features/voice_chat/infrastructure/datasources/chat_ai_datasource.dart'
@@ -707,7 +707,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i131.VoiceChatRepositoryImpl(gh<_i23.ChatAiDatasource>()));
     gh.lazySingleton<_i132.VouchRepository>(
         () => _i133.IsarVouchRepository(gh<_i58.Isar>()));
-    gh.lazySingleton<_i33.WalletService>(() => databaseModule.walletService(
+    gh.lazySingleton<_i34.WalletService>(() => databaseModule.walletService(
           gh<_i58.Isar>(),
           gh<_i33.EncryptionService>(),
         ));
@@ -725,7 +725,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i141.AuthRepository>(
         () => _i142.AuthRepositoryImpl(gh<_i140.AuthLocalDataSource>()));
     gh.lazySingleton<_i143.AuthService>(
-        () => _i143.AuthServiceImpl(gh<_i34.EncryptionService>()));
+        () => _i143.AuthServiceImpl(gh<_i33.EncryptionService>()));
     gh.lazySingleton<_i144.BleSharingService>(
         () => _i144.BleSharingService(gh<_i15.BleWrapper>()));
     gh.lazySingleton<_i145.CancelSharingUseCase>(
@@ -804,9 +804,9 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i102.GetAvailableSourcesUseCase>(() =>
         _i102.GetAvailableSourcesUseCase(gh<_i44.HealthDataImportService>()));
     gh.factory<_i167.GetChatHistoryUseCase>(
-        () => _i167.GetChatHistoryUseCase(gh<_i130.VoiceChatRepository>()));
+        () => _i167.GetChatHistoryUseCase(gh<_i125.VectorStoreService>()));
     gh.factory<_i168.GetChatHistoryUseCase>(
-        () => _i168.GetChatHistoryUseCase(gh<_i125.VectorStoreService>()));
+        () => _i168.GetChatHistoryUseCase(gh<_i130.VoiceChatRepository>()));
     gh.factory<_i169.GetConnectionsUseCase>(
         () => _i169.GetConnectionsUseCase(gh<_i93.OAuthRepository>()));
     gh.factory<_i170.GetCredentialsUseCase>(
@@ -863,20 +863,16 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i122.UserProfileRepository>(),
         ));
     gh.factory<_i61.LlmAdapter>(
-      () => _i189.MockLlmAdapter(gh<_i96.PromptScrubber>()),
+      () => _i192.MockLlmAdapter(gh<_i96.PromptScrubber>()),
       instanceName: 'mock',
     );
     gh.lazySingleton<_i61.LlmAdapter>(
-      () => _i192.GeminiLlmAdapter(
+      () => _i193.GeminiLlmAdapter(
         scrubber: gh<_i96.PromptScrubber>(),
         userProfileRepository: gh<_i122.UserProfileRepository>(),
         modelWrapper: gh<_i41.GeminiModelWrapper>(),
       ),
       instanceName: 'gemini',
-    );
-    gh.factory<_i61.LlmAdapter>(
-      () => _i193.MockLlmAdapter(gh<_i96.PromptScrubber>()),
-      instanceName: 'mock',
     );
     gh.lazySingleton<_i194.LlmAdapterFactory>(
         () => _i194.LlmAdapterFactory(gh<_i111.SettingsRepository>()));
@@ -967,7 +963,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i219.VitalSignBloc(gh<_i127.VitalSignRepository>()));
     gh.factory<_i220.VoiceChatCubit>(() => _i220.VoiceChatCubit(
           gh<_i213.SendMessageUseCase>(),
-          gh<_i167.GetChatHistoryUseCase>(),
+          gh<_i168.GetChatHistoryUseCase>(),
           gh<_i130.VoiceChatRepository>(),
           gh<_i11.AudioService>(),
         ));
@@ -977,12 +973,12 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i222.AllergiesCubit(gh<_i138.AllergyRepository>()));
     gh.factory<_i223.AllergyBloc>(
         () => _i223.AllergyBloc(gh<_i138.AllergyRepository>()));
-    gh.factory<_i224.AuthCubit>(() => _i224.AuthCubit(gh<_i143.AuthService>()));
-    gh.factory<_i225.AuthCubit>(() => _i225.AuthCubit(
+    gh.factory<_i224.AuthCubit>(() => _i224.AuthCubit(
           gh<_i141.AuthRepository>(),
-          gh<_i34.EncryptionService>(),
+          gh<_i33.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
+    gh.factory<_i225.AuthCubit>(() => _i225.AuthCubit(gh<_i143.AuthService>()));
     gh.lazySingleton<_i226.BadgeCalculator>(() => _i226.BadgeCalculator(
           gh<_i156.DoctorProfileRepository>(),
           gh<_i97.RatingRepository>(),
@@ -1064,8 +1060,8 @@ extension GetItInjectableX on _i1.GetIt {
           startSharingUseCase: gh<_i216.StartSharingUseCase>(),
           startListeningUseCase: gh<_i215.StartListeningUseCase>(),
           cancelSharingUseCase: gh<_i145.CancelSharingUseCase>(),
-          walletService: gh<_i33.WalletService>(),
-          walletEncryption: gh<_i33.EncryptionService>(),
+          walletService: gh<_i34.WalletService>(),
+          walletEncryption: gh<_i34.EncryptionService>(),
         ));
     gh.factory<_i247.GetResearchHistory>(
         () => _i247.GetResearchHistory(gh<_i241.MedicalResearchRepository>()));
