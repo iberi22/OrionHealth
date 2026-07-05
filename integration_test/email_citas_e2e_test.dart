@@ -1,124 +1,159 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/email-citas/presentation/email_connect_page.dart';
-import 'package:orionhealth_health/features/email-citas/application/email_citas_cubit.dart';
-import 'package:orionhealth_health/features/email-citas/application/email_citas_state.dart';
+import 'package:orionhealth_health/features/email-citas/domain/repositories/email_repository.dart';
+import 'package:orionhealth_health/features/appointments/domain/repositories/appointment_repository.dart';
+import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
+import 'package:orionhealth_health/core/widgets/glassmorphic_card.dart';
 import 'package:mocktail/mocktail.dart';
 import 'utils/video_recorder.dart';
 
-class MockEmailCitasCubit extends Mock implements EmailCitasCubit {}
+class MockEmailRepository extends Mock implements EmailRepository {}
+class MockAppointmentRepository extends Mock implements AppointmentRepository {}
+class FakeAppointment extends Fake implements Appointment {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  late MockEmailCitasCubit mockCubit;
+  late MockEmailRepository mockEmailRepository;
+  late MockAppointmentRepository mockAppointmentRepository;
+
+  setUpAll(() async {
+    registerFallbackValue(FakeAppointment());
+    await di.configureDependencies();
+  });
 
   setUp(() {
-    mockCubit = MockEmailCitasCubit();
-    getIt.allowReassignment = true;
-    getIt.registerSingleton<EmailCitasCubit>(mockCubit);
+    mockEmailRepository = MockEmailRepository();
+    mockAppointmentRepository = MockAppointmentRepository();
 
-    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+    di.getIt.allowReassignment = true;
+    di.getIt.registerSingleton<EmailRepository>(mockEmailRepository);
+    di.getIt.registerSingleton<AppointmentRepository>(mockAppointmentRepository);
+
+    // Default behaviors
+    when(() => mockEmailRepository.connectGmail()).thenAnswer((_) async => true);
+    when(() => mockEmailRepository.connectOutlook()).thenAnswer((_) async => true);
+    when(() => mockEmailRepository.fetchParsedAppointments(any(), any()))
+        .thenAnswer((_) async => []);
+    when(() => mockAppointmentRepository.saveAppointment(any()))
+        .thenAnswer((_) async => {});
+    when(() => mockEmailRepository.syncToNativeCalendar(any()))
+        .thenAnswer((_) async => {});
+
+    // Mock MethodChannel for app_links
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('com.llfbandit.app_links/messages'),
+      (MethodCall methodCall) async {
+        return null;
+      },
+    );
+
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('com.llfbandit.app_links/events'),
+      (MethodCall methodCall) async {
+        return null;
+      },
+    );
   });
 
-  tearDown(() {
-    getIt.unregister<EmailCitasCubit>();
-  });
+  Finder findProviderCard(String name) {
+    return find.ancestor(
+      of: find.text(name),
+      matching: find.byType(GlassmorphicCard),
+    );
+  }
 
   group('Email Citas Flow - E2E Tests', () {
-    testWidgets('E2E: Connect Email', (WidgetTester tester) async {
-      when(() => mockCubit.state).thenReturn(const EmailCitasInitial());
-
+    testWidgets('E2E: Full Integration Flow - Connect, Sync, and Error Handling', (WidgetTester tester) async {
+      // 1. Initial State
       await tester.pumpWidget(const MaterialApp(home: EmailConnectPage()));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'email_citas', '01_initial');
 
       expect(find.text('Gmail'), findsOneWidget);
-      expect(find.text('No conectado').first, findsOneWidget);
+      expect(find.text('Outlook'), findsOneWidget);
+      expect(find.textContaining('No conectado'), findsNWidgets(2));
 
-      await tester.tap(find.text('CONECTAR').first);
-      verify(() => mockCubit.connectGmail()).called(1);
-    });
+      // 2. Connect Gmail
+      await tester.tap(find.descendant(of: findProviderCard('Gmail'), matching: find.text('CONECTAR')));
+      await tester.pumpAndSettle();
+      verify(() => mockEmailRepository.connectGmail()).called(1);
 
-    testWidgets('E2E: Connection Timeout', (WidgetTester tester) async {
-      final stateController = StreamController<EmailCitasState>.broadcast();
-      when(() => mockCubit.stream).thenAnswer((_) => stateController.stream);
-      when(() => mockCubit.state).thenReturn(const EmailCitasInitial());
-
-      await tester.pumpWidget(const MaterialApp(home: EmailConnectPage()));
+      // Simulate deep link redirect
+      await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+        'com.llfbandit.app_links/events',
+        const StandardMethodCodec().encodeSuccessEnvelope('orionhealth://oauth2redirect?code=gmail_code'),
+        (data) {},
+      );
       await tester.pumpAndSettle();
 
-      when(() => mockCubit.connectGmail()).thenAnswer((_) async {
-        stateController.add(const EmailCitasError('Timeout'));
-      });
+      // Verify Gmail is connected
+      expect(find.descendant(of: findProviderCard('Gmail'), matching: find.text('Conectado')), findsOneWidget);
+      expect(find.text('SINCRONIZAR AHORA'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'email_citas', '02_gmail_connected');
 
-      await tester.tap(find.text('CONECTAR').first);
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'email_citas', '02_timeout');
+      // 3. Manual Sync Success
+      final mockAppointments = [
+        Appointment(
+          doctorName: 'Dr. House',
+          specialty: 'Diagnóstico',
+          dateTime: DateTime.now().add(const Duration(days: 2)),
+          status: AppointmentStatus.upcoming,
+        ),
+        Appointment(
+          doctorName: 'Dr. Strange',
+          specialty: 'Neurocirugía',
+          dateTime: DateTime.now().add(const Duration(days: 5)),
+          status: AppointmentStatus.upcoming,
+        ),
+      ];
 
-      expect(find.text('Error: Timeout'), findsOneWidget);
-    });
-
-    testWidgets('E2E: Invalid Email Credentials', (WidgetTester tester) async {
-      final stateController = StreamController<EmailCitasState>.broadcast();
-      when(() => mockCubit.stream).thenAnswer((_) => stateController.stream);
-      when(() => mockCubit.state).thenReturn(const EmailCitasInitial());
-
-      await tester.pumpWidget(const MaterialApp(home: EmailConnectPage()));
-      await tester.pumpAndSettle();
-
-      when(() => mockCubit.connectGmail()).thenAnswer((_) async {
-        stateController.add(const EmailCitasError('Invalid credentials'));
-      });
-
-      await tester.tap(find.text('CONECTAR').first);
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'email_citas', '03_invalid_creds');
-
-      expect(find.text('Error: Invalid credentials'), findsOneWidget);
-    });
-
-    testWidgets('E2E: Network Drop During Sync', (WidgetTester tester) async {
-      final stateController = StreamController<EmailCitasState>.broadcast();
-      when(() => mockCubit.stream).thenAnswer((_) => stateController.stream);
-      when(() => mockCubit.state).thenReturn(const EmailCitasConnected(isGmailConnected: true));
-
-      await tester.pumpWidget(const MaterialApp(home: EmailConnectPage()));
-      await tester.pumpAndSettle();
-
-      when(() => mockCubit.manualSync()).thenAnswer((_) async {
-        stateController.add(const EmailCitasLoading());
-        stateController.add(const EmailCitasError('Network connection lost'));
-      });
+      when(() => mockEmailRepository.fetchParsedAppointments('Gmail', 'gmail_code'))
+          .thenAnswer((_) async => mockAppointments);
 
       await tester.tap(find.text('SINCRONIZAR AHORA'));
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'email_citas', '04_network_drop');
+      await tester.pump(); // Start loading
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-      expect(find.text('Error: Network connection lost'), findsOneWidget);
-    });
-
-    testWidgets('E2E: Empty Inbox Sync', (WidgetTester tester) async {
-      final stateController = StreamController<EmailCitasState>.broadcast();
-      when(() => mockCubit.stream).thenAnswer((_) => stateController.stream);
-      when(() => mockCubit.state).thenReturn(const EmailCitasConnected(isGmailConnected: true));
-
-      await tester.pumpWidget(const MaterialApp(home: EmailConnectPage()));
       await tester.pumpAndSettle();
 
-      when(() => mockCubit.manualSync()).thenAnswer((_) async {
-        stateController.add(const EmailCitasLoading());
-        stateController.add(const EmailCitasSyncSuccess());
-      });
-
-      await tester.tap(find.text('SINCRONIZAR AHORA'));
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'email_citas', '05_empty_inbox');
-
+      verify(() => mockAppointmentRepository.saveAppointment(any())).called(2);
       expect(find.text('Sincronización completada'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'email_citas', '03_sync_success');
+
+      // 4. Connect Outlook
+      await tester.tap(find.descendant(of: findProviderCard('Outlook'), matching: find.text('CONECTAR')));
+      await tester.pumpAndSettle();
+      verify(() => mockEmailRepository.connectOutlook()).called(1);
+
+      await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+        'com.llfbandit.app_links/events',
+        const StandardMethodCodec().encodeSuccessEnvelope('orionhealth://oauth2redirect?code=outlook_code'),
+        (data) {},
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.descendant(of: findProviderCard('Outlook'), matching: find.text('Conectado')), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'email_citas', '04_both_connected');
+
+      // 5. Sync Error
+      when(() => mockEmailRepository.fetchParsedAppointments('Outlook', 'outlook_code'))
+          .thenThrow(Exception('Error de conexión con Outlook'));
+
+      // Since we just connected Outlook, it might try to sync automatically or we tap sync
+      // The Cubit handles manualSync using _lastSuccessfulCode which would now be 'outlook_code'
+      await tester.tap(find.text('SINCRONIZAR AHORA'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Error: Exception: Error de conexión con Outlook'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'email_citas', '05_sync_error');
     });
   });
 }
