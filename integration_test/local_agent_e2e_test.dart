@@ -86,7 +86,7 @@ void main() {
       await tester.tap(find.text('GEMINI'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Gemini API Configuration'), findsOneWidget);
+      expect(find.text('Gemini API Key'), findsOneWidget);
 
       // Enter API Key
       await tester.enterText(find.byType(TextField), 'test-api-key');
