@@ -101,6 +101,11 @@ class TestMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
     return [];
   }
 
+  @override
+  Future<String> getRelevantContext(String query) async {
+    return 'context';
+  }
+
   void addCode(MedicalCode code) => _codes.add(code);
 
   void _ensureInitialized() {

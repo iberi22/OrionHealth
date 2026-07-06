@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
+import 'package:orionhealth_health/features/local_agent/domain/entities/local_model_descriptor.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/llm_adapter.dart';
 
 /// Minimal concrete implementation for testing the abstract interface
@@ -38,6 +40,19 @@ class TestLlmAdapter implements LlmAdapter {
   @override
   Future<bool> isModelInstalled(String modelId) async =>
       modelId == 'test-model';
+
+  @override
+  Future<ChatMessage> generateResponse(
+    String userMessage,
+    String context,
+    LocalModelDescriptor model,
+  ) async {
+    return ChatMessage(
+      role: ChatRole.assistant,
+      content: 'Response',
+      timestamp: DateTime.now(),
+    );
+  }
 }
 
 void main() {
