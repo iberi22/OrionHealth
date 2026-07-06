@@ -1,0 +1,36 @@
+---
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const planningFiles = [
+  { name: "OrionHealth Roadmap", file: "ORIONHEALTH-ROADMAP.md" },
+  { name: "Jules Pipeline", file: "JULES_PIPELINE.md" },
+  { name: "Task Landing", file: "TASK_LANDING.md" },
+  { name: "Feature Audit", file: "FEATURE_AUDIT.md" },
+  { name: "Improvements Extraction", file: "improvements-extraction.md" },
+];
+---
+
+<BaseLayout title="Planning - OrionHealth" description="Project planning and roadmap" lang="en">
+  <Header lang="en" />
+  <main class="pt-20 pb-16 px-4">
+    <div class="container-custom max-w-7xl mx-auto">
+      <div class="breadcrumb flex items-center gap-2 text-sm text-bone-dark opacity-60 mb-6">
+        <a href={`${base}/docs`} class="hover:text-accent">Docs</a>
+        <span>/</span>
+        <span>Planning</span>
+      </div>
+      <h1 class="text-3xl md:text-5xl font-bold tracking-tighter mb-8">Project Planning</h1>
+      <div class="grid gap-4 max-w-4xl">
+        {planningFiles.map(p => (
+          <a href={`${base}/${p.file.toLowerCase()}`} class="glass rounded-xl p-6 hover:border-accent/50 transition-all block">
+            <h3 class="text-xl font-bold text-white">{p.name}</h3>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+  <Footer lang="en" />
+</BaseLayout>

@@ -1,0 +1,31 @@
+---
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import fs from "node:fs";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+let statusContent = "";
+try {
+  statusContent = fs.readFileSync("docs/status/dev-status.md", "utf-8");
+} catch {
+  statusContent = "# Project Status\nStatus information coming soon.";
+}
+---
+
+<BaseLayout title="Project Status - OrionHealth" description="Current project status and progress" lang="en">
+  <Header lang="en" />
+  <main class="pt-20 pb-16 px-4">
+    <div class="container-custom max-w-7xl mx-auto">
+      <div class="breadcrumb flex items-center gap-2 text-sm text-bone-dark opacity-60 mb-6">
+        <a href={`${base}/docs`} class="hover:text-accent">Docs</a>
+        <span>/</span>
+        <span>Status</span>
+      </div>
+      <article class="prose prose-invert max-w-4xl mx-auto">
+        <div set:html={statusContent} />
+      </article>
+    </div>
+  </main>
+  <Footer lang="en" />
+</BaseLayout>
