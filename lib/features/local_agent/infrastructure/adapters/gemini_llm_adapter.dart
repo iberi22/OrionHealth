@@ -1,3 +1,5 @@
+import '../../domain/chat_message.dart';
+import '../../domain/entities/local_model_descriptor.dart';
 import 'dart:io';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:injectable/injectable.dart';
