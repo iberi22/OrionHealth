@@ -49,6 +49,14 @@ void main() {
       final result = await dataSource.getPreferences();
       expect(result?.preferredDurationMinutes, 20);
     });
+
+    test('should return null when JSON is invalid', () async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('meditation_preferences', 'invalid json');
+
+      final result = await dataSource.getPreferences();
+      expect(result, isNull);
+    });
   });
 
   group('history', () {
@@ -66,6 +74,14 @@ void main() {
       expect(result.first.id, tSession.id);
       expect(result.first.scriptId, tSession.scriptId);
       expect(result.first.completed, tSession.completed);
+    });
+
+    test('should return empty list when JSON is invalid', () async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('meditation_history', 'invalid json');
+
+      final result = await dataSource.getHistory();
+      expect(result, isEmpty);
     });
   });
 }
