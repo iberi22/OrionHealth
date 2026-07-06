@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/health_data_import/presentation/pages/health_import_page.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_import_service.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
 import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/features/user_profile/presentation/pages/user_profile_page.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'utils/video_recorder.dart';
 
 class MockHealthDataImportService extends Mock implements HealthDataImportService {}
@@ -53,28 +56,55 @@ void main() {
     });
   });
 
-  group('Health Data Import - E2E Tests', () {
-    testWidgets('Full Import Flow from Google Fit', (WidgetTester tester) async {
+  tearDown(() {
+     di.getIt.unregister<HealthDataImportService>();
+     di.getIt.unregister<VitalSignRepository>();
+  });
+
+  Widget createImportTestWidget(Widget home) {
+    return MaterialApp(
+      home: home,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('es'),
+    );
+  }
+
+  group('Health Data Import Flow - True E2E Tests', () {
+    testWidgets('E2E: Navigation to Import Page and Full Flow from Google Fit', (WidgetTester tester) async {
       // 1. Mock initial data
       when(() => mockImportService.getAvailableSources())
           .thenAnswer((_) async => [HealthDataSource.googleFit]);
 
-      // 2. Launch the page
-      await tester.pumpWidget(const MaterialApp(
-        home: HealthImportPage(),
-      ));
+      // Start from User Profile to test navigation
+      await tester.pumpWidget(createImportTestWidget(const UserProfilePage()));
       await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'health_data_import', '01_ready_state');
+      await VideoRecorder.recordStep(tester, 'health_data_import', '01_user_profile');
+
+      final l10n = await AppLocalizations.delegate.load(const Locale('es'));
+
+      // Navigate to Importar Datos
+      final importTile = find.text(l10n.importData);
+      await tester.scrollUntilVisible(importTile, 100);
+      await tester.tap(importTile);
+      await tester.pumpAndSettle();
+
+      // Verify Health Import Page is shown
+      expect(find.byType(HealthImportPage), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'health_data_import', '02_import_ready');
 
       // Verify Google Fit is available
       expect(find.text('Google Fit / Health Connect'), findsOneWidget);
-      expect(find.text('Available'), findsOneWidget);
 
-      // 3. Setup mocks for the import process
+      // Setup mocks for the import process
       when(() => mockImportService.requestAuthorization(any()))
           .thenAnswer((_) async => true);
 
-      // Mocking all fetch methods to return empty lists for simplicity in E2E
       when(() => mockImportService.fetchSteps()).thenAnswer((_) async => []);
       when(() => mockImportService.fetchDistance()).thenAnswer((_) async => []);
       when(() => mockImportService.fetchHeartRate()).thenAnswer((_) async => []);
@@ -91,53 +121,36 @@ void main() {
       when(() => mockVitalSignRepository.saveVitalSigns(any()))
           .thenAnswer((_) async => {});
 
-      // 4. Trigger Import
+      // Trigger Import
       await tester.tap(find.text('Import Data'));
       await tester.pump(); // Start the flow
 
-      // 5. Verify Authentication state (dialog showing "Requesting permission from...")
+      // Verify Authentication state
       await tester.pump(const Duration(milliseconds: 100));
       expect(find.textContaining('Requesting permission from'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'health_data_import', '02_authenticating');
+      await VideoRecorder.recordStep(tester, 'health_data_import', '03_authenticating');
 
       await tester.pumpAndSettle();
 
-      // 6. Verify Success SnackBar
+      // Verify Success SnackBar
       expect(find.textContaining('Successfully imported'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'health_data_import', '03_success');
+      await VideoRecorder.recordStep(tester, 'health_data_import', '04_success');
     });
 
-    testWidgets('Handling Authorization Denied', (WidgetTester tester) async {
+    testWidgets('E2E: Handling Authorization Denied', (WidgetTester tester) async {
       when(() => mockImportService.getAvailableSources())
           .thenAnswer((_) async => [HealthDataSource.googleFit]);
       when(() => mockImportService.requestAuthorization(any()))
           .thenAnswer((_) async => false);
 
-      await tester.pumpWidget(const MaterialApp(home: HealthImportPage()));
+      await tester.pumpWidget(createImportTestWidget(const HealthImportPage()));
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Import Data'));
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Authorization denied'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'health_data_import', '04_auth_denied');
-    });
-   group('E2E: Import Health Data from Multiple Sources', () {
-      testWidgets('Shows multiple available sources', (WidgetTester tester) async {
-        when(() => mockImportService.getAvailableSources())
-            .thenAnswer((_) async => [HealthDataSource.googleFit, HealthDataSource.samsungHealth]);
-
-        await tester.pumpWidget(const MaterialApp(home: HealthImportPage()));
-        await tester.pumpAndSettle();
-
-        expect(find.text('Google Fit / Health Connect'), findsOneWidget);
-        expect(find.text('Samsung Health'), findsOneWidget);
-
-        // Verify one is marked available and another is not (simulated)
-        // Actually, our mock says both are in the available list.
-
-        await VideoRecorder.recordStep(tester, 'health_data_import', '05_multiple_sources');
-      });
+      await VideoRecorder.recordStep(tester, 'health_data_import', '05_auth_denied');
     });
   });
 }

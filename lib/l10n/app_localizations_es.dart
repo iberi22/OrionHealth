@@ -314,6 +314,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get anonymizationActive => 'Anonimización activa';
 
   @override
+  String get networkHealth => 'Red de Salud';
+
+  @override
+  String get importData => 'Importar Datos de Salud';
+
+  @override
   String get changePassword => 'Cambiar Contraseña';
 
   @override

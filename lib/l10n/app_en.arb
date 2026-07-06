@@ -105,6 +105,8 @@
   "biometricAuth": "Biometric Authentication",
   "allowCloudApi": "Allow Cloud API",
   "anonymizationActive": "Anonymization active",
+  "networkHealth": "Network Health",
+  "importData": "Import Health Data",
   "changePassword": "Change Password",
   "profileSaved": "Profile saved",
   "saveChanges": "Save Changes",
