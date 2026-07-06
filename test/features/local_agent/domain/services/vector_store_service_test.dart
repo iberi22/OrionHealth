@@ -63,6 +63,11 @@ class TestVectorStoreService implements VectorStoreService {
   }) async {
     return [];
   }
+
+  @override
+  Future<List<ChatMessage>> getRecentMessages({int limit = 20}) async {
+    return [];
+  }
 }
 
 void main() {

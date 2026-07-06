@@ -24,4 +24,9 @@ class MedicalKnowledgeRepositoryImpl implements MedicalKnowledgeRepository {
   Future<List<Map<String, dynamic>>> checkInteractions(List<String> drugCodes) async => [];
   @override
   List<Map<String, dynamic>> getSymptomMappings() => [];
+
+  @override
+  Future<String> getRelevantContext(String query) async {
+    return 'No context found.';
+  }
 }
