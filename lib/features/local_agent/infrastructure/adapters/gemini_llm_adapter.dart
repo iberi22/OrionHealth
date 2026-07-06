@@ -84,6 +84,21 @@ class GeminiLlmAdapter implements LlmAdapter {
 
   @override
   Future<void> cancelDownload(String modelId) async {}
+
+  @override
+  Future<ChatMessage> generateResponse(
+    String userMessage,
+    String context,
+    LocalModelDescriptor model,
+  ) async {
+    final prompt = 'Context: $context\n\nUser: $userMessage\nAssistant:';
+    final response = await generate(prompt);
+    return ChatMessage(
+      role: ChatRole.assistant,
+      content: response,
+      timestamp: DateTime.now(),
+    );
+  }
 }
 
 class SecurityException implements Exception {

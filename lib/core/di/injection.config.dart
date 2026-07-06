@@ -61,8 +61,8 @@ import '../../features/appointments/domain/usecases/get_all_appointments_usecase
     as _i43;
 import '../../features/appointments/domain/usecases/save_appointment_usecase.dart'
     as _i103;
-import '../../features/auth/application/auth_cubit.dart' as _i223;
-import '../../features/auth/application/bloc/auth_cubit.dart' as _i224;
+import '../../features/auth/application/auth_cubit.dart' as _i224;
+import '../../features/auth/application/bloc/auth_cubit.dart' as _i223;
 import '../../features/auth/data/datasources/auth_local_datasource.dart'
     as _i138;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
@@ -261,9 +261,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i192;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i239;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i69;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i68;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i69;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i124;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -458,9 +458,9 @@ import 'memory_module.dart' as _i251;
 import 'network_module.dart' as _i250;
 import 'service_module.dart' as _i249;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -584,15 +584,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i66.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i67.MedicalKnowledgeRepository>(
-      () => _i68.JsonMedicalKnowledgeRepository(),
+      () => _i68.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
+    );
+    gh.factory<_i67.MedicalKnowledgeRepository>(
+      () => _i69.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
-    );
-    gh.factory<_i67.MedicalKnowledgeRepository>(
-      () => _i69.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
     );
     gh.lazySingleton<_i70.MedicalScraperService>(
         () => _i71.MedicalScraperServiceImpl(
@@ -969,12 +969,12 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i221.AllergiesCubit(gh<_i136.AllergyRepository>()));
     gh.factory<_i222.AllergyBloc>(
         () => _i222.AllergyBloc(gh<_i136.AllergyRepository>()));
-    gh.factory<_i223.AuthCubit>(() => _i223.AuthCubit(gh<_i141.AuthService>()));
-    gh.factory<_i224.AuthCubit>(() => _i224.AuthCubit(
+    gh.factory<_i223.AuthCubit>(() => _i223.AuthCubit(
           gh<_i139.AuthRepository>(),
           gh<_i33.EncryptionService>(),
           gh<_i14.BiometricService>(),
         ));
+    gh.factory<_i224.AuthCubit>(() => _i224.AuthCubit(gh<_i141.AuthService>()));
     gh.lazySingleton<_i225.BadgeCalculator>(() => _i225.BadgeCalculator(
           gh<_i154.DoctorProfileRepository>(),
           gh<_i97.RatingRepository>(),

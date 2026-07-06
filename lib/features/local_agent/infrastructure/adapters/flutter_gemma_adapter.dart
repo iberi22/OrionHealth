@@ -182,4 +182,19 @@ class FlutterGemmaAdapter implements LlmAdapter {
     _activeModel = await _wrapper.getActiveModel(maxTokens: 4096);
     return _activeModel!;
   }
+
+  @override
+  Future<ChatMessage> generateResponse(
+    String userMessage,
+    String context,
+    LocalModelDescriptor model,
+  ) async {
+    final prompt = 'Context: $context\n\nUser: $userMessage\nAssistant:';
+    final response = await generate(prompt);
+    return ChatMessage(
+      role: ChatRole.assistant,
+      content: response,
+      timestamp: DateTime.now(),
+    );
+  }
 }

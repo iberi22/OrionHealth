@@ -128,8 +128,11 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
   }
 
   Widget _buildAgentView(VoiceChatState state) {
+    final isRecording = state.status == VoiceChatStatus.recording;
+    final isSpeaking = state.status == VoiceChatStatus.speaking;
+
     return ScaleTransition(
-      scale: _pulseAnimation,
+      scale: isRecording || isSpeaking ? _pulseAnimation : const AlwaysStoppedAnimation(1.0),
       child: Container(
         height: 120,
         width: 120,
@@ -137,13 +140,18 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
           shape: BoxShape.circle,
           gradient: RadialGradient(
             colors: [
-              Colors.blue.withValues(alpha: 0.4),
+              (isRecording ? Colors.red : (isSpeaking ? Colors.green : Colors.blue))
+                  .withValues(alpha: 0.4 + (state.currentAudioLevel * 0.4)),
               Colors.transparent,
             ],
           ),
         ),
-        child: const Center(
-          child: Icon(Icons.psychology, color: Colors.white, size: 64),
+        child: Center(
+          child: Icon(
+            isRecording ? Icons.mic : (isSpeaking ? Icons.volume_up : Icons.psychology),
+            color: Colors.white,
+            size: 64,
+          ),
         ),
       ),
     );
