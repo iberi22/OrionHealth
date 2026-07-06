@@ -57,30 +57,61 @@ class SherpaOnnxAsrService implements LocalAsrService {
 
       final modelEntry = _manager.manifest.models.firstWhere((m) => m.key == modelKey);
 
-      // Basic SenseVoice/Paraformer configuration (adjust based on actual manifest)
-      // For SenseVoiceSmall as in manifest:
-      final onnxMeta = modelEntry.files.firstWhere((f) => f.url.endsWith('.onnx'));
-      final tokensMeta = modelEntry.files.firstWhere((f) => f.url.endsWith('tokens.txt'));
+      OfflineRecognizerConfig config;
 
-      final onnxPath = await _manager.getLocalPath(modelKey, onnxMeta.url);
-      final tokensPath = await _manager.getLocalPath(modelKey, tokensMeta.url);
+      if (modelEntry.type == 'whisper') {
+        final encoderMeta = modelEntry.files.firstWhere((f) => f.url.contains('encoder'));
+        final decoderMeta = modelEntry.files.firstWhere((f) => f.url.contains('decoder'));
+        final tokensMeta = modelEntry.files.firstWhere((f) => f.url.contains('tokens'));
 
-      if (onnxPath == null || tokensPath == null) {
-        throw Exception('Model files missing despite isInstalled returning true');
-      }
+        final encoderPath = await _manager.getLocalPath(modelKey, encoderMeta.url);
+        final decoderPath = await _manager.getLocalPath(modelKey, decoderMeta.url);
+        final tokensPath = await _manager.getLocalPath(modelKey, tokensMeta.url);
 
-      final config = OfflineRecognizerConfig(
-        model: OfflineModelConfig(
-          senseVoice: OfflineSenseVoiceModelConfig(
-            model: onnxPath,
-            useInverseTextNormalization: true,
+        if (encoderPath == null || decoderPath == null || tokensPath == null) {
+          throw Exception('Whisper model files missing');
+        }
+
+        config = OfflineRecognizerConfig(
+          model: OfflineModelConfig(
+            whisper: OfflineWhisperModelConfig(
+              encoder: encoderPath,
+              decoder: decoderPath,
+              language: modelEntry.language,
+              task: 'transcribe',
+              tailPaddings: -1,
+            ),
+            tokens: tokensPath,
+            numThreads: 1,
+            debug: kDebugMode,
+            provider: 'cpu',
           ),
-          tokens: tokensPath,
-          numThreads: 1,
-          debug: kDebugMode,
-          provider: 'cpu',
-        ),
-      );
+        );
+      } else {
+        // Basic SenseVoice/Paraformer configuration
+        final onnxMeta = modelEntry.files.firstWhere((f) => f.url.endsWith('.onnx'));
+        final tokensMeta = modelEntry.files.firstWhere((f) => f.url.endsWith('tokens.txt'));
+
+        final onnxPath = await _manager.getLocalPath(modelKey, onnxMeta.url);
+        final tokensPath = await _manager.getLocalPath(modelKey, tokensMeta.url);
+
+        if (onnxPath == null || tokensPath == null) {
+          throw Exception('Model files missing despite isInstalled returning true');
+        }
+
+        config = OfflineRecognizerConfig(
+          model: OfflineModelConfig(
+            senseVoice: OfflineSenseVoiceModelConfig(
+              model: onnxPath,
+              useInverseTextNormalization: true,
+            ),
+            tokens: tokensPath,
+            numThreads: 1,
+            debug: kDebugMode,
+            provider: 'cpu',
+          ),
+        );
+      }
 
       _recognizer = OfflineRecognizer(config);
       state = AsrState.ready;

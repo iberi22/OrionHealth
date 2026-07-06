@@ -2,6 +2,9 @@
 ///
 /// This interface allows OrionHealth to integrate with the HiRAG Phase 2
 /// automatic summarization features while maintaining hexagonal architecture.
+import '../chat_message.dart';
+import '../entities/local_model_descriptor.dart';
+
 abstract class LlmAdapter {
   /// Generate text based on a prompt
   ///

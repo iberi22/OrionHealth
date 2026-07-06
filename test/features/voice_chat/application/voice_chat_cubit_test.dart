@@ -9,6 +9,7 @@ import 'package:orionhealth_health/core/services/audio/audio_player_service.dart
 import 'package:orionhealth_health/features/voice_chat/application/voice_chat_cubit.dart';
 import 'package:orionhealth_health/features/voice_chat/application/voice_chat_state.dart';
 import 'package:orionhealth_health/features/voice_chat/domain/entities/voice_chat_message.dart';
+import 'package:orionhealth_health/features/voice_chat/domain/entities/transcript.dart';
 import 'package:orionhealth_health/features/voice_chat/domain/usecases/get_chat_history_usecase.dart';
 import 'package:orionhealth_health/features/voice_chat/domain/usecases/send_message_usecase.dart';
 import 'package:orionhealth_health/features/voice_chat/domain/repositories/voice_chat_repository.dart';
@@ -121,7 +122,7 @@ void main() {
       final audioBytes = Uint8List.fromList([1, 2, 3]);
       when(() => mockAudioService.startRecording()).thenAnswer((_) async => {});
       when(() => mockAudioService.stopRecording()).thenAnswer((_) async => audioBytes);
-      when(() => mockRepository.transcribeAudio(any())).thenAnswer((_) async => 'Test');
+      when(() => mockRepository.transcribeAudio(any())).thenAnswer((_) async => Transcript(text: 'Test', timestamp: DateTime.now()));
       when(() => mockSendMessageUseCase(any(), history: any(named: 'history')))
           .thenAnswer((_) async => VoiceChatMessage(
                 id: '2',

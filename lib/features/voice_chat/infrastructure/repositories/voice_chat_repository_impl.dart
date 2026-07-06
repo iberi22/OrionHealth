@@ -4,6 +4,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/entities/voice_chat_message.dart';
+import '../../domain/entities/transcript.dart';
 import '../../domain/repositories/voice_chat_repository.dart';
 import '../datasources/chat_ai_datasource.dart';
 
@@ -60,7 +61,11 @@ class VoiceChatRepositoryImpl implements VoiceChatRepository {
   }
 
   @override
-  Future<String> transcribeAudio(List<int> audioBytes) async {
-    return await _datasource.transcribe(audioBytes);
+  Future<Transcript> transcribeAudio(List<int> audioBytes) async {
+    final text = await _datasource.transcribe(audioBytes);
+    return Transcript(
+      text: text,
+      timestamp: DateTime.now(),
+    );
   }
 }
