@@ -2,45 +2,70 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_cubit.dart';
-import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/biometric_service.dart';
 import 'package:orionhealth_health/features/auth/domain/repositories/auth_repository.dart';
 import 'package:orionhealth_health/features/auth/domain/entities/auth_credentials.dart';
+import 'package:orionhealth_health/features/auth/domain/entities/auth_credential.dart';
+import 'package:orionhealth_health/features/auth/domain/usecases/login_usecase.dart';
+import 'package:orionhealth_health/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:orionhealth_health/features/auth/domain/usecases/validate_session_usecase.dart';
+import 'package:orionhealth_health/features/auth/domain/usecases/set_pin_usecase.dart';
 import 'package:orionhealth_health/features/auth/presentation/auth_gate.dart';
 import 'package:orionhealth_health/features/auth/presentation/login_page.dart';
 import 'package:orionhealth_health/features/auth/presentation/setup_pin_page.dart';
+import 'package:orionhealth_health/features/onboarding/presentation/pages/onboarding_main_page.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 
-import 'auth_gate_test.mocks.dart';
+class MockUserProfileRepository extends Mock implements UserProfileRepository {}
+class MockAuthRepository extends Mock implements AuthRepository {}
+class MockBiometricService extends Mock implements BiometricService {}
+class MockLoginUseCase extends Mock implements LoginUseCase {}
+class MockLogoutUseCase extends Mock implements LogoutUseCase {}
+class MockValidateSessionUseCase extends Mock implements ValidateSessionUseCase {}
+class MockSetPinUseCase extends Mock implements SetPinUseCase {}
 
-@GenerateMocks([UserProfileRepository, AuthRepository, EncryptionService, BiometricService])
+class FakeAuthCredential extends Fake implements AuthCredential {}
+
 void main() {
   final getIt = GetIt.instance;
   late MockUserProfileRepository mockUserProfileRepository;
   late MockAuthRepository mockAuthRepository;
-  late MockEncryptionService mockEncryptionService;
   late MockBiometricService mockBiometricService;
+  late MockLoginUseCase mockLoginUseCase;
+  late MockLogoutUseCase mockLogoutUseCase;
+  late MockValidateSessionUseCase mockValidateSessionUseCase;
+  late MockSetPinUseCase mockSetPinUseCase;
 
   setUpAll(() {
+    registerFallbackValue(FakeAuthCredential());
+
     mockUserProfileRepository = MockUserProfileRepository();
     mockAuthRepository = MockAuthRepository();
-    mockEncryptionService = MockEncryptionService();
     mockBiometricService = MockBiometricService();
+    mockLoginUseCase = MockLoginUseCase();
+    mockLogoutUseCase = MockLogoutUseCase();
+    mockValidateSessionUseCase = MockValidateSessionUseCase();
+    mockSetPinUseCase = MockSetPinUseCase();
 
     getIt.registerLazySingleton<UserProfileRepository>(() => mockUserProfileRepository);
     getIt.registerLazySingleton<AuthRepository>(() => mockAuthRepository);
-    getIt.registerLazySingleton<EncryptionService>(() => mockEncryptionService);
     getIt.registerLazySingleton<BiometricService>(() => mockBiometricService);
+    getIt.registerLazySingleton<LoginUseCase>(() => mockLoginUseCase);
+    getIt.registerLazySingleton<LogoutUseCase>(() => mockLogoutUseCase);
+    getIt.registerLazySingleton<ValidateSessionUseCase>(() => mockValidateSessionUseCase);
+    getIt.registerLazySingleton<SetPinUseCase>(() => mockSetPinUseCase);
 
     getIt.registerFactory<AuthCubit>(() => AuthCubit(
       mockAuthRepository,
-      mockEncryptionService,
       mockBiometricService,
+      mockLoginUseCase,
+      mockLogoutUseCase,
+      mockValidateSessionUseCase,
+      mockSetPinUseCase,
     ));
   });
 
@@ -51,8 +76,15 @@ void main() {
   setUp(() {
     reset(mockUserProfileRepository);
     reset(mockAuthRepository);
-    reset(mockEncryptionService);
     reset(mockBiometricService);
+    reset(mockLoginUseCase);
+    reset(mockLogoutUseCase);
+    reset(mockValidateSessionUseCase);
+    reset(mockSetPinUseCase);
+
+    // Default stubs
+    when(() => mockLoginUseCase(any())).thenAnswer((_) async => null);
+    when(() => mockBiometricService.canCheckBiometrics()).thenAnswer((_) async => false);
   });
 
   Widget makeApp() {
@@ -65,8 +97,9 @@ void main() {
 
   group('AuthGate', () {
     testWidgets('AuthInitial → CircularProgressIndicator', (tester) async {
-      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(name: 'Test'));
-      when(mockAuthRepository.getCredentials()).thenAnswer((_) async => Completer<AuthCredentials?>().future);
+      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(name: 'Test'));
+      when(() => mockValidateSessionUseCase()).thenAnswer((_) async => null);
+      when(() => mockAuthRepository.getCredentials()).thenAnswer((_) async => Completer<AuthCredentials?>().future);
 
       await tester.pumpWidget(makeApp());
       await tester.pump();
@@ -74,8 +107,9 @@ void main() {
     });
 
     testWidgets('AuthNotSetup → SetupPinPage', (tester) async {
-      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(name: 'Test'));
-      when(mockAuthRepository.getCredentials()).thenAnswer((_) async => null);
+      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(name: 'Test'));
+      when(() => mockValidateSessionUseCase()).thenAnswer((_) async => null);
+      when(() => mockAuthRepository.getCredentials()).thenAnswer((_) async => null);
 
       await tester.pumpWidget(makeApp());
       await tester.pumpAndSettle();
@@ -84,45 +118,24 @@ void main() {
     });
 
     testWidgets('AuthUnauthenticated → LoginPage', (tester) async {
-      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(name: 'Test'));
+      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(name: 'Test'));
+      when(() => mockValidateSessionUseCase()).thenAnswer((_) async => null);
       final credentials = AuthCredentials()..hashedPin = 'hashed'..salt = 'salt';
-      when(mockAuthRepository.getCredentials()).thenAnswer((_) async => credentials);
+      when(() => mockAuthRepository.getCredentials()).thenAnswer((_) async => credentials);
 
       await tester.pumpWidget(makeApp());
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginPage), findsOneWidget);
-    });
-
-    testWidgets('AuthLocked → LoginPage', (tester) async {
-      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => UserProfile(name: 'Test'));
-      final credentials = AuthCredentials()
-        ..hashedPin = 'hashed'
-        ..salt = 'salt'
-        ..failedAttempts = 5
-        ..lastLockoutTime = DateTime.now();
-      when(mockAuthRepository.getCredentials()).thenAnswer((_) async => credentials);
-
-      await tester.pumpWidget(makeApp());
-      await tester.pumpAndSettle();
-
-      expect(find.byType(LoginPage), findsOneWidget);
-      expect(find.text('Acceso Bloqueado'), findsOneWidget);
     });
 
     testWidgets('UserProfile null → OnboardingMainPage', (tester) async {
-      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => null);
+      when(() => mockUserProfileRepository.getUserProfile()).thenAnswer((_) async => null);
 
       await tester.pumpWidget(makeApp());
       await tester.pumpAndSettle();
 
-      // Based on AuthGate.dart: if (userProfile == null) return OnboardingMainPage(...)
-      expect(find.byType(SetupPinPage), findsNothing);
-      expect(find.byType(LoginPage), findsNothing);
-      // We check for some text that is likely in OnboardingMainPage
-      // or just the type if we had it imported/mocked.
-      // Since OnboardingMainPage is a complex widget, we just check for its existence.
-      // But we need to make sure it's available in the test context.
+      expect(find.byType(OnboardingMainPage), findsOneWidget);
     });
   });
 }

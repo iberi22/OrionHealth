@@ -100,4 +100,16 @@ void main() {
 
     expect(find.text('Health is good'), findsOneWidget);
   });
+
+  testWidgets('handles null vitals and summary', (tester) async {
+    when(() => mockHomeCubit.state).thenReturn(const HomeState(
+      status: HomeStatus.loaded,
+      healthSummary: null,
+    ));
+
+    await tester.pumpWidget(createWidgetUnderTest());
+
+    expect(find.text('--'), findsNWidgets(4));
+    expect(find.byIcon(Icons.info_outline), findsNothing);
+  });
 }

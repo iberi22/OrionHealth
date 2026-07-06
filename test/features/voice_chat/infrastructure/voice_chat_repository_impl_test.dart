@@ -120,7 +120,7 @@ void main() {
 
       final result = await repository.transcribeAudio(audioBytes);
 
-      expect(result, transcription);
+      expect(result.text, transcription);
       verify(() => mockDatasource.transcribe(audioBytes)).called(1);
     });
 
