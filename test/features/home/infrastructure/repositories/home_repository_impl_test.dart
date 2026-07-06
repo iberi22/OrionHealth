@@ -6,6 +6,7 @@ import 'package:orionhealth_health/features/appointments/domain/repositories/app
 import 'package:orionhealth_health/features/medications/domain/repositories/medication_repository.dart';
 import 'package:orionhealth_health/features/home/infrastructure/datasources/home_local_datasource.dart';
 import 'package:orionhealth_health/features/home/infrastructure/datasources/home_remote_datasource.dart';
+import 'package:orionhealth_health/features/home/infrastructure/datasources/health_summary_datasource.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 
@@ -14,6 +15,7 @@ class MockAppointmentRepository extends Mock implements AppointmentRepository {}
 class MockMedicationRepository extends Mock implements MedicationRepository {}
 class MockHomeLocalDataSource extends Mock implements HomeLocalDataSource {}
 class MockHomeRemoteDataSource extends Mock implements HomeRemoteDataSource {}
+class MockHealthSummaryDatasource extends Mock implements HealthSummaryDatasource {}
 
 void main() {
   late HomeRepositoryImpl repository;
@@ -22,6 +24,7 @@ void main() {
   late MockMedicationRepository mockMeds;
   late MockHomeLocalDataSource mockLocal;
   late MockHomeRemoteDataSource mockRemote;
+  late MockHealthSummaryDatasource mockHealthSummary;
 
   setUp(() {
     mockVitals = MockVitalSignRepository();
@@ -29,6 +32,7 @@ void main() {
     mockMeds = MockMedicationRepository();
     mockLocal = MockHomeLocalDataSource();
     mockRemote = MockHomeRemoteDataSource();
+    mockHealthSummary = MockHealthSummaryDatasource();
 
     repository = HomeRepositoryImpl(
       mockVitals,
@@ -36,6 +40,7 @@ void main() {
       mockMeds,
       mockLocal,
       mockRemote,
+      mockHealthSummary,
     );
   });
 
@@ -53,15 +58,18 @@ void main() {
         )
       ]);
       when(() => mockMeds.getAllMedications()).thenAnswer((_) async => []);
+      when(() => mockHealthSummary.getHealthSummary()).thenAnswer((_) async => 'Summary text');
+      when(() => mockLocal.cacheHealthSummary(any())).thenAnswer((_) async {});
 
       final result = await repository.getHealthSummary();
 
       expect(result.latestVitals, isNotEmpty);
       expect(result.upcomingAppointments, hasLength(1));
+      expect(result.summaryText, 'Summary text');
     });
 
     test('getHomeModules returns cached modules if available', () async {
-      when(() => mockLocal.getCachedHomeModules()).thenAnswer((_) async => []);
+      when(() => mockLocal.getHomeModules()).thenAnswer((_) async => []);
       when(() => mockRemote.getHomeModules()).thenAnswer((_) async => []);
       when(() => mockLocal.cacheHomeModules(any())).thenAnswer((_) async {});
 

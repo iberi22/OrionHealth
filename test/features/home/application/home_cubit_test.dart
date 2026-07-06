@@ -37,7 +37,7 @@ void main() {
       ),
     ],
     upcomingAppointments: [],
-    medicationCount: 3,
+    medicationCount: 3, summaryText: "",
   );
 
   final tModules = [

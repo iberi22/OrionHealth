@@ -26,7 +26,7 @@ void main() {
       final entity = HomeHealthSummary(
         latestVitals: tVitals,
         upcomingAppointments: tAppointments,
-        medicationCount: 5,
+        medicationCount: 5, summaryText: "",
       );
 
       final model = HomeHealthSummaryModel.fromEntity(entity);
@@ -40,12 +40,12 @@ void main() {
       final entity1 = HomeHealthSummary(
         latestVitals: tVitals,
         upcomingAppointments: tAppointments,
-        medicationCount: 5,
+        medicationCount: 5, summaryText: "",
       );
       final entity2 = HomeHealthSummary(
         latestVitals: tVitals,
         upcomingAppointments: tAppointments,
-        medicationCount: 5,
+        medicationCount: 5, summaryText: "",
       );
 
       final model1 = HomeHealthSummaryModel.fromEntity(entity1);
@@ -60,7 +60,7 @@ void main() {
       final entity = HomeHealthSummary(
         latestVitals: [],
         upcomingAppointments: [],
-        medicationCount: 0,
+        medicationCount: 0, summaryText: "",
       );
 
       final model = HomeHealthSummaryModel.fromEntity(entity);
