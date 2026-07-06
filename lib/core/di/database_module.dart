@@ -22,6 +22,8 @@ import '../../features/settings/domain/entities/app_settings.dart';
 import '../../features/settings/domain/entities/llm_config.dart';
 import '../../features/dashboard/domain/entities/dashboard_preference.dart';
 import '../../features/medical_research/domain/entities/medical_research_result.dart';
+import '../../features/network/domain/entities/network_peer.dart';
+import '../../features/network/domain/entities/network_message.dart';
 // SSI schemas removed in #548 (dead code cleanup)
 // import '../../features/ssi/infrastructure/persistence/isar_did.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
@@ -57,6 +59,8 @@ abstract class DatabaseModule {
         LlmConfigSchema,
         DashboardPreferenceSchema,
         MedicalResearchResultSchema,
+        NetworkPeerSchema,
+        NetworkMessageSchema,
         wallet.HealthRecordSchema,
         wallet.LabResultSchema,
         wallet.VitalSignSchema,
