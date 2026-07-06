@@ -94,7 +94,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(() => mockOauthRepo.logout('1')).called(1);
-      expect(find.text('No EPS providers connected'), findsOneWidget);
+      expect(find.text('No tienes ninguna EPS vinculada'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'eps', '02_after_disconnect');
     });
 
@@ -105,7 +105,7 @@ void main() {
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'eps', '03_empty');
 
-      expect(find.text('No EPS providers connected'), findsOneWidget);
+      expect(find.text('No tienes ninguna EPS vinculada'), findsOneWidget);
     });
 
     testWidgets('E2E: Error Handling', (WidgetTester tester) async {
