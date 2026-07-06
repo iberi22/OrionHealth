@@ -2,19 +2,24 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'package:injectable/injectable.dart';
+import '../../domain/entities/home_module.dart';
+import '../../domain/repositories/home_data_source.dart';
 import '../models/home_module_model.dart';
 
 @injectable
-class HomeRemoteDataSource {
+class HomeRemoteDataSource implements HomeDataSource {
   HomeRemoteDataSource();
 
-  Future<List<HomeModuleModel>> getHomeModules() async {
+  @override
+  Future<List<HomeModule>> getHomeModules() async {
     // This would normally call an API endpoint.
-    // For now, we'll return the default modules as Models.
-    // In a real implementation:
-    // final response = await _dio.get('/home/modules');
-    // return (response.data as List).map((m) => HomeModuleModel.fromJson(m)).toList();
-
+    // For now, we'll return an empty list or mock data.
     return [];
+  }
+
+  @override
+  Future<String> getHealthSummary() async {
+    // This would normally call an API endpoint.
+    return 'Resumen remoto: Signos estables.';
   }
 }

@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../../core/theme/cyber_theme.dart';
 import '../../application/home_cubit.dart';
 import '../../application/home_state.dart';
 import '../../../vitals/domain/entities/vital_sign.dart';
@@ -16,42 +17,68 @@ class HealthStatusGrid extends StatelessWidget {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         final vitals = state.healthSummary?.latestVitals ?? [];
+        final summaryText = state.healthSummary?.summaryText;
 
-        return GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.3,
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildVitalCard(
-              context,
-              'Ritmo Cardíaco',
-              _getVitalValue(vitals, VitalSignType.heartRate),
-              Icons.favorite,
-              Colors.redAccent,
-            ),
-            _buildVitalCard(
-              context,
-              'Temperatura',
-              _getVitalValue(vitals, VitalSignType.temperature),
-              Icons.thermostat,
-              Colors.blueAccent,
-            ),
-            _buildVitalCard(
-              context,
-              'Pasos',
-              _getVitalValue(vitals, VitalSignType.steps),
-              Icons.directions_walk,
-              Colors.orangeAccent,
-            ),
-            _buildVitalCard(
-              context,
-              'Saturación O2',
-              _getVitalValue(vitals, VitalSignType.spO2) ?? _getVitalValue(vitals, VitalSignType.oxygenSaturation),
-              Icons.opacity,
-              Colors.cyanAccent,
+            if (summaryText != null && summaryText.isNotEmpty) ...[
+              GlassmorphicCard(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info_outline, color: CyberTheme.primary),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        summaryText,
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 1.3,
+              children: [
+                _buildVitalCard(
+                  context,
+                  'Ritmo Cardíaco',
+                  _getVitalValue(vitals, VitalSignType.heartRate),
+                  Icons.favorite,
+                  Colors.redAccent,
+                ),
+                _buildVitalCard(
+                  context,
+                  'Temperatura',
+                  _getVitalValue(vitals, VitalSignType.temperature),
+                  Icons.thermostat,
+                  Colors.blueAccent,
+                ),
+                _buildVitalCard(
+                  context,
+                  'Pasos',
+                  _getVitalValue(vitals, VitalSignType.steps),
+                  Icons.directions_walk,
+                  Colors.orangeAccent,
+                ),
+                _buildVitalCard(
+                  context,
+                  'Saturación O2',
+                  _getVitalValue(vitals, VitalSignType.spO2) ??
+                      _getVitalValue(vitals, VitalSignType.oxygenSaturation),
+                  Icons.opacity,
+                  Colors.cyanAccent,
+                ),
+              ],
             ),
           ],
         );

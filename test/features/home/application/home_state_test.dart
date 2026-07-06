@@ -29,7 +29,7 @@ void main() {
       const summary = HomeHealthSummary(
         latestVitals: [],
         upcomingAppointments: [],
-        medicationCount: 0,
+        medicationCount: 0, summaryText: "",
       );
       final state = HomeState(status: HomeStatus.loaded, healthSummary: summary);
       final updated = state.copyWith(errorMessage: 'Error');
