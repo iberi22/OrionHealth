@@ -217,6 +217,14 @@ class AssetMedicalKnowledgeRepository implements MedicalKnowledgeRepository {
     return _symptomMappings;
   }
 
+  @override
+  Future<String> getRelevantContext(String query) async {
+    _ensureInitialized();
+    final codes = await searchByTerm(query);
+    if (codes.isEmpty) return 'No context found.';
+    return codes.take(3).map((c) => c.displayName).join('. ');
+  }
+
   List<MedicalCode> _searchByTokens(String query) {
     final tokens = _tokenize(query);
     if (tokens.isEmpty) return [];

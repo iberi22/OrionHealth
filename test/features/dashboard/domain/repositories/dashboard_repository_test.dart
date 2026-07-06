@@ -6,7 +6,7 @@ import 'package:orionhealth_health/features/dashboard/domain/repositories/dashbo
 class MockDashboardRepository implements DashboardRepository {
   @override
   Future<DashboardStats> getDashboardStats() async {
-    return const DashboardStats(totalPatients: 0, activeAppointments: 0, pendingReports: 0);
+    return const DashboardStats(totalMedications: 0, reportsCount: 0);
   }
 
   @override

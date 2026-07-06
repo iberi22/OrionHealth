@@ -1,4 +1,4 @@
-import '../../domain/chat_message.dart';
+import '../../domain/chat_message.dart' as orion;
 import '../../domain/entities/local_model_descriptor.dart';
 import 'package:injectable/injectable.dart';
 import 'package:openai_dart/openai_dart.dart';
@@ -132,4 +132,19 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
 
   @override
   Future<void> cancelDownload(String modelId) async {}
+
+  @override
+  Future<orion.ChatMessage> generateResponse(
+    String userMessage,
+    String context,
+    LocalModelDescriptor model,
+  ) async {
+    final prompt = 'Context: $context\n\nUser: $userMessage\n\nAssistant:';
+    final responseText = await generate(prompt);
+    return orion.ChatMessage(
+      role: orion.ChatRole.assistant,
+      content: responseText,
+      timestamp: DateTime.now(),
+    );
+  }
 }
