@@ -1,7 +1,7 @@
 ﻿{
     "humanReviewPending":  true,
     "humanApproved":  false,
-    "lastUpdated":  "2026-07-05 21:29:51",
+    "lastUpdated":  "2026-07-06 00:11:30",
     "implementationPct":  105.8,
     "steps":  [
                   {
@@ -17,7 +17,7 @@
                   {
                       "id":  2,
                       "weight":  10,
-                      "evidence":  "1 entities",
+                      "evidence":  "2 entities",
                       "description":  "Domain entities defined and typed",
                       "completed":  true,
                       "name":  "Domain Layer Entities",
@@ -27,7 +27,7 @@
                   {
                       "id":  3,
                       "weight":  10,
-                      "evidence":  "1 repository files",
+                      "evidence":  "2 repository files",
                       "description":  "Repository abstract class in domain",
                       "completed":  true,
                       "name":  "Domain Layer Repository Abstract",
@@ -47,7 +47,7 @@
                   {
                       "id":  5,
                       "weight":  10,
-                      "evidence":  "2 infra files",
+                      "evidence":  "6 infra files",
                       "description":  "Repository implementation + datasources",
                       "completed":  true,
                       "name":  "Infrastructure Layer Implementation",
@@ -87,7 +87,7 @@
                   {
                       "id":  9,
                       "weight":  9.9,
-                      "evidence":  "16 tests",
+                      "evidence":  "17 tests",
                       "description":  "Minimum 15 test files",
                       "completed":  true,
                       "name":  "Unit Tests (\u003e=15)",

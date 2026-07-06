@@ -1,7 +1,7 @@
 ﻿{
     "humanReviewPending":  true,
     "humanApproved":  false,
-    "lastUpdated":  "2026-07-05 21:29:51",
+    "lastUpdated":  "2026-07-06 00:11:30",
     "implementationPct":  100.9,
     "steps":  [
                   {
@@ -17,7 +17,7 @@
                   {
                       "id":  2,
                       "weight":  10,
-                      "evidence":  "8 entities",
+                      "evidence":  "10 entities",
                       "description":  "Domain entities defined and typed",
                       "completed":  true,
                       "name":  "Domain Layer Entities",
@@ -27,7 +27,7 @@
                   {
                       "id":  3,
                       "weight":  10,
-                      "evidence":  "3 repository files",
+                      "evidence":  "4 repository files",
                       "description":  "Repository abstract class in domain",
                       "completed":  true,
                       "name":  "Domain Layer Repository Abstract",
@@ -47,7 +47,7 @@
                   {
                       "id":  5,
                       "weight":  10,
-                      "evidence":  "1 infra files",
+                      "evidence":  "3 infra files",
                       "description":  "Repository implementation + datasources",
                       "completed":  true,
                       "name":  "Infrastructure Layer Implementation",
@@ -57,7 +57,7 @@
                   {
                       "id":  6,
                       "weight":  10,
-                      "evidence":  "1 app files",
+                      "evidence":  "3 app files",
                       "description":  "State management in application layer",
                       "completed":  true,
                       "name":  "Application Layer (BLoC/Cubit/State)",
@@ -67,7 +67,7 @@
                   {
                       "id":  7,
                       "weight":  10,
-                      "evidence":  "1 pres files",
+                      "evidence":  "3 pres files",
                       "description":  "UI widgets and pages",
                       "completed":  true,
                       "name":  "Presentation Layer Widgets",
@@ -87,7 +87,7 @@
                   {
                       "id":  9,
                       "weight":  9.9,
-                      "evidence":  "34 tests",
+                      "evidence":  "35 tests",
                       "description":  "Minimum 15 test files",
                       "completed":  true,
                       "name":  "Unit Tests (\u003e=15)",
@@ -97,7 +97,7 @@
                   {
                       "id":  10,
                       "weight":  4.9,
-                      "evidence":  "7 goldens",
+                      "evidence":  "9 goldens",
                       "description":  "Golden reference screenshots",
                       "completed":  true,
                       "name":  "Golden Tests (\u003e=2)",
