@@ -11,6 +11,7 @@ import '../../../appointments/domain/repositories/appointment_repository.dart';
 import '../../../medications/domain/repositories/medication_repository.dart';
 import '../datasources/home_local_datasource.dart';
 import '../datasources/home_remote_datasource.dart';
+import '../datasources/health_summary_datasource.dart';
 import '../models/home_module_model.dart';
 
 @LazySingleton(as: HomeRepository)
@@ -20,6 +21,7 @@ class HomeRepositoryImpl implements HomeRepository {
   final MedicationRepository _medicationRepository;
   final HomeLocalDataSource _localDataSource;
   final HomeRemoteDataSource _remoteDataSource;
+  final HealthSummaryDatasource _healthSummaryDatasource;
 
   HomeRepositoryImpl(
     this._vitalSignRepository,
@@ -27,6 +29,7 @@ class HomeRepositoryImpl implements HomeRepository {
     this._medicationRepository,
     this._localDataSource,
     this._remoteDataSource,
+    this._healthSummaryDatasource,
   );
 
   @override
@@ -44,18 +47,28 @@ class HomeRepositoryImpl implements HomeRepository {
 
     final medications = await _medicationRepository.getAllMedications();
 
+    // Fetch textual summary from infrastructure datasource
+    String summaryText = '';
+    try {
+      summaryText = await _healthSummaryDatasource.getHealthSummary();
+      await _localDataSource.cacheHealthSummary(summaryText);
+    } catch (_) {
+      summaryText = await _localDataSource.getHealthSummary();
+    }
+
     return HomeHealthSummary(
       latestVitals: vitalsList.cast(),
       upcomingAppointments: upcomingAppointments,
       medicationCount: medications.length,
+      summaryText: summaryText,
     );
   }
 
   @override
   Future<List<HomeModule>> getHomeModules() async {
     // 1. Try local cache
-    final cachedModules = await _localDataSource.getCachedHomeModules();
-    if (cachedModules != null && cachedModules.isNotEmpty) {
+    final cachedModules = await _localDataSource.getHomeModules();
+    if (cachedModules.isNotEmpty) {
       return cachedModules;
     }
 
@@ -63,7 +76,9 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final remoteModules = await _remoteDataSource.getHomeModules();
       if (remoteModules.isNotEmpty) {
-        await _localDataSource.cacheHomeModules(remoteModules);
+        await _localDataSource.cacheHomeModules(
+          remoteModules.map((m) => HomeModuleModel.fromEntity(m)).toList(),
+        );
         return remoteModules;
       }
     } catch (_) {
@@ -72,45 +87,47 @@ class HomeRepositoryImpl implements HomeRepository {
 
     // 3. Fallback to default modules
     final defaultModules = [
-      HomeModuleModel(
+      const HomeModuleModel(
         title: 'AI Assistant',
-        iconCode: Icons.psychology.codePoint,
-        iconFontFamily: Icons.psychology.fontFamily,
-        iconFontPackage: Icons.psychology.fontPackage,
+        iconCode: 0xe4f7, // Icons.psychology.codePoint
+        iconFontFamily: 'MaterialIcons',
         color: Colors.blue,
         route: '/chat',
       ),
-      HomeModuleModel(
+      const HomeModuleModel(
         title: 'Salud',
-        iconCode: Icons.favorite.codePoint,
-        iconFontFamily: Icons.favorite.fontFamily,
-        iconFontPackage: Icons.favorite.fontPackage,
+        iconCode: 0xe25b, // Icons.favorite.codePoint
+        iconFontFamily: 'MaterialIcons',
         color: Colors.red,
         route: '/vitals',
       ),
-      HomeModuleModel(
+      const HomeModuleModel(
         title: 'Medicamentos',
-        iconCode: Icons.medication.codePoint,
-        iconFontFamily: Icons.medication.fontFamily,
-        iconFontPackage: Icons.medication.fontPackage,
+        iconCode: 0xe3d9, // Icons.medication.codePoint
+        iconFontFamily: 'MaterialIcons',
         color: Colors.orange,
         route: '/medications',
       ),
-      HomeModuleModel(
+      const HomeModuleModel(
         title: 'Línea de tiempo',
-        iconCode: Icons.timeline.codePoint,
-        iconFontFamily: Icons.timeline.fontFamily,
-        iconFontPackage: Icons.timeline.fontPackage,
+        iconCode: 0xe651, // Icons.timeline.codePoint
+        iconFontFamily: 'MaterialIcons',
         color: Colors.teal,
         route: '/timeline',
       ),
-      HomeModuleModel(
+      const HomeModuleModel(
         title: 'Meditación',
-        iconCode: Icons.spa.codePoint,
-        iconFontFamily: Icons.spa.fontFamily,
-        iconFontPackage: Icons.spa.fontPackage,
+        iconCode: 0xe5d0, // Icons.spa.codePoint
+        iconFontFamily: 'MaterialIcons',
         color: Colors.purple,
         route: '/meditation',
+      ),
+      const HomeModuleModel(
+        title: 'Informes',
+        iconCode: 0xe097, // Icons.assessment.codePoint
+        iconFontFamily: 'MaterialIcons',
+        color: Colors.green,
+        route: '/reports',
       ),
     ];
 

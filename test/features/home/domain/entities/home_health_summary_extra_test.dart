@@ -7,12 +7,12 @@ void main() {
       final summary1 = HomeHealthSummary(
         latestVitals: [],
         upcomingAppointments: [],
-        medicationCount: 5,
+        medicationCount: 5, summaryText: "",
       );
       final summary2 = HomeHealthSummary(
         latestVitals: [],
         upcomingAppointments: [],
-        medicationCount: 5,
+        medicationCount: 5, summaryText: "",
       );
 
       expect(summary1, equals(summary2));
@@ -22,10 +22,10 @@ void main() {
       final summary = HomeHealthSummary(
         latestVitals: [],
         upcomingAppointments: [],
-        medicationCount: 10,
+        medicationCount: 10, summaryText: "",
       );
 
-      expect(summary.props, [[], [], 10]);
+      expect(summary.props, [[], [], 10, ""]);
     });
   });
 }
