@@ -3,25 +3,31 @@ import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_cubit.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_state.dart';
-import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_import_service.dart';
-import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
+import 'package:orionhealth_health/features/health_data_import/domain/usecases/health_import_usecases.dart';
 
-class MockHealthDataImportService extends Mock implements HealthDataImportService {}
-class MockVitalSignRepository extends Mock implements VitalSignRepository {}
+class MockGetAvailableSourcesUseCase extends Mock implements GetAvailableSourcesUseCase {}
+class MockRequestHealthAuthUseCase extends Mock implements RequestHealthAuthUseCase {}
+class MockImportHealthDataUseCase extends Mock implements ImportHealthDataUseCase {}
 
 void main() {
   late HealthImportCubit cubit;
-  late MockHealthDataImportService mockImportService;
-  late MockVitalSignRepository mockVitalSignRepository;
+  late MockGetAvailableSourcesUseCase mockGetAvailableSourcesUseCase;
+  late MockRequestHealthAuthUseCase mockRequestHealthAuthUseCase;
+  late MockImportHealthDataUseCase mockImportHealthDataUseCase;
 
   setUpAll(() {
     registerFallbackValue(HealthDataSource.googleFit);
   });
 
   setUp(() {
-    mockImportService = MockHealthDataImportService();
-    mockVitalSignRepository = MockVitalSignRepository();
-    cubit = HealthImportCubit(mockImportService, mockVitalSignRepository);
+    mockGetAvailableSourcesUseCase = MockGetAvailableSourcesUseCase();
+    mockRequestHealthAuthUseCase = MockRequestHealthAuthUseCase();
+    mockImportHealthDataUseCase = MockImportHealthDataUseCase();
+    cubit = HealthImportCubit(
+      mockGetAvailableSourcesUseCase,
+      mockRequestHealthAuthUseCase,
+      mockImportHealthDataUseCase,
+    );
   });
 
   tearDown(() {
@@ -34,7 +40,7 @@ void main() {
     });
 
     test('checkAvailableSources emits [Loading, Ready] on success', () async {
-      when(() => mockImportService.getAvailableSources())
+      when(() => mockGetAvailableSourcesUseCase())
           .thenAnswer((_) async => [HealthDataSource.googleFit]);
 
       final states = <HealthImportState>[];
@@ -55,7 +61,7 @@ void main() {
     });
 
     test('checkAvailableSources emits [Loading, Error] on failure', () async {
-      when(() => mockImportService.getAvailableSources())
+      when(() => mockGetAvailableSourcesUseCase())
           .thenThrow(Exception('Test error'));
 
       final states = <HealthImportState>[];
@@ -76,24 +82,25 @@ void main() {
     });
 
     test('importFromSource emits states and saves data on success', () async {
-      when(() => mockImportService.requestAuthorization(any()))
+      when(() => mockRequestHealthAuthUseCase(any()))
           .thenAnswer((_) async => true);
 
-      when(() => mockImportService.fetchSteps()).thenAnswer((_) async => []);
-      when(() => mockImportService.fetchDistance()).thenAnswer((_) async => []);
-      when(() => mockImportService.fetchHeartRate()).thenAnswer((_) async => []);
-      when(() => mockImportService.fetchSleep()).thenAnswer((_) async => []);
-      when(() => mockImportService.fetchBloodGlucose()).thenAnswer((_) async => []);
-      when(() => mockImportService.fetchBloodPressure()).thenAnswer((_) async => []);
-      when(() => mockImportService.fetchHeight()).thenAnswer((_) async => []);
-      when(() => mockImportService.fetchWeight()).thenAnswer((_) async => []);
-      when(() => mockImportService.fetchOxygenSaturation()).thenAnswer((_) async => []);
-
-      when(() => mockImportService.convertToVitalSigns(any(), any()))
-          .thenAnswer((_) async => []);
-
-      when(() => mockVitalSignRepository.saveVitalSigns(any()))
-          .thenAnswer((_) async => {});
+      when(() => mockImportHealthDataUseCase(any()))
+          .thenAnswer((_) => Stream.fromIterable([
+            const ImportProgress(
+              currentStep: 'Step 1',
+              totalSteps: 2,
+              currentStepNum: 1,
+              importedCount: 0,
+            ),
+            const ImportProgress(
+              currentStep: 'Completed',
+              totalSteps: 2,
+              currentStepNum: 2,
+              importedCount: 10,
+              isCompleted: true,
+            ),
+          ]));
 
       final states = <HealthImportState>[];
       final subscription = cubit.stream.listen(states.add);
@@ -103,21 +110,14 @@ void main() {
 
       expect(states, [
         isA<HealthImportAuthenticating>(),
-        isA<HealthImportImporting>(), // Step 1
-        isA<HealthImportImporting>(), // Step 2
-        isA<HealthImportImporting>(), // Step 3
-        isA<HealthImportImporting>(), // Step 4
-        isA<HealthImportImporting>(), // Step 5
-        isA<HealthImportImporting>(), // Step 6
-        isA<HealthImportImporting>(), // Step 7
-        isA<HealthImportImporting>(), // Step 8
-        isA<HealthImportSuccess>(),
+        isA<HealthImportImporting>().having((s) => s.currentStep, 'currentStep', 'Step 1'),
+        isA<HealthImportSuccess>().having((s) => s.result.importedCount, 'importedCount', 10),
       ]);
       await subscription.cancel();
     });
 
     test('importFromSource emits Error when authorization fails', () async {
-      when(() => mockImportService.requestAuthorization(any()))
+      when(() => mockRequestHealthAuthUseCase(any()))
           .thenAnswer((_) async => false);
 
       final states = <HealthImportState>[];
@@ -138,7 +138,7 @@ void main() {
     });
 
     test('importFromSource emits Error on unexpected error', () async {
-      when(() => mockImportService.requestAuthorization(any()))
+      when(() => mockRequestHealthAuthUseCase(any()))
           .thenThrow(Exception('Import crash'));
 
       final states = <HealthImportState>[];
