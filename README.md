@@ -11,12 +11,13 @@
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://iberi22.github.io/OrionHealth/)
 [![Dart SDK](https://img.shields.io/badge/Dart-3.10+-blue?logo=dart)](https://dart.dev)
 [![Code Size](https://img.shields.io/github/languages/code-size/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth)
+[![Real Score](https://img.shields.io/badge/Real%20Score-79.7%25-orange)](https://github.com/iberi22/OrionHealth)
 
 ---
 
 ## 📊 Project Status
 
-**v0.9.0** — Tests `325+ pass / 2 fail` (99.4%+) ✅ | Clean Architecture Coverage: **17/25 (68%) full** + **4/25 (16%) near-complete** = **84% with all 4 layers** | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅ | 23/25 features have all 4 Clean Architecture layers ✅
+**v0.9.0** — Tests `325+ pass / 2 fail` (99.4%+) ✅ | **Real Score: 79.7%** (26 features, 4/5 layers, 0 golden) | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅ | 23/26 features have all 4 Clean Architecture layers ✅
 
 > **Full coverage details:** [`coverage_report.md`](./coverage_report.md) | **Feature Catalog:** [`features.json`](./features.json)
 
