@@ -20,5 +20,10 @@ void main() {
       final result = await datasource.getHomeModules();
       expect(result, isEmpty);
     });
+
+    test('getHealthSummary returns mock string', () async {
+      final result = await datasource.getHealthSummary();
+      expect(result, contains('Resumen remoto'));
+    });
   });
 }

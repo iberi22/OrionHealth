@@ -9,13 +9,20 @@ class HomeHealthSummary extends Equatable {
   final List<VitalSign> latestVitals;
   final List<Appointment> upcomingAppointments;
   final int medicationCount;
+  final String summaryText;
 
   const HomeHealthSummary({
     required this.latestVitals,
     required this.upcomingAppointments,
     required this.medicationCount,
+    required this.summaryText,
   });
 
   @override
-  List<Object?> get props => [latestVitals, upcomingAppointments, medicationCount];
+  List<Object?> get props => [
+    latestVitals,
+    upcomingAppointments,
+    medicationCount,
+    summaryText,
+  ];
 }

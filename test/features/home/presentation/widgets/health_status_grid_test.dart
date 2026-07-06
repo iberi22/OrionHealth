@@ -23,7 +23,7 @@ void main() {
       value: mockHomeCubit,
       child: const MaterialApp(
         home: Scaffold(
-          body: HealthStatusGrid(),
+          body: SingleChildScrollView(child: HealthStatusGrid()),
         ),
       ),
     );
@@ -58,7 +58,7 @@ void main() {
       healthSummary: HomeHealthSummary(
         latestVitals: vitals,
         upcomingAppointments: const [],
-        medicationCount: 0,
+        medicationCount: 0, summaryText: "",
       ),
     ));
 
@@ -76,12 +76,28 @@ void main() {
       healthSummary: HomeHealthSummary(
         latestVitals: [],
         upcomingAppointments: [],
-        medicationCount: 0,
+        medicationCount: 0, summaryText: "",
       ),
     ));
 
     await tester.pumpWidget(createWidgetUnderTest());
 
     expect(find.text('--'), findsNWidgets(4));
+  });
+
+  testWidgets('displays summary text when available', (tester) async {
+    when(() => mockHomeCubit.state).thenReturn(const HomeState(
+      status: HomeStatus.loaded,
+      healthSummary: HomeHealthSummary(
+        latestVitals: [],
+        upcomingAppointments: [],
+        medicationCount: 0,
+        summaryText: "Health is good",
+      ),
+    ));
+
+    await tester.pumpWidget(createWidgetUnderTest());
+
+    expect(find.text('Health is good'), findsOneWidget);
   });
 }

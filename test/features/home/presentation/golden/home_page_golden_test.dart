@@ -107,7 +107,7 @@ void main() {
         healthSummary: HomeHealthSummary(
           latestVitals: mockVitals,
           upcomingAppointments: mockAppointments,
-          medicationCount: 3,
+          medicationCount: 3, summaryText: "",
         ),
       );
 

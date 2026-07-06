@@ -8,6 +8,7 @@ class HomeHealthSummaryModel extends HomeHealthSummary {
     required super.latestVitals,
     required super.upcomingAppointments,
     required super.medicationCount,
+    required super.summaryText,
   });
 
   // Since HomeHealthSummary contains entities from other features,
@@ -19,6 +20,7 @@ class HomeHealthSummaryModel extends HomeHealthSummary {
       latestVitals: entity.latestVitals,
       upcomingAppointments: entity.upcomingAppointments,
       medicationCount: entity.medicationCount,
+      summaryText: entity.summaryText,
     );
   }
 }

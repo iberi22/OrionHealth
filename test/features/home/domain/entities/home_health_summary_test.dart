@@ -25,12 +25,12 @@ void main() {
       final summary1 = HomeHealthSummary(
         latestVitals: tVitals,
         upcomingAppointments: tAppointments,
-        medicationCount: 5,
+        medicationCount: 5, summaryText: "",
       );
       final summary2 = HomeHealthSummary(
         latestVitals: tVitals,
         upcomingAppointments: tAppointments,
-        medicationCount: 5,
+        medicationCount: 5, summaryText: "",
       );
 
       expect(summary1, equals(summary2));
@@ -40,10 +40,10 @@ void main() {
       final summary = HomeHealthSummary(
         latestVitals: tVitals,
         upcomingAppointments: tAppointments,
-        medicationCount: 5,
+        medicationCount: 5, summaryText: "",
       );
 
-      expect(summary.props, [tVitals, tAppointments, 5]);
+      expect(summary.props, [tVitals, tAppointments, 5, ""]);
     });
   });
 }

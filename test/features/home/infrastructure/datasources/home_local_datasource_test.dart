@@ -15,10 +15,22 @@ void main() {
   });
 
   group('HomeLocalDataSource', () {
-    test('getCachedHomeModules returns null when no cache', () async {
+    test('getHomeModules returns empty list when no cache', () async {
       when(() => mockPrefs.getString(any())).thenReturn(null);
-      final result = await datasource.getCachedHomeModules();
-      expect(result, isNull);
+      final result = await datasource.getHomeModules();
+      expect(result, isEmpty);
+    });
+
+    test('getHealthSummary returns empty string when no cache', () async {
+      when(() => mockPrefs.getString(any())).thenReturn(null);
+      final result = await datasource.getHealthSummary();
+      expect(result, '');
+    });
+
+    test('cacheHealthSummary saves to prefs', () async {
+      when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async => true);
+      await datasource.cacheHealthSummary('test summary');
+      verify(() => mockPrefs.setString('home_summary_cache', 'test summary')).called(1);
     });
   });
 }

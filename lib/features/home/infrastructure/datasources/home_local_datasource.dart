@@ -4,12 +4,15 @@
 import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../domain/entities/home_module.dart';
+import '../../domain/repositories/home_data_source.dart';
 import '../models/home_module_model.dart';
 
 @injectable
-class HomeLocalDataSource {
+class HomeLocalDataSource implements HomeDataSource {
   final SharedPreferences _prefs;
   static const String _modulesKey = 'home_modules_cache';
+  static const String _summaryKey = 'home_summary_cache';
 
   HomeLocalDataSource(this._prefs);
 
@@ -18,11 +21,21 @@ class HomeLocalDataSource {
     await _prefs.setString(_modulesKey, jsonEncode(modulesJson));
   }
 
-  Future<List<HomeModuleModel>?> getCachedHomeModules() async {
+  @override
+  Future<List<HomeModule>> getHomeModules() async {
     final modulesJson = _prefs.getString(_modulesKey);
-    if (modulesJson == null) return null;
+    if (modulesJson == null) return [];
 
     final List<dynamic> decoded = jsonDecode(modulesJson);
     return decoded.map((m) => HomeModuleModel.fromJson(m)).toList();
+  }
+
+  Future<void> cacheHealthSummary(String summary) async {
+    await _prefs.setString(_summaryKey, summary);
+  }
+
+  @override
+  Future<String> getHealthSummary() async {
+    return _prefs.getString(_summaryKey) ?? '';
   }
 }
