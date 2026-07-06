@@ -74,5 +74,15 @@ void main() {
       expect(results.first.title, 'New');
       expect(results.last.title, 'Old');
     });
+
+    test('getReportById returns null for non-existent id', () async {
+      final retrieved = await repository.getReportById(999);
+      expect(retrieved, isNull);
+    });
+
+    test('getReports returns empty list when no reports exist', () async {
+      final results = await repository.getReports();
+      expect(results, isEmpty);
+    });
   });
 }

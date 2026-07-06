@@ -22,6 +22,29 @@ class NetworkHealth extends Equatable {
     required this.uptimePercentage,
   });
 
+  factory NetworkHealth.fromJson(Map<String, dynamic> json) {
+    return NetworkHealth(
+      status: NetworkStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => NetworkStatus.healthy,
+      ),
+      activeNodes: json['activeNodes'] as int,
+      totalNodes: json['totalNodes'] as int,
+      averageLatency: (json['averageLatency'] as num).toDouble(),
+      uptimePercentage: (json['uptimePercentage'] as num).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status.name,
+      'activeNodes': activeNodes,
+      'totalNodes': totalNodes,
+      'averageLatency': averageLatency,
+      'uptimePercentage': uptimePercentage,
+    };
+  }
+
   NetworkHealth copyWith({
     NetworkStatus? status,
     int? activeNodes,
