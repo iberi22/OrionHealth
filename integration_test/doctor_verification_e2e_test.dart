@@ -1,37 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_detail_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_profile.dart';
-import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_cubit.dart';
-import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
+import 'package:orionhealth_health/features/doctor_verification/domain/repositories/doctor_profile_repository.dart';
+import 'package:orionhealth_health/features/doctor_verification/domain/repositories/rating_repository.dart';
+import 'package:orionhealth_health/features/doctor_verification/domain/services/license_verifier.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/doctor_card.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/rating_dialog.dart';
 import 'package:mocktail/mocktail.dart';
 import 'dart:async';
-import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_rating.dart';
 import 'utils/video_recorder.dart';
 
-class MockDoctorVerificationCubit extends Mock implements DoctorVerificationCubit {
-  @override
-  Future<void> close() async {}
-}
+class MockDoctorProfileRepository extends Mock implements DoctorProfileRepository {}
+class MockRatingRepository extends Mock implements RatingRepository {}
+class MockLicenseVerifier extends Mock implements LicenseVerifier {}
 
 class FakeDoctorRating extends Fake implements DoctorRating {}
-
 class FakeDoctorProfile extends Fake implements DoctorProfile {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
-    registerFallbackValue(FakeDoctorRating());
-    registerFallbackValue(FakeDoctorProfile());
-  });
+  late MockDoctorProfileRepository mockProfileRepo;
+  late MockRatingRepository mockRatingRepo;
+  late MockLicenseVerifier mockLicenseVerifier;
 
-  late MockDoctorVerificationCubit mockCubit;
   final doctor = DoctorProfile(
     id: 'dr1',
     fullName: 'Dr. Gregory House',
@@ -46,25 +43,28 @@ void main() {
     updatedAt: DateTime.now(),
   );
 
+  setUpAll(() async {
+    await di.configureDependencies();
+    registerFallbackValue(FakeDoctorRating());
+    registerFallbackValue(FakeDoctorProfile());
+  });
+
   setUp(() {
-    mockCubit = MockDoctorVerificationCubit();
-    GetIt.I.registerSingleton<DoctorVerificationCubit>(mockCubit);
+    mockProfileRepo = MockDoctorProfileRepository();
+    mockRatingRepo = MockRatingRepository();
+    mockLicenseVerifier = MockLicenseVerifier();
 
-    when(() => mockCubit.loadDoctors()).thenAnswer((_) async {});
-    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+    di.getIt.allowReassignment = true;
+    di.getIt.registerSingleton<DoctorProfileRepository>(mockProfileRepo);
+    di.getIt.registerSingleton<RatingRepository>(mockRatingRepo);
+    di.getIt.registerSingleton<LicenseVerifier>(mockLicenseVerifier);
+
+    when(() => mockProfileRepo.getAllDoctorProfiles()).thenAnswer((_) async => [doctor]);
+    when(() => mockRatingRepo.getAverageForDoctor(any())).thenAnswer((_) async => 4.5);
   });
 
-  tearDown(() {
-    GetIt.I.unregister<DoctorVerificationCubit>();
-  });
-
-  group('Doctor Verification - E2E Tests', () {
+  group('Doctor Verification - True E2E Tests', () {
     testWidgets('E2E: Doctor List and Detail Navigation', (WidgetTester tester) async {
-      when(() => mockCubit.state).thenReturn(DoctorVerificationLoaded(
-        doctors: [doctor],
-        averageRatings: const {'dr1': 4.5},
-      ));
-
       await tester.pumpWidget(const MaterialApp(
         home: DoctorListPage(),
       ));
@@ -87,11 +87,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      when(() => mockCubit.state).thenReturn(DoctorVerificationLoaded(
-        doctors: [doctor],
-        averageRatings: const {'dr1': 4.5},
-      ));
-      when(() => mockCubit.submitRating(any())).thenAnswer((_) async {});
+      when(() => mockRatingRepo.save(any())).thenAnswer((_) async {});
 
       await tester.pumpWidget(MaterialApp(
         home: DoctorDetailPage(doctor: doctor),
@@ -104,19 +100,16 @@ void main() {
 
       expect(find.byType(RatingDialog), findsOneWidget);
 
-      // Simulate rating selection (finding stars might be tricky, let's look for submit)
       await tester.tap(find.text('ENVIAR'));
       await tester.pumpAndSettle();
 
-      verify(() => mockCubit.submitRating(any())).called(1);
+      verify(() => mockRatingRepo.save(any())).called(1);
     });
 
     testWidgets('E2E: Verify License Flow', (WidgetTester tester) async {
-      when(() => mockCubit.state).thenReturn(DoctorVerificationLoaded(
-        doctors: [doctor],
-        averageRatings: const {'dr1': 4.5},
-      ));
-      when(() => mockCubit.verifyDoctor(any())).thenAnswer((_) async {});
+      when(() => mockLicenseVerifier.verify(any(), any()))
+          .thenAnswer((_) async => LicenseVerificationResult.valid);
+      when(() => mockProfileRepo.saveDoctorProfile(any())).thenAnswer((_) async {});
 
       await tester.pumpWidget(MaterialApp(
         home: DoctorDetailPage(doctor: doctor),
@@ -124,28 +117,26 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('VERIFICAR LICENCIA AHORA'));
-      await tester.pump();
+      await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'doctor_verif', '04_verification_triggered');
 
-      verify(() => mockCubit.verifyDoctor(doctor)).called(1);
+      verify(() => mockLicenseVerifier.verify('MD-12345', 'US')).called(1);
     });
-   group('Edge Cases', () {
-      testWidgets('Error Snackbar on Verification Failure', (WidgetTester tester) async {
-        final stateController = StreamController<DoctorVerificationState>.broadcast();
-        when(() => mockCubit.state).thenReturn(DoctorVerificationInitial());
-        when(() => mockCubit.stream).thenAnswer((_) => stateController.stream);
 
-        await tester.pumpWidget(MaterialApp(
-          home: DoctorDetailPage(doctor: doctor),
-        ));
-        await tester.pumpAndSettle();
+    testWidgets('E2E: Error Snackbar on Verification Failure', (WidgetTester tester) async {
+      when(() => mockLicenseVerifier.verify(any(), any()))
+          .thenThrow(Exception('Verification Failed'));
 
-        stateController.add(const DoctorVerificationError('Verification Failed'));
-        await tester.pump(); // SnackBar trigger
+      await tester.pumpWidget(const MaterialApp(
+        home: DoctorDetailPage(doctor: doctor),
+      ));
+      await tester.pumpAndSettle();
 
-        expect(find.text('Verification Failed'), findsOneWidget);
-        await VideoRecorder.recordStep(tester, 'doctor_verif', '05_error_snackbar');
-      });
+      await tester.tap(find.text('VERIFICAR LICENCIA AHORA'));
+      await tester.pump(); // SnackBar trigger
+
+      expect(find.textContaining('Verification Failed'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'doctor_verif', '05_error_snackbar');
     });
   });
 }

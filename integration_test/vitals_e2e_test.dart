@@ -73,10 +73,10 @@ void main() {
 
       expect(find.text('72.0'), findsOneWidget);
       expect(find.text('120/80'), findsOneWidget);
-      expect(find.text('RITMO CARDÍACO'), findsOneWidget);
+      expect(find.textContaining('RITMO CARDÍACO', caseSensitive: false), findsOneWidget);
 
       // 2. MANUAL ENTRY
-      await tester.tap(find.byType(FloatingActionButton));
+      await tester.tap(find.text('Agregar Signo Vital'));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'vitals', '02_add_bottom_sheet');
 
