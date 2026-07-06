@@ -12,6 +12,7 @@ import '../../../medications/presentation/pages/medications_page.dart';
 import '../../../health_record/presentation/pages/timeline_page.dart';
 import '../../../meditation/presentation/meditation_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
+import '../../../medical_research/presentation/pages/medical_research_page.dart';
 import '../../application/home_cubit.dart';
 import '../../application/home_state.dart';
 import '../widgets/health_status_grid.dart';
@@ -110,6 +111,9 @@ class HomePageView extends StatelessWidget {
         break;
       case '/reports':
         page = const ReportsPage();
+        break;
+      case '/research':
+        page = const MedicalResearchPage();
         break;
     }
 

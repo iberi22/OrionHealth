@@ -4,6 +4,7 @@ import 'package:orionhealth_health/core/theme/app_colors.dart';
 import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
 import 'package:orionhealth_health/features/local_agent/presentation/pages/llm_settings_page.dart';
+import '../../voice_chat/presentation/pages/voice_chat_page.dart';
 
 class ChatPage extends StatefulWidget {
   final LlmService llmService;
@@ -81,6 +82,14 @@ class _ChatPageState extends State<ChatPage> {
       ),
       centerTitle: true,
       actions: [
+        IconButton(
+          icon: const Icon(Icons.mic),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const VoiceChatPage()),
+            );
+          },
+        ),
         IconButton(
           icon: const Icon(Icons.settings),
           onPressed: () {

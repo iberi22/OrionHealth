@@ -5,6 +5,8 @@ import '../../../../features/auth/presentation/pages/receive_medical_data_page.d
 import '../../../../features/auth/presentation/pages/share_medical_data_page.dart';
 import '../../../../features/about/presentation/pages/about_page.dart';
 import '../../../../features/settings/presentation/pages/llm_settings_page.dart';
+import '../../../../features/network/network_health/presentation/pages/network_health_page.dart';
+import '../../../../features/health_data_import/presentation/pages/health_import_page.dart';
 import '../../../../features/medications/presentation/pages/medications_page.dart';
 import '../../../../features/allergies/presentation/pages/allergies_page.dart';
 import '../../../../features/appointments/presentation/pages/appointments_page.dart';
@@ -125,6 +127,30 @@ class _UserProfileView extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => const AppointmentsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    ProfileInfoTile(
+                      icon: Icons.hub_outlined,
+                      title: AppLocalizations.of(context)!.networkHealth,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NetworkHealthPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    ProfileInfoTile(
+                      icon: Icons.import_export,
+                      title: AppLocalizations.of(context)!.importData,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HealthImportPage(),
                           ),
                         );
                       },
