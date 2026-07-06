@@ -1,4 +1,4 @@
-import '../../domain/chat_message.dart' as orion;
+import '../../domain/chat_message.dart' as domain;
 import '../../domain/entities/local_model_descriptor.dart';
 import 'package:injectable/injectable.dart';
 import 'package:openai_dart/openai_dart.dart';
@@ -55,7 +55,7 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
       final response = await _client!.chat.completions.create(
         ChatCompletionCreateRequest(
           model: _modelName,
-          messages: [ChatMessage.user(prompt)],
+          messages: [ChatMessage.user(content: ChatMessageUserContent.text(prompt))],
           temperature: 0.7,
           maxTokens: 4096,
         ),
@@ -79,7 +79,7 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
       final stream = _client!.chat.completions.createStream(
         ChatCompletionCreateRequest(
           model: _modelName,
-          messages: [ChatMessage.user(prompt)],
+          messages: [ChatMessage.user(content: ChatMessageUserContent.text(prompt))],
           temperature: 0.7,
           maxTokens: 4096,
         ),
@@ -104,7 +104,7 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
       final response = await _client!.chat.completions.create(
         ChatCompletionCreateRequest(
           model: _modelName,
-          messages: [ChatMessage.user('Respond with "ok".')],
+          messages: [ChatMessage.user(content: ChatMessageUserContent.text('Respond with "ok".'))],
           maxTokens: 10,
         ),
       );
@@ -134,16 +134,16 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
   Future<void> cancelDownload(String modelId) async {}
 
   @override
-  Future<orion.ChatMessage> generateResponse(
+  Future<domain.ChatMessage> generateResponse(
     String userMessage,
     String context,
     LocalModelDescriptor model,
   ) async {
-    final prompt = 'Context: $context\n\nUser: $userMessage\n\nAssistant:';
-    final responseText = await generate(prompt);
-    return orion.ChatMessage(
-      role: orion.ChatRole.assistant,
-      content: responseText,
+    final prompt = 'Context: $context\n\nUser: $userMessage\nAssistant:';
+    final response = await generate(prompt);
+    return domain.ChatMessage(
+      role: domain.ChatRole.assistant,
+      content: response,
       timestamp: DateTime.now(),
     );
   }

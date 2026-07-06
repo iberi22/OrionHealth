@@ -60,9 +60,9 @@ import '../../features/appointments/domain/usecases/delete_appointment_usecase.d
 import '../../features/appointments/domain/usecases/get_all_appointments_usecase.dart'
     as _i43;
 import '../../features/appointments/domain/usecases/save_appointment_usecase.dart'
-    as _i106;
-import '../../features/auth/application/auth_cubit.dart' as _i227;
-import '../../features/auth/application/bloc/auth_cubit.dart' as _i228;
+    as _i103;
+import '../../features/auth/application/auth_cubit.dart' as _i224;
+import '../../features/auth/application/bloc/auth_cubit.dart' as _i223;
 import '../../features/auth/data/datasources/auth_local_datasource.dart'
     as _i141;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
@@ -276,9 +276,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i195;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i243;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i69;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i68;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i69;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i127;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -613,19 +613,19 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i66.LocalModelLocalDataSource());
     gh.lazySingleton<_i67.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
-    gh.factory<_i68.MedicalKnowledgeRepository>(
+    gh.factory<_i67.MedicalKnowledgeRepository>(
+      () => _i68.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
+    );
+    gh.factory<_i67.MedicalKnowledgeRepository>(
       () => _i69.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
     );
-    gh.factory<_i68.MedicalKnowledgeRepository>(
-      () => _i70.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
-    );
-    gh.lazySingleton<_i71.MedicalScraperService>(
-        () => _i72.MedicalScraperServiceImpl(
+    gh.lazySingleton<_i70.MedicalScraperService>(
+        () => _i71.MedicalScraperServiceImpl(
               gh<_i29.Dio>(),
               gh<_i16.BotBypassHandler>(),
             ));
@@ -1000,15 +1000,14 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i131.VoiceChatRepository>(),
           gh<_i11.AudioService>(),
         ));
-    gh.factory<_i224.VouchCubit>(
-        () => _i224.VouchCubit(gh<_i133.VouchRepository>()));
-    gh.factory<_i225.AllergiesCubit>(
-        () => _i225.AllergiesCubit(gh<_i139.AllergyRepository>()));
-    gh.factory<_i226.AllergyBloc>(
-        () => _i226.AllergyBloc(gh<_i139.AllergyRepository>()));
-    gh.factory<_i227.AuthCubit>(() => _i227.AuthCubit(gh<_i144.AuthService>()));
-    gh.factory<_i228.AuthCubit>(() => _i228.AuthCubit(
-          gh<_i142.AuthRepository>(),
+    gh.factory<_i220.VouchCubit>(
+        () => _i220.VouchCubit(gh<_i130.VouchRepository>()));
+    gh.factory<_i221.AllergiesCubit>(
+        () => _i221.AllergiesCubit(gh<_i136.AllergyRepository>()));
+    gh.factory<_i222.AllergyBloc>(
+        () => _i222.AllergyBloc(gh<_i136.AllergyRepository>()));
+    gh.factory<_i223.AuthCubit>(() => _i223.AuthCubit(
+          gh<_i139.AuthRepository>(),
           gh<_i33.EncryptionService>(),
           gh<_i14.BiometricService>(),
           gh<_i198.LoginUseCase>(),
@@ -1016,10 +1015,11 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i222.ValidateSessionUseCase>(),
           gh<_i216.SetPinUseCase>(),
         ));
-    gh.lazySingleton<_i229.BadgeCalculator>(() => _i229.BadgeCalculator(
-          gh<_i157.DoctorProfileRepository>(),
-          gh<_i100.RatingRepository>(),
-          gh<_i133.VouchRepository>(),
+    gh.factory<_i224.AuthCubit>(() => _i224.AuthCubit(gh<_i141.AuthService>()));
+    gh.lazySingleton<_i225.BadgeCalculator>(() => _i225.BadgeCalculator(
+          gh<_i154.DoctorProfileRepository>(),
+          gh<_i97.RatingRepository>(),
+          gh<_i130.VouchRepository>(),
         ));
     gh.factory<_i230.BadgeCubit>(
         () => _i230.BadgeCubit(gh<_i229.BadgeCalculator>()));

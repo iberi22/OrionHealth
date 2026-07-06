@@ -75,13 +75,16 @@ class VoiceChatCubit extends Cubit<VoiceChatState> {
         return;
       }
 
-      final transcription = await _repository.transcribeAudio(audioBytes);
-      if (transcription.trim().isEmpty) {
-        emit(state.copyWith(status: VoiceChatStatus.error, errorMessage: 'Transcripción vacía'));
+      final transcript = await _repository.transcribeAudio(audioBytes);
+      if (transcript.text.trim().isEmpty) {
+        emit(state.copyWith(
+          status: VoiceChatStatus.initial,
+          statusMessage: 'No se detectó voz. Intenta de nuevo.',
+        ));
         return;
       }
 
-      await sendMessage(transcription);
+      await sendMessage(transcript.text);
     } catch (e) {
       emit(state.copyWith(status: VoiceChatStatus.error, errorMessage: e.toString()));
     }

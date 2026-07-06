@@ -189,11 +189,11 @@ class FlutterGemmaAdapter implements LlmAdapter {
     String context,
     LocalModelDescriptor model,
   ) async {
-    final prompt = 'Context: $context\n\nUser: $userMessage\n\nAssistant:';
-    final responseText = await generate(prompt);
+    final prompt = 'Context: $context\n\nUser: $userMessage\nAssistant:';
+    final response = await generate(prompt);
     return ChatMessage(
       role: ChatRole.assistant,
-      content: responseText,
+      content: response,
       timestamp: DateTime.now(),
     );
   }
