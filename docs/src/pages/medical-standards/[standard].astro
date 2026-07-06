@@ -5,13 +5,13 @@ import Header from "../../components/Header.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-	const standards = ["icd-10", "loinc", "rxnorm", "snomed"];
+	const standards = ["icd10", "loinc", "rxnorm", "snomed"];
 	return standards.map((s) => ({ params: { standard: s } }));
 }
 
 const standardId = Astro.params.standard;
 const standardNames = {
-	"icd-10": {
+	icd10: {
 		name: "ICD-10",
 		fullName: "International Classification of Diseases",
 		file: "icd10.json",
