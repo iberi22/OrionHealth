@@ -75,6 +75,17 @@ void main() {
       expect(await repository.getUserProfile(), isNull);
     });
 
+    test('should save and get user profile with minimal data', () async {
+      final profile = UserProfile(name: 'Minimal');
+
+      await repository.saveUserProfile(profile);
+      final result = await repository.getUserProfile();
+
+      expect(result, isNotNull);
+      expect(result?.name, 'Minimal');
+      expect(result?.age, isNull);
+    });
+
     test('should return the first profile when multiple exist', () async {
       await repository.saveUserProfile(UserProfile(name: 'First'));
       await repository.saveUserProfile(UserProfile(name: 'Second'));

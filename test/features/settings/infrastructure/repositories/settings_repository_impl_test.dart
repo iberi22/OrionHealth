@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
@@ -120,6 +121,29 @@ void main() {
 
       test('importData completes without error', () async {
         expect(repository.importData('{}'), completes);
+      });
+
+      test('importData should persist configuration and settings', () async {
+        final data = {
+          'llmConfig': {
+            'selectedModel': 'imported_model',
+          },
+          'appSettings': {
+            'themeMode': 'light',
+            'languageCode': 'en',
+            'notificationsEnabled': false,
+          },
+        };
+
+        await repository.importData(jsonEncode(data));
+
+        final config = await repository.getLlmConfig();
+        expect(config?.selectedModel, 'imported_model');
+
+        final settings = await repository.getAppSettings();
+        expect(settings?.themeMode, 'light');
+        expect(settings?.languageCode, 'en');
+        expect(settings?.notificationsEnabled, false);
       });
     });
   });
