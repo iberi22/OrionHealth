@@ -15,6 +15,26 @@ class NodeStats extends Equatable {
     required this.uptime,
   });
 
+  factory NodeStats.fromJson(Map<String, dynamic> json) {
+    return NodeStats(
+      nodeId: json['nodeId'] as String,
+      cpuUsage: (json['cpuUsage'] as num).toDouble(),
+      memoryUsage: (json['memoryUsage'] as num).toDouble(),
+      diskUsage: (json['diskUsage'] as num).toDouble(),
+      uptime: Duration(seconds: json['uptimeSeconds'] as int),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nodeId': nodeId,
+      'cpuUsage': cpuUsage,
+      'memoryUsage': memoryUsage,
+      'diskUsage': diskUsage,
+      'uptimeSeconds': uptime.inSeconds,
+    };
+  }
+
   NodeStats copyWith({
     String? nodeId,
     double? cpuUsage,

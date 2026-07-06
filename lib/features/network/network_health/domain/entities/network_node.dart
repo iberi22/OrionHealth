@@ -22,6 +22,29 @@ class NetworkNode extends Equatable {
     required this.lastSeen,
   });
 
+  factory NetworkNode.fromJson(Map<String, dynamic> json) {
+    return NetworkNode(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      address: json['address'] as String,
+      status: NodeStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => NodeStatus.offline,
+      ),
+      lastSeen: DateTime.parse(json['lastSeen'] as String),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'address': address,
+      'status': status.name,
+      'lastSeen': lastSeen.toIso8601String(),
+    };
+  }
+
   NetworkNode copyWith({
     String? id,
     String? name,

@@ -18,10 +18,14 @@ class MeditationLocalDataSource {
   }
 
   Future<MeditationPreferences?> getPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    final json = prefs.getString(_prefsKey);
-    if (json == null) return null;
-    return MeditationPreferences.fromJson(jsonDecode(json));
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = prefs.getString(_prefsKey);
+      if (json == null) return null;
+      return MeditationPreferences.fromJson(jsonDecode(json));
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<void> saveHistory(List<MeditationSession> history) async {
@@ -33,12 +37,16 @@ class MeditationLocalDataSource {
   }
 
   Future<List<MeditationSession>> getHistory() async {
-    final prefs = await SharedPreferences.getInstance();
-    final json = prefs.getString(_historyKey);
-    if (json == null) return [];
-    final list = jsonDecode(json) as List<dynamic>;
-    return list
-        .map((e) => MeditationSession.fromJson(e as Map<String, dynamic>))
-        .toList();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final json = prefs.getString(_historyKey);
+      if (json == null) return [];
+      final list = jsonDecode(json) as List<dynamic>;
+      return list
+          .map((e) => MeditationSession.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      return [];
+    }
   }
 }
