@@ -7,22 +7,18 @@ import 'health_import_event.dart';
 import '../../domain/entities/health_data_source.dart';
 import '../../domain/entities/health_import_result.dart';
 import '../health_import_state.dart';
-import '../../domain/services/health_data_import_service.dart';
-import '../../../vitals/domain/repositories/vital_sign_repository.dart';
 import '../../domain/usecases/health_import_usecases.dart';
 
 @injectable
 class HealthImportBloc extends Bloc<HealthImportEvent, HealthImportState> {
   final GetAvailableSourcesUseCase _getAvailableSourcesUseCase;
   final RequestHealthAuthUseCase _requestHealthAuthUseCase;
-  final HealthDataImportService _importService;
-  final VitalSignRepository _vitalSignRepository;
+  final ImportHealthDataUseCase _importHealthDataUseCase;
 
   HealthImportBloc(
     this._getAvailableSourcesUseCase,
     this._requestHealthAuthUseCase,
-    this._importService,
-    this._vitalSignRepository,
+    this._importHealthDataUseCase,
   ) : super(HealthImportInitial()) {
     on<CheckAvailableSources>(_onCheckAvailableSources);
     on<ImportFromSource>(_onImportFromSource);
@@ -66,40 +62,29 @@ class HealthImportBloc extends Bloc<HealthImportEvent, HealthImportState> {
         return;
       }
 
-      int totalImported = 0;
-      final steps = [
-        ('Importing steps...', _importService.fetchSteps),
-        ('Importing distance...', _importService.fetchDistance),
-        ('Importing heart rate...', _importService.fetchHeartRate),
-        ('Importing sleep data...', _importService.fetchSleep),
-        ('Importing blood glucose...', _importService.fetchBloodGlucose),
-        ('Importing blood pressure...', _importService.fetchBloodPressure),
-        ('Importing height...', _importService.fetchHeight),
-        ('Importing weight...', _importService.fetchWeight),
-        ('Importing oxygen saturation...', _importService.fetchOxygenSaturation),
-      ];
+      final importStream = _importHealthDataUseCase(source);
 
-      for (int i = 0; i < steps.length; i++) {
-        emit(HealthImportImporting(
-          source: source,
-          currentStep: steps[i].$1,
-          totalSteps: steps.length,
-          currentStepNum: i + 1,
-          importedCount: totalImported,
-        ));
-
-        final data = await steps[i].$2();
-        final vitals = await _importService.convertToVitalSigns(data, source);
-        await _vitalSignRepository.saveVitalSigns(vitals);
-        totalImported += vitals.length;
-      }
-
-      emit(HealthImportSuccess(
-        HealthImportResult(
-          source: source,
-          importedCount: totalImported,
-        ),
-      ));
+      await emit.forEach<ImportProgress>(
+        importStream,
+        onData: (progress) {
+          if (progress.isCompleted) {
+            return HealthImportSuccess(
+              HealthImportResult(
+                source: source,
+                importedCount: progress.importedCount,
+              ),
+            );
+          } else {
+            return HealthImportImporting(
+              source: source,
+              currentStep: progress.currentStep,
+              totalSteps: progress.totalSteps,
+              currentStepNum: progress.currentStepNum,
+              importedCount: progress.importedCount,
+            );
+          }
+        },
+      );
     } catch (e) {
       emit(HealthImportError('Import failed: $e'));
     }
