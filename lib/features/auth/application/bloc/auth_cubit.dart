@@ -1,29 +1,44 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:uuid/uuid.dart';
 import '../../domain/entities/auth_credentials.dart';
+import '../../domain/entities/auth_credential.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../infrastructure/services/encryption_service.dart';
+import '../../domain/usecases/login_usecase.dart';
+import '../../domain/usecases/logout_usecase.dart';
+import '../../domain/usecases/validate_session_usecase.dart';
+import '../../domain/usecases/set_pin_usecase.dart';
 import '../../infrastructure/services/biometric_service.dart';
 import 'auth_state.dart';
 
 @injectable
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _repository;
-  final EncryptionService _encryptionService;
   final BiometricService _biometricService;
+  final LoginUseCase _loginUseCase;
+  final LogoutUseCase _logoutUseCase;
+  final ValidateSessionUseCase _validateSessionUseCase;
+  final SetPinUseCase _setPinUseCase;
 
   Timer? _sessionTimer;
-  static const int sessionTimeoutMinutes = 15;
 
   AuthCubit(
     this._repository,
-    this._encryptionService,
     this._biometricService,
+    this._loginUseCase,
+    this._logoutUseCase,
+    this._validateSessionUseCase,
+    this._setPinUseCase,
   ) : super(AuthInitial());
 
   Future<void> checkStatus() async {
+    final session = await _validateSessionUseCase();
+    if (session != null) {
+      _startSessionTimer(session.expiresAt);
+      emit(AuthAuthenticated(session.expiresAt));
+      return;
+    }
+
     final credentials = await _repository.getCredentials();
 
     if (credentials == null || credentials.hashedPin == null) {
@@ -31,14 +46,9 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
-    if (credentials.lastLockoutTime != null) {
-      final lockoutDuration = _getLockoutDuration(credentials.failedAttempts);
-      final lockoutUntil = credentials.lastLockoutTime!.add(lockoutDuration);
-
-      if (DateTime.now().isBefore(lockoutUntil)) {
-        emit(AuthLocked(lockoutUntil));
-        return;
-      }
+    if (credentials.isLocked) {
+      emit(AuthLocked(credentials.lockoutUntil!));
+      return;
     }
 
     emit(const AuthUnauthenticated());
@@ -46,47 +56,37 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> setupPin(String pin) async {
     emit(AuthLoading());
-    final salt = const Uuid().v4();
-    final hashedPin = await _encryptionService.hashPin(pin, salt);
+    final success = await _setPinUseCase(pin);
+    if (!success) {
+       emit(const AuthUnauthenticated(errorMessage: 'PIN inválido'));
+       return;
+    }
 
-    final credentials = AuthCredentials()
-      ..hashedPin = hashedPin
-      ..salt = salt
-      ..biometricEnabled = false
-      ..failedAttempts = 0;
-
-    await _repository.saveCredentials(credentials);
-    _startSession();
+    final session = await _loginUseCase(PinCredential(pin));
+    if (session != null) {
+      _startSessionTimer(session.expiresAt);
+      emit(AuthAuthenticated(session.expiresAt));
+    }
   }
 
   Future<void> loginWithPin(String pin) async {
-    final credentials = await _repository.getCredentials();
-    if (credentials == null) return;
-
     if (state is AuthLocked) {
       final lockedState = state as AuthLocked;
       if (DateTime.now().isBefore(lockedState.lockoutUntil)) return;
     }
 
-    final hashedInput = await _encryptionService.hashPin(pin, credentials.salt!);
+    final session = await _loginUseCase(PinCredential(pin));
 
-    if (hashedInput == credentials.hashedPin) {
-      credentials.failedAttempts = 0;
-      credentials.lastLockoutTime = null;
-      await _repository.saveCredentials(credentials);
-      _startSession();
+    if (session != null) {
+      _startSessionTimer(session.expiresAt);
+      emit(AuthAuthenticated(session.expiresAt));
     } else {
-      credentials.failedAttempts++;
-      if (credentials.failedAttempts >= 5) {
-        credentials.lastLockoutTime = DateTime.now();
-        final lockoutDuration = _getLockoutDuration(credentials.failedAttempts);
-        final lockoutUntil = credentials.lastLockoutTime!.add(lockoutDuration);
-        await _repository.saveCredentials(credentials);
-        emit(AuthLocked(lockoutUntil));
+      final credentials = await _repository.getCredentials();
+      if (credentials != null && credentials.isLocked) {
+        emit(AuthLocked(credentials.lockoutUntil!));
       } else {
-        await _repository.saveCredentials(credentials);
         emit(AuthUnauthenticated(
-          failedAttempts: credentials.failedAttempts,
+          failedAttempts: credentials?.failedAttempts ?? 0,
           errorMessage: 'PIN incorrecto',
         ));
       }
@@ -94,15 +94,10 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> loginWithBiometrics() async {
-    final credentials = await _repository.getCredentials();
-    if (credentials == null || !credentials.biometricEnabled) return;
-
-    final authenticated = await _biometricService.authenticate(
-      localizedReason: 'Autentícate para acceder a tus datos médicos',
-    );
-
-    if (authenticated) {
-      _startSession();
+    final session = await _loginUseCase(const BiometricCredential());
+    if (session != null) {
+      _startSessionTimer(session.expiresAt);
+      emit(AuthAuthenticated(session.expiresAt));
     }
   }
 
@@ -121,28 +116,22 @@ class AuthCubit extends Cubit<AuthState> {
     await _repository.saveCredentials(credentials);
   }
 
-  void logout() {
+  Future<void> logout() async {
     _sessionTimer?.cancel();
+    await _logoutUseCase();
     emit(const AuthUnauthenticated());
   }
 
-  void _startSession() {
-    final expiry = DateTime.now().add(const Duration(minutes: sessionTimeoutMinutes));
-    emit(AuthAuthenticated(expiry));
-
+  void _startSessionTimer(DateTime expiresAt) {
     _sessionTimer?.cancel();
-    _sessionTimer = Timer(const Duration(minutes: sessionTimeoutMinutes), () {
+    final duration = expiresAt.difference(DateTime.now());
+    if (duration.isNegative) {
       logout();
-    });
-  }
-
-  Duration _getLockoutDuration(int failedAttempts) {
-    if (failedAttempts >= 10) return const Duration(minutes: 60);
-    if (failedAttempts >= 9) return const Duration(minutes: 30);
-    if (failedAttempts >= 8) return const Duration(minutes: 15);
-    if (failedAttempts >= 7) return const Duration(minutes: 5);
-    if (failedAttempts >= 5) return const Duration(minutes: 1);
-    return Duration.zero;
+    } else {
+      _sessionTimer = Timer(duration, () {
+        logout();
+      });
+    }
   }
 
   @override

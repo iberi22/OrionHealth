@@ -1,4 +1,49 @@
 import '../../domain/entities/auth_credentials.dart';
+import '../../domain/entities/auth_user.dart';
+
+class AuthUserDto {
+  final String id;
+  final String email;
+  final String role;
+
+  const AuthUserDto({
+    required this.id,
+    required this.email,
+    required this.role,
+  });
+
+  factory AuthUserDto.fromEntity(AuthUser entity) {
+    return AuthUserDto(
+      id: entity.id,
+      email: entity.email,
+      role: entity.role,
+    );
+  }
+
+  AuthUser toEntity() {
+    return AuthUser(
+      id: id,
+      email: email,
+      role: role,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'role': role,
+    };
+  }
+
+  factory AuthUserDto.fromJson(Map<String, dynamic> json) {
+    return AuthUserDto(
+      id: json['id'] as String,
+      email: json['email'] as String,
+      role: json['role'] as String,
+    );
+  }
+}
 
 class AuthCredentialsDto {
   final int? id;
