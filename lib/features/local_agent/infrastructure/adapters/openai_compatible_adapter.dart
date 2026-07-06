@@ -55,13 +55,15 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
       final response = await _client!.chat.completions.create(
         ChatCompletionCreateRequest(
           model: _modelName,
-          messages: [ChatMessage.user(content: ChatMessageUserContent.text(prompt))],
+          messages: [
+            ChatMessage.user(prompt),
+          ],
           temperature: 0.7,
           maxTokens: 4096,
         ),
       );
 
-      final text = response.text;
+      final text = response.choices.first.message.content;
       if (text == null || text.isEmpty) {
         throw Exception('Empty response from provider');
       }
@@ -79,16 +81,20 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
       final stream = _client!.chat.completions.createStream(
         ChatCompletionCreateRequest(
           model: _modelName,
-          messages: [ChatMessage.user(content: ChatMessageUserContent.text(prompt))],
+          messages: [
+            ChatMessage.user(prompt),
+          ],
           temperature: 0.7,
           maxTokens: 4096,
         ),
       );
 
       await for (final event in stream) {
-        final delta = event.textDelta;
-        if (delta != null && delta.isNotEmpty) {
-          yield delta;
+        if (event.choices != null && event.choices!.isNotEmpty) {
+          final delta = event.choices!.first.delta.content;
+          if (delta != null && delta.isNotEmpty) {
+            yield delta;
+          }
         }
       }
     } catch (e) {
@@ -104,11 +110,13 @@ class OpenaiCompatibleAdapter implements LlmAdapter {
       final response = await _client!.chat.completions.create(
         ChatCompletionCreateRequest(
           model: _modelName,
-          messages: [ChatMessage.user(content: ChatMessageUserContent.text('Respond with "ok".'))],
+          messages: [
+            ChatMessage.user('Respond with "ok".'),
+          ],
           maxTokens: 10,
         ),
       );
-      return response.text != null;
+      return response.choices.first.message.content != null;
     } catch (_) {
       return false;
     }
