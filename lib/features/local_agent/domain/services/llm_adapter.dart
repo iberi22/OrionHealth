@@ -15,6 +15,13 @@ abstract class LlmAdapter {
   /// Optional: Check if the adapter is available/configured
   Future<bool> isAvailable();
 
+  /// Generate a response (Added for compatibility)
+  Future<ChatMessage> generateResponse(
+    String userMessage,
+    String context,
+    LocalModelDescriptor model,
+  );
+
   /// Install a model from a network URL.
   /// Returns a stream of progress percentages (0–100).
   Stream<int> installModel({

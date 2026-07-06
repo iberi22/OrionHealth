@@ -1,3 +1,4 @@
+import '../../domain/chat_message.dart';
 import 'dart:async';
 
 import 'package:flutter_gemma/flutter_gemma.dart' hide ModelType;

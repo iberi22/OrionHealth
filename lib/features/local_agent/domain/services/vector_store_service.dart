@@ -1,3 +1,6 @@
+import 'package:isar/isar.dart';
+import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
+
 /// Vector Store Service interface for memory management
 ///
 /// This interface abstracts the underlying vector database implementation
@@ -51,4 +54,7 @@ abstract class VectorStoreService {
     int maxHops = 2,
     int topK = 5,
   });
+
+  /// Get recent chat messages (Added for compatibility)
+  Future<List<ChatMessage>> getRecentMessages({int limit = 20});
 }
