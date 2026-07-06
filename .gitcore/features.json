@@ -3,7 +3,7 @@
                           "translations_arb":  30,
                           "readme_count":  25,
                           "architecture":  true,
-                          "readme_features_pct":  100,
+                          "readme_features_pct":  96.2,
                           "contributing":  true
                       },
     "version":  "0.9.0",
@@ -24,8 +24,8 @@
     "protocol_version":  "3",
     "features":  {
                      "gap_network_health_incomplete":  1,
-                     "complete_layers":  25,
-                     "total":  25
+                     "complete_layers":  26,
+                     "total":  26
                  },
     "name":  "OrionHealth",
     "human_review":  {
@@ -115,19 +115,19 @@
                  }
              ],
     "test_suite":  {
-                       "test_ratio_pct":  45,
-                       "integration_tests":  34,
-                       "test_files":  596,
-                       "golden_screenshots":  249
+                       "test_ratio_pct":  44.2,
+                       "integration_tests":  35,
+                       "test_files":  603,
+                       "golden_screenshots":  251
                    },
     "gaps":  {
                  "incomplete_architecture":  [
 
                                              ],
                  "low_coverage_features":  [
-
+                                               "data_sources"
                                            ],
-                 "missing_readmes":  0
+                 "missing_readmes":  1
              },
     "metadata":  {
                      "flutter_analyze":  "0 issues (assumed clean after PR #1014)",
@@ -136,24 +136,24 @@
                                       "health_wallet":  "0.1.0",
                                       "isar_agent_memory":  "0.5.0-beta"
                                   },
-                     "total_dart_files":  1325,
+                     "total_dart_files":  1365,
                      "branches":  [
                                       "main: 347cb89",
                                       "harness v1 deployed"
                                   ],
-                     "last_scan":  "2026-07-05 21:29:49",
-                     "last_updated":  "2026-07-05"
+                     "last_scan":  "2026-07-06 00:11:25",
+                     "last_updated":  "2026-07-06"
                  },
     "metrics":  {
                     "doc_weight":  9.9,
                     "e2e_weight":  9.9,
                     "arch_weight":  25,
-                    "global_pct":  89.4,
+                    "global_pct":  89.2,
                     "test_weight":  29.7,
                     "golden_weight":  9.9,
                     "ci_weight":  4.95,
                     "human_final_weight":  1,
-                    "auto_score":  89.4
+                    "auto_score":  89.2
                 },
     "ci_cd":  {
                   "ci_tests":  true,

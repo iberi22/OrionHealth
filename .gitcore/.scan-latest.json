@@ -2,18 +2,18 @@
     "e2eScore":  9.9,
     "workflows":  6,
     "ciScore":  5,
-    "docScore":  9.9,
-    "fullArch":  25,
+    "docScore":  9.7,
+    "fullArch":  26,
     "i18nFiles":  30,
     "testScore":  29.7,
-    "scanTime":  "2026-07-05 21:29:49",
-    "goldenFiles":  249,
-    "autoScore":  89.4,
-    "implementationPct":  89.4,
-    "features":  25,
-    "dartFiles":  588,
+    "scanTime":  "2026-07-06 00:11:25",
+    "goldenFiles":  251,
+    "autoScore":  89.2,
+    "implementationPct":  89.2,
+    "features":  26,
+    "dartFiles":  620,
     "archScore":  25,
-    "testFiles":  596,
+    "testFiles":  603,
     "goldenScore":  9.9,
     "fullArchPct":  100,
     "featureDetails":  {
@@ -45,7 +45,7 @@
                                                              "presentation"
                                                          ],
                                               "hasInjectionConfig":  true,
-                                              "testCount":  18,
+                                              "testCount":  19,
                                               "goldenCount":  11,
                                               "hasFullArch":  true
                                           },
@@ -146,6 +146,22 @@
                                                 "goldenCount":  6,
                                                 "hasFullArch":  true
                                             },
+                           "sync":  {
+                                        "hasE2E":  true,
+                                        "hasReadme":  true,
+                                        "layerCount":  4,
+                                        "hasData":  false,
+                                        "layers":  [
+                                                       "application",
+                                                       "domain",
+                                                       "infrastructure",
+                                                       "presentation"
+                                                   ],
+                                        "hasInjectionConfig":  true,
+                                        "testCount":  23,
+                                        "goldenCount":  3,
+                                        "hasFullArch":  true
+                                    },
                            "health_sharing":  {
                                                   "hasE2E":  false,
                                                   "hasReadme":  true,
@@ -308,22 +324,22 @@
                                              "goldenCount":  6,
                                              "hasFullArch":  true
                                          },
-                           "sync":  {
-                                        "hasE2E":  true,
-                                        "hasReadme":  true,
-                                        "layerCount":  4,
-                                        "hasData":  false,
-                                        "layers":  [
-                                                       "application",
-                                                       "domain",
-                                                       "infrastructure",
-                                                       "presentation"
-                                                   ],
-                                        "hasInjectionConfig":  true,
-                                        "testCount":  23,
-                                        "goldenCount":  3,
-                                        "hasFullArch":  true
-                                    },
+                           "data_sources":  {
+                                                "hasE2E":  false,
+                                                "hasReadme":  false,
+                                                "layerCount":  4,
+                                                "hasData":  false,
+                                                "layers":  [
+                                                               "application",
+                                                               "domain",
+                                                               "infrastructure",
+                                                               "presentation"
+                                                           ],
+                                                "hasInjectionConfig":  true,
+                                                "testCount":  4,
+                                                "goldenCount":  0,
+                                                "hasFullArch":  true
+                                            },
                            "home":  {
                                         "hasE2E":  true,
                                         "hasReadme":  true,
@@ -401,7 +417,7 @@
                                                               "presentation"
                                                           ],
                                                "hasInjectionConfig":  true,
-                                               "testCount":  16,
+                                               "testCount":  17,
                                                "goldenCount":  4,
                                                "hasFullArch":  true
                                            },
@@ -420,12 +436,12 @@
                                                           "presentation"
                                                       ],
                                            "hasInjectionConfig":  true,
-                                           "testCount":  34,
-                                           "goldenCount":  7,
+                                           "testCount":  35,
+                                           "goldenCount":  9,
                                            "hasFullArch":  true
                                        }
                        },
-    "totalDartFiles":  1325,
-    "e2eFiles":  34,
+    "totalDartFiles":  1365,
+    "e2eFiles":  35,
     "readmeCount":  25
 }
