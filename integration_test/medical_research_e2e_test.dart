@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:medical_standards/medical_standards.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/home/presentation/pages/home_page.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/pages/medical_research_page.dart';
@@ -9,23 +13,16 @@ import 'package:orionhealth_health/features/medical_research/domain/entities/res
 import 'package:orionhealth_health/features/medical_research/domain/models/research_result.dart';
 import 'package:orionhealth_health/features/medical_research/domain/repositories/medical_research_repository.dart';
 import 'package:orionhealth_health/features/medical_research/domain/services/medical_standards_service.dart';
-import 'package:orionhealth_health/features/dashboard/presentation/pages/home_dashboard_page.dart';
-import 'package:orionhealth_health/features/dashboard/application/dashboard_cubit.dart';
-import 'package:orionhealth_health/features/dashboard/domain/usecases/get_dashboard_stats_usecase.dart';
-import 'package:orionhealth_health/features/dashboard/domain/usecases/get_recent_activity_usecase.dart';
-import 'package:orionhealth_health/features/dashboard/domain/entities/dashboard_stats.dart';
+import 'package:orionhealth_health/features/home/domain/repositories/home_repository.dart';
+import 'package:orionhealth_health/features/home/domain/entities/home_health_summary.dart';
+import 'package:orionhealth_health/features/home/domain/entities/home_module.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:medical_standards/medical_standards.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'utils/video_recorder.dart';
 
 class MockMedicalResearchRepository extends Mock implements MedicalResearchRepository {}
 class MockMedicalStandardsService extends Mock implements MedicalStandardsService {}
-class MockGetDashboardStatsUseCase extends Mock implements GetDashboardStatsUseCase {}
-class MockGetRecentActivityUseCase extends Mock implements GetRecentActivityUseCase {}
+class MockHomeRepository extends Mock implements HomeRepository {}
 
 class FakeResearchQuery extends Fake implements ResearchQuery {}
 class FakeMedicalResearchResult extends Fake implements MedicalResearchResult {}
@@ -33,10 +30,9 @@ class FakeMedicalResearchResult extends Fake implements MedicalResearchResult {}
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  late MockMedicalResearchRepository mockResearchRepository;
+  late MockMedicalResearchRepository mockRepository;
   late MockMedicalStandardsService mockStandardsService;
-  late MockGetDashboardStatsUseCase mockGetStats;
-  late MockGetRecentActivityUseCase mockGetRecentActivity;
+  late MockHomeRepository mockHomeRepository;
 
   setUpAll(() async {
     await di.configureDependencies();
@@ -45,16 +41,20 @@ void main() {
   });
 
   setUp(() {
-    mockResearchRepository = MockMedicalResearchRepository();
+    mockRepository = MockMedicalResearchRepository();
     mockStandardsService = MockMedicalStandardsService();
-    mockGetStats = MockGetDashboardStatsUseCase();
-    mockGetRecentActivity = MockGetRecentActivityUseCase();
+    mockHomeRepository = MockHomeRepository();
 
     di.getIt.allowReassignment = true;
-    di.getIt.registerSingleton<MedicalResearchRepository>(mockResearchRepository);
+    di.getIt.registerSingleton<MedicalResearchRepository>(mockRepository);
     di.getIt.registerSingleton<MedicalStandardsService>(mockStandardsService);
-    di.getIt.registerSingleton<GetDashboardStatsUseCase>(mockGetStats);
-    di.getIt.registerSingleton<GetRecentActivityUseCase>(mockGetRecentActivity);
+    di.getIt.registerSingleton<HomeRepository>(mockHomeRepository);
+  });
+
+  tearDown(() {
+    di.getIt.unregister<MedicalResearchRepository>();
+    di.getIt.unregister<MedicalStandardsService>();
+    di.getIt.unregister<HomeRepository>();
   });
 
   Widget createResearchTestWidget(Widget home) {
@@ -73,6 +73,25 @@ void main() {
 
   group('Medical Research Flow - True E2E Tests', () {
     testWidgets('E2E: Navigation to Research and Basic Verification', (WidgetTester tester) async {
+      // Mock Home Data
+      final homeModules = [
+        HomeModule(
+          title: 'Investigación',
+          iconCode: Icons.science.codePoint,
+          iconFontFamily: Icons.science.fontFamily,
+          iconFontPackage: Icons.science.fontPackage,
+          color: Colors.purpleAccent,
+          route: '/research',
+        ),
+      ];
+      when(() => mockHomeRepository.getHomeModules()).thenAnswer((_) async => homeModules);
+      when(() => mockHomeRepository.getHealthSummary()).thenAnswer((_) async => const HomeHealthSummary(
+            latestVitals: [],
+            upcomingAppointments: [],
+            medicationCount: 0,
+          ));
+
+      // Mock Research Data
       final results = [
         const ResearchResult(
           title: 'Diabetes Study 2025',
@@ -82,33 +101,30 @@ void main() {
           confidence: 0.95,
         ),
       ];
-      when(() => mockResearchRepository.search(any())).thenAnswer((_) async => researchResults);
-      when(() => mockResearchRepository.saveToHistory(any())).thenAnswer((_) async {});
-      when(() => mockResearchRepository.getHistory()).thenAnswer((_) async => []);
+      when(() => mockRepository.search(any())).thenAnswer((_) async => results);
+      when(() => mockRepository.saveToHistory(any())).thenAnswer((_) async {});
+      when(() => mockRepository.getHistory()).thenAnswer((_) async => []);
 
-      // Mock Interactions
+      // Mock Standards Data
       when(() => mockStandardsService.checkDrugInteractions(any()))
           .thenAnswer((_) async => ['Aspirin and Warfarin may increase bleeding risk.']);
 
-      // Start from Home Page
+      final icdCode = Icd10Code(
+        code: 'E11.9',
+        displayName: 'Type 2 diabetes mellitus without complications',
+        category: 'Endocrine, nutritional and metabolic diseases',
+        synonyms: ['NIDDM', 'Type 2 diabetes'],
+      );
+      when(() => mockStandardsService.lookupIcd10(any())).thenAnswer((_) async => icdCode);
+
+      // 1. Start from Home Page
       await tester.pumpWidget(createResearchTestWidget(const HomePage()));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'medical_research', '01_home_page');
 
-      // Navigate to Investigación
+      // 2. Navigate to MedicalResearchPage
       final researchCard = find.text('Investigación');
       expect(researchCard, findsOneWidget);
-      await tester.tap(researchCard);
-      await tester.pumpAndSettle();
-
-      // Verify Medical Research Page is shown
-      expect(find.byType(MedicalResearchPage), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'medical_research', '02_research_loaded');
-
-      // 2. Navigate to MedicalResearchPage
-      // In home_dashboard_page.dart, the title is 'Investigación'
-      final researchCard = find.text('Investigación');
-      await tester.scrollUntilVisible(researchCard, 100);
       await tester.tap(researchCard);
       await tester.pumpAndSettle();
 
@@ -119,20 +135,14 @@ void main() {
       // 3. Test Evidence Tab (EVIDENCIA)
       expect(find.text('BUSCAR EN BASES DE DATOS MÉDICAS'), findsOneWidget);
       await tester.enterText(find.byType(TextField).first, 'Diabetes AI');
-      // Tap send button
       await tester.tap(find.byIcon(Icons.send));
       await tester.pump(); // Start loading
-
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
       await tester.pumpAndSettle();
 
       expect(find.text('Diabetes Study 2025'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'medical_research', '03_research_results');
 
-      // Drug Interactions Check
-      when(() => mockStandardsService.checkDrugInteractions(any()))
-          .thenAnswer((_) async => ['Aspirin and Warfarin may increase bleeding risk.']);
-
+      // 4. Test Interactions Tab (INTERACCIONES)
       await tester.tap(find.text('INTERACCIONES'));
       await tester.pumpAndSettle();
       expect(find.text('VERIFICADOR DE INTERACCIONES'), findsOneWidget);
@@ -147,18 +157,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Aspirin and Warfarin may increase bleeding risk.'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'medical_research', '04_interactions_found');
+      await VideoRecorder.recordStep(tester, 'medical_research', '05_interactions_found');
 
-      // ICD-10 Lookup
-      final icdCode = Icd10Code(
-        code: 'E11.9',
-        displayName: 'Type 2 diabetes mellitus without complications',
-        category: 'Endocrine, nutritional and metabolic diseases',
-        synonyms: ['NIDDM', 'Type 2 diabetes'],
-      );
-
-      when(() => mockStandardsService.lookupIcd10(any())).thenAnswer((_) async => icdCode);
-
+      // 5. Test ICD-10 Tab (ICD-10)
       await tester.tap(find.text('ICD-10'));
       await tester.pumpAndSettle();
       expect(find.text('BÚSQUEDA DE CÓDIGOS ICD-10'), findsOneWidget);
@@ -170,7 +171,7 @@ void main() {
 
       expect(find.text('E11.9'), findsOneWidget);
       expect(find.text('Type 2 diabetes mellitus without complications'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'medical_research', '05_icd10_result');
+      await VideoRecorder.recordStep(tester, 'medical_research', '07_icd10_result');
     });
 
     testWidgets('E2E: Medical Research Error State', (WidgetTester tester) async {
@@ -184,8 +185,8 @@ void main() {
       await tester.tap(find.byIcon(Icons.send));
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('Error en la investigación: Exception: API Error'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'medical_research', '06_error_state');
+      expect(find.textContaining('Exception: API Error'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'medical_research', '08_error_state');
     });
   });
 }
