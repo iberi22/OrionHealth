@@ -1,14 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
 import 'package:orionhealth_health/features/medications/infrastructure/repositories/isar_medication_repository.dart';
+import 'package:orionhealth_health/features/medications/infrastructure/services/pharmacy_api_service.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
+
+class MockPharmacyApiService extends Mock implements PharmacyApiService {}
 
 void main() {
   late Isar isar;
   late IsarMedicationRepository repository;
   late String testDir;
+  late MockPharmacyApiService mockApiService;
 
   setUpAll(() async {
     testDir = p.join(Directory.current.path, 'test_db_medications');
@@ -20,7 +25,8 @@ void main() {
       [MedicationSchema],
       directory: testDir,
     );
-    repository = IsarMedicationRepository(isar);
+    mockApiService = MockPharmacyApiService();
+    repository = IsarMedicationRepository(isar, mockApiService);
   });
 
   tearDownAll(() async {

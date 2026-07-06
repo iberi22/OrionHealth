@@ -18,6 +18,12 @@ class Medication {
 
   String? notes;
 
+  String? rxNormCode;
+
+  String? drugClass;
+
+  String? genericName;
+
   Medication({
     this.id = Isar.autoIncrement,
     required this.name,
@@ -26,6 +32,9 @@ class Medication {
     required this.startDate,
     this.isActive = true,
     this.notes,
+    this.rxNormCode,
+    this.drugClass,
+    this.genericName,
   });
 
   @override
@@ -39,9 +48,22 @@ class Medication {
           frequency == other.frequency &&
           startDate == other.startDate &&
           isActive == other.isActive &&
-          notes == other.notes;
+          notes == other.notes &&
+          rxNormCode == other.rxNormCode &&
+          drugClass == other.drugClass &&
+          genericName == other.genericName;
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, dosage, frequency, startDate, isActive, notes);
+  int get hashCode => Object.hash(
+        id,
+        name,
+        dosage,
+        frequency,
+        startDate,
+        isActive,
+        notes,
+        rxNormCode,
+        drugClass,
+        genericName,
+      );
 }
