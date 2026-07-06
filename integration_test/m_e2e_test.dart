@@ -48,7 +48,6 @@ void main() {
 
     when(() => mockRepository.initialize()).thenAnswer((_) async {});
     when(() => mockRepository.getProgress()).thenAnswer((_) async => const MeditationProgress());
-    when(() => mockRepository.getHomeModules()).thenAnswer((_) async => []); // If needed
   });
 
   tearDown(() {

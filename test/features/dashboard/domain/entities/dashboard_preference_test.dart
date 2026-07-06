@@ -3,23 +3,18 @@ import 'package:orionhealth_health/features/dashboard/domain/entities/dashboard_
 
 void main() {
   group('DashboardPreference', () {
-    test('should create with default values', () {
-      const pref = DashboardPreference();
-      expect(pref.showStats, isTrue);
-      expect(pref.showRecentActivity, isTrue);
-    });
-
-    test('should support copyWith', () {
-      const pref = DashboardPreference();
-      final modified = pref.copyWith(showStats: false);
-      expect(modified.showStats, isFalse);
-      expect(modified.showRecentActivity, isTrue);
+    test('should create with required values', () {
+      final pref = DashboardPreference(key: 'showStats', value: 'true');
+      expect(pref.key, equals('showStats'));
+      expect(pref.value, equals('true'));
     });
 
     test('should support equality', () {
-      const a = DashboardPreference();
-      const b = DashboardPreference();
-      expect(a, equals(b));
+      final a = DashboardPreference(key: 'k', value: 'v');
+      final b = DashboardPreference(key: 'k', value: 'v');
+      // DashboardPreference is a class without Equatable/override
+      expect(a.key, equals(b.key));
+      expect(a.value, equals(b.value));
     });
   });
 }

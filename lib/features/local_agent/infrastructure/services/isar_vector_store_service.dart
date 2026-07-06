@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:injectable/injectable.dart';
+import 'package:isar/isar.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
+import '../../domain/chat_message.dart';
 import '../../domain/services/vector_store_service.dart';
 import '../../domain/repositories/medical_knowledge_repository.dart';
 import '../../../../core/services/app_logger.dart';

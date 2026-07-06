@@ -1,31 +1,31 @@
 # Feature Test Coverage Report
 
-Generated on: 2026-06-18 20:01:29.611560
+Generated on: 2026-07-06 04:39:46.986425
 
 | Feature | Domain | Application | Infrastructure | Presentation | Goldens |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | about | ✅ | ✅ | ✅ | ✅ | ✅ |
 | allergies | ✅ | ✅ | ✅ | ✅ | ✅ |
 | appointments | ✅ | ✅ | ✅ | ✅ | ✅ |
-| auth | ❌ | ✅ | ✅ | ✅ | ✅ |
+| auth | ✅ | ✅ | ✅ | ✅ | ✅ |
 | calendar_import | ✅ | ✅ | ✅ | ✅ | ✅ |
 | dashboard | ✅ | ✅ | ✅ | ✅ | ✅ |
 | doctor_verification | ✅ | ✅ | ✅ | ✅ | ✅ |
 | email-citas | ✅ | ✅ | ✅ | ✅ | ✅ |
 | eps_connection | ✅ | ✅ | ✅ | ✅ | ✅ |
-| health_data_import | ✅ | ❌ | ✅ | ✅ | ✅ |
+| health_data_import | ✅ | ✅ | ✅ | ✅ | ✅ |
 | health_record | ✅ | ✅ | ✅ | ✅ | ✅ |
 | health_sharing | ✅ | ✅ | ✅ | ✅ | ✅ |
-| home | ✅ | ✅ | ❌ | ✅ | ✅ |
+| home | ✅ | ✅ | ✅ | ✅ | ✅ |
 | local_agent | ✅ | ✅ | ✅ | ✅ | ✅ |
 | medical_research | ✅ | ✅ | ✅ | ✅ | ✅ |
-| medications | ✅ | ✅ | ❌ | ✅ | ✅ |
+| medications | ✅ | ✅ | ✅ | ✅ | ✅ |
 | meditation | ✅ | ✅ | ✅ | ✅ | ✅ |
 | network | ❌ | ❌ | ❌ | ❌ | ❌ |
 | onboarding | ✅ | ✅ | ✅ | ✅ | ✅ |
 | reports | ✅ | ✅ | ✅ | ✅ | ✅ |
 | settings | ✅ | ✅ | ✅ | ✅ | ✅ |
-| sync | ✅ | ✅ | ✅ | ✅ | ❌ |
+| sync | ✅ | ✅ | ✅ | ✅ | ✅ |
 | user_profile | ✅ | ✅ | ✅ | ✅ | ✅ |
 | vitals | ✅ | ✅ | ✅ | ✅ | ✅ |
-| voice_chat | ❌ | ❌ | ❌ | ❌ | ❌ |
+| voice_chat | ✅ | ✅ | ✅ | ✅ | ✅ |
