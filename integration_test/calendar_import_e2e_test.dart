@@ -75,7 +75,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(() => mockAppointmentRepository.saveAppointment(any())).called(1);
-      expect(find.text('Se importaron 1 citas con éxito'), findsOneWidget);
+      expect(find.text('Importación exitosa'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'calendar_import', '02_success');
     });
 
@@ -87,7 +87,7 @@ void main() {
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'calendar_import', '03_empty');
 
-      expect(find.text('No se encontraron citas médicas en tu calendario'), findsOneWidget);
+      expect(find.text('No se encontraron citas médicas'), findsOneWidget);
     });
 
     testWidgets('E2E: Permission Denied Flow', (WidgetTester tester) async {
@@ -98,7 +98,7 @@ void main() {
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'calendar_import', '04_permission_denied');
 
-      expect(find.text('Se requiere permiso para acceder al calendario'), findsOneWidget);
+      expect(find.text('Permiso denegado'), findsOneWidget);
     });
   });
 }
