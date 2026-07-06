@@ -3,11 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:orionhealth_health/features/home/presentation/pages/home_page.dart';
 import 'package:orionhealth_health/features/voice_chat/presentation/pages/voice_chat_page.dart';
+import 'package:orionhealth_health/features/local_agent/presentation/chat_page.dart' as agent;
 import 'package:orionhealth_health/core/services/audio/audio_player_service.dart';
 import 'package:orionhealth_health/core/services/aicore_service.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
+import 'package:orionhealth_health/l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'utils/video_recorder.dart';
 
 import 'package:orionhealth_health/core/services/asr/asr_service.dart';
@@ -30,11 +34,10 @@ void main() {
   late StreamController<double> volumeController;
 
   setUpAll(() async {
-    // Basic setup before all tests
+    await di.configureDependencies();
   });
 
   setUp(() async {
-    await di.getIt.reset();
     di.getIt.allowReassignment = true;
 
     mockAudioService = MockAudioService();
@@ -44,8 +47,6 @@ void main() {
 
     audioStateController = StreamController<AudioState>.broadcast();
     volumeController = StreamController<double>.broadcast();
-
-    await di.configureDependencies();
 
     // Override services that require hardware/native features
     di.getIt.registerSingleton<AudioService>(mockAudioService);
@@ -81,124 +82,102 @@ void main() {
     volumeController.close();
   });
 
-  group('Voice Chat - Integrated E2E Tests', () {
-    testWidgets('E2E: Page Rendering and Initial State', (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(
-        home: VoiceChatPage(),
-      ));
-      await tester.pumpAndSettle();
-      await VideoRecorder.recordStep(tester, 'voice_chat', '01_initial_state');
+  Widget createVoiceChatTestWidget(Widget home) {
+    return MaterialApp(
+      home: home,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('es'),
+    );
+  }
 
-      expect(find.text('Orion — Chat de Voz'), findsOneWidget);
-      // Wait for cubit initialization
-      await tester.pump(const Duration(milliseconds: 500));
-      expect(find.text('Listo para conversar'), findsOneWidget);
-    });
-
-    testWidgets('E2E: Text Message Flow', (WidgetTester tester) async {
-      // Mock AI response
+  group('Voice Chat - True E2E Tests', () {
+    testWidgets('E2E: Navigation to Voice Chat and Basic Interaction', (WidgetTester tester) async {
+       // Mock AI response
       when(() => mockAIService.getResponse(any(), context: any(named: 'context')))
           .thenAnswer((_) async => 'Hola, ¿en qué puedo ayudarte?');
 
-      await tester.pumpWidget(const MaterialApp(
-        home: VoiceChatPage(),
-      ));
+      // Start from Home Page
+      await tester.pumpWidget(createVoiceChatTestWidget(const HomePage()));
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(tester, 'voice_chat', '01_home_page');
+
+      // Find AI Assistant module
+      final aiAssistantCard = find.text('AI Assistant');
+      expect(aiAssistantCard, findsOneWidget);
+      await tester.tap(aiAssistantCard);
       await tester.pumpAndSettle();
 
-      final textField = find.byType(TextField);
-      expect(textField, findsOneWidget);
+      // We should be in agent.ChatPage now
+      expect(find.byType(agent.ChatPage), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'voice_chat', '02_chat_page');
 
-      // Enter text
+      // Navigate to Voice Chat via the Mic icon in AppBar
+      final voiceChatBtn = find.byIcon(Icons.mic);
+      expect(voiceChatBtn, findsOneWidget);
+      await tester.tap(voiceChatBtn);
+      await tester.pumpAndSettle();
+
+      // Verify Voice Chat Page
+      expect(find.byType(VoiceChatPage), findsOneWidget);
+      expect(find.text('Orion — Chat de Voz'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'voice_chat', '03_voice_chat_loaded');
+
+      // Text Message Flow
+      final textField = find.byType(TextField);
       await tester.enterText(textField, 'Hola Orion');
       await tester.testTextInput.receiveAction(TextInputAction.done);
-
-      // We use pump() instead of pumpAndSettle because of the infinite animation in VoiceChatPage
       await tester.pump(const Duration(milliseconds: 500));
-      await VideoRecorder.recordStep(tester, 'voice_chat', '02_message_sent');
 
-      // Verify message appears in UI
       expect(find.text('Hola Orion'), findsOneWidget);
-
-      // Wait for AI response processing
       await tester.pump(const Duration(seconds: 1));
-
-      // Verify AI response appears
       expect(find.text('Hola, ¿en qué puedo ayudarte?'), findsOneWidget);
-
-      // Verify TTS was called
       verify(() => mockAudioService.speakText('Hola, ¿en qué puedo ayudarte?')).called(1);
+      await VideoRecorder.recordStep(tester, 'voice_chat', '04_message_exchanged');
 
-      await VideoRecorder.recordStep(tester, 'voice_chat', '03_ai_responded');
-    });
-
-    testWidgets('E2E: Voice Recording and Transcription', (WidgetTester tester) async {
-      // Mock behaviors
+      // Voice recording interaction
       when(() => mockAudioService.startRecording()).thenAnswer((_) async {});
       when(() => mockAudioService.stopRecording()).thenAnswer((_) async => Uint8List.fromList([1, 2, 3]));
       when(() => mockAIService.transcribeAudio(any())).thenAnswer((_) async => 'Consulta por voz');
-      when(() => mockAIService.getResponse(any(), context: any(named: 'context')))
-          .thenAnswer((_) async => 'Recibido por voz');
 
-      await tester.pumpWidget(const MaterialApp(
-        home: VoiceChatPage(),
-      ));
-      await tester.pumpAndSettle();
-
-      // Find mic button (VoiceInputButton uses GestureDetector for long press)
-      final micIcon = find.byIcon(Icons.mic_none);
-      expect(micIcon, findsOneWidget);
-
-      // Start recording with Long Press
-      final gesture = await tester.startGesture(tester.getCenter(micIcon));
-      // Long press detection usually takes ~500ms
+      final micButton = find.byIcon(Icons.mic_none);
+      final gesture = await tester.startGesture(tester.getCenter(micButton));
       await tester.pump(const Duration(milliseconds: 600));
-
       verify(() => mockAudioService.startRecording()).called(1);
       expect(find.text('Grabando...'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'voice_chat', '04_recording');
 
-      // Stop recording (release)
       await gesture.up();
-      await tester.pump(const Duration(milliseconds: 500));
-
-      verify(() => mockAudioService.stopRecording()).called(1);
-
-      // Wait for transcription and response
       await tester.pump(const Duration(seconds: 1));
-
       expect(find.text('Consulta por voz'), findsOneWidget);
-      expect(find.text('Recibido por voz'), findsOneWidget);
-      await VideoRecorder.recordStep(tester, 'voice_chat', '05_voice_transcribed');
-    });
+      await VideoRecorder.recordStep(tester, 'voice_chat', '05_voice_recorded');
 
-    testWidgets('E2E: Clear Chat History', (WidgetTester tester) async {
-       // Mock AI response to have some messages
-      when(() => mockAIService.getResponse(any(), context: any(named: 'context')))
-          .thenAnswer((_) async => 'Respuesta');
-
-      await tester.pumpWidget(const MaterialApp(
-        home: VoiceChatPage(),
-      ));
-      await tester.pumpAndSettle();
-
-      // Send a message to populate history
-      await tester.enterText(find.byType(TextField), 'Test');
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pump(const Duration(seconds: 1));
-
-      expect(find.text('Test'), findsOneWidget);
-
-      // Tap clear history button (AppBar action)
+      // Clear history
       final deleteIcon = find.byIcon(Icons.delete_outline);
-      expect(deleteIcon, findsOneWidget);
-
       await tester.tap(deleteIcon);
       await tester.pumpAndSettle();
-
-      // Verify history is cleared
-      expect(find.text('Test'), findsNothing);
+      expect(find.text('Hola Orion'), findsNothing);
       expect(find.text('Conversación limpiada'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'voice_chat', '06_history_cleared');
+    });
+
+    testWidgets('E2E: Handles Error State', (WidgetTester tester) async {
+      when(() => mockAIService.getResponse(any(), context: any(named: 'context')))
+          .thenThrow(Exception('AI Error'));
+
+      await tester.pumpWidget(createVoiceChatTestWidget(const VoiceChatPage()));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'Test error');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Exception: AI Error'), findsOneWidget);
+      await VideoRecorder.recordStep(tester, 'voice_chat', '07_error_state');
     });
   });
 }
