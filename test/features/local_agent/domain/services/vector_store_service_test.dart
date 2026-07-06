@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 import 'package:orionhealth_health/features/local_agent/domain/services/vector_store_service.dart';
 
 /// Minimal concrete implementation for testing the abstract interface
