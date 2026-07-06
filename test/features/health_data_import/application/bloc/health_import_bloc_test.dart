@@ -4,14 +4,11 @@ import 'package:orionhealth_health/features/health_data_import/application/bloc/
 import 'package:orionhealth_health/features/health_data_import/application/bloc/health_import_event.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
 import 'package:orionhealth_health/features/health_data_import/application/health_import_state.dart';
-import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_import_service.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/usecases/health_import_usecases.dart';
-import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 
 class MockGetAvailableSourcesUseCase extends Mock implements GetAvailableSourcesUseCase {}
 class MockRequestHealthAuthUseCase extends Mock implements RequestHealthAuthUseCase {}
-class MockHealthDataImportService extends Mock implements HealthDataImportService {}
-class MockVitalSignRepository extends Mock implements VitalSignRepository {}
+class MockImportHealthDataUseCase extends Mock implements ImportHealthDataUseCase {}
 
 void main() {
   setUpAll(() {
@@ -21,20 +18,17 @@ void main() {
   late HealthImportBloc bloc;
   late MockGetAvailableSourcesUseCase mockGetAvailableSources;
   late MockRequestHealthAuthUseCase mockRequestHealthAuth;
-  late MockHealthDataImportService mockImportService;
-  late MockVitalSignRepository mockVitalSignRepository;
+  late MockImportHealthDataUseCase mockImportHealthData;
 
   setUp(() {
     mockGetAvailableSources = MockGetAvailableSourcesUseCase();
     mockRequestHealthAuth = MockRequestHealthAuthUseCase();
-    mockImportService = MockHealthDataImportService();
-    mockVitalSignRepository = MockVitalSignRepository();
+    mockImportHealthData = MockImportHealthDataUseCase();
 
     bloc = HealthImportBloc(
       mockGetAvailableSources,
       mockRequestHealthAuth,
-      mockImportService,
-      mockVitalSignRepository,
+      mockImportHealthData,
     );
   });
 
@@ -72,6 +66,23 @@ void main() {
       final expected = [
         const HealthImportAuthenticating(HealthDataSource.googleFit),
         const HealthImportError('Authorization denied. Please grant permission to access health data.'),
+      ];
+
+      expectLater(bloc.stream, emitsInOrder(expected));
+      bloc.add(const ImportFromSource(HealthDataSource.googleFit));
+    });
+
+    test('ImportFromSource emits states and result on success', () async {
+      when(() => mockRequestHealthAuth(any())).thenAnswer((_) async => true);
+      when(() => mockImportHealthData(any())).thenAnswer((_) => Stream.fromIterable([
+        const ImportProgress(currentStep: 'Step 1', totalSteps: 2, currentStepNum: 1, importedCount: 5),
+        const ImportProgress(currentStep: 'Done', totalSteps: 2, currentStepNum: 2, importedCount: 10, isCompleted: true),
+      ]));
+
+      final expected = [
+        const HealthImportAuthenticating(HealthDataSource.googleFit),
+        isA<HealthImportImporting>().having((s) => s.importedCount, 'importedCount', 5),
+        isA<HealthImportSuccess>().having((s) => s.result.importedCount, 'importedCount', 10),
       ];
 
       expectLater(bloc.stream, emitsInOrder(expected));
