@@ -112,6 +112,14 @@ class HomeRepositoryImpl implements HomeRepository {
         color: Colors.purple,
         route: '/meditation',
       ),
+      HomeModuleModel(
+        title: 'Investigación',
+        iconCode: Icons.science.codePoint,
+        iconFontFamily: Icons.science.fontFamily,
+        iconFontPackage: Icons.science.fontPackage,
+        color: Colors.purpleAccent,
+        route: '/research',
+      ),
     ];
 
     await _localDataSource.cacheHomeModules(defaultModules);

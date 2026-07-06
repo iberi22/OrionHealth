@@ -314,6 +314,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get anonymizationActive => 'Anonymization active';
 
   @override
+  String get networkHealth => 'Network Health';
+
+  @override
+  String get importData => 'Import Health Data';
+
+  @override
   String get changePassword => 'Change Password';
 
   @override
