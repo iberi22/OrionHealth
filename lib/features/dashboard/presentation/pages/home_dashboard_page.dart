@@ -10,6 +10,7 @@ import 'package:orionhealth_health/features/medications/presentation/pages/medic
 import 'package:orionhealth_health/features/reports/presentation/pages/reports_page.dart';
 import 'package:orionhealth_health/features/health_record/presentation/pages/timeline_page.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/pages/medical_research_page.dart';
+import 'package:orionhealth_health/features/dashboard/presentation/widgets/dashboard_stats_card.dart';
 import 'package:orionhealth_health/features/dashboard/application/dashboard_cubit.dart';
 import 'package:orionhealth_health/features/dashboard/application/dashboard_state.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/activity_item.dart';
@@ -72,6 +73,11 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
                     padding: const EdgeInsets.all(16.0),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
+                        KeyedSubtree(
+                          key: const Key('dashboard_stats_card'),
+                          child: DashboardStatsCard(stats: state.stats),
+                        ),
+                        const SizedBox(height: 24),
                         _buildQuickActionsHeader(context),
                         const SizedBox(height: 16),
                         _buildQuickActionsGrid(context),
