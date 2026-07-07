@@ -1,0 +1,17 @@
+import { test, expect } from '@playwright/test';
+
+const BASE = 'http://localhost:4321/OrionHealth';
+
+test('capture light mode', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto(BASE + '/');
+  await page.waitForTimeout(2000); // Wait for animations
+  await page.screenshot({ path: 'light-mode.png', fullPage: true });
+});
+
+test('capture dark mode', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto(BASE + '/');
+  await page.waitForTimeout(2000); // Wait for animations
+  await page.screenshot({ path: 'dark-mode.png', fullPage: true });
+});

@@ -36,6 +36,24 @@ const isRTL = lang === "ar";
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style is:global>
+    :root {
+      --color-background: #F5F5DC;
+      --color-foreground: #121212;
+      --color-surface: #E8E8C0;
+      --color-bone: #121212;
+      --color-bone-dark: #1E1E1E;
+      --color-accent: #10B981;
+      --color-secondary: #06B6D4;
+    }
+
+    :root.dark {
+      --color-background: #121212;
+      --color-foreground: #F5F5DC;
+      --color-surface: #1E1E1E;
+      --color-bone: #F5F5DC;
+      --color-bone-dark: #E8E8C0;
+    }
+
     * {
       font-family: 'Fira Code', monospace;
     }
@@ -118,8 +136,8 @@ const isRTL = lang === "ar";
 
     /* Cyber-Minimalism Base */
     body {
-      background-color: #121212;
-      color: #F5F5DC;
+      background-color: var(--color-background);
+      color: var(--color-foreground);
     }
 
     /* Noise Overlay - Cyber-Minimalism */
@@ -129,36 +147,60 @@ const isRTL = lang === "ar";
       left: 0;
       width: 100%;
       height: 100%;
-      opacity: 0.05;
+      opacity: 0.03;
       z-index: -1;
       pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
+    :root.dark .bg-noise {
+      opacity: 0.05;
+    }
+
     /* Grid Pattern - Subtle */
     .bg-grid {
       background-image:
+        linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    :root.dark .bg-grid {
+      background-image:
         linear-gradient(rgba(16, 185, 129, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(16, 185, 129, 0.02) 1px, transparent 1px);
-      background-size: 40px 40px;
     }
 
     /* Blob Animation Background */
     .animate-blob {
       filter: blur(100px);
+      opacity: 0.08;
+    }
+
+    :root.dark .animate-blob {
       opacity: 0.06;
     }
 
     /* Professional Glassmorphism - Cyber Style */
     .glass {
-      background: rgba(30, 30, 30, 0.6);
+      background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    :root.dark .glass {
+      background: rgba(30, 30, 30, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .glass-dark {
-      background: rgba(10, 10, 10, 0.8);
+      background: rgba(245, 245, 220, 0.9);
       backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    :root.dark .glass-dark {
+      background: rgba(10, 10, 10, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.03);
     }
 
@@ -239,7 +281,7 @@ const isRTL = lang === "ar";
     /* Button Styles - Cyber-Minimalism */
     .btn-primary {
       background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-      color: #0A0A0A;
+      color: #0A0A0A !important;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -254,8 +296,8 @@ const isRTL = lang === "ar";
 
     .btn-secondary {
       background: transparent;
-      color: #F5F5DC;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--color-foreground);
+      border: 1px solid rgba(16, 185, 129, 0.2);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -332,7 +374,7 @@ const isRTL = lang === "ar";
 
   <!-- PWA & iOS Specific -->
   <link rel="manifest" href="/OrionHealth/manifest.json">
-  <meta name="theme-color" content="#121212">
+  <meta name="theme-color" content="#10B981">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="OrionHealth">
@@ -342,6 +384,25 @@ const isRTL = lang === "ar";
 
   <!-- Plausible Analytics -->
   <script defer data-domain="orionhealth.app" src="https://plausible.io/js/script.js"></script>
+
+  <script is:inline>
+    const theme = (() => {
+      if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+        return localStorage.getItem('theme');
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      return 'light';
+    })();
+
+    if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+    window.localStorage.setItem('theme', theme);
+  </script>
 </head>
 
 <body class="min-h-screen bg-background text-bone antialiased overflow-x-hidden">

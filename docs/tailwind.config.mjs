@@ -6,18 +6,18 @@ export default {
     extend: {
       colors: {
         // Cyber-Minimalism Palette (BestOf OpenSource)
-        background: '#121212',
+        background: 'var(--color-background)',
         surface: {
-          DEFAULT: '#1E1E1E',
-          dark: '#0A0A0A',
-          light: '#2A2A2A'
+          DEFAULT: 'var(--color-surface)',
+          dark: 'var(--color-bone-dark)',
+          light: 'var(--color-background)'
         },
         bone: {
-          DEFAULT: '#F5F5DC',
-          dark: '#E8E8C0'
+          DEFAULT: 'var(--color-bone)',
+          dark: 'var(--color-bone-dark)'
         },
         accent: {
-          DEFAULT: '#10B981', // Emerald-500
+          DEFAULT: 'var(--color-accent)', // Emerald-500
           light: '#34D399',
           dark: '#059669'
         },
@@ -29,7 +29,7 @@ export default {
           light: '#34D399'
         },
         secondary: {
-          DEFAULT: '#06B6D4', // Cyan
+          DEFAULT: 'var(--color-secondary)', // Cyan
           dark: '#0891B2',
           light: '#22D3EE'
         }
