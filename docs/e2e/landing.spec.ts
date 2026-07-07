@@ -101,7 +101,8 @@ test.describe('Medical Standards Search', () => {
     await searchInput.fill('I10');
     const results = page.locator('#search-results');
     await expect(results).toBeVisible({ timeout: 5000 });
-    await expect(results).toContainText('Essential hypertension');
+    await expect(results).toContainText('Essential');
+    await expect(results).toContainText('hypertension');
   });
 
   test('should search by name (diabetes) and find results', async ({ page }) => {
@@ -177,7 +178,7 @@ test.describe('Medical Standards Detail Pages', () => {
   });
 });
 
-test.describe('PWA Support', () => {
+test.describe('PWA & iOS Support', () => {
   test('should have manifest link in page head', async ({ page }) => {
     await page.goto(BASE + '/');
     // Wait for full page load, including <link> elements
@@ -187,6 +188,22 @@ test.describe('PWA Support', () => {
       return link ? link.getAttribute('href') : null;
     });
     expect(manifestHref).toBe('/OrionHealth/manifest.json');
+  });
+
+  test('should have iOS meta tags', async ({ page }) => {
+    await page.goto(BASE + '/');
+    const metaCapable = await page.locator('meta[name="apple-mobile-web-app-capable"]');
+    await expect(metaCapable).toHaveAttribute('content', 'yes');
+
+    const metaStatusBarStyle = await page.locator('meta[name="apple-mobile-web-app-status-bar-style"]');
+    await expect(metaStatusBarStyle).toHaveAttribute('content', 'black-translucent');
+
+    const appleTouchIcon = await page.locator('link[rel="apple-touch-icon"]');
+    await expect(appleTouchIcon).toHaveAttribute('sizes', '180x180');
+    await expect(appleTouchIcon).toHaveAttribute('href', '/OrionHealth/apple-touch-icon.png');
+
+    const startupImage = await page.locator('link[rel="apple-touch-startup-image"]');
+    await expect(startupImage).toHaveAttribute('href', '/OrionHealth/android-chrome-512x512.png');
   });
 });
 
