@@ -12,18 +12,24 @@ enum AllergySeverity {
 class Allergy {
   Id id = Isar.autoIncrement;
 
+  @ignore
   String? allergen;
+
+  /// Encrypted version of allergen for persistence
+  String? encryptedAllergen;
 
   @Enumerated(EnumType.name)
   late AllergySeverity severity;
 
+  @ignore
   String? notes;
+
+  /// Encrypted version of notes for persistence
+  String? encryptedNotes;
 
   Allergy({
     this.id = Isar.autoIncrement,
-    this.allergen,
     this.severity = AllergySeverity.mild,
-    this.notes,
   });
 
   bool get isValid => allergen != null && allergen!.trim().isNotEmpty;
@@ -35,24 +41,35 @@ class Allergy {
           runtimeType == other.runtimeType &&
           id == other.id &&
           allergen == other.allergen &&
+          encryptedAllergen == other.encryptedAllergen &&
           severity == other.severity &&
-          notes == other.notes;
+          notes == other.notes &&
+          encryptedNotes == other.encryptedNotes;
 
   @override
   int get hashCode =>
-      id.hashCode ^ allergen.hashCode ^ severity.hashCode ^ notes.hashCode;
+      id.hashCode ^
+      allergen.hashCode ^
+      encryptedAllergen.hashCode ^
+      severity.hashCode ^
+      notes.hashCode ^
+      encryptedNotes.hashCode;
 
   Allergy copyWith({
     Id? id,
     String? allergen,
+    String? encryptedAllergen,
     AllergySeverity? severity,
     String? notes,
+    String? encryptedNotes,
   }) {
     return Allergy(
       id: id ?? this.id,
       allergen: allergen ?? this.allergen,
       severity: severity ?? this.severity,
       notes: notes ?? this.notes,
-    );
+    )
+      ..encryptedAllergen = encryptedAllergen ?? this.encryptedAllergen
+      ..encryptedNotes = encryptedNotes ?? this.encryptedNotes;
   }
 }
