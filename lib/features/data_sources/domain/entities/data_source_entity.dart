@@ -33,6 +33,7 @@ class DataSource extends Equatable {
   });
 
   DataSource copyWith({
+    String? id,
     String? name,
     String? description,
     DataSourceType? type,
@@ -41,7 +42,7 @@ class DataSource extends Equatable {
     String? errorMessage,
   }) {
     return DataSource(
-      id: id,
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       type: type ?? this.type,
