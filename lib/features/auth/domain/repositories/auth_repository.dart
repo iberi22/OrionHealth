@@ -13,4 +13,5 @@ abstract class AuthRepository {
   Future<void> saveSession(AuthSession session);
   Future<void> deleteSession();
   Future<AuthUser?> getAuthenticatedUser();
+  Future<void> setAuthenticatedUser(AuthUser? user);
 }

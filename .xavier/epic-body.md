@@ -5,9 +5,9 @@
 ### Investigacion Web: Checklist Final Validacion
 
 **PWA Lighthouse (Docs Site - Astro en GitHub Pages):**
-- Manifest: ✅ ya tiene name, short_name, start_url /OrionHealth/, display standalone, icons 192+512, maskable, shortcuts
-- Service Worker: ✅ ya tiene cache-first para JSON medical data, network-first para docs, navegacion offline
-- HTTPS: ✅ GitHub Pages automatico
+- Manifest: ? ya tiene name, short_name, start_url /OrionHealth/, display standalone, icons 192+512, maskable, shortcuts
+- Service Worker: ? ya tiene cache-first para JSON medical data, network-first para docs, navegacion offline
+- HTTPS: ? GitHub Pages automatico
 - Falta: Test real con Lighthouse (performance, accessibility, SEO, PWA scores)
 - Falta: iOS meta tags en index.html (apple-mobile-web-app-capable, apple-touch-icon)
 - Falta: Offline fallback page HTML personalizada
@@ -48,18 +48,18 @@
 7. **Golden Tests Coverage** - 0% en todas las features
 8. **Bundle Size** - No analizado para Flutter web build
 
-### Sprints Actualizados
+### Sprints Actualizados (2026-07-06)
 
-**Sprint 1: Unit Tests Domain Batch 1 (7 features)** - COMPLETADO (PR #1355 merged)
+**Sprint 1: Unit Tests Domain Batch 1 (7 features)** - ? COMPLETADO (PR #1355 merged)
 auth, network, local_agent, vitals, appointments, sync, health_data_import
 
-**Sprint 2: Unit Tests Domain Batch 2 (7 features)** - COMPLETADO (PR #1353 merged)
+**Sprint 2: Unit Tests Domain Batch 2 (7 features)** - ? COMPLETADO (PR #1353 merged)
 about, allergies, calendar_import, doctor_verification, email-citas, eps_connection, health_record
 
-**Sprint 3: Unit Tests Infrastructure Batch 1** - COMPLETADO
+**Sprint 3: Unit Tests Infrastructure Batch 1** - ? COMPLETADO (PR #1354 merged)
 health_sharing, home, medications, meditation, network_health, onboarding, reports
 
-**Sprint 4: Unit Tests Infrastructure + Widgets Batch 2** - EN PROGRESO (PR #1356 Draft)
+**Sprint 4: Unit Tests Infrastructure + Widgets Batch 2** - ?? EN PROGRESO (PR #1356 OPEN)
 settings, user_profile, voice_chat infrastructure + widget tests para auth, home, vitals, appointments
 
 **Sprint 5: Widget Tests Restantes**
@@ -99,3 +99,20 @@ widget tests para: network, local_agent, medications, health_sharing, eps_connec
 1. email-citas: **56.5%** - 0 unit/widget/infra tests, solo 1 integration test
 2. data_sources: **73.5%** - 1 unit test, 0 integration
 3. dashboard: **78.5%** - 0 integration tests
+
+### Issues Asignados a Jules (2026-07-06)
+**Sprint 5: Widget Tests**
+- #1357 Widget tests: dashboard stats card
+- #1358 Widget tests: email-citas list tile
+- #1359 Widget tests: data sources tile
+- #1360 Widget tests: network connection status
+- #1361 Widget tests: health sharing card
+
+**Sprint 6: PWA Audit & Fixes**
+- #1362 PWA: iOS meta tags y touch icons
+- #1363 PWA: offline fallback page
+- #1364 PWA: hero image para landing page
+
+**Sprint 7: Health & Security**
+- #1365 Security: migrar tokens a flutter_secure_storage
+- #1366 Security: session timeout 15 min
