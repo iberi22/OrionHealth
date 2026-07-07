@@ -330,4 +330,14 @@ class AppLocalizationsPcm extends AppLocalizations {
 
   @override
   String get logOut => 'Log out';
+
+  @override
+  String get sessionExpiredTitle => 'Session Expired';
+
+  @override
+  String get sessionExpiredMessage =>
+      'Your session has expired due to inactivity. Please log in again to protect your data.';
+
+  @override
+  String get loginButton => 'Log In';
 }

@@ -40,6 +40,10 @@ class AuthAuthenticated extends AuthState {
   List<Object?> get props => [sessionExpiry];
 }
 
+class AuthSessionExpired extends AuthState {
+  const AuthSessionExpired();
+}
+
 class AuthLoading extends AuthState {
   const AuthLoading();
 }
