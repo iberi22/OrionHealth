@@ -5,10 +5,14 @@ import 'package:cryptography/cryptography.dart';
 import 'package:argon2/argon2.dart';
 import 'package:injectable/injectable.dart';
 import 'package:hex/hex.dart';
+import '../../../../core/services/secure_storage_service.dart';
 
 @lazySingleton
 class EncryptionService {
+  final SecureStorageService _secureStorage;
   final _algorithm = AesGcm.with256bits();
+
+  EncryptionService(this._secureStorage);
 
   /// Hashes a PIN using Argon2id
   Future<String> hashPin(String pin, String salt) async {
@@ -31,9 +35,55 @@ class EncryptionService {
   }
 
   late String _sessionKey;
+  static const String _healthKeyNamespace = 'health_encryption';
+  static const String _healthKeyName = 'master_secret';
 
   Future<void> initialize() async {
     _sessionKey = 'orion_ble_session_static_key_v1';
+
+    // Ensure a master secret exists for health data encryption
+    if (!await _secureStorage.containsKey('$_healthKeyNamespace:$_healthKeyName')) {
+      final rand = Random.secure();
+      final secret = Uint8List.fromList(List<int>.generate(32, (i) => rand.nextInt(256)));
+      await _secureStorage.writeSecure(_healthKeyNamespace, _healthKeyName, HEX.encode(secret));
+    }
+  }
+
+  Future<String> _getHealthKey() async {
+    final masterSecretHex = await _secureStorage.readSecure(_healthKeyNamespace, _healthKeyName);
+    if (masterSecretHex == null) {
+      throw Exception('Encryption master secret not found');
+    }
+
+    // Derive a 256-bit key using Argon2id
+    final parameters = Argon2Parameters(
+      Argon2Parameters.ARGON2_id,
+      Uint8List.fromList(utf8.encode('orion_health_salt_v1')),
+      version: Argon2Parameters.ARGON2_VERSION_13,
+      iterations: 3,
+      memory: 65536,
+      lanes: 4,
+    );
+
+    final generator = Argon2BytesGenerator();
+    generator.init(parameters);
+
+    final result = Uint8List(32);
+    generator.generateBytesFromString(masterSecretHex, result);
+
+    return HEX.encode(result);
+  }
+
+  /// Encrypts health data using AES-256-GCM and a derived key.
+  Future<String> encryptHealthData(String data) async {
+    final key = await _getHealthKey();
+    return await encrypt(data, key) as String;
+  }
+
+  /// Decrypts health data using AES-256-GCM and a derived key.
+  Future<String> decryptHealthData(String encryptedData) async {
+    final key = await _getHealthKey();
+    return decrypt(encryptedData, key);
   }
 
   Future<Uint8List> encryptBytes(Uint8List plainBytes) async {

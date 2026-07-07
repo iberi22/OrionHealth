@@ -1,11 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
+import 'package:orionhealth_health/core/services/secure_storage_service.dart';
+
+class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 void main() {
   late EncryptionService encryptionService;
+  late MockSecureStorageService mockSecureStorage;
 
   setUp(() {
-    encryptionService = EncryptionService();
+    mockSecureStorage = MockSecureStorageService();
+    encryptionService = EncryptionService(mockSecureStorage);
   });
 
   group('EncryptionService', () {
@@ -37,6 +43,35 @@ void main() {
 
       expect(decrypted, equals(data));
       expect(encrypted, isNot(equals(data)));
+    });
+
+    test('health encryption should work correctly', () async {
+      const data = 'patient-sensitive-data';
+      const masterSecret = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
+      when(() => mockSecureStorage.readSecure(any(), any()))
+          .thenAnswer((_) async => masterSecret);
+
+      final encrypted = await encryptionService.encryptHealthData(data);
+      final decrypted = await encryptionService.decryptHealthData(encrypted);
+
+      expect(decrypted, equals(data));
+      expect(encrypted, isNot(equals(data)));
+
+      verify(() => mockSecureStorage.readSecure('health_encryption', 'master_secret')).called(2);
+    });
+
+    test('initialize should create master secret if not exists', () async {
+      when(() => mockSecureStorage.containsKey(any())).thenAnswer((_) async => false);
+      when(() => mockSecureStorage.writeSecure(any(), any(), any())).thenAnswer((_) async => {});
+
+      await encryptionService.initialize();
+
+      verify(() => mockSecureStorage.writeSecure(
+        'health_encryption',
+        'master_secret',
+        any(),
+      )).called(1);
     });
   });
 }
