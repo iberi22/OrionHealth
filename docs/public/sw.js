@@ -11,7 +11,8 @@ const STATIC_ASSETS = [
   '/OrionHealth/about',
   '/OrionHealth/privacy',
   '/OrionHealth/favicon.svg',
-  '/OrionHealth/manifest.json'
+  '/OrionHealth/manifest.json',
+  '/OrionHealth/offline.html'
 ];
 
 const MEDICAL_DATA = [
@@ -101,15 +102,17 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // HTML pages: network-first, fallback to cache
+  // HTML pages: network-first, fallback to cache, then to offline page
   if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match(event.request).then((cached) => {
-          return cached || caches.match('/OrionHealth/');
-        });
-      })
-    );
+    event.respondWith((async () => {
+      try {
+        return await fetch(event.request);
+      } catch (err) {
+        return await caches.match(event.request) ||
+               await caches.match('/OrionHealth/') ||
+               await caches.match('/OrionHealth/offline.html');
+      }
+    })());
     return;
   }
 
