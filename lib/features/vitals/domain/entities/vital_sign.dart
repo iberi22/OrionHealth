@@ -21,21 +21,26 @@ class VitalSign {
   @Enumerated(EnumType.name)
   late VitalSignType type;
 
+  @ignore
   late double value;
+
+  String? encryptedValue;
 
   late DateTime dateTime;
 
   String? unit;
   String? source;
+
+  @ignore
   String? notes;
+
+  String? encryptedNotes;
 
   VitalSign({
     required this.type,
-    required this.value,
     required this.dateTime,
     this.unit,
     this.source,
-    this.notes,
   });
 
   /// Formatted value string for display purposes.

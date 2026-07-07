@@ -19,14 +19,16 @@ class MedicalRecord {
   @Enumerated(EnumType.name)
   RecordType type;
 
+  @ignore
   String? summary;
+
+  String? encryptedSummary;
 
   List<MedicalAttachment> attachments;
 
   MedicalRecord({
     this.date,
     this.type = RecordType.other,
-    this.summary,
     this.attachments = const [],
   });
 
@@ -35,6 +37,7 @@ class MedicalRecord {
         'date': date?.toIso8601String(),
         'type': type.name,
         'summary': summary,
+        'encryptedSummary': encryptedSummary,
         'attachments': attachments.map((a) => a.toJson()).toList(),
       };
 
@@ -47,7 +50,9 @@ class MedicalRecord {
               ?.map((e) => MedicalAttachment.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-    )..id = json['id'] as int? ?? Isar.autoIncrement;
+    )
+      ..id = json['id'] as int? ?? Isar.autoIncrement
+      ..encryptedSummary = json['encryptedSummary'] as String?;
   }
 
   bool get isValid => attachments.every((a) => a.isValid);
@@ -61,11 +66,17 @@ class MedicalRecord {
           date == other.date &&
           type == other.type &&
           summary == other.summary &&
+          encryptedSummary == other.encryptedSummary &&
           _listEquals(attachments, other.attachments);
 
   @override
   int get hashCode =>
-      id.hashCode ^ date.hashCode ^ type.hashCode ^ summary.hashCode ^ _listHashCode(attachments);
+      id.hashCode ^
+      date.hashCode ^
+      type.hashCode ^
+      summary.hashCode ^
+      encryptedSummary.hashCode ^
+      _listHashCode(attachments);
 
   bool _listEquals(List<MedicalAttachment> a, List<MedicalAttachment> b) {
     if (a.length != b.length) return false;
