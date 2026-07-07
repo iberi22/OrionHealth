@@ -12,6 +12,7 @@ import 'package:orionhealth_health/features/auth/domain/usecases/login_usecase.d
 import 'package:orionhealth_health/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:orionhealth_health/features/auth/domain/usecases/validate_session_usecase.dart';
 import 'package:orionhealth_health/features/auth/domain/usecases/set_pin_usecase.dart';
+import 'package:orionhealth_health/features/auth/domain/usecases/check_session_timeout.dart';
 import 'package:orionhealth_health/features/auth/presentation/auth_gate.dart';
 import 'package:orionhealth_health/features/auth/presentation/login_page.dart';
 import 'package:orionhealth_health/features/auth/presentation/setup_pin_page.dart';
@@ -27,6 +28,7 @@ class MockLoginUseCase extends Mock implements LoginUseCase {}
 class MockLogoutUseCase extends Mock implements LogoutUseCase {}
 class MockValidateSessionUseCase extends Mock implements ValidateSessionUseCase {}
 class MockSetPinUseCase extends Mock implements SetPinUseCase {}
+class MockCheckSessionTimeoutUseCase extends Mock implements CheckSessionTimeoutUseCase {}
 
 class FakeAuthCredential extends Fake implements AuthCredential {}
 
@@ -39,6 +41,7 @@ void main() {
   late MockLogoutUseCase mockLogoutUseCase;
   late MockValidateSessionUseCase mockValidateSessionUseCase;
   late MockSetPinUseCase mockSetPinUseCase;
+  late MockCheckSessionTimeoutUseCase mockCheckSessionTimeoutUseCase;
 
   setUpAll(() {
     registerFallbackValue(FakeAuthCredential());
@@ -50,6 +53,7 @@ void main() {
     mockLogoutUseCase = MockLogoutUseCase();
     mockValidateSessionUseCase = MockValidateSessionUseCase();
     mockSetPinUseCase = MockSetPinUseCase();
+    mockCheckSessionTimeoutUseCase = MockCheckSessionTimeoutUseCase();
 
     getIt.registerLazySingleton<UserProfileRepository>(() => mockUserProfileRepository);
     getIt.registerLazySingleton<AuthRepository>(() => mockAuthRepository);
@@ -58,6 +62,7 @@ void main() {
     getIt.registerLazySingleton<LogoutUseCase>(() => mockLogoutUseCase);
     getIt.registerLazySingleton<ValidateSessionUseCase>(() => mockValidateSessionUseCase);
     getIt.registerLazySingleton<SetPinUseCase>(() => mockSetPinUseCase);
+    getIt.registerLazySingleton<CheckSessionTimeoutUseCase>(() => mockCheckSessionTimeoutUseCase);
 
     getIt.registerFactory<AuthCubit>(() => AuthCubit(
       mockAuthRepository,
@@ -66,6 +71,7 @@ void main() {
       mockLogoutUseCase,
       mockValidateSessionUseCase,
       mockSetPinUseCase,
+      mockCheckSessionTimeoutUseCase,
     ));
   });
 
@@ -81,10 +87,11 @@ void main() {
     reset(mockLogoutUseCase);
     reset(mockValidateSessionUseCase);
     reset(mockSetPinUseCase);
+    reset(mockCheckSessionTimeoutUseCase);
 
     // Default stubs
     when(() => mockLoginUseCase(any())).thenAnswer((_) async => null);
-    when(() => mockBiometricService.canCheckBiometrics()).thenAnswer((_) async => false);
+    when(() => mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => false);
   });
 
   Widget makeApp() {

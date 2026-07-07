@@ -8,6 +8,8 @@ import '../application/bloc/auth_cubit.dart';
 import '../application/bloc/auth_state.dart';
 import 'login_page.dart';
 import 'setup_pin_page.dart';
+import 'pages/session_expired_page.dart';
+import 'providers/auth_provider.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -75,9 +77,14 @@ class AuthenticatedGate extends StatelessWidget {
             // User has PIN/biometric set but is not authenticated
             return const LoginPage();
 
+          case AuthSessionExpired():
+            return const SessionExpiredPage();
+
           case AuthAuthenticated():
             // Properly authenticated via PIN or biometrics — grant access
-            return const MainNavigationPage();
+            return const SessionInteractionListener(
+              child: MainNavigationPage(),
+            );
         }
       },
     );

@@ -11,6 +11,7 @@ import 'package:orionhealth_health/features/auth/domain/usecases/login_usecase.d
 import 'package:orionhealth_health/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:orionhealth_health/features/auth/domain/usecases/validate_session_usecase.dart';
 import 'package:orionhealth_health/features/auth/domain/usecases/set_pin_usecase.dart';
+import 'package:orionhealth_health/features/auth/domain/usecases/check_session_timeout.dart';
 
 import 'auth_cubit_test.mocks.dart';
 
@@ -21,6 +22,7 @@ import 'auth_cubit_test.mocks.dart';
   LogoutUseCase,
   ValidateSessionUseCase,
   SetPinUseCase,
+  CheckSessionTimeoutUseCase,
 ])
 void main() {
   late AuthCubit authCubit;
@@ -30,6 +32,7 @@ void main() {
   late MockLogoutUseCase mockLogoutUseCase;
   late MockValidateSessionUseCase mockValidateSessionUseCase;
   late MockSetPinUseCase mockSetPinUseCase;
+  late MockCheckSessionTimeoutUseCase mockCheckSessionTimeoutUseCase;
 
   setUp(() {
     mockRepository = MockAuthRepository();
@@ -38,6 +41,7 @@ void main() {
     mockLogoutUseCase = MockLogoutUseCase();
     mockValidateSessionUseCase = MockValidateSessionUseCase();
     mockSetPinUseCase = MockSetPinUseCase();
+    mockCheckSessionTimeoutUseCase = MockCheckSessionTimeoutUseCase();
 
     authCubit = AuthCubit(
       mockRepository,
@@ -46,6 +50,7 @@ void main() {
       mockLogoutUseCase,
       mockValidateSessionUseCase,
       mockSetPinUseCase,
+      mockCheckSessionTimeoutUseCase,
     );
   });
 
@@ -59,6 +64,7 @@ void main() {
     });
 
     test('checkStatus should emit AuthNotSetup when no credentials exist', () async {
+      when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => false);
       when(mockValidateSessionUseCase()).thenAnswer((_) async => null);
       when(mockRepository.getCredentials()).thenAnswer((_) async => null);
 

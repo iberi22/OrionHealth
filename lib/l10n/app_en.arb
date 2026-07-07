@@ -110,5 +110,8 @@
   "changePassword": "Change Password",
   "profileSaved": "Profile saved",
   "saveChanges": "Save Changes",
-  "logOut": "Log Out"
+  "logOut": "Log Out",
+  "sessionExpiredTitle": "Session Expired",
+  "sessionExpiredMessage": "Your session has expired due to inactivity. Please log in again to protect your data.",
+  "loginButton": "Log In"
 }

@@ -110,5 +110,8 @@
   "changePassword": "Cambiar Contraseña",
   "profileSaved": "Perfil guardado",
   "saveChanges": "Guardar Cambios",
-  "logOut": "Cerrar Sesión"
+  "logOut": "Cerrar Sesión",
+  "sessionExpiredTitle": "Sesión Expirada",
+  "sessionExpiredMessage": "Tu sesión ha expirado por inactividad. Por favor, inicia sesión de nuevo para proteger tus datos.",
+  "loginButton": "Iniciar Sesión"
 }

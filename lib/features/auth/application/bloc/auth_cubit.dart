@@ -8,6 +8,8 @@ import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/validate_session_usecase.dart';
 import '../../domain/usecases/set_pin_usecase.dart';
+import '../../domain/usecases/check_session_timeout.dart';
+import '../../domain/entities/auth_session.dart';
 import '../../infrastructure/services/biometric_service.dart';
 import 'auth_state.dart';
 
@@ -19,8 +21,10 @@ class AuthCubit extends Cubit<AuthState> {
   final LogoutUseCase _logoutUseCase;
   final ValidateSessionUseCase _validateSessionUseCase;
   final SetPinUseCase _setPinUseCase;
+  final CheckSessionTimeoutUseCase _checkSessionTimeoutUseCase;
 
   Timer? _sessionTimer;
+  DateTime? _lastActivityReset;
 
   AuthCubit(
     this._repository,
@@ -29,9 +33,17 @@ class AuthCubit extends Cubit<AuthState> {
     this._logoutUseCase,
     this._validateSessionUseCase,
     this._setPinUseCase,
+    this._checkSessionTimeoutUseCase,
   ) : super(AuthInitial());
 
   Future<void> checkStatus() async {
+    final isExpired = await _checkSessionTimeoutUseCase();
+    if (isExpired) {
+      await _logoutUseCase();
+      emit(const AuthUnauthenticated());
+      return;
+    }
+
     final session = await _validateSessionUseCase();
     if (session != null) {
       _startSessionTimer(session.expiresAt);
@@ -122,16 +134,46 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthUnauthenticated());
   }
 
+  void resetInactivityTimer() async {
+    if (state is! AuthAuthenticated) return;
+
+    final now = DateTime.now();
+    final newExpiry = now.add(const Duration(minutes: 15));
+
+    // Always update local timer and state for UI responsiveness
+    _startSessionTimer(newExpiry);
+    emit(AuthAuthenticated(newExpiry));
+
+    // Throttle persistence to repository to every 30 seconds to avoid excessive I/O
+    if (_lastActivityReset == null ||
+        now.difference(_lastActivityReset!) > const Duration(seconds: 30)) {
+      _lastActivityReset = now;
+
+      final currentSession = await _repository.getSession();
+      if (currentSession != null) {
+        await _repository.saveSession(AuthSession(
+          token: currentSession.token,
+          expiresAt: newExpiry,
+        ));
+      }
+    }
+  }
+
   void _startSessionTimer(DateTime expiresAt) {
     _sessionTimer?.cancel();
     final duration = expiresAt.difference(DateTime.now());
     if (duration.isNegative) {
-      logout();
+      _handleSessionTimeout();
     } else {
       _sessionTimer = Timer(duration, () {
-        logout();
+        _handleSessionTimeout();
       });
     }
+  }
+
+  Future<void> _handleSessionTimeout() async {
+    await _logoutUseCase();
+    emit(const AuthSessionExpired());
   }
 
   @override
