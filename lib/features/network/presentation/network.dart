@@ -13,4 +13,5 @@ export '../network_health/presentation/pages/network_health_page.dart';
 export '../network_health/presentation/widgets/network_stats_card.dart';
 export '../network_health/presentation/widgets/node_list_item.dart';
 export 'pages/network_overview_page.dart';
+export 'widgets/connection_status_badge.dart';
 export 'widgets/peer_list_item.dart';

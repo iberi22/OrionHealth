@@ -1,7 +1,7 @@
 ﻿{
     "totalFeatures":  26,
     "partialCount":  26,
-    "timestamp":  "2026-07-06 03:25:49",
+    "timestamp":  "2026-07-07 00:00:07",
     "okCount":  0,
     "features":  [
                      {
@@ -296,7 +296,7 @@
                          "hasApp":  true,
                          "score":  81,
                          "domainTests":  7,
-                         "widgetTests":  4,
+                         "widgetTests":  6,
                          "layerCount":  4,
                          "integrationTests":  1,
                          "infraTests":  2,
@@ -305,7 +305,7 @@
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  1,
-                         "totalTests":  24,
+                         "totalTests":  28,
                          "hasPres":  true
                      },
                      {
