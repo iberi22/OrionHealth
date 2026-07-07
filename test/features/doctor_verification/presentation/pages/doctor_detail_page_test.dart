@@ -83,14 +83,14 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest(verifiedDoctor));
       await tester.pump();
 
-      expect(find.text('Verificado'), findsOneWidget);
+      expect(find.text('MÉDICO VERIFICADO'), findsOneWidget);
     });
 
     testWidgets('shows unverified status correctly', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest(unverifiedDoctor));
       await tester.pump();
 
-      expect(find.text('Sin verificar'), findsOneWidget);
+      expect(find.text('PENDIENTE DE VERIFICACIÓN'), findsOneWidget);
     });
 
     testWidgets('shows verify button only for unverified doctor', (tester) async {
