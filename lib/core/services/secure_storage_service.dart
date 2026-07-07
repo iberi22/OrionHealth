@@ -4,6 +4,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:crypto/crypto.dart' show sha256;
+import 'package:injectable/injectable.dart';
 
 /// Abstract secure storage service for sensitive data.
 ///
@@ -33,6 +34,9 @@ abstract class SecureStorageService {
   /// Read a value previously stored via [writeSecure].
   Future<String?> readSecure(String namespace, String key);
 
+  /// Delete a value previously stored via [writeSecure].
+  Future<void> deleteSecure(String namespace, String key);
+
   /// Store a JSON-serializable object.
   Future<void> writeJson(String key, Map<String, dynamic> value);
 
@@ -41,20 +45,23 @@ abstract class SecureStorageService {
 }
 
 /// Default implementation backed by [FlutterSecureStorage].
+@LazySingleton(as: SecureStorageService)
 class SecureStorageServiceImpl implements SecureStorageService {
   final FlutterSecureStorage _storage;
   final String _appKeySeed;
 
   SecureStorageServiceImpl({
     FlutterSecureStorage? storage,
-    String appKeySeed = 'orionhealth_v1',
-  })  : _storage = storage ?? const FlutterSecureStorage(
-          aOptions: AndroidOptions(),
-          iOptions: IOSOptions(
-            accessibility: KeychainAccessibility.first_unlock_this_device,
-          ),
-        ),
-        _appKeySeed = appKeySeed;
+  })  : _storage = storage ??
+            const FlutterSecureStorage(
+              aOptions: AndroidOptions(
+                encryptedSharedPreferences: true,
+              ),
+              iOptions: IOSOptions(
+                accessibility: KeychainAccessibility.first_unlock_this_device,
+              ),
+            ),
+        _appKeySeed = 'orionhealth_v1';
 
   // ── Basic operations ──────────────────────────────────────
 
@@ -95,6 +102,12 @@ class SecureStorageServiceImpl implements SecureStorageService {
   Future<String?> readSecure(String namespace, String key) async {
     final derivedKey = _deriveKey(namespace, key);
     return await _storage.read(key: derivedKey);
+  }
+
+  @override
+  Future<void> deleteSecure(String namespace, String key) async {
+    final derivedKey = _deriveKey(namespace, key);
+    await _storage.delete(key: derivedKey);
   }
 
   // ── JSON helpers ──────────────────────────────────────────
