@@ -30,11 +30,6 @@ const isRTL = lang === "ar";
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={description}>
 
-  <!-- Theme Color for Mobile -->
-  <meta name="theme-color" content="#121212">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
   <!-- Fira Code Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -335,15 +330,14 @@ const isRTL = lang === "ar";
     }
   </style>
 
-  <!-- PWA Manifest -->
+  <!-- PWA & iOS Specific -->
   <link rel="manifest" href="/OrionHealth/manifest.json">
+  <meta name="theme-color" content="#121212">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="OrionHealth">
-  <link rel="apple-touch-icon" href="/OrionHealth/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/OrionHealth/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="/OrionHealth/favicon.svg">
-
-  <!-- Splash Screens for iOS -->
   <link rel="apple-touch-startup-image" href="/OrionHealth/android-chrome-512x512.png">
 
   <!-- Plausible Analytics -->

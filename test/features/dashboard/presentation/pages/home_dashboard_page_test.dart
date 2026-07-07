@@ -90,7 +90,16 @@ void main() {
     await tester.pumpWidget(createWidgetUnderTest(DashboardLoaded(stats: stats, activities: activities)));
     await tester.pumpAndSettle();
 
+    expect(find.byKey(const Key('dashboard_stats_card')), findsOneWidget);
+
     expect(find.text('ORION HEALTH'), findsOneWidget);
+
+    expect(find.text('RESUMEN DE SALUD'), findsOneWidget);
+    expect(find.text('2'), findsOneWidget);
+    expect(find.text('1'), findsOneWidget);
+
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -1000));
+    await tester.pumpAndSettle();
 
     expect(find.text('Vital check activity'), findsOneWidget);
     expect(find.text('Medication activity'), findsOneWidget);
@@ -109,6 +118,9 @@ void main() {
     final stats = DashboardStats(totalMedications: 0, reportsCount: 0);
 
     await tester.pumpWidget(createWidgetUnderTest(DashboardLoaded(stats: stats, activities: const [])));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -1000));
     await tester.pumpAndSettle();
 
     expect(find.text('No hay actividad reciente'), findsOneWidget);
