@@ -4,11 +4,12 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medical_standards/medical_standards.dart';
+import '../network/http_client.dart';
 
 @module
 abstract class NetworkModule {
   @lazySingleton
-  Dio get dio => Dio();
+  Dio get dio => HttpClientFactory.createDio();
 
   @lazySingleton
   MedicalContextProvider get medicalContextProvider => MedicalContextProvider();
