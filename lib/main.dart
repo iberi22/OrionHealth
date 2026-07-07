@@ -24,6 +24,7 @@ import 'features/onboarding/presentation/pages/onboarding_page.dart';
 import 'features/onboarding/application/onboarding_cubit.dart';
 import 'features/sync/domain/sync_repository.dart';
 import 'features/home/presentation/pages/main_navigation_page.dart';
+import 'features/auth/presentation/auth_gate.dart';
 
 // ─────────────────────────────────────────────
 // BACKGROUND SYNC
@@ -187,7 +188,7 @@ class _StartupRouter extends StatelessWidget {
           );
         }
         if (snap.data == true) {
-          return const MainNavigationPage();
+          return const AuthGate();
         }
         return BlocProvider(
           create: (_) => getIt<OnboardingCubit>(),
