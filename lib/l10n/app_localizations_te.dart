@@ -330,4 +330,14 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get logOut => 'లాగ్ అవుట్';
+
+  @override
+  String get sessionExpiredTitle => 'Session Expired';
+
+  @override
+  String get sessionExpiredMessage =>
+      'Your session has expired due to inactivity. Please log in again to protect your data.';
+
+  @override
+  String get loginButton => 'Log In';
 }
