@@ -7,7 +7,7 @@ interface Props {
 
 const {
 	title,
-	description = "Privacy-first health assistant powered by local AI",
+	description = "Your AI-powered health companion",
 	lang = "en",
 } = Astro.props;
 const isRTL = lang === "ar";
@@ -18,17 +18,18 @@ const isRTL = lang === "ar";
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>{title} | OrionHealth</title>
+  <title>OrionHealth | {title}</title>
   <meta name="description" content={description}>
 
   <!-- SEO -->
-  <meta property="og:title" content={title}>
+  <meta property="og:title" content="OrionHealth">
   <meta property="og:description" content={description}>
   <meta property="og:type" content="website">
-  <meta property="og:image" content="/og-image.png">
+  <meta property="og:image" content="/OrionHealth/hero-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content={title}>
+  <meta name="twitter:title" content="OrionHealth">
   <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content="/OrionHealth/hero-image.png">
 
   <!-- Fira Code Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
