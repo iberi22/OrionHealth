@@ -281,6 +281,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i189;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i251;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
+    as _i71;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+s
     as _i70;
 import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i71;
@@ -488,7 +491,8 @@ import '../services/aicore_service.dart' as _i3;
 import '../services/asr/asr_service.dart' as _i11;
 import '../services/audio/audio_player_service.dart' as _i12;
 import '../services/audio/audio_recorder_service.dart' as _i14;
-import '../services/device_capability_service.dart' as _i29;
+import '../services/device_capability_service.dart' as _i30;
+s
 import '../services/privacy_anonymizer.dart' as _i102;
 import '../services/secure_storage_service.dart' as _i113;
 import 'database_module.dart' as _i274;
@@ -497,9 +501,9 @@ import 'memory_module.dart' as _i273;
 import 'network_module.dart' as _i272;
 import 'service_module.dart' as _i271;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -628,16 +632,18 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i68.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i69.MedicalKnowledgeRepository>(
-      () => _i70.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
-    );
-    gh.factory<_i69.MedicalKnowledgeRepository>(
-      () => _i71.JsonMedicalKnowledgeRepository(),
+      () => _i70.JsonMedicalKnowledgeRepository(),
+s
       registerFor: {
         _desktop,
         _test,
       },
     );
+    gh.factory<_i69.MedicalKnowledgeRepository>(
+      () => _i71.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
+    );
+s
     gh.lazySingleton<_i72.MedicalScraperService>(
         () => _i73.MedicalScraperServiceImpl(
               gh<_i31.Dio>(),
@@ -906,7 +912,8 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i191.LlmSettingsCubit>(() => _i191.LlmSettingsCubit(
           gh<_i118.SettingsRepository>(),
-          gh<_i30.DeviceCapabilityService>(),
+          gh<_i29.DeviceCapabilityService>(),
+s
           gh<_i63.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.factory<_i192.LoginUseCase>(() => _i192.LoginUseCase(
