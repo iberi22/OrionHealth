@@ -1,4 +1,4 @@
-import 'package:isar/isar.dart';
+﻿import 'package:isar/isar.dart';
 
 part 'allergy.g.dart';
 
@@ -75,3 +75,4 @@ class Allergy {
       ..encryptedNotes = encryptedNotes ?? this.encryptedNotes;
   }
 }
+

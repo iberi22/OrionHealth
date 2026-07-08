@@ -2,6 +2,8 @@
 // Cache-first for medical standards data, network-first for docs
 
 const CACHE_NAME = 'orionhealth-v1.1.0';
+const OFFLINE_URL = '/OrionHealth/offline.html';
+
 const STATIC_ASSETS = [
   '/OrionHealth/',
   '/OrionHealth/dashboard',
@@ -12,7 +14,7 @@ const STATIC_ASSETS = [
   '/OrionHealth/privacy',
   '/OrionHealth/favicon.svg',
   '/OrionHealth/manifest.json',
-  '/OrionHealth/offline.html'
+  OFFLINE_URL
 ];
 
 const MEDICAL_DATA = [
@@ -29,9 +31,11 @@ const MEDICAL_DATA = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll([...STATIC_ASSETS, ...MEDICAL_DATA]).catch((err) => {
-        console.error('SW: Cache install error', err);
-      });
+      // Use a more resilient addAll (continue if some fail, but log them)
+      const allAssets = [...STATIC_ASSETS, ...MEDICAL_DATA];
+      return Promise.allSettled(
+        allAssets.map(url => cache.add(url).catch(err => console.error(`SW: Failed to cache ${url}`, err)))
+      );
     })
   );
   self.skipWaiting();
@@ -106,17 +110,28 @@ self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith((async () => {
       try {
-        return await fetch(event.request);
+        // Always try the network first for navigation
+        const networkResponse = await fetch(event.request);
+        return networkResponse;
       } catch (err) {
-        return await caches.match(event.request) ||
-               await caches.match('/OrionHealth/') ||
-               await caches.match('/OrionHealth/offline.html');
+        // If network fails, try the cache
+        const cachedResponse = await caches.match(event.request);
+        if (cachedResponse) return cachedResponse;
+
+        // Fallback to home if root request failed
+        if (url.pathname === '/OrionHealth/' || url.pathname === '/OrionHealth') {
+           const homeCached = await caches.match('/OrionHealth/');
+           if (homeCached) return homeCached;
+        }
+
+        // Final fallback: the custom offline page
+        return caches.match(OFFLINE_URL);
       }
     })());
     return;
   }
 
-  // Everything else: network-only
+  // Everything else: network-only with generic cache fallback
   event.respondWith(fetch(event.request).catch(() => {
     return caches.match(event.request);
   }));

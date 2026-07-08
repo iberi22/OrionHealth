@@ -283,7 +283,10 @@ import '../../features/local_agent/infrastructure/rag_llm_service.dart'
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
     as _i71;
 import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+s
     as _i70;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i71;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i131;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -422,7 +425,7 @@ import '../../features/settings/application/llm_settings_cubit.dart' as _i191;
 import '../../features/settings/domain/repositories/settings_repository.dart'
     as _i118;
 import '../../features/settings/domain/services/device_capability_service.dart'
-    as _i29;
+    as _i30;
 import '../../features/settings/infrastructure/datasources/settings_local_datasource.dart'
     as _i117;
 import '../../features/settings/infrastructure/repositories/settings_repository_impl.dart'
@@ -489,6 +492,7 @@ import '../services/asr/asr_service.dart' as _i11;
 import '../services/audio/audio_player_service.dart' as _i12;
 import '../services/audio/audio_recorder_service.dart' as _i14;
 import '../services/device_capability_service.dart' as _i30;
+s
 import '../services/privacy_anonymizer.dart' as _i102;
 import '../services/secure_storage_service.dart' as _i113;
 import 'database_module.dart' as _i274;
@@ -629,6 +633,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => networkModule.medicalContextProvider);
     gh.factory<_i69.MedicalKnowledgeRepository>(
       () => _i70.JsonMedicalKnowledgeRepository(),
+s
       registerFor: {
         _desktop,
         _test,
@@ -638,6 +643,7 @@ extension GetItInjectableX on _i1.GetIt {
       () => _i71.AssetMedicalKnowledgeRepository(),
       registerFor: {_mobile},
     );
+s
     gh.lazySingleton<_i72.MedicalScraperService>(
         () => _i73.MedicalScraperServiceImpl(
               gh<_i31.Dio>(),
@@ -907,6 +913,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i191.LlmSettingsCubit>(() => _i191.LlmSettingsCubit(
           gh<_i118.SettingsRepository>(),
           gh<_i29.DeviceCapabilityService>(),
+s
           gh<_i63.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.factory<_i192.LoginUseCase>(() => _i192.LoginUseCase(

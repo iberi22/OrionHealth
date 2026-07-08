@@ -26,7 +26,7 @@ class MedicalRecord {
 
   List<MedicalAttachment> attachments;
 
-  MedicalRecord({
+    MedicalRecord({
     this.date,
     this.type = RecordType.other,
     this.summary,

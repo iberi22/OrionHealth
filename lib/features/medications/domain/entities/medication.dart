@@ -39,15 +39,17 @@ class Medication {
 
   String? encryptedGenericName;
 
-  Medication({
+    Medication({
     this.id = Isar.autoIncrement,
-    this.name = '',
     required this.startDate,
     this.isActive = true,
+    this.name = 'Unknown',
+    this.dosage,
+    this.frequency,
+    this.notes,
+    this.genericName,
     this.rxNormCode,
     this.drugClass,
-    this.genericName,
-    this.notes,
   });
 
   @override
