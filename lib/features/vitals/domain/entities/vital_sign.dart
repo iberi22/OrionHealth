@@ -36,11 +36,13 @@ class VitalSign {
 
   String? encryptedNotes;
 
-  VitalSign({
+    VitalSign({
     required this.type,
     required this.dateTime,
+    this.value = 0.0,
     this.unit,
     this.source,
+    this.notes,
   });
 
   /// Formatted value string for display purposes.

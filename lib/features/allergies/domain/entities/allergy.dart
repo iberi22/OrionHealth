@@ -1,4 +1,4 @@
-import 'package:isar/isar.dart';
+﻿import 'package:isar/isar.dart';
 
 part 'allergy.g.dart';
 
@@ -29,7 +29,9 @@ class Allergy {
 
   Allergy({
     this.id = Isar.autoIncrement,
+    this.allergen,
     this.severity = AllergySeverity.mild,
+    this.notes,
   });
 
   bool get isValid => allergen != null && allergen!.trim().isNotEmpty;
@@ -73,3 +75,4 @@ class Allergy {
       ..encryptedNotes = encryptedNotes ?? this.encryptedNotes;
   }
 }
+

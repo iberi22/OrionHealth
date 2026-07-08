@@ -57,12 +57,11 @@ class IsarMedicationRepository implements MedicationRepository {
     }
 
     // 2. Search in Isar cache (previously searched medications)
-    final cachedResults = await _isar.medications
-        .filter()
-        .nameContains(query, caseSensitive: false)
-        .or()
-        .genericNameContains(query, caseSensitive: false)
-        .findAll();
+    final allCached = await _isar.medications.where().findAll();
+    final cachedResults = allCached.where((m) =>
+      m.name.toLowerCase().contains(query.toLowerCase()) ||
+      (m.genericName?.toLowerCase().contains(query.toLowerCase()) ?? false)
+    ).toList();
 
     for (var m in cachedResults) {
       if (m.rxNormCode != null) mergedResults[m.rxNormCode!] = m;
