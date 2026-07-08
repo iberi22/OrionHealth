@@ -50,10 +50,12 @@ class CitasListTile extends StatelessWidget {
                 style: const TextStyle(color: Colors.white70),
               ),
               const SizedBox(height: 4),
-              Row(
+              Wrap(
+                spacing: 4,
+                runSpacing: 2,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   const Icon(Icons.access_time, size: 14, color: CyberTheme.secondary),
-                  const SizedBox(width: 4),
                   Text(
                     DateFormat('dd MMM yyyy, hh:mm a', 'es').format(appointment.dateTime),
                     style: const TextStyle(color: CyberTheme.secondary, fontSize: 12),
