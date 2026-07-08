@@ -54,6 +54,10 @@ const isRTL = lang === "ar";
       --color-bone-dark: #E8E8C0;
     }
 
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     * {
       font-family: 'Fira Code', monospace;
     }
@@ -138,6 +142,12 @@ const isRTL = lang === "ar";
     body {
       background-color: var(--color-background);
       color: var(--color-foreground);
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+      overflow-wrap: break-word;
     }
 
     /* Noise Overlay - Cyber-Minimalism */
