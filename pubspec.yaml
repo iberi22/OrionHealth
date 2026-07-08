@@ -52,7 +52,7 @@ dependencies:
   dio: ^5.7.0
   flutter_secure_storage: ^10.3.1
   flutter_markdown: ^0.7.7+1
-  equatable: ^2.0.7
+  equatable: ^2.1.0
   isar_agent_memory:
     path: packages/isar_agent_memory
   medical_standards:
