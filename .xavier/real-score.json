@@ -1,7 +1,7 @@
 ﻿{
     "totalFeatures":  26,
     "partialCount":  26,
-    "timestamp":  "2026-07-07 22:20:38",
+    "timestamp":  "2026-07-08 01:15:39",
     "okCount":  0,
     "features":  [
                      {
@@ -390,18 +390,18 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  56.5,
-                         "domainTests":  0,
-                         "widgetTests":  0,
+                         "score":  81,
+                         "domainTests":  7,
+                         "widgetTests":  8,
                          "layerCount":  4,
                          "integrationTests":  1,
-                         "infraTests":  0,
+                         "infraTests":  3,
                          "name":  "email-citas",
                          "hasDomain":  true,
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  0,
-                         "totalTests":  1,
+                         "totalTests":  31,
                          "hasPres":  true
                      },
                      {
@@ -422,5 +422,5 @@
                      }
                  ],
     "lowCount":  0,
-    "overallScore":  80.1
+    "overallScore":  81
 }
