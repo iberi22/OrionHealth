@@ -29,6 +29,7 @@ class MedicalRecord {
   MedicalRecord({
     this.date,
     this.type = RecordType.other,
+    this.summary,
     this.attachments = const [],
   });
 

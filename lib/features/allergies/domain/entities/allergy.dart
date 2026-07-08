@@ -29,7 +29,9 @@ class Allergy {
 
   Allergy({
     this.id = Isar.autoIncrement,
+    this.allergen,
     this.severity = AllergySeverity.mild,
+    this.notes,
   });
 
   bool get isValid => allergen != null && allergen!.trim().isNotEmpty;
