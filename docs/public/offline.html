@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -17,6 +17,7 @@
       --color-bg: #0A0A0A;
       --color-card: rgba(255, 255, 255, 0.03);
       --color-text: #F5F5DC;
+      --color-error: #FF4B4B;
     }
 
     * {
@@ -38,34 +39,21 @@
       padding: 20px;
     }
 
-    /* Cyber Background Effects */
+    /* Cyber Background */
     .bg-effects {
       position: fixed;
       inset: 0;
       z-index: -1;
-      overflow: hidden;
     }
 
     .grid {
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(0, 255, 133, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 133, 0.05) 1px, transparent 1px);
-      background-size: 50px 50px;
-      transform: perspective(500px) rotateX(60deg) translateY(-100px);
-      mask-image: linear-gradient(to bottom, transparent, black);
-    }
-
-    .glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(0, 255, 133, 0.1) 0%, transparent 70%);
-      filter: blur(50px);
+        linear-gradient(rgba(0, 255, 133, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 133, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at center, black, transparent 80%);
     }
 
     .container {
@@ -80,123 +68,150 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 32px;
-      padding: 40px;
+      padding: 48px 32px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       position: relative;
-      overflow: hidden;
     }
 
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
-    }
-
-    .logo-container {
-      margin-bottom: 30px;
+    .logo {
       display: inline-flex;
       align-items: center;
       gap: 12px;
+      margin-bottom: 40px;
+      text-decoration: none;
+      color: inherit;
     }
 
     .logo-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(to bottom right, var(--color-accent), var(--color-secondary));
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(0, 255, 133, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 255, 133, 0.2);
     }
 
     .logo-text {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.02em;
+      text-transform: uppercase;
     }
 
     .logo-text span {
       color: var(--color-accent);
     }
 
-    .status-icon {
-      margin: 20px 0;
-      color: #FF4B4B;
-      animation: pulse 2s infinite;
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 75, 75, 0.1);
+      color: var(--color-error);
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 75, 75, 0.2);
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.7; }
-      100% { transform: scale(1); opacity: 1; }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-error);
+      border-radius: 50%;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
 
     h1 {
-      font-size: 28px;
-      margin-bottom: 12px;
+      font-size: 24px;
+      margin-bottom: 16px;
       font-weight: 700;
     }
 
-    .description {
-      font-size: 16px;
+    .message {
+      font-size: 15px;
       color: rgba(245, 245, 220, 0.6);
       line-height: 1.6;
-      margin-bottom: 30px;
+      margin-bottom: 32px;
     }
 
-    .lang-section {
-      margin-bottom: 25px;
+    .lang-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
     }
 
-    .lang-section:last-of-type {
-      margin-bottom: 40px;
+    .lang-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(245, 245, 220, 0.4);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .lang-btn.active {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      background: rgba(0, 255, 133, 0.05);
     }
 
     .btn {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 14px 28px;
-      border-radius: 16px;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
       width: 100%;
-      margin-bottom: 12px;
+      padding: 16px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
       border: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .btn-primary {
       background: var(--color-accent);
       color: #0A0A0A;
-      box-shadow: 0 4px 15px rgba(0, 255, 133, 0.2);
+      margin-bottom: 12px;
+      box-shadow: 0 4px 15px rgba(0, 255, 133, 0.1);
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 255, 133, 0.4);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(0, 255, 133, 0.3);
     }
 
     .btn-secondary {
       background: rgba(255, 255, 255, 0.05);
       color: var(--color-text);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
     }
 
     .shake {
-      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+      animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
     }
 
     @keyframes shake {
@@ -207,90 +222,115 @@
     }
 
     .footer {
-      margin-top: 30px;
-      font-size: 12px;
-      color: rgba(245, 245, 220, 0.3);
+      margin-top: 32px;
+      font-size: 11px;
+      color: rgba(245, 245, 220, 0.2);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.2em;
     }
   </style>
 </head>
 <body>
   <div class="bg-effects">
     <div class="grid"></div>
-    <div class="glow"></div>
   </div>
 
   <div class="container">
     <div class="card" id="offline-card">
-      <div class="logo-container">
+      <a href="/OrionHealth/" class="logo">
         <div class="logo-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </div>
         <div class="logo-text">ORION<span>HEALTH</span></div>
-      </div>
-
-      <div class="status-icon">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="1" y1="1" x2="23" y2="23"></line>
-          <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
-          <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
-          <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
-          <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
-          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
-          <line x1="12" y1="20" x2="12.01" y2="20"></line>
-        </svg>
-      </div>
-
-      <div class="lang-section">
-        <h1>You're Offline</h1>
-        <p class="description">It seems you've lost your connection. This page isn't available offline yet.</p>
-      </div>
-
-      <div class="lang-section">
-        <h1>Estás Sin Conexión</h1>
-        <p class="description">Parece que has perdido la conexión. Esta página aún no está disponible sin internet.</p>
-      </div>
-
-      <button onclick="retryConnection()" class="btn btn-primary" id="retry-btn">
-        Retry / Reintentar
-      </button>
-      <a href="/OrionHealth/" class="btn btn-secondary">
-        Go to Home / Ir al Inicio
       </a>
 
-      <div class="footer">OrionHealth v1.1.0 • System Offline</div>
+      <div class="status-badge">
+        <div class="status-dot"></div>
+        Offline Mode
+      </div>
+
+      <div class="content" id="content-en">
+        <h1>No Connection</h1>
+        <p class="message">
+          You are currently offline. The page you're looking for hasn't been cached yet for offline use.
+        </p>
+      </div>
+
+      <div class="content" id="content-es" style="display: none;">
+        <h1>Sin Conexión</h1>
+        <p class="message">
+          Te encuentras sin conexión. La página que buscas aún no ha sido guardada para uso offline.
+        </p>
+      </div>
+
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+      </div>
+
+      <button onclick="retry()" class="btn btn-primary" id="retry-btn">
+        <span id="btn-text-en">Retry Connection</span>
+        <span id="btn-text-es" style="display: none;">Reintentar Conexión</span>
+      </button>
+
+      <a href="/OrionHealth/" class="btn btn-secondary">
+        <span id="home-text-en">Back to Home</span>
+        <span id="home-text-es" style="display: none;">Volver al Inicio</span>
+      </a>
+
+      <div class="footer">OrionHealth Platform • v1.1.0</div>
     </div>
   </div>
 
   <script>
-    function retryConnection() {
-      const btn = document.getElementById('retry-btn');
+    let currentLang = 'en';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('content-en').style.display = lang === 'en' ? 'block' : 'none';
+      document.getElementById('content-es').style.display = lang === 'es' ? 'block' : 'none';
+
+      document.getElementById('btn-text-en').style.display = lang === 'en' ? 'inline' : 'none';
+      document.getElementById('btn-text-es').style.display = lang === 'es' ? 'inline' : 'none';
+
+      document.getElementById('home-text-en').style.display = lang === 'en' ? 'inline' : 'none';
+      document.getElementById('home-text-es').style.display = lang === 'es' ? 'inline' : 'none';
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+      });
+    }
+
+    function retry() {
       const card = document.getElementById('offline-card');
+      const btn = document.getElementById('retry-btn');
 
       if (navigator.onLine) {
         window.location.reload();
       } else {
         card.classList.remove('shake');
-        void card.offsetWidth; // trigger reflow
+        void card.offsetWidth;
         card.classList.add('shake');
 
-        btn.textContent = "Still Offline / Sigue Sin Conexión";
-        btn.style.background = "#FF4B4B";
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = currentLang === 'en' ? 'Still Offline' : 'Sigue sin conexión';
+        btn.style.background = 'var(--color-error)';
 
         setTimeout(() => {
-          btn.textContent = "Retry / Reintentar";
-          btn.style.background = "";
+          btn.innerHTML = originalContent;
+          btn.style.background = '';
         }, 2000);
       }
     }
 
-    // Listen for online event to automatically reload
-    window.addEventListener('online', () => {
-      window.location.reload();
-    });
+    window.addEventListener('online', () => window.location.reload());
+
+    // Auto-detect browser language
+    if (navigator.language.startsWith('es')) {
+      setLang('es');
+    }
   </script>
 </body>
 </html>
