@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:get_it/get_it.dart';
@@ -31,12 +31,15 @@ void main() {
     testWidgets('Vitals Page - Loading State', (tester) async {
       setupGoldenTest(tester);
 
-      // We return a future that doesn't complete immediately to show loading
-      when(() => mockRepository.getLatestVitals()).thenAnswer((_) => Completer<Map<VitalSignType, VitalSign?>>().future);
-      when(() => mockRepository.getAllVitalSigns()).thenAnswer((_) => Completer<List<VitalSign>>().future);
+      when(() => mockRepository.getLatestVitals()).thenAnswer(
+        (_) => Completer<Map<VitalSignType, VitalSign?>>().future,
+      );
+      when(() => mockRepository.getAllVitalSigns()).thenAnswer(
+        (_) => Completer<List<VitalSign>>().future,
+      );
 
       await tester.pumpWidget(wrapWithMaterial(const VitalsPage()));
-      await tester.pump(); // Start the loading
+      await tester.pump();
 
       await expectLater(
         find.byType(VitalsPage),
@@ -64,7 +67,7 @@ void main() {
     testWidgets('Vitals Page - Loaded State', (tester) async {
       setupGoldenTest(tester);
 
-      final date = DateTime(2025, 1, 1, 10, 0);
+      final date = DateTime(2026, 7, 8, 10, 0);
       final latestVitals = {
         VitalSignType.heartRate: VitalSign(
           type: VitalSignType.heartRate,
@@ -102,12 +105,12 @@ void main() {
         VitalSign(
           type: VitalSignType.temperature,
           value: 36.6,
-          dateTime: date,
+          dateTime: date.subtract(const Duration(hours: 2)),
         ),
         VitalSign(
           type: VitalSignType.spO2,
           value: 98,
-          dateTime: date,
+          dateTime: date.subtract(const Duration(hours: 1)),
         ),
         VitalSign(
           type: VitalSignType.bloodPressureSystolic,
