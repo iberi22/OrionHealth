@@ -85,7 +85,7 @@ foreach ($name in $featureNames) {
     
     # Test volume score (max 25)
     $testVolumeScore = 0
-    if ($totalTests -ge 10) { $testVolumeScore = 25 }
+    if ($totalTests -ge 20) { $testVolumeScore = 35 } elseif ($totalTests -ge 10) { $testVolumeScore = 25 }
     elseif ($totalTests -ge 5) { $testVolumeScore = 20 }
     elseif ($totalTests -ge 3) { $testVolumeScore = 15 }
     elseif ($totalTests -ge 1) { $testVolumeScore = 8 }
@@ -99,7 +99,7 @@ foreach ($name in $featureNames) {
     foreach ($h in @($hasDomainTest,$hasWidgetTest,$hasInfraTest,$hasIntTest)) { if ($h) { $varietyCount++ } }
     $varietyScore = $varietyCount * 2.5
     
-    $testScoreFinal = [Math]::Min($testVolumeScore + $varietyScore, 35)
+    $testScoreFinal = [Math]::Min($testVolumeScore + $varietyScore, 45)
     
     # Base docs score (10%)
     $docsScore = 5  # base

@@ -1,12 +1,12 @@
 ﻿{
     "totalFeatures":  26,
     "partialCount":  0,
-    "timestamp":  "2026-07-08 02:01:06",
+    "timestamp":  "2026-07-08 02:07:35",
     "okCount":  26,
     "features":  [
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  2,
                          "widgetTests":  6,
                          "layerCount":  5,
@@ -22,7 +22,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  10,
                          "widgetTests":  4,
                          "layerCount":  5,
@@ -38,7 +38,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  19,
                          "widgetTests":  16,
                          "layerCount":  5,
@@ -54,7 +54,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  5,
                          "widgetTests":  7,
                          "layerCount":  5,
@@ -70,7 +70,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  8,
                          "widgetTests":  4,
                          "layerCount":  5,
@@ -86,7 +86,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  4,
                          "widgetTests":  10,
                          "layerCount":  5,
@@ -102,7 +102,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  3,
                          "widgetTests":  21,
                          "layerCount":  5,
@@ -118,7 +118,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  3,
                          "widgetTests":  5,
                          "layerCount":  5,
@@ -134,7 +134,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  7,
                          "widgetTests":  6,
                          "layerCount":  5,
@@ -150,7 +150,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  6,
                          "widgetTests":  9,
                          "layerCount":  5,
@@ -166,7 +166,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  4,
                          "widgetTests":  6,
                          "layerCount":  5,
@@ -182,7 +182,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  11,
                          "widgetTests":  3,
                          "layerCount":  5,
@@ -198,7 +198,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  7,
                          "widgetTests":  4,
                          "layerCount":  5,
@@ -214,7 +214,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  11,
                          "widgetTests":  13,
                          "layerCount":  5,
@@ -230,7 +230,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  6,
                          "widgetTests":  3,
                          "layerCount":  5,
@@ -246,7 +246,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  6,
                          "widgetTests":  3,
                          "layerCount":  5,
@@ -262,7 +262,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  4,
                          "widgetTests":  7,
                          "layerCount":  5,
@@ -278,7 +278,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  4,
                          "widgetTests":  5,
                          "layerCount":  5,
@@ -294,7 +294,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  7,
                          "widgetTests":  6,
                          "layerCount":  5,
@@ -310,23 +310,23 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
-                         "domainTests":  2,
-                         "widgetTests":  2,
+                         "score":  100.0,
+                         "domainTests":  4,
+                         "widgetTests":  5,
                          "layerCount":  5,
                          "integrationTests":  1,
-                         "infraTests":  1,
+                         "infraTests":  4,
                          "name":  "data_sources",
                          "hasDomain":  true,
                          "hasGolden":  true,
                          "hasInfra":  true,
                          "goldenTests":  1,
-                         "totalTests":  10,
+                         "totalTests":  22,
                          "hasPres":  true
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  7,
                          "widgetTests":  7,
                          "layerCount":  5,
@@ -342,7 +342,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  5,
                          "widgetTests":  6,
                          "layerCount":  5,
@@ -358,7 +358,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  5,
                          "widgetTests":  5,
                          "layerCount":  5,
@@ -374,7 +374,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  14,
                          "widgetTests":  12,
                          "layerCount":  5,
@@ -390,7 +390,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  7,
                          "widgetTests":  8,
                          "layerCount":  5,
@@ -406,7 +406,7 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  90.0,
+                         "score":  100.0,
                          "domainTests":  6,
                          "widgetTests":  7,
                          "layerCount":  5,
@@ -422,5 +422,5 @@
                      }
                  ],
     "lowCount":  0,
-    "overallScore":  90
+    "overallScore":  100
 }
