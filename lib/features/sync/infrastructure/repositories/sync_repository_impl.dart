@@ -1,4 +1,4 @@
-/// Sync repository for IHCE Colombia
+﻿/// Sync repository for IHCE Colombia
 /// Uses FhirClient natively from Flutter - no backend needed
 /// Communicates directly with IHCE FHIR APIs from the device
 library;
@@ -130,7 +130,7 @@ class SyncRepositoryImpl implements SyncRepository {
           for (final med in medications) {
             final existing = await _isar.collection<app_med.Medication>()
                 .filter()
-                .nameEqualTo(med.name)
+                .encryptedNameEqualTo(med.encryptedName)
                 .startDateEqualTo(med.startDate)
                 .findFirst();
             if (existing != null) {
@@ -141,9 +141,11 @@ class SyncRepositoryImpl implements SyncRepository {
         }
         if (allergies.isNotEmpty) {
           for (final allergy in allergies) {
+            // allergen is @ignore in Allergy, so we can't filter by it in Isar
+            // Use encryptedAllergen instead (the stored field)
             final existing = await _isar.collection<Allergy>()
                 .filter()
-                .allergenEqualTo(allergy.allergen)
+                .encryptedAllergenEqualTo(allergy.encryptedAllergen)
                 .findFirst();
             if (existing != null) {
               allergy.id = existing.id; // Update existing
@@ -213,3 +215,5 @@ class SyncRepositoryImpl implements SyncRepository {
     return false;
   }
 }
+
+
