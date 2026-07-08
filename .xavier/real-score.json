@@ -1,14 +1,14 @@
 ﻿{
     "totalFeatures":  26,
     "partialCount":  26,
-    "timestamp":  "2026-07-07 00:00:07",
+    "timestamp":  "2026-07-07 22:19:10",
     "okCount":  0,
     "features":  [
                      {
                          "hasApp":  true,
                          "score":  81,
                          "domainTests":  2,
-                         "widgetTests":  4,
+                         "widgetTests":  6,
                          "layerCount":  4,
                          "integrationTests":  1,
                          "infraTests":  5,
@@ -17,7 +17,7 @@
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  2,
-                         "totalTests":  25,
+                         "totalTests":  29,
                          "hasPres":  true
                      },
                      {
@@ -40,7 +40,7 @@
                          "hasApp":  true,
                          "score":  81,
                          "domainTests":  19,
-                         "widgetTests":  13,
+                         "widgetTests":  14,
                          "layerCount":  4,
                          "integrationTests":  1,
                          "infraTests":  6,
@@ -49,7 +49,7 @@
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  2,
-                         "totalTests":  56,
+                         "totalTests":  58,
                          "hasPres":  true
                      },
                      {
@@ -72,7 +72,7 @@
                          "hasApp":  true,
                          "score":  81,
                          "domainTests":  8,
-                         "widgetTests":  3,
+                         "widgetTests":  4,
                          "layerCount":  4,
                          "integrationTests":  1,
                          "infraTests":  21,
@@ -81,7 +81,7 @@
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  1,
-                         "totalTests":  43,
+                         "totalTests":  45,
                          "hasPres":  true
                      },
                      {
@@ -184,7 +184,7 @@
                          "hasApp":  true,
                          "score":  81,
                          "domainTests":  11,
-                         "widgetTests":  2,
+                         "widgetTests":  3,
                          "layerCount":  4,
                          "integrationTests":  1,
                          "infraTests":  7,
@@ -193,7 +193,7 @@
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  1,
-                         "totalTests":  27,
+                         "totalTests":  29,
                          "hasPres":  true
                      },
                      {
@@ -219,13 +219,13 @@
                          "widgetTests":  10,
                          "layerCount":  4,
                          "integrationTests":  1,
-                         "infraTests":  6,
+                         "infraTests":  5,
                          "name":  "auth",
                          "hasDomain":  true,
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  3,
-                         "totalTests":  47,
+                         "totalTests":  46,
                          "hasPres":  true
                      },
                      {
@@ -246,18 +246,18 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  78.5,
+                         "score":  81,
                          "domainTests":  6,
-                         "widgetTests":  2,
+                         "widgetTests":  3,
                          "layerCount":  4,
-                         "integrationTests":  0,
+                         "integrationTests":  1,
                          "infraTests":  5,
                          "name":  "dashboard",
                          "hasDomain":  true,
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  1,
-                         "totalTests":  18,
+                         "totalTests":  21,
                          "hasPres":  true
                      },
                      {
@@ -310,18 +310,18 @@
                      },
                      {
                          "hasApp":  true,
-                         "score":  73.5,
-                         "domainTests":  1,
-                         "widgetTests":  1,
+                         "score":  81,
+                         "domainTests":  2,
+                         "widgetTests":  2,
                          "layerCount":  4,
-                         "integrationTests":  0,
+                         "integrationTests":  1,
                          "infraTests":  1,
                          "name":  "data_sources",
                          "hasDomain":  true,
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  1,
-                         "totalTests":  6,
+                         "totalTests":  10,
                          "hasPres":  true
                      },
                      {
@@ -360,7 +360,7 @@
                          "hasApp":  true,
                          "score":  81,
                          "domainTests":  5,
-                         "widgetTests":  2,
+                         "widgetTests":  3,
                          "layerCount":  4,
                          "integrationTests":  1,
                          "infraTests":  12,
@@ -369,14 +369,14 @@
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  1,
-                         "totalTests":  24,
+                         "totalTests":  26,
                          "hasPres":  true
                      },
                      {
                          "hasApp":  true,
                          "score":  81,
                          "domainTests":  14,
-                         "widgetTests":  8,
+                         "widgetTests":  9,
                          "layerCount":  4,
                          "integrationTests":  1,
                          "infraTests":  11,
@@ -385,7 +385,7 @@
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  0,
-                         "totalTests":  47,
+                         "totalTests":  49,
                          "hasPres":  true
                      },
                      {
@@ -408,7 +408,7 @@
                          "hasApp":  true,
                          "score":  81,
                          "domainTests":  6,
-                         "widgetTests":  6,
+                         "widgetTests":  7,
                          "layerCount":  4,
                          "integrationTests":  1,
                          "infraTests":  3,
@@ -417,10 +417,10 @@
                          "hasGolden":  false,
                          "hasInfra":  true,
                          "goldenTests":  2,
-                         "totalTests":  30,
+                         "totalTests":  32,
                          "hasPres":  true
                      }
                  ],
     "lowCount":  0,
-    "overallScore":  79.7
+    "overallScore":  80.1
 }
