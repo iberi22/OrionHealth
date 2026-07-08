@@ -8,7 +8,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Overall REAL Score | **79.7%** |
+| Overall REAL Score | **80.1%** |
 | Features >=90% | 0/26 |
 | Features 50-89% | 26/26 |
 | Features <50% | 0/26 |
