@@ -1,4 +1,4 @@
-import 'package:injectable/injectable.dart';
+﻿import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import '../../domain/entities/allergy.dart';
 import '../../domain/repositories/allergy_repository.dart';
@@ -10,7 +10,7 @@ class AllergyRepositoryImpl implements AllergyRepository {
   final AllergyLocalDataSource _localDataSource;
   final EncryptionService _encryptionService;
 
-  AllergyRepositoryImpl(this._localDataSource, this._encryptionService);
+  AllergyRepositoryImpl(this._localDataSource, {this._encryptionService});
 
   @override
   Future<List<Allergy>> getAllergies() async {
@@ -42,3 +42,4 @@ class AllergyRepositoryImpl implements AllergyRepository {
     return _localDataSource.deleteAllergy(id);
   }
 }
+
