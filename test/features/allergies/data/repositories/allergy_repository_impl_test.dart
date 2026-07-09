@@ -18,7 +18,7 @@ void main() {
 
   setUp(() {
     mockLocalDataSource = MockAllergyLocalDataSource();
-    repository = AllergyRepositoryImpl(mockLocalDataSource);
+    repository = AllergyRepositoryImpl(mockLocalDataSource, encryptionService: MockEncryptionService());
   });
 
   group('AllergyRepositoryImpl', () {

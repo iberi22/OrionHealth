@@ -8,6 +8,8 @@ import 'package:url_launcher_platform_interface/url_launcher_platform_interface.
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'dart:collection';
 import 'package:device_calendar/device_calendar.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class MockHttpClient extends Mock implements http.Client {}
 
@@ -24,6 +26,8 @@ void main() {
   late MockDeviceCalendarPlugin mockCalendar;
 
   setUpAll(() {
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('UTC'));
     registerFallbackValue(Uri.parse('http://localhost'));
     registerFallbackValue(FakeLaunchOptions());
   });
@@ -43,6 +47,12 @@ void main() {
         final result = await repository.connectGmail();
         expect(result, true);
         verify(() => mockUrlLauncher.launchUrl(any(that: contains('accounts.google.com')), any())).called(1);
+      });
+
+      test('connectGmail returns false if launchUrl fails', () async {
+        when(() => mockUrlLauncher.launchUrl(any(), any())).thenAnswer((_) async => false);
+        final result = await repository.connectGmail();
+        expect(result, false);
       });
 
       test('connectOutlook calls launchUrl', () async {
@@ -99,23 +109,56 @@ void main() {
 
         expect(() => repository.fetchParsedAppointments('Gmail', 'test_code'), throwsException);
       });
+
+      test('throws exception on invalid JSON', () async {
+        when(() => mockHttpClient.post(
+              any(),
+              headers: any(named: 'headers'),
+              body: any(named: 'body'),
+            )).thenAnswer((_) async => http.Response('Invalid JSON', 200));
+
+        expect(() => repository.fetchParsedAppointments('Gmail', 'test_code'), throwsException);
+      });
     });
 
     group('syncToNativeCalendar', () {
-      test('runs without error (stubbed for coverage)', () async {
-        final appointment = Appointment(
-          doctorName: 'Test',
-          specialty: 'Test',
-          dateTime: DateTime.now(),
-          status: AppointmentStatus.upcoming,
-        );
+      final appointment = Appointment(
+        doctorName: 'Test',
+        specialty: 'Test',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+      );
 
-        when(() => mockCalendar.hasPermissions()).thenAnswer((_) async => Result<bool>()..data = true);
+      test('returns early if permissions are denied', () async {
+        when(() => mockCalendar.hasPermissions()).thenAnswer((_) async => Result<bool>()..data = false);
+        when(() => mockCalendar.requestPermissions()).thenAnswer((_) async => Result<bool>()..data = false);
+
+        await repository.syncToNativeCalendar(appointment);
+
+        verifyNever(() => mockCalendar.retrieveCalendars());
+      });
+
+      test('requests permissions if not already granted', () async {
+        when(() => mockCalendar.hasPermissions()).thenAnswer((_) async => Result<bool>()..data = false);
+        when(() => mockCalendar.requestPermissions()).thenAnswer((_) async => Result<bool>()..data = true);
         when(() => mockCalendar.retrieveCalendars()).thenAnswer((_) async => Result<UnmodifiableListView<Calendar>>()..data = UnmodifiableListView([]));
 
-        try {
-          await repository.syncToNativeCalendar(appointment);
-        } catch (_) {}
+        await repository.syncToNativeCalendar(appointment);
+
+        verify(() => mockCalendar.requestPermissions()).called(1);
+      });
+
+      test('creates event if permissions granted and calendars available', () async {
+        final calendar = Calendar(id: '1', name: 'Main');
+        when(() => mockCalendar.hasPermissions()).thenAnswer((_) async => Result<bool>()..data = true);
+        when(() => mockCalendar.retrieveCalendars()).thenAnswer((_) async => Result<UnmodifiableListView<Calendar>>()..data = UnmodifiableListView([calendar]));
+        when(() => mockCalendar.createOrUpdateEvent(any())).thenAnswer((_) async => Result<String>()..data = 'event_id');
+
+        registerFallbackValue(Event('1'));
+
+        await repository.syncToNativeCalendar(appointment);
+
+        verify(() => mockCalendar.createOrUpdateEvent(any())).called(1);
       });
     });
   });

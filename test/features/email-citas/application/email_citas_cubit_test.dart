@@ -164,18 +164,55 @@ void main() {
   });
 
   group('syncAppointments', () {
-    test('emits error when repository throws exception', () async {
-       final uri = Uri.parse('orionhealth://oauth2redirect?code=test_code');
+    test('emits error and restores connected state when repository throws exception', () async {
+      final uri = Uri.parse('orionhealth://oauth2redirect?code=test_code');
 
-       when(() => mockEmailRepository.connectGmail()).thenAnswer((_) async => true);
-       when(() => mockEmailRepository.fetchParsedAppointments(any(), any())).thenThrow(Exception('Network Error'));
+      when(() => mockEmailRepository.connectGmail()).thenAnswer((_) async => true);
+      when(() => mockEmailRepository.fetchParsedAppointments(any(), any())).thenThrow(Exception('Network Error'));
 
-       await cubit.connectGmail();
-       await cubit.handleOAuthRedirect(uri);
+      await cubit.connectGmail();
 
-       // States will be: Connected -> Loading -> Error -> Connected (restored)
-       expect(cubit.state, isA<EmailCitasConnected>());
-       // Verification of the Error state being emitted would require a package like bloc_test
+      final states = <EmailCitasState>[];
+      final subscription = cubit.stream.listen(states.add);
+
+      // Wait for all async operations to complete
+      await cubit.handleOAuthRedirect(uri);
+      await Future.delayed(Duration.zero);
+
+      // States should include EmailCitasConnected(true, false), EmailCitasLoading, EmailCitasError, EmailCitasConnected(true, false)
+      expect(states, contains(isA<EmailCitasLoading>()));
+      expect(states, contains(isA<EmailCitasError>()));
+      expect(cubit.state, isA<EmailCitasConnected>());
+
+      await subscription.cancel();
+    });
+
+    test('emits EmailCitasSyncSuccess on successful sync', () async {
+      final uri = Uri.parse('orionhealth://oauth2redirect?code=test_code');
+      final appointment = Appointment(
+        doctorName: 'Dr. Smith',
+        specialty: 'Cardiology',
+        dateTime: DateTime.now(),
+        status: AppointmentStatus.upcoming,
+      );
+
+      when(() => mockEmailRepository.connectGmail()).thenAnswer((_) async => true);
+      when(() => mockEmailRepository.fetchParsedAppointments(any(), any())).thenAnswer((_) async => [appointment]);
+      when(() => mockAppointmentRepository.saveAppointment(any())).thenAnswer((_) async => {});
+      when(() => mockEmailRepository.syncToNativeCalendar(any())).thenAnswer((_) async => {});
+
+      await cubit.connectGmail();
+
+      final states = <EmailCitasState>[];
+      final subscription = cubit.stream.listen(states.add);
+
+      await cubit.handleOAuthRedirect(uri);
+      await Future.delayed(Duration.zero);
+
+      expect(states, contains(isA<EmailCitasSyncSuccess>()));
+      expect(cubit.state, isA<EmailCitasConnected>());
+
+      await subscription.cancel();
     });
 
     test('handles empty appointment list', () async {
