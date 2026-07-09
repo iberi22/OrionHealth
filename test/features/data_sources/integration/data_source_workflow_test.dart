@@ -1,24 +1,42 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/data_sources/domain/entities/data_source_entity.dart';
 
 void main() {
-  group('DataSource Workflow', () {
+  group('DataSource Workflow Integration', () {
     test('creates file type', () {
-      final ds = DataSourceEntity(name: 'CSV', type: DataSourceType.file);
+      const ds = DataSource(
+        id: '1',
+        name: 'CSV',
+        description: 'desc',
+        type: DataSourceType.file,
+        status: DataSourceStatus.disconnected,
+      );
       expect(ds.name, 'CSV');
       expect(ds.type, DataSourceType.file);
     });
 
     test('creates health connect type', () {
-      final ds = DataSourceEntity(name: 'HC', type: DataSourceType.healthConnect);
+      const ds = DataSource(
+        id: '2',
+        name: 'HC',
+        description: 'desc',
+        type: DataSourceType.healthConnect,
+        status: DataSourceStatus.disconnected,
+      );
       expect(ds.name, 'HC');
       expect(ds.type, DataSourceType.healthConnect);
     });
 
-    test('creates sensor API type', () {
-      final ds = DataSourceEntity(name: 'Sensor', type: DataSourceType.sensorApi);
+    test('creates sensor type', () {
+      const ds = DataSource(
+        id: '3',
+        name: 'Sensor',
+        description: 'desc',
+        type: DataSourceType.sensor,
+        status: DataSourceStatus.disconnected,
+      );
       expect(ds.name, 'Sensor');
-      expect(ds.type, DataSourceType.sensorApi);
+      expect(ds.type, DataSourceType.sensor);
     });
   });
 }

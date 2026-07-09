@@ -1,10 +1,14 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:health/health.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 
 @module
 abstract class ServiceModule {
+  @lazySingleton
+  Health get health => Health();
+
   @lazySingleton
   FlutterSecureStorage get storage => const FlutterSecureStorage();
 
