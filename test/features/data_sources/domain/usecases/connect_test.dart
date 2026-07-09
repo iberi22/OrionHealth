@@ -1,6 +1,5 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/data_sources/domain/entities/data_source_entity.dart';
 import 'package:orionhealth_health/features/data_sources/domain/repositories/data_source_repository.dart';
 
 class MockRepo extends Mock implements DataSourceRepository {}
@@ -12,15 +11,9 @@ void main() {
     repo = MockRepo();
   });
 
-  test('connect returns true on success', () async {
-    when(() => repo.connect(any())).thenAnswer((_) async => true);
-    final result = await repo.connect(DataSourceEntity(name: 'test', type: DataSourceType.file));
-    expect(result, isTrue);
-  });
-
-  test('connect returns false on failure', () async {
-    when(() => repo.connect(any())).thenAnswer((_) async => false);
-    final result = await repo.connect(DataSourceEntity(name: 'test', type: DataSourceType.file));
-    expect(result, isFalse);
+  test('connectDataSource calls repository', () async {
+    when(() => repo.connectDataSource(any())).thenAnswer((_) async => {});
+    await repo.connectDataSource('test_id');
+    verify(() => repo.connectDataSource('test_id')).called(1);
   });
 }
