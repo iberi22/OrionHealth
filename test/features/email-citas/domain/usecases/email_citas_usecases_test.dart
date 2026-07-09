@@ -1,7 +1,7 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/features/email_citas/domain/repositories/email_repository.dart';
-import 'package:orionhealth_health/features/email_citas/domain/usecases/email_citas_usecases.dart';
+import 'package:orionhealth_health/features/email-citas/domain/repositories/email_repository.dart';
+import 'package:orionhealth_health/features/email-citas/domain/usecases/email_citas_usecases.dart';
 import 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart';
 
 class MockEmailRepository extends Mock implements EmailRepository {}
@@ -64,8 +64,12 @@ void main() {
 
     test('should return appointments from repository', () async {
       final appointments = [
-        Appointment(id: '1', title: 'Cita', date: DateTime(2026)),
-
+        Appointment(
+          doctorName: 'Dr. Test',
+          specialty: 'General',
+          dateTime: DateTime(2026),
+          status: AppointmentStatus.upcoming,
+        ),
       ];
       when(() => mockRepo.fetchParsedAppointments(any(), any()))
           .thenAnswer((_) async => appointments);
@@ -73,7 +77,7 @@ void main() {
       final result = await syncUseCase('Outlook', 'abc');
 
       expect(result.length, 1);
-      expect(result.first.id, '1');
+      expect(result.first.doctorName, 'Dr. Test');
     });
   });
 }
