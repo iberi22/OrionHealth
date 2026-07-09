@@ -1,5 +1,5 @@
 ﻿import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/features/email_citas/domain/entities/email_template.dart';
+import 'package:orionhealth_health/features/email-citas/domain/entities/email_template.dart';
 
 void main() {
   group('EmailTemplate', () {
@@ -20,15 +20,22 @@ void main() {
     });
 
     test('should have confirmation template', () {
-      expect(EmailTemplate.confirmation.subject, contains('Confirmaci' + String.fromCharCode(243) + 'n'));
+      expect(EmailTemplate.confirmation.subject, contains('Confirmación'));
+      expect(EmailTemplate.confirmation.subject, contains('{{specialty}}'));
       expect(EmailTemplate.confirmation.body, contains('{{doctor}}'));
+      expect(EmailTemplate.confirmation.body, contains('{{specialty}}'));
       expect(EmailTemplate.confirmation.body, contains('{{date}}'));
+      expect(EmailTemplate.confirmation.body, contains('{{time}}'));
+      expect(EmailTemplate.confirmation.body, contains('{{notes}}'));
     });
 
     test('should have reminder template', () {
       expect(EmailTemplate.reminder.subject, contains('Recordatorio'));
+      expect(EmailTemplate.reminder.subject, contains('{{specialty}}'));
       expect(EmailTemplate.reminder.body, contains('{{doctor}}'));
+      expect(EmailTemplate.reminder.body, contains('{{specialty}}'));
       expect(EmailTemplate.reminder.body, contains('{{time}}'));
+      expect(EmailTemplate.reminder.body, contains('{{location}}'));
     });
 
     test('should have correct hash code', () {
