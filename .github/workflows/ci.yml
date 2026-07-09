@@ -33,13 +33,11 @@ jobs:
           echo "All analyzes complete"
         continue-on-error: true
 
-      - name: Flutter Test
-        continue-on-error: true
-        run: |
-          flutter test --reporter expanded | tee test_output.txt || echo "Tests had non-fatal failures"
-
       - name: Flutter Test (root)
-        run: flutter test --reporter expanded | tee test_output.txt || echo "Root tests had non-fatal failures"
+        run: flutter test --coverage --reporter expanded | tee test_output.txt
+
+      - name: Check Coverage Threshold
+        run: python3 coverage_checker.py
 
       - name: Flutter Test (packages)
         run: |
