@@ -1,27 +1,66 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:health/health.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/data_sources/infrastructure/datasources/sensor_api_datasource.dart';
 
+class MockHealth extends Mock implements Health {}
+
 void main() {
-  late SensorApiDataSource dataSource;
+  late SensorApiDataSourceImpl dataSource;
+  late MockHealth mockHealth;
+
+  final types = [
+    HealthDataType.STEPS,
+    HealthDataType.HEART_RATE,
+    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+  ];
 
   setUp(() {
-    dataSource = SensorApiDataSource();
+    mockHealth = MockHealth();
+    dataSource = SensorApiDataSourceImpl(mockHealth);
   });
 
-  group('SensorApiDataSource', () {
-    test('has default timeout', () {
-      expect(dataSource.timeout, greaterThan(0));
+  group('SensorApiDataSourceImpl', () {
+    test('requestAuthorization calls health package with correct types', () async {
+      when(() => mockHealth.requestAuthorization(types)).thenAnswer((_) async => true);
+
+      final result = await dataSource.requestAuthorization();
+
+      expect(result, isTrue);
+      verify(() => mockHealth.requestAuthorization(types)).called(1);
     });
 
-    test('returns null for unavailable sensor', () async {
-      final result = await dataSource.readSensor('nonexistent');
-      expect(result, isNull);
+    test('hasPermissions returns true if health package returns true', () async {
+      when(() => mockHealth.hasPermissions(types)).thenAnswer((_) async => true);
+
+      final result = await dataSource.hasPermissions();
+
+      expect(result, isTrue);
     });
 
-    test('lists available sensors', () async {
-      final sensors = await dataSource.listSensors();
-      expect(sensors, isNotNull);
+    test('hasPermissions returns false if health package returns false or null', () async {
+      when(() => mockHealth.hasPermissions(types)).thenAnswer((_) async => null);
+
+      final result = await dataSource.hasPermissions();
+
+      expect(result, isFalse);
+    });
+
+    test('fetchAndSaveData calls getHealthDataFromTypes', () async {
+      when(() => mockHealth.getHealthDataFromTypes(
+        types: any(named: 'types'),
+        startTime: any(named: 'startTime'),
+        endTime: any(named: 'endTime'),
+      )).thenAnswer((_) async => []);
+
+      await dataSource.fetchAndSaveData();
+
+      verify(() => mockHealth.getHealthDataFromTypes(
+        types: types,
+        startTime: any(named: 'startTime'),
+        endTime: any(named: 'endTime'),
+      )).called(1);
     });
   });
 }
