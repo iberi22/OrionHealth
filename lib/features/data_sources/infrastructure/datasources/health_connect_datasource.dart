@@ -9,7 +9,9 @@ abstract class HealthConnectDataSource {
 
 @LazySingleton(as: HealthConnectDataSource)
 class HealthConnectDataSourceImpl implements HealthConnectDataSource {
-  final Health _health = Health();
+  final Health _health;
+
+  HealthConnectDataSourceImpl(this._health);
 
   @override
   Future<bool> isAvailable() async {

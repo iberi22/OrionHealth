@@ -9,7 +9,9 @@ abstract class SensorApiDataSource {
 
 @LazySingleton(as: SensorApiDataSource)
 class SensorApiDataSourceImpl implements SensorApiDataSource {
-  final Health _health = Health();
+  final Health _health;
+
+  SensorApiDataSourceImpl(this._health);
 
   static const List<HealthDataType> _types = [
     HealthDataType.STEPS,

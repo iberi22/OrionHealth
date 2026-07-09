@@ -117,6 +117,25 @@ void main() {
         ]);
         await subscription.cancel();
       });
+
+      test('disconnect failure updates status to error', () async {
+        when(() => mockRepository.disconnectDataSource(any())).thenThrow(Exception('disc fail'));
+
+        final connectedSource = tSources[0].copyWith(status: DataSourceStatus.connected);
+        cubit.emit(DataSourceLoaded([connectedSource]));
+
+        final states = <DataSourceState>[];
+        final subscription = cubit.stream.listen(states.add);
+
+        await cubit.toggleConnection('sensors');
+        await Future.delayed(Duration.zero);
+
+        expect(states, [
+          DataSourceLoaded([connectedSource.copyWith(status: DataSourceStatus.disconnected)]),
+          DataSourceLoaded([connectedSource.copyWith(status: DataSourceStatus.error, errorMessage: 'Exception: disc fail')]),
+        ]);
+        await subscription.cancel();
+      });
     });
 
     group('syncSource', () {
