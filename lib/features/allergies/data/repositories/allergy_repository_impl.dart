@@ -10,7 +10,8 @@ class AllergyRepositoryImpl implements AllergyRepository {
   final AllergyLocalDataSource _localDataSource;
   final EncryptionService _encryptionService;
 
-  AllergyRepositoryImpl(this._localDataSource, {this._encryptionService});
+  AllergyRepositoryImpl(this._localDataSource, {required EncryptionService encryptionService})
+      : _encryptionService = encryptionService;
 
   @override
   Future<List<Allergy>> getAllergies() async {
