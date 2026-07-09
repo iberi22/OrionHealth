@@ -117,3 +117,5 @@ packages/medical_standards/build/
 # Golden test failures
 failures/
 **/failures/
+
+nul
