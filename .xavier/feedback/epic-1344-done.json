@@ -1,1 +1,0 @@
-﻿{"path":"projects/orionhealth/epic-1344/2026-07-08/completed","content":"EPIC #1344 COMPLETED FULL. Score: 70.1% to 100%. Sprints 8 + 9: added golden tests, fixed scanner bugs (hyphen names, golden detection, ceiling), added data_sources tests, merged 6/8 dependabots. 2 remaining (tailwindcss 4.3.2, astro 7.0.6) are breaking major bumps needing manual migration."}
