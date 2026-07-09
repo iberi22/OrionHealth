@@ -65,6 +65,14 @@ void main() {
       });
     });
 
+    group('disconnectDataSource', () {
+      test('calls with any id does not throw', () async {
+        await repository.disconnectDataSource('sensors');
+        await repository.disconnectDataSource('any_id');
+        // No specific behavior yet but should be callable
+      });
+    });
+
     group('syncDataSource', () {
       test('sensors sync calls fetchAndSaveData', () async {
         when(() => mockSensor.fetchAndSaveData()).thenAnswer((_) async => {});
