@@ -159,3 +159,7 @@ test-results/
 
 medical-standards/
 memory/
+
+# Environment example
+.env.example
+docs/.env.example
