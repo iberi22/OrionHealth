@@ -1,145 +1,77 @@
-# OrionHealth - Architecture
+# OrionHealth — Architecture Guide
 
-## System Architecture
+OrionHealth is a privacy-first personal health assistant built with Flutter, following a strict Clean Architecture pattern and local-first principles.
 
-OrionHealth is a Flutter mobile application built with **clean architecture** principles, designed for privacy-first, offline-capable health data management.
+## 🏗️ Clean Architecture (4 Layers)
 
-### Layer Structure
+The project is organized into modular features, each following four distinct layers to ensure separation of concerns and testability:
 
+1.  **Domain Layer**: The core of the system. Contains Entities, Use Cases, and Repository Interfaces. It is independent of any other layer and contains the business logic.
+2.  **Application Layer**: Contains BLoCs/Cubits and application-specific logic. It coordinates between the UI and the Domain layer.
+3.  **Infrastructure Layer**: Implements Repository Interfaces. Handles data sources (local DB, external APIs), services (ASR, TTS), and infrastructure details like network or file system.
+4.  **Presentation Layer**: Contains the UI widgets, pages, and animations. It interacts solely with the Application layer (Cubits/BLoCs) to display state.
+
+### Directory Structure
 ```
-lib/
-├── core/                    # Shared utilities, DI, theming, widgets
-│   ├── di/                  # Dependency injection (Isar, memory modules)
-│   ├── theme/               # AppTheme, CyberTheme
-│   └── widgets/             # Reusable UI components (GlassmorphicCard)
-├── features/                # Feature modules (allergies, auth, vitals...)
-│   ├── <feature>/
-│   │   ├── domain/          # Entities, repositories (abstract), use cases
-│   │   ├── application/     # Business logic orchestration
-│   │   ├── infrastructure/ # Repository implementations, data sources
-│   │   └── presentation/   # UI screens, widgets, BLoC/state
-├── l10n/                    # Localization (20+ languages)
-└── main.dart
+lib/features/<feature_name>/
+├── domain/           # Entities, Repositories, UseCases
+├── application/      # BLoCs, Cubits
+├── infrastructure/   # Repository Impl, Data Sources, Mappers
+└── presentation/     # Widgets, Pages
 ```
 
-### Core Principles
-- **Domain-Driven Design**: Each feature is self-contained with clear boundaries
-- **Dependency Injection**: `get_it` + `injectable` for loose coupling
-- **State Management**: BLoC pattern per feature
-- **Database**: Isar (local-first, encrypted NoSQL)
-- **AI**: On-device LLM via ONNX Runtime (Phi-3 Mini / Gemma 2B)
+## 🧠 State Management
 
----
+OrionHealth uses **Flutter BLoC/Cubit** for predictable state management.
+- **Cubits** are used for simple state transitions.
+- **BLoCs** are used for more complex event-based state management.
+- All UI components listen to state changes and rebuild reactively.
 
-## Data Flow
+## 🔄 Data Flow
 
-```
-User Input
-    ↓
-Presentation Layer (Screens / Widgets / BLoC)
-    ↓
-Application Layer (Use Cases)
-    ↓
-Domain Layer (Entities / Repository Interfaces)
-    ↓
-Infrastructure Layer (Repository Implementations / Data Sources)
-    ↓
-Isar Database (on-device encrypted storage)
+The application follows an **Offline-first** data flow:
+1.  **Local Persistence**: Data is primarily stored and retrieved from **Isar DB** (local).
+2.  **State Management**: The **BLoC/Cubit** layer fetches data from the local repository.
+3.  **Reactive UI**: The UI subscribes to the BLoC/Cubit state and updates when the local data changes.
+4.  **Sync**: Synchronization with external nodes or servers happens in the background via the Infrastructure layer.
+
+```text
+Local Storage (Isar DB) <---> Repository (Infra) <---> BLoC/Cubit (Application) <---> UI (Presentation)
 ```
 
-### Key Data Flows
+## 🔒 Offline-first & Privacy
 
-**Health Record Ingestion**
-1. User uploads PDF/image document
-2. OCR extracts text from document
-3. Structured data (lab results, prescriptions) is parsed and stored in Isar
-4. RAG pipeline indexes content for AI retrieval
+- **On-Device AI**: Uses local models for ASR (Speech-to-Text), TTS (Text-to-Speech), and LLM-based assistants.
+- **Local Database**: All health data stays on the device by default, encrypted using **Isar**.
+- **Secure Storage**: Sensitive keys and identifiers are stored in the system's secure enclave (Keychain/Keystore) via `flutter_secure_storage`.
 
-**AI Health Insights**
-1. User queries the local AI assistant
-2. RAG retrieves relevant context from health records
-3. On-device LLM generates contextual response
-4. Response surfaced in chat UI
+## 📡 P2P Synchronization
 
-**Sensor Sync**
-1. App syncs with Apple HealthKit (iOS) or Google Health Connect (Android)
-2. Vitals data (heart rate, steps, sleep) imported and stored locally
-3. Dashboard aggregates all data sources
+OrionHealth supports distributed data sharing and synchronization:
+- **Wi-Fi Direct / mDNS**: Local discovery of other OrionHealth nodes.
+- **IPFS**: Decentralized storage for health records and blobs, ensuring availability without central servers.
+- **SSI (Self-Sovereign Identity)**: Uses DIDs and Verifiable Credentials for secure data exchange.
 
----
+## 🏥 Medical Standards Integration
 
-## Security Model
+To ensure interoperability and accuracy, OrionHealth integrates several international medical standards:
+- **FHIR (R4/DSTU2)**: The primary data model for health resources.
+- **ICD-10**: For clinical diagnoses and classification.
+- **LOINC**: For laboratory and clinical observations.
+- **RxNorm**: For standardized medication nomenclature.
+- **SNOMED CT**: For clinical terminology and medical concepts.
 
-### Encryption
-- **Data at Rest**: Isar database with AES encryption enabled
-- **No cloud storage**: All data stays on-device
-- **Biometric/PIN**: App access protected by biometric or PIN authentication
+## 🚀 Build System & CI
 
-### Privacy
-- **Zero telemetry**: No analytics, no crash reporting to third parties
-- **GDPR Compliance**: Data export (JSON) and right-to-be-forgotten deletion implemented
-- **Privacy consent**: Shown during onboarding before any data collection
+- **GitHub Actions**: Automated CI pipeline for every push and PR.
+- **Static Analysis**: Enforced `dart analyze` for code quality.
+- **Testing Suite**:
+    - **Unit Tests**: Domain and Application logic.
+    - **Widget Tests**: Presentation layer components.
+    - **Golden Tests**: Visual regression testing using screenshots.
+    - **Integration Tests**: End-to-end flows.
 
-### Authentication Flow
-```
-App Launch → PIN/Biometric Check → Authenticated Session
-                                ↓
-                        Session token stored in
-                        SecureStorage (flutter_secure_storage)
-```
+## 🔗 References
 
----
-
-## Module Responsibilities
-
-Currently, the project contains 25 feature modules. Clean Architecture Completion: 72%
-
-| Module | Responsibility | Clean Arch Status |
-|--------|---------------|-------------------|
-| `core/di` | Dependency injection container setup | N/A |
-| `core/theme` | Visual theming (light/dark, cyber aesthetic) | N/A |
-| `core/widgets` | Shared UI components (GlassmorphicCard) | N/A |
-| `features/about` | Static content | Partial |
-| `features/ai_assistant` | AI Assistant UI | Partial |
-| `features/allergies` | Allergy tracking | Partial |
-| `features/appointments` | Appointment scheduling and reminders | Partial |
-| `features/auth` | Authentication, PIN/biometric, session management | Full |
-| `features/calendar_import` | Import appointments from calendar | Partial |
-| `features/dashboard` | Home screen with health summary | Partial |
-| `features/doctor_verification` | Doctor verification flow | Full |
-| `features/email-citas` | Parse appointments from email | Partial |
-| `features/eps_connection` | Connect to health providers | Partial |
-| `features/health_data_import` | Import data from Apple Health / Google Fit | Partial |
-| `features/health_record` | Document upload, OCR, structured storage | Full |
-| `features/health_sharing` | Unified P2P sharing (BLE, NFC, WiFi) | Full |
-| `features/home` | Home orchestration | Partial |
-| `features/local_agent` | Local LLM management (ONNX Runtime) | Full |
-| `features/medical_assistant` | On-device AI chat with RAG | Full |
-| `features/medical_research` | Web search and evidence processing | Partial |
-| `features/medications` | Medication list and reminders | Partial |
-| `features/onboarding` | First-run experience, privacy consent | Partial |
-| `features/reports` | Health report generation (PDF export) | Full |
-| `features/settings` | App and LLM settings | Partial |
-| `features/ssi` | Verifiable Credentials | Full |
-| `features/sync` | Decentralized network node sync | Partial |
-| `features/user_profile` | User profile and preferences | Full |
-| `features/vitals` | Vitals tracking, sensor integration | Partial |
----
-
-## Platform Integration
-
-- **iOS**: Apple HealthKit integration, biometric auth via LocalAuthentication
-- **Android**: Google Health Connect, BiometricPrompt API
-- **Shared**: Flutter platform channels for native integrations
-
----
-
-## Documentation
-
-- `README.md` — Overview and feature list
-- `PLANNING.md` — Project roadmap and planning
-- `TASK.md` — Task breakdown
-- `SECURITY.md` — Security policy
-- `APK_BUILD_STATUS.md` — Build status tracking
-- `docs/ORIONHEALTH-ROADMAP.md` — Detailed roadmap
-- `docs/PRODUCTION_CHECKLIST.md` — This file — release checklist
+- [Features Catalog](features.json)
+- [Git Protocol](GITPROTOCOL.md)
