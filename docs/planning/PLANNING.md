@@ -309,4 +309,28 @@ packages/
 
 ---
 
-*Last updated: 2026-04-15*
+## Open Beta Sprint Planning (July-August 2026)
+
+Aligned with [SRS v1.0](../SRS.md) functional requirements.
+
+### Sprint Goals
+- **Core Stability**: Reach 100% pass rate in CI.
+- **Requirement Traceability**: Map all features to REQ-F-XXX.
+- **Production Readiness**: Finalize encryption and security audits.
+
+### Feature Dependencies
+1. **Auth (REQ-F-101)** -> **User Profile (REQ-F-102)**: Identity is required for profile management.
+2. **User Profile (REQ-F-102)** -> **Health Records (REQ-F-201)**: Profile determines selective sync context.
+3. **Health Records (REQ-F-201)** -> **AI Assistant (REQ-F-302)**: RAG requires local data for grounding.
+4. **Medical Standards (REQ-F-402)** -> **Symptom Analysis (REQ-F-303)**: Mapping standards is prerequisite for analysis.
+
+### Risks & Mitigations
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| Inconsistent requirement mapping | High | Maintain `SRS.md` as the single source of truth for all modules. |
+| Performance degradation on local LLM | Medium | Use optimized ONNX runtimes and quantization (INT4). |
+| BLE/WiFi P2P instability | High | Implement robust retry logic and fallback to manual PIN exchange. |
+| Security vulnerabilities in local DB | Critical | Enforce AES-256-GCM encryption at rest for Isar collections. |
+
+---
+*Last updated: 2026-07-10*
