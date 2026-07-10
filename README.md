@@ -158,7 +158,7 @@ We follow a specific development workflow. Please read our [**GITPROTOCOL.md**](
 
 | Label | Purpose |
 |-------|---------|
-| `jules` | Tasks for automated AI agent |
+| `ai-task` | Tasks for automated AI agent |
 | `bug` | Bug reports |
 | `enhancement` | Feature requests |
 | `dependencies` | Dependency updates |

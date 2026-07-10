@@ -2,7 +2,7 @@
 
 > **Goal:** Preparar OrionHealth para open beta (v0.9.x) — CI verde, tests actualizados, landing page pulida.
 > **Repositorio:** https://github.com/iberi22/OrionHealth
-> **Reglas:** Max 1-3 archivos por issue. Un issue por feature/task. Label `jules` activa Jules.
+> **Reglas:** Max 1-3 archivos por issue. Un issue por feature/task. Label `ai-task` activa agente.
 
 ---
 
@@ -168,9 +168,9 @@ Phase 1 → Phase 2 → Phase 3 → Phase 4
 ```
 
 **Cómo ejecutar:**
-1. Jules: issues Phase 1 y Phase 3 (tasks de código)
+1. AI Agent: issues Phase 1 y Phase 3 (tasks de código)
 2. Claude Code (Codex CLI): Phase 2 (screenshots + landing)
 3. Manual: Phase 4 (release)
-4. **Push siempre antes de asignar a Jules**
+4. **Push siempre antes de asignar al agente**
 
-**Máximo 1-3 archivos por issue para Jules. Issues grandes = fallan.**
+**Máximo 1-3 archivos por issue para el agente. Issues grandes = fallan.**

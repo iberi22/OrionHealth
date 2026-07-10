@@ -34,7 +34,7 @@ Tools â€¢ Dart 3.10.0 â€¢ DevTools 2.51.1 |
 
 ## 🤖 Actionable Agentic Tasks
 > [!TIP]
-> These tasks are prioritized for automated resolution by Jules or Antigravity.
+> These tasks are prioritized for automated resolution by AI agents.
 
 No critical issues detected.
 

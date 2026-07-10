@@ -361,13 +361,13 @@ OrionHealth/
 | Health Wallet Package | OpenCode | ✅ Complete |
 | Smart Onboarding | Me | ✅ Complete |
 | NFC/BLE Receiving Infrastructure | OpenCode | ✅ Complete |
-| External Data Import (HealthKit/Fit) | Jules | ✅ Complete |
-| Clean Architecture Gaps (24/25 modules) | Jules | ✅ Complete |
+| External Data Import (HealthKit/Fit) | AI Agent | ✅ Complete |
+| Clean Architecture Gaps (24/25 modules) | AI Agent | ✅ Complete |
 | Medical Concept Timeline | OpenCode | ✅ Complete |
 | FHIR Import/Export | OpenCode | ✅ Complete |
 | Network Node Discovery | OpenCode | ✅ Complete |
-| Golden Tests (Appointments, SSI, Vitals) | Jules | ✅ Complete |
-| Issues #581-#591 (Sprint v0.9.0) | Jules | ✅ Complete |
+| Golden Tests (Appointments, SSI, Vitals) | AI Agent | ✅ Complete |
+| Issues #581-#591 (Sprint v0.9.0) | AI Agent | ✅ Complete |
 
 ### Remaining Tasks
 
