@@ -1,26 +1,31 @@
 # Agent Index — OrionHealth
 
-| Agent | Role | Trigger | CLI/Tool |
-|-------|------|---------|----------|
-| **Jules AI** | Autonomous coding (features, bugs, enhancements) | GitHub Issue with label `jules` | `@jules-ai` in issue comment |
-| **Claw** | Orquestador humano + merge + estabilización | Telegram commands | `claude -p`, `opencode run`, `codex exec` |
-| **Gemini** | Deep research, análisis de codebase, migraciones | Telegram: analysis/research | `gemini -p "..."` |
-| **OpenCode (MiniMax)** | Heavy coding, refactors, infrastructure | Telegram: heavy coding | `opencode run --model minimax/MiniMax-M2.7` |
+This document describes how automated coding agents interact with this repository.
 
-## Routing Rules
+## Agent Integration
 
-| Etiqueta | Agente | Acción |
-|----------|--------|--------|
-| `jules` | **Jules AI** | Crea branch → implementa → PR → cierra issue |
-| `fix` | **Claw** | Fix manual o subagente |
-| `enhancement`, `feature` | Jules | Via GitHub Issue |
-| `bug` | Jules | Via GitHub Issue |
-| `research`, `analysis` | Gemini | Via Gemini CLI |
+| Agent Type | Scope | Trigger | Activation |
+|---|---|---|---|
+| **AI Coding Agent** | Autonomous coding (features, bugs, enhancements) | GitHub Issue with agent label | Comment tag in issue |
 
-## Protocolo de Startup
+## Label Convention
 
-1. Leer `.gitcore/features.json` → estado actual del proyecto
-2. Leer `.gitcore/planning/TASK.md` → tareas activas
-3. Revisar GitHub Issues con label `jules` → PRs creados
-4. Ejecutar `dart analyze lib/ test/` → 0 errors requerido
-5. Guardar decisión en xavier: `POST /memory/add`
+| Label | Agent Type | Action |
+|---|---|---|
+| `ai-task`, `enhancement`, `feature` | AI Agent | Creates branch → implements → PR → closes issue |
+| `bug` | AI Agent | Via GitHub Issue |
+
+## Workflow
+
+1. Human creates GitHub Issue with clear description + scope (max 1-3 files)
+2. Add appropriate label (`ai-task`, `enhancement`, `bug`)
+3. Agent detects label, creates branch, implements, opens PR
+4. Human reviews and merges PR
+5. Agent auto-closes issue when PR merges
+
+## Rules
+
+- Max 1-3 files per issue
+- One feature/task = one issue
+- Large issues cause failures — split into smaller pieces
+- Repository must be pushed to GitHub before assigning to agent

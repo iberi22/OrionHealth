@@ -36,17 +36,17 @@ We follow the **Conventional Commits** specification. Messages should be concise
 **Example:**
 `feat(auth): add biometric authentication support`
 
-## 🤖 Jules AI Integration
+## 🤖 AI Agent Integration
 
-Jules is our primary AI software engineer for automated tasks.
+This repository is designed to work with any AI coding agent.
 
-1.  **Triggering Jules**: Create a GitHub Issue describing the task.
-2.  **Labeling**: Add the `jules` label to the issue.
+1.  **Triggering**: Create a GitHub Issue describing the task, or tag the agent in a comment.
+2.  **Labeling**: Add the `ai-task` label to the issue.
 3.  **Process**:
-    - Jules detects the label and starts working.
-    - Jules creates a feature branch (`feat/` or `fix/`).
-    - Jules implements the changes and updates the relevant status (e.g., `features.json`).
-    - Jules opens a Pull Request for review.
+    - Agent detects the label and starts working.
+    - Agent creates a feature branch (`feat/` or `fix/`).
+    - Agent implements the changes and updates the relevant status (e.g., `features.json`).
+    - Agent opens a Pull Request for review.
 
 ## 🔍 Pull Request Review Process
 

@@ -22,7 +22,7 @@
 | Golden (new) | sync, meditation, vitals, reports, incentives — **ADDED** |
 | CI/CD | GitHub Actions (analyze + test + build) — **SETUP** |
 
-## 🛠 Sprint Final — Issues Jules (Sprint Junio 2026)
+## 🛠 Sprint Final — Issues de agente automatizado (Sprint Junio 2026)
 
 | Issue | Qué | Resultado |
 |-------|-----|-----------|

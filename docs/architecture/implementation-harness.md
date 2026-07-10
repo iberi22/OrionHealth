@@ -9,7 +9,7 @@
 #   2. REPORT → Genera reporte con % de implementación ponderado
 #   3. DETAILS → Crea/actualiza .gitcore/features.details/<feature>.json
 #   4. UPDATE → Actualiza .gitcore/features.json con estado global
-#   5. AGENT → Jules/OpenCode toma los gaps y ejecuta implementación
+#   5. AGENT → AI Coding Agent toma los gaps y ejecuta implementación
 #   6. E2E → Scripts automatizados validan coverage y tests
 #   7. HUMAN → 1% de review humano en cada feature
 #
@@ -26,7 +26,7 @@
 #   Mientras haya features < 100%:
 #     1. Invocar scan
 #     2. Identificar gaps prioritarios
-#     3. Asignar a Jules (label jules en issues)
+#     3. Asignar al agente (label ai-task en issues)
 #     4. Integrar PRs automáticamente
 #     5. Re-scanear para actualizar %
 #     6. Reportar al humano
