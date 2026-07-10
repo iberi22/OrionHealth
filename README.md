@@ -25,7 +25,7 @@
 
 ## 🌟 Vision
 
-**OrionHealth** is a privacy-first, local-first health assistant that enables individuals to own and control their complete health data history. Built with Flutter and powered by on-device AI, it creates a secure "Digital Health Sheet" that integrates medical records, sensor data (Apple HealthKit, Google Health Connect), and AI-powered insights—all without compromising your privacy.
+**OrionHealth** is a privacy-first health platform that gives individuals full control over their complete health data history. Built with Flutter and powered by its own backend infrastructure, it creates a secure "Digital Health Sheet" that integrates medical records, sensor data (Apple HealthKit, Google Health Connect), and AI-powered insights into a unified health intelligence platform.
 
 ---
 
