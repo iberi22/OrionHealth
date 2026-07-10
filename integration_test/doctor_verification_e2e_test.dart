@@ -11,7 +11,6 @@ import 'package:orionhealth_health/features/doctor_verification/domain/services/
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/doctor_card.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/widgets/rating_dialog.dart';
 import 'package:mocktail/mocktail.dart';
-import 'dart:async';
 import 'package:orionhealth_health/features/doctor_verification/domain/entities/doctor_rating.dart';
 import 'utils/video_recorder.dart';
 
@@ -127,7 +126,7 @@ void main() {
       when(() => mockLicenseVerifier.verify(any(), any()))
           .thenThrow(Exception('Verification Failed'));
 
-      await tester.pumpWidget(const MaterialApp(
+      await tester.pumpWidget(MaterialApp(
         home: DoctorDetailPage(doctor: doctor),
       ));
       await tester.pumpAndSettle();

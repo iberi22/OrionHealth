@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
-import 'package:orionhealth_health/features/health_sharing/application/sharing_cubit.dart';
 import 'package:orionhealth_health/features/health_sharing/domain/entities/shared_health_package.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/share_page.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/receive_page.dart';
@@ -111,7 +110,7 @@ void main() {
         package: any(named: 'package'),
         pin: any(named: 'pin'),
       )).thenAnswer((_) async {
-        bleStateController.add(const BleSharingState(status: 'scanning'));
+        bleStateController.add(BleSharingState.scanning());
       });
 
       await tester.tap(find.text('Compartir'));
@@ -121,11 +120,7 @@ void main() {
       await VideoRecorder.recordStep(tester, 'health_sharing', '02_sharing_scanning');
 
       // Simulate completion
-      bleStateController.add(const BleSharingState(
-        status: 'completed',
-        bytesTransferred: 1024,
-        transferTime: Duration(seconds: 2),
-      ));
+      bleStateController.add(BleSharingState.completed(1024, const Duration(seconds: 2)));
       await tester.pumpAndSettle();
 
       expect(find.text('¡Compartido exitosamente!'), findsOneWidget);
@@ -145,7 +140,7 @@ void main() {
 
       when(() => mockStartListeningUseCase(any(), pin: any(named: 'pin')))
           .thenAnswer((_) async {
-        nfcStateController.add(const NfcSharingState(status: 'listening'));
+        nfcStateController.add(NfcSharingState.listening());
       });
 
       await tester.tap(find.text('NFC'));
@@ -170,7 +165,7 @@ void main() {
         signature: 'sig',
       );
 
-      nfcStateController.add(NfcSharingState(status: 'received', receivedPackage: mockPackage));
+      nfcStateController.add(NfcSharingState.received(mockPackage));
       await tester.pumpAndSettle();
 
       expect(find.text('Datos recibidos'), findsOneWidget);
@@ -186,11 +181,7 @@ void main() {
       await tester.tap(find.text('Importar'));
       await tester.pump();
 
-      nfcStateController.add(const NfcSharingState(
-        status: 'completed',
-        bytesTransferred: 512,
-        transferTime: Duration(seconds: 1),
-      ));
+      nfcStateController.add(NfcSharingState.completed(512, const Duration(seconds: 1)));
       await tester.pumpAndSettle();
 
       expect(find.text('¡Importación completa!'), findsOneWidget);
@@ -210,7 +201,7 @@ void main() {
         package: any(named: 'package'),
         pin: any(named: 'pin'),
       )).thenAnswer((_) async {
-        bleStateController.add(const BleSharingState(status: 'scanning'));
+        bleStateController.add(BleSharingState.scanning());
       });
 
       await tester.tap(find.text('Laboratorios'));
@@ -234,7 +225,7 @@ void main() {
 
       when(() => mockStartListeningUseCase(any(), pin: any(named: 'pin')))
           .thenAnswer((_) async {
-        nfcStateController.add(const NfcSharingState(status: 'listening'));
+        nfcStateController.add(NfcSharingState.listening());
       });
 
       await tester.tap(find.text('NFC'));
@@ -256,7 +247,7 @@ void main() {
         signature: 'sig',
       );
 
-      nfcStateController.add(NfcSharingState(status: 'received', receivedPackage: mockPackage));
+      nfcStateController.add(NfcSharingState.received(mockPackage));
       await tester.pumpAndSettle();
 
       expect(find.text('Datos recibidos'), findsOneWidget);

@@ -4,8 +4,15 @@ import 'package:orionhealth_health/features/medical_research/presentation/widget
 
 void main() {
   testWidgets('ResearchResultCard golden test', (tester) async {
+    final tResult = ResearchResult(
+      title: 'Test Title',
+      content: 'Test Content',
+      source: 'PubMed',
+      url: 'https://pubmed.ncbi.nlm.nih.gov/',
+    );
     await tester.pumpWidget(
-      const MaterialApp(home: Scaffold(body: ResearchResultCard())),
+      const MaterialApp(
+          home: Scaffold(body: ResearchResultCard(result: tResult))),
     );
     await expectLater(
       find.byType(ResearchResultCard),

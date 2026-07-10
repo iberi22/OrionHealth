@@ -66,7 +66,7 @@ class ProfileSection extends StatelessWidget {
               const Row(
                 children: [
                   Icon(Icons.dark_mode_outlined, color: AppColors.secondary, size: 20),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Text(
                     'Modo Oscuro',
                     style: TextStyle(color: Colors.white, fontSize: 15),
@@ -77,7 +77,7 @@ class ProfileSection extends StatelessWidget {
                 key: const Key('dark_mode_switch'),
                 value: isDarkMode,
                 onChanged: onDarkModeChanged,
-                activeColor: AppColors.primary,
+                activeThumbColor: AppColors.primary,
               ),
             ],
           ),

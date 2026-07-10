@@ -89,6 +89,7 @@ void main() {
             latestVitals: [],
             upcomingAppointments: [],
             medicationCount: 0,
+            summaryText: 'Summary',
           ));
 
       // Mock Research Data
