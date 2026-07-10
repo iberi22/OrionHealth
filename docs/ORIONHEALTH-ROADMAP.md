@@ -1,6 +1,6 @@
 # OrionHealth — Technical Roadmap & Architecture
 
-> **Version:** 0.9.0 | **Last Updated:** 2026-06-17 | **Status:** Active Development
+> **Version:** 1.0.0 | **Last Updated:** 2026-07-10 | **Status:** Open Beta Readiness
 
 ---
 
@@ -137,36 +137,45 @@ OrionHealth/
 | Encrypted Packages | ✅ | AES-256 + ECDH key exchange |
 | Consent Flow | ✅ | User approves before receiving |
 
-### 🔄 Phase 4 — Doctor Verification (REFACTORING)
+### 🔄 Phase 4 — Doctor Verification (Open Beta Priority)
 
-| Feature | Status | Details |
-|---------|--------|---------|
-| Doctor Profile | 🔄 | Refactoring to Isar-compatible schemas |
-| License Verification | 🔄 | Integration with medical boards |
-| Patient Ratings | 🔄 | 1-5 stars + comments |
-| Vouching System | 📋 | Doctors validate other doctors (Planned) |
-| Reputation Badges | 📋 | Bronze/Silver/Gold/Platinum (Planned) |
+| Feature | Requirement | Status | Details |
+|---------|-------------|--------|---------|
+| Doctor Profile | REQ-F-102 | 🔄 | Refactoring to Isar-compatible schemas |
+| License Verification | REQ-F-402 | 🔄 | Integration with medical boards |
+| Patient Ratings | REQ-F-103 | 🔄 | 1-5 stars + comments |
+| Vouching System | REQ-F-404 | 📋 | Doctors validate other doctors |
+| Reputation Badges | REQ-F-103 | 📋 | UI Badges for verified status |
 
 ### ✅ Phase 5 — Medical Concept (COMPLETE)
 
-| Feature | Status | Details |
-|---------|--------|---------|
-| Medical Concept Model | ✅ | Doctor's notes + recommendations |
-| Timeline View | ✅ | Chronological medical history |
-| External Data Import | ✅ | Integration with Apple Health / Google Fit |
-| FHIR Export | ✅ | Standard format for EHR systems |
-| Second Opinion | 🔄 | Multiple doctor reviews (In Progress) |
+| Feature | Requirement | Status | Details |
+|---------|-------------|--------|---------|
+| Medical Concept Model | REQ-F-201 | ✅ | Doctor's notes + recommendations |
+| Timeline View | REQ-F-103 | ✅ | Chronological medical history |
+| External Data Import | REQ-F-502 | ✅ | Integration with Apple Health / Google Fit |
+| FHIR Export | REQ-F-403 | ✅ | Standard format for EHR systems |
+| Second Opinion | REQ-F-302 | 🔄 | Multiple doctor reviews |
 
 ### 🔄 Phase 6 — Network Expansion (IN PROGRESS)
 
-| Feature | Status | Details |
-|---------|--------|---------|
-| Node Discovery | ✅ | Find nearby Orion nodes via mDNS/Bonsoir |
-| Voice Chat Agent | ✅ | Local LLM voice interaction |
-| Meditation Layers | ✅ | Mental health & wellness integration |
-| Distributed Cache | 🔄 | IPFS/Filecoin for standards |
-| Governance Token | 📋 | DAO for network decisions |
-| Incentive System | 📋 | Rewards for data contribution |
+| Feature | Requirement | Status | Details |
+|---------|-------------|--------|---------|
+| Node Discovery | REQ-F-501 | ✅ | Find nearby Orion nodes via mDNS/Bonsoir |
+| Voice Chat Agent | REQ-F-304 | ✅ | Local LLM voice interaction |
+| Meditation Layers | REQ-F-103 | ✅ | Mental health & wellness integration |
+| Distributed Cache | REQ-F-501 | 🔄 | IPFS/Filecoin for standards |
+| Governance Token | REQ-F-401 | 📋 | DAO for network decisions |
+| Incentive System | REQ-F-401 | 📋 | Rewards for data contribution |
+
+### 🚀 Phase 7 — Open Beta Readiness (JULY-AUGUST 2026)
+
+| Milestone | Requirement | Status | Details |
+|-----------|-------------|--------|---------|
+| SRS v1.0 Completion | ALL | ✅ | Documenting REQ-F-XXX requirements |
+| CI/CD Stability | REQ-NF-03 | 🔄 | Fixing all test failures and 100% analyze |
+| Security Audit | REQ-NF-02 | 📋 | AES-256-GCM verification |
+| Production Release | ALL | 📋 | Open Beta v1.0.0-stable |
 
 ---
 
