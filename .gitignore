@@ -132,3 +132,27 @@ docs/diagnostics/
 .packages
 
 .git-core-protocol-version
+
+
+# Internal tools and scripts
+.skills/
+.openclaw/
+.opencode/
+test-results/
+
+# Internal agent files
+.gitignore
+.gitcore/.scan-latest.json
+.gitcore/JULES_HARNESS.md
+.gitcore/create-jules-issues.ps1
+.gitcore/jules-trigger.ps1
+.gitcore/label-jules-issues.ps1
+.gitcore/orionhealth-harness.ps1
+.gitcore/read-score.ps1
+.gitcore/real-scanner.ps1
+.gitcore/planning/TASK.md
+.gitcore/src/
+.gitcore/version
+.gitcore/features.json
+.gitcore/features.details/
+.gitcore/features/
