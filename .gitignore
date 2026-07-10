@@ -156,3 +156,6 @@ test-results/
 .gitcore/features.json
 .gitcore/features.details/
 .gitcore/features/
+
+medical-standards/
+memory/
