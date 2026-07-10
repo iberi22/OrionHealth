@@ -7,7 +7,7 @@ This plan is based on the mocked Flutter screens rendered through golden tests i
 ## Execution Log
 
 1. Created a widget-only golden test at [`test/widgets/golden_screenshots_test.dart`](../../test/widgets/golden_screenshots_test.dart) by copying the mock pages from `integration_test/app_test.dart`.
-1. Pointed all golden outputs to [`integration_test/screenshots/actual/`](../../integration_test/screenshots/actual/).
+1. Pointed all golden outputs to [`integration_test/screenshots/actual/`](../../assets/screenshots/).
 1. Ran `flutter test --update-goldens --tags=golden test/widgets/golden_screenshots_test.dart`.
 1. The tag selector did not match any tests in this environment, so the fallback command was used: `flutter test --update-goldens test/widgets/golden_screenshots_test.dart`.
 1. Golden generation succeeded on Windows desktop and produced 12 PNGs in the target directory.
@@ -177,7 +177,7 @@ If the team wants to turn this into implementation work, the best first slice is
 ## Reference Artifacts
 
 - [`test/widgets/golden_screenshots_test.dart`](../../test/widgets/golden_screenshots_test.dart)
-- [`integration_test/screenshots/actual/01_main_navigation.png`](../../integration_test/screenshots/actual/01_main_navigation.png)
-- [`integration_test/screenshots/actual/06_upload_buttons.png`](../../integration_test/screenshots/actual/06_upload_buttons.png)
-- [`integration_test/screenshots/actual/08_chat_interface.png`](../../integration_test/screenshots/actual/08_chat_interface.png)
-- [`integration_test/screenshots/actual/09_reports_list.png`](../../integration_test/screenshots/actual/09_reports_list.png)
+- [`integration_test/screenshots/actual/01_main_navigation.png`](../../assets/screenshots/01_main_navigation.png)
+- [`integration_test/screenshots/actual/06_upload_buttons.png`](../../assets/screenshots/06_upload_buttons.png)
+- [`integration_test/screenshots/actual/08_chat_interface.png`](../../assets/screenshots/08_chat_interface.png)
+- [`integration_test/screenshots/actual/09_reports_list.png`](../../assets/screenshots/09_reports_list.png)

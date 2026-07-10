@@ -19,7 +19,7 @@
 
 **v0.9.0** — Tests `325+ pass / 2 fail` (99.4%+) ✅ | **Real Score: 100%** (26 features, 4/5 layers, 0 golden) | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅ | 23/26 features have all 4 Clean Architecture layers ✅
 
-> **Full coverage details:** [`coverage_report.md`](./coverage_report.md) | **Feature Catalog:** [`features.json`](./features.json)
+> **Full coverage details:** [`coverage_report.md`](docs/status/coverage_report.md) | **Feature Catalog:** [`features.json`](./features.json)
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 🏗️ Architecture
 
-OrionHealth follows **Clean Architecture** with 4 layers. For a detailed breakdown, see [**ARCHITECTURE.md**](./ARCHITECTURE.md).
+OrionHealth follows **Clean Architecture** with 4 layers. For a detailed breakdown, see [**ARCHITECTURE.md**](docs/architecture/ARCHITECTURE.md).
 
 ```
 lib/
