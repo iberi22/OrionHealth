@@ -292,6 +292,12 @@ packages/
 - [ ] FHIR export
 - [ ] Telegram support bot
 
+### Phase 7: Colombia Health Ecosystem Integration
+- [ ] **SURA EPS Integration**: OAuth2 connection and automated data fetching.
+- [ ] **Minsalud IHC Node**: Integration with the national interoperability system (Res. 866/2021).
+- [ ] **RIPS JSON Support**: Automated parsing of service provision records (Res. 2275/2023).
+- [ ] **HL7 FHIR R4 Adaptation**: Mapping Colombian FHIR profiles to OrionHealth local models.
+
 ## Licensing Philosophy
 
 **AGPL-3.0** ensures health data ownership tools remain public goods forever.
