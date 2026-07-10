@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/local_agent/domain/chat_message.dart';
 
 /// Vector Store Service interface for memory management

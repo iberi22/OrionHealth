@@ -99,7 +99,7 @@ class AboutPage extends StatelessWidget {
 
 class BlogTile extends StatelessWidget {
   final BlogPost post;
-  const BlogTile({required this.post});
+  const BlogTile({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
