@@ -37,7 +37,7 @@ jobs:
         run: flutter test --coverage --reporter expanded | tee test_output.txt
 
       - name: Check Coverage Threshold
-        run: python3 coverage_checker.py
+        run: python3 scripts/coverage_checker.py
 
       - name: Flutter Test (packages)
         run: |
