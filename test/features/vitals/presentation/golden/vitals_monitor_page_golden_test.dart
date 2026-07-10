@@ -18,7 +18,7 @@ void main() {
     when(() => mockBleService.initialize()).thenAnswer((_) async {});
     when(() => mockBleService.scanForDevices()).thenAnswer((_) async => []);
     when(() => mockBleService.connect(any())).thenAnswer((_) async => true);
-    when(() => mockBleService.startMedicalDataStream(any())).thenAnswer((_) => {});
+    when(() => mockBleService.startMedicalDataStream(any())).thenAnswer((_) async {});
   });
 
   tearDownAll(() {
