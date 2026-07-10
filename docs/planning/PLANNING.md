@@ -317,7 +317,7 @@ packages/
 
 ## Open Beta Sprint Planning (July-August 2026)
 
-Aligned with [SRS v1.0](../SRS.md) functional requirements.
+Aligned with [SRS v1.0](docs/SRS/README.md) functional requirements.
 
 ### Sprint Goals
 - **Core Stability**: Reach 100% pass rate in CI.

@@ -198,4 +198,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Roadmap
 
-See [PLANNING.md](PLANNING.md) and [TASK.md](TASK.md) for upcoming features and roadmap.
+See [PLANNING.md](docs/planning/PLANNING.md) and [Project Tasks](https://github.com/iberi22/OrionHealth/issues) for upcoming features and roadmap.

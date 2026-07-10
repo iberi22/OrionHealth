@@ -41,4 +41,4 @@ No critical issues detected.
 ---
 
 ## 📊 Raw State representation
-The full diagnostic state is available in [diag.json](file:///e:/scripts-python/orionhealth/diag.json) for automated processing.
+The full diagnostic state is available in [diag.json](scripts/tools/diag.json) for automated processing.

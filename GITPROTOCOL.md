@@ -72,5 +72,5 @@ The documentation site (located in the `docs/` folder) is an Astro-based site.
 
 ## 🔗 References
 
-- [Architecture Guide](ARCHITECTURE.md)
+- [Architecture Guide](docs/architecture/ARCHITECTURE.md)
 - [Features Catalog](features.json)
