@@ -8,6 +8,7 @@ import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/health_data_import/presentation/pages/health_import_page.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/usecases/health_import_usecases.dart';
 import 'package:orionhealth_health/features/health_data_import/domain/entities/health_data_source.dart';
+import 'package:orionhealth_health/features/health_data_import/domain/services/health_data_import_service.dart';
 import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:orionhealth_health/features/user_profile/presentation/pages/user_profile_page.dart';

@@ -120,10 +120,14 @@ void main() {
       await VideoRecorder.recordStep(tester, 'health_sharing', '02_sharing_scanning');
 
       // Simulate completion
+<<<<<<< HEAD
       bleStateController.add(BleSharingState.completed(
         1024,
         const Duration(seconds: 2),
       ));
+=======
+      bleStateController.add(BleSharingState.completed(1024, const Duration(seconds: 2)));
+>>>>>>> origin/fix/analyze-warnings-and-errors-13650026634091576366
       await tester.pumpAndSettle();
 
       expect(find.text('¡Compartido exitosamente!'), findsOneWidget);
@@ -184,10 +188,14 @@ void main() {
       await tester.tap(find.text('Importar'));
       await tester.pump();
 
+<<<<<<< HEAD
       nfcStateController.add(NfcSharingState.completed(
         512,
         const Duration(seconds: 1),
       ));
+=======
+      nfcStateController.add(NfcSharingState.completed(512, const Duration(seconds: 1)));
+>>>>>>> origin/fix/analyze-warnings-and-errors-13650026634091576366
       await tester.pumpAndSettle();
 
       expect(find.text('¡Importación completa!'), findsOneWidget);
