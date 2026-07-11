@@ -52,13 +52,16 @@ void main() {
     });
 
     test('can be mocked and called for transcribeAudio', () async {
-      const tTranscription = 'Transcribed text';
+      final tTranscript = Transcript(
+        text: 'Transcribed text',
+        timestamp: DateTime(2025),
+      );
       when(() => mockRepository.transcribeAudio(any()))
-          .thenAnswer((_) async => tTranscription);
+          .thenAnswer((_) async => tTranscript);
 
       final result = await mockRepository.transcribeAudio([1, 2, 3]);
 
-      expect(result, tTranscription);
+      expect(result, tTranscript);
       verify(() => mockRepository.transcribeAudio([1, 2, 3])).called(1);
     });
   });
