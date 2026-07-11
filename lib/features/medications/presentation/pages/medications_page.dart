@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:get_it/get_it.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../domain/entities/medication.dart';
 import '../../application/medications_cubit.dart';
 import '../../application/medications_state.dart';

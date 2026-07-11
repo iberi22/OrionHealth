@@ -96,7 +96,7 @@ class EpsConnectionPage extends StatelessWidget {
         },
         child: const Padding(
           padding: EdgeInsets.all(20),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.qr_code_scanner, color: AppColors.primary),

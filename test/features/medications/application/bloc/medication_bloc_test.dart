@@ -35,7 +35,7 @@ void main() {
     final tMedications = <Medication>[tMedication];
 
     test('initial state should be MedicationInitial', () {
-      expect(medicationBloc.state, const MedicationInitial());
+      expect(medicationBloc.state, const MedicationState.initial());
     });
 
     group('LoadMedications', () {
@@ -47,8 +47,8 @@ void main() {
         expectLater(
           medicationBloc.stream,
           emitsInOrder([
-            const MedicationLoading(),
-            MedicationLoaded(tMedications),
+            const MedicationState.loading(),
+            MedicationState.loaded(tMedications),
           ]),
         );
       });
@@ -61,8 +61,8 @@ void main() {
         expectLater(
           medicationBloc.stream,
           emitsInOrder([
-            const MedicationLoading(),
-            const MedicationError('Exception: DB Error'),
+            const MedicationState.loading(),
+            const MedicationState.error('Exception: DB Error'),
           ]),
         );
       });

@@ -41,7 +41,7 @@ class DataSourceTile extends StatelessWidget {
             Switch(
               value: source.status == DataSourceStatus.connected,
               onChanged: (_) => onToggle(),
-              activeColor: AppColors.primary,
+              activeThumbColor: AppColors.primary,
             ),
           ],
         ),
