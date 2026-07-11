@@ -35,7 +35,7 @@ void main() {
     final tLatest = {VitalSignType.heartRate: tVital};
 
     test('initial state should be VitalSignInitial', () {
-      expect(vitalSignBloc.state, const VitalSignInitial());
+      expect(vitalSignBloc.state, const VitalSignState.initial());
     });
 
     group('LoadVitalSigns', () {
@@ -47,8 +47,8 @@ void main() {
         expectLater(
           vitalSignBloc.stream,
           emitsInOrder([
-            const VitalSignLoading(),
-            VitalSignLoaded(tVitals),
+            const VitalSignState.loading(),
+            VitalSignState.loaded(tVitals),
           ]),
         );
       });
@@ -61,8 +61,8 @@ void main() {
         expectLater(
           vitalSignBloc.stream,
           emitsInOrder([
-            const VitalSignLoading(),
-            const VitalSignError('Exception: DB Error'),
+            const VitalSignState.loading(),
+            const VitalSignState.error('Exception: DB Error'),
           ]),
         );
       });
@@ -77,8 +77,8 @@ void main() {
         expectLater(
           vitalSignBloc.stream,
           emitsInOrder([
-            const VitalSignLoading(),
-            VitalSignLatestLoaded(tLatest),
+            const VitalSignState.loading(),
+            VitalSignState.latestLoaded(tLatest),
           ]),
         );
       });

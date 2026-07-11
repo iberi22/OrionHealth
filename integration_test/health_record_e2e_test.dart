@@ -7,7 +7,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/health_record/presentation/pages/timeline_page.dart';
 import 'package:orionhealth_health/features/health_record/presentation/pages/health_record_staging_page.dart';
-import 'package:orionhealth_health/features/health_record/domain/repositories/health_record_repository.dart';
 import 'package:orionhealth_health/features/health_record/domain/entities/medical_record.dart';
 import 'package:orionhealth_health/features/health_record/infrastructure/services/file_picker_service.dart';
 import 'package:orionhealth_health/features/health_record/infrastructure/services/image_picker_service.dart';

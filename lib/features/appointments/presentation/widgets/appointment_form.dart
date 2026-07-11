@@ -116,7 +116,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<AppointmentStatus>(
-              value: _status,
+              initialValue: _status,
               decoration: const InputDecoration(labelText: 'Estado', border: OutlineInputBorder()),
               items: AppointmentStatus.values.map((s) => DropdownMenuItem(value: s, child: Text(s.name))).toList(),
               onChanged: (val) => setState(() => _status = val!),

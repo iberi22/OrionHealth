@@ -140,7 +140,7 @@ void main() {
       when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
       when(mockBiometric.authenticate(localizedReason: anyNamed('localizedReason')))
           .thenAnswer((_) async => true);
-      when(mockRepository.saveCredentials(any)).thenAnswer((_) async => null);
+      when(mockRepository.saveCredentials(any)).thenAnswer((_) async {});
 
       await authCubit.toggleBiometrics(true);
 
@@ -149,7 +149,7 @@ void main() {
     });
 
     test('logout should call logoutUseCase and emit AuthUnauthenticated', () async {
-      when(mockLogoutUseCase()).thenAnswer((_) async => null);
+      when(mockLogoutUseCase()).thenAnswer((_) async {});
 
       await authCubit.logout();
 

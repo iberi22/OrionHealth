@@ -40,7 +40,7 @@ void main() {
     when(() => mockDashboardCubit.stream).thenAnswer((_) => const Stream.empty());
   });
 
-  Widget _buildApp(DashboardState state) {
+  Widget buildApp(DashboardState state) {
     when(() => mockDashboardCubit.state).thenReturn(state);
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -85,7 +85,7 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        _buildApp(DashboardLoaded(stats: stats, activities: activities)),
+        buildApp(DashboardLoaded(stats: stats, activities: activities)),
       );
       await tester.pumpAndSettle();
 
@@ -130,7 +130,7 @@ void main() {
 
       final stats = DashboardStats(totalMedications: 3, reportsCount: 5);
       await tester.pumpWidget(
-        _buildApp(DashboardLoaded(stats: stats, activities: const [])),
+        buildApp(DashboardLoaded(stats: stats, activities: const [])),
       );
       await tester.pumpAndSettle();
 
@@ -189,7 +189,7 @@ void main() {
           Future(() {
             controller.add(
               DashboardLoaded(
-                stats: const DashboardStats(
+                stats: DashboardStats(
                   totalMedications: 5,
                   reportsCount: 12,
                   lastVitalCheck: DateTime(2026, 7, 7),
@@ -213,7 +213,7 @@ void main() {
       when(() => mockDashboardCubit.stream).thenAnswer((_) => stateStream);
 
       await tester.pumpWidget(
-        _buildApp(const DashboardLoading()),
+        buildApp(const DashboardLoading()),
       );
       await tester.pump();
 

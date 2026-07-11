@@ -2,7 +2,6 @@ import 'package:health/health.dart';
 import 'package:injectable/injectable.dart';
 import '../services/health_data_import_service.dart';
 import '../entities/health_data_source.dart';
-import '../entities/health_import_result.dart';
 import '../../../vitals/domain/repositories/vital_sign_repository.dart';
 
 @injectable

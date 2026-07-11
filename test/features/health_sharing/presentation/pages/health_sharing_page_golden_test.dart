@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/share_page.dart';
 import 'package:orionhealth_health/features/health_sharing/presentation/pages/receive_page.dart';
@@ -14,7 +13,6 @@ import 'package:orionhealth_health/features/health_sharing/application/sharing_c
 import 'package:orionhealth_health/features/auth/application/bloc/auth_cubit.dart';
 import 'package:orionhealth_health/features/auth/application/bloc/auth_state.dart' as auth_state;
 import 'package:orionhealth_health/features/health_sharing/domain/entities/shared_health_package.dart';
-import 'package:orionhealth_health/features/health_sharing/infrastructure/wifi_direct_service.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/golden_test_utils.dart';

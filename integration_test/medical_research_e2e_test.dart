@@ -89,6 +89,7 @@ void main() {
             latestVitals: [],
             upcomingAppointments: [],
             medicationCount: 0,
+            summaryText: 'Tu salud está en buen estado.',
           ));
 
       // Mock Research Data
