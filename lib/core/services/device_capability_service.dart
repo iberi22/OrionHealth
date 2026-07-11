@@ -146,4 +146,24 @@ class DeviceCapabilityService {
     final caps = await getCapabilities();
     return caps.recommendation;
   }
+
+  /// Returns true if the device is an emulator.
+  Future<bool> isEmulator() async {
+    if (Platform.isAndroid) {
+      try {
+        final androidInfo = await _deviceInfo.androidInfo;
+        return !androidInfo.isPhysicalDevice;
+      } catch (_) {
+        return false;
+      }
+    } else if (Platform.isIOS) {
+      try {
+        final iosInfo = await _deviceInfo.iosInfo;
+        return !iosInfo.isPhysicalDevice;
+      } catch (_) {
+        return false;
+      }
+    }
+    return false;
+  }
 }
