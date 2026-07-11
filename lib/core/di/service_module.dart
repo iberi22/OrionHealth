@@ -4,11 +4,16 @@ import 'package:health/health.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import '../services/device_capability_service.dart';
+import '../utils/health_helper.dart';
+import '../utils/health_wrapper.dart';
 
 @module
 abstract class ServiceModule {
   @lazySingleton
-  Health get health => Health();
+  HealthWrapper get healthWrapper => HealthWrapper(HealthHelper.createClient());
+
+  @lazySingleton
+  Health? get health => HealthHelper.createClient();
 
   @preResolve
   @lazySingleton

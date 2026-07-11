@@ -1,5 +1,6 @@
 import 'package:health/health.dart';
 import 'package:injectable/injectable.dart';
+import '../../../../core/utils/health_helper.dart';
 import '../../../vitals/domain/entities/vital_sign.dart';
 import '../entities/health_data_source.dart';
 
@@ -34,17 +35,23 @@ class HealthDataImportService {
     HealthDataAccess.READ,
   ];
 
-  Future<Health> _getHealthClient() async {
-    _healthClient ??= Health();
-    if (!_configured) {
-      await _healthClient!.configure();
-      _configured = true;
+  Future<Health?> _getHealthClient() async {
+    _healthClient ??= HealthHelper.createClient();
+    if (_healthClient != null && !_configured) {
+      try {
+        await _healthClient!.configure();
+        _configured = true;
+      } catch (_) {
+        return null;
+      }
     }
-    return _healthClient!;
+    return _healthClient;
   }
 
   Future<List<HealthDataSource>> getAvailableSources() async {
     final health = await _getHealthClient();
+    if (health == null) return [];
+
     final List<HealthDataSource> available = [];
 
     try {
@@ -66,22 +73,33 @@ class HealthDataImportService {
 
   Future<bool> requestAuthorization(HealthDataSource source) async {
     final health = await _getHealthClient();
-    return await health.requestAuthorization(
-      _desiredDataTypes,
-      permissions: _permissions,
-    );
+    if (health == null) return false;
+    try {
+      return await health.requestAuthorization(
+        _desiredDataTypes,
+        permissions: _permissions,
+      );
+    } catch (_) {
+      return false;
+    }
   }
 
   Future<List<HealthDataPoint>> _fetchData(HealthDataType type) async {
     final health = await _getHealthClient();
+    if (health == null) return [];
+
     final now = DateTime.now();
     final thirtyDaysAgo = now.subtract(const Duration(days: 30));
     
-    return await health.getHealthDataFromTypes(
-      types: [type],
-      startTime: thirtyDaysAgo,
-      endTime: now,
-    );
+    try {
+      return await health.getHealthDataFromTypes(
+        types: [type],
+        startTime: thirtyDaysAgo,
+        endTime: now,
+      );
+    } catch (_) {
+      return [];
+    }
   }
 
   Future<List<HealthDataPoint>> fetchSteps() => _fetchData(HealthDataType.STEPS);
@@ -92,21 +110,27 @@ class HealthDataImportService {
 
   Future<List<HealthDataPoint>> fetchBloodPressure() async {
     final health = await _getHealthClient();
+    if (health == null) return [];
+
     final now = DateTime.now();
     final thirtyDaysAgo = now.subtract(const Duration(days: 30));
     
-    final systolicData = await health.getHealthDataFromTypes(
-      types: [HealthDataType.BLOOD_PRESSURE_SYSTOLIC],
-      startTime: thirtyDaysAgo,
-      endTime: now,
-    );
-    final diastolicData = await health.getHealthDataFromTypes(
-      types: [HealthDataType.BLOOD_PRESSURE_DIASTOLIC],
-      startTime: thirtyDaysAgo,
-      endTime: now,
-    );
-    
-    return [...systolicData, ...diastolicData];
+    try {
+      final systolicData = await health.getHealthDataFromTypes(
+        types: [HealthDataType.BLOOD_PRESSURE_SYSTOLIC],
+        startTime: thirtyDaysAgo,
+        endTime: now,
+      );
+      final diastolicData = await health.getHealthDataFromTypes(
+        types: [HealthDataType.BLOOD_PRESSURE_DIASTOLIC],
+        startTime: thirtyDaysAgo,
+        endTime: now,
+      );
+
+      return [...systolicData, ...diastolicData];
+    } catch (_) {
+      return [];
+    }
   }
 
   Future<List<HealthDataPoint>> fetchHeight() => _fetchData(HealthDataType.HEIGHT);

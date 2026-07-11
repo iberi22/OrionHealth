@@ -1,5 +1,6 @@
 import 'package:health/health.dart';
 import 'package:injectable/injectable.dart';
+import '../../../core/utils/health_helper.dart';
 import '../../health_record/infrastructure/services/file_picker_service.dart';
 import '../../health_record/infrastructure/services/ocr_service.dart';
 
@@ -11,26 +12,41 @@ abstract class SensorHealthDataSource {
 
 @LazySingleton(as: SensorHealthDataSource)
 class SensorHealthDataSourceImpl implements SensorHealthDataSource {
-  final Health _health = Health();
+  final Health? _health = HealthHelper.createClient();
 
   @override
   Future<bool> requestAuthorization(List<HealthDataType> types, List<HealthDataAccess> permissions) async {
-    return await _health.requestAuthorization(types, permissions: permissions);
+    if (_health == null) return false;
+    try {
+      return await _health!.requestAuthorization(types, permissions: permissions);
+    } catch (_) {
+      return false;
+    }
   }
 
   @override
   Future<List<HealthDataPoint>> fetchData(HealthDataType type, DateTime start, DateTime end) async {
-    return await _health.getHealthDataFromTypes(
-      types: [type],
-      startTime: start,
-      endTime: end,
-    );
+    if (_health == null) return [];
+    try {
+      return await _health!.getHealthDataFromTypes(
+        types: [type],
+        startTime: start,
+        endTime: end,
+      );
+    } catch (_) {
+      return [];
+    }
   }
 
   @override
   Future<bool> hasPermissions(List<HealthDataType> types) async {
-    final result = await _health.hasPermissions(types);
-    return result ?? false;
+    if (_health == null) return false;
+    try {
+      final result = await _health!.hasPermissions(types);
+      return result ?? false;
+    } catch (_) {
+      return false;
+    }
   }
 }
 
