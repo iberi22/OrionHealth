@@ -5,27 +5,31 @@ const BASE = '/OrionHealth';
 test.describe('OrionHealth Landing Page', () => {
   test('should load hero section with title', async ({ page }) => {
     await page.goto(BASE + '/');
-    await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('h1')).toContainText('OrionHealth');
+    await expect(page.locator('h1.hero-title')).toBeVisible();
+    await expect(page.locator('h1.hero-title')).toContainText('OrionHealth');
   });
 
   test('should have working navigation', async ({ page }) => {
     await page.goto(BASE + '/');
-    await expect(page.locator('header')).toBeVisible();
+    // Header has a logo link which is always visible
+    await expect(page.locator('header a').first()).toBeVisible();
+    // Check for any nav links in the header
+    const links = await page.locator('header a').count();
+    expect(links).toBeGreaterThan(1);
   });
 
   test('should render project dashboard section', async ({ page }) => {
     await page.goto(BASE + '/');
-    await page.waitForSelector('#dashboard', { timeout: 10000 });
-    await expect(page.locator('#dashboard')).toBeVisible();
-    await expect(page.locator('#dashboard')).toContainText('BUILD');
+    const dashboard = page.locator('#dashboard');
+    await expect(dashboard).toBeVisible({ timeout: 10000 });
+    await expect(dashboard).toContainText('BUILD');
   });
 
   test('should render medical standards section', async ({ page }) => {
     await page.goto(BASE + '/');
-    await page.waitForSelector('#standards', { timeout: 10000 });
-    await expect(page.locator('#standards')).toBeVisible();
-    await expect(page.locator('#standards')).toContainText('628');
+    const standards = page.locator('#standards');
+    await expect(standards).toBeVisible({ timeout: 10000 });
+    await expect(standards).toContainText('628');
   });
 });
 
