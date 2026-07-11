@@ -1,6 +1,4 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/data_sources/application/data_source_cubit.dart';
@@ -10,7 +8,7 @@ import 'package:orionhealth_health/features/data_sources/presentation/pages/data
 import 'package:orionhealth_health/features/data_sources/presentation/widgets/data_source_tile.dart';
 import 'package:get_it/get_it.dart';
 
-class MockDataSourceCubit extends MockCubit<DataSourceState> implements DataSourceCubit {}
+class MockDataSourceCubit extends Mock implements DataSourceCubit {}
 
 void main() {
   late MockDataSourceCubit mockCubit;
@@ -28,6 +26,10 @@ void main() {
   setUpAll(() {
     final getIt = GetIt.instance;
     mockCubit = MockDataSourceCubit();
+
+    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockCubit.close()).thenAnswer((_) async => {});
+
     if (!getIt.isRegistered<DataSourceCubit>()) {
       getIt.registerFactory<DataSourceCubit>(() => mockCubit);
     }

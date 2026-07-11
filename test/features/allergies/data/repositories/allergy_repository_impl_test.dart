@@ -1,11 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
 import 'package:orionhealth_health/features/allergies/data/datasources/allergy_local_datasource.dart';
 import 'package:orionhealth_health/features/allergies/data/repositories/allergy_repository_impl.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
 
 class MockAllergyLocalDataSource extends Mock implements AllergyLocalDataSource {}
+class MockEncryptionService extends Mock implements EncryptionService {}
+
 class MockEncryptionService extends Mock implements EncryptionService {}
 
 class FakeAllergy extends Fake implements Allergy {}
