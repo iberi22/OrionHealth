@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:test/test.dart';
 import 'package:isar/isar.dart';
 import 'package:path/path.dart' as p;

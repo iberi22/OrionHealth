@@ -1,4 +1,3 @@
-import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import '../../domain/entities/allergy.dart';
 import '../../domain/repositories/allergy_repository.dart';

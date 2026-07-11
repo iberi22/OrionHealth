@@ -1,4 +1,3 @@
-import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import '../../domain/entities/appointment.dart';
 import '../../domain/repositories/appointment_repository.dart';

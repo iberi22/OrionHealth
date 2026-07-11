@@ -54,7 +54,7 @@ class AuditLogger {
       'action': action,
       'resourceType': resourceType,
       'resourceId': resourceId,
-      if (metadata != null) 'metadata': metadata,
+      'metadata': ?metadata,
     };
 
     try {
