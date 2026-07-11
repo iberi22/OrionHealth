@@ -6,7 +6,7 @@ export default defineConfig({
   retries: 0,
   workers: 1,
   use: {
-    baseURL: 'http://localhost:4321',
+    baseURL: 'http://localhost:4321/OrionHealth',
     trace: 'off',
   },
   projects: [
