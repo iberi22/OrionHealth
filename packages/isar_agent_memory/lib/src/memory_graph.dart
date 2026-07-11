@@ -4,7 +4,10 @@ import 'embeddings_adapter.dart';
 import 'models/memory_node.dart';
 import 'models/memory_edge.dart';
 import 'models/memory_embedding.dart';
+import 'models/patient_package.dart';
+import 'models/backend_operation_log.dart';
 import 'vector_index.dart';
+import 'vector_index_objectbox.dart';
 import 'reranking_strategy.dart';
 
 /// Main API for interacting with the universal agent memory graph.
@@ -19,22 +22,29 @@ class MemoryGraph {
   final EmbeddingsAdapter embeddingsAdapter;
 
   /// Pluggable vector index backend (e.g., ObjectBox, Remote/custom).
-  final VectorIndex index;
+  late final VectorIndex _index;
 
   /// Creates a [MemoryGraph] with the given [Isar] instance and [EmbeddingsAdapter].
-  /// A [VectorIndex] must be provided (e.g., InMemoryVectorIndex).
+  /// Optionally, a custom [VectorIndex] can be provided. If none is provided,
+  /// a default ObjectBox-based index will be used.
   MemoryGraph(
     this.isar, {
     required this.embeddingsAdapter,
-    required this.index,
-  });
+    VectorIndex? index,
+  }) {
+    _index = index ??
+        ObjectBoxVectorIndex.open(
+          namespace: 'default',
+          dimension: embeddingsAdapter.dimension,
+        );
+  }
 
   /// Initializes the vector index with existing nodes from the Isar database.
   ///
   /// This method should be called once when the application starts to ensure the
   /// vector index is synchronized with the persisted nodes.
   Future<void> initialize() async {
-    await index.load();
+    await _index.load();
 
     final allNodes = await isar.memoryNodes.where().findAll();
     for (final node in allNodes) {
@@ -42,8 +52,8 @@ class MemoryGraph {
         // Safely attempt to add the document to the index.
         // Errors might occur if dimensions mismatch.
         try {
-          await index.removeDocument(node.id.toString());
-          await index.addDocument(
+          await _index.removeDocument(node.id.toString());
+          await _index.addDocument(
             node.id.toString(),
             node.content,
             Float32List.fromList(
@@ -76,7 +86,7 @@ class MemoryGraph {
     // 1. Deduplication check
     if (deduplicate) {
       try {
-        final existing = await index.search(
+        final existing = await _index.search(
           Float32List.fromList(vector.map((e) => e.toDouble()).toList()),
           topK: 1,
         );
@@ -116,8 +126,8 @@ class MemoryGraph {
     if (node.embedding != null) {
       // Replace any existing vector for this ID to avoid duplicates during tests
       try {
-        await index.removeDocument(nodeId.toString());
-        await index.addDocument(
+        await _index.removeDocument(nodeId.toString());
+        await _index.addDocument(
           nodeId.toString(),
           node.content,
           Float32List.fromList(
@@ -144,7 +154,7 @@ class MemoryGraph {
   /// Returns `true` if the deletion was successful.
   Future<bool> deleteNode(int id) async {
     try {
-      await index.removeDocument(id.toString());
+      await _index.removeDocument(id.toString());
     } catch (e) {
       print('Warning: Failed to remove node $id from index: $e');
     }
@@ -187,7 +197,7 @@ class MemoryGraph {
 
     // Use pluggable vector index.
     try {
-      final searchResults = await index.search(
+      final searchResults = await _index.search(
         Float32List.fromList(queryEmbedding.map((e) => e.toDouble()).toList()),
         topK: topK,
       );
@@ -203,7 +213,7 @@ class MemoryGraph {
             results.add((
               node: node,
               distance: searchResults[i].score,
-              provider: index.provider,
+              provider: _index.provider,
             ));
           }
         }
@@ -379,6 +389,64 @@ class MemoryGraph {
   /// A root node is defined as a node with no incoming edges.
   /// The search is limited to a [maxDepth].
   /// Returns a list of paths, where each path is a list of node IDs.
+  /// Stores a medical context node.
+  Future<int> storeMedicalNode({
+    required String content,
+    required String type,
+    required MedicalMetadata medicalMetadata,
+    Map<String, dynamic>? metadata,
+  }) async {
+    final vector = await embeddingsAdapter.embed(content);
+    final embedding = MemoryEmbedding(
+      vector: vector,
+      provider: embeddingsAdapter.providerName,
+      dimension: vector.length,
+    );
+    final node = MemoryNode(
+      content: content,
+      type: type,
+      embedding: embedding,
+      metadata: metadata,
+      medicalMetadata: medicalMetadata,
+    );
+    return await storeNode(node);
+  }
+
+  /// Stores a patient package.
+  Future<int> storePatientPackage(PatientPackage package) async {
+    return await isar.writeTxn(() => isar.patientPackages.put(package));
+  }
+
+  /// Retrieves a patient package by its [patientId].
+  Future<PatientPackage?> getPatientPackage(String patientId) async {
+    return await isar.patientPackages
+        .filter()
+        .patientIdEqualTo(patientId)
+        .findFirst();
+  }
+
+  /// Logs a backend operation.
+  Future<int> logBackendOperation({
+    required String operationType,
+    required String status,
+    String? errorMessage,
+    int? durationMs,
+    String? nodeId,
+    String? patientId,
+    required String tenantId,
+  }) async {
+    final log = BackendOperationLog(
+      operationType: operationType,
+      status: status,
+      errorMessage: errorMessage,
+      durationMs: durationMs,
+      nodeId: nodeId,
+      patientId: patientId,
+      tenantId: tenantId,
+    );
+    return await isar.writeTxn(() => isar.backendOperationLogs.put(log));
+  }
+
   Future<List<List<int>>> _findPathsToNode(int targetId,
       {int maxDepth = 2}) async {
     final List<List<int>> paths = [];
@@ -420,7 +488,7 @@ class MemoryGraph {
   ///
   /// This is primarily for testing purposes to ensure a clean state between tests.
   Future<void> clearVectorCollection() async {
-    await index.clear();
+    await _index.clear();
   }
 
   /// Performs a semantic search with a re-ranking strategy.
