@@ -12,13 +12,13 @@ void main() {
 
       expect(
         SyncState(
-          status: SyncStatus.initial,
+          status: SyncPageStatus.initial,
           lastSyncTime: lastSync,
           errorMessage: 'error',
           discoveredNodes: nodes,
         ),
         SyncState(
-          status: SyncStatus.initial,
+          status: SyncPageStatus.initial,
           lastSyncTime: lastSync,
           errorMessage: 'error',
           discoveredNodes: nodes,
@@ -37,26 +37,26 @@ void main() {
       ];
 
       final state = SyncState(
-        status: SyncStatus.initial,
+        status: SyncPageStatus.initial,
         lastSyncTime: lastSync,
         errorMessage: 'error',
         discoveredNodes: nodes,
       );
 
       final updatedState = state.copyWith(
-        status: SyncStatus.success,
+        status: SyncPageStatus.success,
         lastSyncTime: newSync,
         errorMessage: 'no error',
         discoveredNodes: newNodes,
       );
 
-      expect(updatedState.status, SyncStatus.success);
+      expect(updatedState.status, SyncPageStatus.success);
       expect(updatedState.lastSyncTime, newSync);
       expect(updatedState.errorMessage, 'no error');
       expect(updatedState.discoveredNodes, newNodes);
 
-      final partiallyUpdated = state.copyWith(status: SyncStatus.loading);
-      expect(partiallyUpdated.status, SyncStatus.loading);
+      final partiallyUpdated = state.copyWith(status: SyncPageStatus.loading);
+      expect(partiallyUpdated.status, SyncPageStatus.loading);
       expect(partiallyUpdated.lastSyncTime, lastSync);
       expect(partiallyUpdated.errorMessage, 'error');
       expect(partiallyUpdated.discoveredNodes, nodes);

@@ -29,11 +29,11 @@ class SyncPage extends StatelessWidget {
               Expanded(
                 child: BlocConsumer<FhirSyncCubit, SyncState>(
                   listener: (context, state) {
-                    if (state.status == SyncStatus.success) {
+                    if (state.status == SyncPageStatus.success) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Sincronización completada con éxito')),
                       );
-                    } else if (state.status == SyncStatus.failure) {
+                    } else if (state.status == SyncPageStatus.failure) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Error: ${state.errorMessage}')),
                       );
@@ -92,7 +92,7 @@ class SyncPage extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (state.status == SyncStatus.loading)
+              if (state.status == SyncPageStatus.loading)
                 const Padding(
                   padding: EdgeInsets.only(left: 8.0),
                   child: SizedBox(
@@ -135,7 +135,7 @@ class SyncPage extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: state.status == SyncStatus.loading
+              onPressed: state.status == SyncPageStatus.loading
                   ? null
                   : () => context.read<FhirSyncCubit>().performSync(),
               icon: const Icon(Icons.sync),

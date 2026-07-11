@@ -35,7 +35,7 @@ void main() {
       setupGoldenTest(tester);
 
       final state = SyncState(
-        status: SyncStatus.initial,
+        status: SyncPageStatus.initial,
         lastSyncTime: DateTime(2026, 6, 14, 15, 30),
         discoveredNodes: const [
           SyncNode(id: '1', name: 'Nodo Sala Principal', host: '192.168.1.15', port: 8080),
@@ -60,7 +60,7 @@ void main() {
       setupGoldenTest(tester);
 
       final state = SyncState(
-        status: SyncStatus.loading,
+        status: SyncPageStatus.loading,
         lastSyncTime: DateTime(2026, 6, 14, 15, 30),
       );
 

@@ -32,7 +32,7 @@ void main() {
 
   group('FhirSyncCubit', () {
     test('initial state has initial status', () {
-      expect(cubit.state.status, SyncStatus.initial);
+      expect(cubit.state.status, SyncPageStatus.initial);
     });
 
     group('performSync', () {
@@ -44,8 +44,8 @@ void main() {
         ).thenAnswer((_) async => tLastSync);
 
         final expected = [
-          SyncState(status: SyncStatus.loading, lastSyncTime: null),
-          SyncState(status: SyncStatus.success, lastSyncTime: tLastSync),
+          SyncState(status: SyncPageStatus.loading, lastSyncTime: null),
+          SyncState(status: SyncPageStatus.success, lastSyncTime: tLastSync),
         ];
 
         expectLater(cubit.stream, emitsInOrder(expected));
@@ -59,9 +59,9 @@ void main() {
         when(() => service.getLastSyncTime()).thenAnswer((_) async => null);
 
         final expected = [
-          SyncState(status: SyncStatus.loading, lastSyncTime: null),
+          SyncState(status: SyncPageStatus.loading, lastSyncTime: null),
           SyncState(
-            status: SyncStatus.failure,
+            status: SyncPageStatus.failure,
             errorMessage: 'Exception: sync failed',
           ),
         ];
@@ -74,19 +74,19 @@ void main() {
     group('SyncState', () {
       test('supports value equality', () {
         expect(
-          const SyncState(status: SyncStatus.initial),
-          const SyncState(status: SyncStatus.initial),
+          const SyncState(status: SyncPageStatus.initial),
+          const SyncState(status: SyncPageStatus.initial),
         );
         expect(
-          SyncState(status: SyncStatus.success, lastSyncTime: DateTime(2024)),
-          SyncState(status: SyncStatus.success, lastSyncTime: DateTime(2024)),
+          SyncState(status: SyncPageStatus.success, lastSyncTime: DateTime(2024)),
+          SyncState(status: SyncPageStatus.success, lastSyncTime: DateTime(2024)),
         );
       });
 
       test('copyWith preserves unchanged fields', () {
-        const state = SyncState(status: SyncStatus.loading);
+        const state = SyncState(status: SyncPageStatus.loading);
         final copied = state.copyWith();
-        expect(copied.status, SyncStatus.loading);
+        expect(copied.status, SyncPageStatus.loading);
       });
     });
   });
