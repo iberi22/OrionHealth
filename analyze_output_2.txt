@@ -1,0 +1,186 @@
+Resolving dependencies...
+Downloading packages...
+  _fe_analyzer_shared 61.0.0 (104.0.0 available)
+  analyzer 5.13.0 (14.0.0 available)
+  app_links 6.4.1 (7.2.1 available)
+  app_links_platform_interface 2.0.2 (2.0.4 available)
+  audio_session 0.2.3 (0.2.4 available)
+  build 2.4.1 (4.0.7 available)
+  build_config 1.1.2 (1.3.1 available)
+  build_daemon 4.1.1 (4.1.2 available)
+  build_resolvers 2.4.2 (3.0.4 available)
+  build_runner 2.4.13 (2.15.1 available)
+  build_runner_core 7.3.2 (9.3.2 available)
+  connectivity_plus 7.1.1 (7.2.0 available)
+  cross_file 0.3.5+2 (0.3.5+4 available)
+  dart_style 2.3.2 (3.1.11 available)
+  device_info_plus 12.4.0 (13.2.0 available)
+  device_info_plus_platform_interface 7.0.3 (8.1.0 available)
+  dio_web_adapter 2.1.2 (2.2.0 available)
+  file_picker 10.3.10 (11.0.2 available)
+  firebase_database 12.4.3 (12.4.4 available)
+  flat_buffers 23.5.26 (25.9.23 available)
+  flutter_appauth 12.0.1 (12.0.2 available)
+  flutter_blue_plus 2.3.8 (2.3.10 available)
+  flutter_blue_plus_android 9.0.2 (9.0.3 available)
+  flutter_blue_plus_darwin 9.0.2 (9.0.3 available)
+  flutter_blue_plus_linux 9.0.2 (9.0.3 available)
+  flutter_blue_plus_platform_interface 9.0.2 (9.0.3 available)
+  flutter_blue_plus_web 9.0.2 (9.0.3 available)
+  flutter_gemma 0.13.6 (1.2.2 available)
+  flutter_markdown 0.7.7+1 (discontinued replaced by flutter_markdown_plus)
+  flutter_secure_storage_darwin 0.3.2 (0.4.0 available)
+  flutter_secure_storage_windows 4.1.0 (4.2.2 available)
+  freezed 2.5.2 (3.2.5 available)
+  freezed_annotation 2.4.4 (3.1.0 available)
+  google_mlkit_commons 0.11.1 (0.12.0 available)
+  google_mlkit_text_recognition 0.15.1 (0.16.0 available)
+  googleai_dart 3.6.0 (9.0.0 available)
+  googleapis 15.0.0 (16.0.0 available)
+  googleapis_auth 2.3.2 (2.3.3 available)
+  image_picker 1.2.2 (1.2.3 available)
+  image_picker_android 0.8.13+17 (0.8.13+19 available)
+  injectable 2.7.1+4 (3.0.0 available)
+  injectable_generator 2.4.2 (3.1.0 available)
+  intl 0.20.2 (0.20.3 available)
+  js 0.6.7 (0.7.2 available)
+  just_audio 0.10.5 (0.10.6 available)
+  large_file_handler 0.3.1 (0.5.0 available)
+  local_auth 3.0.1 (3.0.2 available)
+  local_auth_android 2.0.8 (2.0.9 available)
+  matcher 0.12.18 (0.12.20 available)
+  meta 1.17.0 (1.19.0 available)
+  mobile_scanner 6.0.11 (7.2.0 available)
+  mockito 5.4.4 (5.7.0 available)
+  native_toolchain_c 0.19.1 (0.19.2 available)
+  objectbox 5.0.4 (5.3.2 available)
+  objectbox_flutter_libs 5.0.4 (5.3.2 available)
+  package_config 2.2.0 (3.0.0 available)
+  path_provider_linux 2.2.1 (2.2.2 available)
+  pointycastle 3.9.1 (4.0.0 available)
+  record 6.2.1 (7.1.1 available)
+  record_android 1.5.2 (2.1.2 available)
+  record_ios 1.2.1 (2.1.1 available)
+  record_linux 1.3.1 (2.1.1 available)
+  record_macos 1.2.2 (2.1.1 available)
+  record_platform_interface 1.6.0 (2.1.0 available)
+  record_web 1.3.0 (2.1.1 available)
+  record_windows 1.0.7 (2.2.2 available)
+  share_plus 12.0.2 (13.2.0 available)
+  share_plus_platform_interface 6.1.0 (7.1.0 available)
+  shared_preferences_android 2.4.23 (2.4.26 available)
+  shelf_web_socket 2.0.1 (3.0.0 available)
+  source_gen 1.5.0 (4.2.3 available)
+  sqflite 2.4.2+1 (2.4.3 available)
+  sqflite_android 2.4.2+3 (2.4.3 available)
+  sqflite_common 2.5.8 (2.5.11 available)
+  sqflite_darwin 2.4.2 (2.4.3+1 available)
+  sqflite_platform_interface 2.4.0 (2.4.1 available)
+  sqlite3 3.3.3 (3.3.4 available)
+  synchronized 3.4.0+1 (3.4.1 available)
+  test_api 0.7.9 (0.7.13 available)
+  timezone 0.9.4 (0.11.1 available)
+  url_launcher_android 6.3.30 (6.3.32 available)
+  vector_math 2.2.0 (2.4.0 available)
+  vertex_ai 0.2.1 (0.2.4 available)
+  web_socket_channel 2.4.0 (3.0.3 available)
+  win32 5.15.0 (6.3.0 available)
+  win32_registry 2.1.0 (3.0.3 available)
+  xml 6.6.1 (7.0.1 available)
+Got dependencies!
+1 package is discontinued.
+86 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing app...
+
+warning • Unused import: 'dart:async' • integration_test/about_e2e_test.dart:1:8 • unused_import
+warning • Unused import: 'dart:async' • integration_test/doctor_verification_e2e_test.dart:14:8 • unused_import
+  error • Invalid constant value • integration_test/doctor_verification_e2e_test.dart:131:40 • invalid_constant
+warning • Unused import: 'dart:async' • integration_test/email_citas_e2e_test.dart:4:8 • unused_import
+   info • 'setMockMethodCallHandler' is deprecated and shouldn't be used. Use tester.binding.defaultBinaryMessenger.setMockMethodCallHandler or TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler instead. Pass the channel as the first argument. This feature was deprecated after v3.9.0-19.0.pre • integration_test/health_data_import_e2e_test.dart:55:10 • deprecated_member_use
+warning • Unused import: 'package:orionhealth_health/features/health_record/domain/repositories/health_record_repository.dart' • integration_test/health_record_e2e_test.dart:10:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/health_sharing/application/sharing_cubit.dart' • integration_test/health_sharing_e2e_test.dart:7:8 • unused_import
+   info • Angle brackets will be interpreted as HTML • integration_test/screenshot_flow_e2e_test.dart:27:61 • unintended_html_in_doc_comment
+   info • Angle brackets will be interpreted as HTML • integration_test/screenshot_flow_e2e_test.dart:27:68 • unintended_html_in_doc_comment
+   info • Don't invoke 'print' in production code • integration_test/utils/video_recorder.dart:19:5 • avoid_print
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/core/logging/audit_logger.dart:57:7 • use_null_aware_elements
+   info • 'encryptedSharedPreferences' is deprecated and shouldn't be used. EncryptedSharedPreferences is deprecated and will be removed in v11. The Jetpack Security library is deprecated by Google. Your data will be automatically migrated to custom ciphers on first access. Remove this parameter - it will be ignored • lib/core/services/secure_storage_service.dart:58:17 • deprecated_member_use
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/core/widgets/page_header.dart:62:15 • use_null_aware_elements
+   info • Constructors for public widgets should have a named 'key' parameter • lib/features/about/presentation/pages/about_page.dart:102:9 • use_key_in_widget_constructors
+warning • Unused import: 'package:injectable/injectable.dart' • lib/features/allergies/infrastructure/repositories/isar_allergy_repository.dart:1:8 • unused_import
+warning • Unused import: 'package:injectable/injectable.dart' • lib/features/appointments/infrastructure/repositories/isar_appointment_repository.dart:1:8 • unused_import
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/appointments/presentation/widgets/appointment_form.dart:119:15 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/data_sources/presentation/widgets/data_source_tile.dart:44:15 • deprecated_member_use
+   info • Unnecessary 'const' keyword • lib/features/eps_connection/presentation/pages/eps_connection_page.dart:99:18 • unnecessary_const
+warning • Unused import: '../entities/health_import_result.dart' • lib/features/health_data_import/domain/usecases/health_import_usecases.dart:5:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/health_sharing/presentation/widgets/share_card.dart:54:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/health_sharing/presentation/widgets/share_card.dart:121:29 • deprecated_member_use
+warning • Duplicate import • lib/features/local_agent/domain/services/llm_adapter.dart:8:8 • duplicate_import
+warning • Duplicate import • lib/features/local_agent/domain/services/llm_adapter.dart:9:8 • duplicate_import
+warning • Unused import: 'package:isar/isar.dart' • lib/features/local_agent/domain/services/vector_store_service.dart:1:8 • unused_import
+warning • Unused import: '../../../../core/widgets/glassmorphic_card.dart' • lib/features/medications/presentation/pages/medications_page.dart:6:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/network/network_health/presentation/widgets/network_stats_card.dart:78:34 • deprecated_member_use
+warning • The declaration 'hasConsent' isn't referenced • lib/features/onboarding/presentation/pages/hipaa_consent_page.dart:375:23 • unused_element
+   info • Unnecessary 'const' keyword • lib/features/settings/presentation/widgets/profile_section.dart:69:19 • unnecessary_const
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/settings/presentation/widgets/profile_section.dart:80:17 • deprecated_member_use
+warning • Unused import: 'features/home/presentation/pages/main_navigation_page.dart' • lib/main.dart:26:8 • unused_import
+   info • The imported package 'flutter_test' isn't a dependency of the importing package • packages/health_wallet/test/encryption_service_test.dart:2:8 • depend_on_referenced_packages
+   info • The imported package 'flutter_test' isn't a dependency of the importing package • packages/health_wallet/test/sync_service_test.dart:2:8 • depend_on_referenced_packages
+   info • The imported package 'flutter_test' isn't a dependency of the importing package • packages/health_wallet/test/wallet_service_test.dart:2:8 • depend_on_referenced_packages
+   info • The imported package 'path' isn't a dependency of the importing package • packages/health_wallet/test/wallet_service_test.dart:4:8 • depend_on_referenced_packages
+   info • Don't invoke 'print' in production code • scripts/coverage_report.dart:7:5 • avoid_print
+warning • The value of the local variable 'testFeaturesDir' isn't used • scripts/coverage_report.dart:11:9 • unused_local_variable
+   info • Don't invoke 'print' in production code • scripts/coverage_report.dart:38:3 • avoid_print
+   info • Don't invoke 'print' in production code • scripts/coverage_report.dart:54:3 • avoid_print
+   info • The import of 'package:mocktail/mocktail.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter_test/flutter_test.dart' • test/core/logging/audit_logger_test.dart:7:8 • unnecessary_import
+   info • The imported package 'path_provider_platform_interface' isn't a dependency of the importing package • test/core/logging/audit_logger_test.dart:10:8 • depend_on_referenced_packages
+warning • Unused import: 'dart:io' • test/core/network/dio_behavior_test.dart:4:8 • unused_import
+   info • Don't invoke 'print' in production code • test/core/network/dio_behavior_test.dart:26:5 • avoid_print
+warning • Unused import: 'dart:io' • test/core/network/http_client_test.dart:4:8 • unused_import
+warning • The value of the local variable 'adapter' isn't used • test/core/network/http_client_test.dart:51:15 • unused_local_variable
+  error • Target of URI doesn't exist: 'package:orionhealth_health/core/security/encryption_service.dart' • test/features/allergies/data/repositories/allergy_repository_impl_test.dart:3:8 • uri_does_not_exist
+  error • Classes and mixins can only implement other classes and mixins • test/features/allergies/data/repositories/allergy_repository_impl_test.dart:10:53 • implements_non_class
+  error • The argument type 'MockEncryptionService' can't be assigned to the parameter type 'EncryptionService'.  • test/features/allergies/data/repositories/allergy_repository_impl_test.dart:24:80 • argument_type_not_assignable
+   info • Don't return 'null' from a function with a return type of 'void' • test/features/auth/application/bloc/auth_cubit_test.dart:143:64 • avoid_returning_null_for_void
+   info • Don't return 'null' from a function with a return type of 'void' • test/features/auth/application/bloc/auth_cubit_test.dart:152:48 • avoid_returning_null_for_void
+warning • Unused import: 'package:flutter/material.dart' • test/features/auth/presentation/golden/auth_gate_golden_test.dart:2:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/auth/presentation/golden/auth_methods_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/auth/presentation/golden/auth_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/auth/presentation/golden/login_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/calendar_import/presentation/golden/calendar_import_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/appointments/domain/entities/appointment.dart' • test/features/calendar_import/presentation/golden/calendar_import_page_golden_test.dart:9:8 • unused_import
+warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/data_sources/presentation/pages/config_page_test.dart:2:8 • unused_import
+warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/doctor_verification/presentation/pages/doctor_detail_page_test.dart:3:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/doctor_verification/presentation/pages/doctor_list_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/email-citas/presentation/golden/email_connect_error_golden_test.dart:2:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • test/features/email-citas/presentation/widgets/citas_list_tile_test.dart:89:66 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • test/features/email-citas/presentation/widgets/citas_list_tile_test.dart:89:95 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • test/features/email-citas/presentation/widgets/citas_list_tile_test.dart:90:66 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • test/features/email-citas/presentation/widgets/citas_list_tile_test.dart:90:94 • deprecated_member_use
+   info • Unnecessary 'const' keyword • test/features/health_data_import/presentation/golden/data_source_card_golden_test.dart:49:26 • unnecessary_const
+warning • Unused import: 'package:flutter/material.dart' • test/features/health_data_import/presentation/golden/health_import_page_ready_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:get_it/get_it.dart' • test/features/health_data_import/presentation/golden/health_import_page_ready_golden_test.dart:4:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/health_data_import/presentation/golden/health_import_page_status_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:get_it/get_it.dart' • test/features/health_data_import/presentation/golden/health_import_page_status_golden_test.dart:4:8 • unused_import
+warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/health_data_import/presentation/pages/health_import_golden_test.dart:3:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/health_data_import/domain/entities/health_import_result.dart' • test/features/health_data_import/presentation/pages/health_import_page_test.dart:10:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/health_record/presentation/golden/timeline_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:get_it/get_it.dart' • test/features/health_sharing/presentation/pages/health_sharing_page_golden_test.dart:5:8 • unused_import
+warning • Unused import: 'package:orionhealth_health/features/health_sharing/infrastructure/wifi_direct_service.dart' • test/features/health_sharing/presentation/pages/health_sharing_page_golden_test.dart:17:8 • unused_import
+  error • Const variables must be initialized with a constant value • test/features/medical_research/presentation/golden/research_result_card_golden_test.dart:7:21 • const_initialized_with_non_constant_value
+  error • The function 'ResearchResult' isn't defined • test/features/medical_research/presentation/golden/research_result_card_golden_test.dart:7:21 • undefined_function
+warning • Unused import: 'package:flutter/material.dart' • test/features/network/governance/presentation/pages/governance_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/network/incentives/presentation/pages/incentives_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/network/incentives/presentation/pages/incentives_page_golden_test.dart:4:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/network/network_health/presentation/pages/network_health_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/network/presentation/golden/connection_status_badge_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter_bloc/flutter_bloc.dart' • test/features/settings/presentation/golden/settings_page_golden_test.dart:2:8 • unused_import
+warning • Unused import: 'package:get_it/get_it.dart' • test/features/settings/presentation/golden/settings_page_golden_test.dart:5:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/sync/presentation/golden/sync_page_golden_test.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • test/features/user_profile/presentation/golden/user_profile_page_golden_test.dart:1:8 • unused_import
+  error • The function 'Transcript' isn't defined • test/features/voice_chat/domain/repositories/voice_chat_repository_test.dart:55:27 • undefined_function
+warning • Unused import: 'package:flutter/material.dart' • test/features/voice_chat/presentation/golden/voice_chat_page_golden_test.dart:1:8 • unused_import
+   info • The local variable '_buildApp' starts with an underscore • test/integration/dashboard_integration_test.dart:43:10 • no_leading_underscores_for_local_identifiers
+warning • Unused import: 'package:orionhealth_health/features/data_sources/domain/repositories/data_source_repository.dart' • test/integration/data_sources_integration_test.dart:4:8 • unused_import
+
+89 issues found. (ran in 10.6s)
