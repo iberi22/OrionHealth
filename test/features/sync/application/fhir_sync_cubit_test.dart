@@ -66,7 +66,7 @@ void main() {
 
     await cubit.performSync();
 
-    expect(cubit.state.status, SyncStatus.success);
+    expect(cubit.state.status, SyncPageStatus.success);
     expect(cubit.state.lastSyncTime, lastSync);
   });
 
@@ -75,7 +75,7 @@ void main() {
 
     await cubit.performSync();
 
-    expect(cubit.state.status, SyncStatus.failure);
+    expect(cubit.state.status, SyncPageStatus.failure);
     expect(cubit.state.errorMessage, 'Exception: Sync failed');
   });
 }
