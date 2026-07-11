@@ -2,9 +2,11 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:injectable/injectable.dart';
+import 'device_capability_service.dart';
 
 /// Abstract secure storage service for sensitive data.
 ///
@@ -47,11 +49,15 @@ abstract class SecureStorageService {
 /// Default implementation backed by [FlutterSecureStorage].
 @LazySingleton(as: SecureStorageService)
 class SecureStorageServiceImpl implements SecureStorageService {
-  final FlutterSecureStorage _storage;
+  FlutterSecureStorage _storage;
+  final DeviceCapabilityService _capabilityService;
   final String _appKeySeed;
+  final bool _isStorageInjected;
+  bool _initialized = false;
 
   SecureStorageServiceImpl({
     FlutterSecureStorage? storage,
+    DeviceCapabilityService? capabilityService,
   })  : _storage = storage ??
             const FlutterSecureStorage(
               aOptions: AndroidOptions(
@@ -61,32 +67,57 @@ class SecureStorageServiceImpl implements SecureStorageService {
                 accessibility: KeychainAccessibility.first_unlock_this_device,
               ),
             ),
+        _capabilityService = capabilityService ?? DeviceCapabilityService(),
+        _isStorageInjected = storage != null,
         _appKeySeed = 'orionhealth_v1';
+
+  /// Ensures that the storage is correctly initialized,
+  /// especially for emulators where EncryptedSharedPreferences might fail.
+  Future<void> _ensureInitialized() async {
+    if (_initialized || _isStorageInjected) return;
+
+    if (Platform.isAndroid && await _capabilityService.isEmulator()) {
+      _storage = const FlutterSecureStorage(
+        aOptions: AndroidOptions(
+          encryptedSharedPreferences: false,
+        ),
+        iOptions: IOSOptions(
+          accessibility: KeychainAccessibility.first_unlock_this_device,
+        ),
+      );
+    }
+    _initialized = true;
+  }
 
   // ── Basic operations ──────────────────────────────────────
 
   @override
   Future<void> write(String key, String value) async {
+    await _ensureInitialized();
     await _storage.write(key: key, value: value);
   }
 
   @override
   Future<String?> read(String key) async {
+    await _ensureInitialized();
     return await _storage.read(key: key);
   }
 
   @override
   Future<void> delete(String key) async {
+    await _ensureInitialized();
     await _storage.delete(key: key);
   }
 
   @override
   Future<void> deleteAll() async {
+    await _ensureInitialized();
     await _storage.deleteAll();
   }
 
   @override
   Future<bool> containsKey(String key) async {
+    await _ensureInitialized();
     return await _storage.containsKey(key: key);
   }
 
@@ -94,18 +125,21 @@ class SecureStorageServiceImpl implements SecureStorageService {
 
   @override
   Future<void> writeSecure(String namespace, String key, String value) async {
+    await _ensureInitialized();
     final derivedKey = _deriveKey(namespace, key);
     await _storage.write(key: derivedKey, value: value);
   }
 
   @override
   Future<String?> readSecure(String namespace, String key) async {
+    await _ensureInitialized();
     final derivedKey = _deriveKey(namespace, key);
     return await _storage.read(key: derivedKey);
   }
 
   @override
   Future<void> deleteSecure(String namespace, String key) async {
+    await _ensureInitialized();
     final derivedKey = _deriveKey(namespace, key);
     await _storage.delete(key: derivedKey);
   }
