@@ -45,7 +45,7 @@ import '../../features/about/infrastructure/datasources/about_local_datasource.d
     as _i4;
 import '../../features/about/infrastructure/datasources/about_remote_datasource.dart'
     as _i144;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/about/infrastructure/repositories/about_repository_impl.dart'
     as _i55;
 import '../../features/allergies/application/allergies_cubit.dart' as _i263;
@@ -55,7 +55,7 @@ import '../../features/allergies/data/datasources/allergy_local_datasource.dart'
     as _i143;
 =======
     as _i145;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/allergies/data/repositories/allergy_repository_impl.dart'
     as _i227;
 import '../../features/allergies/domain/repositories/allergy_repository.dart'
@@ -115,7 +115,7 @@ import '../../features/auth/domain/usecases/logout_usecase.dart' as _i197;
 import '../../features/auth/domain/usecases/save_credentials_usecase.dart'
     as _i209;
 import '../../features/auth/domain/usecases/set_pin_usecase.dart' as _i216;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/auth/domain/usecases/validate_session_usecase.dart'
     as _i222;
 import '../../features/auth/infrastructure/services/biometric_service.dart'
@@ -125,7 +125,7 @@ import '../../features/auth/infrastructure/services/encryption_service.dart'
     as _i163;
 =======
     as _i165;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/calendar_import/application/calendar_import_cubit.dart'
     as _i232;
 import '../../features/calendar_import/domain/repositories/calendar_import_repository.dart'
@@ -137,7 +137,7 @@ import '../../features/calendar_import/domain/usecases/import_calendar_usecase.d
     as _i187;
 =======
     as _i189;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/calendar_import/infrastructure/datasources/calendar_api_datasource.dart'
     as _i19;
 import '../../features/calendar_import/infrastructure/repositories/calendar_import_repository_impl.dart'
@@ -156,7 +156,7 @@ import '../../features/dashboard/infrastructure/datasources/dashboard_local_data
     as _i154;
 =======
     as _i156;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/dashboard/infrastructure/datasources/dashboard_remote_datasource.dart'
     as _i27;
 import '../../features/dashboard/infrastructure/repositories/dashboard_repository_impl.dart'
@@ -178,7 +178,7 @@ import '../../features/data_sources/infrastructure/datasources/file_import_datas
     as _i167;
 import '../../features/data_sources/infrastructure/datasources/health_connect_datasource.dart'
     as _i46;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/data_sources/infrastructure/datasources/sensor_api_datasource.dart'
     as _i116;
 import '../../features/data_sources/infrastructure/repositories/data_source_repository_impl.dart'
@@ -202,7 +202,7 @@ import '../../features/doctor_verification/application/vouch_cubit.dart'
     as _i225;
 import '../../features/doctor_verification/domain/repositories/doctor_profile_repository.dart'
     as _i160;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/doctor_verification/domain/repositories/rating_repository.dart'
     as _i104;
 import '../../features/doctor_verification/domain/repositories/second_opinion_repository.dart'
@@ -212,7 +212,7 @@ import '../../features/doctor_verification/domain/repositories/vouch_repository.
     as _i138;
 =======
     as _i140;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/doctor_verification/domain/services/badge_calculator.dart'
     as _i230;
 import '../../features/doctor_verification/domain/services/license_verifier.dart'
@@ -234,7 +234,7 @@ import '../../features/doctor_verification/infrastructure/datasources/license_re
     as _i62;
 import '../../features/doctor_verification/infrastructure/repositories/isar_doctor_profile_repository.dart'
     as _i161;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/doctor_verification/infrastructure/repositories/isar_rating_repository.dart'
     as _i105;
 import '../../features/doctor_verification/infrastructure/repositories/isar_second_opinion_repository.dart'
@@ -250,7 +250,7 @@ import '../../features/email-citas/application/email_citas_cubit.dart' as _i162;
 import '../../features/email-citas/application/bloc/email_citas_bloc.dart'
     as _i163;
 import '../../features/email-citas/application/email_citas_cubit.dart' as _i164;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/email-citas/domain/repositories/email_repository.dart'
     as _i32;
 import '../../features/email-citas/domain/usecases/email_citas_usecases.dart'
@@ -290,7 +290,7 @@ import '../../features/health_data_import/domain/repositories/health_data_import
     as _i185;
 import '../../features/health_data_import/domain/services/health_data_import_service.dart'
     as _i47;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/health_data_import/domain/usecases/health_import_usecases.dart'
     as _i109;
 import '../../features/health_data_import/infrastructure/data_source.dart'
@@ -304,7 +304,7 @@ import '../../features/health_record/domain/repositories/health_record_repositor
     as _i185;
 =======
     as _i187;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/health_record/domain/usecases/get_all_records_usecase.dart'
     as _i243;
 import '../../features/health_record/domain/usecases/save_record_usecase.dart'
@@ -316,7 +316,7 @@ import '../../features/health_record/infrastructure/repositories/health_record_r
     as _i211;
 import '../../features/health_record/infrastructure/repositories/health_record_repository_impl.dart'
     as _i188;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/health_record/infrastructure/services/file_picker_service.dart'
     as _i37;
 import '../../features/health_record/infrastructure/services/image_picker_service.dart'
@@ -349,7 +349,7 @@ import '../../features/health_sharing/infrastructure/ble_sharing_service.dart'
 import '../../features/health_sharing/infrastructure/ble_wrapper.dart' as _i17;
 import '../../features/health_sharing/infrastructure/datasources/health_sharing_local_datasource.dart'
     as _i48;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/health_sharing/infrastructure/datasources/health_sharing_remote_datasource.dart'
     as _i48;
 import '../../features/health_sharing/infrastructure/nfc_handler.dart' as _i92;
@@ -380,7 +380,7 @@ import '../../features/local_agent/data/datasources/chat_message_local_datasourc
     as _i217;
 import '../../features/local_agent/data/datasources/chat_message_local_datasource.dart'
     as _i151;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/local_agent/data/datasources/local_model_local_datasource.dart'
     as _i68;
 import '../../features/local_agent/domain/repositories/medical_knowledge_repository.dart'
@@ -395,11 +395,11 @@ import '../../features/local_agent/domain/usecases/get_chat_history_usecase.dart
     as _i133;
 import '../../features/local_agent/domain/usecases/get_chat_history_usecase.dart'
     as _i172;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/local_agent/domain/usecases/send_chat_message_usecase.dart'
     as _i115;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
-    as _i66;
+    as _i65;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i40;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
@@ -407,39 +407,29 @@ import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.da
     as _i188;
 =======
     as _i191;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
     as _i42;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
     as _i189;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
-<<<<<<< HEAD
     as _i66;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
+<<<<<<< HEAD
     as _i192;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i191;
 =======
-    as _i65;
-import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
     as _i194;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i193;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i253;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-<<<<<<< HEAD
     as _i71;
 import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i72;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i132;
-=======
-    as _i72;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
-    as _i71;
-import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
-    as _i134;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
     as _i190;
 import '../../features/local_agent/infrastructure/services/local_llm_service.dart'
@@ -471,7 +461,7 @@ import '../../features/medical_research/infrastructure/medical_research_service.
     as _i196;
 =======
     as _i198;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/medical_research/infrastructure/medical_scraper_service_impl.dart'
     as _i74;
 import '../../features/medical_research/infrastructure/medical_standards_service_impl.dart'
@@ -497,7 +487,7 @@ import '../../features/medications/domain/repositories/medication_adherence_repo
     as _i79;
 import '../../features/medications/domain/repositories/medication_repository.dart'
     as _i199;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/medications/domain/usecases/get_all_medications_usecase.dart'
     as _i242;
 import '../../features/medications/domain/usecases/save_medication_usecase.dart'
@@ -513,7 +503,7 @@ import '../../features/medications/infrastructure/datasources/adherence_sqlite_d
     as _i5;
 import '../../features/medications/infrastructure/repositories/isar_medication_repository.dart'
     as _i200;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/medications/infrastructure/repositories/sqlite_medication_adherence_repository.dart'
     as _i80;
 import '../../features/medications/infrastructure/services/pharmacy_api_service.dart'
@@ -540,7 +530,7 @@ import '../../features/meditation/domain/usecases/get_progress_usecase.dart'
     as _i178;
 import '../../features/meditation/domain/usecases/get_scripts_usecase.dart'
     as _i180;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/meditation/domain/usecases/recommend_script_usecase.dart'
     as _i106;
 import '../../features/meditation/domain/usecases/start_session_usecase.dart'
@@ -569,7 +559,7 @@ import '../../features/network/governance/infrastructure/datasources/governance_
     as _i182;
 import '../../features/network/governance/infrastructure/repositories/governance_repository_impl.dart'
     as _i184;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/network/incentives/domain/repositories/incentive_repository.dart'
     as _i58;
 import '../../features/network/incentives/infrastructure/datasources/incentive_datasource.dart'
@@ -601,7 +591,7 @@ import '../../features/network/network_health/domain/usecases/get_network_health
     as _i176;
 import '../../features/network/network_health/domain/usecases/get_node_stats.dart'
     as _i177;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/network/network_health/infrastructure/datasources/network_datasource.dart'
     as _i86;
 import '../../features/network/network_health/infrastructure/repositories/network_repository_impl.dart'
@@ -642,7 +632,7 @@ import '../../features/reports/domain/services/report_generation_service.dart'
     as _i207;
 import '../../features/reports/domain/usecases/get_reports_usecase.dart'
     as _i179;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/reports/domain/usecases/save_report_usecase.dart'
     as _i111;
 import '../../features/reports/infrastructure/repositories/isar_report_repository.dart'
@@ -652,7 +642,7 @@ import '../../features/reports/infrastructure/services/gemma_report_generation_s
     as _i206;
 =======
     as _i208;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/reports/infrastructure/services/mock_report_generation_service.dart'
     as _i84;
 import '../../features/settings/application/llm_settings_cubit.dart' as _i193;
@@ -677,7 +667,7 @@ import '../../features/sync/domain/services/sync_service.dart' as _i219;
 import '../../features/sync/domain/services/node_discovery_service.dart'
     as _i95;
 import '../../features/sync/domain/services/sync_service.dart' as _i127;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../../features/sync/domain/usecases/distributed_cache_usecase.dart'
     as _i238;
 import '../../features/sync/infrastructure/datasources/filecoin_datasource.dart'
@@ -769,17 +759,13 @@ import '../../features/voice_chat/infrastructure/datasources/chat_ai_datasource.
     as _i25;
 import '../../features/voice_chat/infrastructure/repositories/voice_chat_repository_impl.dart'
     as _i139;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
 import '../logging/audit_logger.dart' as _i15;
 import '../services/aicore_service.dart' as _i3;
 import '../services/asr/asr_service.dart' as _i11;
 import '../services/audio/audio_player_service.dart' as _i12;
 import '../services/audio/audio_recorder_service.dart' as _i14;
-<<<<<<< HEAD
 import '../services/device_capability_service.dart' as _i30;
-=======
-import '../services/device_capability_service.dart' as _i29;
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
 import '../services/privacy_anonymizer.dart' as _i103;
 import '../services/secure_storage_service.dart' as _i114;
 import '../utils/health_wrapper.dart' as _i50;
@@ -907,12 +893,12 @@ extension GetItInjectableX on _i1.GetIt {
         _i63.LicenseVerifier(
             await getAsync<_i62.LicenseRegistryLocalDataSource>()));
     gh.lazySingleton<_i64.LlmAdapter>(
-      () => _i65.OpenaiCompatibleAdapter(),
-      instanceName: 'openai',
+      () => _i65.FlutterGemmaAdapter(wrapper: gh<_i40.FlutterGemmaWrapper>()),
+      instanceName: 'gemma',
     );
     gh.lazySingleton<_i64.LlmAdapter>(
-      () => _i66.FlutterGemmaAdapter(wrapper: gh<_i40.FlutterGemmaWrapper>()),
-      instanceName: 'gemma',
+      () => _i66.OpenaiCompatibleAdapter(),
+      instanceName: 'openai',
     );
     gh.lazySingleton<_i67.LocalLlmService>(() => _i67.LocalLlmService());
     gh.lazySingleton<_i68.LocalModelLocalDataSource>(
@@ -920,27 +906,16 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i69.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i70.MedicalKnowledgeRepository>(
-<<<<<<< HEAD
       () => _i71.AssetMedicalKnowledgeRepository(),
       registerFor: {_mobile},
     );
     gh.factory<_i70.MedicalKnowledgeRepository>(
       () => _i72.JsonMedicalKnowledgeRepository(),
-=======
-      () => _i71.JsonMedicalKnowledgeRepository(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
       registerFor: {
         _desktop,
         _test,
       },
     );
-<<<<<<< HEAD
-=======
-    gh.factory<_i70.MedicalKnowledgeRepository>(
-      () => _i72.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
-    );
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
     gh.lazySingleton<_i73.MedicalScraperService>(
         () => _i74.MedicalScraperServiceImpl(
               gh<_i31.Dio>(),
@@ -1082,7 +1057,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i139.VoiceChatRepositoryImpl(gh<_i25.ChatAiDatasource>()));
     gh.lazySingleton<_i140.VouchRepository>(
         () => _i141.IsarVouchRepository(gh<_i61.Isar>()));
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
     gh.lazySingleton<_i35.WalletService>(() => databaseModule.walletService(
           gh<_i61.Isar>(),
           gh<_i35.EncryptionService>(),
@@ -1143,7 +1118,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i152.CheckSessionTimeoutUseCase(gh<_i147.AuthRepository>()));
     gh.lazySingleton<_i153.CompleteSessionUseCase>(
         () => _i153.CompleteSessionUseCase(gh<_i82.MeditationRepository>()));
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
     gh.factory<_i124.ConnectEmailProviderUseCase>(
         () => _i124.ConnectEmailProviderUseCase(gh<_i32.EmailRepository>()));
     gh.lazySingleton<_i152.ConnectNode>(
@@ -1196,7 +1171,7 @@ extension GetItInjectableX on _i1.GetIt {
               await getAsync<_i63.LicenseVerifier>(),
             ));
     gh.factory<_i163.EmailCitasBloc>(() => _i163.EmailCitasBloc(
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
           gh<_i124.ConnectEmailProviderUseCase>(),
           gh<_i124.SyncEmailAppointmentsUseCase>(),
           gh<_i32.EmailRepository>(),
@@ -1220,7 +1195,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i127.SyncService>(),
           gh<_i95.NodeDiscoveryService>(),
         ));
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
     gh.lazySingleton<_i117.FileHealthDataSource>(
         () => _i117.FileHealthDataSourceImpl(
               gh<_i37.FilePickerService>(),
@@ -1346,7 +1321,7 @@ extension GetItInjectableX on _i1.GetIt {
       () => _i190.MockLlmAdapter(gh<_i103.PromptScrubber>()),
       instanceName: 'mock',
     );
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
     gh.lazySingleton<_i64.LlmAdapter>(
       () => _i188.GeminiLlmAdapter(
         scrubber: gh<_i103.PromptScrubber>(),
@@ -1368,10 +1343,21 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i64.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.factory<_i193.LlmSettingsCubit>(() => _i193.LlmSettingsCubit(
+=======
+    gh.lazySingleton<_i192.LlmAdapterFactory>(
+        () => _i192.LlmAdapterFactory(gh<_i119.SettingsRepository>()));
+    gh.lazySingleton<_i193.LlmService>(() => _i194.GemmaLlmService(
+          gh<_i133.VectorStoreService>(),
+          gh<_i130.UserProfileRepository>(),
+          gh<_i64.LlmAdapter>(instanceName: 'gemma'),
+        ));
+    gh.factory<_i195.LlmSettingsCubit>(() => _i195.LlmSettingsCubit(
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
           gh<_i119.SettingsRepository>(),
           gh<_i29.DeviceCapabilityService>(),
           gh<_i64.LlmAdapter>(instanceName: 'gemma'),
         ));
+<<<<<<< HEAD
     gh.factory<_i194.LoginUseCase>(() => _i194.LoginUseCase(
           gh<_i145.AuthRepository>(),
           gh<_i163.EncryptionService>(),
@@ -1412,18 +1398,6 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i205.ReportGenerationService>(
         () => _i206.GemmaReportGenerationService(
 =======
-    gh.lazySingleton<_i192.LlmAdapterFactory>(
-        () => _i192.LlmAdapterFactory(gh<_i119.SettingsRepository>()));
-    gh.lazySingleton<_i193.LlmService>(() => _i194.GemmaLlmService(
-          gh<_i133.VectorStoreService>(),
-          gh<_i130.UserProfileRepository>(),
-          gh<_i64.LlmAdapter>(instanceName: 'gemma'),
-        ));
-    gh.factory<_i195.LlmSettingsCubit>(() => _i195.LlmSettingsCubit(
-          gh<_i119.SettingsRepository>(),
-          gh<_i30.DeviceCapabilityService>(),
-          gh<_i64.LlmAdapter>(instanceName: 'gemma'),
-        ));
     gh.factory<_i196.LoginUseCase>(() => _i196.LoginUseCase(
           gh<_i147.AuthRepository>(),
           gh<_i165.EncryptionService>(),
@@ -1463,7 +1437,7 @@ extension GetItInjectableX on _i1.GetIt {
         _i206.OnboardingRepositoryImpl(gh<_i130.UserProfileRepository>()));
     gh.lazySingleton<_i207.ReportGenerationService>(
         () => _i208.GemmaReportGenerationService(
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
               gh<_i64.LlmAdapter>(instanceName: 'gemma'),
               gh<_i131.VectorStoreService>(),
               gh<_i128.UserProfileRepository>(),
@@ -1543,7 +1517,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i220.SyncCubit>(() => _i220.SyncCubit(
           gh<_i69.SyncService>(),
           gh<_i133.VectorStoreService>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
         ));
     gh.factory<_i221.UserProfileCubit>(
         () => _i221.UserProfileCubit(gh<_i128.UserProfileRepository>()));
@@ -1560,7 +1534,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i215.SendMessageUseCase>(),
           gh<_i171.GetChatHistoryUseCase>(),
           gh<_i138.VoiceChatRepository>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
           gh<_i12.AudioService>(),
         ));
     gh.factory<_i225.VouchCubit>(
@@ -1590,7 +1564,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i222.ValidateSessionUseCase>(),
           gh<_i216.SetPinUseCase>(),
           gh<_i152.CheckSessionTimeoutUseCase>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
         ));
     gh.lazySingleton<_i229.AuthService>(
         () => _i229.AuthServiceImpl(gh<_i163.EncryptionService>()));
@@ -1601,7 +1575,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i138.VouchRepository>(),
 =======
           gh<_i140.VouchRepository>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
         ));
     gh.factory<_i231.BadgeCubit>(
         () => _i231.BadgeCubit(gh<_i230.BadgeCalculator>()));
@@ -1611,7 +1585,7 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i187.ImportCalendarUseCase>(),
 =======
           gh<_i189.ImportCalendarUseCase>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
         ));
     gh.factory<_i233.CompleteOnboardingUseCase>(() =>
         _i233.CompleteOnboardingUseCase(gh<_i203.OnboardingRepository>()));
@@ -1624,7 +1598,7 @@ extension GetItInjectableX on _i1.GetIt {
 =======
               gh<_i135.VitalSignRepository>(),
               gh<_i199.MedicationRepository>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
               gh<_i107.ReportRepository>(),
             ));
     gh.lazySingleton<_i236.DataSourceRepository>(
@@ -1636,7 +1610,7 @@ extension GetItInjectableX on _i1.GetIt {
 =======
               gh<_i167.FileImportDataSource>(),
               gh<_i46.HealthConnectDataSource>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
             ));
     gh.lazySingleton<_i238.DistributedCacheUsecase>(() =>
         _i238.DistributedCacheUsecase(gh<_i156.DistributedStorageService>()));
@@ -1691,7 +1665,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i246.GetRecentActivityUseCase>(
         () => _i246.GetRecentActivityUseCase(gh<_i234.DashboardRepository>()));
     gh.factory<_i247.HealthImportBloc>(() => _i247.HealthImportBloc(
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
           gh<_i109.GetAvailableSourcesUseCase>(),
           gh<_i109.RequestHealthAuthUseCase>(),
           gh<_i109.ImportHealthDataUseCase>(),
@@ -1700,7 +1674,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i249.HealthImportCubit>(() => _i249.HealthImportCubit(
 =======
     gh.factory<_i248.HealthImportCubit>(() => _i248.HealthImportCubit(
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
           gh<_i109.GetAvailableSourcesUseCase>(),
           gh<_i109.RequestHealthAuthUseCase>(),
           gh<_i109.ImportHealthDataUseCase>(),
@@ -1747,7 +1721,7 @@ extension GetItInjectableX on _i1.GetIt {
         gh<_i133.VectorStoreService>(),
         gh<_i198.MedicalResearchService>(),
         gh<_i130.UserProfileRepository>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
         gh<_i64.LlmAdapter>(instanceName: 'gemma'),
       ),
       instanceName: 'rag',
@@ -1784,7 +1758,7 @@ extension GetItInjectableX on _i1.GetIt {
         gh<_i133.VectorStoreService>(),
         gh<_i187.HealthRecordRepository>(),
         gh<_i199.MedicationRepository>(),
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
         gh<_i226.AllergyRepository>(),
         gh<_i133.VitalSignRepository>(),
         gh<_i8.AppointmentRepository>(),
@@ -1871,7 +1845,7 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.lazySingleton<_i270.MedicalIndexingService>(
         () => _i270.MedicalIndexingService(
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322
               gh<_i70.MedicalKnowledgeRepository>(),
               gh<_i131.VectorStoreService>(),
               gh<_i258.PatientContextIndexer>(),
@@ -1901,4 +1875,4 @@ class _$MemoryModule extends _i274.MemoryModule {}
 class _$DatabaseModule extends _i275.DatabaseModule {}
 
 class _$FhirModule extends _i276.FhirModule {}
->>>>>>> origin/fix/resolve-flutter-warnings-9378330091415961273
+>>>>>>> origin/fix/update-golden-baselines-11775210155915563322

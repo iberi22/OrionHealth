@@ -22,6 +22,7 @@ void main() {
 
     when(() => mockCubit.loadDataSources()).thenAnswer((_) async => {});
     when(() => mockCubit.close()).thenAnswer((_) async => {});
+    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
   });
 
   Widget createWidgetUnderTest() {
