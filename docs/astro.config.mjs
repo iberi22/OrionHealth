@@ -17,6 +17,9 @@ export default defineConfig({
   vite: {
     ssr: {
       noExternal: ['@astrojs/*']
+    },
+    build: {
+      cssMinify: 'esbuild'
     }
   }
 });
