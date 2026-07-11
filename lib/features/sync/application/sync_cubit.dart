@@ -35,17 +35,17 @@ class FhirSyncCubit extends Cubit<SyncState> {
   }
 
   Future<void> performSync() async {
-    emit(state.copyWith(status: SyncStatus.loading));
+    emit(state.copyWith(status: SyncPageStatus.loading));
     try {
       await _syncService.performFullSync();
       final lastSync = await _syncService.getLastSyncTime();
       emit(state.copyWith(
-        status: SyncStatus.success,
+        status: SyncPageStatus.success,
         lastSyncTime: lastSync,
       ));
     } catch (e) {
       emit(state.copyWith(
-        status: SyncStatus.failure,
+        status: SyncPageStatus.failure,
         errorMessage: e.toString(),
       ));
     }

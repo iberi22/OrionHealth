@@ -1,23 +1,23 @@
 import 'package:equatable/equatable.dart';
 import '../domain/entities/sync_node.dart';
 
-enum SyncStatus { initial, loading, success, failure }
+enum SyncPageStatus { initial, loading, success, failure }
 
 class SyncState extends Equatable {
-  final SyncStatus status;
+  final SyncPageStatus status;
   final DateTime? lastSyncTime;
   final String? errorMessage;
   final List<SyncNode> discoveredNodes;
 
   const SyncState({
-    this.status = SyncStatus.initial,
+    this.status = SyncPageStatus.initial,
     this.lastSyncTime,
     this.errorMessage,
     this.discoveredNodes = const [],
   });
 
   SyncState copyWith({
-    SyncStatus? status,
+    SyncPageStatus? status,
     DateTime? lastSyncTime,
     String? errorMessage,
     List<SyncNode>? discoveredNodes,
