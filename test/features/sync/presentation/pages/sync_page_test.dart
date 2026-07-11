@@ -72,7 +72,7 @@ void main() {
       setupGoldenTest(tester);
 
       final syncingState = SyncState(
-        status: SyncStatus.loading,
+        status: SyncPageStatus.loading,
         lastSyncTime: DateTime(2025, 1, 1, 10, 0),
       );
       when(() => mockCubit.state).thenReturn(syncingState);
