@@ -1,0 +1,164 @@
+---
+// Standalone offline page to minimize dependencies
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline | OrionHealth</title>
+    <style>
+        :root {
+            --color-accent: #00FF85;
+            --color-bg: #121212;
+            --color-text: #F5F5DC;
+            --color-card: #1E1E1E;
+        }
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .card {
+            background: var(--color-card);
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .logo-text {
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+        .text-accent { color: var(--color-accent); }
+        .hidden { display: none !important; }
+        h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+        p { font-size: 0.9rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.5; }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: var(--color-accent);
+            color: #121212;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--color-text);
+        }
+        .lang-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .lang-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--color-text);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.3rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        .lang-btn.active {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+        .shake {
+            animation: shake 0.4s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="offline-card">
+        <div class="logo-text">ORION<span class="text-accent">HEALTH</span></div>
+
+        <div id="content-en">
+            <h1>No Connection</h1>
+            <p>You are currently offline. The page you're looking for hasn't been cached yet.</p>
+        </div>
+
+        <div id="content-es" class="hidden">
+            <h1>Sin Conexión</h1>
+            <p>Te encuentras sin conexión. La página que buscas aún no ha sido guardada.</p>
+        </div>
+
+        <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+        </div>
+
+        <button id="retry-btn" class="btn btn-primary">
+            <span class="en-text">Retry Connection</span>
+            <span class="es-text hidden">Reintentar Conexión</span>
+        </button>
+
+        <a href="/OrionHealth/" class="btn btn-secondary">
+            <span class="en-text">Back to Home</span>
+            <span class="es-text hidden">Volver al Inicio</span>
+        </a>
+    </div>
+
+    <script>
+        let currentLang = 'en';
+        function setLang(lang) {
+            currentLang = lang;
+            document.getElementById('content-en').classList.toggle('hidden', lang !== 'en');
+            document.getElementById('content-es').classList.toggle('hidden', lang !== 'es');
+            document.querySelectorAll('.en-text').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
+            document.querySelectorAll('.es-text').forEach(el => el.classList.toggle('hidden', lang !== 'es'));
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => setLang(btn.getAttribute('data-lang')));
+        });
+
+        document.getElementById('retry-btn').addEventListener('click', () => {
+            if (navigator.onLine) {
+                window.location.reload();
+            } else {
+                const card = document.getElementById('offline-card');
+                card.classList.add('shake');
+                setTimeout(() => card.classList.remove('shake'), 400);
+
+                const btn = document.getElementById('retry-btn');
+                const originalText = btn.innerHTML;
+                btn.textContent = currentLang === 'en' ? 'Still Offline' : 'Sigue sin conexión';
+                btn.style.background = '#ff4b4b';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            }
+        });
+
+        if (navigator.language.startsWith('es')) setLang('es');
+    </script>
+</body>
+</html>

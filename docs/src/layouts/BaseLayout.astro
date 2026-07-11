@@ -384,7 +384,6 @@ const isRTL = lang === "ar";
   </style>
 
   <!-- PWA & iOS Specific -->
-  <link rel="manifest" href="/OrionHealth/manifest.json">
   <meta name="theme-color" content="#10B981">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -392,6 +391,10 @@ const isRTL = lang === "ar";
   <link rel="apple-touch-icon" sizes="180x180" href="/OrionHealth/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="/OrionHealth/favicon.svg">
   <link rel="apple-touch-startup-image" href="/OrionHealth/android-chrome-512x512.png">
+
+  <!-- PWA Script -->
+  <script is:inline src="/OrionHealth/registerSW.js"></script>
+  <link rel="manifest" href="/OrionHealth/manifest.webmanifest">
 
   <!-- Plausible Analytics -->
   <script defer data-domain="orionhealth.app" src="https://plausible.io/js/script.js"></script>
@@ -470,17 +473,6 @@ const isRTL = lang === "ar";
         observer.observe(el);
       });
     });
-
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/OrionHealth/sw.js').then((reg) => {
-          console.log('SW registered: ' + reg.scope);
-        }).catch((err) => {
-          console.log('SW registration failed: ' + err);
-        });
-      });
-    }
   </script>
 </body>
 </html>
