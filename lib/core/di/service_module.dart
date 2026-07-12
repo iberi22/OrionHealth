@@ -12,8 +12,6 @@ abstract class ServiceModule {
   @lazySingleton
   HealthWrapper get healthWrapper => HealthWrapper(HealthHelper.createClient());
 
-  Health? get health => HealthHelper.createClient(); // NOT injected (nullable)
-
   @preResolve
   @lazySingleton
   Future<FlutterSecureStorage> storage(DeviceCapabilityService capabilityService) async {

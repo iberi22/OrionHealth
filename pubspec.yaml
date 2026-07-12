@@ -93,7 +93,7 @@ dependencies:
   sherpa_onnx: ^1.13.4
   flutter_tts: ^4.2.5
   freezed_annotation: ^2.4.1
-  research_package: ^2.4.0
+  research_package: 2.3.0
 
 dev_dependencies:
   flutter_test:
