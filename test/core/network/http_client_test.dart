@@ -47,7 +47,6 @@ void main() {
     test('validateCertificate returns null for unpinned hosts to use system validation', () {
       final dio = HttpClientFactory.createDio();
       if (dio.httpClientAdapter is IOHttpClientAdapter) {
-        final adapter = dio.httpClientAdapter as IOHttpClientAdapter;
         // Mocking a certificate is complex, but we can check the logic if we could call it
         // Since we can't easily mock X509Certificate, we rely on code inspection and
         // the fact that we return null for unknown hosts.
