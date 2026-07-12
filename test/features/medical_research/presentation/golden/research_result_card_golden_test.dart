@@ -1,6 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/widgets/research_result_card.dart';
+import 'package:orionhealth_health/features/medical_research/domain/models/research_result.dart';
 
 void main() {
   testWidgets('ResearchResultCard golden test', (tester) async {

@@ -12,6 +12,10 @@ abstract class ServiceModule {
   @lazySingleton
   HealthWrapper get healthWrapper => HealthWrapper(HealthHelper.createClient());
 
+  @PreResolve
+  @lazySingleton
+  Health get health => HealthHelper.createClient() ?? Health.withClient(Health());
+
   @preResolve
   @lazySingleton
   Future<FlutterSecureStorage> storage(DeviceCapabilityService capabilityService) async {

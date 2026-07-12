@@ -2,13 +2,6 @@ import 'package:research_package/research_package.dart';
 
 class LocalConsentDocument {
   static RPConsentDocument get consentDocument {
-    RPConsentDocument document = RPConsentDocument(
-      title: 'Consentimiento Informado - Orion Health',
-      signatures: [
-        RPConsentSignature(identifier: 'patient_signature')
-      ],
-    );
-
     RPConsentSection dataGatheringSection = RPConsentSection(
       type: RPConsentSectionType.DataGathering,
       summary: 'Recolección de Datos Locales',
@@ -21,8 +14,10 @@ class LocalConsentDocument {
       content: 'Tus datos no se subirán a ninguna nube ni servidor externo. Orion Health opera de forma totalmente local, asegurando tu privacidad según los estándares HIPAA y garantizando que solo tú tienes acceso a esta información.',
     );
 
-    document.addSection(dataGatheringSection);
-    document.addSection(privacySection);
+    RPConsentDocument document = RPConsentDocument(
+      title: 'Consentimiento Informado - Orion Health',
+      sections: [dataGatheringSection, privacySection],
+    );
 
     return document;
   }

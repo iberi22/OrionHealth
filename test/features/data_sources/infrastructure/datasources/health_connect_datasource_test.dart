@@ -1,7 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/core/utils/health_wrapper.dart';
 import 'package:orionhealth_health/features/data_sources/infrastructure/datasources/health_connect_datasource.dart';
+
+class MockHealthWrapper extends Mock implements HealthWrapper {
+  @override
+  Health? get health => _mockHealth;
+  final MockHealth _mockHealth = MockHealth();
+}
 
 class MockHealth extends Mock implements Health {}
 
@@ -11,7 +18,9 @@ void main() {
 
   setUp(() {
     mockHealth = MockHealth();
-    dataSource = HealthConnectDataSourceImpl(mockHealth);
+    final wrapper = MockHealthWrapper();
+    when(() => wrapper.health).thenReturn(mockHealth);
+    dataSource = HealthConnectDataSourceImpl(wrapper);
   });
 
   group('HealthConnectDataSourceImpl', () {
