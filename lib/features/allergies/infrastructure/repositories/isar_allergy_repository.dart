@@ -9,20 +9,20 @@ class IsarAllergyRepository implements AllergyRepository {
 
   @override
   Future<List<Allergy>> getAllergies() async {
-    return _isar.allergys.where().findAll();
+    return _isar.collection<Allergy>().where().findAll();
   }
 
   @override
   Future<void> saveAllergy(Allergy allergy) async {
     await _isar.writeTxn(() async {
-      await _isar.allergys.put(allergy);
+      await _isar.collection<Allergy>().put(allergy);
     });
   }
 
   @override
   Future<void> deleteAllergy(Id id) async {
     await _isar.writeTxn(() async {
-      await _isar.allergys.delete(id);
+      await _isar.collection<Allergy>().delete(id);
     });
   }
 }

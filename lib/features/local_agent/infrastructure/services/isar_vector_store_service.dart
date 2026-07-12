@@ -272,9 +272,9 @@ class IsarVectorStoreService implements VectorStoreService {
   }) async {
     final childNodeIntIds = <int>[];
 
-    final count = await _memoryGraph.isar.memoryNodes.count();
+    final count = await _memoryGraph.isar.collection<MemoryNode>().count();
     for (var i = 0; i < count; i++) {
-      final node = await _memoryGraph.isar.memoryNodes.get(i + 1);
+      final node = await _memoryGraph.isar.collection<MemoryNode>().get(i + 1);
       if (node != null &&
           node.metadata != null &&
           node.metadata!.containsKey('externalId')) {
@@ -318,7 +318,7 @@ class IsarVectorStoreService implements VectorStoreService {
 
   @override
   Future<List<ChatMessage>> getRecentMessages({int limit = 20}) async {
-    final nodes = await _memoryGraph.isar.memoryNodes
+    final nodes = await _memoryGraph.isar.collection<MemoryNode>()
         .filter()
         .typeEqualTo('chat_message')
         .sortByCreatedAtDesc()

@@ -9,18 +9,18 @@ class AllergyLocalDataSource {
   AllergyLocalDataSource(this._isar);
 
   Future<List<Allergy>> getAllergies() async {
-    return await _isar.allergys.where().findAll();
+    return await _isar.collection<Allergy>().where().findAll();
   }
 
   Future<void> saveAllergy(Allergy allergy) async {
     await _isar.writeTxn(() async {
-      await _isar.allergys.put(allergy);
+      await _isar.collection<Allergy>().put(allergy);
     });
   }
 
   Future<void> deleteAllergy(Id id) async {
     await _isar.writeTxn(() async {
-      await _isar.allergys.delete(id);
+      await _isar.collection<Allergy>().delete(id);
     });
   }
 }
