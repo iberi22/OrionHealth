@@ -1,4 +1,4 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+﻿import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:health/health.dart';
 import 'package:http/http.dart' as http;
@@ -12,8 +12,7 @@ abstract class ServiceModule {
   @lazySingleton
   HealthWrapper get healthWrapper => HealthWrapper(HealthHelper.createClient());
 
-  @lazySingleton
-  Health? get health => HealthHelper.createClient();
+  Health? get health => HealthHelper.createClient(); // NOT injected (nullable)
 
   @preResolve
   @lazySingleton
@@ -35,3 +34,4 @@ abstract class ServiceModule {
   @lazySingleton
   http.Client get httpClient => http.Client();
 }
+

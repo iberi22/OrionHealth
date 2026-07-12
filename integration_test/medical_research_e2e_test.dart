@@ -89,11 +89,7 @@ void main() {
             latestVitals: [],
             upcomingAppointments: [],
             medicationCount: 0,
-<<<<<<< HEAD
             summaryText: 'Tu salud está en buen estado.',
-=======
-            summaryText: 'Summary',
->>>>>>> origin/fix/analyze-warnings-and-errors-13650026634091576366
           ));
 
       // Mock Research Data

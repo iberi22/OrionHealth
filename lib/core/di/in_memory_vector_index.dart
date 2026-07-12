@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+﻿// SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'dart:math' as math;
@@ -8,7 +8,7 @@ import 'package:isar_agent_memory/isar_agent_memory.dart';
 /// Simple in-memory vector index for development / when ObjectBox is unavailable.
 class InMemoryVectorIndex implements VectorIndex {
   final Map<String, _DocEntry> _docs = {};
-  InMemoryVectorIndex({int dimension = 768});
+  InMemoryVectorIndex({int dimension = 768}) : _dim = dimension;
 
   @override
   String get provider => 'in_memory';
@@ -18,6 +18,11 @@ class InMemoryVectorIndex implements VectorIndex {
   bool get normalize => false;
   @override
   VectorMetric get metric => VectorMetric.cosine;
+
+  @override
+  int get dimension => _dim;
+
+  int _dim;
 
   @override
   Future<void> addDocument(String id, String content, Float32List vector) async {
@@ -70,3 +75,4 @@ class _ScoredId {
   final double score;
   _ScoredId({required this.id, required this.score});
 }
+

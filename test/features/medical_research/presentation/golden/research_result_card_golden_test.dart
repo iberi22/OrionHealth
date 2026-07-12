@@ -5,7 +5,6 @@ import 'package:orionhealth_health/features/medical_research/presentation/widget
 void main() {
   testWidgets('ResearchResultCard golden test', (tester) async {
     final tResult = ResearchResult(
-<<<<<<< HEAD
       title: 'Estudio de Aspirina',
       content: 'La aspirina es efectiva para el dolor.',
       source: 'PubMed',
@@ -18,16 +17,6 @@ void main() {
           body: ResearchResultCard(result: tResult),
         ),
       ),
-=======
-      title: 'Test Title',
-      content: 'Test Content',
-      source: 'PubMed',
-      url: 'https://pubmed.ncbi.nlm.nih.gov/',
-    );
-    await tester.pumpWidget(
-      const MaterialApp(
-          home: Scaffold(body: ResearchResultCard(result: tResult))),
->>>>>>> origin/fix/analyze-warnings-and-errors-13650026634091576366
     );
     await expectLater(
       find.byType(ResearchResultCard),

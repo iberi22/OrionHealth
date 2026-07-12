@@ -1,13 +1,10 @@
 import '../chat_message.dart';
 import '../entities/local_model_descriptor.dart';
 
-<<<<<<< HEAD
 /// LLM Adapter interface for integration with isar_agent_memory v0.4.0
 ///
 /// This interface allows OrionHealth to integrate with the HiRAG Phase 2
 /// automatic summarization features while maintaining hexagonal architecture.
-=======
->>>>>>> origin/fix/analyze-warnings-and-errors-13650026634091576366
 
 abstract class LlmAdapter {
   /// Generate text based on a prompt
