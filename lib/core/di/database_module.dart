@@ -28,6 +28,7 @@ import '../../features/network/domain/entities/network_message.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_did.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_revocation_entry.dart';
+import '../../features/clinical_assessments/domain/entities/clinical_assessment_record.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
 import 'package:health_wallet/health_wallet.dart' as wallet;
 
@@ -42,8 +43,8 @@ abstract class DatabaseModule {
         ApiAuditLogSchema,
         ChatMessageSchema,
         MedicalRecordSchema,
-        MemoryNodeSchema,
-        MemoryEdgeSchema,
+
+
         ReportSchema,
         MedicationSchema,
         AppointmentSchema,
@@ -59,6 +60,7 @@ abstract class DatabaseModule {
         LlmConfigSchema,
         DashboardPreferenceSchema,
         MedicalResearchResultSchema,
+        ClinicalAssessmentRecordSchema,
         NetworkPeerSchema,
         NetworkMessageSchema,
         wallet.HealthRecordSchema,
@@ -82,3 +84,4 @@ abstract class DatabaseModule {
   wallet.WalletService walletService(Isar isar, wallet.EncryptionService encryption) =>
       wallet.WalletService(isar, encryption);
 }
+

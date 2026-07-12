@@ -213,11 +213,7 @@ void main() {
       when(() => mockDashboardCubit.stream).thenAnswer((_) => stateStream);
 
       await tester.pumpWidget(
-<<<<<<< HEAD
         buildApp(const DashboardLoading()),
-=======
-        buildApp(DashboardLoading()),
->>>>>>> origin/fix/analyze-warnings-and-errors-13650026634091576366
       );
       await tester.pump();
 

@@ -4,11 +4,11 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
+  audioplayers_windows
   bonsoir_windows
   connectivity_plus
   file_selector_windows
   firebase_core
-  firebase_database
   flutter_blue_plus_winrt
   flutter_gemma
   flutter_secure_storage_windows
