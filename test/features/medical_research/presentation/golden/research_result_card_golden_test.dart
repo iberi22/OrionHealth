@@ -1,10 +1,11 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:orionhealth_health/features/medical_research/domain/models/research_result.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/widgets/research_result_card.dart';
 
 void main() {
   testWidgets('ResearchResultCard golden test', (tester) async {
-    final tResult = ResearchResult(
+    const tResult = ResearchResult(
       title: 'Estudio de Aspirina',
       content: 'La aspirina es efectiva para el dolor.',
       source: 'PubMed',

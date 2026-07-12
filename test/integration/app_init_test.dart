@@ -4,6 +4,9 @@
 /// Integration test: full app startup smoke test
 /// Run: flutter test integration_test/app_init_test.dart --flavor prod
 
+library;
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/main.dart' as app;

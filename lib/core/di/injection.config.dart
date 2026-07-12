@@ -269,11 +269,11 @@ import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i40;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i192;
+    as _i191;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
     as _i42;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i191;
+    as _i192;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
     as _i66;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
@@ -282,9 +282,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i194;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i253;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i72;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i71;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i72;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i134;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -423,7 +423,7 @@ import '../../features/settings/application/llm_settings_cubit.dart' as _i196;
 import '../../features/settings/domain/repositories/settings_repository.dart'
     as _i119;
 import '../../features/settings/domain/services/device_capability_service.dart'
-    as _i29;
+    as _i30;
 import '../../features/settings/infrastructure/datasources/settings_local_datasource.dart'
     as _i118;
 import '../../features/settings/infrastructure/repositories/settings_repository_impl.dart'
@@ -489,7 +489,7 @@ import '../services/aicore_service.dart' as _i3;
 import '../services/asr/asr_service.dart' as _i11;
 import '../services/audio/audio_player_service.dart' as _i12;
 import '../services/audio/audio_recorder_service.dart' as _i14;
-import '../services/device_capability_service.dart' as _i30;
+import '../services/device_capability_service.dart' as _i29;
 import '../services/privacy_anonymizer.dart' as _i103;
 import '../services/secure_storage_service.dart' as _i114;
 import '../utils/health_wrapper.dart' as _i50;
@@ -499,9 +499,9 @@ import 'memory_module.dart' as _i275;
 import 'network_module.dart' as _i274;
 import 'service_module.dart' as _i273;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -577,7 +577,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i40.FlutterGemmaWrapper>(
         () => _i40.FlutterGemmaWrapper());
     await gh.lazySingletonAsync<_i41.FlutterSecureStorage>(
-      () => serviceModule.storage(gh<_i30.DeviceCapabilityService>()),
+      () => serviceModule.storage(gh<_i29.DeviceCapabilityService>()),
       preResolve: true,
     );
     gh.lazySingleton<_i42.GeminiModelWrapper>(
@@ -633,15 +633,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i69.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i70.MedicalKnowledgeRepository>(
-      () => _i71.JsonMedicalKnowledgeRepository(),
+      () => _i71.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
+    );
+    gh.factory<_i70.MedicalKnowledgeRepository>(
+      () => _i72.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
-    );
-    gh.factory<_i70.MedicalKnowledgeRepository>(
-      () => _i72.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
     );
     gh.lazySingleton<_i73.MedicalScraperService>(
         () => _i74.MedicalScraperServiceImpl(
@@ -714,7 +714,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i114.SecureStorageService>(
         () => _i114.SecureStorageServiceImpl(
               storage: gh<_i41.FlutterSecureStorage>(),
-              capabilityService: gh<_i30.DeviceCapabilityService>(),
+              capabilityService: gh<_i29.DeviceCapabilityService>(),
             ));
     gh.factory<_i115.SendChatMessageUseCase>(() => _i115.SendChatMessageUseCase(
           gh<_i64.LlmAdapter>(),
@@ -902,17 +902,17 @@ extension GetItInjectableX on _i1.GetIt {
               gh<_i46.HealthDataImportService>(),
               gh<_i135.VitalSignRepository>(),
             ));
-    gh.factory<_i64.LlmAdapter>(
-      () => _i191.MockLlmAdapter(gh<_i103.PromptScrubber>()),
-      instanceName: 'mock',
-    );
     gh.lazySingleton<_i64.LlmAdapter>(
-      () => _i192.GeminiLlmAdapter(
+      () => _i191.GeminiLlmAdapter(
         scrubber: gh<_i103.PromptScrubber>(),
         userProfileRepository: gh<_i130.UserProfileRepository>(),
         modelWrapper: gh<_i42.GeminiModelWrapper>(),
       ),
       instanceName: 'gemini',
+    );
+    gh.factory<_i64.LlmAdapter>(
+      () => _i192.MockLlmAdapter(gh<_i103.PromptScrubber>()),
+      instanceName: 'mock',
     );
     gh.lazySingleton<_i193.LlmAdapterFactory>(
         () => _i193.LlmAdapterFactory(gh<_i119.SettingsRepository>()));
@@ -923,7 +923,7 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i196.LlmSettingsCubit>(() => _i196.LlmSettingsCubit(
           gh<_i119.SettingsRepository>(),
-          gh<_i29.DeviceCapabilityService>(),
+          gh<_i30.DeviceCapabilityService>(),
           gh<_i64.LlmAdapter>(instanceName: 'gemma'),
         ));
     gh.factory<_i197.LoginUseCase>(() => _i197.LoginUseCase(
