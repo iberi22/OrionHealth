@@ -271,11 +271,9 @@ class IsarVectorStoreService implements VectorStoreService {
   }) async {
     final childNodeIntIds = <int>[];
 
-    final count = await _memoryGraph.isar.memoryNodes.count();
-    for (var i = 0; i < count; i++) {
-      final node = await _memoryGraph.isar.memoryNodes.get(i + 1);
-      if (node != null &&
-          node.metadata != null &&
+    final allLayerNodes = await _memoryGraph.getNodesByLayer(layer);
+    for (final node in allLayerNodes) {
+      if (node.metadata != null &&
           node.metadata!.containsKey('externalId')) {
         final extId = node.metadata!['externalId'] as String?;
         if (extId != null && childNodeIds.contains(extId)) {
@@ -317,23 +315,30 @@ class IsarVectorStoreService implements VectorStoreService {
 
   @override
   Future<List<ChatMessage>> getRecentMessages({int limit = 20}) async {
-    final nodes = await _memoryGraph.isar.memoryNodes
-        .filter()
-        .typeEqualTo('chat_message')
-        .sortByCreatedAtDesc()
-        .limit(limit)
-        .findAll();
-
-    return nodes.map((node) {
-      final metadata = node.metadata ?? {};
-      return ChatMessage(
-        id: node.id,
-        role: metadata['role'] == 'assistant' ? ChatRole.assistant : ChatRole.user,
-        content: node.content,
-        timestamp: node.createdAt,
-        citations: List<String>.from(metadata['citations'] ?? []),
-      );
-    }).toList();
+    // Get all nodes from all layers and filter for chat messages
+    final allNodes = <ChatMessage>[];
+    for (var layer = 1; layer <= 5; layer++) {
+      try {
+        final nodes = await _memoryGraph.getNodesByLayer(layer);
+        for (final node in nodes) {
+          if (node.type == 'chat_message') {
+            final metadata = node.metadata ?? {};
+            allNodes.add(ChatMessage(
+              id: node.id,
+              role: metadata['role'] == 'assistant' ? ChatRole.assistant : ChatRole.user,
+              content: node.content,
+              timestamp: node.createdAt,
+              citations: List<String>.from(metadata['citations'] ?? []),
+            ));
+          }
+        }
+      } catch (_) {
+        // Layer may not exist
+      }
+    }
+    // Sort by createdAt descending and limit
+    allNodes.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return allNodes.take(limit).toList();
   }
 
   @override
