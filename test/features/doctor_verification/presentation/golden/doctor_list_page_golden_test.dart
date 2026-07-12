@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/doctor_verification/presentation/pages/doctor_list_page.dart';
 import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_cubit.dart';
 import 'package:orionhealth_health/features/doctor_verification/application/doctor_verification_state.dart';
