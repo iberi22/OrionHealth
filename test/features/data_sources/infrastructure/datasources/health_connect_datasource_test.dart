@@ -1,17 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:orionhealth_health/core/utils/health_wrapper.dart';
 import 'package:orionhealth_health/features/data_sources/infrastructure/datasources/health_connect_datasource.dart';
 
 class MockHealth extends Mock implements Health {}
 
+class MockHealthWrapper extends Mock implements HealthWrapper {}
+
 void main() {
   late HealthConnectDataSourceImpl dataSource;
+  late MockHealthWrapper mockWrapper;
   late MockHealth mockHealth;
 
   setUp(() {
+    mockWrapper = MockHealthWrapper();
     mockHealth = MockHealth();
-    dataSource = HealthConnectDataSourceImpl(mockHealth);
+    when(() => mockWrapper.health).thenReturn(mockHealth);
+    dataSource = HealthConnectDataSourceImpl(mockWrapper);
   });
 
   group('HealthConnectDataSourceImpl', () {
@@ -43,18 +49,36 @@ void main() {
 
     test('syncData calls health package with correct types and date range', () async {
       when(() => mockHealth.getHealthDataFromTypes(
-        types: any(named: 'types'),
-        startTime: any(named: 'startTime'),
-        endTime: any(named: 'endTime'),
-      )).thenAnswer((_) async => []);
+            types: any(named: 'types'),
+            startTime: any(named: 'startTime'),
+            endTime: any(named: 'endTime'),
+          )).thenAnswer((_) async => []);
 
       await dataSource.syncData();
 
       verify(() => mockHealth.getHealthDataFromTypes(
-        types: [HealthDataType.STEPS, HealthDataType.HEART_RATE],
-        startTime: any(named: 'startTime'),
-        endTime: any(named: 'endTime'),
-      )).called(1);
+            types: [HealthDataType.STEPS, HealthDataType.HEART_RATE],
+            startTime: any(named: 'startTime'),
+            endTime: any(named: 'endTime'),
+          )).called(1);
+    });
+
+    test('isAvailable returns false if health is null', () async {
+      when(() => mockWrapper.health).thenReturn(null);
+      final result = await dataSource.isAvailable();
+      expect(result, isFalse);
+    });
+
+    test('requestPermissions returns false if health is null', () async {
+      when(() => mockWrapper.health).thenReturn(null);
+      final result = await dataSource.requestPermissions();
+      expect(result, isFalse);
+    });
+
+    test('syncData does nothing if health is null', () async {
+      when(() => mockWrapper.health).thenReturn(null);
+      await dataSource.syncData();
+      // Should not throw
     });
   });
 }
