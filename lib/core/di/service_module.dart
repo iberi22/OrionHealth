@@ -1,6 +1,5 @@
-﻿import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
-import 'package:health/health.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import '../services/device_capability_service.dart';
@@ -11,10 +10,6 @@ import '../utils/health_wrapper.dart';
 abstract class ServiceModule {
   @lazySingleton
   HealthWrapper get healthWrapper => HealthWrapper(HealthHelper.createClient());
-
-  @PreResolve
-  @lazySingleton
-  Health get health => HealthHelper.createClient() ?? Health.withClient(Health());
 
   @preResolve
   @lazySingleton
@@ -36,4 +31,3 @@ abstract class ServiceModule {
   @lazySingleton
   http.Client get httpClient => http.Client();
 }
-

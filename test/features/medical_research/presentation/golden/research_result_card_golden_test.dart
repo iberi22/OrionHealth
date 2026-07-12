@@ -13,7 +13,7 @@ void main() {
       confidence: 0.95,
     );
     await tester.pumpWidget(
-      const MaterialApp(
+      MaterialApp(
         home: Scaffold(
           body: ResearchResultCard(result: tResult),
         ),
