@@ -4,6 +4,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/voice_chat/domain/entities/voice_chat_message.dart';
+import 'package:orionhealth_health/features/voice_chat/domain/entities/transcript.dart';
 import 'package:orionhealth_health/features/voice_chat/domain/repositories/voice_chat_repository.dart';
 
 class MockVoiceChatRepository extends Mock implements VoiceChatRepository {}
