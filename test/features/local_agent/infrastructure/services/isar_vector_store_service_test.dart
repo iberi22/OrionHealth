@@ -147,7 +147,7 @@ void main() {
         final mockCollection = MockMemoryNodeCollection();
 
         when(() => mockMemoryGraph.isar).thenReturn(mockIsar);
-        when(() => mockIsar.memoryNodes).thenReturn(mockCollection);
+        when(() => mockIsar.collection<MemoryNode>()).thenReturn(mockCollection);
         when(() => mockCollection.count()).thenAnswer((_) async => 0);
 
         await expectLater(
