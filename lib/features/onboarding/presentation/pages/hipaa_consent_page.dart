@@ -371,12 +371,6 @@ class _HipaaConsentPageState extends State<HipaaConsentPage> {
     }
   }
 
-  /// Static method to check if consent has been previously granted.
-  static Future<bool> hasConsent() async {
-    const storage = FlutterSecureStorage();
-    final value = await storage.read(key: _consentKey);
-    return value == 'true';
-  }
 }
 
 const String _privacyPolicyText = '''

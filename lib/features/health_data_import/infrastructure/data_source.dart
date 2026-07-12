@@ -18,7 +18,7 @@ class SensorHealthDataSourceImpl implements SensorHealthDataSource {
   Future<bool> requestAuthorization(List<HealthDataType> types, List<HealthDataAccess> permissions) async {
     if (_health == null) return false;
     try {
-      return await _health!.requestAuthorization(types, permissions: permissions);
+      return await _health.requestAuthorization(types, permissions: permissions);
     } catch (_) {
       return false;
     }
@@ -28,7 +28,7 @@ class SensorHealthDataSourceImpl implements SensorHealthDataSource {
   Future<List<HealthDataPoint>> fetchData(HealthDataType type, DateTime start, DateTime end) async {
     if (_health == null) return [];
     try {
-      return await _health!.getHealthDataFromTypes(
+      return await _health.getHealthDataFromTypes(
         types: [type],
         startTime: start,
         endTime: end,
@@ -42,7 +42,7 @@ class SensorHealthDataSourceImpl implements SensorHealthDataSource {
   Future<bool> hasPermissions(List<HealthDataType> types) async {
     if (_health == null) return false;
     try {
-      final result = await _health!.hasPermissions(types);
+      final result = await _health.hasPermissions(types);
       return result ?? false;
     } catch (_) {
       return false;
