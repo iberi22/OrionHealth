@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
 import 'package:orionhealth_health/features/medical_research/presentation/widgets/interaction_checker_widget.dart';
 import 'package:orionhealth_health/features/medical_research/application/medical_research_cubit.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
