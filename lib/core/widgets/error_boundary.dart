@@ -24,6 +24,7 @@ class ErrorBoundary extends StatefulWidget {
   });
 
   static Widget _defaultErrorBuilder(BuildContext context, Object error) {
+    final navigator = _tryGetNavigator(context);
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -35,7 +36,7 @@ class ErrorBoundary extends StatefulWidget {
               const Icon(Icons.error_outline, color: Colors.red, size: 64),
               const SizedBox(height: 16),
               const Text(
-                'Algo salió mal',
+                'Algo sali\u00f3 mal',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -49,20 +50,30 @@ class ErrorBoundary extends StatefulWidget {
                 style: const TextStyle(color: Colors.white70, fontSize: 14),
               ),
               const SizedBox(height: 24),
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (_) => const _ResetApp(),
+              if (navigator != null)
+                ElevatedButton.icon(
+                  onPressed: () => navigator.pushReplacement(
+                    MaterialPageRoute(
+                      builder: (_) => const _ResetApp(),
+                    ),
                   ),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Reiniciar'),
                 ),
-                icon: const Icon(Icons.refresh),
-                label: const Text('Reiniciar'),
-              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  /// Safely tries to get a Navigator, returns null if none exists.
+  static NavigatorState? _tryGetNavigator(BuildContext context) {
+    try {
+      return Navigator.of(context);
+    } catch (_) {
+      return null;
+    }
   }
 
   static String _userFriendlyMessage(Object error) {
