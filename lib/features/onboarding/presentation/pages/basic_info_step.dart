@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -26,12 +25,22 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
 
   // Lazily initialized - avoids crashing initState during build
   EpsConnectionCubit? _lazyEpsCubit() {
-    if (_epsCubitInitFailed) return null;
+    if (_epsCubitInitFailed) {
+      debugPrint('[EPS] _lazyEpsCubit: already failed, returning null');
+      return null;
+    }
     try {
-      if (_epsCubit != null) return _epsCubit;
+      if (_epsCubit != null) {
+        debugPrint('[EPS] _lazyEpsCubit: cached cubit available');
+        return _epsCubit;
+      }
+      debugPrint('[EPS] _lazyEpsCubit: creating cubit via getIt...');
       _epsCubit = getIt<EpsConnectionCubit>();
+      debugPrint('[EPS] _lazyEpsCubit: SUCCESS, cubit created');
       return _epsCubit;
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('[EPS] _lazyEpsCubit: FAILED - $e');
+      debugPrint('[EPS] Stack: $st');
       _epsCubitInitFailed = true;
       return null;
     }
@@ -184,7 +193,9 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
 
   Widget _buildEpsSection() {
     final cubit = _lazyEpsCubit();
+    debugPrint('[EPS] _buildEpsSection: cubit=$cubit, failed=$_epsCubitInitFailed');
     if (_epsCubitInitFailed || cubit == null) {
+      debugPrint('[EPS] _buildEpsSection: showing fallback UI');
       return GlassmorphicCard(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -213,9 +224,7 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
       );
     }
 
-    return BlocProvider<EpsConnectionCubit>.value(
-      value: cubit,
-      child: const EpsConnectButton(),
+    return EpsConnectButton(cubit: cubit),
     );
   }
 
