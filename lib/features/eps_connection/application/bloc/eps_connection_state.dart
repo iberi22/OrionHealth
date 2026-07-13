@@ -56,3 +56,19 @@ class EpsConnectionError extends EpsConnectionState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Emitted after a successful Patient Portal Extraction flow.
+/// The patient authenticated through the EPS web portal (on-device RPA)
+/// rather than through SMART on FHIR OAuth2.
+class EpsConnectionPortalConnected extends EpsConnectionState {
+  final EPSProvider provider;
+  final String? patientId;
+
+  const EpsConnectionPortalConnected({
+    required this.provider,
+    this.patientId,
+  });
+
+  @override
+  List<Object?> get props => [provider, patientId];
+}

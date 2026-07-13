@@ -6,10 +6,10 @@ import 'package:orionhealth_health/features/eps_connection/domain/entities/oauth
 
 void main() {
   group('EpsConnectionState', () {
-    test('EpsConnectionInitial supports equality', () {
-      const state = EpsConnectionInitial();
-      expect(state, const EpsConnectionInitial());
-      expect(state.props, isEmpty);
+    test('EpsConnectionCatalog supports equality', () {
+      const state = EpsConnectionCatalog(availableProviders: []);
+      expect(state, const EpsConnectionCatalog(availableProviders: []));
+      expect(state.availableProviders, isEmpty);
     });
 
     test('EpsConnectionLoading supports equality', () {
@@ -34,6 +34,20 @@ void main() {
       const state = EpsConnectionError('error');
       expect(state, const EpsConnectionError('error'));
       expect(state.props, ['error']);
+    });
+
+    test('EpsConnectionPortalConnected supports equality', () {
+      final provider = const EPSProvider(
+        id: '1', name: 'N', discoveryUrl: 'D',
+        clientId: 'C', redirectUrl: 'R', scopes: [],
+      );
+      final state = EpsConnectionPortalConnected(
+        provider: provider, patientId: 'P',
+      );
+      expect(state, EpsConnectionPortalConnected(
+        provider: provider, patientId: 'P',
+      ));
+      expect(state.props, [provider, 'P']);
     });
   });
 }
