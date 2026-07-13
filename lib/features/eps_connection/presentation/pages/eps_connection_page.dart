@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/bloc/eps_connection_cubit.dart';
 import '../../application/bloc/eps_connection_state.dart';
 import '../widgets/eps_connection_status_card.dart';
+import '../widgets/eps_qr_scanner_page.dart';
+import '../../domain/entities/eps_providers_catalog.dart';
+import '../../domain/entities/eps_provider.dart';
 
 import '../../../../core/widgets/page_header.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
@@ -121,10 +124,22 @@ class EpsConnectionPage extends StatelessWidget {
   Widget _buildAddConnectionButton(BuildContext context) {
     return GlassmorphicCard(
       child: InkWell(
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('QR scanner coming soon')),
-          );
+        onTap: () async {
+          try {
+            final result = await Navigator.push<EPSProviderScanResult>(
+              context,
+              MaterialPageRoute(builder: (_) => const EpsQrScannerPage()),
+            );
+            if (result != null && mounted) {
+              _handleScanResult(context, result);
+            }
+          } catch (e) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Error al abrir el escáner: $e')),
+              );
+            }
+          }
         },
         child: const Padding(
           padding: EdgeInsets.all(20),
@@ -148,6 +163,47 @@ class EpsConnectionPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _handleScanResult(BuildContext context, EPSProviderScanResult result) {
+    if (result.providerId != null) {
+      // Buscar en el catálogo
+      final provider = EpsProvidersCatalog.byId(result.providerId!);
+      if (provider != null) {
+        // Conectar con la EPS escaneada
+        try {
+          context.read<EpsConnectionCubit>().connect(provider);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Conectando con ${provider.name}...')),
+          );
+          return;
+        } catch (_) {}
+      }
+    }
+
+    if (result.discoveryUrl != null) {
+      // Crear provider temporal con la URL escaneada
+      final provider = EPSProvider(
+        id: result.providerId ?? 'scanned-${DateTime.now().millisecondsSinceEpoch}',
+        name: result.providerId ?? 'EPS Escaneada',
+        discoveryUrl: result.discoveryUrl!,
+        clientId: 'orionhealth',
+        redirectUrl: 'orionhealth://callback',
+        scopes: const ['openid', 'fhirUser', 'offline_access',
+          'patient/Patient.read', 'patient/Observation.read'],
+      );
+      try {
+        context.read<EpsConnectionCubit>().connect(provider);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Conectando con EPS...')),
+        );
+        return;
+      } catch (_) {}
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Código QR no reconocido como EPS válida')),
     );
   }
 }
