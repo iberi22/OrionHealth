@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:research_package/research_package.dart';
-import 'package:orionhealth_health/features/clinical_assessments/data/assessment_repository.dart';
+import "package:orionhealth_health/features/clinical_assessments/domain/repositories/i_assessment_repository.dart";
 import 'package:orionhealth_health/features/clinical_assessments/domain/entities/clinical_assessment_record.dart';
 import 'package:orionhealth_health/features/clinical_assessments/presentation/consent_screen.dart';
 import '../helpers/carp_test_utils.dart';
 
-class MockAssessmentRepository extends Mock implements AssessmentRepository {}
+class MockAssessmentRepository extends Mock implements IAssessmentRepository {}
 
 void main() {
   late MockAssessmentRepository mockRepository;
