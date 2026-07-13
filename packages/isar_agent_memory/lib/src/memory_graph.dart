@@ -44,9 +44,28 @@ class MemoryGraph {
   /// This method should be called once when the application starts to ensure the
   /// vector index is synchronized with the persisted nodes.
   Future<void> initialize() async {
-    await _index.load();
+    try {
+      await _index.load();
+    } catch (e) {
+      print('Warning: Failed to load vector index: $e');
+    }
 
-    final allNodes = await isar.collection<MemoryNode>().where().findAll();
+    List<MemoryNode> allNodes;
+    try {
+      allNodes = await isar.collection<MemoryNode>().where().findAll();
+    } catch (e) {
+      print('CRITICAL: Isar schema mismatch or corruption in MemoryGraph: $e');
+      if (e.toString().contains('TypeSchema') || e.toString().contains('Schema')) {
+        try {
+          await isar.close();
+          print('Isar closed due to schema mismatch in MemoryGraph');
+        } catch (closeErr) {
+          print('Error closing Isar: $closeErr');
+        }
+      }
+      rethrow;
+    }
+
     for (final node in allNodes) {
       if (node.embedding != null) {
         // Safely attempt to add the document to the index.
@@ -66,7 +85,6 @@ class MemoryGraph {
     }
   }
 
-  /// Stores a new memory node with an embedding generated from its [content].
   ///
   /// The embedding is created using the provided [embeddingsAdapter].
   ///

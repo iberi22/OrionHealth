@@ -21,12 +21,25 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
   final _heightController = TextEditingController();
   DateTime? _birthDate;
   String? _sex;
+  EpsConnectionCubit? _epsCubit;
+  bool _epsCubitInitFailed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      _epsCubit = getIt<EpsConnectionCubit>();
+    } catch (e) {
+      _epsCubitInitFailed = true;
+    }
+  }
 
   @override
   void dispose() {
     _nameController.dispose();
     _weightController.dispose();
     _heightController.dispose();
+    _epsCubit?.close();
     super.dispose();
   }
 
@@ -85,10 +98,7 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 12),
-          BlocProvider(
-            create: (context) => getIt<EpsConnectionCubit>(),
-            child: const EpsConnectButton(),
-          ),
+          _buildEpsSection(),
           const SizedBox(height: 48),
           _buildNavigationButtons(context),
         ],
@@ -161,6 +171,42 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
           }
         },
       ),
+    );
+  }
+
+  Widget _buildEpsSection() {
+    if (_epsCubitInitFailed || _epsCubit == null) {
+      return GlassmorphicCard(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              const Icon(Icons.link_off, color: Colors.orangeAccent),
+              const SizedBox(width: 16),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Conexión EPS no disponible',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      'No pudimos inicializar la conexión. Puedes continuar sin ella.',
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return BlocProvider<EpsConnectionCubit>.value(
+      value: _epsCubit!,
+      child: const EpsConnectButton(),
     );
   }
 
