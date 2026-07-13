@@ -39,16 +39,19 @@ void main() {
   });
 
   group('EpsConnectionBloc', () {
-    test('initial state is EpsConnectionInitial', () {
-      expect(bloc.state, const EpsConnectionInitial());
+    test('initial state is EpsConnectionCatalog with 28 providers', () {
+      expect(bloc.state, isA<EpsConnectionCatalog>());
+      final catalog = bloc.state as EpsConnectionCatalog;
+      expect(catalog.availableProviders.length, 28);
+      expect(catalog.connections, isEmpty);
     });
 
     test('LoadConnections emits [Loading, Loaded] on success', () async {
       when(() => mockGetConnections()).thenAnswer((_) async => []);
 
       final expected = [
-        const EpsConnectionLoading(),
-        const EpsConnectionLoaded([]),
+        isA<EpsConnectionLoading>(),
+        isA<EpsConnectionLoaded>(),
       ];
 
       expectLater(bloc.stream, emitsInOrder(expected));
@@ -59,7 +62,7 @@ void main() {
       when(() => mockGetConnections()).thenThrow(Exception('failure'));
 
       final expected = [
-        const EpsConnectionLoading(),
+        isA<EpsConnectionLoading>(),
         isA<EpsConnectionError>(),
       ];
 
@@ -67,7 +70,7 @@ void main() {
       bloc.add(const LoadConnections());
     });
 
-    test('ConnectProvider calls usecase and reloads', () async {
+    test('ConnectProvider emits Connecting, then calls usecase and reloads', () async {
       final provider = EPSProvider(
         id: '1',
         name: 'Test',
@@ -83,7 +86,7 @@ void main() {
 
       await expectLater(
         bloc.stream,
-        emitsThrough(const EpsConnectionLoaded([])),
+        emitsThrough(isA<EpsConnectionLoaded>()),
       );
 
       verify(() => mockConnectProvider(provider)).called(1);

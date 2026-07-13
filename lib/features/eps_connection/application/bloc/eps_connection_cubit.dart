@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'eps_connection_state.dart';
 import '../../domain/entities/eps_provider.dart';
+import '../../domain/entities/eps_providers_catalog.dart';
 import '../../domain/usecases/connect_provider_usecase.dart';
 import '../../domain/usecases/disconnect_provider_usecase.dart';
 import '../../domain/usecases/get_connections_usecase.dart';
@@ -19,10 +20,35 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
     this._getConnectionsUseCase,
     this._connectProviderUseCase,
     this._disconnectProviderUseCase,
-  ) : super(const EpsConnectionInitial()) {
-    loadConnections();
+  ) : super(const EpsConnectionCatalog(availableProviders: [])) {
+    loadCatalog();
   }
 
+  /// Carga el catálogo completo de EPS + conexiones existentes.
+  Future<void> loadCatalog() async {
+    final providers = EpsProvidersCatalog.activeProviders;
+
+    try {
+      final connections = await _getConnectionsUseCase();
+      final connectedIds =
+          connections.map((c) => c.provider.id).toSet().toList();
+
+      emit(EpsConnectionCatalog(
+        availableProviders: providers,
+        connections: connections,
+        connectedProviderIds: connectedIds,
+      ));
+    } catch (_) {
+      // Si falla obtener conexiones, mostrar solo catálogo
+      emit(EpsConnectionCatalog(
+        availableProviders: providers,
+        connections: const [],
+        connectedProviderIds: const [],
+      ));
+    }
+  }
+
+  /// Refresca las conexiones sin recargar el catálogo.
   Future<void> loadConnections() async {
     emit(const EpsConnectionLoading());
     try {
@@ -33,13 +59,16 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
     }
   }
 
+  /// Conecta con una EPS del catálogo.
   Future<void> connect(EPSProvider provider) async {
-    emit(const EpsConnectionLoading());
+    emit(EpsConnectionConnecting(provider));
     try {
       await _connectProviderUseCase(provider);
-      await loadConnections();
+      await loadCatalog(); // Recarga catálogo con nuevas conexiones
     } catch (e) {
-      emit(EpsConnectionError('Connection error: ${e.toString()}'));
+      emit(EpsConnectionError('Error de conexión: ${e.toString()}'));
+      // Recuperar: volver al catálogo
+      await loadCatalog();
     }
   }
 
@@ -47,7 +76,7 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
     emit(const EpsConnectionLoading());
     try {
       await _disconnectProviderUseCase(providerId);
-      await loadConnections();
+      await loadCatalog();
     } catch (e) {
       emit(EpsConnectionError('Disconnection error: ${e.toString()}'));
     }

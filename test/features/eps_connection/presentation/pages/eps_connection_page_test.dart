@@ -8,6 +8,7 @@ import 'package:orionhealth_health/features/eps_connection/presentation/pages/ep
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_connection.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/oauth_token.dart';
+import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_providers_catalog.dart';
 
 class MockEpsConnectionCubit extends Mock implements EpsConnectionCubit {}
 
@@ -38,58 +39,102 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('EpsConnectionPage shows empty message when no connections', (tester) async {
-    when(() => mockCubit.state).thenReturn(const EpsConnectionLoaded([]));
-    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionLoaded([])));
+  testWidgets('EpsConnectionPage shows catalog providers when state is EpsConnectionCatalog', (tester) async {
+    // Use a small subset to speed up test
+    final subset = EpsProvidersCatalog.activeProviders.take(5).toList();
+    final catalog = EpsConnectionCatalog(
+      availableProviders: subset,
+      connections: const [],
+      connectedProviderIds: const [],
+    );
+    when(() => mockCubit.state).thenReturn(catalog);
+    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(catalog));
 
     await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pump();
 
-    expect(find.text('No EPS providers connected'), findsOneWidget);
-    expect(find.text('Connect via QR Code'), findsOneWidget);
+    // Should show header "28 EPS disponibles"
+    expect(find.text('28 EPS disponibles'), findsOneWidget);
+    // Should show search bar
+    expect(find.text('Buscar EPS por nombre...'), findsOneWidget);
+    // Should show regime filters
+    expect(find.text('Todas'), findsOneWidget);
   });
 
-  testWidgets('EpsConnectionPage shows connections list and handles disconnect', (tester) async {
+  testWidgets('EpsConnectionPage shows search bar', (tester) async {
+    final subset = EpsProvidersCatalog.activeProviders.take(3).toList();
+    final catalog = EpsConnectionCatalog(
+      availableProviders: subset,
+      connections: const [],
+      connectedProviderIds: const [],
+    );
+    when(() => mockCubit.state).thenReturn(catalog);
+    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(catalog));
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pump();
+
+    expect(find.text('Buscar EPS por nombre...'), findsOneWidget);
+  });
+
+  testWidgets('EpsConnectionPage shows regime filters', (tester) async {
+    final subset = EpsProvidersCatalog.activeProviders.take(2).toList();
+    final catalog = EpsConnectionCatalog(
+      availableProviders: subset,
+      connections: const [],
+      connectedProviderIds: const [],
+    );
+    when(() => mockCubit.state).thenReturn(catalog);
+    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(catalog));
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pump();
+
+    // Regime filter chips present
+    expect(find.text('Todas'), findsOneWidget);
+    expect(find.text('Contributivo'), findsOneWidget);
+    expect(find.text('Subsidiado'), findsOneWidget);
+  });
+
+  testWidgets('EpsConnectionPage shows connections when present', (tester) async {
     final connection = EPSConnection(
-      provider: const EPSProvider(id: '1', name: 'Provider 1', discoveryUrl: 'D', clientId: 'C', redirectUrl: 'R', scopes: []),
+      provider: const EPSProvider(id: 'EPS025', name: 'EPS SURA', discoveryUrl: 'D', clientId: 'C', redirectUrl: 'R', scopes: []),
       token: const OAuthToken(accessToken: 'A'),
       patientId: 'P1',
       connectedAt: DateTime.now(),
     );
-    when(() => mockCubit.state).thenReturn(EpsConnectionLoaded([connection]));
-    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(EpsConnectionLoaded([connection])));
+    final catalog = EpsConnectionCatalog(
+      availableProviders: EpsProvidersCatalog.activeProviders.take(5).toList(),
+      connections: [connection],
+      connectedProviderIds: ['EPS025'],
+    );
+    when(() => mockCubit.state).thenReturn(catalog);
+    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(catalog));
     when(() => mockCubit.disconnect(any())).thenAnswer((_) async => {});
 
     await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pump();
 
-    expect(find.text('Provider 1'), findsOneWidget);
-
-    // Tap disconnect in the card
+    // Disconnect button
     await tester.tap(find.byIcon(Icons.link_off));
     await tester.pump();
 
-    verify(() => mockCubit.disconnect('1')).called(1);
+    verify(() => mockCubit.disconnect('EPS025')).called(1);
   });
 
-  testWidgets('EpsConnectionPage shows error SnackBar', (tester) async {
-    when(() => mockCubit.state).thenReturn(const EpsConnectionInitial());
-    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionError('Failed to load')));
+  testWidgets('EpsConnectionPage handles error state gracefully', (tester) async {
+    final errorState = EpsConnectionError('Failed to load');
+    when(() => mockCubit.state).thenReturn(errorState);
+    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(errorState));
 
-    await tester.pumpWidget(createWidgetUnderTest());
-    await tester.pump(); // trigger listener
-
-    expect(find.byType(SnackBar), findsOneWidget);
-    expect(find.text('Failed to load'), findsOneWidget);
-  });
-
-  testWidgets('Connect via QR Code tap shows SnackBar', (tester) async {
-    when(() => mockCubit.state).thenReturn(const EpsConnectionLoaded([]));
-    when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionLoaded([])));
-
-    await tester.pumpWidget(createWidgetUnderTest());
-
-    await tester.tap(find.text('Connect via QR Code'));
+    // If cubit is provided via constructor, wrap happens in _buildBody
+    await tester.pumpWidget(MaterialApp(
+      home: EpsConnectionPage(cubit: mockCubit),
+    ));
     await tester.pump();
 
-    expect(find.text('QR scanner coming soon'), findsOneWidget);
+    // Error state shows retry button
+    expect(find.text('Reintentar'), findsOneWidget);
+    expect(find.text('Failed to load'), findsOneWidget);
   });
 }

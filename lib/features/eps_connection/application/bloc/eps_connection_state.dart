@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/eps_connection.dart';
+import '../../domain/entities/eps_provider.dart';
 
 sealed class EpsConnectionState extends Equatable {
   const EpsConnectionState();
@@ -8,8 +9,24 @@ sealed class EpsConnectionState extends Equatable {
   List<Object?> get props => [];
 }
 
-class EpsConnectionInitial extends EpsConnectionState {
-  const EpsConnectionInitial();
+/// Estado inicial con el catálogo de EPS disponibles.
+class EpsConnectionCatalog extends EpsConnectionState {
+  final List<EPSProvider> availableProviders;
+  final List<EPSConnection> connections;
+  final List<String> connectedProviderIds;
+
+  const EpsConnectionCatalog({
+    required this.availableProviders,
+    this.connections = const [],
+    this.connectedProviderIds = const [],
+  });
+
+  @override
+  List<Object?> get props => [
+        availableProviders,
+        connections,
+        connectedProviderIds,
+      ];
 }
 
 class EpsConnectionLoading extends EpsConnectionState {
@@ -22,6 +39,14 @@ class EpsConnectionLoaded extends EpsConnectionState {
 
   @override
   List<Object?> get props => [connections];
+}
+
+class EpsConnectionConnecting extends EpsConnectionState {
+  final EPSProvider provider;
+  const EpsConnectionConnecting(this.provider);
+
+  @override
+  List<Object?> get props => [provider];
 }
 
 class EpsConnectionError extends EpsConnectionState {
