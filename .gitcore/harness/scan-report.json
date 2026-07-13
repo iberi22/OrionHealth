@@ -27,16 +27,16 @@
                                      "arch_score":  100
                                  },
                      "dashboard":  {
-                                       "golden_count":  1,
-                                       "overall_pct":  75,
+                                       "golden_count":  2,
+                                       "overall_pct":  100,
                                        "layers":  [
                                                       "domain",
                                                       "application",
                                                       "infrastructure",
                                                       "presentation"
                                                   ],
-                                       "test_count":  55,
-                                       "e2e_count":  0,
+                                       "test_count":  58,
+                                       "e2e_count":  3,
                                        "arch_score":  100
                                    },
                      "eps_connection":  {
@@ -120,15 +120,15 @@
                                              "arch_score":  100
                                          },
                      "data_sources":  {
-                                          "golden_count":  1,
-                                          "overall_pct":  90,
+                                          "golden_count":  2,
+                                          "overall_pct":  100,
                                           "layers":  [
                                                          "domain",
                                                          "application",
                                                          "infrastructure",
                                                          "presentation"
                                                      ],
-                                          "test_count":  100,
+                                          "test_count":  104,
                                           "e2e_count":  1,
                                           "arch_score":  100
                                       },
@@ -305,7 +305,7 @@
                                      },
                      "email-citas":  {
                                          "golden_count":  5,
-                                         "overall_pct":  85,
+                                         "overall_pct":  100,
                                          "layers":  [
                                                         "domain",
                                                         "application",
@@ -313,7 +313,7 @@
                                                         "presentation"
                                                     ],
                                          "test_count":  104,
-                                         "e2e_count":  0,
+                                         "e2e_count":  1,
                                          "arch_score":  100
                                      },
                      "health_data_import":  {
@@ -357,6 +357,6 @@
                                      }
                  },
     "feature_count":  27,
-    "overall_score":  97,
-    "generated":  "2026-07-13T15:24:45"
+    "overall_score":  98.9,
+    "generated":  "2026-07-13T15:27:35"
 }
