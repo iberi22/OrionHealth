@@ -12,34 +12,23 @@ void main() {
 
     test('all providers have required fields', () {
       for (final provider in EpsProvidersCatalog.activeProviders) {
-        expect(provider.name.isNotEmpty, true, reason: '${provider.providerId} has no name');
-        expect(provider.providerId.isNotEmpty, true, reason: '${provider.name} has no providerId');
-        expect(provider.code.isNotEmpty, true, reason: '${provider.name} has no code');
-        expect(provider.regime.isNotEmpty, true, reason: '${provider.name} has no regime');
-      }
-    });
-
-    test('byRegime should filter correctly', () {
-      final contributivo = EpsProvidersCatalog.byRegime('Contributivo');
-      expect(contributivo.length, greaterThanOrEqualTo(5));
-      for (final p in contributivo) {
-        expect(p.regime, 'Contributivo');
-      }
-
-      final subsidiado = EpsProvidersCatalog.byRegime('Subsidiado');
-      expect(subsidiado.length, greaterThanOrEqualTo(3));
-      for (final p in subsidiado) {
-        expect(p.regime, 'Subsidiado');
+        expect(provider.id.isNotEmpty, true, reason: '${provider.name} has no id');
+        expect(provider.name.isNotEmpty, true, reason: '${provider.id} has no name');
+        expect(provider.discoveryUrl.isNotEmpty, true, reason: '${provider.name} has no discoveryUrl');
+        expect(provider.clientId.isNotEmpty, true, reason: '${provider.name} has no clientId');
+        expect(provider.redirectUrl.isNotEmpty, true, reason: '${provider.name} has no redirectUrl');
+        expect(provider.scopes.isNotEmpty, true, reason: '${provider.name} has no scopes');
+        expect(provider.type, EPSProviderType.fhir, reason: '${provider.name} should be FHIR type');
       }
     });
 
     test('search should find EPS by name', () {
       final results = EpsProvidersCatalog.search('SURA');
       expect(results.length, 1);
-      expect(results.first.providerId, 'EPS025');
+      expect(results.first.id, 'EPS025');
     });
 
-    test('search should find EPS by code', () {
+    test('search should find EPS by id', () {
       final results = EpsProvidersCatalog.search('EPS005');
       expect(results.length, 1);
       expect(results.first.name, 'Sanitas E.P.S.');
@@ -55,32 +44,35 @@ void main() {
       expect(EpsProvidersCatalog.search('XYZNoExiste'), isEmpty);
     });
 
-    test('byCode should find by exact code', () {
-      final eps = EpsProvidersCatalog.byCode('EPS037');
+    test('byId should find by exact id', () {
+      final eps = EpsProvidersCatalog.byId('EPS037');
       expect(eps, isNotNull);
       expect(eps!.name, 'Nueva EPS');
     });
 
-    test('byCode should return null for invalid code', () {
-      expect(EpsProvidersCatalog.byCode('INVALID'), isNull);
+    test('byId should return null for invalid id', () {
+      expect(EpsProvidersCatalog.byId('INVALID'), isNull);
     });
 
-    test('byProviderId should find by exact providerId', () {
-      final eps = EpsProvidersCatalog.byProviderId('EPS002');
-      expect(eps, isNotNull);
-      expect(eps!.name, 'Salud Total E.P.S.');
+    test('ids should list all unique ids sorted', () {
+      final ids = EpsProvidersCatalog.ids;
+      expect(ids.length, EpsProvidersCatalog.count);
+      expect(ids, equals(ids.toSet().toList()..sort()));
     });
 
-    test('regimes should list unique regimes sorted', () {
-      final regimes = EpsProvidersCatalog.regimes;
-      expect(regimes.contains('Contributivo'), true);
-      expect(regimes.contains('Subsidiado'), true);
-      expect(regimes, equals(regimes.toSet().toList()..sort()));
-    });
-
-    test('providerIds should be unique', () {
-      final ids = EpsProvidersCatalog.activeProviders.map((p) => p.providerId).toList();
+    test('ids should be unique', () {
+      final ids = EpsProvidersCatalog.activeProviders.map((p) => p.id).toList();
       expect(ids.length, ids.toSet().length);
+    });
+
+    test('discoveryUrls all point to IHCE platform', () {
+      for (final provider in EpsProvidersCatalog.activeProviders) {
+        expect(
+          provider.discoveryUrl,
+          contains('ihce.minsalud.gov.co'),
+          reason: '${provider.name} should use IHCE platform',
+        );
+      }
     });
   });
 }

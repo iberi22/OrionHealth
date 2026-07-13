@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -224,8 +225,7 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
       );
     }
 
-    return EpsConnectButton(cubit: cubit),
-    );
+    return EpsConnectButton(cubit: cubit);
   }
 
   Widget _buildSexSelector() {
