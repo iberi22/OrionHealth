@@ -6,6 +6,7 @@ import 'package:orionhealth_health/features/data_sources/application/data_source
 import 'package:orionhealth_health/features/data_sources/application/data_source_state.dart';
 import 'package:orionhealth_health/features/data_sources/domain/entities/data_source_entity.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
+import '../../../../core/golden_test_utils.dart';
 
 class MockDataSourceCubit extends Mock implements DataSourceCubit {}
 
@@ -26,14 +27,10 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: const DataSourcesConfigPage(),
-    );
+    return wrapWithMaterial(const DataSourcesConfigPage());
   }
 
   testWidgets('DataSourcesConfigPage matches golden - Loading state', (tester) async {
-    when(() => mockCubit.state).thenReturn(DataSourceInitial());
-    // We expect initial to trigger loadDataSources which will eventually emit Loading
     when(() => mockCubit.state).thenReturn(DataSourceLoading());
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -85,5 +82,46 @@ void main() {
       find.byType(DataSourcesConfigPage),
       matchesGoldenFile('goldens/data_sources_error.png'),
     );
+  });
+
+  testWidgets('DataSourcesConfigPage matches golden - Full Page Loaded', (tester) async {
+    setupGoldenTest(tester);
+
+    final tSources = [
+      const DataSource(
+        id: 'sensors',
+        name: 'Device Sensors',
+        description: 'Steps, heart rate, and more.',
+        type: DataSourceType.sensor,
+        status: DataSourceStatus.connected,
+        lastSync: null,
+      ),
+      const DataSource(
+        id: 'health_connect',
+        name: 'Health Connect',
+        description: 'Sync with Google Health Connect.',
+        type: DataSourceType.healthConnect,
+        status: DataSourceStatus.connected,
+      ),
+      const DataSource(
+        id: 'files',
+        name: 'Health Files',
+        description: 'Import records from files.',
+        type: DataSourceType.file,
+        status: DataSourceStatus.disconnected,
+      ),
+    ];
+
+    when(() => mockCubit.state).thenReturn(DataSourceLoaded(tSources));
+
+    await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(DataSourcesConfigPage),
+      matchesGoldenFile('goldens/data_sources_page_loaded.png'),
+    );
+
+    resetGoldenTest(tester);
   });
 }
