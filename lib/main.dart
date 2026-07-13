@@ -71,8 +71,38 @@ void main() async {
       _logError(details.exception, details.stack);
     };
 
+    ErrorWidget.builder = (details) {
+      return Material(
+        color: Colors.black,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                const SizedBox(height: 16),
+                const Text(
+                  'Error de Interfaz',
+                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  details.exception.toString().split('\n').first,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    };
+
     try {
+      AppLogger.i('Startup', 'Configuring dependencies...');
       await configureDependencies();
+      AppLogger.i('Startup', 'Dependencies configured');
       await ConnectivityManager().initialize();
       // MemoryGraph init is non-critical; catch errors to prevent startup crash
       try {

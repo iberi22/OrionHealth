@@ -26,6 +26,8 @@ void main() {
     mockOnboardingCubit = MockOnboardingCubit();
     mockEpsConnectionCubit = MockEpsConnectionCubit();
 
+    when(() => mockEpsConnectionCubit.close()).thenAnswer((_) async {});
+
     if (getIt.isRegistered<EpsConnectionCubit>()) {
       getIt.unregister<EpsConnectionCubit>();
     }

@@ -100,8 +100,8 @@ class CalendarImportRepositoryImpl implements CalendarImportRepository {
     return allMedicalEvents;
   }
 
-  bool _isMedicalEvent(String title, String description) {
-    final text = '$title $description'.toLowerCase();
+  bool _isMedicalEvent(String? title, String? description) {
+    final text = '${title ?? ''} ${description ?? ''}'.toLowerCase();
     const keywords = [
       'cita',
       'médico',
@@ -132,7 +132,7 @@ class CalendarImportRepositoryImpl implements CalendarImportRepository {
 
   CalendarAppointment _mapToCalendarAppointment(CalendarEvent event) {
     // Logic migrated from Cubit to Repository implementation
-    final title = event.title;
+    final title = event.title ?? '';
     String doctorName = 'Médico';
     String specialty = 'Consulta General';
 

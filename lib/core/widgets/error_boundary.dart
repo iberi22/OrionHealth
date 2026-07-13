@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:orionhealth_health/core/services/app_logger.dart';
 
 /// Catches Flutter errors and renders a fallback UI instead of crashing.
@@ -115,7 +116,15 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
         stackTrace: details.stack,
       );
       if (mounted) {
-        setState(() => _error = details.exception);
+        // Only trigger rebuild if we're not currently in a build phase.
+        // During tests, this helps avoid 'setState() or markNeedsBuild() called during build' errors.
+        if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.persistentCallbacks) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() => _error = details.exception);
+            }
+          });
+        }
       }
       return widget.errorBuilder(context, details.exception);
     };
