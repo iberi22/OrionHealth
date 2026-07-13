@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 import '../domain/models/health_survey.dart';
-import '../data/assessment_repository.dart';
+import '../domain/repositories/i_assessment_repository.dart';
 
 class SurveyScreen extends StatelessWidget {
-  final AssessmentRepository repository;
+  final IAssessmentRepository repository;
 
-  const SurveyScreen({Key? key, required this.repository}) : super(key: key);
+  const SurveyScreen({super.key, required this.repository});
 
   void _onTaskFinished(RPTaskResult result) {
     // Save to local database

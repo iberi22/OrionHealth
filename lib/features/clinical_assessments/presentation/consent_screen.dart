@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 import '../domain/models/consent_document.dart';
-import '../data/assessment_repository.dart';
+import '../domain/repositories/i_assessment_repository.dart';
 
 class ConsentScreen extends StatelessWidget {
-  final AssessmentRepository repository;
+  final IAssessmentRepository repository;
 
-  const ConsentScreen({Key? key, required this.repository}) : super(key: key);
+  const ConsentScreen({super.key, required this.repository});
 
   void _onConsentResult(RPTaskResult result) {
     // Save to local database
