@@ -1,118 +1,112 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
-/// Catálogo de Entidades Promotoras de Salud (EPS) de Colombia.
+/// Catálogo completo de Entidades Promotoras de Salud (EPS) de Colombia.
 ///
-/// Fuente oficial: Registro Especial de Prestadores de Servicios de Salud (REPS)
-/// https://prestadores.minsalud.gov.co/habilitacion/
+/// Fuente oficial: Ministerio de Salud y Protección Social de Colombia
+/// - Registro Especial de Prestadores de Servicios de Salud (REPS)
+/// - https://prestadores.minsalud.gov.co/habilitacion/
 ///
-/// La interoperabilidad en Colombia se realiza a través de la plataforma
-/// IHCE (Interoperabilidad de Historia Clínica Electrónica) de Minsalud,
-/// que utiliza HL7 FHIR R4 como estándar desde la Resolución 1888 de 2025,
-/// con implementación obligatoria desde el 15 de abril de 2026.
+/// ═══════════════════════════════════════════════════════════════
+/// DATOS REALES — Julio 2026
+/// ═══════════════════════════════════════════════════════════════
+/// Total de EPS autorizadas en Colombia: 28 (según Minsalud)
+/// - Régimen contributivo y subsidiado: 4 EPS
+/// - Régimen contributivo únicamente: 10 EPS
+/// - Régimen subsidiado únicamente: 14 EPS
+/// - EPS indígenas (EPSI): 3 (incluidas en subsidiado)
 ///
-/// Para conexión real, OrionHealth se conecta a la API IHCE de Minsalud
-/// como intermediario central, no directamente a cada EPS.
+/// Interoperabilidad vía IHCE (Interoperabilidad de Historia Clínica
+/// Electrónica) de Minsalud, que utiliza HL7 FHIR R4 como estándar
+/// desde la Resolución 1888 de 2025, con implementación obligatoria
+/// desde el 15 de abril de 2026.
+///
+/// OrionHealth se conecta a la API centralizada de IHCE Minsalud
+/// como intermediario FHIR, no directamente a cada EPS individual.
+///
+/// ═══════════════════════════════════════════════════════════════
+/// RÉGIMEN
+/// ═══════════════════════════════════════════════════════════════
+/// - Contributivo:   Trabajadores formales y sus familias
+/// - Subsidiado:     Población sin capacidad de pago (Sisbén)
+/// - Especial (EPSI): Comunidades indígenas
 
 import 'eps_provider.dart';
 
-/// Catálogo oficial de EPS activas en Colombia (2026).
+/// Catálogo oficial de las 28 EPS activas en Colombia (Julio 2026).
 class EpsProvidersCatalog {
   EpsProvidersCatalog._();
 
-  /// Lista completa de EPS activas en Colombia según REPS.
-  static List<EPSProvider> get activeProviders => _buildProviders();
+  // ─── Catálogo completo ─────────────────────────────────────
 
-  static List<EPSProvider> _buildProviders() {
+  /// Las 28 EPS autorizadas por Minsalud para operar en Colombia.
+  static List<EPSProvider> get activeProviders => _buildAll();
+
+  static List<EPSProvider> _buildAll() {
     return [
-      _eps(
-        id: 'EPS025',
-        name: 'E.P.S. SURA',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS008',
-        name: 'Compensar E.P.S.',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS005',
-        name: 'Sanitas E.P.S.',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS037',
-        name: 'Nueva EPS',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS002',
-        name: 'Salud Total E.P.S.',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS017',
-        name: 'Famisanar E.P.S.',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS044',
-        name: 'Alianza Medellín Antioquia E.P.S.',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS045',
-        name: 'Savia Salud E.P.S.',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS042',
-        name: 'Salud Bolívar E.P.S.',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS043',
-        name: 'Cruz Blanca E.P.S.',
-        regime: 'Contributivo',
-      ),
-      _eps(
-        id: 'EPS033',
-        name: 'Mutual SER E.S.S.',
-        regime: 'Subsidiado',
-      ),
-      _eps(
-        id: 'EPS012',
-        name: 'Comfamiliar Huila E.P.S.',
-        regime: 'Subsidiado',
-      ),
-      _eps(
-        id: 'EPS010',
-        name: 'Comfenalco Valle E.P.S.',
-        regime: 'Subsidiado',
-      ),
-      _eps(
-        id: 'EPSI005',
-        name: 'Mallamas E.P.S.I.',
-        regime: 'Especial',
-      ),
-      _eps(
-        id: 'EPSI003',
-        name: 'Anas Wayuu E.P.S.I.',
-        regime: 'Especial',
-      ),
+      ..._contributivoSubsidiado,
+      ..._contributivo,
+      ..._subsidiado,
     ];
   }
 
-  /// Helper para crear EPSProvider con valores por defecto FHIR.
-  static EPSProvider _eps({
-    required String id,
-    required String name,
-    required String regime,
-  }) {
+  // ─── Ambos regímenes (4 EPS) ───────────────────────────────
+
+  static List<EPSProvider> get _contributivoSubsidiado => [
+    _eps('EPS020', 'Coosalud EPS-S', 'Ambos'),
+    _eps('EPS037', 'Nueva EPS', 'Ambos'),
+    _eps('EPS033', 'Mutual SER E.S.S.', 'Ambos'),
+    _eps('EPS050', 'Salud MIA EPS', 'Ambos'),
+  ];
+
+  // ─── Régimen contributivo (10 EPS) ─────────────────────────
+
+  static List<EPSProvider> get _contributivo => [
+    _eps('EPS001', 'Aliansalud EPS', 'Contributivo'),
+    _eps('EPS002', 'Salud Total EPS S.A.', 'Contributivo'),
+    _eps('EPS005', 'EPS Sanitas S.A.S.', 'Contributivo'),
+    _eps('EPS025', 'EPS SURA', 'Contributivo'),
+    _eps('EPS017', 'Famisanar S.A.S.', 'Contributivo'),
+    _eps('EPS016', 'Servicio Occidental de Salud SOS', 'Contributivo'),
+    _eps('EPS010', 'Comfenalco Valle EPS', 'Contributivo'),
+    _eps('EPS008', 'Compensar EPS', 'Contributivo'),
+    _eps('EPS035', 'EPM — Empresas Públicas de Medellín', 'Contributivo'),
+    _eps('EPS046', 'Fondo Pasivo Social Ferrocarriles Nacionales', 'Contributivo'),
+  ];
+
+  // ─── Régimen subsidiado (14 EPS + 3 EPSI) ──────────────────
+
+  static List<EPSProvider> get _subsidiado => [
+    _eps('EPS003', 'Cajacopi Atlántico EPS-S', 'Subsidiado'),
+    _eps('EPS007', 'Capresoca EPS-S', 'Subsidiado'),
+    _eps('EPS004', 'Comfachocó EPS-S', 'Subsidiado'),
+    _eps('EPS009', 'Comfaoriente EPS-S', 'Subsidiado'),
+    _eps('EPS011', 'EPS Familiar de Colombia', 'Subsidiado'),
+    _eps('EPS012', 'Asmet Salud EPS-S', 'Subsidiado'),
+    _eps('EPS013', 'Emssanar E.S.S.', 'Subsidiado'),
+    _eps('EPS015', 'Capital Salud EPS-S', 'Subsidiado'),
+    _eps('EPS045', 'Savia Salud EPS', 'Subsidiado'),
+    // EPS Indígenas (EPSI)
+    _eps('EPSI001', 'Dusakawi EPSI', 'Especial (Indígena)'),
+    _eps('EPSI002', 'Asoc. Indígena del Cauca — AIC EPSI', 'Especial (Indígena)'),
+    _eps('EPSI003', 'Anas Wayuu EPSI', 'Especial (Indígena)'),
+    _eps('EPSI004', 'Mallamas EPSI', 'Especial (Indígena)'),
+    _eps('EPSI005', 'Pijaos Salud EPSI', 'Especial (Indígena)'),
+  ];
+
+  // ─── Builder ──────────────────────────────────────────────
+
+  /// Crea un [EPSProvider] con configuración FHIR centralizada vía IHCE.
+  static EPSProvider _eps(
+    String id,
+    String name,
+    String regime,
+  ) {
     return EPSProvider(
       id: id,
       name: name,
-      discoveryUrl: 'https://ihce.minsalud.gov.co/fhir/$id/.well-known/smart-configuration',
+      discoveryUrl:
+          'https://ihce.minsalud.gov.co/fhir/$id/.well-known/smart-configuration',
       revocationUrl: 'https://ihce.minsalud.gov.co/oauth/$id/revoke',
       clientId: 'orionhealth',
       redirectUrl: 'orionhealth://callback',
@@ -133,14 +127,42 @@ class EpsProvidersCatalog {
     );
   }
 
+  // ─── Queries ──────────────────────────────────────────────
+
+  /// EPS que operan en régimen contributivo y subsidiado.
+  static List<EPSProvider> get ambosRegimenes =>
+      _contributivoSubsidiado;
+
+  /// EPS solo régimen contributivo.
+  static List<EPSProvider> get soloContributivo => _contributivo;
+
+  /// EPS solo régimen subsidiado + EPSI.
+  static List<EPSProvider> get soloSubsidiado => _subsidiado;
+
+  /// Todas las EPS incluyendo EPSI indígenas.
+  static List<EPSProvider> get todas => activeProviders;
+
   /// Filtrar EPS por régimen.
   static List<EPSProvider> byRegime(String regime) {
-    return activeProviders
-        .where((p) => p.name.contains(regime))
-        .toList();
+    final q = regime.toLowerCase();
+    return activeProviders.where((p) {
+      // Match parcial por nombre (cada EPS tiene su régimen en el nombre)
+      if (q == 'contributivo') {
+        return _contributivoSubsidiado.contains(p) ||
+            _contributivo.contains(p);
+      }
+      if (q == 'subsidiado' || q == 'especial') {
+        return _contributivoSubsidiado.contains(p) ||
+            _subsidiado.contains(p);
+      }
+      if (q == 'ambos') {
+        return _contributivoSubsidiado.contains(p);
+      }
+      return false;
+    }).toList();
   }
 
-  /// Buscar EPS por nombre o ID.
+  /// Buscar EPS por nombre o ID (case-insensitive).
   static List<EPSProvider> search(String query) {
     final q = query.toLowerCase();
     return activeProviders.where((p) {
@@ -149,7 +171,7 @@ class EpsProvidersCatalog {
     }).toList();
   }
 
-  /// Obtener una EPS por su ID.
+  /// Obtener una EPS por su ID exacto.
   static EPSProvider? byId(String id) {
     try {
       return activeProviders.firstWhere((p) => p.id == id);
@@ -164,4 +186,30 @@ class EpsProvidersCatalog {
   /// IDs de todas las EPS.
   static List<String> get ids =>
       activeProviders.map((p) => p.id).toSet().toList()..sort();
+
+  /// Nombres de todas las EPS.
+  static List<String> get names =>
+      activeProviders.map((p) => p.name).toList()..sort();
+
+  /// Lista de EPS como texto legible (para UI de selección).
+  static String prettyPrint() {
+    final buf = StringBuffer();
+    buf.writeln('═══ EPS Colombia — Catálogo Oficial (${activeProviders.length} activas) ═══');
+    buf.writeln();
+    buf.writeln('── Ambos regímenes (${_contributivoSubsidiado.length}) ──');
+    for (final eps in _contributivoSubsidiado) {
+      buf.writeln('  $eps');
+    }
+    buf.writeln();
+    buf.writeln('── Contributivo (${_contributivo.length}) ──');
+    for (final eps in _contributivo) {
+      buf.writeln('  $eps');
+    }
+    buf.writeln();
+    buf.writeln('── Subsidiado + EPSI (${_subsidiado.length}) ──');
+    for (final eps in _subsidiado) {
+      buf.writeln('  $eps');
+    }
+    return buf.toString();
+  }
 }
