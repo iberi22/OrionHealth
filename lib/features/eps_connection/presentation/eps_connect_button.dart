@@ -27,8 +27,8 @@ class EpsConnectButton extends StatelessWidget {
       final resolved = context.read<EpsConnectionCubit>();
       return _buildContent(context, resolved);
     } catch (_) {
-      // Fallback si no hay provider
-      return _buildFallback(context);
+      // Fallback sin provider: UI de 'Conectar' sin cubit
+      return _buildFallback(context, null);
     }
   }
 
@@ -58,7 +58,7 @@ class EpsConnectButton extends StatelessWidget {
                 trailing: TextButton(
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const EpsConnectionPage()),
+                    MaterialPageRoute(builder: (_) => EpsConnectionPage(cubit: cubit)),
                   ),
                   child: const Text('Ver Detalles', style: TextStyle(color: AppColors.primary)),
                 ),
@@ -66,18 +66,18 @@ class EpsConnectButton extends StatelessWidget {
             );
           }
 
-          return _buildFallback(context);
+          return _buildFallback(context, cubit);
         },
       ),
     );
   }
 
-  Widget _buildFallback(BuildContext context) {
+  Widget _buildFallback(BuildContext context, EpsConnectionCubit? cubit) {
     return GlassmorphicCard(
       child: InkWell(
         onTap: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const EpsConnectionPage()),
+          MaterialPageRoute(builder: (_) => EpsConnectionPage(cubit: cubit)),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
