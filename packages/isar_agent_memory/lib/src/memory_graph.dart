@@ -46,7 +46,7 @@ class MemoryGraph {
   Future<void> initialize() async {
     await _index.load();
 
-    final allNodes = await isar.memoryNodes.where().findAll();
+    final allNodes = await isar.collection<MemoryNode>().where().findAll();
     for (final node in allNodes) {
       if (node.embedding != null) {
         // Safely attempt to add the document to the index.
@@ -122,7 +122,7 @@ class MemoryGraph {
   /// If the node has an embedding, it is also added to the vector index.
   /// Returns the unique ID of the stored node.
   Future<int> storeNode(MemoryNode node) async {
-    final nodeId = await isar.writeTxn(() => isar.memoryNodes.put(node));
+    final nodeId = await isar.writeTxn(() => isar.collection<MemoryNode>().put(node));
     if (node.embedding != null) {
       // Replace any existing vector for this ID to avoid duplicates during tests
       try {
@@ -146,7 +146,7 @@ class MemoryGraph {
   ///
   /// Returns `null` if no node with the given ID is found.
   Future<MemoryNode?> getNode(int id) async {
-    return await isar.memoryNodes.get(id);
+    return await isar.collection<MemoryNode>().get(id);
   }
 
   /// Deletes a [MemoryNode] by its [id] from both the database and the vector index.
@@ -158,22 +158,21 @@ class MemoryGraph {
     } catch (e) {
       print('Warning: Failed to remove node $id from index: $e');
     }
-    return await isar.writeTxn(() => isar.memoryNodes.delete(id));
+    return await isar.writeTxn(() => isar.collection<MemoryNode>().delete(id));
   }
 
   /// Stores a [MemoryEdge] in the database.
   ///
   /// Returns the unique ID of the stored edge.
   Future<int> storeEdge(MemoryEdge edge) async {
-    return await isar.writeTxn(() => isar.memoryEdges.put(edge));
+    return await isar.writeTxn(() => isar.collection<MemoryEdge>().put(edge));
   }
 
   /// Retrieves all edges connected to a given [nodeId], both incoming and outgoing.
   Future<List<MemoryEdge>> getEdgesForNode(int nodeId) async {
-    final outgoing =
-        await isar.memoryEdges.filter().fromNodeIdEqualTo(nodeId).findAll();
-    final incoming =
-        await isar.memoryEdges.filter().toNodeIdEqualTo(nodeId).findAll();
+    final allEdges = await isar.collection<MemoryEdge>().where().findAll();
+    final outgoing = allEdges.where((e) => e.fromNodeId == nodeId).toList();
+    final incoming = allEdges.where((e) => e.toNodeId == nodeId).toList();
     return [...outgoing, ...incoming];
   }
 
@@ -204,7 +203,7 @@ class MemoryGraph {
 
       if (searchResults.isNotEmpty) {
         final nodeIds = searchResults.map((r) => int.parse(r.id)).toList();
-        final nodes = await isar.memoryNodes.getAll(nodeIds);
+        final nodes = await isar.collection<MemoryNode>().getAll(nodeIds);
         final results =
             <({MemoryNode node, double distance, String provider})>[];
         for (var i = 0; i < searchResults.length; i++) {
@@ -224,11 +223,9 @@ class MemoryGraph {
     }
 
     // Fallback to linear scan if the index returns no results or fails.
-    final List<MemoryNode> allNodes;
+    var allNodes = await isar.collection<MemoryNode>().where().findAll();
     if (layer != null) {
-      allNodes = await isar.memoryNodes.filter().layerEqualTo(layer).findAll();
-    } else {
-      allNodes = await isar.memoryNodes.where().findAll();
+      allNodes = allNodes.where((n) => n.layer == layer).toList();
     }
 
     final distances = allNodes
@@ -278,11 +275,15 @@ class MemoryGraph {
     // 2. Text Search (Isar Filter)
     // Note: This is a boolean filter, not a ranked FTS.
     // For a real FTS, we would need @Index(type: IndexType.value) and tokenization.
-    final textResults = await isar.memoryNodes
-        .filter()
-        .contentContains(query, caseSensitive: false)
-        .limit(topK * 2)
-        .findAll();
+    final allMemNodes = await isar.collection<MemoryNode>().where().findAll();
+    final filtered = <MemoryNode>[];
+    for (final n in allMemNodes) {
+      if (n.content.toLowerCase().contains(query.toLowerCase())) {
+        filtered.add(n);
+        if (filtered.length >= topK * 2) break;
+      }
+    }
+    final textResults = filtered;
 
     // 3. Fusion (Weighted Scoring)
     // We normalize vector distance (lower is better) to similarity (higher is better).
@@ -414,15 +415,17 @@ class MemoryGraph {
 
   /// Stores a patient package.
   Future<int> storePatientPackage(PatientPackage package) async {
-    return await isar.writeTxn(() => isar.patientPackages.put(package));
+    return await isar.writeTxn(() => isar.collection<PatientPackage>().put(package));
   }
 
   /// Retrieves a patient package by its [patientId].
   Future<PatientPackage?> getPatientPackage(String patientId) async {
-    return await isar.patientPackages
-        .filter()
-        .patientIdEqualTo(patientId)
-        .findFirst();
+    final allPackages = await isar.collection<PatientPackage>().where().findAll();
+    try {
+      return allPackages.firstWhere((p) => p.patientId == patientId);
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Logs a backend operation.
@@ -444,15 +447,15 @@ class MemoryGraph {
       patientId: patientId,
       tenantId: tenantId,
     );
-    return await isar.writeTxn(() => isar.backendOperationLogs.put(log));
+    return await isar.writeTxn(() => isar.collection<BackendOperationLog>().put(log));
   }
 
   Future<List<List<int>>> _findPathsToNode(int targetId,
       {int maxDepth = 2}) async {
     final List<List<int>> paths = [];
 
-    final allNodes = await isar.memoryNodes.where().findAll();
-    final allEdges = await isar.memoryEdges.where().findAll();
+    final allNodes = await isar.collection<MemoryNode>().where().findAll();
+    final allEdges = await isar.collection<MemoryEdge>().where().findAll();
     final nodeIds = allNodes.map((n) => n.id).toSet();
     final toIds = allEdges.map((e) => e.toNodeId).toSet();
     final rootIds = nodeIds.difference(toIds);

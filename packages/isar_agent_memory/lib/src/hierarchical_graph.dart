@@ -101,7 +101,8 @@ extension HierarchicalMemoryGraph on MemoryGraph {
 
   /// Retrieves nodes by [layer].
   Future<List<MemoryNode>> getNodesByLayer(int layer) async {
-    return await isar.memoryNodes.filter().layerEqualTo(layer).findAll();
+    final nodes = await isar.collection<MemoryNode>().where().findAll();
+    return nodes.where((n) => n.layer == layer).toList();
   }
 
   /// Performs a multi-hop search, enriching results with hierarchical context.
@@ -132,11 +133,11 @@ extension HierarchicalMemoryGraph on MemoryGraph {
 
       while (hops < maxHops) {
         // Find edges where the current node is the 'from' node and relation is 'summary_of'
-        final edges = await isar.memoryEdges
-            .filter()
-            .fromNodeIdEqualTo(currentNode.id)
-            .relationEqualTo(relationSummaryOf)
-            .findAll();
+        final allEdgeNodes = await isar.collection<MemoryEdge>().where().findAll();
+        final edges = allEdgeNodes.where((e) =>
+            e.fromNodeId == currentNode.id &&
+            e.relation == relationSummaryOf
+        ).toList();
 
         if (edges.isEmpty) break;
 

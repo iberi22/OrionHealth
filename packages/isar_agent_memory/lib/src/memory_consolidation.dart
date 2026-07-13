@@ -31,10 +31,10 @@ class MemoryConsolidation {
     String? type,
     int? maxClusters,
   }) async {
-    final nodes = await memoryGraph.isar.memoryNodes
-        .filter()
-        .optional(type != null, (q) => q.typeEqualTo(type))
-        .findAll();
+    final allNodes = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final nodes = type != null
+        ? allNodes.where((n) => n.type == type).toList()
+        : allNodes;
 
     if (nodes.length < minClusterSize) {
       return [];
@@ -202,10 +202,10 @@ CONSOLIDATED MEMORY:''';
     double threshold = 0.05,
     String? type,
   }) async {
-    final nodes = await memoryGraph.isar.memoryNodes
-        .filter()
-        .optional(type != null, (q) => q.typeEqualTo(type))
-        .findAll();
+    final allNodes = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final nodes = type != null
+        ? allNodes.where((n) => n.type == type).toList()
+        : allNodes;
 
     final toDelete = <int>{};
     final seen = <int>{};

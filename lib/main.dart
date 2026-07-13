@@ -74,10 +74,21 @@ void main() async {
     try {
       await configureDependencies();
       await ConnectivityManager().initialize();
-      await getIt<MemoryGraph>().initialize();
+      // MemoryGraph init is non-critical; catch errors to prevent startup crash
+      try {
+        await getIt<MemoryGraph>().initialize();
+        AppLogger.i('Startup', 'MemoryGraph initialized successfully');
+      } catch (e) {
+        AppLogger.w('Startup', 'MemoryGraph init failed (non-critical): $e');
+      }
 
       // Index medical standards and patient context at startup
-      unawaited(getIt<MedicalIndexingService>().indexAll());
+      // Medical index is non-critical; skip if service can't be resolved
+      try {
+        if (getIt.isRegistered<MedicalIndexingService>()) {
+          unawaited(getIt<MedicalIndexingService>().indexAll());
+        }
+      } catch (_) {}
 
       runApp(const MyApp());
     } catch (e, stack) {

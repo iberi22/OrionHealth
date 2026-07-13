@@ -7,17 +7,15 @@ plugins {
 android {
     namespace = "com.orionhealth.orionhealth_health"
     compileSdk = 36
-    ndkVersion = "25.1.8937393"
+    ndkVersion = "28.2.13676358"
 
     packaging {
-        resources {
-            pickFirsts.add("lib/arm64-v8a/libonnxruntime.so")
-            pickFirsts.add("lib/armeabi-v7a/libonnxruntime.so")
-            pickFirsts.add("lib/x86_64/libonnxruntime.so")
-            pickFirsts.add("lib/x86/libonnxruntime.so")
-        }
         jniLibs {
-            pickFirsts.add("**/libc++_shared.so")
+            useLegacyPackaging = false
+            pickFirsts.addAll(listOf(
+                "**/libonnxruntime.so",
+                "**/libc++_shared.so"
+            ))
         }
     }
 

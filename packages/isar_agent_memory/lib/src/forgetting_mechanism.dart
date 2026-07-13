@@ -30,14 +30,9 @@ class ForgettingMechanism {
     score += accessScore * 0.3;
 
     // Factor 3: Connection strength (well-connected nodes are important)
-    final incomingEdges = await memoryGraph.isar.memoryEdges
-        .filter()
-        .toNodeIdEqualTo(node.id)
-        .count();
-    final outgoingEdges = await memoryGraph.isar.memoryEdges
-        .filter()
-        .fromNodeIdEqualTo(node.id)
-        .count();
+    final allEdges = await memoryGraph.isar.collection<MemoryEdge>().where().findAll();
+    final incomingEdges = allEdges.where((e) => e.toNodeId == node.id).length;
+    final outgoingEdges = allEdges.where((e) => e.fromNodeId == node.id).length;
     final connectionScore =
         math.min(1.0, (incomingEdges + outgoingEdges) / 5.0);
     score += connectionScore * 0.2;
@@ -60,10 +55,10 @@ class ForgettingMechanism {
     bool dryRun = false,
     String? type,
   }) async {
-    final nodes = await memoryGraph.isar.memoryNodes
-        .filter()
-        .optional(type != null, (q) => q.typeEqualTo(type))
-        .findAll();
+    final allNodes = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final nodes = type != null
+        ? allNodes.where((n) => n.type == type).toList()
+        : allNodes;
 
     final toForget = <int>[];
 
@@ -99,10 +94,8 @@ class ForgettingMechanism {
   }) async {
     final cutoff = DateTime.now().subtract(Duration(days: maxAgeDays));
 
-    final oldNodes = await memoryGraph.isar.memoryNodes
-        .filter()
-        .createdAtLessThan(cutoff)
-        .findAll();
+    final allNodes = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final oldNodes = allNodes.where((n) => n.createdAt.isBefore(cutoff)).toList();
 
     final toForget = <int>[];
 
@@ -135,7 +128,7 @@ class ForgettingMechanism {
     double decayRate = 0.1,
     int minAccessCount = 0,
   }) async {
-    final nodes = await memoryGraph.isar.memoryNodes.where().findAll();
+    final nodes = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
     int updated = 0;
 
     for (final node in nodes) {
@@ -171,7 +164,7 @@ class ForgettingMechanism {
     required int maxNodes,
     bool dryRun = false,
   }) async {
-    final totalNodes = await memoryGraph.isar.memoryNodes.count();
+    final totalNodes = await memoryGraph.isar.collection<MemoryNode>().count();
 
     if (totalNodes <= maxNodes) {
       return []; // Under limit, nothing to forget
@@ -180,8 +173,8 @@ class ForgettingMechanism {
     final toForgetCount = totalNodes - maxNodes;
 
     // Get nodes sorted by last access time (oldest first)
-    final nodes =
-        await memoryGraph.isar.memoryNodes.where().sortByModifiedAt().findAll();
+    final nodes = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    nodes.sort((a, b) => a.modifiedAt!.compareTo(b.modifiedAt!));
 
     final toForget = <int>[];
     int forgotten = 0;

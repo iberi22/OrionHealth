@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 
-part 'backend_operation_log.g.dart';
+
 
 /// Operational logs for backend synchronization and database operations.
 @collection

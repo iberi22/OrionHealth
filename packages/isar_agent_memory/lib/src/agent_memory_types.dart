@@ -133,8 +133,7 @@ class AgentMemoryTypes {
     String? location,
     List<String>? participants,
   }) async {
-    var query = memoryGraph.isar.memoryNodes.filter().typeEqualTo(typeEpisodic);
-
+    final query = memoryGraph.isar.collection<MemoryNode>().where();
     final memories = await query.findAll();
 
     // Additional filtering based on metadata
@@ -167,10 +166,8 @@ class AgentMemoryTypes {
     List<String>? tags,
     double? minConfidence,
   }) async {
-    final memories = await memoryGraph.isar.memoryNodes
-        .filter()
-        .typeEqualTo(typeSemantic)
-        .findAll();
+    final all = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final memories = all.where((m) => m.type == typeSemantic).toList();
 
     return memories.where((m) {
       if (category != null && m.metadata?['category'] != category) {
@@ -197,10 +194,8 @@ class AgentMemoryTypes {
     String? skill,
     double? minProficiency,
   }) async {
-    final memories = await memoryGraph.isar.memoryNodes
-        .filter()
-        .typeEqualTo(typeProcedural)
-        .findAll();
+    final all = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final memories = all.where((m) => m.type == typeProcedural).toList();
 
     return memories.where((m) {
       if (skill != null && m.metadata?['skill'] != skill) return false;
@@ -245,10 +240,8 @@ class AgentMemoryTypes {
   /// Cleans up expired working memories.
   Future<int> cleanupWorkingMemory() async {
     final now = DateTime.now();
-    final workingMemories = await memoryGraph.isar.memoryNodes
-        .filter()
-        .typeEqualTo(typeWorking)
-        .findAll();
+    final all = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final workingMemories = all.where((m) => m.type == typeWorking).toList();
 
     int deleted = 0;
 
@@ -297,25 +290,11 @@ class AgentMemoryTypes {
 
   /// Gets memory statistics by type.
   Future<MemoryTypeStats> getStats() async {
-    final episodicCount = await memoryGraph.isar.memoryNodes
-        .filter()
-        .typeEqualTo(typeEpisodic)
-        .count();
-
-    final semanticCount = await memoryGraph.isar.memoryNodes
-        .filter()
-        .typeEqualTo(typeSemantic)
-        .count();
-
-    final proceduralCount = await memoryGraph.isar.memoryNodes
-        .filter()
-        .typeEqualTo(typeProcedural)
-        .count();
-
-    final workingCount = await memoryGraph.isar.memoryNodes
-        .filter()
-        .typeEqualTo(typeWorking)
-        .count();
+    final all = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final episodicCount = all.where((m) => m.type == typeEpisodic).length;
+    final semanticCount = all.where((m) => m.type == typeSemantic).length;
+    final proceduralCount = all.where((m) => m.type == typeProcedural).length;
+    final workingCount = all.where((m) => m.type == typeWorking).length;
 
     return MemoryTypeStats(
       episodic: episodicCount,

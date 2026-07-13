@@ -1,0 +1,10 @@
+/// Patch isar_agent_memory to use Isar 3.1 API
+/// In Isar 3.1, there's no .filter() with .uuidEqualTo() etc.
+/// We use .where().filter() and call .findAll() on where() directly,
+/// or we inline the filtering in Dart code.
+
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
+
+// We'll do this with direct text replacements in each file
