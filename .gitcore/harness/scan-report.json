@@ -1,0 +1,362 @@
+﻿{
+    "features":  {
+                     "home":  {
+                                  "golden_count":  2,
+                                  "overall_pct":  100,
+                                  "layers":  [
+                                                 "domain",
+                                                 "application",
+                                                 "infrastructure",
+                                                 "presentation"
+                                             ],
+                                  "test_count":  52,
+                                  "e2e_count":  4,
+                                  "arch_score":  100
+                              },
+                     "network":  {
+                                     "golden_count":  8,
+                                     "overall_pct":  100,
+                                     "layers":  [
+                                                    "domain",
+                                                    "application",
+                                                    "infrastructure",
+                                                    "presentation"
+                                                ],
+                                     "test_count":  171,
+                                     "e2e_count":  2,
+                                     "arch_score":  100
+                                 },
+                     "dashboard":  {
+                                       "golden_count":  1,
+                                       "overall_pct":  75,
+                                       "layers":  [
+                                                      "domain",
+                                                      "application",
+                                                      "infrastructure",
+                                                      "presentation"
+                                                  ],
+                                       "test_count":  55,
+                                       "e2e_count":  0,
+                                       "arch_score":  100
+                                   },
+                     "eps_connection":  {
+                                            "golden_count":  3,
+                                            "overall_pct":  100,
+                                            "layers":  [
+                                                           "domain",
+                                                           "application",
+                                                           "infrastructure",
+                                                           "presentation"
+                                                       ],
+                                            "test_count":  141,
+                                            "e2e_count":  3,
+                                            "arch_score":  100
+                                        },
+                     "auth":  {
+                                  "golden_count":  7,
+                                  "overall_pct":  95,
+                                  "layers":  [
+                                                 "data",
+                                                 "domain",
+                                                 "application",
+                                                 "infrastructure",
+                                                 "presentation"
+                                             ],
+                                  "test_count":  150,
+                                  "e2e_count":  2,
+                                  "arch_score":  80
+                              },
+                     "settings":  {
+                                      "golden_count":  2,
+                                      "overall_pct":  100,
+                                      "layers":  [
+                                                     "domain",
+                                                     "application",
+                                                     "infrastructure",
+                                                     "presentation"
+                                                 ],
+                                      "test_count":  114,
+                                      "e2e_count":  1,
+                                      "arch_score":  100
+                                  },
+                     "clinical_assessments":  {
+                                                  "golden_count":  2,
+                                                  "overall_pct":  100,
+                                                  "layers":  [
+                                                                 "domain",
+                                                                 "application",
+                                                                 "infrastructure",
+                                                                 "presentation"
+                                                             ],
+                                                  "test_count":  49,
+                                                  "e2e_count":  3,
+                                                  "arch_score":  100
+                                              },
+                     "allergies":  {
+                                       "golden_count":  2,
+                                       "overall_pct":  95,
+                                       "layers":  [
+                                                      "data",
+                                                      "domain",
+                                                      "application",
+                                                      "infrastructure",
+                                                      "presentation"
+                                                  ],
+                                       "test_count":  79,
+                                       "e2e_count":  1,
+                                       "arch_score":  80
+                                   },
+                     "calendar_import":  {
+                                             "golden_count":  2,
+                                             "overall_pct":  100,
+                                             "layers":  [
+                                                            "domain",
+                                                            "application",
+                                                            "infrastructure",
+                                                            "presentation"
+                                                        ],
+                                             "test_count":  108,
+                                             "e2e_count":  3,
+                                             "arch_score":  100
+                                         },
+                     "data_sources":  {
+                                          "golden_count":  1,
+                                          "overall_pct":  90,
+                                          "layers":  [
+                                                         "domain",
+                                                         "application",
+                                                         "infrastructure",
+                                                         "presentation"
+                                                     ],
+                                          "test_count":  100,
+                                          "e2e_count":  1,
+                                          "arch_score":  100
+                                      },
+                     "doctor_verification":  {
+                                                 "golden_count":  8,
+                                                 "overall_pct":  100,
+                                                 "layers":  [
+                                                                "domain",
+                                                                "application",
+                                                                "infrastructure",
+                                                                "presentation"
+                                                            ],
+                                                 "test_count":  166,
+                                                 "e2e_count":  4,
+                                                 "arch_score":  100
+                                             },
+                     "voice_chat":  {
+                                        "golden_count":  4,
+                                        "overall_pct":  100,
+                                        "layers":  [
+                                                       "domain",
+                                                       "application",
+                                                       "infrastructure",
+                                                       "presentation"
+                                                   ],
+                                        "test_count":  70,
+                                        "e2e_count":  2,
+                                        "arch_score":  100
+                                    },
+                     "medical_research":  {
+                                              "golden_count":  5,
+                                              "overall_pct":  100,
+                                              "layers":  [
+                                                             "domain",
+                                                             "application",
+                                                             "infrastructure",
+                                                             "presentation"
+                                                         ],
+                                              "test_count":  145,
+                                              "e2e_count":  2,
+                                              "arch_score":  100
+                                          },
+                     "reports":  {
+                                     "golden_count":  3,
+                                     "overall_pct":  100,
+                                     "layers":  [
+                                                    "domain",
+                                                    "application",
+                                                    "infrastructure",
+                                                    "presentation"
+                                                ],
+                                     "test_count":  68,
+                                     "e2e_count":  1,
+                                     "arch_score":  100
+                                 },
+                     "vitals":  {
+                                    "golden_count":  4,
+                                    "overall_pct":  100,
+                                    "layers":  [
+                                                   "domain",
+                                                   "application",
+                                                   "infrastructure",
+                                                   "presentation"
+                                               ],
+                                    "test_count":  111,
+                                    "e2e_count":  1,
+                                    "arch_score":  100
+                                },
+                     "sync":  {
+                                  "golden_count":  2,
+                                  "overall_pct":  100,
+                                  "layers":  [
+                                                 "domain",
+                                                 "application",
+                                                 "infrastructure",
+                                                 "presentation"
+                                             ],
+                                  "test_count":  114,
+                                  "e2e_count":  1,
+                                  "arch_score":  100
+                              },
+                     "health_record":  {
+                                           "golden_count":  3,
+                                           "overall_pct":  100,
+                                           "layers":  [
+                                                          "domain",
+                                                          "application",
+                                                          "infrastructure",
+                                                          "presentation"
+                                                      ],
+                                           "test_count":  107,
+                                           "e2e_count":  2,
+                                           "arch_score":  100
+                                       },
+                     "about":  {
+                                   "golden_count":  3,
+                                   "overall_pct":  100,
+                                   "layers":  [
+                                                  "domain",
+                                                  "application",
+                                                  "infrastructure",
+                                                  "presentation"
+                                              ],
+                                   "test_count":  72,
+                                   "e2e_count":  2,
+                                   "arch_score":  100
+                               },
+                     "meditation":  {
+                                        "golden_count":  2,
+                                        "overall_pct":  100,
+                                        "layers":  [
+                                                       "domain",
+                                                       "application",
+                                                       "infrastructure",
+                                                       "presentation"
+                                                   ],
+                                        "test_count":  92,
+                                        "e2e_count":  2,
+                                        "arch_score":  100
+                                    },
+                     "onboarding":  {
+                                        "golden_count":  5,
+                                        "overall_pct":  100,
+                                        "layers":  [
+                                                       "domain",
+                                                       "application",
+                                                       "infrastructure",
+                                                       "presentation"
+                                                   ],
+                                        "test_count":  95,
+                                        "e2e_count":  13,
+                                        "arch_score":  100
+                                    },
+                     "appointments":  {
+                                          "golden_count":  3,
+                                          "overall_pct":  100,
+                                          "layers":  [
+                                                         "domain",
+                                                         "application",
+                                                         "infrastructure",
+                                                         "presentation"
+                                                     ],
+                                          "test_count":  103,
+                                          "e2e_count":  1,
+                                          "arch_score":  100
+                                      },
+                     "user_profile":  {
+                                          "golden_count":  3,
+                                          "overall_pct":  95,
+                                          "layers":  [
+                                                         "data",
+                                                         "domain",
+                                                         "application",
+                                                         "infrastructure",
+                                                         "presentation"
+                                                     ],
+                                          "test_count":  76,
+                                          "e2e_count":  2,
+                                          "arch_score":  80
+                                      },
+                     "local_agent":  {
+                                         "golden_count":  1,
+                                         "overall_pct":  85,
+                                         "layers":  [
+                                                        "data",
+                                                        "domain",
+                                                        "application",
+                                                        "infrastructure",
+                                                        "presentation"
+                                                    ],
+                                         "test_count":  274,
+                                         "e2e_count":  3,
+                                         "arch_score":  80
+                                     },
+                     "email-citas":  {
+                                         "golden_count":  5,
+                                         "overall_pct":  85,
+                                         "layers":  [
+                                                        "domain",
+                                                        "application",
+                                                        "infrastructure",
+                                                        "presentation"
+                                                    ],
+                                         "test_count":  104,
+                                         "e2e_count":  0,
+                                         "arch_score":  100
+                                     },
+                     "health_data_import":  {
+                                                "golden_count":  5,
+                                                "overall_pct":  100,
+                                                "layers":  [
+                                                               "domain",
+                                                               "application",
+                                                               "infrastructure",
+                                                               "presentation"
+                                                           ],
+                                                "test_count":  95,
+                                                "e2e_count":  4,
+                                                "arch_score":  100
+                                            },
+                     "health_sharing":  {
+                                            "golden_count":  3,
+                                            "overall_pct":  100,
+                                            "layers":  [
+                                                           "domain",
+                                                           "application",
+                                                           "infrastructure",
+                                                           "presentation"
+                                                       ],
+                                            "test_count":  111,
+                                            "e2e_count":  3,
+                                            "arch_score":  100
+                                        },
+                     "medications":  {
+                                         "golden_count":  2,
+                                         "overall_pct":  100,
+                                         "layers":  [
+                                                        "domain",
+                                                        "application",
+                                                        "infrastructure",
+                                                        "presentation"
+                                                    ],
+                                         "test_count":  86,
+                                         "e2e_count":  1,
+                                         "arch_score":  100
+                                     }
+                 },
+    "feature_count":  27,
+    "overall_score":  97,
+    "generated":  "2026-07-13T15:24:45"
+}
