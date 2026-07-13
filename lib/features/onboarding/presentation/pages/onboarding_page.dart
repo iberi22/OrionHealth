@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_boundary.dart';
 import '../../../home/presentation/pages/main_navigation_page.dart';
 import 'welcome_step.dart';
 import 'basic_info_step.dart';
@@ -71,13 +72,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (_) {},
                   children: [
-                    WelcomeStep(),
-                    BasicInfoStep(),
-                    ConditionsStep(),
-                    FamilyHistoryStep(),
-                    MedicationsStep(),
-                    PrivacyStep(),
-                    CompleteStep(),
+                    ErrorBoundary(label: 'WelcomeStep', child: WelcomeStep()),
+                    ErrorBoundary(label: 'BasicInfoStep', child: BasicInfoStep()),
+                    ErrorBoundary(label: 'ConditionsStep', child: ConditionsStep()),
+                    ErrorBoundary(label: 'FamilyHistoryStep', child: FamilyHistoryStep()),
+                    ErrorBoundary(label: 'MedicationsStep', child: MedicationsStep()),
+                    ErrorBoundary(label: 'PrivacyStep', child: PrivacyStep()),
+                    ErrorBoundary(label: 'CompleteStep', child: CompleteStep()),
                   ],
                 ),
               ),

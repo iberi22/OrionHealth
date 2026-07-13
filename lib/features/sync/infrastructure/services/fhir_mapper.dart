@@ -6,6 +6,7 @@ import '../../../vitals/domain/entities/vital_sign.dart';
 class FhirMapper {
   /// Maps FHIR Patient resource to UserProfile
   static UserProfile mapPatient(Map<String, dynamic> json, UserProfile existingProfile) {
+    if (json.isEmpty) return existingProfile;
     final name = _extractPatientName(json);
     final birthDateStr = json['birthDate'] as String?;
     final birthDate = birthDateStr != null ? DateTime.tryParse(birthDateStr) : null;
@@ -58,6 +59,7 @@ class FhirMapper {
 
   /// Maps FHIR MedicationStatement or MedicationRequest to Medication
   static Medication? mapMedicationStatement(Map<String, dynamic> json) {
+    if (json.isEmpty) return null;
     final medicationCodeableConcept = json['medicationCodeableConcept'];
     final medicationReference = json['medicationReference'];
 
@@ -86,6 +88,7 @@ class FhirMapper {
 
   /// Maps FHIR AllergyIntolerance to Allergy
   static Allergy? mapAllergyIntolerance(Map<String, dynamic> json) {
+    if (json.isEmpty) return null;
     final code = json['code'];
     String? allergen = code?['text'] as String?;
 
@@ -167,6 +170,7 @@ class FhirMapper {
 
   /// Maps FHIR Observation to VitalSign
   static List<VitalSign> mapObservation(Map<String, dynamic> json) {
+    if (json.isEmpty) return [];
     final code = json['code'];
     final codings = code?['coding'] as List?;
     if (codings == null && json['component'] == null) return [];
