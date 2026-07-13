@@ -314,7 +314,7 @@ packages:
     source: hosted
     version: "2.0.1"
   carp_themes_package:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: carp_themes_package
       sha256: "9753723406efa78fe7f379d3a5a51751acd427b89f5787bfc64f2b89eb3a8f78"
