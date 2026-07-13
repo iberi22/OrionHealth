@@ -76,7 +76,7 @@ void main() {
   });
 
   testWidgets('EpsConnectButton shows error SnackBar', (tester) async {
-    when(() => mockCubit.state).thenReturn(const EpsConnectionInitial());
+    when(() => mockCubit.state).thenReturn(const EpsConnectionCatalog(availableProviders: []));
     when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionError('Failed')));
 
     await tester.pumpWidget(createWidgetUnderTest());

@@ -5,9 +5,11 @@ import '../../application/bloc/eps_connection_state.dart';
 import '../widgets/eps_connection_status_card.dart';
 import '../widgets/eps_provider_card.dart';
 import '../widgets/eps_qr_scanner_page.dart';
+import '../pages/eps_patient_portal_screen.dart';
 import '../../domain/entities/eps_connection.dart';
 import '../../domain/entities/eps_providers_catalog.dart';
 import '../../domain/entities/eps_provider.dart';
+import '../../../onboarding/domain/entities/user_profile.dart';
 
 import '../../../../core/widgets/page_header.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -263,6 +265,15 @@ class _EpsConnectionPageState extends State<EpsConnectionPage> {
                 ],
               ),
             );
+
+          case EpsConnectionPortalConnected():
+            // Portal extraction complete — reload catalog to show state
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.read<EpsConnectionCubit>().loadCatalog();
+            });
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            );
         }
       },
     );
@@ -328,9 +339,7 @@ class _EpsConnectionPageState extends State<EpsConnectionPage> {
           if (i == index) {
             return EpsProviderCard(
               provider: provider,
-              onConnect: () {
-                context.read<EpsConnectionCubit>().connect(provider);
-              },
+              onConnect: () => _handleProviderConnect(context, provider),
             );
           }
           i++;
@@ -531,5 +540,48 @@ class _EpsConnectionPageState extends State<EpsConnectionPage> {
       const SnackBar(
           content: Text('Código QR no reconocido como EPS válida')),
     );
+  }
+
+  // ─── Patient Portal Extraction ─────────────────────────────
+
+  /// Routes the connection attempt based on provider capabilities.
+  ///
+  /// Providers with SMART on FHIR configured (has a non-empty [clientId]
+  /// and [redirectUrl]) use the standard OAuth2 Authorization Code + PKCE flow.
+  ///
+  /// Providers without SMART on FHIR use the Patient Portal Extractor,
+  /// which opens the EPS web portal in an embedded WebView for the patient
+  /// to authenticate with their existing credentials, then extracts clinical
+  /// data via on-device RPA (HTTP interception + JS injection).
+  Future<void> _handleProviderConnect(
+      BuildContext context, EPSProvider provider) async {
+    final hasSmartOnFhir =
+        provider.clientId.isNotEmpty && provider.redirectUrl.isNotEmpty;
+
+    if (hasSmartOnFhir) {
+      // Standard SMART on FHIR OAuth2 flow
+      try {
+        context.read<EpsConnectionCubit>().connect(provider);
+      } catch (_) {}
+      return;
+    }
+
+    // Patient Portal Extraction flow (on-device RPA)
+    try {
+      final profile = await Navigator.push<UserProfile>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => EpsPatientPortalScreen(provider: provider),
+        ),
+      );
+
+      if (profile != null && context.mounted) {
+        // Profile was extracted successfully — mark as connected
+        context.read<EpsConnectionCubit>().markPortalConnected(
+              provider: provider,
+              patientId: profile.epsPatientId,
+            );
+      }
+    } catch (_) {}
   }
 }

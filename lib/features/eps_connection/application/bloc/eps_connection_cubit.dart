@@ -81,4 +81,20 @@ class EpsConnectionCubit extends Cubit<EpsConnectionState> {
       emit(EpsConnectionError('Disconnection error: ${e.toString()}'));
     }
   }
+
+  /// Marks a provider as connected via the Patient Portal Extractor flow.
+  /// This is used when the patient authenticates through the EPS web portal
+  /// (on-device RPA) rather than through SMART on FHIR OAuth2.
+  void markPortalConnected({
+    required EPSProvider provider,
+    String? patientId,
+  }) {
+    // Emit a success-like state so the UI updates
+    emit(EpsConnectionPortalConnected(
+      provider: provider,
+      patientId: patientId,
+    ));
+    // Reload full state to reflect the new connection
+    loadCatalog();
+  }
 }

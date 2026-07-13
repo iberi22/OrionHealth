@@ -67,7 +67,7 @@ void main() {
     when(() => mockOnboardingCubit.currentStep).thenReturn(0);
     when(() => mockOnboardingCubit.startOnboarding()).thenAnswer((_) async {});
 
-    when(() => mockEpsConnectionCubit.state).thenReturn(const EpsConnectionInitial());
+    when(() => mockEpsConnectionCubit.state).thenReturn(const EpsConnectionCatalog(availableProviders: []));
     when(() => mockEpsConnectionCubit.stream).thenAnswer((_) => const Stream.empty());
 
     when(() => mockHomeCubit.state).thenReturn(const HomeState());
