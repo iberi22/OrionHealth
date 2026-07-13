@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
+import 'package:orionhealth_health/core/theme/cyber_theme.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/email-citas/presentation/email_connect_page.dart';
 import 'package:orionhealth_health/features/email-citas/domain/repositories/email_repository.dart';
@@ -65,6 +68,21 @@ void main() {
     );
   });
 
+  Widget createTestWidget(Widget home) {
+    return MaterialApp(
+      home: home,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('es'),
+      theme: CyberTheme.darkTheme,
+    );
+  }
+
   Finder findProviderCard(String name) {
     return find.ancestor(
       of: find.text(name),
@@ -75,13 +93,14 @@ void main() {
   group('Email Citas Flow - E2E Tests', () {
     testWidgets('E2E: Full Integration Flow - Connect, Sync, and Error Handling', (WidgetTester tester) async {
       // 1. Initial State
-      await tester.pumpWidget(const MaterialApp(home: EmailConnectPage()));
+      await tester.pumpWidget(createTestWidget(const EmailConnectPage()));
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'email_citas', '01_initial');
 
       expect(find.text('Gmail'), findsOneWidget);
       expect(find.text('Outlook'), findsOneWidget);
       expect(find.textContaining('No conectado'), findsNWidgets(2));
+      expect(find.text('SINCRONIZAR AHORA'), findsNothing);
 
       // 2. Connect Gmail
       await tester.tap(find.descendant(of: findProviderCard('Gmail'), matching: find.text('CONECTAR')));
@@ -127,6 +146,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(() => mockAppointmentRepository.saveAppointment(any())).called(2);
+      verify(() => mockEmailRepository.syncToNativeCalendar(any())).called(2);
       expect(find.text('Sincronización completada'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'email_citas', '03_sync_success');
 
@@ -149,8 +169,6 @@ void main() {
       when(() => mockEmailRepository.fetchParsedAppointments('Outlook', 'outlook_code'))
           .thenThrow(Exception('Error de conexión con Outlook'));
 
-      // Since we just connected Outlook, it might try to sync automatically or we tap sync
-      // The Cubit handles manualSync using _lastSuccessfulCode which would now be 'outlook_code'
       await tester.tap(find.text('SINCRONIZAR AHORA'));
       await tester.pumpAndSettle();
 
