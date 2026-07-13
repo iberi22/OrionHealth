@@ -24,14 +24,22 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
   EpsConnectionCubit? _epsCubit;
   bool _epsCubitInitFailed = false;
 
+  // Lazily initialized - avoids crashing initState during build
+  EpsConnectionCubit? _lazyEpsCubit() {
+    if (_epsCubitInitFailed) return null;
+    try {
+      if (_epsCubit != null) return _epsCubit;
+      _epsCubit = getIt<EpsConnectionCubit>();
+      return _epsCubit;
+    } catch (e) {
+      _epsCubitInitFailed = true;
+      return null;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    try {
-      _epsCubit = getIt<EpsConnectionCubit>();
-    } catch (e) {
-      _epsCubitInitFailed = true;
-    }
   }
 
   @override
@@ -175,7 +183,8 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
   }
 
   Widget _buildEpsSection() {
-    if (_epsCubitInitFailed || _epsCubit == null) {
+    final cubit = _lazyEpsCubit();
+    if (_epsCubitInitFailed || cubit == null) {
       return GlassmorphicCard(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -205,7 +214,7 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
     }
 
     return BlocProvider<EpsConnectionCubit>.value(
-      value: _epsCubit!,
+      value: cubit,
       child: const EpsConnectButton(),
     );
   }
