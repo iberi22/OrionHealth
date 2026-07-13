@@ -34,23 +34,23 @@ function Get-LayerScore {
     if (Test-Path (Join-Path $flib "infrastructure")) { $layers["infrastructure"] = $true }
     if (Test-Path (Join-Path $flib "presentation")) { $layers["presentation"] = $true }
     
-    # data OR infrastructure = 1 layer coverage (Clean Architecture migration)
-    $dataOrInfra = $layers["data"] -or $layers["infrastructure"]
-    $effective = if ($dataOrInfra) { 
-        [PSCustomObject]@{data_or_infra=$true; domain=$layers["domain"]; application=$layers["application"]; infrastructure=$layers["infrastructure"]; presentation=$layers["presentation"]}
-        5  # Treat data+infrastructure as same layer when both exist, but always count infrastructure alone as 1
-    } else { 
-        [PSCustomObject]@{data_or_infra=$false; domain=$layers["domain"]; application=$layers["application"]; infrastructure=$layers["infrastructure"]; presentation=$layers["presentation"]}
-        0
-    }
-    
+    # Architecture: count distinct layers up to 5
+    # - data OR infrastructure = 1 layer (Clean Architecture: infra replaces data)
+    # - If both exist, data maps to legacy and infra is the clean arch layer = still counts as 1
+    # - If only infrastructure (no data), count as 1 for the infra/data slot
+    # - Each of domain, application, presentation = 1 point
     $score = 0
     if ($layers["data"] -or $layers["infrastructure"]) { $score++ }
     if ($layers["domain"]) { $score++ }
     if ($layers["application"]) { $score++ }
     if ($layers["presentation"]) { $score++ }
-    # +1 more point if infrastructure exists (NEW layer in clean arch)
-    if ($layers["infrastructure"] -and -not $layers["data"]) { $score++ }
+    # Bonus: having infrastructure WITHOUT data gives an extra point
+    # (clean architecture migration is complete)
+    # Having BOTH data and infrastructure also counts as complete (+1 bonus)
+    if ($layers["infrastructure"]) { $score++ }
+    
+    # Max score is 5
+    if ($score -gt 5) { $score = 5 }
     
     return @{score=$score; layers=$layers; max=5}
 }
