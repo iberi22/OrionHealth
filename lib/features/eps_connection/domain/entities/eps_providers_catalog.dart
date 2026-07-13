@@ -14,137 +14,145 @@
 /// Para conexión real, OrionHealth se conecta a la API IHCE de Minsalud
 /// como intermediario central, no directamente a cada EPS.
 
-import '../../domain/entities/eps_provider.dart';
+import 'eps_provider.dart';
 
 /// Catálogo oficial de EPS activas en Colombia (2026).
 class EpsProvidersCatalog {
   EpsProvidersCatalog._();
 
   /// Lista completa de EPS activas en Colombia según REPS.
-  static List<EPSProvider> get activeProviders => [
-        // Régimen Contributivo y Subsidiado
-        const EPSProvider(
-          name: 'E.P.S. SURA',
-          providerId: 'EPS025',
-          regime: 'Contributivo',
-          code: 'EPS025',
-        ),
-        const EPSProvider(
-          name: 'Compensar E.P.S.',
-          providerId: 'EPS008',
-          regime: 'Contributivo',
-          code: 'EPS008',
-        ),
-        const EPSProvider(
-          name: 'Sanitas E.P.S.',
-          providerId: 'EPS005',
-          regime: 'Contributivo',
-          code: 'EPS005',
-        ),
-        const EPSProvider(
-          name: 'Nueva EPS',
-          providerId: 'EPS037',
-          regime: 'Contributivo',
-          code: 'EPS037',
-        ),
-        const EPSProvider(
-          name: 'Salud Total E.P.S.',
-          providerId: 'EPS002',
-          regime: 'Contributivo',
-          code: 'EPS002',
-        ),
-        const EPSProvider(
-          name: 'Famisanar E.P.S.',
-          providerId: 'EPS017',
-          regime: 'Contributivo',
-          code: 'EPS017',
-        ),
-        const EPSProvider(
-          name: 'Alianza Medellín Antioquia E.P.S. S.A.S.',
-          providerId: 'EPS044',
-          regime: 'Contributivo',
-          code: 'EPS044',
-        ),
-        const EPSProvider(
-          name: 'Savia Salud E.P.S.',
-          providerId: 'EPS045',
-          regime: 'Contributivo',
-          code: 'EPS045',
-        ),
-        const EPSProvider(
-          name: 'Salud Bolívar E.P.S. S.A.S.',
-          providerId: 'EPS042',
-          regime: 'Contributivo',
-          code: 'EPS042',
-        ),
-        const EPSProvider(
-          name: 'Cruz Blanca E.P.S. S.A.',
-          providerId: 'EPS043',
-          regime: 'Contributivo',
-          code: 'EPS043',
-        ),
-        const EPSProvider(
-          name: 'Mutual SER E.S.S.',
-          providerId: 'EPS033',
-          regime: 'Subsidiado',
-          code: 'EPS033',
-        ),
-        const EPSProvider(
-          name: 'Comfamiliar Huila E.P.S.',
-          providerId: 'EPS012',
-          regime: 'Subsidiado',
-          code: 'EPS012',
-        ),
-        const EPSProvider(
-          name: 'Comfenalco Valle E.P.S.',
-          providerId: 'EPS010',
-          regime: 'Subsidiado',
-          code: 'EPS010',
-        ),
-        const EPSProvider(
-          name: 'Mallamas E.P.S.I.',
-          providerId: 'EPSI005',
-          regime: 'Especial',
-          code: 'EPSI005',
-        ),
-        const EPSProvider(
-          name: 'Anas Wayuu E.P.S.I.',
-          providerId: 'EPSI003',
-          regime: 'Especial',
-          code: 'EPSI003',
-        ),
-      ];
+  static List<EPSProvider> get activeProviders => _buildProviders();
+
+  static List<EPSProvider> _buildProviders() {
+    return [
+      _eps(
+        id: 'EPS025',
+        name: 'E.P.S. SURA',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS008',
+        name: 'Compensar E.P.S.',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS005',
+        name: 'Sanitas E.P.S.',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS037',
+        name: 'Nueva EPS',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS002',
+        name: 'Salud Total E.P.S.',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS017',
+        name: 'Famisanar E.P.S.',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS044',
+        name: 'Alianza Medellín Antioquia E.P.S.',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS045',
+        name: 'Savia Salud E.P.S.',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS042',
+        name: 'Salud Bolívar E.P.S.',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS043',
+        name: 'Cruz Blanca E.P.S.',
+        regime: 'Contributivo',
+      ),
+      _eps(
+        id: 'EPS033',
+        name: 'Mutual SER E.S.S.',
+        regime: 'Subsidiado',
+      ),
+      _eps(
+        id: 'EPS012',
+        name: 'Comfamiliar Huila E.P.S.',
+        regime: 'Subsidiado',
+      ),
+      _eps(
+        id: 'EPS010',
+        name: 'Comfenalco Valle E.P.S.',
+        regime: 'Subsidiado',
+      ),
+      _eps(
+        id: 'EPSI005',
+        name: 'Mallamas E.P.S.I.',
+        regime: 'Especial',
+      ),
+      _eps(
+        id: 'EPSI003',
+        name: 'Anas Wayuu E.P.S.I.',
+        regime: 'Especial',
+      ),
+    ];
+  }
+
+  /// Helper para crear EPSProvider con valores por defecto FHIR.
+  static EPSProvider _eps({
+    required String id,
+    required String name,
+    required String regime,
+  }) {
+    return EPSProvider(
+      id: id,
+      name: name,
+      discoveryUrl: 'https://ihce.minsalud.gov.co/fhir/$id/.well-known/smart-configuration',
+      revocationUrl: 'https://ihce.minsalud.gov.co/oauth/$id/revoke',
+      clientId: 'orionhealth',
+      redirectUrl: 'orionhealth://callback',
+      scopes: const [
+        'openid',
+        'fhirUser',
+        'patient/Patient.read',
+        'patient/Observation.read',
+        'patient/MedicationRequest.read',
+        'patient/Condition.read',
+        'patient/AllergyIntolerance.read',
+        'patient/Immunization.read',
+        'patient/Procedure.read',
+        'patient/DiagnosticReport.read',
+        'offline_access',
+      ],
+      type: EPSProviderType.fhir,
+    );
+  }
 
   /// Filtrar EPS por régimen.
   static List<EPSProvider> byRegime(String regime) {
     return activeProviders
-        .where((p) => p.regime.toLowerCase() == regime.toLowerCase())
+        .where((p) => p.name.contains(regime))
         .toList();
   }
 
-  /// Buscar EPS por nombre o código.
+  /// Buscar EPS por nombre o ID.
   static List<EPSProvider> search(String query) {
     final q = query.toLowerCase();
     return activeProviders.where((p) {
       return p.name.toLowerCase().contains(q) ||
-          p.providerId.toLowerCase().contains(q) ||
-          p.code.toLowerCase().contains(q);
+          p.id.toLowerCase().contains(q);
     }).toList();
   }
 
-  /// Obtener una EPS por su código.
-  static EPSProvider? byCode(String code) {
+  /// Obtener una EPS por su ID.
+  static EPSProvider? byId(String id) {
     try {
-      return activeProviders.firstWhere((p) => p.code == code);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  /// Obtener una EPS por su providerId.
-  static EPSProvider? byProviderId(String providerId) {
-    try {
-      return activeProviders.firstWhere((p) => p.providerId == providerId);
+      return activeProviders.firstWhere((p) => p.id == id);
     } catch (_) {
       return null;
     }
@@ -153,7 +161,7 @@ class EpsProvidersCatalog {
   /// Total de EPS en el catálogo.
   static int get count => activeProviders.length;
 
-  /// Regímenes disponibles.
-  static List<String> get regimes =>
-      activeProviders.map((p) => p.regime).toSet().cast<String>().toList()..sort();
+  /// IDs de todas las EPS.
+  static List<String> get ids =>
+      activeProviders.map((p) => p.id).toSet().toList()..sort();
 }
