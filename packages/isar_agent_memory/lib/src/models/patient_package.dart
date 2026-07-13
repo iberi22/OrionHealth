@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 
-part 'patient_package.g.dart';
+
 
 /// Encrypted personal data for a patient.
 @collection

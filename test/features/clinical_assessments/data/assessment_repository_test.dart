@@ -6,34 +6,45 @@ import 'package:orionhealth_health/features/clinical_assessments/data/assessment
 import 'package:orionhealth_health/features/clinical_assessments/domain/entities/clinical_assessment_record.dart';
 import 'dart:convert';
 
-class MockIsar extends Mock implements Isar {}
+/// Custom minimal Isar implementation for testing.
+/// Extends Fake (from mocktail) to get noSuchMethod fallback,
+/// then manually overrides only the methods used by AssessmentRepository.
+class FakeIsar extends Fake implements Isar {
+  final IsarCollection<ClinicalAssessmentRecord> _clinicalCollection;
 
-// We need to mock the specific collection
-abstract class IsarCollectionClinicalAssessmentRecord extends IsarCollection<ClinicalAssessmentRecord> {}
-class MockIsarCollection extends Mock implements IsarCollectionClinicalAssessmentRecord {}
+  FakeIsar(this._clinicalCollection);
+
+  @override
+  IsarCollection<T> collection<T>() {
+    if (T == ClinicalAssessmentRecord) {
+      return _clinicalCollection as IsarCollection<T>;
+    }
+    throw UnimplementedError('collection<$T> not mocked');
+  }
+
+  @override
+  IsarCollection<ClinicalAssessmentRecord> get clinicalAssessmentRecords =>
+      _clinicalCollection;
+
+  @override
+  Future<T> writeTxn<T>(Future<T> Function() callback,
+      {bool silent = false, bool? requiresFlutter}) async {
+    return await callback();
+  }
+}
+
+class MockCollection extends Mock
+    implements IsarCollection<ClinicalAssessmentRecord> {}
 
 void main() {
-  late MockIsar mockIsar;
-  late MockIsarCollection mockCollection;
+  late FakeIsar fakeIsar;
+  late MockCollection mockCollection;
   late AssessmentRepository repository;
 
   setUp(() {
-    mockIsar = MockIsar();
-    mockCollection = MockIsarCollection();
-    repository = AssessmentRepository(mockIsar);
-
-    // Provide the collection to isar
-    when(() => mockIsar.clinicalAssessmentRecords).thenReturn(mockCollection);
-    
-    // Register fallback for the generic writeTxn callback
-    registerFallbackValue(() async {});
-    
-    // Mock writeTxn to execute the callback
-    when(() => mockIsar.writeTxn<dynamic>(any(), silent: any(named: 'silent')))
-        .thenAnswer((invocation) async {
-      final callback = invocation.positionalArguments.first as Future<dynamic> Function();
-      return await callback();
-    });
+    mockCollection = MockCollection();
+    fakeIsar = FakeIsar(mockCollection);
+    repository = AssessmentRepository(fakeIsar);
   });
 
   setUpAll(() {
@@ -41,22 +52,56 @@ void main() {
   });
 
   group('AssessmentRepository Tests', () {
-    test('saveAssessmentResult saves the correct record to Isar', () async {
-      // Arrange
-      final fakeResult = RPTaskResult(identifier: 'test_task');
-      when(() => mockCollection.put(any())).thenAnswer((_) async => 1);
+    test('saveAssessmentResult calls put on clinicalAssessmentRecords',
+        () async {
+      ClinicalAssessmentRecord? savedRecord;
 
-      // Act
+      when(() => mockCollection.put(any())).thenAnswer((invocation) async {
+        savedRecord =
+            invocation.positionalArguments.first as ClinicalAssessmentRecord;
+        return 1;
+      });
+
+      final fakeResult = RPTaskResult(identifier: 'test_task');
       await repository.saveAssessmentResult('survey_test', fakeResult);
 
-      // Assert
-      final captured = verify(() => mockCollection.put(captureAny())).captured;
-      expect(captured.length, 1);
-      final record = captured.first as ClinicalAssessmentRecord;
-      
-      expect(record.assessmentType, 'survey_test');
-      expect(record.resultJson, jsonEncode(fakeResult.toJson()));
-      expect(record.completedAt, isNotNull);
+      expect(savedRecord, isNotNull);
+      expect(savedRecord!.assessmentType, 'survey_test');
+      expect(savedRecord!.resultJson, jsonEncode(fakeResult.toJson()));
+      expect(savedRecord!.completedAt, isNotNull);
+    });
+
+    test('saveAssessmentResult stores consent type correctly', () async {
+      String? storedType;
+
+      when(() => mockCollection.put(any())).thenAnswer((invocation) async {
+        final record =
+            invocation.positionalArguments.first as ClinicalAssessmentRecord;
+        storedType = record.assessmentType;
+        return 1;
+      });
+
+      final fakeResult = RPTaskResult(identifier: 'consent_task');
+      await repository.saveAssessmentResult('informed_consent', fakeResult);
+
+      expect(storedType, 'informed_consent');
+    });
+
+    test('saveAssessmentResult stores health_survey type correctly',
+        () async {
+      String? storedType;
+
+      when(() => mockCollection.put(any())).thenAnswer((invocation) async {
+        final record =
+            invocation.positionalArguments.first as ClinicalAssessmentRecord;
+        storedType = record.assessmentType;
+        return 1;
+      });
+
+      final fakeResult = RPTaskResult(identifier: 'health_survey_task');
+      await repository.saveAssessmentResult('health_survey', fakeResult);
+
+      expect(storedType, 'health_survey');
     });
   });
 }

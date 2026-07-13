@@ -31,8 +31,8 @@ class SyncManager {
     }
 
     // 1. Fetch all data
-    final nodes = await _memoryGraph.isar.memoryNodes.where().findAll();
-    final edges = await _memoryGraph.isar.memoryEdges.where().findAll();
+    final nodes = await _memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final edges = await _memoryGraph.isar.collection<MemoryEdge>().where().findAll();
 
     // 2. Serialize to JSON
     // We use a custom map structure because we want to handle specific fields
@@ -80,11 +80,15 @@ class SyncManager {
           continue;
         }
 
-        // Find by UUID
-        final existingNode = await _memoryGraph.isar.memoryNodes
-            .filter()
-            .uuidEqualTo(incomingNode.uuid)
-            .findFirst();
+        // Find by UUID — filtered in Dart for Isar 3.1 compat
+        final allNodes = await _memoryGraph.isar.collection<MemoryNode>().where().findAll();
+        MemoryNode? existingNode;
+        for (final n in allNodes) {
+          if (n.uuid == incomingNode.uuid) {
+            existingNode = n;
+            break;
+          }
+        }
 
         if (existingNode == null) {
           // New node. Ensure ID doesn't conflict (Isar auto-increments, but if we deserialize with ID, we might overwrite)
@@ -96,7 +100,7 @@ class SyncManager {
           // UNLESS we are restoring a backup to the SAME device.
           // For sync, we want new local ID.
           incomingNode.id = Isar.autoIncrement;
-          await _memoryGraph.isar.memoryNodes.put(incomingNode);
+          await _memoryGraph.isar.collection<MemoryNode>().put(incomingNode);
         } else {
           // Existing node found by UUID. Update it.
           // LWW Check
@@ -108,7 +112,7 @@ class SyncManager {
           if (incomingTime.isAfter(existingTime)) {
             // Preserve local ID to update the correct record
             incomingNode.id = existingNode.id;
-            await _memoryGraph.isar.memoryNodes.put(incomingNode);
+            await _memoryGraph.isar.collection<MemoryNode>().put(incomingNode);
           }
         }
       }
@@ -119,14 +123,18 @@ class SyncManager {
 
         if (incomingEdge.uuid == null) continue;
 
-        final existingEdge = await _memoryGraph.isar.memoryEdges
-            .filter()
-            .uuidEqualTo(incomingEdge.uuid)
-            .findFirst();
+        final allEdges = await _memoryGraph.isar.collection<MemoryEdge>().where().findAll();
+        MemoryEdge? existingEdge;
+        for (final e in allEdges) {
+          if (e.uuid == incomingEdge.uuid) {
+            existingEdge = e;
+            break;
+          }
+        }
 
         if (existingEdge == null) {
           incomingEdge.id = Isar.autoIncrement;
-          await _memoryGraph.isar.memoryEdges.put(incomingEdge);
+          await _memoryGraph.isar.collection<MemoryEdge>().put(incomingEdge);
         } else {
           final incomingTime =
               incomingEdge.modifiedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
@@ -135,7 +143,7 @@ class SyncManager {
 
           if (incomingTime.isAfter(existingTime)) {
             incomingEdge.id = existingEdge.id;
-            await _memoryGraph.isar.memoryEdges.put(incomingEdge);
+            await _memoryGraph.isar.collection<MemoryEdge>().put(incomingEdge);
           }
         }
       }

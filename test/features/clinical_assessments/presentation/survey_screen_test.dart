@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:research_package/research_package.dart';
+import 'package:carp_themes_package/carp_themes_package.dart';
 import 'package:orionhealth_health/features/clinical_assessments/data/assessment_repository.dart';
 import 'package:orionhealth_health/features/clinical_assessments/presentation/survey_screen.dart';
+import '../helpers/carp_test_utils.dart';
 
 class MockAssessmentRepository extends Mock implements AssessmentRepository {}
 
@@ -14,20 +17,13 @@ void main() {
     mockRepository = MockAssessmentRepository();
   });
 
-  Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: Scaffold(
-        body: SurveyScreen(repository: mockRepository),
-      ),
-    );
-  }
-
-  testWidgets('SurveyScreen renders RPUITask and displays content', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(createWidgetUnderTest());
+  testWidgets('SurveyScreen renders RPUITask and displays content',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(createCarpTestApp(
+      SurveyScreen(repository: mockRepository),
+    ));
     await tester.pump();
 
-    // Verify that the ResearchPackage task UI is rendered
     expect(find.byType(RPUITask), findsOneWidget);
   });
 }

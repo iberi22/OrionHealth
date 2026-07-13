@@ -78,7 +78,7 @@ class QualityMetrics {
   ///
   /// [accessedNodeIds]: Nodes that were retrieved in searches.
   Future<double> calculateCoverage(Set<int> accessedNodeIds) async {
-    final totalNodes = await memoryGraph.isar.memoryNodes.count();
+    final totalNodes = await memoryGraph.isar.collection<MemoryNode>().count();
     if (totalNodes == 0) return 0.0;
     return accessedNodeIds.length / totalNodes;
   }
@@ -132,11 +132,9 @@ class QualityMetrics {
     final recentQueries =
         _queryHistory.where((q) => q.timestamp.isAfter(cutoff));
 
-    final totalNodes = await memoryGraph.isar.memoryNodes.count();
-    final nodesWithEmbeddings = await memoryGraph.isar.memoryNodes
-        .filter()
-        .embeddingIsNotNull()
-        .count();
+    final totalNodes = await memoryGraph.isar.collection<MemoryNode>().count();
+    final allNodes = await memoryGraph.isar.collection<MemoryNode>().where().findAll();
+    final nodesWithEmbeddings = allNodes.where((n) => n.embedding != null).length;
 
     return QualityReport(
       totalQueries: recentQueries.length,

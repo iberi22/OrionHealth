@@ -21,7 +21,8 @@ extension DynamicLayerCreation on MemoryGraph {
     final organization = LayerOrganization();
 
     // Get all base nodes (layer 0)
-    final baseNodes = await isar.memoryNodes.filter().layerEqualTo(0).findAll();
+    final allNodesForBase = await isar.collection<MemoryNode>().where().findAll();
+    final baseNodes = allNodesForBase.where((n) => n.layer == 0).toList();
 
     if (baseNodes.isEmpty) {
       return organization;
@@ -214,8 +215,8 @@ extension DynamicLayerCreation on MemoryGraph {
     }
 
     // Shift upper layers up by 1
-    final upperNodes =
-        await isar.memoryNodes.filter().layerGreaterThan(lowerLayer).findAll();
+    final allNodesForShift = await isar.collection<MemoryNode>().where().findAll();
+    final upperNodes = allNodesForShift.where((n) => n.layer > lowerLayer).toList();
 
     for (final node in upperNodes) {
       node.layer = node.layer + 1;
@@ -225,7 +226,7 @@ extension DynamicLayerCreation on MemoryGraph {
 
   /// Analyzes layer distribution and suggests optimizations.
   Future<LayerAnalysis> analyzeLayerStructure() async {
-    final allNodes = await isar.memoryNodes.where().findAll();
+    final allNodes = await isar.collection<MemoryNode>().where().findAll();
 
     final layerCounts = <int, int>{};
     final layerTypes = <int, Set<String>>{};
