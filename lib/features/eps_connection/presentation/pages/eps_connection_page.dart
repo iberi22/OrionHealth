@@ -9,7 +9,9 @@ import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class EpsConnectionPage extends StatelessWidget {
-  const EpsConnectionPage({super.key});
+  final EpsConnectionCubit? cubit;
+
+  const EpsConnectionPage({super.key, this.cubit});
 
   @override
   Widget build(BuildContext context) {
@@ -30,59 +32,89 @@ class EpsConnectionPage extends StatelessWidget {
                 showBackButton: true,
               ),
               Expanded(
-                child: BlocConsumer<EpsConnectionCubit, EpsConnectionState>(
-                  listener: (context, state) {
-                    if (state is EpsConnectionError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.message)),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is EpsConnectionLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (state is EpsConnectionLoaded) {
-                      return ListView(
-                        padding: const EdgeInsets.all(16),
-                        children: [
-                          if (state.connections.isEmpty)
-                            const Center(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 40),
-                                child: Text(
-                                  'No EPS providers connected',
-                                  style: TextStyle(color: Colors.white70),
-                                ),
-                              ),
-                            )
-                          else
-                            ...state.connections.map(
-                              (conn) => Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: EpsConnectionStatusCard(
-                                  connection: conn,
-                                  onDisconnect: () => context
-                                      .read<EpsConnectionCubit>()
-                                      .disconnect(conn.provider.id),
-                                ),
-                              ),
-                            ),
-                          const SizedBox(height: 20),
-                          _buildAddConnectionButton(context),
-                        ],
-                      );
-                    }
-
-                    return const SizedBox.shrink();
-                  },
-                ),
+                child: _buildBody(context),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    // If cubit provided, wrap with BlocProvider
+    if (cubit != null) {
+      return BlocProvider<EpsConnectionCubit>.value(
+        value: cubit!,
+        child: _buildContent(context),
+      );
+    }
+
+    // Fallback: try to find provider in tree (backward compat)
+    try {
+      context.read<EpsConnectionCubit>();
+      return _buildContent(context);
+    } catch (_) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(40),
+          child: Text(
+            'EPS connection not available',
+            style: TextStyle(color: Colors.white70, fontSize: 16),
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return BlocConsumer<EpsConnectionCubit, EpsConnectionState>(
+      listener: (context, state) {
+        if (state is EpsConnectionError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is EpsConnectionLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is EpsConnectionLoaded) {
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              if (state.connections.isEmpty)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40),
+                    child: Text(
+                      'No EPS providers connected',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ),
+                )
+              else
+                ...state.connections.map(
+                  (conn) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: EpsConnectionStatusCard(
+                      connection: conn,
+                      onDisconnect: () => context
+                          .read<EpsConnectionCubit>()
+                          .disconnect(conn.provider.id),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 20),
+              _buildAddConnectionButton(context),
+            ],
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
     );
   }
 
