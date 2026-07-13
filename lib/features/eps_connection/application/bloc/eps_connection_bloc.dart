@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'eps_connection_event.dart';
 import 'eps_connection_state.dart';
+import '../../domain/entities/eps_providers_catalog.dart';
 import '../../domain/usecases/connect_provider_usecase.dart';
 import '../../domain/usecases/disconnect_provider_usecase.dart';
 import '../../domain/usecases/get_connections_usecase.dart';
@@ -19,7 +20,8 @@ class EpsConnectionBloc extends Bloc<EpsConnectionEvent, EpsConnectionState> {
     this._getConnectionsUseCase,
     this._connectProviderUseCase,
     this._disconnectProviderUseCase,
-  ) : super(const EpsConnectionInitial()) {
+  ) : super(EpsConnectionCatalog(
+            availableProviders: EpsProvidersCatalog.activeProviders)) {
     on<LoadConnections>(_onLoadConnections);
     on<ConnectProvider>(_onConnectProvider);
     on<DisconnectProvider>(_onDisconnectProvider);
@@ -42,10 +44,11 @@ class EpsConnectionBloc extends Bloc<EpsConnectionEvent, EpsConnectionState> {
     ConnectProvider event,
     Emitter<EpsConnectionState> emit,
   ) async {
-    emit(const EpsConnectionLoading());
+    emit(EpsConnectionConnecting(event.provider));
     try {
       await _connectProviderUseCase(event.provider);
-      add(const LoadConnections());
+      final connections = await _getConnectionsUseCase();
+      emit(EpsConnectionLoaded(connections));
     } catch (e) {
       emit(EpsConnectionError('Connection error: ${e.toString()}'));
     }
@@ -58,7 +61,8 @@ class EpsConnectionBloc extends Bloc<EpsConnectionEvent, EpsConnectionState> {
     emit(const EpsConnectionLoading());
     try {
       await _disconnectProviderUseCase(event.providerId);
-      add(const LoadConnections());
+      final connections = await _getConnectionsUseCase();
+      emit(EpsConnectionLoaded(connections));
     } catch (e) {
       emit(EpsConnectionError('Disconnection error: ${e.toString()}'));
     }
