@@ -97,13 +97,6 @@ class ErrorBoundary extends StatefulWidget {
         errorString.contains('A RenderFlex overflowed');
   }
 
-  /// Returns true for non-fatal Flutter framework warnings that should not
-  /// trigger the error boundary (e.g. cosmetic decoration conflicts).
-  static bool _isNonFatalWarning(String errorString) {
-    return errorString.contains('ListTile background color or ink splashes may be invisible') ||
-        errorString.contains('A RenderFlex overflowed');
-  }
-
   @override
   State<ErrorBoundary> createState() => _ErrorBoundaryState();
 }
