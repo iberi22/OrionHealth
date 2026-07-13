@@ -85,9 +85,16 @@ class ErrorBoundary extends StatefulWidget {
       return 'Encontramos datos inesperados. Reiniciando puede resolverlo.';
     }
     if (msg.contains('Timeout')) {
-      return 'La operación tardó demasiado. Verifica tu conexión.';
+      return 'La operaci\u00f3n tard\u00f3 demasiado. Verifica tu conexi\u00f3n.';
     }
-    return 'Ocurrió un error inesperado. Puedes reiniciar la aplicación.';
+    return 'Ocurri\u00f3 un error inesperado. Puedes reiniciar la aplicaci\u00f3n.';
+  }
+
+  /// Returns true for non-fatal Flutter framework warnings that should not
+  /// trigger the error boundary (e.g. cosmetic decoration conflicts).
+  static bool _isNonFatalWarning(String errorString) {
+    return errorString.contains('ListTile background color or ink splashes may be invisible') ||
+        errorString.contains('A RenderFlex overflowed');
   }
 
   @override
@@ -120,15 +127,19 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
     };
 
     ErrorWidget.builder = (details) {
+      final errorStr = details.exceptionAsString();
       AppLogger.e(
         widget.label ?? 'ErrorBoundary',
-        'Build error: ${details.exceptionAsString()}',
+        'Build error: $errorStr',
         error: details.exception,
         stackTrace: details.stack,
       );
+      // Skip non-fatal framework warnings that should not trigger the boundary.
+      // These are cosmetic issues, not runtime crashes.
+      if (_isNonFatalWarning(errorStr)) {
+        return const SizedBox.shrink();
+      }
       if (mounted) {
-        // Only trigger rebuild if we're not currently in a build phase.
-        // During tests, this helps avoid 'setState() or markNeedsBuild() called during build' errors.
         if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.persistentCallbacks) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
