@@ -54,7 +54,7 @@
                                         },
                      "auth":  {
                                   "golden_count":  7,
-                                  "overall_pct":  95,
+                                  "overall_pct":  100,
                                   "layers":  [
                                                  "data",
                                                  "domain",
@@ -64,7 +64,7 @@
                                              ],
                                   "test_count":  150,
                                   "e2e_count":  2,
-                                  "arch_score":  80
+                                  "arch_score":  100
                               },
                      "settings":  {
                                       "golden_count":  2,
@@ -94,7 +94,7 @@
                                               },
                      "allergies":  {
                                        "golden_count":  2,
-                                       "overall_pct":  95,
+                                       "overall_pct":  100,
                                        "layers":  [
                                                       "data",
                                                       "domain",
@@ -104,7 +104,7 @@
                                                   ],
                                        "test_count":  79,
                                        "e2e_count":  1,
-                                       "arch_score":  80
+                                       "arch_score":  100
                                    },
                      "calendar_import":  {
                                              "golden_count":  2,
@@ -277,7 +277,7 @@
                                       },
                      "user_profile":  {
                                           "golden_count":  3,
-                                          "overall_pct":  95,
+                                          "overall_pct":  100,
                                           "layers":  [
                                                          "data",
                                                          "domain",
@@ -287,11 +287,11 @@
                                                      ],
                                           "test_count":  76,
                                           "e2e_count":  2,
-                                          "arch_score":  80
+                                          "arch_score":  100
                                       },
                      "local_agent":  {
-                                         "golden_count":  1,
-                                         "overall_pct":  85,
+                                         "golden_count":  2,
+                                         "overall_pct":  100,
                                          "layers":  [
                                                         "data",
                                                         "domain",
@@ -299,9 +299,9 @@
                                                         "infrastructure",
                                                         "presentation"
                                                     ],
-                                         "test_count":  274,
+                                         "test_count":  277,
                                          "e2e_count":  3,
-                                         "arch_score":  80
+                                         "arch_score":  100
                                      },
                      "email-citas":  {
                                          "golden_count":  5,
@@ -357,6 +357,6 @@
                                      }
                  },
     "feature_count":  27,
-    "overall_score":  98.9,
-    "generated":  "2026-07-13T15:28:18"
+    "overall_score":  100,
+    "generated":  "2026-07-13T15:46:50"
 }
