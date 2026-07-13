@@ -130,11 +130,11 @@ class EpsConnectionPage extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (_) => const EpsQrScannerPage()),
             );
-            if (result != null && mounted) {
+            if (result != null && context.mounted) {
               _handleScanResult(context, result);
             }
           } catch (e) {
-            if (mounted) {
+            if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Error al abrir el escáner: $e')),
               );
