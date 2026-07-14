@@ -22,14 +22,30 @@ import '../../../../core/theme/app_colors.dart';
 /// 3. User manually authenticates with EPS credentials
 /// 4. On login detection: session captured + endpoint interception starts
 /// 5. After scraping: returns patient data to previous screen
+typedef WebViewBuilder = Widget Function(
+  BuildContext context,
+  InAppWebViewSettings settings,
+  void Function(InAppWebViewController controller) onWebViewCreated,
+  void Function(InAppWebViewController controller, WebUri? url) onLoadStop,
+  void Function(InAppWebViewController controller, int progress) onProgressChanged,
+  Future<NavigationActionPolicy?> Function(InAppWebViewController controller, NavigationAction navigationAction) shouldOverrideUrlLoading,
+  Future<WebResourceResponse?> Function(InAppWebViewController controller, WebResourceRequest request) shouldInterceptRequest,
+  void Function(InAppWebViewController controller, WebResourceRequest request, WebResourceError error) onReceivedError,
+  String initialUrl,
+);
+
 class EpsPatientPortalScreen extends StatefulWidget {
   final EPSProvider provider;
   final bool autoConnect; // If true, try to restore session and skip login
+  final FlutterSecureStorage? storage;
+  final WebViewBuilder? webViewBuilder;
 
   const EpsPatientPortalScreen({
     super.key,
     required this.provider,
     this.autoConnect = false,
+    this.storage,
+    this.webViewBuilder,
   });
 
   @override
@@ -57,7 +73,7 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
   @override
   void initState() {
     super.initState();
-    const storage = FlutterSecureStorage();
+    final storage = widget.storage ?? const FlutterSecureStorage();
     _sessionManager = EpsWebViewSession(
       storage: storage,
       epsId: widget.provider.id,
@@ -235,39 +251,80 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     return results;
   }
 
-  /// Fetches common API endpoints as fallback.
-  Future<Map<String, String>> _tryApiEndpoints() async {
-    final results = <String, String>{};
-    final routes = [
-      '/api/afiliado/perfil',
-      '/api/v1/paciente',
-      '/api/beneficiario/datos',
-      '/api/me',
-      '/api/user/profile',
-    ];
+  // ─── WebView Callbacks Refactored ───
 
-    for (final route in routes) {
-      try {
-        final json = await _webViewController!.evaluateJavascript(source: '''
-          (async () => {
-            try {
-              const r = await fetch('$route', { credentials: 'include' });
-              if (r.ok) {
-                const d = await r.json();
-                return JSON.stringify(d);
-              }
-              return '';
-            } catch(e) { return ''; }
-          })()
-        ''');
+  Future<void> _handleWebViewCreated(InAppWebViewController controller) async {
+    _webViewController = controller;
+    if (widget.autoConnect) {
+      final restored = await _sessionManager.restoreSession(controller);
+      if (restored) {
+        setState(() => _state = _PortalState.restoring);
+        await _sessionManager.restoreLocalStorage(controller);
+        _sessionRestored = true;
+      }
+    }
+  }
 
-        if (json != null && json.toString().isNotEmpty) {
-          results['api_$route'] = json.toString();
-        }
-      } catch (_) {}
+  Future<void> _handleLoadStop(InAppWebViewController controller, WebUri? url) async {
+    final urlStr = url?.toString() ?? '';
+    _currentUrl = urlStr;
+
+    _sessionManager.trackNavigation(urlStr);
+    _sessionManager.saveLastUrl(urlStr);
+
+    if (!_sessionRestored && widget.autoConnect) {
+      await _sessionManager.restoreSession(controller);
+      await _sessionManager.restoreLocalStorage(controller);
+      _sessionRestored = true;
     }
 
-    return results;
+    if (_isPostLoginUrl(urlStr)) {
+      setState(() => _state = _PortalState.authenticated);
+    } else if (_state == _PortalState.loading || _state == _PortalState.restoring) {
+      setState(() => _state = _PortalState.loginPage);
+    }
+  }
+
+  void _handleProgressChanged(InAppWebViewController controller, int progress) {
+    if (_state == _PortalState.loading || _state == _PortalState.restoring) {
+      setState(() => _loadProgress = progress / 100.0);
+    }
+  }
+
+  Future<NavigationActionPolicy?> _handleShouldOverrideUrlLoading(
+      InAppWebViewController controller, NavigationAction navigationAction) async {
+    final url = navigationAction.request.url.toString();
+
+    if (!EpsUrlValidator.isUrlAllowed(url, widget.provider.id)) {
+      debugPrint('BLOCKED: $url');
+      return NavigationActionPolicy.CANCEL;
+    }
+
+    _redirectCount++;
+    _redirectUrls.add(url);
+    if (_redirectUrls.length > 20) {
+      _redirectUrls.removeAt(0);
+    }
+    _currentUrl = url;
+
+    _sessionManager.trackNavigation(url);
+    _sessionManager.saveLastUrl(url);
+
+    if (_isPostLoginUrl(url)) {
+      setState(() => _state = _PortalState.authenticated);
+    }
+
+    return NavigationActionPolicy.ALLOW;
+  }
+
+  Future<WebResourceResponse?> _handleShouldInterceptRequest(
+      InAppWebViewController controller, WebResourceRequest request) async {
+    return _endpointInterceptor.interceptRequest(request);
+  }
+
+  void _handleReceivedError(
+      InAppWebViewController controller, WebResourceRequest request, WebResourceError error) {
+    debugPrint('WebView error: ${error.description} for ${request.url}');
   }
 
   // ─── Build ───
@@ -409,93 +466,28 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
           future: _resolveInitialUrl(),
           builder: (context, snapshot) {
             final initialUrl = snapshot.data ?? _portalUrl;
+            if (widget.webViewBuilder != null) {
+              return widget.webViewBuilder!(
+                context,
+                _endpointInterceptor.interceptionSettings,
+                _handleWebViewCreated,
+                _handleLoadStop,
+                _handleProgressChanged,
+                _handleShouldOverrideUrlLoading,
+                _handleShouldInterceptRequest,
+                _handleReceivedError,
+                initialUrl,
+              );
+            }
             return InAppWebView(
               initialUrlRequest: URLRequest(url: WebUri(initialUrl)),
               initialSettings: _endpointInterceptor.interceptionSettings,
-              shouldOverrideUrlLoading:
-                  (controller, navigationAction) async {
-                final url =
-                    navigationAction.request.url.toString();
-
-                // Security: block unauthorized URLs
-                if (!EpsUrlValidator.isUrlAllowed(
-                    url, widget.provider.id)) {
-                  debugPrint('BLOCKED: $url');
-                  return NavigationActionPolicy.CANCEL;
-                }
-
-                _redirectCount++;
-                _redirectUrls.add(url);
-                if (_redirectUrls.length > 20) {
-                  _redirectUrls.removeAt(0);
-                }
-                _currentUrl = url;
-
-                // Track navigation in session history
-                _sessionManager.trackNavigation(url);
-                _sessionManager.saveLastUrl(url);
-
-                // Detect post-login navigation
-                if (_isPostLoginUrl(url)) {
-                  setState(() {
-                    _state = _PortalState.authenticated;
-                  });
-                }
-
-                return NavigationActionPolicy.ALLOW;
-              },
-              shouldInterceptRequest:
-                  (controller, request) async {
-                // Pass through endpoint interceptor for cataloging
-                return _endpointInterceptor.interceptRequest(request);
-              },
-              onLoadStop: (controller, url) async {
-                final urlStr = url?.toString() ?? '';
-                _currentUrl = urlStr;
-
-                // Track navigation
-                _sessionManager.trackNavigation(urlStr);
-                _sessionManager.saveLastUrl(urlStr);
-
-                // If this is the first load and we have a session, try restoring
-                if (!_sessionRestored && widget.autoConnect) {
-                  await _sessionManager.restoreSession(controller);
-                  await _sessionManager.restoreLocalStorage(controller);
-                  _sessionRestored = true;
-                }
-
-                if (_isPostLoginUrl(urlStr)) {
-                  setState(() => _state = _PortalState.authenticated);
-                } else if (_state == _PortalState.loading ||
-                    _state == _PortalState.restoring) {
-                  setState(() => _state = _PortalState.loginPage);
-                }
-              },
-              onProgressChanged: (controller, progress) {
-                if (_state == _PortalState.loading ||
-                    _state == _PortalState.restoring) {
-                  setState(
-                      () => _loadProgress = progress / 100.0);
-                }
-              },
-              onReceivedError:
-                  (controller, request, error) {
-                debugPrint(
-                    'WebView error: ${error.description} for ${request.url}');
-              },
-              onWebViewCreated: (controller) async {
-                _webViewController = controller;
-
-                // Restore cookies + localStorage if we have a session
-                if (widget.autoConnect) {
-                  final restored = await _sessionManager.restoreSession(controller);
-                  if (restored) {
-                    setState(() => _state = _PortalState.restoring);
-                    await _sessionManager.restoreLocalStorage(controller);
-                    _sessionRestored = true;
-                  }
-                }
-              },
+              shouldOverrideUrlLoading: _handleShouldOverrideUrlLoading,
+              shouldInterceptRequest: _handleShouldInterceptRequest,
+              onLoadStop: _handleLoadStop,
+              onProgressChanged: _handleProgressChanged,
+              onReceivedError: _handleReceivedError,
+              onWebViewCreated: _handleWebViewCreated,
             );
           },
         ),
