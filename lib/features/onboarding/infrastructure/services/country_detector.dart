@@ -81,7 +81,8 @@ class CountryDetector {
         .timeout(const Duration(seconds: 5));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
-      return data['country_code'] as String?;
+      final code = data['country_code'] as String?;
+      return code?.trim().toUpperCase();
     }
     return null;
   }
@@ -92,7 +93,8 @@ class CountryDetector {
         .timeout(const Duration(seconds: 5));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
-      return data['countryCode'] as String?;
+      final code = data['countryCode'] as String?;
+      return code?.trim().toUpperCase();
     }
     return null;
   }
@@ -103,7 +105,8 @@ class CountryDetector {
         .timeout(const Duration(seconds: 5));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
-      return data['country'] as String?;
+      final code = data['country'] as String?;
+      return code?.trim().toUpperCase();
     }
     return null;
   }
