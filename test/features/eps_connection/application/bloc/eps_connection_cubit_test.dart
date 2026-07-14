@@ -139,5 +139,33 @@ void main() {
       verify(() => mockConnectProvider(provider)).called(1);
       expect(cubit.state, isA<EpsConnectionCatalog>());
     });
+
+    test('markPortalConnected emits EpsConnectionPortalConnected and reloads catalog', () async {
+      final provider = EPSProvider(
+        id: 'EPS025',
+        name: 'SURA',
+        discoveryUrl: '',
+        clientId: '',
+        redirectUrl: '',
+        scopes: [],
+      );
+
+      when(() => mockGetConnections()).thenAnswer((_) async => []);
+
+      final expected = [
+        isA<EpsConnectionPortalConnected>(),
+        isA<EpsConnectionCatalog>(),
+      ];
+
+      expectLater(cubit.stream, emitsInOrder(expected));
+
+      cubit.markPortalConnected(provider: provider, patientId: '123');
+
+      // Wait for loadCatalog to complete
+      await Future.delayed(Duration.zero);
+
+      final state = cubit.state;
+      expect(state, isA<EpsConnectionCatalog>());
+    });
   });
 }
