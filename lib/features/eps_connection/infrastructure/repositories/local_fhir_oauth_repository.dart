@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/oauth_token.dart';
@@ -10,6 +11,7 @@ import 'package:orionhealth_health/features/eps_connection/infrastructure/servic
 
 /// Implementación del OAuthRepository que usa el Local FHIR Engine
 /// para conectar con el IHCE de Minsalud.
+@LazySingleton(as: OAuthRepository, env: ['development', 'staging', 'test'])
 class LocalFhirOAuthRepository implements OAuthRepository {
   static const String _sandboxClientId = 'fhir-client';
   static const String _sandboxClientSecret = 'fhir-secret';

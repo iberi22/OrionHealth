@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../infrastructure/services/patient_portal_extractor.dart';
+import '../../infrastructure/services/eps_url_validator.dart';
 import '../../domain/entities/eps_provider.dart';
+import '../../domain/entities/eps_providers_catalog.dart';
 import '../../../onboarding/domain/entities/user_profile.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -47,31 +49,24 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     _extractor = PatientPortalExtractor(
       secureStorage: const FlutterSecureStorage(),
       epsId: widget.provider.id,
-      epsPortalUrl: widget.provider.discoveryUrl,
+      epsPortalUrl: EpsProvidersCatalog.getPortalUrl(widget.provider.id),
       epsName: widget.provider.name,
     );
     _progressSubscription = _extractor.progress.listen(_onProgressUpdate);
-    _beginExtraction();
-  }
-
-  Future<void> _beginExtraction() async {
-    try {
-      final profile = await _extractor.mapToProfileAndCleanup();
-      if (mounted) {
-        setState(() {
-          _extractedProfile = profile;
-          _isComplete = true;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _errorMessage = e.toString());
-      }
-    }
   }
 
   void _onProgressUpdate(ExtractionProgress p) {
-    if (mounted) setState(() => _currentStep = p);
+    if (mounted) {
+      setState(() {
+        _currentStep = p;
+        if (p.phase == ExtractionPhase.complete) {
+          _extractedProfile = _extractor.extractedProfile;
+          _isComplete = true;
+        } else if (p.phase == ExtractionPhase.error) {
+          _errorMessage = p.message;
+        }
+      });
+    }
   }
 
   @override
@@ -81,9 +76,39 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     super.dispose();
   }
 
+  Widget _buildProgressHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      color: Colors.black54,
+      child: Row(
+        children: [
+          const Icon(Icons.security, color: AppColors.primary, size: 16),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Portal Seguro — Inicia sesión para importar tus datos',
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.7),
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.provider.name),
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -97,7 +122,45 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
               ? _buildCompleteView()
               : _errorMessage != null
                   ? _buildErrorView()
-                  : _buildExtractionProgressView(),
+                  : _currentStep.phase == ExtractionPhase.recognition
+                      ? Column(
+                          children: [
+                            _buildProgressHeader(),
+                            Expanded(
+                              child: InAppWebView(
+                                initialUrlRequest: URLRequest(
+                                  url: WebUri(EpsProvidersCatalog.getPortalUrl(widget.provider.id)),
+                                ),
+                                initialSettings: InAppWebViewSettings(
+                                  javaScriptEnabled: true,
+                                  domStorageEnabled: true,
+                                  cacheEnabled: true,
+                                  userAgent: _extractor.mobileUserAgent(),
+                                  mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+                                ),
+                                shouldInterceptRequest: (controller, request) async {
+                                  return await _extractor.onInterceptRequest(controller, request);
+                                },
+                                shouldOverrideUrlLoading: (controller, navigationAction) async {
+                                  final url = navigationAction.request.url.toString();
+                                  if (EpsUrlValidator.isUrlAllowed(url, widget.provider.id)) {
+                                    return NavigationActionPolicy.ALLOW;
+                                  } else {
+                                    debugPrint('Blocked navigation to unauthorized URL: $url');
+                                    return NavigationActionPolicy.CANCEL;
+                                  }
+                                },
+                                onLoadStop: (controller, url) {
+                                  _extractor.onPageLoadComplete(controller, url);
+                                },
+                                onUpdateVisitedHistory: (controller, url, isReload) {
+                                  _extractor.onNavigationChange(controller, url, isReload);
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      : _buildExtractionProgressView(),
         ),
       ),
     );

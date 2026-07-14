@@ -38,6 +38,8 @@ class PatientPortalExtractor {
   String? _rawClinicalHistoryHtml;
   Map<String, dynamic>? _structuredProfileData;
   bool _authenticationDetected = false;
+  UserProfile? _extractedProfile;
+  UserProfile? get extractedProfile => _extractedProfile;
 
   PatientPortalExtractor({
     required FlutterSecureStorage secureStorage,
@@ -67,15 +69,15 @@ class PatientPortalExtractor {
         javaScriptEnabled: true,
         domStorageEnabled: true,
         cacheEnabled: true,
-        userAgent: _mobileUserAgent(),
+        userAgent: mobileUserAgent(),
         mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
         supportZoom: true,
         builtInZoomControls: true,
         displayZoomControls: false,
       ),
-      shouldInterceptRequest: _onInterceptRequest,
-      onLoadStop: _onPageLoadComplete,
-      onUpdateVisitedHistory: _onNavigationChange,
+      shouldInterceptRequest: onInterceptRequest,
+      onLoadStop: onPageLoadComplete,
+      onUpdateVisitedHistory: onNavigationChange,
     );
 
     await _headlessWebView!.platform.run();
@@ -93,7 +95,7 @@ class PatientPortalExtractor {
   /// - Detect authentication endpoints (login form submissions)
   /// - Capture session tokens and authorization headers
   /// - Discover FHIR/REST API endpoints returning patient data
-  Future<WebResourceResponse?> _onInterceptRequest(
+  Future<WebResourceResponse?> onInterceptRequest(
     InAppWebViewController controller,
     WebResourceRequest request,
   ) async {
@@ -133,7 +135,7 @@ class PatientPortalExtractor {
   }
 
   /// Page Load Observer — Phase 1: Authentication Detection
-  void _onPageLoadComplete(InAppWebViewController controller, WebUri? url) async {
+  void onPageLoadComplete(InAppWebViewController controller, WebUri? url) async {
     if (url == null || _authenticationDetected) return;
 
     final urlStr = url.toString();
@@ -158,12 +160,25 @@ class PatientPortalExtractor {
         }
       } catch (_) {}
 
-      // Begin data extraction
-      await _executeDataExtraction(controller);
+      try {
+        // Begin data extraction
+        await _executeDataExtraction(controller);
+
+        // Automatically map to profile and clean up
+        final profile = await mapToProfileAndCleanup();
+        _extractedProfile = profile;
+      } catch (e) {
+        _emit(ExtractionProgress(
+          phase: ExtractionPhase.error,
+          step: 'Extraction failed',
+          message: 'Error importing data: ${e.toString()}',
+          progress: 1.0,
+        ));
+      }
     }
   }
 
-  void _onNavigationChange(
+  void onNavigationChange(
       InAppWebViewController controller, WebUri? url, bool? isReload) {
     // Track navigation for endpoint discovery
   }
@@ -601,7 +616,7 @@ class PatientPortalExtractor {
     return relevant;
   }
 
-  String _mobileUserAgent() =>
+  String mobileUserAgent() =>
       'Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 '
       '(KHTML, like Gecko) Chrome/125.0.6422.165 Mobile Safari/537.36';
 

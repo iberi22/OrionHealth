@@ -3,7 +3,7 @@ import 'dart:io';
 
 /// 🏥 Test de conexión directa con IHCE Minsalud — Dart puro (sin Flutter).
 ///
-/// Se ejecuta con: dart run ihce_live_test.dart
+/// Se ejecuta con: dart run test/features/eps_connection/infrastructure/services/ihce_live_run.dart
 /// NO usa HttpClient de Flutter — usa dart:io HttpClient directo.
 
 const tenantId = '3d4b3d76-b910-426c-bd8f-bd964e3e1b53';

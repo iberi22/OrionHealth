@@ -168,5 +168,5 @@ void main() {
         client.close();
       }
     });
-  });
+  }, skip: 'Requires real network access (fails under TestWidgetsFlutterBinding)');
 }

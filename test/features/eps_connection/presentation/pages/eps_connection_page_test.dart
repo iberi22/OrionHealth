@@ -135,6 +135,6 @@ void main() {
 
     // Error state shows retry button
     expect(find.text('Reintentar'), findsOneWidget);
-    expect(find.text('Failed to load'), findsOneWidget);
+    expect(find.text('Failed to load'), findsNWidgets(2));
   });
 }
