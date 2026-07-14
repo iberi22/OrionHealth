@@ -8,6 +8,7 @@ import 'package:orionhealth_health/features/eps_connection/application/bloc/eps_
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_connection.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/eps_provider.dart';
 import 'package:orionhealth_health/features/eps_connection/domain/entities/oauth_token.dart';
+import 'package:orionhealth_health/features/eps_connection/presentation/widgets/eps_qr_scanner_page.dart';
 import '../../../../core/golden_test_utils.dart';
 
 class MockEpsConnectionCubit extends Mock implements EpsConnectionCubit {}
@@ -77,7 +78,7 @@ void main() {
       resetGoldenTest(tester);
     });
 
-    testWidgets('EpsConnectionPage - QR Scanner SnackBar', (tester) async {
+    testWidgets('EpsConnectionPage - QR Scanner opens scanner', (tester) async {
       setupGoldenTest(tester);
       when(() => mockCubit.state).thenReturn(const EpsConnectionLoaded([]));
       when(() => mockCubit.stream).thenAnswer((_) => Stream.value(const EpsConnectionLoaded([])));
@@ -85,15 +86,10 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest(const EpsConnectionPage()));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Connect via QR Code'));
-      // Wait for the SnackBar animation to complete to ensure a stable golden image
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
+      await tester.tap(find.byIcon(Icons.qr_code_scanner));
+      await tester.pumpAndSettle();
 
-      await expectLater(
-        find.byType(SnackBar),
-        matchesGoldenFile("goldens/eps_connection_qr_snackbar.png"),
-      );
+      expect(find.byType(EpsQrScannerPage), findsOneWidget);
       resetGoldenTest(tester);
     });
   });

@@ -61,6 +61,7 @@ void main() {
       when(() => mockGetConnectionsUseCase()).thenAnswer((_) async => [testConnection]);
 
       await buildCubit();
+      await cubit.loadConnections();
 
       expect(cubit.state, isA<EpsConnectionLoaded>());
       final state = cubit.state as EpsConnectionLoaded;
@@ -68,9 +69,10 @@ void main() {
     });
 
     test('loadConnections emits Error state on exception', () async {
+      await buildCubit();
       when(() => mockGetConnectionsUseCase()).thenThrow(Exception('Fail'));
 
-      await buildCubit();
+      await cubit.loadConnections();
 
       expect(cubit.state, isA<EpsConnectionError>());
       expect((cubit.state as EpsConnectionError).message, contains('Fail'));
@@ -84,17 +86,25 @@ void main() {
       await cubit.connect(testProvider);
 
       verify(() => mockConnectProviderUseCase(testProvider)).called(1);
-      expect(cubit.state, isA<EpsConnectionLoaded>());
+      expect(cubit.state, isA<EpsConnectionCatalog>());
+      final state = cubit.state as EpsConnectionCatalog;
+      expect(state.connections, [testConnection]);
     });
 
     test('connect emits Error state on exception', () async {
-      when(() => mockConnectProviderUseCase(any())).thenThrow(Exception('Connect Fail'));
+      when(() => mockConnectProviderUseCase(any()))
+          .thenAnswer((_) => Future.error(Exception('Connect Fail')));
 
       await buildCubit();
+      
+      final states = <EpsConnectionState>[];
+      final subscription = cubit.stream.listen(states.add);
+
       await cubit.connect(testProvider);
 
-      expect(cubit.state, isA<EpsConnectionError>());
-      expect((cubit.state as EpsConnectionError).message, contains('Connect Fail'));
+      expect(states, contains(isA<EpsConnectionError>()));
+      expect(cubit.state, isA<EpsConnectionCatalog>());
+      subscription.cancel();
     });
 
     test('disconnect calls usecase and reloads', () async {
@@ -105,7 +115,7 @@ void main() {
       await cubit.disconnect('test_id');
 
       verify(() => mockDisconnectProviderUseCase('test_id')).called(1);
-      expect(cubit.state, isA<EpsConnectionLoaded>());
+      expect(cubit.state, isA<EpsConnectionCatalog>());
     });
 
     test('disconnect emits Error state on exception', () async {

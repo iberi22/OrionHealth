@@ -7,7 +7,7 @@ import '../../domain/entities/oauth_token.dart';
 import '../../domain/repositories/oauth_repository.dart';
 import '../datasources/oauth_local_datasource.dart';
 
-@LazySingleton(as: OAuthRepository)
+@LazySingleton(as: OAuthRepository, env: ['production'])
 class OAuthRepositoryImpl implements OAuthRepository {
   final OAuthLocalDataSource _localDataSource;
   final FlutterAppAuth _appAuth;

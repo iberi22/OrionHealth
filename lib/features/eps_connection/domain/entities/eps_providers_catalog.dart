@@ -108,8 +108,8 @@ class EpsProvidersCatalog {
       discoveryUrl:
           'https://ihce.minsalud.gov.co/fhir/$id/.well-known/smart-configuration',
       revocationUrl: 'https://ihce.minsalud.gov.co/oauth/$id/revoke',
-      clientId: 'orionhealth',
-      redirectUrl: 'orionhealth://callback',
+      clientId: '',
+      redirectUrl: '',
       scopes: const [
         'openid',
         'fhirUser',
@@ -211,5 +211,28 @@ class EpsProvidersCatalog {
       buf.writeln('  $eps');
     }
     return buf.toString();
+  }
+
+  /// Obtiene la URL real del portal web de la EPS para autenticación vía WebView.
+  static String getPortalUrl(String id) {
+    switch (id) {
+      case 'EPS020':
+        return 'https://coosalud.com/';
+      case 'EPS037':
+        return 'https://www.nuevaeps.co/';
+      case 'EPS005':
+        return 'https://www.epssanitas.com/';
+      case 'EPS025':
+        return 'https://www.epssura.com/';
+      case 'EPS002':
+        return 'https://saludtotal.com.co/';
+      case 'EPS008':
+        return 'https://corporativo.compensar.com/salud';
+      case 'EPS017':
+        return 'https://www.famisanar.com.co/';
+      default:
+        // Fallback al sandbox en desarrollo
+        return 'https://sandbox.ihcecol.gov.co/ihce';
+    }
   }
 }
