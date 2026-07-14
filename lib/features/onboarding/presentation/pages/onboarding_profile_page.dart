@@ -5,11 +5,13 @@ import '../../../../core/widgets/glassmorphic_card.dart';
 class OnboardingProfilePage extends StatefulWidget {
   final Function(Map<String, dynamic>) onNext;
   final Map<String, dynamic> initialData;
+  final String? epsProviderName;
 
   const OnboardingProfilePage({
     super.key,
     required this.onNext,
     required this.initialData,
+    this.epsProviderName,
   });
 
   @override
@@ -85,10 +87,50 @@ class _OnboardingProfilePageState extends State<OnboardingProfilePage> {
                   ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Let\'s start with some basic details about you.',
-              style: TextStyle(color: Colors.grey),
+            Text(
+              widget.epsProviderName != null
+                  ? 'Datos importados desde ${widget.epsProviderName} ✓'
+                  : 'Let\'s start with some basic details about you.',
+              style: TextStyle(
+                color: widget.epsProviderName != null
+                    ? (CyberTheme.success)
+                    : Colors.grey,
+              ),
             ),
+            if (widget.epsProviderName != null) const SizedBox(height: 8),
+            if (widget.epsProviderName != null)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      (CyberTheme.success).withValues(alpha: 0.15),
+                      (CyberTheme.success).withValues(alpha: 0.05),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: (CyberTheme.success).withValues(alpha: 0.25),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.check_circle_outline,
+                        color: CyberTheme.success, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Los campos fueron pre-llenados desde tu portal de ${widget.epsProviderName}. '
+                        'Podés editarlos si es necesario.',
+                        style: TextStyle(
+                          color: (CyberTheme.success).withValues(alpha: 0.8),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 32),
             GlassmorphicCard(
               child: Padding(

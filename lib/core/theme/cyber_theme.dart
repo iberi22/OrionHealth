@@ -13,6 +13,8 @@ class CyberTheme {
   static const Color backgroundDark = AppColors.background;
   static const Color surfaceDark = AppColors.surface;
   static const Color textDark = AppColors.textPrimary;
+  static const Color success = AppColors.success;
+  static const Color successGreen = Color(0xFF4CAF50);
 
   static ThemeData get darkTheme => AppTheme.darkTheme;
 }

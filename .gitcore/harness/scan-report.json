@@ -83,6 +83,7 @@
                                                   "golden_count":  2,
                                                   "overall_pct":  100,
                                                   "layers":  [
+                                                                 "data",
                                                                  "domain",
                                                                  "application",
                                                                  "infrastructure",
@@ -358,5 +359,5 @@
                  },
     "feature_count":  27,
     "overall_score":  100,
-    "generated":  "2026-07-13T17:22:30"
+    "generated":  "2026-07-13T20:47:02"
 }
