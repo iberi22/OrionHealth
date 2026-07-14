@@ -568,18 +568,18 @@ class _EpsConnectionPageState extends State<EpsConnectionPage> {
 
     // Patient Portal Extraction flow (on-device RPA)
     try {
-      final profile = await Navigator.push<UserProfile>(
+      final patientData = await Navigator.push<Map<String, dynamic>>(
         context,
         MaterialPageRoute(
           builder: (_) => EpsPatientPortalScreen(provider: provider),
         ),
       );
 
-      if (profile != null && context.mounted) {
+      if (patientData != null && patientData.isNotEmpty && context.mounted) {
         // Profile was extracted successfully — mark as connected
         context.read<EpsConnectionCubit>().markPortalConnected(
               provider: provider,
-              patientId: profile.epsPatientId,
+              patientId: patientData['documentId'] as String?,
             );
       }
     } catch (_) {}

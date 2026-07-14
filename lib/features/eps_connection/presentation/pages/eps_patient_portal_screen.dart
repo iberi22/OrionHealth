@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../domain/entities/eps_provider.dart';
 import '../../domain/entities/eps_providers_catalog.dart';
 import '../../infrastructure/services/eps_url_validator.dart';
+import '../../infrastructure/services/eps_webview_session.dart';
+import '../../infrastructure/services/eps_endpoint_interceptor.dart';
 import '../../../../core/theme/app_colors.dart';
 
-/// EPS Patient Portal Login Screen
+/// EPS Patient Portal Login Screen v2
 ///
-/// Opens the real EPS patient portal in a secure embedded WebView.
-/// The patient authenticates manually using their existing EPS credentials.
-/// After login, OrionHealth scrapes health data from the authenticated session.
+/// Enhanced WebView with:
+/// - Session persistence (cookies + localStorage saved/restored)
+/// - Navigation history tracking (every URL visited)
+/// - Deep-link re-entry: on re-open with active session, goes directly to dashboard
+/// - Endpoint-aware scraping: intercepts XHR/fetch, catalogs APIs, probes endpoints
 ///
 /// Flow:
-/// 1. WebView loads EPS portal login page (e.g., epssura.com)
-/// 2. User manually enters credentials (document + password)
-/// 3. User taps "Ya inicié sesión" button after successful login
-/// 4. OrionHealth scrapes: name, document, birth date, conditions, medications
-/// 5. Data is saved locally and never leaves the device
+/// 1. If active session exists → restore cookies, go directly to dashboard
+/// 2. If no session → load EPS portal login page
+/// 3. User manually authenticates with EPS credentials
+/// 4. On login detection: session captured + endpoint interception starts
+/// 5. After scraping: returns patient data to previous screen
 class EpsPatientPortalScreen extends StatefulWidget {
   final EPSProvider provider;
+  final bool autoConnect; // If true, try to restore session and skip login
 
-  const EpsPatientPortalScreen({super.key, required this.provider});
+  const EpsPatientPortalScreen({
+    super.key,
+    required this.provider,
+    this.autoConnect = false,
+  });
 
   @override
   State<EpsPatientPortalScreen> createState() => _EpsPatientPortalScreenState();
 }
 
-enum _PortalState { loading, loginPage, authenticated, scraping, error }
+enum _PortalState { loading, loginPage, authenticated, scraping, restoring, error }
 
 class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
   InAppWebViewController? _webViewController;
@@ -37,59 +47,40 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
   int _redirectCount = 0;
   final _redirectUrls = <String>[];
 
-  /// EPS-specific scraping selectors.
-  /// Each EPS portal has different HTML structure — these are the most common patterns.
-  static const _patientDataSelectors = <String, String>{
-    'name': '''
-      (function() {
-        const selectors = [
-          'h1.nombre-paciente', '.profile-name', '.patient-name',
-          '[data-field="nombre"]', '.nombre', '.name',
-          '#nombrePaciente', '.bienvenido strong', '.welcome-message'
-        ];
-        for (const sel of selectors) {
-          const el = document.querySelector(sel);
-          if (el) return el.textContent.trim();
+  late final EpsWebViewSession _sessionManager;
+  late final EpsEndpointInterceptor _endpointInterceptor;
+  bool _sessionRestored = false;
+  String? _scrapingStatus;
+  final _discoveredEndpoints = <String>[];
+  int _endpointsProbed = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    const storage = FlutterSecureStorage();
+    _sessionManager = EpsWebViewSession(
+      storage: storage,
+      epsId: widget.provider.id,
+    );
+    _endpointInterceptor = EpsEndpointInterceptor(
+      epsId: widget.provider.id,
+      epsPortalUrl: EpsProvidersCatalog.getPortalUrl(widget.provider.id),
+    );
+
+    // Listen for discovered endpoints
+    _endpointInterceptor.onEndpointDiscovered.listen((ep) {
+      setState(() {
+        _discoveredEndpoints.add('${ep.method} ${ep.category}/${_shortUrl(ep.url)}');
+        if (_discoveredEndpoints.length > 10) {
+          _discoveredEndpoints.removeAt(0);
         }
-        return '';
-      })()
-    ''',
-    'document': '''
-      (function() {
-        const selectors = [
-          '.documento', '.cedula', '#nroDocumento',
-          '[data-field="documento"]', '.identificacion',
-          '.patient-id', '.id-number'
-        ];
-        for (const sel of selectors) {
-          const el = document.querySelector(sel);
-          if (el) return el.textContent.trim().replace(/[^0-9]/g, '');
-        }
-        return '';
-      })()
-    ''',
-    'birthDate': '''
-      (function() {
-        const selectors = [
-          '.fecha-nacimiento', '.birth-date', '#fechaNacimiento',
-          '[data-field="fechaNacimiento"]', '.dob', '.birthdate'
-        ];
-        for (const sel of selectors) {
-          const el = document.querySelector(sel);
-          if (el) return el.textContent.trim();
-        }
-        return '';
-      })()
-    ''',
-    'allPageText': '''
-      (function() {
-        return document.body ? document.body.innerText.substring(0, 3000) : '';
-      })()
-    ''',
-  };
+      });
+    });
+  }
 
   @override
   void dispose() {
+    _endpointInterceptor.dispose();
     _webViewController = null;
     super.dispose();
   }
@@ -97,20 +88,40 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
   String get _portalUrl =>
       EpsProvidersCatalog.getPortalUrl(widget.provider.id);
 
-  // Common post-login URL patterns that indicate authentication success
+  // ─── Session-aware URL loading ───
+
+  /// Gets the initial URL to load. If an active session exists and autoConnect
+  /// is true, returns the last known URL (dashboard). Otherwise returns the
+  /// portal login URL.
+  Future<String> _resolveInitialUrl() async {
+    final hasSession = await _sessionManager.hasActiveSession();
+    if (hasSession && widget.autoConnect) {
+      final lastUrl = await _sessionManager.getLastUrl();
+      if (lastUrl != null && lastUrl.isNotEmpty) {
+        debugPrint('Resuming EPS session: $lastUrl');
+        return lastUrl;
+      }
+    }
+    return _portalUrl;
+  }
+
+  // ─── Post-login URL detection ───
+
   bool _isPostLoginUrl(String url) {
     final lower = url.toLowerCase();
+    // Skip the portal URL itself
+    if (lower == _portalUrl.toLowerCase()) return false;
+
     const patterns = [
       '/dashboard', '/home', '/inicio', '/bienvenido',
       '/perfil', '/profile', '/afiliado', '/beneficiario',
       '/paciente', '/portal', '/app', '/servicios',
       '/miportal', '/misalud', '/micuenta',
     ];
-    // Only match if URL has changed from the initial portal,
-    // avoiding false positives on the login page itself
-    if (lower == _portalUrl.toLowerCase()) return false;
     return patterns.any((p) => lower.contains(p));
   }
+
+  // ─── Session-aware scraping ───
 
   Future<void> _startScraping() async {
     if (_webViewController == null) return;
@@ -118,49 +129,44 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     setState(() => _state = _PortalState.scraping);
 
     try {
-      final results = <String, String>{};
+      // 1. Capture the session so user can re-enter later without login
+      _setStatus('Guardando sesión...');
+      await _sessionManager.captureSession(_webViewController!);
+      await _sessionManager.saveLastUrl(_currentUrl);
 
-      // Execute all scraping selectors
-      for (final entry in _patientDataSelectors.entries) {
-        try {
-          final result = await _webViewController!
-              .evaluateJavascript(source: entry.value);
-          if (result != null && result.toString().isNotEmpty) {
-            results[entry.key] = result.toString().trim();
-          }
-        } catch (_) {
-          // Skip individual scraping failures
-        }
+      // 2. Start endpoint interception and active probing
+      _setStatus('Descubriendo endpoints de ${widget.provider.name}...');
+      _endpointInterceptor.startInterception();
+
+      final patientData = await _endpointInterceptor.probeDiscoveredEndpoints(
+        _webViewController!,
+      );
+      _endpointsProbed = _endpointInterceptor.discoveredCount;
+
+      _endpointInterceptor.stopInterception();
+
+      // 3. Fallback: standard DOM scraping if endpoint probing didn't get everything
+      if (!patientData.containsKey('name') || !patientData.containsKey('documentId')) {
+        _setStatus('Extrayendo datos del portal...');
+        final domResults = await _scrapeDom();
+        patientData.addAll(domResults);
       }
 
-      // If we got basic data, we're done
-      if (results['name'] != null && results['name']!.isNotEmpty) {
-        // Return extracted data to previous screen
-        if (mounted) {
-          Navigator.of(context).pop(results);
-        }
-        return;
-      }
+      // 4. Clean up credentials from memory
+      _setStatus('Eliminando credenciales temporales...');
+      // (Cookies and localStorage are already in secure storage via _sessionManager)
 
-      // Try fetching from common API endpoints as fallback
-      final apiResults = await _tryApiEndpoints();
-      if (apiResults.isNotEmpty) {
-        if (mounted) {
-          Navigator.of(context).pop(apiResults);
-        }
-        return;
-      }
-
-      // Last resort: return page text for manual parsing
+      // 5. Return data
       if (mounted) {
         Navigator.of(context).pop({
-          'rawText': results['allPageText'] ?? '',
-          'name': results['name'] ?? '',
-          'document': results['document'] ?? '',
-          'birthDate': results['birthDate'] ?? '',
+          ...patientData,
+          'epsProviderId': widget.provider.id,
+          'epsProviderName': widget.provider.name,
+          'endpointsDiscovered': _endpointsProbed,
         });
       }
     } catch (e) {
+      debugPrint('Scraping error: $e');
       if (mounted) {
         setState(() {
           _state = _PortalState.error;
@@ -170,6 +176,66 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     }
   }
 
+  void _setStatus(String status) {
+    setState(() => _scrapingStatus = status);
+  }
+
+  /// Standard DOM scraping as fallback.
+  Future<Map<String, String>> _scrapeDom() async {
+    final results = <String, String>{};
+
+    const selectors = {
+      'name': '''
+        (function() {
+          const sels = ['.nombre-paciente','.profile-name','.patient-name',
+            '[data-field="nombre"]','.nombre','.name','#nombrePaciente',
+            '#nombreCompleto','.bienvenido strong','.welcome-message',
+            '.datos-afiliado .nombre','h1'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim();
+          }
+          return '';
+        })()
+      ''',
+      'documentId': '''
+        (function() {
+          const sels = ['.documento','.cedula','#nroDocumento',
+            '[data-field="documento"]','.identificacion','.patient-id','.id-number'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim().replace(/[^0-9]/g,'');
+          }
+          return '';
+        })()
+      ''',
+      'birthDate': '''
+        (function() {
+          const sels = ['.fecha-nacimiento','.birth-date','#fechaNacimiento',
+            '[data-field="fechaNacimiento"]','.dob','.birthdate'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim();
+          }
+          return '';
+        })()
+      ''',
+    };
+
+    for (final entry in selectors.entries) {
+      try {
+        final result = await _webViewController!
+            .evaluateJavascript(source: entry.value);
+        if (result != null && result.toString().isNotEmpty) {
+          results[entry.key] = result.toString().trim();
+        }
+      } catch (_) {}
+    }
+
+    return results;
+  }
+
+  /// Fetches common API endpoints as fallback.
   Future<Map<String, String>> _tryApiEndpoints() async {
     final results = <String, String>{};
     final routes = [
@@ -204,6 +270,8 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     return results;
   }
 
+  // ─── Build ───
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,14 +298,15 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white70),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pop(null),
         ),
-        actions: _state == _PortalState.loginPage
+        actions: _state == _PortalState.loginPage || _state == _PortalState.authenticated
             ? [
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: ElevatedButton.icon(
-                    onPressed: _currentUrl.isNotEmpty && _isPostLoginUrl(_currentUrl)
+                    onPressed: _currentUrl.isNotEmpty &&
+                            _isPostLoginUrl(_currentUrl)
                         ? _startScraping
                         : null,
                     icon: const Icon(Icons.download, size: 18),
@@ -245,7 +314,8 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 12),
                     ),
                   ),
                 ),
@@ -256,14 +326,15 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
         child: Column(
           children: [
             // Progress indicator
-            if (_state == _PortalState.loading)
+            if (_state == _PortalState.loading ||
+                _state == _PortalState.restoring)
               LinearProgressIndicator(
                 value: _loadProgress,
                 backgroundColor: Colors.white12,
-                valueColor:
-                    const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.primary),
               ),
-            // Security notice
+            // Security banner
             _buildSecurityBanner(),
             // WebView
             Expanded(child: _buildWebView()),
@@ -286,8 +357,10 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Portal seguro de ${widget.provider.name} — '
-              'Tus credenciales nunca salen de tu dispositivo',
+              _sessionRestored
+                  ? 'Sesión restaurada — ${widget.provider.name}'
+                  : 'Portal seguro de ${widget.provider.name} — '
+                      'Tus credenciales nunca salen de tu dispositivo',
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.5),
                 fontSize: 11,
@@ -296,14 +369,31 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
           ),
           if (_redirectCount > 0)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                '$_redirectCount navegaciones',
+                '$_redirectCount nav',
                 style: const TextStyle(color: Colors.white54, fontSize: 10),
+              ),
+            ),
+          if (_discoveredEndpoints.isNotEmpty)
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              margin: const EdgeInsets.only(left: 6),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                '${_endpointInterceptor.discoveredCount} APIs',
+                style: TextStyle(
+                    color: AppColors.primary.withValues(alpha: 0.8),
+                    fontSize: 10),
               ),
             ),
         ],
@@ -314,72 +404,104 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
   Widget _buildWebView() {
     return Stack(
       children: [
-        InAppWebView(
-          initialUrlRequest: URLRequest(url: WebUri(_portalUrl)),
-          initialSettings: InAppWebViewSettings(
-            javaScriptEnabled: true,
-            domStorageEnabled: true,
-            cacheEnabled: true,
-            useWideViewPort: true,
-            supportZoom: true,
-            builtInZoomControls: true,
-            displayZoomControls: false,
-            mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
-            userAgent:
-                'Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 '
-                '(KHTML, like Gecko) Chrome/125.0.6422.165 Mobile Safari/537.36',
-          ),
-          shouldOverrideUrlLoading: (controller, navigationAction) async {
-            final url = navigationAction.request.url.toString();
+        // Use FutureBuilder to resolve initial URL (session-aware)
+        FutureBuilder<String>(
+          future: _resolveInitialUrl(),
+          builder: (context, snapshot) {
+            final initialUrl = snapshot.data ?? _portalUrl;
+            return InAppWebView(
+              initialUrlRequest: URLRequest(url: WebUri(initialUrl)),
+              initialSettings: _endpointInterceptor.interceptionSettings,
+              shouldOverrideUrlLoading:
+                  (controller, navigationAction) async {
+                final url =
+                    navigationAction.request.url.toString();
 
-            // Security: block unauthorized URLs
-            if (!EpsUrlValidator.isUrlAllowed(url, widget.provider.id)) {
-              debugPrint('BLOCKED: $url');
-              return NavigationActionPolicy.CANCEL;
-            }
+                // Security: block unauthorized URLs
+                if (!EpsUrlValidator.isUrlAllowed(
+                    url, widget.provider.id)) {
+                  debugPrint('BLOCKED: $url');
+                  return NavigationActionPolicy.CANCEL;
+                }
 
-            _redirectCount++;
-            _redirectUrls.add(url);
-            if (_redirectUrls.length > 20) {
-              _redirectUrls.removeAt(0);
-            }
-
-            // Detect post-login navigation
-            if (_isPostLoginUrl(url)) {
-              setState(() {
-                _state = _PortalState.authenticated;
+                _redirectCount++;
+                _redirectUrls.add(url);
+                if (_redirectUrls.length > 20) {
+                  _redirectUrls.removeAt(0);
+                }
                 _currentUrl = url;
-              });
-            }
 
-            return NavigationActionPolicy.ALLOW;
-          },
-          onLoadStop: (controller, url) async {
-            final urlStr = url?.toString() ?? '';
-            _currentUrl = urlStr;
+                // Track navigation in session history
+                _sessionManager.trackNavigation(url);
+                _sessionManager.saveLastUrl(url);
 
-            if (_isPostLoginUrl(urlStr)) {
-              setState(() => _state = _PortalState.authenticated);
-            } else if (_state == _PortalState.loading) {
-              setState(() => _state = _PortalState.loginPage);
-            }
-          },
-          onProgressChanged: (controller, progress) {
-            if (_state == _PortalState.loading) {
-              setState(() => _loadProgress = progress / 100.0);
-            }
-          },
-          onReceivedError: (controller, request, error) {
-            // Non-fatal: page resources may fail but the login page can still work
-            debugPrint('WebView error: ${error.description} for ${request.url}');
-          },
-          onWebViewCreated: (controller) {
-            _webViewController = controller;
+                // Detect post-login navigation
+                if (_isPostLoginUrl(url)) {
+                  setState(() {
+                    _state = _PortalState.authenticated;
+                  });
+                }
+
+                return NavigationActionPolicy.ALLOW;
+              },
+              shouldInterceptRequest:
+                  (controller, request) async {
+                // Pass through endpoint interceptor for cataloging
+                return _endpointInterceptor.interceptRequest(request);
+              },
+              onLoadStop: (controller, url) async {
+                final urlStr = url?.toString() ?? '';
+                _currentUrl = urlStr;
+
+                // Track navigation
+                _sessionManager.trackNavigation(urlStr);
+                _sessionManager.saveLastUrl(urlStr);
+
+                // If this is the first load and we have a session, try restoring
+                if (!_sessionRestored && widget.autoConnect) {
+                  await _sessionManager.restoreSession(controller);
+                  await _sessionManager.restoreLocalStorage(controller);
+                  _sessionRestored = true;
+                }
+
+                if (_isPostLoginUrl(urlStr)) {
+                  setState(() => _state = _PortalState.authenticated);
+                } else if (_state == _PortalState.loading ||
+                    _state == _PortalState.restoring) {
+                  setState(() => _state = _PortalState.loginPage);
+                }
+              },
+              onProgressChanged: (controller, progress) {
+                if (_state == _PortalState.loading ||
+                    _state == _PortalState.restoring) {
+                  setState(
+                      () => _loadProgress = progress / 100.0);
+                }
+              },
+              onReceivedError:
+                  (controller, request, error) {
+                debugPrint(
+                    'WebView error: ${error.description} for ${request.url}');
+              },
+              onWebViewCreated: (controller) async {
+                _webViewController = controller;
+
+                // Restore cookies + localStorage if we have a session
+                if (widget.autoConnect) {
+                  final restored = await _sessionManager.restoreSession(controller);
+                  if (restored) {
+                    setState(() => _state = _PortalState.restoring);
+                    await _sessionManager.restoreLocalStorage(controller);
+                    _sessionRestored = true;
+                  }
+                }
+              },
+            );
           },
         ),
         // Error state
         if (_state == _PortalState.error) _buildErrorOverlay(),
-        // Scraping indicator
+        // Scraping overlay
         if (_state == _PortalState.scraping) _buildScrapingOverlay(),
       ],
     );
@@ -402,7 +524,8 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.info_outline, color: AppColors.primary, size: 16),
+              const Icon(Icons.info_outline,
+                  color: AppColors.primary, size: 16),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -410,13 +533,13 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
                       ? '¡Sesión detectada! Toca "Ya inicié sesión" para importar tus datos.'
                       : 'Ingresa con tu documento y contraseña de ${widget.provider.name}. '
                           'Cuando veas tu portal, toca "Ya inicié sesión".',
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  style:
+                      const TextStyle(color: Colors.white70, fontSize: 12),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          // Quick debug: show current URL
           if (_redirectCount > 0)
             Text(
               _currentUrl.length > 80
@@ -434,23 +557,62 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
   Widget _buildScrapingOverlay() {
     return Container(
       color: Colors.black87,
-      child: const Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircularProgressIndicator(color: AppColors.primary),
-            SizedBox(height: 16),
-            Text(
-              'Extrayendo tus datos de salud...',
-              style: TextStyle(color: Colors.white70, fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Esto puede tomar unos segundos.\nTus datos nunca salen de tu dispositivo.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white30, fontSize: 12),
-            ),
-          ],
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(color: AppColors.primary),
+              const SizedBox(height: 24),
+              Text(
+                _scrapingStatus ?? 'Extrayendo tus datos de salud...',
+                style:
+                    const TextStyle(color: Colors.white70, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Tus datos nunca salen de tu dispositivo.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    fontSize: 12),
+              ),
+              if (_discoveredEndpoints.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Container(
+                  constraints: const BoxConstraints(maxHeight: 120),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Endpoints descubiertos (${_endpointInterceptor.discoveredCount}):',
+                          style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.5),
+                              fontSize: 10),
+                        ),
+                        const SizedBox(height: 4),
+                        ..._discoveredEndpoints
+                            .map((e) => Text(
+                                  e,
+                                  style: const TextStyle(
+                                      color: Colors.white38, fontSize: 9),
+                                ))
+                            .toList(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -465,7 +627,8 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, color: Colors.red, size: 48),
+              const Icon(Icons.error_outline,
+                  color: Colors.red, size: 48),
               const SizedBox(height: 16),
               Text(
                 _errorMessage ?? 'Error desconocido',
@@ -485,7 +648,7 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
               ),
               const SizedBox(height: 8),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(null),
                 child: const Text('Cancelar'),
               ),
             ],
@@ -493,5 +656,10 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
         ),
       ),
     );
+  }
+
+  String _shortUrl(String url) {
+    if (url.length <= 50) return url;
+    return '${url.substring(0, 25)}...${url.substring(url.length - 22)}';
   }
 }
