@@ -7,25 +7,28 @@ void main() {
     bool onNextCalled = false;
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
-        body: OnboardingWelcomePage(onNext: () => onNextCalled = true),
+        body: OnboardingWelcomePage(
+          onNext: () => onNextCalled = true,
+          onEpsDataReceived: (_) {},
+        ),
       ),
     ));
 
     expect(find.text('Privacy First'), findsOneWidget);
-    expect(find.text('Next'), findsOneWidget);
+    expect(find.text('Siguiente'), findsOneWidget);
 
-    await tester.tap(find.text('Next'));
+    await tester.tap(find.text('Siguiente'));
     await tester.pumpAndSettle();
 
     expect(find.text('Local AI'), findsOneWidget);
 
-    await tester.tap(find.text('Next'));
+    await tester.tap(find.text('Siguiente'));
     await tester.pumpAndSettle();
 
     expect(find.text('Own Your Data'), findsOneWidget);
-    expect(find.text('Get Started'), findsOneWidget);
+    expect(find.text('Continuar sin EPS'), findsOneWidget);
 
-    await tester.tap(find.text('Get Started'));
+    await tester.tap(find.text('Continuar sin EPS'));
     await tester.pump();
 
     expect(onNextCalled, isTrue);
