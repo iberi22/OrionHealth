@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:path/path.dart' as p;
 import 'package:mocktail/mocktail.dart';
