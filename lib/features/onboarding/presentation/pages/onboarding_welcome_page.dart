@@ -27,12 +27,14 @@ class OnboardingWelcomePage extends StatefulWidget {
   final VoidCallback onNext;
   final void Function(Map<String, dynamic> epsData) onEpsDataReceived;
   final void Function(Set<String> connectedSources)? onHealthSourcesConnected;
+  final CountryDetector? countryDetector;
 
   const OnboardingWelcomePage({
     super.key,
     required this.onNext,
     required this.onEpsDataReceived,
     this.onHealthSourcesConnected,
+    this.countryDetector,
   });
 
   @override
@@ -89,9 +91,11 @@ class _OnboardingWelcomePageState extends State<OnboardingWelcomePage> {
   }
 
   Future<void> _checkCountry() async {
-    final detector = CountryDetector();
+    final detector = widget.countryDetector ?? CountryDetector();
     final isColombia = await detector.isColombia();
-    detector.dispose();
+    if (widget.countryDetector == null) {
+      detector.dispose();
+    }
     if (mounted) {
       setState(() {
         _isColombia = isColombia;
