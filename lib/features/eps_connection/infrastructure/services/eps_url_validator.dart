@@ -27,7 +27,7 @@ class EpsUrlValidator {
       'EPS020': ['coosalud.com', 'coosalud.com.co'],
       'EPS037': ['nuevaeps.co', 'nuevaeps.com.co'],
       'EPS005': ['epssanitas.com', 'epssanitas.com.co', 'colsanitas.com'],
-      'EPS025': ['epssura.com', 'epssura.com.co', 'sura.com'],
+      'EPS025': ['epssura.com', 'epssura.com.co', 'sura.com', 'login.sura.com'],
       'EPS002': ['saludtotal.com.co', 'saludtotal.com'],
       'EPS008': ['compensar.com', 'compensarsalud.com'],
       'EPS017': ['famisanar.com.co', 'famisanar.com'],

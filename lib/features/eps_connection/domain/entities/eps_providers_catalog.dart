@@ -235,4 +235,57 @@ class EpsProvidersCatalog {
         return 'https://sandbox.ihcecol.gov.co/ihce';
     }
   }
+
+  /// Obtiene la URL directa del formulario de login de la EPS.
+  ///
+  /// A diferencia de [getPortalUrl] que apunta a la homepage, esta URL
+  /// carga directamente el formulario de inicio de sesión, ahorrando al
+  /// usuario tener que navegar desde la index hasta el login.
+  ///
+  /// Si no hay URL de login específica, retorna null y se usa [getPortalUrl].
+  static String? getLoginUrl(String id) {
+    switch (id) {
+      case 'EPS025': // Sura — SSO login directo
+        return 'https://login.sura.com/sso/servicelogin.aspx'
+            '?continueTo=https%3A%2F%2Fportaleps.epssura.com%2FServiciosUnClick%2F'
+            '&service=epssura';
+      case 'EPS005': // Sanitas — login directo
+        return 'https://www.epssanitas.com/usuarios/login';
+      case 'EPS037': // Nueva EPS — login directo
+        return 'https://www.nuevaeps.co/login';
+      case 'EPS002': // Salud Total
+        return 'https://saludtotal.com.co/login';
+      case 'EPS008': // Compensar
+        return 'https://corporativo.compensar.com/salud/login';
+      case 'EPS017': // Famisanar
+        return 'https://www.famisanar.com.co/login';
+      default:
+        return null; // Usar getPortalUrl como fallback
+    }
+  }
+
+  /// Retorna las URLs internas del portal EPS donde se encuentran los datos
+  /// del paciente (perfil, historia clínica, medicamentos, etc).
+  ///
+  /// El auto-tour navega secuencialmente por estas páginas después del login
+  /// para extraer la máxima cantidad de datos del paciente.
+  static List<String> getTourUrls(String id) {
+    switch (id) {
+      case 'EPS025': // Sura — páginas de datos dentro del portal
+        return [
+          // Perfil / Datos del afiliado
+          '/ServiciosUnClick/',
+          // Intentar paths comunes de perfil
+          '/perfil',
+          '/datos-afiliado',
+          '/mi-perfil',
+        ];
+      case 'EPS005': // Sanitas
+        return ['/perfil', '/mi-perfil', '/datos'];
+      case 'EPS037': // Nueva EPS
+        return ['/perfil', '/mi-perfil', '/datos'];
+      default:
+        return ['/perfil', '/mi-perfil'];
+    }
+  }
 }

@@ -37,10 +37,11 @@ class EpsWebViewSession {
   /// Call this after detecting that the user has logged into their EPS portal.
   Future<void> captureSession(InAppWebViewController controller) async {
     try {
-      // Capture cookies
+      // Capture cookies — use the current page URL to scope correctly
       final cookieManager = CookieManager.instance();
+      final currentUrl = await controller.getUrl();
       final cookies = await cookieManager.getCookies(
-        url: WebUri('https://'),
+        url: currentUrl ?? WebUri('https://'),
       );
 
       if (cookies.isNotEmpty) {

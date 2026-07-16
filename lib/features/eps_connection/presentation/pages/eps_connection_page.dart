@@ -576,12 +576,321 @@ class _EpsConnectionPageState extends State<EpsConnectionPage> {
       );
 
       if (patientData != null && patientData.isNotEmpty && context.mounted) {
-        // Profile was extracted successfully — mark as connected
-        context.read<EpsConnectionCubit>().markPortalConnected(
-              provider: provider,
-              patientId: patientData['documentId'] as String?,
-            );
+        // Show extraction results before proceeding
+        _showExtractionResults(context, provider, patientData);
       }
     } catch (_) {}
+  }
+
+  /// Shows a dialog with all extracted data fields from the EPS portal.
+  void _showExtractionResults(
+    BuildContext context,
+    EPSProvider provider,
+    Map<String, dynamic> data,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => _ExtractionResultsSheet(
+        provider: provider,
+        data: data,
+        onContinue: () {
+          Navigator.of(ctx).pop();
+          try {
+            context.read<EpsConnectionCubit>().markPortalConnected(
+                  provider: provider,
+                  patientId: data['documentId'] as String?,
+                );
+          } catch (_) {}
+        },
+      ),
+    );
+  }
+}
+
+/// Bottom sheet that displays extracted EPS data with field-level details.
+class _ExtractionResultsSheet extends StatelessWidget {
+  final EPSProvider provider;
+  final Map<String, dynamic> data;
+  final VoidCallback onContinue;
+
+  const _ExtractionResultsSheet({
+    required this.provider,
+    required this.data,
+    required this.onContinue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scalarFields = _buildScalarFields();
+    final listFields = _buildListFields();
+    final metaFields = _buildMetaFields();
+
+    // Count extracted vs total fields
+    int foundCount = 0;
+    final scalarKeys = ['name', 'documentId', 'birthDate', 'sex', 'phone', 'email', 'address', 'bloodType', 'affiliationType', 'affiliationDate'];
+    final listKeys = ['conditions', 'medications', 'allergies', 'vaccines', 'appointments'];
+    for (final k in [...scalarKeys, ...listKeys]) {
+      final v = data[k];
+      if (v != null && (v is! String || v.isNotEmpty) && (v is! List || v.isNotEmpty)) foundCount++;
+    }
+    final totalFields = scalarKeys.length + listKeys.length;
+
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.85,
+      ),
+      decoration: const BoxDecoration(
+        color: Color(0xFF1A1A2E),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle
+          Container(
+            margin: const EdgeInsets.only(top: 12),
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.white24,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          // Header
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+            child: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.green, size: 28),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '✅ Datos Extraídos',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '${provider.name} — $foundCount de $totalFields campos encontrados',
+                        style: TextStyle(
+                          color: Colors.white54,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(color: Colors.white12, height: 1),
+          // Content
+          Flexible(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shrinkWrap: true,
+              children: [
+                if (scalarFields.isNotEmpty) ...[
+                  _buildSectionTitle('📋 Datos Personales'),
+                  const SizedBox(height: 8),
+                  ...scalarFields,
+                  const SizedBox(height: 16),
+                ],
+                if (listFields.isNotEmpty) ...[
+                  _buildSectionTitle('🏥 Datos Clínicos'),
+                  const SizedBox(height: 8),
+                  ...listFields,
+                  const SizedBox(height: 16),
+                ],
+                if (metaFields.isNotEmpty) ...[
+                  _buildSectionTitle('🔧 Metadata'),
+                  const SizedBox(height: 8),
+                  ...metaFields,
+                  const SizedBox(height: 8),
+                ],
+              ],
+            ),
+          ),
+          // Continue button
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton.icon(
+                onPressed: onContinue,
+                icon: const Icon(Icons.arrow_forward, size: 20),
+                label: const Text(
+                  'Continuar',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        color: AppColors.primary,
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  List<Widget> _buildScalarFields() {
+    final fields = <String, String>{
+      'Nombre': 'name',
+      'Documento': 'documentId',
+      'Fecha Nacimiento': 'birthDate',
+      'Sexo': 'sex',
+      'Teléfono': 'phone',
+      'Email': 'email',
+      'Dirección': 'address',
+      'Tipo Sangre': 'bloodType',
+      'Tipo Afiliación': 'affiliationType',
+      'Fecha Afiliación': 'affiliationDate',
+    };
+
+    return fields.entries.map((e) {
+      final value = data[e.value];
+      final hasData = value != null && value.toString().isNotEmpty;
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              hasData ? Icons.check_circle : Icons.radio_button_unchecked,
+              size: 16,
+              color: hasData ? Colors.green : Colors.white24,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '${e.key}: ',
+              style: const TextStyle(
+                color: Colors.white54,
+                fontSize: 13,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                hasData ? value.toString() : '(no encontrado)',
+                style: TextStyle(
+                  color: hasData ? Colors.white : Colors.white24,
+                  fontSize: 13,
+                  fontWeight: hasData ? FontWeight.w500 : FontWeight.normal,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList();
+  }
+
+  List<Widget> _buildListFields() {
+    final listFields = <String, String>{
+      'Condiciones': 'conditions',
+      'Medicamentos': 'medications',
+      'Alergias': 'allergies',
+      'Vacunas': 'vaccines',
+      'Citas': 'appointments',
+    };
+
+    final widgets = <Widget>[];
+    for (final entry in listFields.entries) {
+      final value = data[entry.value];
+      final hasData = value is List && value.isNotEmpty;
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                hasData ? Icons.check_circle : Icons.radio_button_unchecked,
+                size: 16,
+                color: hasData ? Colors.green : Colors.white24,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                '${entry.key}: ',
+                style: const TextStyle(
+                  color: Colors.white54,
+                  fontSize: 13,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  hasData ? '${value.length} elementos' : '(vacío)',
+                  style: TextStyle(
+                    color: hasData ? Colors.white : Colors.white24,
+                    fontSize: 13,
+                    fontWeight: hasData ? FontWeight.w500 : FontWeight.normal,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return widgets;
+  }
+
+  List<Widget> _buildMetaFields() {
+    final meta = <String, String>{};
+    if (data.containsKey('epsProviderName')) {
+      meta['EPS'] = data['epsProviderName'].toString();
+    }
+    if (data.containsKey('endpointsDiscovered')) {
+      meta['APIs descubiertas'] = '${data['endpointsDiscovered']}';
+    }
+    if (data.containsKey('pageText')) {
+      final pageText = data['pageText'].toString();
+      if (pageText.isNotEmpty) {
+        meta['Texto página'] = '${pageText.length} caracteres capturados';
+      }
+    }
+
+    return meta.entries.map((e) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, size: 14, color: Colors.white38),
+            const SizedBox(width: 10),
+            Text(
+              '${e.key}: ',
+              style: const TextStyle(color: Colors.white38, fontSize: 12),
+            ),
+            Text(
+              e.value,
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+          ],
+        ),
+      );
+    }).toList();
   }
 }

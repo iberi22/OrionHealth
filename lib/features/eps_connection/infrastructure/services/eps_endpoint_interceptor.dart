@@ -181,37 +181,50 @@ class EpsEndpointInterceptor {
     return patientData;
   }
 
-  /// Probes common Colombian EPS API paths even if not discovered.
+  /// Probes a small set of EPS-specific API paths as a last-resort fallback.
+  ///
+  /// ⚠️ CRITICAL: We limit probing to at most 5 essential paths with delays
+  /// to avoid triggering the EPS's security/anti-bot mechanisms.
+  /// Rapid probing of non-existent endpoints causes session invalidation
+  /// on many Colombian EPS portals (especially Sura and Sanitas).
   Future<void> _tryCommonApiPaths(
     InAppWebViewController controller,
     Map<String, dynamic> patientData,
   ) async {
-    const commonPaths = [
+    // Only probe high-value paths that are likely to exist across EPS portals.
+    // Limited to 5 max to avoid security triggers (was 20, causing Sura logouts).
+    const criticalPaths = <String>[
       '/api/afiliado/perfil',
-      '/api/v1/paciente',
-      '/api/afiliado/consultar',
-      '/api/beneficiario/datos',
-      '/api/patient/profile',
-      '/api/user/profile',
       '/api/me',
-      '/api/salud/historia-clinica',
-      '/api/v1/historia-clinica',
-      '/api/afiliado/historia',
-      '/api/medical/history',
-      '/api/citas/pendientes',
-      '/api/medicamentos',
-      '/api/medications',
-      '/api/afiliado/medicamentos',
-      '/api/vacunas',
-      '/api/immunizations',
       '/fhir/Patient',
-      '/api/fhir/R4/Patient',
-      '/fhir/R4/Patient',
+      '/api/v1/paciente',
     ];
 
-    for (final path in commonPaths) {
-      // Skip if we already have it
+    // EPS-specific known-good paths — configure here when verified per EPS
+    const epsPaths = <String, List<String>>{};
+    // Future: 'EPS025': ['/api/afiliado/perfil'],  // Sura
+
+    final pathsToTry = <String>[
+      ...(epsPaths[_epsId] ?? <String>[]),
+      ...criticalPaths,
+    ].take(5).toList();
+
+    for (int i = 0; i < pathsToTry.length; i++) {
+      final path = pathsToTry[i];
+
       if (_discovered.values.any((e) => e.url.contains(path))) continue;
+
+      // Bail early if we already have the essential data
+      if (patientData.containsKey('name') &&
+          patientData.containsKey('documentId') &&
+          patientData.containsKey('birthDate')) {
+        break;
+      }
+
+      // ⚠️ Delay between probes to avoid triggering security
+      if (i > 0) {
+        await Future<void>.delayed(const Duration(milliseconds: 800));
+      }
 
       try {
         final result = await controller.evaluateJavascript(source: '''
@@ -243,7 +256,9 @@ class EpsEndpointInterceptor {
             _extractPatientFields(parsed, patientData);
           }
         }
-      } catch (_) {}
+      } catch (_) {
+        // Non-fatal: individual path probing failure is expected
+      }
     }
   }
 
@@ -297,16 +312,58 @@ class EpsEndpointInterceptor {
       ]);
     }
 
-    // Collect lists: conditions, medications, allergies
+    // Additional scalar fields
+    if (!patientData.containsKey('phone')) {
+      patientData['phone'] = _jsonStr(data, [
+        'telefono', 'celular', 'phone', 'mobilePhone',
+        'telephone', 'contactPhone', 'numeroTelefono',
+      ]);
+    }
+
+    if (!patientData.containsKey('email')) {
+      patientData['email'] = _jsonStr(data, [
+        'email', 'correo', 'correoElectronico', 'mail',
+      ]);
+    }
+
+    if (!patientData.containsKey('address')) {
+      patientData['address'] = _jsonStr(data, [
+        'direccion', 'address', 'residencia', 'domicilio',
+      ]);
+    }
+
+    if (!patientData.containsKey('bloodType')) {
+      patientData['bloodType'] = _jsonStr(data, [
+        'grupoSanguineo', 'bloodType', 'tipoSangre',
+        'bloodGroup', 'rhFactor', 'rh',
+      ]);
+    }
+
+    if (!patientData.containsKey('affiliationDate')) {
+      patientData['affiliationDate'] = _jsonStr(data, [
+        'fechaAfiliacion', 'affiliationDate', 'fecha_afiliacion',
+        'enrollmentDate', 'startDate',
+      ]);
+    }
+
+    if (!patientData.containsKey('epsId')) {
+      patientData['epsId'] = _jsonStr(data, [
+        'codigoEPS', 'epsId', 'epsCode', 'codigo_eps',
+      ]);
+    }
+
+    // Collect lists: conditions, medications, allergies, vaccines, appointments
     final conds = _jsonList(data, [
-      'diagnosticos', 'conditions', 'diagnoses', 'patologias', 'problemList',
+      'diagnosticos', 'conditions', 'diagnoses', 'patologias',
+      'problemList', 'antecedentes', 'medicalConditions',
     ]);
     if (conds != null && conds.isNotEmpty) {
       patientData['conditions'] = conds.map((c) => c.toString()).toList();
     }
 
     final meds = _jsonList(data, [
-      'medicamentos', 'medications', 'medicines', 'tratamientos', 'medicationList',
+      'medicamentos', 'medications', 'medicines', 'tratamientos',
+      'medicationList', 'medicacion', 'drugs',
     ]);
     if (meds != null && meds.isNotEmpty) {
       patientData['medications'] = meds.map((m) => m.toString()).toList();
@@ -314,9 +371,26 @@ class EpsEndpointInterceptor {
 
     final alls = _jsonList(data, [
       'alergias', 'allergies', 'intolerancias',
+      'allergyList', 'reaccionesAdversas',
     ]);
     if (alls != null && alls.isNotEmpty) {
       patientData['allergies'] = alls.map((a) => a.toString()).toList();
+    }
+
+    final vacs = _jsonList(data, [
+      'vacunas', 'vaccines', 'immunizations', 'inmunizaciones',
+      'vaccineList',
+    ]);
+    if (vacs != null && vacs.isNotEmpty) {
+      patientData['vaccines'] = vacs.map((v) => v.toString()).toList();
+    }
+
+    final apps = _jsonList(data, [
+      'citas', 'appointments', 'encuentros', 'encounters',
+      'citasPendientes', 'pendingAppointments',
+    ]);
+    if (apps != null && apps.isNotEmpty) {
+      patientData['appointments'] = apps.map((a) => a.toString()).toList();
     }
   }
 
