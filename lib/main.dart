@@ -204,6 +204,17 @@ class MyApp extends StatelessWidget {
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('es', ''), // Force Spanish for now as requested
         home: const _StartupRouter(),
+        builder: (context, child) {
+          final mediaQuery = MediaQuery.of(context);
+          final clamped = mediaQuery.textScaler.clamp(
+            minScaleFactor: 0.85,
+            maxScaleFactor: 1.15,
+          );
+          return MediaQuery(
+            data: mediaQuery.copyWith(textScaler: clamped),
+            child: child!,
+          );
+        },
       ),
     );
   }

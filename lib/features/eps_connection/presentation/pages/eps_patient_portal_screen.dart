@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -80,7 +82,7 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     );
     _endpointInterceptor = EpsEndpointInterceptor(
       epsId: widget.provider.id,
-      epsPortalUrl: EpsProvidersCatalog.getPortalUrl(widget.provider.id),
+      epsPortalUrl: EpsProvidersCatalog.getLoginUrl(widget.provider.id) ?? EpsProvidersCatalog.getPortalUrl(widget.provider.id),
     );
 
     // Listen for discovered endpoints
@@ -101,7 +103,9 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     super.dispose();
   }
 
+  /// Returns the login URL for the EPS if available, otherwise the portal URL.
   String get _portalUrl =>
+      EpsProvidersCatalog.getLoginUrl(widget.provider.id) ??
       EpsProvidersCatalog.getPortalUrl(widget.provider.id);
 
   // ─── Session-aware URL loading ───
@@ -125,8 +129,11 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
 
   bool _isPostLoginUrl(String url) {
     final lower = url.toLowerCase();
-    // Skip the portal URL itself
-    if (lower == _portalUrl.toLowerCase()) return false;
+    // Skip the login URL and portal URL itself
+    final loginUrl = EpsProvidersCatalog.getLoginUrl(widget.provider.id);
+    final portalUrl = EpsProvidersCatalog.getPortalUrl(widget.provider.id);
+    if (lower == portalUrl.toLowerCase()) return false;
+    if (loginUrl != null && lower == loginUrl.toLowerCase()) return false;
 
     const patterns = [
       '/dashboard', '/home', '/inicio', '/bienvenido',
@@ -138,6 +145,53 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
   }
 
   // ─── Session-aware scraping ───
+
+  /// Accumulated data from all pages visited during capture mode.
+  final Map<String, dynamic> _accumulatedData = {};
+  bool _captureMode = false;
+  int _pagesScraped = 0;
+
+  /// Enters capture mode: session is saved, then every page the user navigates
+  /// to is automatically scraped. Much more reliable than auto-tour for SPAs.
+  Future<void> _enterCaptureMode() async {
+    if (_webViewController == null) return;
+    await _sessionManager.captureSession(_webViewController!);
+    await _sessionManager.saveLastUrl(_currentUrl);
+    setState(() { _captureMode = true; _state = _PortalState.authenticated; });
+    await _scrapeCurrentPage();
+  }
+
+  Future<void> _scrapeCurrentPage() async {
+    if (_webViewController == null || !_captureMode) return;
+    _pagesScraped++;
+    setState(() => _scrapingStatus = 'Página $_pagesScraped escaneada');
+    try {
+      final r = await _scrapeDom();
+      for (final e in r.entries) {
+        if (e.value.isNotEmpty) _accumulatedData[e.key] = e.value;
+      }
+      if (_accumulatedData.containsKey('pageText')) {
+        _extractFieldsFromText(_accumulatedData['pageText']!.toString(), _accumulatedData);
+        _accumulatedData.remove('pageText');
+      }
+    } catch (_) {}
+    setState(() {});
+  }
+
+  void _finishCapture() {
+    setState(() { _captureMode = false; _state = _PortalState.scraping; });
+    _endpointInterceptor.startInterception();
+    _endpointInterceptor.probeDiscoveredEndpoints(_webViewController!).then((apiData) {
+      _endpointsProbed = _endpointInterceptor.discoveredCount;
+      _endpointInterceptor.stopInterception();
+      _accumulatedData.addAll(apiData);
+      if (mounted) Navigator.of(context).pop({..._accumulatedData,
+        'epsProviderId': widget.provider.id,
+        'epsProviderName': widget.provider.name,
+        'endpointsDiscovered': _endpointsProbed,
+      });
+    });
+  }
 
   Future<void> _startScraping() async {
     if (_webViewController == null) return;
@@ -161,16 +215,23 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
 
       _endpointInterceptor.stopInterception();
 
-      // 3. Fallback: standard DOM scraping if endpoint probing didn't get everything
-      if (!patientData.containsKey('name') || !patientData.containsKey('documentId')) {
-        _setStatus('Extrayendo datos del portal...');
-        final domResults = await _scrapeDom();
-        patientData.addAll(domResults);
+      // 3. DOM scraping + full page text analysis
+      _setStatus('Extrayendo datos de la página...');
+      final domResults = await _scrapeDom();
+      patientData.addAll(domResults);
+
+      // 4. Comprehensive regex extraction from page text (most reliable)
+      if (patientData.containsKey('pageText')) {
+        _extractFieldsFromText(patientData['pageText']!.toString(), patientData);
+        // Don't store raw page text in final results
+        patientData.remove('pageText');
       }
 
-      // 4. Clean up credentials from memory
-      _setStatus('Eliminando credenciales temporales...');
-      // (Cookies and localStorage are already in secure storage via _sessionManager)
+      // 5. Try auto-tour if still missing critical data
+      final tourUrls = EpsProvidersCatalog.getTourUrls(widget.provider.id);
+      if (tourUrls.isNotEmpty && _countMissingFields(patientData) > 3) {
+        await _runAutoTour(_webViewController!, patientData, tourUrls);
+      }
 
       // 5. Return data
       if (mounted) {
@@ -196,17 +257,178 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
     setState(() => _scrapingStatus = status);
   }
 
-  /// Standard DOM scraping as fallback.
+  /// Counts how many essential scalar fields are still missing from patientData.
+  int _countMissingFields(Map<String, dynamic> data) {
+    const essential = ['name', 'documentId', 'birthDate', 'sex', 'phone', 'email', 'address', 'bloodType'];
+    return essential.where((k) {
+      final v = data[k];
+      return v == null || (v is String && v.isEmpty);
+    }).length;
+  }
+
+  /// Auto-navigates through EPS portal data pages to extract maximum data.
+  ///
+  /// After login, the dashboard typically only shows a welcome message.
+  /// This method uses TWO strategies:
+  /// 1. URL navigation — for portals with server-side routing
+  /// 2. SPA click navigation — injects JS to click menu links (works for Angular/React/Vue SPAs)
+  Future<void> _runAutoTour(
+    InAppWebViewController controller,
+    Map<String, dynamic> patientData,
+    List<String> tourUrls,
+  ) async {
+    // Strategy 1: URL navigation
+    for (int i = 0; i < tourUrls.length; i++) {
+      if (_countMissingFields(patientData) <= 2 &&
+          patientData.containsKey('name') &&
+          patientData.containsKey('documentId')) break;
+
+      final url = tourUrls[i];
+      _setStatus('Tour URL (${i + 1}/${tourUrls.length})...');
+
+      try {
+        final fullUrl = url.startsWith('http')
+            ? url
+            : '${Uri.parse(_currentUrl).origin}$url';
+        await controller.loadUrl(urlRequest: URLRequest(url: WebUri(fullUrl)));
+        await Future<void>.delayed(const Duration(seconds: 2));
+        final pageResults = await _scrapeDom();
+        for (final entry in pageResults.entries) {
+          if (!patientData.containsKey(entry.key) ||
+              (patientData[entry.key] is String && (patientData[entry.key] as String).isEmpty)) {
+            patientData[entry.key] = entry.value;
+          }
+        }
+      } catch (e) {
+        debugPrint('Tour URL step failed: $e');
+      }
+    }
+
+    // Strategy 2: SPA click navigation (for portals with client-side routing)
+    if (_countMissingFields(patientData) > 3) {
+      await _runSpaClickTour(controller, patientData);
+    }
+  }
+
+  /// SPA-compatible auto-tour: injects JavaScript to find and click
+  /// navigation links within the portal, then scrapes each resulting view.
+  /// This works for Angular, React, Vue, and other SPA frameworks.
+  Future<void> _runSpaClickTour(
+    InAppWebViewController controller,
+    Map<String, dynamic> patientData,
+  ) async {
+    _setStatus('Tour SPA: Buscando enlaces de datos...');
+
+    // The JS snippet finds clickable elements whose text suggests they lead
+    // to patient data pages, clicks each one, and returns scraped text.
+    final spaResults = await controller.evaluateJavascript(source: '''
+      (async function() {
+        const results = {};
+        // Keywords that indicate patient data pages
+        const keywords = ['perfil', 'datos', 'historia', 'medicamentos',
+          'citas', 'vacunas', 'información', 'mi cuenta', 'afiliado',
+          'beneficiario', 'documento', 'personal'];
+
+        // Find clickable elements with matching text
+        const elements = [];
+        const selectors = 'a, button, li, span, div[role="button"], div[onclick]';
+        document.querySelectorAll(selectors).forEach(el => {
+          const text = (el.textContent || '').toLowerCase().trim();
+          const match = keywords.find(k => text.includes(k));
+          if (match && text.length < 100 && el.offsetParent !== null) {
+            elements.push({el: el, keyword: match});
+          }
+        });
+
+        // Deduplicate by keyword, keep first visible
+        const seen = new Set();
+        const toClick = elements.filter(e => {
+          if (seen.has(e.keyword)) return false;
+          seen.add(e.keyword);
+          return true;
+        });
+
+        for (let i = 0; i < toClick.length && i < 5; i++) {
+          try {
+            toClick[i].el.click();
+            await new Promise(r => setTimeout(r, 2000));
+            // Scrape visible text from the current view
+            const body = document.body;
+            if (body) {
+              results[toClick[i].keyword] = body.innerText.substring(0, 3000);
+            }
+          } catch(e) {}
+        }
+
+        return JSON.stringify(results);
+      })();
+    ''');
+
+    if (spaResults != null && spaResults.toString().isNotEmpty) {
+      try {
+        final parsed = Map<String, dynamic>.from(
+          jsonDecode(spaResults.toString()) as Map,
+        );
+        // Parse each page's text for patient data fields
+        for (final entry in parsed.entries) {
+          final text = entry.value.toString();
+          _extractFieldsFromText(text, patientData);
+        }
+      } catch (_) {}
+    }
+
+    _setStatus('Tour SPA completado');
+  }
+
+  /// Extracts patient data fields from raw page text using regex patterns.
+  void _extractFieldsFromText(String text, Map<String, dynamic> data) {
+    // Document ID patterns (Colombian CC: 6-10 digits)
+    if (!data.containsKey('documentId')) {
+      final docMatch = RegExp(r'(?:documento|cedula|identificación|CC|NIT)[:\s]*#?\s*(\d{6,12})', caseSensitive: false).firstMatch(text);
+      if (docMatch != null) data['documentId'] = docMatch.group(1)!;
+    }
+    // Birth date patterns
+    if (!data.containsKey('birthDate')) {
+      final birthMatch = RegExp(r'(?:fecha\s*(?:de\s*)?nacimiento|nacimiento|nacido)[:\s]*(\d{1,2}[/\-.]\d{1,2}[/\-.]\d{2,4})', caseSensitive: false).firstMatch(text);
+      if (birthMatch != null) data['birthDate'] = birthMatch.group(1)!;
+    }
+    // Phone patterns
+    if (!data.containsKey('phone')) {
+      final phoneMatch = RegExp(r'(?:tel[eé]fono|celular|m[oó]vil|contacto)[:\s]*#?\s*([+\d]{7,15})', caseSensitive: false).firstMatch(text);
+      if (phoneMatch != null) data['phone'] = phoneMatch.group(1)!;
+    }
+    // Email patterns
+    if (!data.containsKey('email')) {
+      final emailMatch = RegExp(r'[\w.-]+@[\w.-]+\.\w+').firstMatch(text);
+      if (emailMatch != null) data['email'] = emailMatch.group(0)!;
+    }
+    // Sex/gender
+    if (!data.containsKey('sex')) {
+      final sexMatch = RegExp(r'(?:sexo|g[eé]nero)[:\s]*(masculino|femenino|M|F)', caseSensitive: false).firstMatch(text);
+      if (sexMatch != null) data['sex'] = sexMatch.group(1)!;
+    }
+    // Blood type
+    if (!data.containsKey('bloodType')) {
+      final bloodMatch = RegExp(r'(?:grupo\s*sangu[ií]neo|tipo\s*de\s*sangre|RH)[:\s]*(O|A|B|AB)\s*[+\-]?', caseSensitive: false).firstMatch(text);
+      if (bloodMatch != null) data['bloodType'] = bloodMatch.group(0)!.trim();
+    }
+  }
+
+  /// Standard DOM scraping as fallback — enhanced with Sura-specific selectors
+  /// and comprehensive field extraction.
   Future<Map<String, String>> _scrapeDom() async {
     final results = <String, String>{};
 
     const selectors = {
       'name': '''
         (function() {
-          const sels = ['.nombre-paciente','.profile-name','.patient-name',
+          const sels = [
+            '.nombre-paciente','.profile-name','.patient-name',
             '[data-field="nombre"]','.nombre','.name','#nombrePaciente',
             '#nombreCompleto','.bienvenido strong','.welcome-message',
-            '.datos-afiliado .nombre','h1'];
+            '.datos-afiliado .nombre','h1',
+            '.nombre-afiliado','.full-name','.display-name','.user-display',
+            '.MuiTypography-h5','.v-card-title','.card-title'];
           for (const s of sels) {
             const el = document.querySelector(s);
             if (el && el.textContent.trim()) return el.textContent.trim();
@@ -217,7 +439,8 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
       'documentId': '''
         (function() {
           const sels = ['.documento','.cedula','#nroDocumento',
-            '[data-field="documento"]','.identificacion','.patient-id','.id-number'];
+            '[data-field="documento"]','.identificacion','.patient-id',
+            '.id-number','.numero-documento','.doc-number'];
           for (const s of sels) {
             const el = document.querySelector(s);
             if (el && el.textContent.trim()) return el.textContent.trim().replace(/[^0-9]/g,'');
@@ -228,12 +451,99 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
       'birthDate': '''
         (function() {
           const sels = ['.fecha-nacimiento','.birth-date','#fechaNacimiento',
-            '[data-field="fechaNacimiento"]','.dob','.birthdate'];
+            '[data-field="fechaNacimiento"]','.dob','.birthdate','.fecha_nac'];
           for (const s of sels) {
             const el = document.querySelector(s);
             if (el && el.textContent.trim()) return el.textContent.trim();
           }
           return '';
+        })()
+      ''',
+      'phone': '''
+        (function() {
+          const sels = ['.telefono','.phone','.celular','#telefono',
+            '[data-field="telefono"]','.contact-phone','.mobile-number',
+            '.numero-contacto'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim().replace(/[^0-9+]/g,'');
+          }
+          return '';
+        })()
+      ''',
+      'email': '''
+        (function() {
+          const sels = ['.email','.correo','#email','#correoElectronico',
+            '[data-field="email"]','.contact-email','.correo-electronico'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim();
+          }
+          return '';
+        })()
+      ''',
+      'affiliationType': '''
+        (function() {
+          const sels = ['.tipo-afiliado','.regimen','.plan-type','.affiliation-type',
+            '.tipo-afiliacion','.categoria','.tipo-usuario'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim();
+          }
+          return '';
+        })()
+      ''',
+      'bloodType': '''
+        (function() {
+          const sels = ['.grupo-sanguineo','.blood-type','.tipo-sangre',
+            '#grupoSanguineo','.rh-factor','.blood-group'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim();
+          }
+          return '';
+        })()
+      ''',
+      'address': '''
+        (function() {
+          const sels = ['.direccion','.address','#direccion',
+            '[data-field="direccion"]','.home-address','.residencia'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim();
+          }
+          return '';
+        })()
+      ''',
+      'sex': '''
+        (function() {
+          const sels = ['.sexo','.gender','#sexo','#genero',
+            '[data-field="sexo"]','.genero','.sex'];
+          for (const s of sels) {
+            const el = document.querySelector(s);
+            if (el && el.textContent.trim()) return el.textContent.trim();
+          }
+          return '';
+        })()
+      ''',
+      // Sura-specific: try to extract from text labels
+      'pageText': '''
+        (function() {
+          try {
+            const body = document.body;
+            if (!body) return '';
+            // Get visible text content, limited to avoid overload
+            const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+            let text = '';
+            let node;
+            while (node = walker.nextNode()) {
+              if (node.parentElement && node.parentElement.offsetParent !== null) {
+                text += node.textContent + ' ';
+              }
+              if (text.length > 20000) break;
+            }
+            return text;
+          } catch(e) { return ''; }
         })()
       ''',
     };
@@ -276,6 +586,11 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
       await _sessionManager.restoreSession(controller);
       await _sessionManager.restoreLocalStorage(controller);
       _sessionRestored = true;
+    }
+
+    // Auto-scrape each page when in capture mode
+    if (_captureMode) {
+      await _scrapeCurrentPage();
     }
 
     if (_isPostLoginUrl(urlStr)) {
@@ -361,20 +676,29 @@ class _EpsPatientPortalScreenState extends State<EpsPatientPortalScreen> {
             ? [
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: ElevatedButton.icon(
-                    onPressed: _currentUrl.isNotEmpty &&
-                            _isPostLoginUrl(_currentUrl)
-                        ? _startScraping
-                        : null,
-                    icon: const Icon(Icons.download, size: 18),
-                    label: const Text('Ya inicié sesión'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 12),
-                    ),
-                  ),
+                  child: _captureMode
+                      ? ElevatedButton.icon(
+                          onPressed: _finishCapture,
+                          icon: const Icon(Icons.done, size: 18),
+                          label: Text('Finalizar ($_pagesScraped pág)'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                        )
+                      : ElevatedButton.icon(
+                          onPressed: _currentUrl.isNotEmpty && _isPostLoginUrl(_currentUrl)
+                              ? _enterCaptureMode
+                              : null,
+                          icon: const Icon(Icons.camera_alt, size: 18),
+                          label: const Text('Iniciar captura'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                        ),
                 ),
               ]
             : null,

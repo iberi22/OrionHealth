@@ -48,7 +48,7 @@
                                                            "infrastructure",
                                                            "presentation"
                                                        ],
-                                            "test_count":  141,
+                                            "test_count":  160,
                                             "e2e_count":  3,
                                             "arch_score":  100
                                         },
@@ -259,7 +259,7 @@
                                                        "infrastructure",
                                                        "presentation"
                                                    ],
-                                        "test_count":  95,
+                                        "test_count":  113,
                                         "e2e_count":  13,
                                         "arch_score":  100
                                     },
@@ -359,5 +359,5 @@
                  },
     "feature_count":  27,
     "overall_score":  100,
-    "generated":  "2026-07-13T20:47:02"
+    "generated":  "2026-07-15T17:41:38"
 }
