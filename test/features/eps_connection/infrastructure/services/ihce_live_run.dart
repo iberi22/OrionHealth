@@ -7,7 +7,8 @@ import 'dart:io';
 /// NO usa HttpClient de Flutter — usa dart:io HttpClient directo.
 
 const tenantId = '3d4b3d76-b910-426c-bd8f-bd964e3e1b53';
-const subscriptionKey = '9ffb7a49797e459bab116c6f2029cae6';
+const subscriptionKey =
+    String.fromEnvironment('IHCE_SANDBOX_API_KEY', defaultValue: '');
 const scope = 'api://ca9a5155-3135-4e44-a644-b92175eb4d21/.default';
 const sandboxUrl = 'https://sandbox.ihcecol.gov.co/ihce';
 const sandboxClientId = 'fhir-client';
