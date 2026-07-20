@@ -36,6 +36,7 @@ class DataSourceTile extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.sync, color: AppColors.secondary),
                 onPressed: onSync,
+                tooltip: 'Sincronizar',
               ),
             _buildStatusIcon(),
             Switch(

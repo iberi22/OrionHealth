@@ -43,6 +43,7 @@ class PageHeader extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   color: AppColors.secondary,
+                  tooltip: 'Volver',
                 ),
                 const SizedBox(width: 12),
               ] else if (leading != null) ...[
