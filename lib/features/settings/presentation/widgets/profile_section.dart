@@ -54,6 +54,7 @@ class ProfileSection extends StatelessWidget {
                 key: const Key('edit_profile_button'),
                 icon: const Icon(Icons.edit_outlined, color: AppColors.primary),
                 onPressed: onEditPressed,
+                tooltip: 'Editar perfil',
               ),
             ],
           ),
