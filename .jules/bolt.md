@@ -1,0 +1,3 @@
+## 2025-02-23 - Optimizing Calendar Render Performance with O(1) Lookups
+**Learning:** Found a classic performance bottleneck in Flutter `GridView` mapping inside the appointments page. In `_buildCalendar`, the rendering mapped over `daysInMonth` and for each day invoked an `O(N)` list iteration (`_allAppointments.any()`) checking against `DateUtils.isSameDay`. For a single month this could trigger an $O(M \times N)$ cost, significantly degrading scroll/render performance.
+**Action:** Always extract static lookups outside of UI rendering loops. By iterating `_allAppointments` once at the top of the function, filtering by the visible month, and storing days in a `Set<int>`, we reduced the daily inner loop operation to an $O(1)$ set inclusion check.

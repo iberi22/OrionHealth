@@ -174,6 +174,12 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     final firstDayOffset = DateUtils.firstDayOffset(_focusedDay.year, _focusedDay.month, MaterialLocalizations.of(context));
     final monthName = DateFormat.MMMM('es').format(_focusedDay);
 
+    // O(1) lookup for days with appointments in the currently focused month
+    final appointmentsInMonth = _allAppointments
+        .where((a) => a.dateTime.year == _focusedDay.year && a.dateTime.month == _focusedDay.month)
+        .map((a) => a.dateTime.day)
+        .toSet();
+
     return GlassmorphicCard(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -216,7 +222,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 final date = DateTime(_focusedDay.year, _focusedDay.month, day);
                 final isSelected = DateUtils.isSameDay(date, _selectedDay);
                 final isToday = DateUtils.isSameDay(date, DateTime.now());
-                final hasAppointment = _allAppointments.any((a) => DateUtils.isSameDay(a.dateTime, date));
+                final hasAppointment = appointmentsInMonth.contains(day);
 
                 return InkWell(
                   onTap: () => setState(() => _selectedDay = date),
