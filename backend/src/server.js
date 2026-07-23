@@ -37,7 +37,7 @@ if (process.env.REDIS_URL) {
 // Session middleware for multi-user support and token caching
 app.use(session({
   store: sessionStore,
-  secret: process.env.SESSION_SECRET || 'ihce-gateway-secret',
+  secret: process.env.SESSION_SECRET || require('crypto').randomBytes(32).toString('hex'),
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -83,6 +83,8 @@ app.get('/api/fhir/patient/:id', async (req, res) => {
   const { id } = req.params;
   const tokenData = req.session.tokenData;
   if (!tokenData) return res.status(401).json({ error: 'Unauthorized' });
+  // Ensure the requested patient ID matches the authenticated user's patient ID
+  if (id !== tokenData.patient) return res.status(403).json({ error: 'Forbidden' });
   try {
     const patient = await fhirClient.getPatient(id, tokenData.accessToken);
     res.json(patient);
