@@ -1,0 +1,4 @@
+## 2024-07-24 - IDOR and Information Leakage in FHIR Patient Endpoint
+**Vulnerability:** The `/api/fhir/patient/:id` endpoint lacked authorization checks to ensure the requested patient ID matches the authenticated user's ID, leading to an Insecure Direct Object Reference (IDOR) vulnerability. It also leaked sensitive error information by returning the raw `error.message` to the client.
+**Learning:** Even with authentication, accessing resources by ID requires verifying ownership or authorization to access that specific ID. Error responses should be generic to prevent exposing internal architecture or potential data.
+**Prevention:** Always implement explicit authorization checks on endpoints that fetch resources by ID, matching the requested ID against the authenticated user's token data (`req.session.tokenData.patient`). Fail securely by returning generic error messages (e.g., 'An error occurred') and logging the detailed error internally.
