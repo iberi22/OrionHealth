@@ -190,9 +190,9 @@ import '../../features/eps_connection/domain/usecases/get_connections_usecase.da
 import '../../features/eps_connection/infrastructure/datasources/oauth_local_datasource.dart'
     as _i96;
 import '../../features/eps_connection/infrastructure/repositories/local_fhir_oauth_repository.dart'
-    as _i99;
-import '../../features/eps_connection/infrastructure/repositories/oauth_repository_impl.dart'
     as _i98;
+import '../../features/eps_connection/infrastructure/repositories/oauth_repository_impl.dart'
+    as _i99;
 import '../../features/health_data_import/application/bloc/health_import_bloc.dart'
     as _i252;
 import '../../features/health_data_import/application/health_import_cubit.dart'
@@ -278,11 +278,11 @@ import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i40;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
-    as _i191;
+    as _i192;
 import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.dart'
     as _i42;
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
-    as _i192;
+    as _i191;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
     as _i65;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
@@ -291,9 +291,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i194;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i257;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i70;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i71;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i70;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i132;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -508,9 +508,9 @@ import 'memory_module.dart' as _i279;
 import 'network_module.dart' as _i278;
 import 'service_module.dart' as _i277;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 const String _development = 'development';
 const String _staging = 'staging';
 const String _production = 'production';
@@ -644,15 +644,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i68.MedicalContextProvider>(
         () => networkModule.medicalContextProvider);
     gh.factory<_i69.MedicalKnowledgeRepository>(
-      () => _i70.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
-    );
-    gh.factory<_i69.MedicalKnowledgeRepository>(
-      () => _i71.JsonMedicalKnowledgeRepository(),
+      () => _i70.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
+    );
+    gh.factory<_i69.MedicalKnowledgeRepository>(
+      () => _i71.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
     );
     gh.lazySingleton<_i72.MedicalScraperService>(
         () => _i73.MedicalScraperServiceImpl(
@@ -699,20 +699,20 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i96.OAuthLocalDataSource>(
         () => _i96.OAuthLocalDataSource(gh<_i41.FlutterSecureStorage>()));
     gh.lazySingleton<_i97.OAuthRepository>(
-      () => _i98.OAuthRepositoryImpl(
-        gh<_i96.OAuthLocalDataSource>(),
-        gh<_i31.Dio>(),
-        gh<_i39.FlutterAppAuth>(),
-      ),
-      registerFor: {_production},
-    );
-    gh.lazySingleton<_i97.OAuthRepository>(
-      () => _i99.LocalFhirOAuthRepository(),
+      () => _i98.LocalFhirOAuthRepository(),
       registerFor: {
         _development,
         _staging,
         _test,
       },
+    );
+    gh.lazySingleton<_i97.OAuthRepository>(
+      () => _i99.OAuthRepositoryImpl(
+        gh<_i96.OAuthLocalDataSource>(),
+        gh<_i31.Dio>(),
+        gh<_i39.FlutterAppAuth>(),
+      ),
+      registerFor: {_production},
     );
     gh.lazySingleton<_i100.OcrService>(() => _i100.MlKitOcrService());
     gh.lazySingleton<_i101.PharmacyApiService>(
@@ -920,17 +920,17 @@ extension GetItInjectableX on _i1.GetIt {
               gh<_i45.HealthDataImportService>(),
               gh<_i133.VitalSignRepository>(),
             ));
+    gh.factory<_i63.LlmAdapter>(
+      () => _i191.MockLlmAdapter(gh<_i103.PromptScrubber>()),
+      instanceName: 'mock',
+    );
     gh.lazySingleton<_i63.LlmAdapter>(
-      () => _i191.GeminiLlmAdapter(
+      () => _i192.GeminiLlmAdapter(
         scrubber: gh<_i103.PromptScrubber>(),
         userProfileRepository: gh<_i128.UserProfileRepository>(),
         modelWrapper: gh<_i42.GeminiModelWrapper>(),
       ),
       instanceName: 'gemini',
-    );
-    gh.factory<_i63.LlmAdapter>(
-      () => _i192.MockLlmAdapter(gh<_i103.PromptScrubber>()),
-      instanceName: 'mock',
     );
     gh.lazySingleton<_i193.LlmAdapterFactory>(
         () => _i193.LlmAdapterFactory(gh<_i119.SettingsRepository>()));
