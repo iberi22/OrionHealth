@@ -174,6 +174,11 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     final firstDayOffset = DateUtils.firstDayOffset(_focusedDay.year, _focusedDay.month, MaterialLocalizations.of(context));
     final monthName = DateFormat.MMMM('es').format(_focusedDay);
 
+    // ⚡ Bolt: Pre-compute appointment dates to optimize O(N*M) lookups in the GridView builder to O(N+M)
+    final appointmentDates = _allAppointments
+        .map((a) => DateTime(a.dateTime.year, a.dateTime.month, a.dateTime.day))
+        .toSet();
+
     return GlassmorphicCard(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -216,7 +221,9 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 final date = DateTime(_focusedDay.year, _focusedDay.month, day);
                 final isSelected = DateUtils.isSameDay(date, _selectedDay);
                 final isToday = DateUtils.isSameDay(date, DateTime.now());
-                final hasAppointment = _allAppointments.any((a) => DateUtils.isSameDay(a.dateTime, date));
+
+                // ⚡ Bolt: Fast O(1) Set lookup instead of O(N) List.any() search inside the loop
+                final hasAppointment = appointmentDates.contains(date);
 
                 return InkWell(
                   onTap: () => setState(() => _selectedDay = date),
