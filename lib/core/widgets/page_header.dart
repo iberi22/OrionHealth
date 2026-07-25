@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-
-
 class PageHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
@@ -39,7 +37,11 @@ class PageHeader extends StatelessWidget {
               if (showBackButton) ...[
                 IconButton(
                   onPressed: onBackPress ?? () => Navigator.of(context).pop(),
-                  icon: Icon(backButtonIcon ?? Icons.arrow_back_ios_new, size: 20),
+                  icon: Icon(
+                    backButtonIcon ?? Icons.arrow_back_ios_new,
+                    size: 20,
+                  ),
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   color: AppColors.secondary,
