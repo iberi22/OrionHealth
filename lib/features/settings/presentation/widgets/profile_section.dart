@@ -54,6 +54,7 @@ class ProfileSection extends StatelessWidget {
                 key: const Key('edit_profile_button'),
                 icon: const Icon(Icons.edit_outlined, color: AppColors.primary),
                 onPressed: onEditPressed,
+                tooltip: 'Editar perfil',
               ),
             ],
           ),
@@ -65,7 +66,11 @@ class ProfileSection extends StatelessWidget {
             children: [
               const Row(
                 children: [
-                  Icon(Icons.dark_mode_outlined, color: AppColors.secondary, size: 20),
+                  Icon(
+                    Icons.dark_mode_outlined,
+                    color: AppColors.secondary,
+                    size: 20,
+                  ),
                   SizedBox(width: 12),
                   Text(
                     'Modo Oscuro',
@@ -87,7 +92,8 @@ class ProfileSection extends StatelessWidget {
   }
 
   Widget _buildAvatar() {
-    final hasAvatar = userProfile?.avatarUrl != null && userProfile!.avatarUrl!.isNotEmpty;
+    final hasAvatar =
+        userProfile?.avatarUrl != null && userProfile!.avatarUrl!.isNotEmpty;
 
     return Container(
       key: const Key('profile_avatar_container'),
@@ -95,11 +101,15 @@ class ProfileSection extends StatelessWidget {
       height: 60,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.5), width: 2),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.5),
+          width: 2,
+        ),
         image: DecorationImage(
           image: hasAvatar
-            ? NetworkImage(userProfile!.avatarUrl!)
-            : const AssetImage('assets/images/user_placeholder.png') as ImageProvider,
+              ? NetworkImage(userProfile!.avatarUrl!)
+              : const AssetImage('assets/images/user_placeholder.png')
+                    as ImageProvider,
           fit: BoxFit.cover,
         ),
       ),
