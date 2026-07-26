@@ -1,0 +1,3 @@
+## 2024-05-18 - GridView Builder O(N*M) Lookup
+**Learning:** Found a performance bottleneck in the Flutter appointments calendar rendering where checking for existing appointments inside the `GridView.builder` loop using `List.any()` caused an O(N*M) time complexity (N appointments * M days). This can lead to significant UI lag when rendering calendars with large amounts of data.
+**Action:** When rendering lists or grids that need to check against a collection of data, pre-compute the lookup collection (e.g., using a `Set` of normalized values like dates) before the builder block to achieve O(1) lookups during the render cycle.

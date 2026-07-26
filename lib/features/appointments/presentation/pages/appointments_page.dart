@@ -42,24 +42,34 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al cargar citas: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error al cargar citas: $e')));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final upcoming = _allAppointments
-        .where((a) => a.dateTime.isAfter(DateTime.now()) && a.status != AppointmentStatus.cancelled)
-        .toList()
-      ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    final upcoming =
+        _allAppointments
+            .where(
+              (a) =>
+                  a.dateTime.isAfter(DateTime.now()) &&
+                  a.status != AppointmentStatus.cancelled,
+            )
+            .toList()
+          ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
 
-    final past = _allAppointments
-        .where((a) => a.dateTime.isBefore(DateTime.now()) || a.status == AppointmentStatus.cancelled)
-        .toList()
-      ..sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    final past =
+        _allAppointments
+            .where(
+              (a) =>
+                  a.dateTime.isBefore(DateTime.now()) ||
+                  a.status == AppointmentStatus.cancelled,
+            )
+            .toList()
+          ..sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
     return Scaffold(
       appBar: AppBar(
@@ -79,7 +89,9 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
             onPressed: () async {
               final result = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CalendarImportPage()),
+                MaterialPageRoute(
+                  builder: (context) => const CalendarImportPage(),
+                ),
               );
               if (result == true) {
                 _loadAppointments();
@@ -109,10 +121,17 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                   ),
                   const SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
                       child: Text(
                         'Próximas',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: CyberTheme.secondary),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: CyberTheme.secondary,
+                        ),
                       ),
                     ),
                   ),
@@ -127,17 +146,26 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                           delegate: SliverChildBuilderDelegate(
                             (context, index) => AppointmentCard(
                               appointment: upcoming[index],
-                              onTap: () => _showAppointmentForm(appointment: upcoming[index]),
+                              onTap: () => _showAppointmentForm(
+                                appointment: upcoming[index],
+                              ),
                             ),
                             childCount: upcoming.length,
                           ),
                         ),
                   const SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
                       child: Text(
                         'Historial',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white54),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white54,
+                        ),
                       ),
                     ),
                   ),
@@ -152,7 +180,9 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                           delegate: SliverChildBuilderDelegate(
                             (context, index) => AppointmentCard(
                               appointment: past[index],
-                              onTap: () => _showAppointmentForm(appointment: past[index]),
+                              onTap: () => _showAppointmentForm(
+                                appointment: past[index],
+                              ),
                             ),
                             childCount: past.length,
                           ),
@@ -170,9 +200,24 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
   }
 
   Widget _buildCalendar() {
-    final daysInMonth = DateUtils.getDaysInMonth(_focusedDay.year, _focusedDay.month);
-    final firstDayOffset = DateUtils.firstDayOffset(_focusedDay.year, _focusedDay.month, MaterialLocalizations.of(context));
+    final daysInMonth = DateUtils.getDaysInMonth(
+      _focusedDay.year,
+      _focusedDay.month,
+    );
+    final firstDayOffset = DateUtils.firstDayOffset(
+      _focusedDay.year,
+      _focusedDay.month,
+      MaterialLocalizations.of(context),
+    );
     final monthName = DateFormat.MMMM('es').format(_focusedDay);
+
+    // ⚡ Bolt Optimization
+    // What: Pre-compute a Set of normalized appointment dates.
+    // Why: To prevent an O(N) lookup (`_allAppointments.any`) inside the GridView.builder's O(M) rendering loop.
+    // Impact: Reduces time complexity of the appointment check from O(N*M) to O(N + M) and provides O(1) lookups during rendering.
+    final appointmentDates = _allAppointments
+        .map((a) => DateTime(a.dateTime.year, a.dateTime.month, a.dateTime.day))
+        .toSet();
 
     return GlassmorphicCard(
       child: Padding(
@@ -184,17 +229,30 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
               children: [
                 Text(
                   '${monthName.toUpperCase()} ${_focusedDay.year}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
                 ),
                 Row(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.chevron_left, size: 20),
-                      onPressed: () => setState(() => _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1)),
+                      onPressed: () => setState(
+                        () => _focusedDay = DateTime(
+                          _focusedDay.year,
+                          _focusedDay.month - 1,
+                        ),
+                      ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.chevron_right, size: 20),
-                      onPressed: () => setState(() => _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1)),
+                      onPressed: () => setState(
+                        () => _focusedDay = DateTime(
+                          _focusedDay.year,
+                          _focusedDay.month + 1,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -216,16 +274,27 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 final date = DateTime(_focusedDay.year, _focusedDay.month, day);
                 final isSelected = DateUtils.isSameDay(date, _selectedDay);
                 final isToday = DateUtils.isSameDay(date, DateTime.now());
-                final hasAppointment = _allAppointments.any((a) => DateUtils.isSameDay(a.dateTime, date));
+
+                final hasAppointment = appointmentDates.contains(date);
 
                 return InkWell(
                   onTap: () => setState(() => _selectedDay = date),
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: isSelected ? CyberTheme.primary.withValues(alpha: 0.2) : null,
+                      color: isSelected
+                          ? CyberTheme.primary.withValues(alpha: 0.2)
+                          : null,
                       borderRadius: BorderRadius.circular(8),
-                      border: isSelected ? Border.all(color: CyberTheme.primary) : (isToday ? Border.all(color: CyberTheme.secondary.withValues(alpha: 0.5)) : null),
+                      border: isSelected
+                          ? Border.all(color: CyberTheme.primary)
+                          : (isToday
+                                ? Border.all(
+                                    color: CyberTheme.secondary.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  )
+                                : null),
                     ),
                     child: Stack(
                       alignment: Alignment.center,
@@ -233,8 +302,14 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                         Text(
                           '$day',
                           style: TextStyle(
-                            color: isSelected ? CyberTheme.primary : (isToday ? CyberTheme.secondary : Colors.white),
-                            fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected
+                                ? CyberTheme.primary
+                                : (isToday
+                                      ? CyberTheme.secondary
+                                      : Colors.white),
+                            fontWeight: isSelected || isToday
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                         if (hasAppointment)
