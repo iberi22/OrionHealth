@@ -74,7 +74,8 @@ app.get('/api/auth/ihce/callback', async (req, res) => {
     req.session.save();
     res.json({ message: 'Authentication successful', patientId: tokenData.patient });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Authentication error:', error);
+    res.status(500).json({ error: 'An error occurred during authentication' });
   }
 });
 
@@ -83,11 +84,18 @@ app.get('/api/fhir/patient/:id', async (req, res) => {
   const { id } = req.params;
   const tokenData = req.session.tokenData;
   if (!tokenData) return res.status(401).json({ error: 'Unauthorized' });
+
+  // Security: Prevent IDOR by ensuring requested ID matches authenticated user's patient ID
+  if (id !== tokenData.patient) {
+    return res.status(403).json({ error: 'Forbidden: Cannot access other patient records' });
+  }
+
   try {
     const patient = await fhirClient.getPatient(id, tokenData.accessToken);
     res.json(patient);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching patient data:', error);
+    res.status(500).json({ error: 'An error occurred while fetching patient data' });
   }
 });
 
@@ -99,7 +107,8 @@ app.get('/api/fhir/rda', async (req, res) => {
     const parsedRda = RdaParser.parse(rdaBundle);
     res.json(parsedRda || rdaBundle);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching RDA data:', error);
+    res.status(500).json({ error: 'An error occurred while fetching RDA data' });
   }
 });
 
@@ -111,7 +120,8 @@ app.post('/api/gmail/appointments', async (req, res) => {
     const appointments = await fetchGmailAppointments({ access_token: 'mock_token' });
     res.json(appointments);
   } catch (error) {
-    res.status(500).send(error.toString());
+    console.error('Error fetching Gmail appointments:', error);
+    res.status(500).send('An error occurred while fetching Gmail appointments');
   }
 });
 
@@ -122,7 +132,8 @@ app.post('/api/outlook/appointments', async (req, res) => {
     const appointments = await fetchOutlookAppointments('mock_token');
     res.json(appointments);
   } catch (error) {
-    res.status(500).send(error.toString());
+    console.error('Error fetching Outlook appointments:', error);
+    res.status(500).send('An error occurred while fetching Outlook appointments');
   }
 });
 

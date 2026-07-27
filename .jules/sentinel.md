@@ -1,0 +1,4 @@
+## 2025-02-15 - Prevent IDOR in FHIR patient data endpoints
+**Vulnerability:** The FHIR patient endpoint (`/api/fhir/patient/:id`) lacked authorization checks, allowing an authenticated user to fetch data for any patient ID by simply modifying the URL parameter. Error responses were also leaking potentially sensitive internal information by passing raw error messages to the client.
+**Learning:** In a multi-user Node.js/Express environment, authenticating a session is not enough; explicit resource-level authorization checks are required. Relying on default error handling can unintentionally expose implementation details.
+**Prevention:** Always compare requested resource IDs against the authenticated user's ID stored in the session (`req.session.tokenData.patient`) before accessing data. Implement generic error messages for client responses and log specific error details on the server side to maintain security without losing debug information.
