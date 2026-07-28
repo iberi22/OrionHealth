@@ -88,6 +88,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
           ),
           IconButton(
             icon: const Icon(Icons.add),
+            tooltip: 'Añadir cita',
             onPressed: () => _showAppointmentForm(),
           ),
         ],
@@ -190,10 +191,12 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.chevron_left, size: 20),
+                      tooltip: 'Mes anterior',
                       onPressed: () => setState(() => _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1)),
                     ),
                     IconButton(
                       icon: const Icon(Icons.chevron_right, size: 20),
+                      tooltip: 'Mes siguiente',
                       onPressed: () => setState(() => _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1)),
                     ),
                   ],
