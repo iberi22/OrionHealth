@@ -1,0 +1,4 @@
+## 2024-07-28 - Fix IDOR in FHIR patient endpoint
+**Vulnerability:** The `/api/fhir/patient/:id` endpoint allowed any authenticated user to fetch the patient data of any arbitrary `:id`. Additionally, the endpoint leaked raw `error.message` strings directly to the client in the 500 response.
+**Learning:** This existed because although there was a check that the user had a `tokenData` indicating they were logged in, there was no check ensuring the requested patient ID matched their own authenticated `tokenData.patient` ID.
+**Prevention:** Always implement explicit authorization checks on endpoints that fetch by ID to ensure the requested resource matches the authenticated user's scope. Also, always return generic error messages to the client instead of raw internal error strings to avoid information leakage.
