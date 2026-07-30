@@ -29,10 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       listener: (context, state) {
         if (state.status == AuthStatus.error && state.error != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error!),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text(state.error!), backgroundColor: Colors.red),
           );
         }
       },
@@ -53,8 +50,8 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     'OrionHealth',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 48),
                   if (state.status == AuthStatus.loading)
@@ -91,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
             border: const OutlineInputBorder(),
             suffixIcon: IconButton(
               icon: Icon(_obscurePin ? Icons.visibility : Icons.visibility_off),
+              tooltip: _obscurePin ? 'Show PIN' : 'Hide PIN',
               onPressed: () => setState(() => _obscurePin = !_obscurePin),
             ),
           ),
@@ -116,10 +114,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildPinSetup(BuildContext context) {
     return Column(
       children: [
-        Text(
-          'Set up your PIN',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        Text('Set up your PIN', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
         const Text('PIN must be 4-6 digits'),
         const SizedBox(height: 24),
@@ -136,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
             border: const OutlineInputBorder(),
             suffixIcon: IconButton(
               icon: Icon(_obscurePin ? Icons.visibility : Icons.visibility_off),
+              tooltip: _obscurePin ? 'Show PIN' : 'Hide PIN',
               onPressed: () => setState(() => _obscurePin = !_obscurePin),
             ),
           ),

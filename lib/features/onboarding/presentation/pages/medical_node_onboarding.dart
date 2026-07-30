@@ -70,6 +70,7 @@ class _MedicalNodeOnboardingState extends State<MedicalNodeOnboarding> {
             children: [
               IconButton(
                 icon: const Icon(Icons.close, color: Colors.white70),
+                tooltip: 'Cerrar',
                 onPressed: () => Navigator.of(context).pop(),
               ),
               Text(
@@ -85,7 +86,9 @@ class _MedicalNodeOnboardingState extends State<MedicalNodeOnboarding> {
             child: LinearProgressIndicator(
               value: (_currentPage + 1) / _totalPages,
               backgroundColor: Colors.white12,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.primary,
+              ),
               minHeight: 4,
             ),
           ),
@@ -158,10 +161,7 @@ class _WhatIsMedicalNetworkStep extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'La Red Médica OrionHealth es una red de centros de salud, laboratorios y especialistas conectados para brindarte atención integral.',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white.withAlpha(179),
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.white.withAlpha(179)),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -173,10 +173,7 @@ class _WhatIsMedicalNetworkStep extends StatelessWidget {
             Icons.medical_services,
             'Especialistas en múltiples áreas',
           ),
-          _buildFeatureItem(
-            Icons.access_time,
-            'Agenda de citas en línea',
-          ),
+          _buildFeatureItem(Icons.access_time, 'Agenda de citas en línea'),
           const Spacer(),
         ],
       ),
@@ -194,10 +191,7 @@ class _WhatIsMedicalNetworkStep extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.white70),
             ),
           ),
         ],
@@ -244,29 +238,14 @@ class _SecureDataSharingStep extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Tu información médica se comparte de forma segura y solo con tu consentimiento entre los profesionales de la red.',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white.withAlpha(179),
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.white.withAlpha(179)),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
-          _buildSecurityItem(
-            Icons.lock,
-            'Cifrado de extremo a extremo',
-          ),
-          _buildSecurityItem(
-            Icons.verified_user,
-            'Autenticación biométrica',
-          ),
-          _buildSecurityItem(
-            Icons.privacy_tip,
-            'Tú controlas quién accede',
-          ),
-          _buildSecurityItem(
-            Icons.rule,
-            'Cumplimiento HIPAA',
-          ),
+          _buildSecurityItem(Icons.lock, 'Cifrado de extremo a extremo'),
+          _buildSecurityItem(Icons.verified_user, 'Autenticación biométrica'),
+          _buildSecurityItem(Icons.privacy_tip, 'Tú controlas quién accede'),
+          _buildSecurityItem(Icons.rule, 'Cumplimiento HIPAA'),
           const Spacer(),
         ],
       ),
@@ -284,10 +263,7 @@ class _SecureDataSharingStep extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.white70),
             ),
           ),
         ],
@@ -334,29 +310,17 @@ class _PatientBenefitsStep extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Al unirte a la Red Médica OrionHealth, obtienes acceso a beneficios exclusivos para tu salud.',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white.withAlpha(179),
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.white.withAlpha(179)),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
-          _buildBenefitItem(
-            Icons.history,
-            'Historial médico unificado',
-          ),
-          _buildBenefitItem(
-            Icons.receipt_long,
-            'Resultados en línea',
-          ),
+          _buildBenefitItem(Icons.history, 'Historial médico unificado'),
+          _buildBenefitItem(Icons.receipt_long, 'Resultados en línea'),
           _buildBenefitItem(
             Icons.card_membership,
             'Descuentos en medicamentos',
           ),
-          _buildBenefitItem(
-            Icons.support_agent,
-            'Asistente de salud 24/7',
-          ),
+          _buildBenefitItem(Icons.support_agent, 'Asistente de salud 24/7'),
           const Spacer(),
         ],
       ),
@@ -374,10 +338,7 @@ class _PatientBenefitsStep extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.white70),
             ),
           ),
         ],
