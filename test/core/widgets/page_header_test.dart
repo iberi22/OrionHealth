@@ -11,10 +11,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: PageHeader(
-              title: 'Page Title',
-              subtitle: 'Page Subtitle',
-            ),
+            body: PageHeader(title: 'Page Title', subtitle: 'Page Subtitle'),
           ),
         ),
       );
@@ -60,25 +57,42 @@ void main() {
       expect(backPressed, isTrue);
     });
 
-    testWidgets('back button uses default pop behavior if onBackPress is null', (tester) async {
+    testWidgets(
+      'back button uses default pop behavior if onBackPress is null',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  return PageHeader(title: 'Pop Test', showBackButton: true);
+                },
+              ),
+            ),
+          ),
+        );
+
+        // This is a bit tricky to test without actual navigation,
+        // but we can verify it doesn't crash and the button exists.
+        expect(find.byType(IconButton), findsOneWidget);
+      },
+    );
+
+    testWidgets('shows tooltip for back button for better accessibility', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Builder(
-              builder: (context) {
-                return PageHeader(
-                  title: 'Pop Test',
-                  showBackButton: true,
-                );
-              },
-            ),
+            body: PageHeader(title: 'Tooltip Test', showBackButton: true),
           ),
         ),
       );
 
-      // This is a bit tricky to test without actual navigation,
-      // but we can verify it doesn't crash and the button exists.
-      expect(find.byType(IconButton), findsOneWidget);
+      final tooltip = find.byTooltip(
+        'Back',
+      ); // MaterialLocalizations default tooltip for en
+      expect(tooltip, findsOneWidget);
     });
   });
 }
