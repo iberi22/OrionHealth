@@ -1,0 +1,4 @@
+## 2025-07-19 - Hardcoded API Key and secrets found
+**Vulnerability:** Found hardcoded sandbox API key `sandboxApiKey = '9ffb7a49797e459bab116c6f2029cae6'` in `IhceApiClient`. Found hardcoded client secret `_sandboxClientSecret = 'fhir-secret'`. Also found a hardcoded `_sessionKey = 'orion_ble_session_static_key_v1'` and salt `'orion_health_salt_v1'` in `EncryptionService`.
+**Learning:** Hardcoding credentials in source code (especially dart/flutter which can be decompiled) is a critical security vulnerability and violates best practices, allowing attackers to extract credentials and compromise external systems. Hardcoding encryption keys renders the encryption useless against targeted attacks.
+**Prevention:** Use `--dart-define` for build-time environment variables in Flutter and retrieve using `String.fromEnvironment`. Or use a `.env` file via `flutter_dotenv` package.

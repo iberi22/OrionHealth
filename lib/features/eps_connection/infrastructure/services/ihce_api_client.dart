@@ -14,7 +14,8 @@ import 'package:orionhealth_health/features/eps_connection/infrastructure/servic
 ///   InteropAPI Minsalud Sandbox - Prestadores v1.5
 class IhceApiClient {
   static const String sandboxBaseUrl = 'https://sandbox.ihcecol.gov.co/ihce';
-  static const String sandboxApiKey = '9ffb7a49797e459bab116c6f2029cae6';
+  static const String sandboxApiKey =
+      String.fromEnvironment('IHCE_SANDBOX_API_KEY', defaultValue: '');
 
   final String _baseUrl;
   final String _subscriptionKey;
