@@ -45,6 +45,7 @@ class PageHeader extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   color: AppColors.secondary,
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                 ),
                 const SizedBox(width: 12),
               ] else if (leading != null) ...[
