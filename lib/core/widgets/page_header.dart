@@ -41,7 +41,6 @@ class PageHeader extends StatelessWidget {
                     backButtonIcon ?? Icons.arrow_back_ios_new,
                     size: 20,
                   ),
-                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   color: AppColors.secondary,
