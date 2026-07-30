@@ -83,13 +83,19 @@ app.get('/api/fhir/patient/:id', async (req, res) => {
   const { id } = req.params;
   const tokenData = req.session.tokenData;
   if (!tokenData) return res.status(401).json({ error: 'Unauthorized' });
-  // Ensure the requested patient ID matches the authenticated user's patient ID
-  if (id !== tokenData.patient) return res.status(403).json({ error: 'Forbidden' });
+
+  // Sentinel: Prevent IDOR by ensuring the requested patient ID matches the authenticated user's ID
+  if (id !== tokenData.patient) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   try {
     const patient = await fhirClient.getPatient(id, tokenData.accessToken);
     res.json(patient);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching patient:', error); // Log detailed error internally
+    // Sentinel: Fail securely by not leaking error details to the client
+    res.status(500).json({ error: 'An error occurred' });
   }
 });
 
