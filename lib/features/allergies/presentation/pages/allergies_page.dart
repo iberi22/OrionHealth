@@ -31,6 +31,7 @@ class _AllergiesView extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: CyberTheme.primary),
+            tooltip: 'Añadir alergia',
             onPressed: () => _showAllergyForm(context),
           ),
         ],
