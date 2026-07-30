@@ -212,6 +212,14 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
     );
     final monthName = DateFormat.MMMM('es').format(_focusedDay);
 
+    // ⚡ Bolt: Optimize collection lookups in itemBuilder
+    // What: Pre-compute normalized appointment dates into a HashSet.
+    // Why: Replaces an expensive O(N) `_allAppointments.any()` check inside the `itemBuilder` loop with a fast O(1) `contains()` check.
+    // Impact: Prevents UI lag when rendering the calendar view, especially for users with many appointments.
+    final appointmentDates = _allAppointments
+        .map((a) => DateTime(a.dateTime.year, a.dateTime.month, a.dateTime.day))
+        .toSet();
+
     return GlassmorphicCard(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -269,9 +277,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 final date = DateTime(_focusedDay.year, _focusedDay.month, day);
                 final isSelected = DateUtils.isSameDay(date, _selectedDay);
                 final isToday = DateUtils.isSameDay(date, DateTime.now());
-                final hasAppointment = _allAppointments.any(
-                  (a) => DateUtils.isSameDay(a.dateTime, date),
-                );
+                final hasAppointment = appointmentDates.contains(date);
 
                 return InkWell(
                   onTap: () => setState(() => _selectedDay = date),
