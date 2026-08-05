@@ -191,7 +191,7 @@ test.describe('PWA & iOS Support', () => {
       const link = document.querySelector('link[rel="manifest"]');
       return link ? link.getAttribute('href') : null;
     });
-    expect(manifestHref).toBe('/OrionHealth/manifest.json');
+    expect(manifestHref).toBe('/OrionHealth/manifest.webmanifest');
   });
 
   test('should have iOS meta tags', async ({ page }) => {
