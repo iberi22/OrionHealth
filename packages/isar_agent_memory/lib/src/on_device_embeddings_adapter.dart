@@ -131,15 +131,38 @@ class OnDeviceEmbeddingsAdapter implements EmbeddingsAdapter {
       // If output is [1, 384] (already pooled), we are good.
       // If output is [1, seq_len, 384], we need to pool.
 
+      // If the output is a nested list of shape [batch, seq_len, dim]
+      if (outputData is List<List<List<double>>> ||
+          (outputData.isNotEmpty && outputData.first is List)) {
+        final seqList = outputData.first as List;
+        final seqLen = seqList.length;
+        if (seqLen == 0) {
+          throw Exception('Empty sequence in ONNX output.');
+        }
+
+        final pooled = List<double>.filled(_dimension, 0.0);
+        for (var i = 0; i < seqLen; i++) {
+          final tokenVec = seqList[i] as List;
+          for (var j = 0; j < _dimension; j++) {
+            pooled[j] += (tokenVec[j] as num).toDouble();
+          }
+        }
+
+        for (var j = 0; j < _dimension; j++) {
+          pooled[j] /= seqLen;
+        }
+
+        return pooled;
+      }
+
       // Simple heuristic: check total elements
       if (outputData.length == _dimension) {
         return outputData.map((e) => (e as num).toDouble()).toList();
       }
 
-      // If larger, assume [1, seq_len, dim] and do Mean Pooling
+      // If larger, assume [1, seq_len, dim] and do Mean Pooling on a flattened list
       // Logic: Sum vectors for all tokens (respecting mask) and divide by count.
       // Since we passed a mask of all 1s and batch=1, we just average all vectors.
-
       final seqLen = tokenIds.length;
       if (outputData.length == seqLen * _dimension) {
         final pooled = List<double>.filled(_dimension, 0.0);
@@ -159,7 +182,7 @@ class OnDeviceEmbeddingsAdapter implements EmbeddingsAdapter {
       }
 
       throw Exception(
-          'Unexpected output shape from ONNX model. Expected dimension $_dimension or sequence length * $_dimension.');
+          'Unexpected output shape from ONNX model. Expected dimension $_dimension or sequence length * $_dimension. Actual length: ${outputData.length}');
     } finally {
       // Ensure native resources are released even if an exception occurs
       for (final entry in inputs.entries) {
