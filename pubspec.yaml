@@ -78,8 +78,8 @@ dependencies:
   google_generative_ai: ^0.4.7
   path: ^1.9.1
   sqflite: ^2.4.2+1
-  flutter_appauth: ^12.0.1
   mobile_scanner: ^7.4.0
+  flutter_appauth: ^12.0.2
   workmanager: ^0.9.0+3
   device_calendar: ^4.3.3
   url_launcher: ^6.3.2
