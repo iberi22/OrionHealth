@@ -165,10 +165,10 @@ packages:
     dependency: transitive
     description:
       name: background_downloader
-      sha256: aceacec2b2a72ec3a8862ab5895fcbbc71ab33765f3619d57963f3110dd268e3
+      sha256: "2ea4d638b12690d58ba5f797453f9f9e322bc2848f1f38cfe67aa56ece1ad072"
       url: "https://pub.dev"
     source: hosted
-    version: "9.5.5"
+    version: "9.5.7"
   bloc:
     dependency: transitive
     description:
@@ -433,14 +433,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.9"
-  dart_sentencepiece_tokenizer:
-    dependency: transitive
-    description:
-      name: dart_sentencepiece_tokenizer
-      sha256: "85825632845cf6427ea0cd13dfba96b4341cf63525165155e5b9b97011239289"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.2"
   dart_style:
     dependency: transitive
     description:
@@ -465,6 +457,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.14"
+  decimal:
+    dependency: transitive
+    description:
+      name: decimal
+      sha256: "2c3c8b74f2948066d3f42585477aec9cfc48fefd7a723a4d4274a6c71a5c0df7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.6"
   device_calendar:
     dependency: "direct main"
     description:
@@ -505,6 +505,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  email_validator:
+    dependency: transitive
+    description:
+      name: email_validator
+      sha256: b19aa5d92fdd76fbc65112060c94d45ba855105a28bb6e462de7ff03b12fa1fb
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   equatable:
     dependency: "direct main"
     description:
@@ -735,10 +743,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_gemma
-      sha256: "72485d8a319bb4c0c00262b1c0e901eb0f0a6f61db5cae7ebfc80e3b5983567a"
+      sha256: "00093a86d841581f588b96b46994d33eb64213d47e9aa19489b72e4dde92692d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.6"
+    version: "1.5.2"
   flutter_inappwebview:
     dependency: "direct main"
     description:
@@ -943,6 +951,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.0"
+  genai_primitives:
+    dependency: transitive
+    description:
+      name: genai_primitives
+      sha256: "5a1e8c7ae9caf01aa609f59c54de47b73f51bf1ae95e0f679b7c7ab6948c4d9d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.4"
   get_it:
     dependency: "direct main"
     description:
@@ -1039,14 +1055,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  grpc:
-    dependency: transitive
-    description:
-      name: grpc
-      sha256: "86be3a7d39ad865b214a7370021ac80e68939238b507730de6d97fc662cb2723"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.0"
   gtk:
     dependency: transitive
     description:
@@ -1102,14 +1110,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
-  http2:
-    dependency: transitive
-    description:
-      name: http2
-      sha256: "382d3aefc5bd6dc68c6b892d7664f29b5beb3251611ae946a98d35158a82bbfa"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.1"
   http_multi_server:
     dependency: transitive
     description:
@@ -1298,6 +1298,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.12.0"
+  json_schema_builder:
+    dependency: transitive
+    description:
+      name: json_schema_builder
+      sha256: e46b1a2957590d2c811f47b22079710a273ebf9c8240a9e1440b759efb8ded5f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.6"
   just_audio:
     dependency: "direct main"
     description:
@@ -1350,10 +1358,10 @@ packages:
     dependency: transitive
     description:
       name: large_file_handler
-      sha256: c2ecaf552e8039119bbe3a094d15aecbafe833899f30b2dcfbb513eddf76b36f
+      sha256: "234eda71f32b6a772349299d0ed185a5f3e10c59235576fd178f4d720dd956ec"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.1"
+    version: "0.5.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -1426,14 +1434,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  local_hnsw:
-    dependency: transitive
-    description:
-      name: local_hnsw
-      sha256: "7fb0988e3f850121774d9dfe94068f843d87908d6b1e9ed5039710d8d9ae3f7a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   logging:
     dependency: transitive
     description:
@@ -1521,14 +1521,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.3+1"
-  native_toolchain_c:
+  mutex:
     dependency: transitive
     description:
-      name: native_toolchain_c
-      sha256: f59351d28f49520cd3a74eb1f41c5f19ae15e53c65a3231d14af672e46510a96
+      name: mutex
+      sha256: "8827da25de792088eb33e572115a5eb0d61d61a3c01acbc8bcbe76ed78f1a1f2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.1"
+    version: "3.1.0"
   nested:
     dependency: transitive
     description:
@@ -1761,14 +1761,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.5"
-  protobuf:
-    dependency: transitive
-    description:
-      name: protobuf
-      sha256: "75ec242d22e950bdcc79ee38dd520ce4ee0bc491d7fadc4ea47694604d22bf06"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.0"
   provider:
     dependency: transitive
     description:
@@ -1793,6 +1785,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  rational:
+    dependency: transitive
+    description:
+      name: rational
+      sha256: cb808fb6f1a839e6fc5f7d8cb3b0a10e1db48b3be102de73938c627f0b636336
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   recase:
     dependency: transitive
     description:
@@ -2134,14 +2134,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      sha256: "37356bcb56ce0d9404d602c41e4bdb7765e7e9732a3e47adb3d98c556a6abdad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.3"
   stack_trace:
     dependency: transitive
     description:
