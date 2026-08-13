@@ -7,15 +7,21 @@ class InMemoryVectorIndex implements VectorIndex {
   final String _namespace;
   final bool _normalize;
   final VectorMetric _metric;
+  final int _dimension;
   final Map<String, Float32List> _store = {};
 
   InMemoryVectorIndex({
     String namespace = 'test',
     bool normalize = true,
     VectorMetric metric = VectorMetric.cosine,
-  })  : _namespace = namespace,
-        _normalize = normalize,
-        _metric = metric;
+    int dimension = 384,
+  }) : _namespace = namespace,
+       _normalize = normalize,
+       _metric = metric,
+       _dimension = dimension;
+
+  @override
+  int get dimension => _dimension;
 
   @override
   String get provider => 'in-memory';

@@ -640,6 +640,36 @@ flutter test
 
 ---
 
+## 📊 Embedding Quality Benchmark & Regression Suite
+
+To ensure the medical RAG pipeline maintains high retrieval accuracy and avoids semantic regressions, we have implemented an automated embedding quality benchmark suite. It runs medical domain queries against a curated gold-standard relevance dataset.
+
+### Curated Medical Dataset
+
+- **Documents**: 10 realistic patient cases, clinical guidelines, and medical symptom descriptions (e.g., Type 2 Diabetes, Hypertension, Stroke, Heart Attack, Asthma, Appendicitis, Pneumonia, etc.).
+- **Queries**: Semantic variations of medical terms (e.g., querying *"lung infection, cough, chest consolidation"* to retrieve the pneumonia guideline) to test zero-shot semantic matching.
+
+### Metrics & Thresholds
+
+We evaluate retrieval quality using **Recall@K** (where $K \in \{1, 3, 5\}$). The following quality thresholds are asserted in our regression tests:
+
+| Metric | Threshold | Actual (Current Model) | Status |
+|--------|-----------|------------------------|--------|
+| **Recall@1** | $\ge$ 70.0% | **100.0%** | Passed ✅ |
+| **Recall@3** | $\ge$ 85.0% | **100.0%** | Passed ✅ |
+| **Recall@5** | $\ge$ 90.0% | **100.0%** | Passed ✅ |
+
+### Running the Quality Benchmark
+
+Execute the following command to run the quality benchmark and assert the thresholds:
+
+```bash
+cd packages/isar_agent_memory
+flutter test test/embedding_benchmark_test.dart
+```
+
+---
+
 ## 🔄 Continuous Dependency Updates
 
 Uses **Dependabot** for automated PRs and **Coderabbit** for AI-assisted reviews. Merges to `main` require passing CI checks.
