@@ -1,54 +1,69 @@
-# SRC.md — Source Code Reference
+# SRC.md — Source Code Reference & Repository Structure
 
 ## Overview
-OrionHealth is a Flutter mobile application (Android/iOS) for privacy-first medical intelligence.
+**OrionHealth** is a Flutter mobile application (Android, iOS, Windows) paired with backend services for privacy-first personal health intelligence.
 
-## Project Structure
+---
 
-### Root Level
-- \lib/\ — Main application source code
-- \packages/\ — Dart packages
-  - \packages/health_wallet/\ — SSI/DID wallet implementation
-  - \packages/medical_standards/\ — ICD-10, LOINC, RxNorm, SNOMED CT, FHIR
-- \	est/\ — Root test suite
-- \docs/\ — Documentation (including SRS/)
-- \.github/\ — CI workflows
-- \scripts/\ — Utility scripts (coverage_checker.py, etc.)
+## Complete Repository Structure (100%)
 
-### lib/ Structure (Clean Architecture)
-- \lib/app/\ — Application entry point, DI, routing
-- \lib/presentation/\ — UI layer (pages, widgets, themes)
-- \lib/domain/\ — Business logic (entities, use cases, repos interfaces)
-- \lib/application/\ — Application services, state management
-- \lib/infrastructure/\ — Data sources (Isar, APIs, BLE, NFC)
+### Root Directory
+- `lib/` — Main Flutter application source code (Clean Architecture)
+- `backend/` — Node.js/Express backend server for FHIR data integration & sessions
+- `functions/` — Cloud & serverless utility functions
+- `packages/` — Local Dart/Flutter packages
+  - `packages/health_wallet/` — Self-Sovereign Identity (SSI) / DID & Verifiable Credentials wallet
+  - `packages/isar_agent_memory/` — Graph + Vector local database for AI agent memory (Isar)
+  - `packages/medical_standards/` — ICD-10, LOINC, RxNorm, SNOMED CT, FHIR mappings
+- `docs/` — Documentation & SRS specifications
+  - `docs/SRS/` — Software Requirements Specification files (`01-functional-requirements.md`, `REQUIREMENTS.md`, etc.)
+  - `docs/architecture/` — Architecture & Clean Architecture guidelines
+  - `docs/features/` — Feature specifications & documentation
+- `.gitcore/` — GitCore & SWAL standards metadata
+  - `.gitcore/docs/` — SWAL_GOAL.md canonical document
+  - `.gitcore/features.json` — Feature catalog (schema v2)
+  - `.gitcore/SRC.md` — Local GitCore source code reference
+- `android/` — Native Android platform code and `AicorePlugin.kt`
+- `ios/` — Native iOS platform code
+- `windows/` — Native Windows desktop platform runner
+- `assets/` — Application assets (images, icons, medical reference data)
+- `test/` — Unit and widget test suite
+- `test_driver/` — Drivers for integration tests
+- `integration_test/` — End-to-end integration test scenarios
+- `golden/` — Reference golden images for visual regression tests
+- `scripts/` — Build and analysis utility scripts
 
-### Features (feature-first in lib/features/)
-Each feature follows Clean Architecture internally:
-\lib/features/<feature>/  - presentation/ (widgets, pages)
-  - domain/ (models, use_cases)
-  - application/ (providers, services)
-  - infrastructure/ (repositories, data sources)
+---
 
-### Key Features (25 total, see features.json)
-- auth, about, allergies, appointments, calendar_import, dashboard, data_sources,
-  doctor_verification, email-citas, eps_connection, health_data_import, health_record,
-  health_sharing, home, local_agent, medications, medical_research, meditation,
-  network, onboarding, reports, settings, sync, user_profile, vitals, voice_chat
+## Application Architecture (`lib/`)
 
-## Build Commands
-- \lutter pub get\ — Install dependencies
-- \lutter analyze\ — Static analysis
-- \lutter test --coverage\ — Run tests with coverage
-- \lutter build apk\ — Build Android APK
-- \lutter build ios\ — Build iOS
+OrionHealth follows Clean Architecture with feature-first modularization:
 
-## Documentation
-- \docs/SRS/README.md\ — 6 SRS documents
-- \docs/ORIONHEALTH-ROADMAP.md\ — Technical roadmap
-- \docs/planning/PLANNING.md\ — Vision and planning
-- \docs/features/*.md\ — Feature-specific docs
-- \eatures.json\ — Feature catalog (26 features, source of truth)
+```
+lib/
+├── app/                        # Main app entry, initialization & global routing
+├── core/                       # Shared infrastructure & utilities
+│   ├── config/                 # Environment & build configs (dev/staging/prod)
+│   ├── di/                     # Dependency Injection (GetIt + injectable)
+│   ├── services/               # Core services (Audio, TTS, SecureStorage, AppLogger)
+│   ├── theme/                  # Theme definitions (CyberTheme dark mode)
+│   ├── utils/                  # Cache, error handling, lazy router
+│   └── widgets/                # Reusable widgets & ErrorBoundary
+└── features/                   # 26 Feature modules
+    ├── auth/                   # Authentication & biometrics
+    ├── dashboard/              # Centralized health dashboard
+    ├── health_record/          # FHIR medical records & history
+    ├── local_agent/            # Local RAG AI agent
+    ├── voice_chat/             # Offline AI voice assistant
+    └── ...                     # (See features.json for full feature list)
+```
 
-## CI
-- \.github/workflows/ci.yml\ — Flutter analyze + test + coverage
-- Coverage threshold: \scripts/coverage_checker.py
+---
+
+## Build & Test Commands
+
+- `flutter pub get` — Install dependencies
+- `dart run build_runner build --delete-conflicting-outputs` — Run code generation
+- `flutter analyze` — Run static analysis
+- `flutter test` — Run unit and widget test suite
+- `flutter build apk` — Build Android release APK
