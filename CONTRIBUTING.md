@@ -4,6 +4,11 @@ Thank you for your interest in contributing to OrionHealth! We welcome contribut
 
 > **Note on health data**: OrionHealth is a local-first health data application. Please **never share real health data** in issues, pull requests, or discussions. Use synthetic or anonymized examples when discussing health-related features.
 
+- La **[Guía de Colaboración SWAL](../../docs/SWAL/COLLABORATION_GUIDE.md)** (canónica, administrada por Maloca) — estándares, licencia, seguridad y flujo issue→PR→merge (gestionado vía GitCore).
+- Para la visión técnica de red y el objetivo SWAL, lee **[docs/SWAL/GOAL.md](../../docs/SWAL/GOAL.md)**.
+- El backlog global se gestiona y puede visualizarse en **[maloca](https://github.com/iberi22/maloca)**.
+- Asegúrate de leer y aceptar el **[CLA.md](CLA.md)**.
+
 ---
 
 ## Getting Started
