@@ -1,0 +1,248 @@
+{
+  "$schema": "v2",
+  "metadata": {
+    "version": "2.0.0",
+    "last_updated": "2026-08-16",
+    "overall_progress_pct": 98.1,
+    "total_features": 26,
+    "completed_features": 25,
+    "in_progress_features": 1,
+    "planned_features": 0
+  },
+  "features": [
+    {
+      "id": "FEAT-001",
+      "name": "Auth & Biometrics",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 42,
+      "description": "Secure user authentication including biometric (fingerprint/face) login and PIN setup."
+    },
+    {
+      "id": "FEAT-002",
+      "name": "User Profile",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 18,
+      "description": "Management of personal health profile, basic information, and preferences."
+    },
+    {
+      "id": "FEAT-003",
+      "name": "Dashboard",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 35,
+      "description": "Centralized overview of health status, upcoming appointments, and daily summaries."
+    },
+    {
+      "id": "FEAT-004",
+      "name": "Health Records",
+      "layer": "domain",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 67,
+      "description": "Comprehensive management of medical history, clinical documents, and FHIR resources."
+    },
+    {
+      "id": "FEAT-005",
+      "name": "Vitals Monitor",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 29,
+      "description": "Tracking and visualization of vital signs like heart rate, blood pressure, and oxygen levels."
+    },
+    {
+      "id": "FEAT-006",
+      "name": "Medications",
+      "layer": "domain",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 44,
+      "description": "Tracking of prescribed medications, dosages, and adherence schedules."
+    },
+    {
+      "id": "FEAT-007",
+      "name": "Appointments",
+      "layer": "application",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 31,
+      "description": "Scheduling and management of medical appointments and follow-ups."
+    },
+    {
+      "id": "FEAT-008",
+      "name": "Reports & Analytics",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 23,
+      "description": "Visual representation of health trends and generated health reports."
+    },
+    {
+      "id": "FEAT-009",
+      "name": "Medical Standards",
+      "layer": "domain",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 56,
+      "description": "Integration and mapping of medical terminologies (ICD-10, LOINC, RxNorm, SNOMED)."
+    },
+    {
+      "id": "FEAT-010",
+      "name": "Doctor Verification",
+      "layer": "application",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 38,
+      "description": "System for verifying medical credentials and professional status of healthcare providers."
+    },
+    {
+      "id": "FEAT-011",
+      "name": "Voice Chat",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 14,
+      "description": "On-device AI-powered voice assistant for hands-free interaction."
+    },
+    {
+      "id": "FEAT-012",
+      "name": "Local Agent",
+      "layer": "infrastructure",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 22,
+      "description": "Personalized local AI agent that learns from user data while maintaining privacy."
+    },
+    {
+      "id": "FEAT-013",
+      "name": "Network Sync",
+      "layer": "infrastructure",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 19,
+      "description": "Infrastructure for peer-to-peer data synchronization across devices."
+    },
+    {
+      "id": "FEAT-014",
+      "name": "Allergies",
+      "layer": "domain",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 27,
+      "description": "Management and tracking of known allergies and adverse reactions."
+    },
+    {
+      "id": "FEAT-015",
+      "name": "Calendar Import",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 16,
+      "description": "Integration with external calendar providers (Gmail, Outlook) to import medical appointments."
+    },
+    {
+      "id": "FEAT-016",
+      "name": "Health Sharing",
+      "layer": "application",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 25,
+      "description": "Secure sharing of health data with trusted individuals or providers via P2P."
+    },
+    {
+      "id": "FEAT-017",
+      "name": "Governance",
+      "layer": "application",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 21,
+      "description": "Mechanisms for network participation, decision-making, and policy updates."
+    },
+    {
+      "id": "FEAT-018",
+      "name": "Incentives & Rewards",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 18,
+      "description": "Gamification and reward system for healthy habits and network contributions."
+    },
+    {
+      "id": "FEAT-019",
+      "name": "Meditation",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 12,
+      "description": "Guided offline meditation and breathing exercises for mental well-being."
+    },
+    {
+      "id": "FEAT-020",
+      "name": "Settings",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 33,
+      "description": "Application configuration, privacy controls, and theme management."
+    },
+    {
+      "id": "FEAT-021",
+      "name": "Sync Service",
+      "layer": "infrastructure",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 20,
+      "description": "Background service orchestrating data consistency across multiple platforms."
+    },
+    {
+      "id": "FEAT-022",
+      "name": "Emergency Data",
+      "layer": "domain",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 15,
+      "description": "Critical health information accessible in case of emergency (Medical ID)."
+    },
+    {
+      "id": "FEAT-023",
+      "name": "Scraping Config",
+      "layer": "application",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 11,
+      "description": "Configuration and adapters for retrieving medical information from various research sources."
+    },
+    {
+      "id": "FEAT-024",
+      "name": "Proposals",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 9,
+      "description": "Interface for submitting and voting on network improvement proposals."
+    },
+    {
+      "id": "FEAT-025",
+      "name": "Data Sources",
+      "layer": "infrastructure",
+      "status": "in_progress",
+      "progress_pct": 50,
+      "tests": 5,
+      "description": "Integration layer for diverse health data inputs (sensors, files, external APIs)."
+    },
+    {
+      "id": "FEAT-026",
+      "name": "Clinical Assessments",
+      "layer": "presentation",
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 10,
+      "description": "Interactive clinical surveys and consent management for patient assessments."
+    }
+  ]
+}
