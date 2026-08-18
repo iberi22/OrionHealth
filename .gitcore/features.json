@@ -3,11 +3,17 @@
   "metadata": {
     "version": "2.0.0",
     "last_updated": "2026-08-16",
-    "overall_progress_pct": 98.1,
+    "overall_progress_pct": 98.08,
     "total_features": 26,
     "completed_features": 25,
     "in_progress_features": 1,
-    "planned_features": 0
+    "planned_features": 0,
+    "project": "OrionHealth",
+    "created": "2026-08-18",
+    "updated": "2026-08-18",
+    "passing": 25,
+    "failing": 1,
+    "status": "in_progress"
   },
   "features": [
     {
@@ -15,234 +21,364 @@
       "name": "Auth & Biometrics",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 42,
-      "description": "Secure user authentication including biometric (fingerprint/face) login and PIN setup."
+      "description": "Secure user authentication including biometric (fingerprint/face) login and PIN setup.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-002",
       "name": "User Profile",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 18,
-      "description": "Management of personal health profile, basic information, and preferences."
+      "description": "Management of personal health profile, basic information, and preferences.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-003",
       "name": "Dashboard",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 35,
-      "description": "Centralized overview of health status, upcoming appointments, and daily summaries."
+      "description": "Centralized overview of health status, upcoming appointments, and daily summaries.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-004",
       "name": "Health Records",
       "layer": "domain",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 67,
-      "description": "Comprehensive management of medical history, clinical documents, and FHIR resources."
+      "description": "Comprehensive management of medical history, clinical documents, and FHIR resources.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-005",
       "name": "Vitals Monitor",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 29,
-      "description": "Tracking and visualization of vital signs like heart rate, blood pressure, and oxygen levels."
+      "description": "Tracking and visualization of vital signs like heart rate, blood pressure, and oxygen levels.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-006",
       "name": "Medications",
       "layer": "domain",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 44,
-      "description": "Tracking of prescribed medications, dosages, and adherence schedules."
+      "description": "Tracking of prescribed medications, dosages, and adherence schedules.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-007",
       "name": "Appointments",
       "layer": "application",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 31,
-      "description": "Scheduling and management of medical appointments and follow-ups."
+      "description": "Scheduling and management of medical appointments and follow-ups.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-008",
       "name": "Reports & Analytics",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 23,
-      "description": "Visual representation of health trends and generated health reports."
+      "description": "Visual representation of health trends and generated health reports.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-009",
       "name": "Medical Standards",
       "layer": "domain",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 56,
-      "description": "Integration and mapping of medical terminologies (ICD-10, LOINC, RxNorm, SNOMED)."
+      "description": "Integration and mapping of medical terminologies (ICD-10, LOINC, RxNorm, SNOMED).",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-010",
       "name": "Doctor Verification",
       "layer": "application",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 38,
-      "description": "System for verifying medical credentials and professional status of healthcare providers."
+      "description": "System for verifying medical credentials and professional status of healthcare providers.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-011",
       "name": "Voice Chat",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 14,
-      "description": "On-device AI-powered voice assistant for hands-free interaction."
+      "description": "On-device AI-powered voice assistant for hands-free interaction.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-012",
       "name": "Local Agent",
       "layer": "infrastructure",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 22,
-      "description": "Personalized local AI agent that learns from user data while maintaining privacy."
+      "description": "Personalized local AI agent that learns from user data while maintaining privacy.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-013",
       "name": "Network Sync",
       "layer": "infrastructure",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 19,
-      "description": "Infrastructure for peer-to-peer data synchronization across devices."
+      "description": "Infrastructure for peer-to-peer data synchronization across devices.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-014",
       "name": "Allergies",
       "layer": "domain",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 27,
-      "description": "Management and tracking of known allergies and adverse reactions."
+      "description": "Management and tracking of known allergies and adverse reactions.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-015",
       "name": "Calendar Import",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 16,
-      "description": "Integration with external calendar providers (Gmail, Outlook) to import medical appointments."
+      "description": "Integration with external calendar providers (Gmail, Outlook) to import medical appointments.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-016",
       "name": "Health Sharing",
       "layer": "application",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 25,
-      "description": "Secure sharing of health data with trusted individuals or providers via P2P."
+      "description": "Secure sharing of health data with trusted individuals or providers via P2P.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-017",
       "name": "Governance",
       "layer": "application",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 21,
-      "description": "Mechanisms for network participation, decision-making, and policy updates."
+      "description": "Mechanisms for network participation, decision-making, and policy updates.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-018",
       "name": "Incentives & Rewards",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 18,
-      "description": "Gamification and reward system for healthy habits and network contributions."
+      "description": "Gamification and reward system for healthy habits and network contributions.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-019",
       "name": "Meditation",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 12,
-      "description": "Guided offline meditation and breathing exercises for mental well-being."
+      "description": "Guided offline meditation and breathing exercises for mental well-being.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-020",
       "name": "Settings",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 33,
-      "description": "Application configuration, privacy controls, and theme management."
+      "description": "Application configuration, privacy controls, and theme management.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-021",
       "name": "Sync Service",
       "layer": "infrastructure",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 20,
-      "description": "Background service orchestrating data consistency across multiple platforms."
+      "description": "Background service orchestrating data consistency across multiple platforms.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-022",
       "name": "Emergency Data",
       "layer": "domain",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 15,
-      "description": "Critical health information accessible in case of emergency (Medical ID)."
+      "description": "Critical health information accessible in case of emergency (Medical ID).",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-023",
       "name": "Scraping Config",
       "layer": "application",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 11,
-      "description": "Configuration and adapters for retrieving medical information from various research sources."
+      "description": "Configuration and adapters for retrieving medical information from various research sources.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-024",
       "name": "Proposals",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 9,
-      "description": "Interface for submitting and voting on network improvement proposals."
+      "description": "Interface for submitting and voting on network improvement proposals.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-025",
       "name": "Data Sources",
       "layer": "infrastructure",
       "status": "in_progress",
-      "progress_pct": 50,
+      "progress_pct": 50.0,
       "tests": 5,
-      "description": "Integration layer for diverse health data inputs (sensors, files, external APIs)."
+      "description": "Integration layer for diverse health data inputs (sensors, files, external APIs).",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     },
     {
       "id": "FEAT-026",
       "name": "Clinical Assessments",
       "layer": "presentation",
       "status": "completed",
-      "progress_pct": 100,
+      "progress_pct": 100.0,
       "tests": 10,
-      "description": "Interactive clinical surveys and consent management for patient assessments."
+      "description": "Interactive clinical surveys and consent management for patient assessments.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": null,
+      "last_tested": null
     }
   ]
 }
