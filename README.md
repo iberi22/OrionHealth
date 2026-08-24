@@ -1,17 +1,14 @@
 # OrionHealth 🏥
 
-**Your Personal Health Data Sanctuary for the Future of Personalized Medicine**
-
+[![CI](https://github.com/iberi22/OrionHealth/actions/workflows/ci.yml/badge.svg)](https://github.com/iberi22/OrionHealth/actions/workflows/ci.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue?logo=flutter)](https://flutter.dev)
-[![CI](https://github.com/iberi22/OrionHealth/actions/workflows/ci.yml/badge.svg)](https://github.com/iberi22/OrionHealth/actions/workflows/ci.yml)
-[![Stars](https://img.shields.io/github/stars/iberi22/OrionHealth?style=social)](https://github.com/iberi22/OrionHealth/stargazers)
-[![Last Commit](https://img.shields.io/github/last-commit/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth/commits/main)
-[![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/OrionHealth)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://iberi22.github.io/OrionHealth/)
-[![Dart SDK](https://img.shields.io/badge/Dart-3.10+-blue?logo=dart)](https://dart.dev)
-[![Code Size](https://img.shields.io/github/languages/code-size/iberi22/OrionHealth)](https://github.com/iberi22/OrionHealth)
-[![Real Score](https://img.shields.io/badge/Real%20Score-100%25-orange)](https://github.com/iberi22/OrionHealth)
+[![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/OrionHealth)
+
+OrionHealth is an open-source, privacy-first personal health intelligence platform and wallet built with Flutter.
+It gives individuals complete ownership of their medical records, wearable metrics, and clinical insights through
+on-device AI models and Self-Sovereign Identity standards without relying on centralized cloud providers.
 
 ---
 
@@ -23,64 +20,11 @@
 
 ---
 
-## 🌟 Vision
+## ⚡ Quickstart
 
-**OrionHealth** is a privacy-first health platform that gives individuals full control over their complete health data history. Built with Flutter and powered by its own backend infrastructure, it creates a secure "Digital Health Sheet" that integrates medical records, sensor data (Apple HealthKit, Google Health Connect), and AI-powered insights into a unified health intelligence platform.
+OrionHealth is packaged as `orionhealth_health` and supports mobile and desktop platforms (`android/`, `ios/`, `windows/`).
 
----
-
-## 🏗️ Architecture
-
-OrionHealth follows **Clean Architecture** with 4 layers. For a detailed breakdown, see [**ARCHITECTURE.md**](docs/architecture/ARCHITECTURE.md).
-
-```
-lib/
-├── core/                    # Shared infrastructure
-│   ├── config/              # Environment & build config
-│   │   ├── environment.dart # Runtime environment (dev/staging/prod)
-│   │   └── build_config.dart# Build-time flavor config
-│   ├── di/                  # Dependency injection (GetIt + injectable)
-│   ├── services/            # Core services
-│   │   ├── audio/           # AudioPlayerService, AudioRecorderService
-│   │   ├── tts/             # TTS adapters (SherpaOnnx, System)
-│   │   ├── app_logger.dart  # Structured logging
-│   │   └── secure_storage_service.dart # Encrypted storage
-│   ├── theme/               # App theme (dark mode)
-│   ├── utils/               # Utilities (cache, error handler, lazy_router)
-│   └── widgets/             # Shared widgets (error_boundary)
-├── features/                # Feature modules (Clean Architecture)
-│   ├── auth/                # Authentication + DID/VC
-│   ├── meditation/          # Offline-guided meditation
-│   ├── voice_chat/          # AI voice chat with TTS/ASR
-│   └── ...                  # 21+ additional features
-├── l10n/                    # Localization (Spanish)
-└── main.dart                # App entry point
-```
-
-### Key Design Decisions
-
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| State Management | flutter_bloc | Predictable, testable, scalable |
-| DI | get_it + injectable | Compile-time code gen, no runtime reflection |
-| TTS | sherpa_onnx (on-device) | Privacy-first, no cloud dependency |
-| Audio | just_audio + record | Lightweight, native platform integration |
-| Storage | flutter_secure_storage | Encrypted at rest, Keychain/Keystore backed |
-| FHIR | fhir_dstu2 + fhir_r4 | Industry standard for health data |
-| ObjectBox | isar_agent_memory | Embedded vector database for AI memory |
-| Logging | AppLogger | Structured, level-based, release-mode silent |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Flutter** 3.10+ / Dart 3.10+
-- **Android Studio** or **VS Code** with Flutter extension
-- **Git LFS** (for large model files)
-
-### Setup
+### Setup & Run
 
 ```bash
 # Clone the repository
@@ -90,16 +34,14 @@ cd OrionHealth
 # Install dependencies
 flutter pub get
 
-# Run code generation (DI, JSON serialization, etc.)
+# Generate dependency injection & serialization code
 dart run build_runner build --delete-conflicting-outputs
 
-# Run on device
+# Run application on target device
 flutter run
 ```
 
 ### Build Flavors
-
-OrionHealth supports three build flavors:
 
 ```bash
 # Development (debug)
@@ -113,12 +55,91 @@ flutter build apk --flavor prod --dart-define=flavor=prod
 flutter build ios --flavor prod --dart-define=flavor=prod
 ```
 
+> **First-Run Note:** On initial startup, on-device AI models (Sherpa ONNX TTS, Gemma LLM) and embedded vector stores (Isar Agent Memory) initialize local models on hardware. No cloud accounts or API keys are required for core offline operation.
+
+---
+
+## ✨ Features
+
+- 🔐 **Privacy-First Core**: Zero telemetry, on-device vector database (Isar Agent Memory), and fully local model execution.
+- 🆔 **Self-Sovereign Identity (SSI)**: Decentralized identifiers (DIDs), AnonCreds, and W3C Verifiable Credentials for cryptographic data control.
+- 🗣️ **Local AI Voice Assistant**: Natural voice interaction powered by on-device Gemma LLM and Sherpa ONNX text-to-speech.
+- 🏥 **Interoperable FHIR Integration**: Native support for FHIR R4 & DSTU2 clinical data exchanges and composition mapping.
+- 🧘 **Offline Health & Wellness**: Offline guided meditation, mood tracking, and audio processing completely detached from cloud servers.
+- 📊 **Wearable & Health Sync**: Direct integration with Apple HealthKit and Google Health Connect sensor streams.
+- 🔒 **Hardware-Backed Storage**: Sensitive credentials and encryption keys stored securely in OS Keychain/KeyStore.
+- 💊 **Medication & Interaction Checkers**: Drug-drug interaction detection using standardized pharmacy APIs and local indexes.
+- 📈 **Clinical Report Summaries**: On-device medical report generation mapped to universal medical standards.
+- 🌍 **Multi-Language Support**: Fully localized interface with offline translation capabilities.
+
+---
+
+## 🛡️ Privacy Architecture
+
+- **Zero Cloud Leakage**: All personal health records, embeddings, and chat history remain strictly on the user's physical device.
+- **Hardware-Level Encryption**: Keys and secrets are secured using OS Keychain/KeyStore via `flutter_secure_storage`.
+- **On-Device Machine Learning**: Vector embeddings and LLM inference run entirely locally via `onnxruntime` and `isar_agent_memory`.
+- **Verifiable Data Ownership**: Employs W3C Verifiable Credentials, AnonCreds, and DIDs for cryptographic proof without central identity providers.
+- **Local PII Protection**: Automated sanitization and masking of personally identifiable information prior to local indexing.
+
+---
+
+## 🩺 Medical Standards
+
+OrionHealth integrates universal health and clinical standards across the application stack:
+
+| Standard | Description | Where Used in App |
+| :--- | :--- | :--- |
+| **ICD-10** | International Classification of Diseases | Diagnostic coding, condition mapping, and clinical report indexing (`lib/features/local_agent/`, `lib/features/reports/`) |
+| **LOINC** | Logical Observation Identifiers Names and Codes | Laboratory observations, FHIR composition mapping, and health summaries (`lib/features/sync/`, `lib/features/local_agent/`) |
+| **RxNorm** | Standardized Nomenclature for Clinical Drugs | Medication profile tracking, dosage mapping, and interaction checking (`lib/features/medications/`, `lib/features/medical_research/`) |
+| **SNOMED CT** | Systematized Nomenclature of Medicine | Clinical terminology resolution and medical research querying (`lib/features/medical_research/`, `lib/features/local_agent/`) |
+
+---
+
+## 🏗️ Architecture
+
+OrionHealth follows **Clean Architecture** structured into 4 main layers. For detailed documentation, see [**ARCHITECTURE.md**](docs/architecture/ARCHITECTURE.md).
+
+```
+lib/
+├── core/                    # Shared infrastructure
+│   ├── config/              # Environment & build config
+│   │   ├── environment.dart # Runtime environment (dev/staging/prod)
+│   │   └── build_config.dart# Build-time flavor config
+│   ├── di/                  # Dependency injection (GetIt + injectable)
+│   ├── services/            # Core services (audio, tts, secure storage, logging)
+│   ├── theme/               # App theme (dark mode)
+│   ├── utils/               # Utilities (cache, error handler, lazy_router)
+│   └── widgets/             # Shared widgets (error_boundary)
+├── features/                # Feature modules (Clean Architecture)
+│   ├── auth/                # Authentication + DID/VC / SSI
+│   ├── meditation/          # Offline-guided meditation
+│   ├── voice_chat/          # AI voice chat with TTS/ASR
+│   └── ...                  # 21+ additional features
+├── l10n/                    # Localization
+└── main.dart                # App entry point
+```
+
+### Key Design Decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| State Management | flutter_bloc | Predictable, testable, scalable state handling |
+| Dependency Injection | get_it + injectable | Compile-time code generation, no runtime reflection |
+| TTS / Voice | sherpa_onnx (on-device) | Privacy-first local synthesis with zero cloud reliance |
+| Audio Engine | just_audio + record | Native platform integration for playback and recording |
+| Storage | flutter_secure_storage | Encrypted at rest, Keychain/Keystore backed |
+| FHIR Engine | fhir_dstu2 + fhir_r4 | Interoperable industry standard for clinical data |
+| Database / Memory | isar_agent_memory | Embedded vector database for local AI context |
+| Logging | AppLogger | Structured logging, silent in release builds |
+
 ---
 
 ## 🧪 Testing
 
 ```bash
-# Run all tests
+# Run unit and widget tests
 flutter test
 
 # Watch mode
@@ -131,22 +152,9 @@ genhtml coverage/lcov.info -o coverage/html
 
 ---
 
-## 🛠️ Key Features
-
-- **🔐 Privacy-first**: All processing on-device, no cloud dependency
-- **🗣️ Voice AI Chat**: Natural conversation with on-device TTS/ASR
-- **🧘 Offline Meditation**: Guided sessions with breathing exercises
-- **🏥 FHIR Integration**: Medical records via standard FHIR R4
-- **🔒 Secure Storage**: Encrypted data at rest with platform keychain
-- **🎯 Personalized AI**: Local agent memory for context-aware responses
-- **📊 Health Metrics**: Sync with Apple HealthKit & Google Health Connect
-- **🔗 DID/VC**: Self-Sovereign Identity for health data sharing
-
----
-
 ## 🤝 Contributing
 
-We follow a specific development workflow. Please read our [**GITPROTOCOL.md**](./GITPROTOCOL.md) before contributing.
+We follow a specific development workflow. Please read our [**GITPROTOCOL.md**](./GITPROTOCOL.md) before submitting contributions.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feat/your-feature`)
@@ -154,28 +162,19 @@ We follow a specific development workflow. Please read our [**GITPROTOCOL.md**](
 4. Push to the branch (`git push origin feat/your-feature`)
 5. Open a Pull Request
 
-### Issue Labels
-
-| Label | Purpose |
-|-------|---------|
-| `ai-task` | Tasks for automated AI agent |
-| `bug` | Bug reports |
-| `enhancement` | Feature requests |
-| `dependencies` | Dependency updates |
-
 ---
 
 ## 📄 License
 
-[AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0) — see [LICENSE](./LICENSE)
+Distributed under the **AGPL-3.0 License**. See [LICENSE](./LICENSE) for more information.
 
 ---
 
 ## 📞 Contact
 
 - **Repository**: [github.com/iberi22/OrionHealth](https://github.com/iberi22/OrionHealth)
-- **Docs**: [iberi22.github.io/OrionHealth](https://iberi22.github.io/OrionHealth/)
-- **Bug Reports**: [Issues](https://github.com/iberi22/OrionHealth/issues)
+- **Documentation**: [iberi22.github.io/OrionHealth](https://iberi22.github.io/OrionHealth/)
+- **Issue Tracker**: [GitHub Issues](https://github.com/iberi22/OrionHealth/issues)
 
 ---
 
