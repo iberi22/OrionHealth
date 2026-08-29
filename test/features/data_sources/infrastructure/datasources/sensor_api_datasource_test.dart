@@ -1,75 +1,164 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/core/utils/health_wrapper.dart';
 import 'package:orionhealth_health/features/data_sources/infrastructure/datasources/sensor_api_datasource.dart';
+import '../../../../helpers/mock_health.dart';
 
-class MockHealthWrapper extends Mock implements HealthWrapper {
-  @override
-  Health? get health => _mockHealth;
-  final MockHealth _mockHealth = MockHealth();
-}
-
-class MockHealth extends Mock implements Health {}
+class FakeDateTime extends Fake implements DateTime {}
 
 void main() {
   late SensorApiDataSourceImpl dataSource;
+  late MockHealthWrapper mockWrapper;
   late MockHealth mockHealth;
 
-  final types = [
+  final expectedTypes = [
     HealthDataType.STEPS,
     HealthDataType.HEART_RATE,
     HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
     HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
   ];
 
+  setUpAll(() {
+    registerFallbackValue(HealthDataType.STEPS);
+    registerFallbackValue(FakeDateTime());
+  });
+
   setUp(() {
+    mockWrapper = MockHealthWrapper();
     mockHealth = MockHealth();
-    final wrapper = MockHealthWrapper();
-    when(() => wrapper.health).thenReturn(mockHealth);
-    dataSource = SensorApiDataSourceImpl(wrapper);
+    when(() => mockWrapper.health).thenReturn(mockHealth);
+    dataSource = SensorApiDataSourceImpl(mockWrapper);
   });
 
   group('SensorApiDataSourceImpl', () {
-    test('requestAuthorization calls health package with correct types', () async {
-      when(() => mockHealth.requestAuthorization(types)).thenAnswer((_) async => true);
+    group('requestAuthorization', () {
+      test(
+        'calls health package with correct types and returns true',
+        () async {
+          when(
+            () => mockHealth.requestAuthorization(expectedTypes),
+          ).thenAnswer((_) async => true);
 
-      final result = await dataSource.requestAuthorization();
+          final result = await dataSource.requestAuthorization();
 
-      expect(result, isTrue);
-      verify(() => mockHealth.requestAuthorization(types)).called(1);
+          expect(result, isTrue);
+          verify(
+            () => mockHealth.requestAuthorization(expectedTypes),
+          ).called(1);
+        },
+      );
+
+      test('returns false if requestAuthorization fails', () async {
+        when(
+          () => mockHealth.requestAuthorization(any()),
+        ).thenAnswer((_) async => false);
+
+        final result = await dataSource.requestAuthorization();
+
+        expect(result, isFalse);
+      });
+
+      test('returns false if health is null', () async {
+        when(() => mockWrapper.health).thenReturn(null);
+
+        final result = await dataSource.requestAuthorization();
+
+        expect(result, isFalse);
+      });
+
+      test('returns false if requestAuthorization throws exception', () async {
+        when(
+          () => mockHealth.requestAuthorization(any()),
+        ).thenThrow(Exception('Auth error'));
+
+        final result = await dataSource.requestAuthorization();
+
+        expect(result, isFalse);
+      });
     });
 
-    test('hasPermissions returns true if health package returns true', () async {
-      when(() => mockHealth.hasPermissions(types)).thenAnswer((_) async => true);
+    group('hasPermissions', () {
+      test('returns true if health package returns true', () async {
+        when(
+          () => mockHealth.hasPermissions(expectedTypes),
+        ).thenAnswer((_) async => true);
 
-      final result = await dataSource.hasPermissions();
+        final result = await dataSource.hasPermissions();
 
-      expect(result, isTrue);
+        expect(result, isTrue);
+        verify(() => mockHealth.hasPermissions(expectedTypes)).called(1);
+      });
+
+      test('returns false if health package returns false or null', () async {
+        when(
+          () => mockHealth.hasPermissions(any()),
+        ).thenAnswer((_) async => null);
+
+        final result = await dataSource.hasPermissions();
+
+        expect(result, isFalse);
+      });
+
+      test('returns false if health is null', () async {
+        when(() => mockWrapper.health).thenReturn(null);
+
+        final result = await dataSource.hasPermissions();
+
+        expect(result, isFalse);
+      });
+
+      test('returns false if hasPermissions throws exception', () async {
+        when(
+          () => mockHealth.hasPermissions(any()),
+        ).thenThrow(Exception('Permission check error'));
+
+        final result = await dataSource.hasPermissions();
+
+        expect(result, isFalse);
+      });
     });
 
-    test('hasPermissions returns false if health package returns false or null', () async {
-      when(() => mockHealth.hasPermissions(types)).thenAnswer((_) async => null);
+    group('fetchAndSaveData', () {
+      test('calls getHealthDataFromTypes with correct parameters', () async {
+        when(
+          () => mockHealth.getHealthDataFromTypes(
+            types: any(named: 'types'),
+            startTime: any(named: 'startTime'),
+            endTime: any(named: 'endTime'),
+          ),
+        ).thenAnswer((_) async => []);
 
-      final result = await dataSource.hasPermissions();
+        await dataSource.fetchAndSaveData();
 
-      expect(result, isFalse);
-    });
+        verify(
+          () => mockHealth.getHealthDataFromTypes(
+            types: expectedTypes,
+            startTime: any(named: 'startTime'),
+            endTime: any(named: 'endTime'),
+          ),
+        ).called(1);
+      });
 
-    test('fetchAndSaveData calls getHealthDataFromTypes', () async {
-      when(() => mockHealth.getHealthDataFromTypes(
-        types: any(named: 'types'),
-        startTime: any(named: 'startTime'),
-        endTime: any(named: 'endTime'),
-      )).thenAnswer((_) async => []);
+      test('handles null health gracefully', () async {
+        when(() => mockWrapper.health).thenReturn(null);
 
-      await dataSource.fetchAndSaveData();
+        await dataSource.fetchAndSaveData();
+      });
 
-      verify(() => mockHealth.getHealthDataFromTypes(
-        types: types,
-        startTime: any(named: 'startTime'),
-        endTime: any(named: 'endTime'),
-      )).called(1);
+      test(
+        'handles exception from getHealthDataFromTypes gracefully',
+        () async {
+          when(
+            () => mockHealth.getHealthDataFromTypes(
+              types: any(named: 'types'),
+              startTime: any(named: 'startTime'),
+              endTime: any(named: 'endTime'),
+            ),
+          ).thenThrow(Exception('Fetch error'));
+
+          await dataSource.fetchAndSaveData();
+        },
+      );
     });
   });
 }
