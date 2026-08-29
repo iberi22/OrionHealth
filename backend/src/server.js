@@ -7,10 +7,10 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { IhceOAuth } = require('./auth/ihce-oauth');
-const { FhirClient } = require('./fhir/fhir-client');
-const { RdaParser } = require('./fhir/rda-parser');
 const { fetchGmailAppointments } = require('./email/gmail-reader');
 const { fetchOutlookAppointments } = require('./email/outlook-reader');
+const fhirRouter = require('./routes/fhir');
+const { errorHandler } = require('./utils/errorHandler');
 const { v4: uuidv4 } = require('uuid');
 
 dotenv.config();
@@ -47,7 +47,6 @@ app.use(session({
 }));
 
 const ihceOAuth = new IhceOAuth();
-const fhirClient = new FhirClient();
 
 // === IHCE Auth Endpoints ===
 app.post('/api/auth/ihce/login', (req, res) => {
@@ -80,32 +79,8 @@ app.get('/api/auth/ihce/callback', async (req, res) => {
 });
 
 // === FHIR Endpoints ===
-app.get('/api/fhir/patient/:id', async (req, res) => {
-  const { id } = req.params;
-  const tokenData = req.session.tokenData;
-  if (!tokenData) return res.status(401).json({ error: 'Unauthorized' });
-  if (id !== tokenData.patient) return res.status(403).json({ error: 'Forbidden' });
-  try {
-    const patient = await fhirClient.getPatient(id, tokenData.accessToken);
-    res.json(patient);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'An error occurred while fetching patient data' });
-  }
-});
-
-app.get('/api/fhir/rda', async (req, res) => {
-  const tokenData = req.session.tokenData;
-  if (!tokenData || !tokenData.patient) return res.status(401).json({ error: 'Unauthorized or Patient ID not found' });
-  try {
-    const rdaBundle = await fhirClient.getRDA(tokenData.patient, tokenData.accessToken);
-    const parsedRda = RdaParser.parse(rdaBundle);
-    res.json(parsedRda || rdaBundle);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'An error occurred while fetching RDA data' });
-  }
-});
+app.use('/api/fhir', fhirRouter);
+app.use('/fhir', fhirRouter);
 
 // === Email Citas Endpoints ===
 app.post('/api/gmail/appointments', async (req, res) => {
@@ -132,6 +107,13 @@ app.post('/api/outlook/appointments', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`IHCE Gateway Backend listening at http://localhost:${port}`);
-});
+// Global Error Handler Middleware
+app.use(errorHandler);
+
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`IHCE Gateway Backend listening at http://localhost:${port}`);
+  });
+}
+
+module.exports = app;
