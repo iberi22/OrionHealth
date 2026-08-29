@@ -96,7 +96,8 @@ class EpsAutoOnboardingError extends EpsAutoOnboardingState {
 class EpsAutoOnboardingCubit extends Cubit<EpsAutoOnboardingState> {
   final EpsAutoOnboardingService _service;
 
-  EpsAutoOnboardingCubit(this._service) : super(const EpsAutoOnboardingInitial());
+  EpsAutoOnboardingCubit(this._service)
+    : super(const EpsAutoOnboardingInitial());
 
   /// Inicia el auto-onboarding con una EPS.
   ///
@@ -108,27 +109,33 @@ class EpsAutoOnboardingCubit extends Cubit<EpsAutoOnboardingState> {
     required String tipoDocumento,
     required String numeroDocumento,
   }) async {
-    emit(EpsAutoOnboardingConnecting(
-      providerName: provider.name,
-      message: 'Conectando con ${provider.name} vía IHCE Minsalud...',
-    ));
+    emit(
+      EpsAutoOnboardingConnecting(
+        providerName: provider.name,
+        message: 'Conectando con ${provider.name} vía IHCE Minsalud...',
+      ),
+    );
 
     // Escuchar progreso del servicio
     _service.progress.listen((progress) {
       switch (progress.stage) {
         case AutoOnboardingStage.connecting:
         case AutoOnboardingStage.authenticating:
-          emit(EpsAutoOnboardingConnecting(
-            providerName: provider.name,
-            message: progress.message,
-            progress: progress.progress,
-          ));
+          emit(
+            EpsAutoOnboardingConnecting(
+              providerName: provider.name,
+              message: progress.message,
+              progress: progress.progress,
+            ),
+          );
           break;
         case AutoOnboardingStage.fetchingData:
-          emit(EpsAutoOnboardingFetching(
-            message: progress.message,
-            progress: progress.progress,
-          ));
+          emit(
+            EpsAutoOnboardingFetching(
+              message: progress.message,
+              progress: progress.progress,
+            ),
+          );
           break;
         case AutoOnboardingStage.processing:
         case AutoOnboardingStage.complete:
@@ -147,41 +154,52 @@ class EpsAutoOnboardingCubit extends Cubit<EpsAutoOnboardingState> {
 
     switch (result.status) {
       case EpsAutoOnboardingStatus.success:
-        emit(EpsAutoOnboardingSuccess(
-          profile: result.profile!,
-          isComplete: true,
-          skippedSteps: result.skippedSteps ?? 0,
-        ));
+        emit(
+          EpsAutoOnboardingSuccess(
+            profile: result.profile!,
+            isComplete: true,
+            skippedSteps: result.skippedSteps ?? 0,
+          ),
+        );
         break;
       case EpsAutoOnboardingStatus.partialSuccess:
-        emit(EpsAutoOnboardingSuccess(
-          profile: result.profile!,
-          isComplete: false,
-          missingFields: result.missingFields ?? [],
-          skippedSteps: result.skippedSteps ?? 0,
-        ));
+        emit(
+          EpsAutoOnboardingSuccess(
+            profile: result.profile!,
+            isComplete: false,
+            missingFields: result.missingFields ?? [],
+            skippedSteps: result.skippedSteps ?? 0,
+          ),
+        );
         break;
       case EpsAutoOnboardingStatus.connectionError:
       case EpsAutoOnboardingStatus.timeout:
-        emit(EpsAutoOnboardingError(
-          message: result.errorMessage ?? 'Error de conexión',
-          errorStatus: result.status,
-          canRetry: true,
-        ));
+        emit(
+          EpsAutoOnboardingError(
+            message: result.errorMessage ?? 'Error de conexión',
+            errorStatus: result.status,
+            canRetry: true,
+          ),
+        );
         break;
       case EpsAutoOnboardingStatus.authError:
-        emit(EpsAutoOnboardingError(
-          message: result.errorMessage ?? 'Error de autenticación',
-          errorStatus: result.status,
-          canRetry: false,
-        ));
+        emit(
+          EpsAutoOnboardingError(
+            message: result.errorMessage ?? 'Error de autenticación',
+            errorStatus: result.status,
+            canRetry: false,
+          ),
+        );
         break;
       case EpsAutoOnboardingStatus.noDataFound:
-        emit(EpsAutoOnboardingError(
-          message: 'No se encontraron datos clínicos en ${provider.name}. Verifica tu documento.',
-          errorStatus: result.status,
-          canRetry: true,
-        ));
+        emit(
+          EpsAutoOnboardingError(
+            message:
+                'No se encontraron datos clínicos en ${provider.name}. Verifica tu documento.',
+            errorStatus: result.status,
+            canRetry: true,
+          ),
+        );
         break;
     }
   }
@@ -189,10 +207,5 @@ class EpsAutoOnboardingCubit extends Cubit<EpsAutoOnboardingState> {
   /// Reinicia el estado para intentar de nuevo.
   void reset() {
     emit(const EpsAutoOnboardingInitial());
-  }
-
-  @override
-  Future<void> close() {
-    return super.close();
   }
 }

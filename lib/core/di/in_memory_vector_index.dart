@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'dart:math' as math;
@@ -22,10 +22,14 @@ class InMemoryVectorIndex implements VectorIndex {
   @override
   int get dimension => _dim;
 
-  int _dim;
+  final int _dim;
 
   @override
-  Future<void> addDocument(String id, String content, Float32List vector) async {
+  Future<void> addDocument(
+    String id,
+    String content,
+    Float32List vector,
+  ) async {
     _docs[id] = _DocEntry(content: content, vector: vector);
   }
 
@@ -35,14 +39,20 @@ class InMemoryVectorIndex implements VectorIndex {
   }
 
   @override
-  Future<List<VectorSearchResult>> search(Float32List query, {int topK = 5}) async {
+  Future<List<VectorSearchResult>> search(
+    Float32List query, {
+    int topK = 5,
+  }) async {
     final scores = <_ScoredId>[];
     for (final entry in _docs.entries) {
       final score = _cosine(query, entry.value.vector);
       scores.add(_ScoredId(id: entry.key, score: score));
     }
     scores.sort((a, b) => b.score.compareTo(a.score));
-    return scores.take(topK).map((s) => VectorSearchResult(id: s.id, score: s.score)).toList();
+    return scores
+        .take(topK)
+        .map((s) => VectorSearchResult(id: s.id, score: s.score))
+        .toList();
   }
 
   @override
@@ -60,7 +70,9 @@ class InMemoryVectorIndex implements VectorIndex {
       magA += a[i] * a[i];
       magB += b[i] * b[i];
     }
-    return magA == 0 || magB == 0 ? 0 : dot / (math.sqrt(magA) * math.sqrt(magB));
+    return magA == 0 || magB == 0
+        ? 0
+        : dot / (math.sqrt(magA) * math.sqrt(magB));
   }
 }
 
@@ -75,4 +87,3 @@ class _ScoredId {
   final double score;
   _ScoredId({required this.id, required this.score});
 }
-

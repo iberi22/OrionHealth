@@ -54,7 +54,7 @@ class AuditLogger {
       'action': action,
       'resourceType': resourceType,
       'resourceId': resourceId,
-      if (metadata != null) 'metadata': metadata,
+      'metadata': ?metadata,
     };
 
     try {
@@ -63,7 +63,11 @@ class AuditLogger {
       final logFile = File(p.join(logDir, '$_logPrefix$today$_logExtension'));
 
       final logLine = jsonEncode(entry);
-      await logFile.writeAsString('$logLine\n', mode: FileMode.append, flush: true);
+      await logFile.writeAsString(
+        '$logLine\n',
+        mode: FileMode.append,
+        flush: true,
+      );
 
       // Perform rotation check once per session
       if (!_rotationPerformed) {
@@ -84,15 +88,23 @@ class AuditLogger {
       final entities = await dir.list().toList();
 
       final now = DateTime.now().toUtc();
-      final expirationDate = DateTime.utc(now.year, now.month, now.day).subtract(const Duration(days: _maxDays));
+      final expirationDate = DateTime.utc(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(const Duration(days: _maxDays));
 
       for (final entity in entities) {
         if (entity is File) {
           final fileName = p.basename(entity.path);
 
           // Rotate logs
-          if (fileName.startsWith(_logPrefix) && fileName.endsWith(_logExtension)) {
-            final datePart = fileName.substring(_logPrefix.length, fileName.length - _logExtension.length);
+          if (fileName.startsWith(_logPrefix) &&
+              fileName.endsWith(_logExtension)) {
+            final datePart = fileName.substring(
+              _logPrefix.length,
+              fileName.length - _logExtension.length,
+            );
             try {
               final fileDate = DateFormat('yyyy-MM-dd').parseUtc(datePart);
               if (fileDate.isBefore(expirationDate)) {
@@ -104,7 +116,8 @@ class AuditLogger {
           }
 
           // Rotate exports
-          if (fileName.startsWith(_exportPrefix) && fileName.endsWith(_exportExtension)) {
+          if (fileName.startsWith(_exportPrefix) &&
+              fileName.endsWith(_exportExtension)) {
             final stat = await entity.stat();
             if (stat.modified.isBefore(expirationDate)) {
               await entity.delete();
@@ -126,25 +139,30 @@ class AuditLogger {
     final entities = await dir.list().toList();
 
     // Filter and sort audit log files by date
-    final logFiles = entities
-        .whereType<File>()
-        .where((f) {
-          final name = p.basename(f.path);
-          return name.startsWith(_logPrefix) && name.endsWith(_logExtension);
-        })
-        .toList();
+    final logFiles = entities.whereType<File>().where((f) {
+      final name = p.basename(f.path);
+      return name.startsWith(_logPrefix) && name.endsWith(_logExtension);
+    }).toList();
 
     logFiles.sort((a, b) => a.path.compareTo(b.path));
 
     final now = DateTime.now().toUtc();
-    final exportFile = File(p.join(logDir, '$_exportPrefix${now.millisecondsSinceEpoch}$_exportExtension'));
+    final exportFile = File(
+      p.join(
+        logDir,
+        '$_exportPrefix${now.millisecondsSinceEpoch}$_exportExtension',
+      ),
+    );
     final sink = exportFile.openWrite();
 
     sink.write('[\n');
     bool firstEntry = true;
 
     for (final file in logFiles) {
-      final lines = file.openRead().transform(utf8.decoder).transform(const LineSplitter());
+      final lines = file
+          .openRead()
+          .transform(utf8.decoder)
+          .transform(const LineSplitter());
       await for (final line in lines) {
         final trimmed = line.trim();
         if (trimmed.isEmpty) continue;

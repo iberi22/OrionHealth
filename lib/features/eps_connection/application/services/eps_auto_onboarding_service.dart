@@ -47,26 +47,30 @@ class EpsAutoOnboardingResult {
       status == EpsAutoOnboardingStatus.success ||
       status == EpsAutoOnboardingStatus.partialSuccess;
 
-  factory EpsAutoOnboardingResult.success(UserProfile profile, {int? skippedSteps}) =>
-      EpsAutoOnboardingResult(
-        status: EpsAutoOnboardingStatus.success,
-        profile: profile,
-        skippedSteps: skippedSteps,
-      );
+  factory EpsAutoOnboardingResult.success(
+    UserProfile profile, {
+    int? skippedSteps,
+  }) => EpsAutoOnboardingResult(
+    status: EpsAutoOnboardingStatus.success,
+    profile: profile,
+    skippedSteps: skippedSteps,
+  );
 
-  factory EpsAutoOnboardingResult.partialSuccess(UserProfile profile, {
+  factory EpsAutoOnboardingResult.partialSuccess(
+    UserProfile profile, {
     required List<String> missingFields,
     int? skippedSteps,
-  }) =>
-      EpsAutoOnboardingResult(
-        status: EpsAutoOnboardingStatus.partialSuccess,
-        profile: profile,
-        skippedSteps: skippedSteps,
-        missingFields: missingFields,
-      );
+  }) => EpsAutoOnboardingResult(
+    status: EpsAutoOnboardingStatus.partialSuccess,
+    profile: profile,
+    skippedSteps: skippedSteps,
+    missingFields: missingFields,
+  );
 
-  factory EpsAutoOnboardingResult.error(EpsAutoOnboardingStatus status, String message) =>
-      EpsAutoOnboardingResult(status: status, errorMessage: message);
+  factory EpsAutoOnboardingResult.error(
+    EpsAutoOnboardingStatus status,
+    String message,
+  ) => EpsAutoOnboardingResult(status: status, errorMessage: message);
 }
 
 /// 🚀 EPS Auto-Onboarding Service
@@ -83,10 +87,10 @@ class EpsAutoOnboardingResult {
 /// necesita hacer login con su EPS y la app se llena sola.
 class EpsAutoOnboardingService {
   final LocalFhirOAuthRepository _repository;
-  LocalFhirEngine? _engine;
 
   /// Stream para reportar progreso del auto-onboarding.
-  final _progressController = StreamController<AutoOnboardingProgress>.broadcast();
+  final _progressController =
+      StreamController<AutoOnboardingProgress>.broadcast();
   Stream<AutoOnboardingProgress> get progress => _progressController.stream;
 
   EpsAutoOnboardingService(this._repository);
@@ -101,11 +105,13 @@ class EpsAutoOnboardingService {
     required String numeroDocumento,
   }) async {
     try {
-      _reportProgress(AutoOnboardingProgress(
-        stage: AutoOnboardingStage.connecting,
-        message: 'Conectando con ${provider.name}...',
-        progress: 0.1,
-      ));
+      _reportProgress(
+        AutoOnboardingProgress(
+          stage: AutoOnboardingStage.connecting,
+          message: 'Conectando con ${provider.name}...',
+          progress: 0.1,
+        ),
+      );
 
       // 1. Login con la EPS vía IHCE
       final loginResult = await _repository.login(provider);
@@ -116,35 +122,43 @@ class EpsAutoOnboardingService {
         );
       }
 
-      _reportProgress(AutoOnboardingProgress(
-        stage: AutoOnboardingStage.authenticating,
-        message: 'Autenticado. Consultando historial clínico...',
-        progress: 0.3,
-      ));
+      _reportProgress(
+        AutoOnboardingProgress(
+          stage: AutoOnboardingStage.authenticating,
+          message: 'Autenticado. Consultando historial clínico...',
+          progress: 0.3,
+        ),
+      );
 
       // 2. Obtener el engine y extraer todos los datos
       final engine = await _repository.getEngine();
 
-      _reportProgress(AutoOnboardingProgress(
-        stage: AutoOnboardingStage.fetchingData,
-        message: 'Extrayendo datos del IHCE...',
-        progress: 0.4,
-      ));
+      _reportProgress(
+        AutoOnboardingProgress(
+          stage: AutoOnboardingStage.fetchingData,
+          message: 'Extrayendo datos del IHCE...',
+          progress: 0.4,
+        ),
+      );
 
       // Escuchar estado de sync para UI
       engine.syncStatus.listen((status) {
         if (status is FhirSyncSyncing) {
-          _reportProgress(AutoOnboardingProgress(
-            stage: AutoOnboardingStage.fetchingData,
-            message: 'Consultando historia clínica...',
-            progress: 0.5,
-          ));
+          _reportProgress(
+            AutoOnboardingProgress(
+              stage: AutoOnboardingStage.fetchingData,
+              message: 'Consultando historia clínica...',
+              progress: 0.5,
+            ),
+          );
         } else if (status is FhirSyncSynced) {
-          _reportProgress(AutoOnboardingProgress(
-            stage: AutoOnboardingStage.processing,
-            message: 'Procesando datos clínicos...',
-            progress: 0.7,
-          ));
+          _reportProgress(
+            AutoOnboardingProgress(
+              stage: AutoOnboardingStage.processing,
+              message: 'Procesando datos clínicos...',
+              progress: 0.7,
+            ),
+          );
         }
       });
 
@@ -154,11 +168,13 @@ class EpsAutoOnboardingService {
         numeroDocumento: numeroDocumento,
       );
 
-      _reportProgress(AutoOnboardingProgress(
-        stage: AutoOnboardingStage.processing,
-        message: 'Mapeando datos a tu perfil de salud...',
-        progress: 0.8,
-      ));
+      _reportProgress(
+        AutoOnboardingProgress(
+          stage: AutoOnboardingStage.processing,
+          message: 'Mapeando datos a tu perfil de salud...',
+          progress: 0.8,
+        ),
+      );
 
       // 4. Mapear FHIR → UserProfile
       final profile = FhirToProfileMapper.transform(
@@ -170,16 +186,21 @@ class EpsAutoOnboardingService {
       // 5. Determinar qué pasos del onboarding se completaron automáticamente
       final analysis = _analyzeProfileCompleteness(profile);
 
-      _reportProgress(AutoOnboardingProgress(
-        stage: AutoOnboardingStage.complete,
-        message: '¡Perfil cargado desde ${provider.name}!',
-        progress: 1.0,
-        details: '${analysis.skippedSteps} de 7 pasos completados automáticamente',
-      ));
+      _reportProgress(
+        AutoOnboardingProgress(
+          stage: AutoOnboardingStage.complete,
+          message: '¡Perfil cargado desde ${provider.name}!',
+          progress: 1.0,
+          details:
+              '${analysis.skippedSteps} de 7 pasos completados automáticamente',
+        ),
+      );
 
       if (analysis.isComplete) {
-        return EpsAutoOnboardingResult.success(profile,
-            skippedSteps: analysis.skippedSteps);
+        return EpsAutoOnboardingResult.success(
+          profile,
+          skippedSteps: analysis.skippedSteps,
+        );
       } else {
         return EpsAutoOnboardingResult.partialSuccess(
           profile,
@@ -212,32 +233,57 @@ class EpsAutoOnboardingService {
 
   /// Analiza qué campos del perfil se completaron vía EPS
   /// y cuáles requieren entrada manual del usuario.
-  _ProfileCompletenessAnalysis _analyzeProfileCompleteness(UserProfile profile) {
+  _ProfileCompletenessAnalysis _analyzeProfileCompleteness(
+    UserProfile profile,
+  ) {
     final missing = <String>[];
     int completedFields = 0;
     const totalFields = 5; // nombre, fecha, sexo, condiciones, medicamentos
 
-    if (profile.name != null && profile.name!.isNotEmpty) completedFields++;
-    else missing.add('Nombre completo');
+    if (profile.name != null && profile.name!.isNotEmpty) {
+      completedFields++;
+    } else {
+      missing.add('Nombre completo');
+    }
 
-    if (profile.birthDate != null) completedFields++;
-    else missing.add('Fecha de nacimiento');
+    if (profile.birthDate != null) {
+      completedFields++;
+    } else {
+      missing.add('Fecha de nacimiento');
+    }
 
-    if (profile.sex != null) completedFields++;
-    else missing.add('Sexo');
+    if (profile.sex != null) {
+      completedFields++;
+    } else {
+      missing.add('Sexo');
+    }
 
-    if (profile.conditions.isNotEmpty) completedFields++;
-    else missing.add('Condiciones médicas');
+    if (profile.conditions.isNotEmpty) {
+      completedFields++;
+    } else {
+      missing.add('Condiciones médicas');
+    }
 
-    if (profile.medications.isNotEmpty) completedFields++;
-    else missing.add('Medicamentos');
+    if (profile.medications.isNotEmpty) {
+      completedFields++;
+    } else {
+      missing.add('Medicamentos');
+    }
 
     // Calcular pasos saltados
     int skipped = 0;
-    if (profile.name != null && profile.birthDate != null && profile.sex != null) skipped++; // BasicInfo
-    if (profile.conditions.isNotEmpty) skipped++; // Conditions
+    if (profile.name != null &&
+        profile.birthDate != null &&
+        profile.sex != null) {
+      skipped++; // BasicInfo
+    }
+    if (profile.conditions.isNotEmpty) {
+      skipped++; // Conditions
+    }
     // FamilyHistory siempre se salta si viene del RDA (se extrae de antecedentes)
-    if (profile.medications.isNotEmpty) skipped++; // Medications
+    if (profile.medications.isNotEmpty) {
+      skipped++; // Medications
+    }
     // Privacy siempre requiere confirmación explícita
 
     return _ProfileCompletenessAnalysis(
