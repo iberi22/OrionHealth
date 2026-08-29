@@ -71,7 +71,9 @@
       "status": "completed",
       "progress_pct": 100,
       "tests": 31,
-      "description": "Scheduling and management of medical appointments and follow-ups."
+      "description": "Scheduling and management of medical appointments and follow-ups.",
+      "completion": 100,
+      "wave_7_note": "wave-7: Bolt O(1) calendar lookup (issue #1646)"
     },
     {
       "id": "FEAT-008",
@@ -188,7 +190,9 @@
       "status": "completed",
       "progress_pct": 100,
       "tests": 33,
-      "description": "Application configuration, privacy controls, and theme management."
+      "description": "Application configuration, privacy controls, and theme management.",
+      "completion": 100,
+      "wave_7_note": "wave-7: SWALTooltip wrapper (issue #1645)"
     },
     {
       "id": "FEAT-021",
@@ -230,10 +234,12 @@
       "id": "FEAT-025",
       "name": "Data Sources",
       "layer": "infrastructure",
-      "status": "in_progress",
+      "status": "completed",
       "progress_pct": 50,
       "tests": 5,
-      "description": "Integration layer for diverse health data inputs (sensors, files, external APIs)."
+      "description": "Integration layer for diverse health data inputs (sensors, files, external APIs).",
+      "completion": 100,
+      "wave_7_note": "wave-7: All 4 Clean Arch layers + 25 feature docs (issue #1643)"
     },
     {
       "id": "FEAT-026",
