@@ -6,6 +6,7 @@ import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../../../core/widgets/swal_tooltip.dart';
 import '../../../email-citas/presentation/email_connect_page.dart';
 import '../../../calendar_import/presentation/calendar_import_page.dart';
+import '../../application/services/appointments_lookup.dart';
 import '../../domain/entities/appointment.dart';
 import '../../domain/repositories/appointment_repository.dart';
 import '../widgets/appointment_card.dart';
@@ -21,6 +22,7 @@ class AppointmentsPage extends StatefulWidget {
 class _AppointmentsPageState extends State<AppointmentsPage> {
   late final AppointmentRepository _repository;
   List<Appointment> _allAppointments = [];
+  AppointmentsLookup _appointmentsLookup = AppointmentsLookup.empty();
   bool _isLoading = true;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
@@ -38,6 +40,11 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
       final appointments = await _repository.getAppointments();
       setState(() {
         _allAppointments = appointments;
+        // Optimization: Pre-compute O(1) date lookup map once on load
+        // What: Convert appointment list to date-indexed lookup map
+        // Why: Avoid O(N) iterative searches on every calendar cell build
+        // Impact: Reduces 42 grid cell lookups from O(42*N) to O(42) per frame
+        _appointmentsLookup = AppointmentsLookup.fromList(appointments);
         _isLoading = false;
       });
     } catch (e) {
@@ -273,8 +280,8 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 final date = DateTime(_focusedDay.year, _focusedDay.month, day);
                 final isSelected = DateUtils.isSameDay(date, _selectedDay);
                 final isToday = DateUtils.isSameDay(date, DateTime.now());
-                final hasAppointment = _allAppointments.any(
-                  (a) => DateUtils.isSameDay(a.dateTime, date),
+final hasAppointment = _appointmentsLookup.hasAppointmentsOn(
+                  date,
                 );
 
                 return InkWell(
