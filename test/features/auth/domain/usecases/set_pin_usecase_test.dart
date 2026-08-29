@@ -4,9 +4,10 @@ import 'package:orionhealth_health/features/auth/domain/entities/auth_credential
 import 'package:orionhealth_health/features/auth/domain/repositories/auth_repository.dart';
 import 'package:orionhealth_health/features/auth/domain/usecases/set_pin_usecase.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
+import '../../../../helpers/mock_encryption_service.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
-class MockEncryptionService extends Mock implements EncryptionService {}
+
 class FakeAuthCredentials extends Fake implements AuthCredentials {}
 
 void main() {
@@ -29,14 +30,20 @@ void main() {
     const tHashedPin = 'hashedPin';
 
     test('should save credentials when PIN is valid', () async {
-      when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => tHashedPin);
-      when(() => mockRepository.saveCredentials(any())).thenAnswer((_) async {});
+      when(
+        () => mockEncryptionService.hashPin(any(), any()),
+      ).thenAnswer((_) async => tHashedPin);
+      when(
+        () => mockRepository.saveCredentials(any()),
+      ).thenAnswer((_) async {});
 
       final result = await useCase(tPin);
 
       expect(result, isTrue);
       verify(() => mockEncryptionService.hashPin(tPin, any())).called(1);
-      verify(() => mockRepository.saveCredentials(any(that: isA<AuthCredentials>()))).called(1);
+      verify(
+        () => mockRepository.saveCredentials(any(that: isA<AuthCredentials>())),
+      ).called(1);
     });
 
     test('should return false when PIN is too short', () async {
