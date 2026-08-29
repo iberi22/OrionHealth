@@ -1,12 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
+import '../../../../helpers/mock_encryption_service.dart';
 import 'package:orionhealth_health/features/allergies/data/datasources/allergy_local_datasource.dart';
 import 'package:orionhealth_health/features/allergies/data/repositories/allergy_repository_impl.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
 
-class MockAllergyLocalDataSource extends Mock implements AllergyLocalDataSource {}
-class MockEncryptionService extends Mock implements EncryptionService {}
+class MockAllergyLocalDataSource extends Mock
+    implements AllergyLocalDataSource {}
 
 class FakeAllergy extends Fake implements Allergy {}
 
@@ -20,7 +21,10 @@ void main() {
 
   setUp(() {
     mockLocalDataSource = MockAllergyLocalDataSource();
-    repository = AllergyRepositoryImpl(mockLocalDataSource, encryptionService: MockEncryptionService());
+    repository = AllergyRepositoryImpl(
+      mockLocalDataSource,
+      encryptionService: MockEncryptionService(),
+    );
   });
 
   group('AllergyRepositoryImpl', () {
@@ -29,8 +33,9 @@ void main() {
     ];
 
     test('getAllergies should delegate to local data source', () async {
-      when(() => mockLocalDataSource.getAllergies())
-          .thenAnswer((_) async => tAllergies);
+      when(
+        () => mockLocalDataSource.getAllergies(),
+      ).thenAnswer((_) async => tAllergies);
 
       final result = await repository.getAllergies();
 
