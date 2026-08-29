@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../../core/widgets/swal_tooltip.dart';
 import '../../../email-citas/presentation/email_connect_page.dart';
 import '../../../calendar_import/presentation/calendar_import_page.dart';
 import '../../application/services/appointments_lookup.dart';
@@ -82,28 +83,34 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
       appBar: AppBar(
         title: const Text('Citas'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.email_outlined),
-            tooltip: 'Importar desde correo',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const EmailConnectPage()),
-            ).then((_) => _loadAppointments()),
-          ),
-          IconButton(
-            icon: const Icon(Icons.calendar_month),
-            tooltip: 'Importar desde calendario',
-            onPressed: () async {
-              final result = await Navigator.push(
+          SWALTooltip(
+            message: 'Importar desde correo',
+            child: IconButton(
+              icon: const Icon(Icons.email_outlined),
+              onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CalendarImportPage(),
+                  builder: (context) => const EmailConnectPage(),
                 ),
-              );
-              if (result == true) {
-                _loadAppointments();
-              }
-            },
+              ).then((_) => _loadAppointments()),
+            ),
+          ),
+          SWALTooltip(
+            message: 'Importar desde calendario',
+            child: IconButton(
+              icon: const Icon(Icons.calendar_month),
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CalendarImportPage(),
+                  ),
+                );
+                if (result == true) {
+                  _loadAppointments();
+                }
+              },
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.add),
@@ -273,8 +280,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 final date = DateTime(_focusedDay.year, _focusedDay.month, day);
                 final isSelected = DateUtils.isSameDay(date, _selectedDay);
                 final isToday = DateUtils.isSameDay(date, DateTime.now());
-                // Optimization: O(1) lookup map check instead of O(N) _allAppointments.any(...) iteration
-                final hasAppointment = _appointmentsLookup.hasAppointmentsOn(
+final hasAppointment = _appointmentsLookup.hasAppointmentsOn(
                   date,
                 );
 

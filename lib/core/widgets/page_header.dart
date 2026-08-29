@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import 'swal_tooltip.dart';
 
 class PageHeader extends StatelessWidget {
   final String title;
@@ -35,15 +36,18 @@ class PageHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (showBackButton) ...[
-                IconButton(
-                  onPressed: onBackPress ?? () => Navigator.of(context).pop(),
-                  icon: Icon(
-                    backButtonIcon ?? Icons.arrow_back_ios_new,
-                    size: 20,
+                SWALTooltip(
+                  message: 'Volver',
+                  child: IconButton(
+                    onPressed: onBackPress ?? () => Navigator.of(context).pop(),
+                    icon: Icon(
+                      backButtonIcon ?? Icons.arrow_back_ios_new,
+                      size: 20,
+                    ),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    color: AppColors.secondary,
                   ),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  color: AppColors.secondary,
                 ),
                 const SizedBox(width: 12),
               ] else if (leading != null) ...[
