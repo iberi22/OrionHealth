@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:orionhealth_health/core/utils/icon_fallbacks.dart';
+import 'swal_tooltip.dart';
 
 enum ConnectionStatus {
   disconnected,
@@ -331,10 +332,16 @@ class LocalConnectionStatus extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               if (onRetry != null)
-                IconButton(
-                  icon: const Icon(Icons.refresh, color: Colors.white38, size: 18),
-                  onPressed: onRetry,
-                  tooltip: 'Reintentar',
+                SWALTooltip(
+                  message: 'Reintentar',
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.refresh,
+                      color: Colors.white38,
+                      size: 18,
+                    ),
+                    onPressed: onRetry,
+                  ),
                 ),
             ],
           ),
@@ -344,10 +351,9 @@ class LocalConnectionStatus extends StatelessWidget {
           Row(
             children: [
               ConnectionStatusIndicator(
-                status:
-                    isLocalAIReady
-                        ? ConnectionStatus.connected
-                        : ConnectionStatus.disconnected,
+                status: isLocalAIReady
+                    ? ConnectionStatus.connected
+                    : ConnectionStatus.disconnected,
                 showLabel: false,
               ),
               const SizedBox(width: 8),
@@ -362,9 +368,7 @@ class LocalConnectionStatus extends StatelessWidget {
               Text(
                 isLocalAIReady ? 'Conectado' : 'No disponible',
                 style: TextStyle(
-                  color: isLocalAIReady
-                      ? Colors.green
-                      : Colors.orange,
+                  color: isLocalAIReady ? Colors.green : Colors.orange,
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
                 ),
@@ -378,10 +382,9 @@ class LocalConnectionStatus extends StatelessWidget {
           Row(
             children: [
               ConnectionStatusIndicator(
-                status:
-                    isMemoryReady
-                        ? ConnectionStatus.connected
-                        : ConnectionStatus.disconnected,
+                status: isMemoryReady
+                    ? ConnectionStatus.connected
+                    : ConnectionStatus.disconnected,
                 showLabel: false,
               ),
               const SizedBox(width: 8),
@@ -396,9 +399,7 @@ class LocalConnectionStatus extends StatelessWidget {
               Text(
                 isMemoryReady ? '$memoryCount recuerdos' : 'No disponible',
                 style: TextStyle(
-                  color: isMemoryReady
-                      ? Colors.green
-                      : Colors.red,
+                  color: isMemoryReady ? Colors.green : Colors.red,
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
                 ),
