@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/widgets/connection_status_indicator.dart';
+import '../../../../core/widgets/swal_tooltip.dart';
 import '../../../../core/services/aicore_service.dart';
 import '../../application/voice_chat_cubit.dart';
 import '../../application/voice_chat_state.dart';
@@ -18,7 +19,8 @@ class VoiceChatPage extends StatefulWidget {
   State<VoiceChatPage> createState() => _VoiceChatPageState();
 }
 
-class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateMixin {
+class _VoiceChatPageState extends State<VoiceChatPage>
+    with TickerProviderStateMixin {
   late final VoiceChatCubit _cubit;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
@@ -79,10 +81,12 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.delete_outline, color: Colors.white70),
-              onPressed: () => _cubit.clearHistory(),
-              tooltip: 'Limpiar conversación',
+            SWALTooltip(
+              message: 'Limpiar conversación',
+              child: IconButton(
+                icon: const Icon(Icons.delete_outline, color: Colors.white70),
+                onPressed: () => _cubit.clearHistory(),
+              ),
             ),
           ],
         ),
@@ -94,7 +98,9 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
           },
           builder: (context, state) {
             if (state.status == VoiceChatStatus.loading) {
-              return const Center(child: CircularProgressIndicator(color: Colors.white70));
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.white70),
+              );
             }
 
             return Column(
@@ -102,7 +108,8 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: LocalConnectionStatus(
-                    isLocalAIReady: getIt<AIService>().currentState == AIServiceState.ready,
+                    isLocalAIReady:
+                        getIt<AIService>().currentState == AIServiceState.ready,
                     isMemoryReady: true, // Assuming for now
                     memoryCount: 0, // Placeholder
                     onRetry: () => getIt<AIService>().initialize(),
@@ -114,7 +121,8 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
                   child: ListView.builder(
                     controller: _scrollController,
                     itemCount: state.messages.length,
-                    itemBuilder: (context, index) => MessageBubble(message: state.messages[index]),
+                    itemBuilder: (context, index) =>
+                        MessageBubble(message: state.messages[index]),
                   ),
                 ),
                 _buildStatusBar(state),
@@ -132,7 +140,9 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
     final isSpeaking = state.status == VoiceChatStatus.speaking;
 
     return ScaleTransition(
-      scale: isRecording || isSpeaking ? _pulseAnimation : const AlwaysStoppedAnimation(1.0),
+      scale: isRecording || isSpeaking
+          ? _pulseAnimation
+          : const AlwaysStoppedAnimation(1.0),
       child: Container(
         height: 120,
         width: 120,
@@ -140,7 +150,9 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
           shape: BoxShape.circle,
           gradient: RadialGradient(
             colors: [
-              (isRecording ? Colors.red : (isSpeaking ? Colors.green : Colors.blue))
+              (isRecording
+                      ? Colors.red
+                      : (isSpeaking ? Colors.green : Colors.blue))
                   .withValues(alpha: 0.4 + (state.currentAudioLevel * 0.4)),
               Colors.transparent,
             ],
@@ -148,7 +160,9 @@ class _VoiceChatPageState extends State<VoiceChatPage> with TickerProviderStateM
         ),
         child: Center(
           child: Icon(
-            isRecording ? Icons.mic : (isSpeaking ? Icons.volume_up : Icons.psychology),
+            isRecording
+                ? Icons.mic
+                : (isSpeaking ? Icons.volume_up : Icons.psychology),
             color: Colors.white,
             size: 64,
           ),
