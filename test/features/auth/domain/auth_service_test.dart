@@ -3,8 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/auth/domain/auth_service.dart';
 import 'package:orionhealth_health/features/auth/infrastructure/services/encryption_service.dart';
-
-class MockEncryptionService extends Mock implements EncryptionService {}
+import '../../../helpers/mock_encryption_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -18,21 +17,27 @@ void main() {
     log.clear();
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(const MethodChannel('local_auth'), (MethodCall methodCall) async {
-      log.add(methodCall);
-      switch (methodCall.method) {
-        case 'isDeviceSupported':
-          return true;
-        default:
-          return null;
-      }
-    });
+        .setMockMethodCallHandler(const MethodChannel('local_auth'), (
+          MethodCall methodCall,
+        ) async {
+          log.add(methodCall);
+          switch (methodCall.method) {
+            case 'isDeviceSupported':
+              return true;
+            default:
+              return null;
+          }
+        });
   });
 
   group('AuthServiceImpl', () {
     test('setPin should hash and store PIN', () async {
-      when(() => mockEncryptionService.generatePinSalt()).thenAnswer((_) async => 'salt');
-      when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => 'hashed');
+      when(
+        () => mockEncryptionService.generatePinSalt(),
+      ).thenAnswer((_) async => 'salt');
+      when(
+        () => mockEncryptionService.hashPin(any(), any()),
+      ).thenAnswer((_) async => 'hashed');
 
       final result = await authService.setPin('1234');
 
@@ -52,11 +57,17 @@ void main() {
 
     test('verifyPin should return true for valid PIN', () async {
       // Set PIN first to cache it
-      when(() => mockEncryptionService.generatePinSalt()).thenAnswer((_) async => 'salt');
-      when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => 'hashed');
+      when(
+        () => mockEncryptionService.generatePinSalt(),
+      ).thenAnswer((_) async => 'salt');
+      when(
+        () => mockEncryptionService.hashPin(any(), any()),
+      ).thenAnswer((_) async => 'hashed');
       await authService.setPin('1234');
 
-      when(() => mockEncryptionService.verifyPin('1234', 'hashed', 'salt')).thenAnswer((_) async => true);
+      when(
+        () => mockEncryptionService.verifyPin('1234', 'hashed', 'salt'),
+      ).thenAnswer((_) async => true);
 
       final result = await authService.verifyPin('1234');
 
@@ -64,11 +75,17 @@ void main() {
     });
 
     test('verifyPin should return error for invalid PIN', () async {
-      when(() => mockEncryptionService.generatePinSalt()).thenAnswer((_) async => 'salt');
-      when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => 'hashed');
+      when(
+        () => mockEncryptionService.generatePinSalt(),
+      ).thenAnswer((_) async => 'salt');
+      when(
+        () => mockEncryptionService.hashPin(any(), any()),
+      ).thenAnswer((_) async => 'hashed');
       await authService.setPin('1234');
 
-      when(() => mockEncryptionService.verifyPin('4321', 'hashed', 'salt')).thenAnswer((_) async => false);
+      when(
+        () => mockEncryptionService.verifyPin('4321', 'hashed', 'salt'),
+      ).thenAnswer((_) async => false);
 
       final result = await authService.verifyPin('4321');
 
@@ -76,11 +93,19 @@ void main() {
       expect(result.error, 'Invalid PIN');
     });
 
-    test('isBiometricAvailable should return true when channel returns true', () async {
-      final result = await authService.isBiometricAvailable();
-      expect(result, isTrue);
-      expect(log, anyElement(predicate((m) => (m as MethodCall).method == 'isDeviceSupported')));
-    });
+    test(
+      'isBiometricAvailable should return true when channel returns true',
+      () async {
+        final result = await authService.isBiometricAvailable();
+        expect(result, isTrue);
+        expect(
+          log,
+          anyElement(
+            predicate((m) => (m as MethodCall).method == 'isDeviceSupported'),
+          ),
+        );
+      },
+    );
 
     test('verifyBiometric should return error if not available', () async {
       // isBiometricAvailable not called or returned false
@@ -96,20 +121,31 @@ void main() {
       expect(result.method, AuthMethod.biometric);
     });
 
-    test('isPinSet currently returns false even after setPin due to implementation detail', () async {
-      // AuthServiceImpl.isPinSet() currently overwrites _cachedPinHash with null from _getStoredPinHash()
-      // This documents the current behavior of the skeleton implementation.
-      when(() => mockEncryptionService.generatePinSalt()).thenAnswer((_) async => 'salt');
-      when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => 'hashed');
+    test(
+      'isPinSet currently returns false even after setPin due to implementation detail',
+      () async {
+        // AuthServiceImpl.isPinSet() currently overwrites _cachedPinHash with null from _getStoredPinHash()
+        // This documents the current behavior of the skeleton implementation.
+        when(
+          () => mockEncryptionService.generatePinSalt(),
+        ).thenAnswer((_) async => 'salt');
+        when(
+          () => mockEncryptionService.hashPin(any(), any()),
+        ).thenAnswer((_) async => 'hashed');
 
-      await authService.setPin('1234');
+        await authService.setPin('1234');
 
-      expect(await authService.isPinSet(), isFalse);
-    });
+        expect(await authService.isPinSet(), isFalse);
+      },
+    );
 
     test('clearAuth should reset cached data', () async {
-      when(() => mockEncryptionService.generatePinSalt()).thenAnswer((_) async => 'salt');
-      when(() => mockEncryptionService.hashPin(any(), any())).thenAnswer((_) async => 'hashed');
+      when(
+        () => mockEncryptionService.generatePinSalt(),
+      ).thenAnswer((_) async => 'salt');
+      when(
+        () => mockEncryptionService.hashPin(any(), any()),
+      ).thenAnswer((_) async => 'hashed');
       await authService.setPin('1234');
 
       await authService.clearAuth();
