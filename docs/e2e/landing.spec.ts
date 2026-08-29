@@ -191,6 +191,7 @@ test.describe('PWA & iOS Support', () => {
       const link = document.querySelector('link[rel="manifest"]');
       return link ? link.getAttribute('href') : null;
     });
+    // Astro 7.2.x PWA integration serves manifest as /OrionHealth/manifest.webmanifest
     expect(manifestHref).toBe('/OrionHealth/manifest.webmanifest');
   });
 

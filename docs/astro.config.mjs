@@ -12,6 +12,7 @@ export default defineConfig({
     }),
     AstroPWA({
       registerType: 'autoUpdate',
+      manifestFilename: 'manifest.webmanifest',
       manifest: {
         name: 'OrionHealth Docs',
         short_name: 'OrionHealth',
