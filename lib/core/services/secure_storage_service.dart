@@ -58,29 +58,25 @@ class SecureStorageServiceImpl implements SecureStorageService {
   SecureStorageServiceImpl({
     FlutterSecureStorage? storage,
     DeviceCapabilityService? capabilityService,
-  })  : _storage = storage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(
-                encryptedSharedPreferences: true,
-              ),
-              iOptions: IOSOptions(
-                accessibility: KeychainAccessibility.first_unlock_this_device,
-              ),
-            ),
-        _capabilityService = capabilityService ?? DeviceCapabilityService(),
-        _isStorageInjected = storage != null,
-        _appKeySeed = 'orionhealth_v1';
+  }) : _storage =
+           storage ??
+           const FlutterSecureStorage(
+             aOptions: AndroidOptions(),
+             iOptions: IOSOptions(
+               accessibility: KeychainAccessibility.first_unlock_this_device,
+             ),
+           ),
+       _capabilityService = capabilityService ?? DeviceCapabilityService(),
+       _isStorageInjected = storage != null,
+       _appKeySeed = 'orionhealth_v1';
 
-  /// Ensures that the storage is correctly initialized,
-  /// especially for emulators where EncryptedSharedPreferences might fail.
+  /// Ensures that the storage is correctly initialized.
   Future<void> _ensureInitialized() async {
     if (_initialized || _isStorageInjected) return;
 
     if (Platform.isAndroid && await _capabilityService.isEmulator()) {
       _storage = const FlutterSecureStorage(
-        aOptions: AndroidOptions(
-          encryptedSharedPreferences: false,
-        ),
+        aOptions: AndroidOptions(),
         iOptions: IOSOptions(
           accessibility: KeychainAccessibility.first_unlock_this_device,
         ),

@@ -13,13 +13,12 @@ abstract class ServiceModule {
 
   @preResolve
   @lazySingleton
-  Future<FlutterSecureStorage> storage(DeviceCapabilityService capabilityService) async {
-    final isEmulator = await capabilityService.isEmulator();
-    return FlutterSecureStorage(
-      aOptions: AndroidOptions(
-        encryptedSharedPreferences: !isEmulator,
-      ),
-      iOptions: const IOSOptions(
+  Future<FlutterSecureStorage> storage(
+    DeviceCapabilityService capabilityService,
+  ) async {
+    return const FlutterSecureStorage(
+      aOptions: AndroidOptions(),
+      iOptions: IOSOptions(
         accessibility: KeychainAccessibility.first_unlock_this_device,
       ),
     );
