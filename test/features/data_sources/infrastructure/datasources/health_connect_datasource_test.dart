@@ -1,69 +1,165 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orionhealth_health/core/utils/health_wrapper.dart';
 import 'package:orionhealth_health/features/data_sources/infrastructure/datasources/health_connect_datasource.dart';
+import '../../../../helpers/mock_health.dart';
 
-class MockHealthWrapper extends Mock implements HealthWrapper {
-  @override
-  Health? get health => _mockHealth;
-  final MockHealth _mockHealth = MockHealth();
-}
-
-class MockHealth extends Mock implements Health {}
+class FakeDateTime extends Fake implements DateTime {}
 
 void main() {
   late HealthConnectDataSourceImpl dataSource;
+  late MockHealthWrapper mockWrapper;
   late MockHealth mockHealth;
 
+  final expectedTypes = [HealthDataType.STEPS, HealthDataType.HEART_RATE];
+
+  setUpAll(() {
+    registerFallbackValue(HealthDataType.STEPS);
+    registerFallbackValue(FakeDateTime());
+  });
+
   setUp(() {
+    mockWrapper = MockHealthWrapper();
     mockHealth = MockHealth();
-    final wrapper = MockHealthWrapper();
-    when(() => wrapper.health).thenReturn(mockHealth);
-    dataSource = HealthConnectDataSourceImpl(wrapper);
+    when(() => mockWrapper.health).thenReturn(mockHealth);
+    dataSource = HealthConnectDataSourceImpl(mockWrapper);
   });
 
   group('HealthConnectDataSourceImpl', () {
-    test('isAvailable returns true if permissions check succeeds', () async {
-      when(() => mockHealth.hasPermissions([])).thenAnswer((_) async => true);
+    group('isAvailable', () {
+      test('returns true if permissions check succeeds', () async {
+        when(
+          () => mockHealth.hasPermissions(any()),
+        ).thenAnswer((_) async => true);
 
-      final result = await dataSource.isAvailable();
+        final result = await dataSource.isAvailable();
 
-      expect(result, isTrue);
+        expect(result, isTrue);
+        verify(() => mockHealth.hasPermissions([])).called(1);
+      });
+
+      test(
+        'returns false if permissions check returns false or null',
+        () async {
+          when(
+            () => mockHealth.hasPermissions(any()),
+          ).thenAnswer((_) async => null);
+
+          final result = await dataSource.isAvailable();
+
+          expect(result, isFalse);
+        },
+      );
+
+      test('returns false if health is null', () async {
+        when(() => mockWrapper.health).thenReturn(null);
+
+        final result = await dataSource.isAvailable();
+
+        expect(result, isFalse);
+      });
+
+      test(
+        'returns false if health permissions check throws exception',
+        () async {
+          when(
+            () => mockHealth.hasPermissions(any()),
+          ).thenThrow(Exception('Device error'));
+
+          final result = await dataSource.isAvailable();
+
+          expect(result, isFalse);
+        },
+      );
     });
 
-    test('isAvailable returns false if permissions check fails or returns null', () async {
-      when(() => mockHealth.hasPermissions([])).thenAnswer((_) async => null);
+    group('requestPermissions', () {
+      test(
+        'calls health package with correct types and returns true',
+        () async {
+          when(
+            () => mockHealth.requestAuthorization(expectedTypes),
+          ).thenAnswer((_) async => true);
 
-      final result = await dataSource.isAvailable();
+          final result = await dataSource.requestPermissions();
 
-      expect(result, isFalse);
+          expect(result, isTrue);
+          verify(
+            () => mockHealth.requestAuthorization(expectedTypes),
+          ).called(1);
+        },
+      );
+
+      test('returns false if requestAuthorization fails', () async {
+        when(
+          () => mockHealth.requestAuthorization(any()),
+        ).thenAnswer((_) async => false);
+
+        final result = await dataSource.requestPermissions();
+
+        expect(result, isFalse);
+      });
+
+      test('returns false if health is null', () async {
+        when(() => mockWrapper.health).thenReturn(null);
+
+        final result = await dataSource.requestPermissions();
+
+        expect(result, isFalse);
+      });
+
+      test('returns false if requestAuthorization throws exception', () async {
+        when(
+          () => mockHealth.requestAuthorization(any()),
+        ).thenThrow(Exception('Auth failed'));
+
+        final result = await dataSource.requestPermissions();
+
+        expect(result, isFalse);
+      });
     });
 
-    test('requestPermissions calls health package with correct types', () async {
-      final types = [HealthDataType.STEPS, HealthDataType.HEART_RATE];
-      when(() => mockHealth.requestAuthorization(types)).thenAnswer((_) async => true);
+    group('syncData', () {
+      test('calls health package with correct types and date range', () async {
+        when(
+          () => mockHealth.getHealthDataFromTypes(
+            types: any(named: 'types'),
+            startTime: any(named: 'startTime'),
+            endTime: any(named: 'endTime'),
+          ),
+        ).thenAnswer((_) async => []);
 
-      final result = await dataSource.requestPermissions();
+        await dataSource.syncData();
 
-      expect(result, isTrue);
-      verify(() => mockHealth.requestAuthorization(types)).called(1);
-    });
+        verify(
+          () => mockHealth.getHealthDataFromTypes(
+            types: expectedTypes,
+            startTime: any(named: 'startTime'),
+            endTime: any(named: 'endTime'),
+          ),
+        ).called(1);
+      });
 
-    test('syncData calls health package with correct types and date range', () async {
-      when(() => mockHealth.getHealthDataFromTypes(
-        types: any(named: 'types'),
-        startTime: any(named: 'startTime'),
-        endTime: any(named: 'endTime'),
-      )).thenAnswer((_) async => []);
+      test('handles null health gracefully', () async {
+        when(() => mockWrapper.health).thenReturn(null);
 
-      await dataSource.syncData();
+        await dataSource.syncData();
+      });
 
-      verify(() => mockHealth.getHealthDataFromTypes(
-        types: [HealthDataType.STEPS, HealthDataType.HEART_RATE],
-        startTime: any(named: 'startTime'),
-        endTime: any(named: 'endTime'),
-      )).called(1);
+      test(
+        'handles exception from getHealthDataFromTypes gracefully',
+        () async {
+          when(
+            () => mockHealth.getHealthDataFromTypes(
+              types: any(named: 'types'),
+              startTime: any(named: 'startTime'),
+              endTime: any(named: 'endTime'),
+            ),
+          ).thenThrow(Exception('Sync error'));
+
+          await dataSource.syncData();
+        },
+      );
     });
   });
 }
