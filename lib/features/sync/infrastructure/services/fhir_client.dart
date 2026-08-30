@@ -1,4 +1,11 @@
-/// FHIR Client for IHCE Colombia
+/// FHIR Client (legacy IHCE Colombia adapter — disabled in Wave 12).
+///
+/// The IHCE Colombia FHIR endpoint (fhir.ihcecol.gov.co) was never
+/// reachable in production. This client is kept as a structural placeholder
+/// so that the DI graph and surrounding sync code continues to compile.
+///
+/// To re-enable, replace the baseUrl with a working FHIR R4 endpoint
+/// (or remove the legacy plumbing entirely).
 /// Native Dart implementation - no backend needed
 /// Uses flutter_appauth for OAuth and http for FHIR API calls
 library;

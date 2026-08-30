@@ -1,4 +1,6 @@
-/// DI Module for IHCE FHIR native services
+/// DI Module for FHIR native services (legacy IHCE — disabled in Wave 12).
+/// The IHCE FHIR native services are not registered here anymore.
+/// Kept as a structural placeholder for future generic FHIR adapters.
 library;
 
 import 'package:injectable/injectable.dart';

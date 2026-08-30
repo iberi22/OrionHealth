@@ -1,30 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../core/theme/cyber_theme.dart';
-import '../../../eps_connection/domain/entities/eps_providers_catalog.dart';
-import '../../../eps_connection/domain/entities/eps_provider.dart';
-import '../../../eps_connection/infrastructure/services/eps_webview_session.dart';
-import '../../../eps_connection/presentation/pages/eps_patient_portal_screen.dart';
+// EPS Colombia integration removed in Wave 12. Stub classes below preserve
+// the API surface so the rest of the file compiles without changes.
+// To fully remove, delete the methods that use these stubs in a follow-up.
 import '../../infrastructure/services/country_detector.dart';
 import '../widgets/eps_info_modal.dart';
 import '../widgets/health_data_sources_sheet.dart';
-import '../../domain/entities/health_data_source.dart';
+
+// ─────────────────────────────────────────────────────────────────────
+// EPS stubs (Wave 12: feature removed, signatures preserved for ABI)
+// ─────────────────────────────────────────────────────────────────────
+class EPSProvider {
+  final String id;
+  final String name;
+  const EPSProvider({required this.id, required this.name});
+}
+
+class EpsProvidersCatalog {
+  static const _empty = EPSProvider(id: '', name: '');
+  static EPSProvider? byId(String id) => _empty;
+  static List<EPSProvider> get activeProviders => const [];
+}
+
+class EpsWebViewSession {
+  EpsWebViewSession({FlutterSecureStorage? storage, required String epsId});
+  Future<bool> hasActiveSession() async => false;
+}
+
+class EpsPatientPortalScreen extends StatelessWidget {
+  final EPSProvider provider;
+  final bool autoConnect;
+  const EpsPatientPortalScreen({
+    super.key,
+    required this.provider,
+    this.autoConnect = false,
+  });
+  @override
+  Widget build(BuildContext context) =>
+      const Scaffold(body: Center(child: Text('EPS removed (Wave 12)')));
+}
 
 /// Onboarding Welcome Page v2
 ///
 /// Privacy-first slides with:
 /// - Country detection: EPS option only shown for Colombian users
-/// - EPS connection with help icon explaining the logic
 /// - Health/fitness data source sync (Strava, Google Fit, Apple Health, etc.)
+///
+/// NOTE: EPS Colombia integration was removed in Wave 12 (the scraper
+/// never worked in production). The page now shows only the
+/// health_data_sources sheet. The onEpsDataReceived callback is kept
+/// as a no-op signature for ABI compatibility with the existing
+/// onboarding flow.
 ///
 /// Flow:
 /// 1. User sees 3 privacy slides (Privacy First, Local AI, Own Your Data)
-/// 2. After slides: EPS connection chips (Colombia only) + Data Sync option
-/// 3. If user connects EPS → data auto-fills onboarding profile
-/// 4. If user connects health sources → settings saved
-/// 5. If user skips → proceeds to manual onboarding
+/// 2. Health data sources sheet (Strava, Google Fit, Apple Health, etc.)
+/// 3. If user skips → proceeds to manual onboarding
 class OnboardingWelcomePage extends StatefulWidget {
   final VoidCallback onNext;
+  // ignore: prefer_typing_uninitialized_variables
   final void Function(Map<String, dynamic> epsData) onEpsDataReceived;
   final void Function(Set<String> connectedSources)? onHealthSourcesConnected;
   final CountryDetector? countryDetector;
