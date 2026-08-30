@@ -5,6 +5,7 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue?logo=flutter)](https://flutter.dev)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://iberi22.github.io/OrionHealth/)
 [![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/OrionHealth)
+[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-green.svg)](docs/accessibility.md)
 
 OrionHealth is an open-source, privacy-first personal health intelligence platform and wallet built with Flutter.
 It gives individuals complete ownership of their medical records, wearable metrics, and clinical insights through
