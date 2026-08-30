@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orionhealth_health/core/services/secure_storage_service.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/right_to_erasure_repository.dart';
 
 class _MockRepo implements RightToErasureRepository {
@@ -15,14 +14,6 @@ class _MockRepo implements RightToErasureRepository {
       ..reports = 4
       ..doctorProfiles = 2;
   }
-}
-
-class _MockSecureStorage implements SecureStorageService {
-  @override
-  Future<void> deleteAll() async {}
-
-  @override
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 void main() {
