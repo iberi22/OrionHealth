@@ -4,9 +4,6 @@ import 'package:intl/intl.dart';
 import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
-import '../../../eps_connection/presentation/eps_connect_button.dart';
-import '../../../eps_connection/application/bloc/eps_connection_cubit.dart';
-import '../../../../core/di/injection.dart';
 
 class BasicInfoStep extends StatefulWidget {
   const BasicInfoStep({super.key});
@@ -21,31 +18,6 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
   final _heightController = TextEditingController();
   DateTime? _birthDate;
   String? _sex;
-  EpsConnectionCubit? _epsCubit;
-  bool _epsCubitInitFailed = false;
-
-  // Lazily initialized - avoids crashing initState during build
-  EpsConnectionCubit? _lazyEpsCubit() {
-    if (_epsCubitInitFailed) {
-      debugPrint('[EPS] _lazyEpsCubit: already failed, returning null');
-      return null;
-    }
-    try {
-      if (_epsCubit != null) {
-        debugPrint('[EPS] _lazyEpsCubit: cached cubit available');
-        return _epsCubit;
-      }
-      debugPrint('[EPS] _lazyEpsCubit: creating cubit via getIt...');
-      _epsCubit = getIt<EpsConnectionCubit>();
-      debugPrint('[EPS] _lazyEpsCubit: SUCCESS, cubit created');
-      return _epsCubit;
-    } catch (e, st) {
-      debugPrint('[EPS] _lazyEpsCubit: FAILED - $e');
-      debugPrint('[EPS] Stack: $st');
-      _epsCubitInitFailed = true;
-      return null;
-    }
-  }
 
   @override
   void initState() {
@@ -57,7 +29,6 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
     _nameController.dispose();
     _weightController.dispose();
     _heightController.dispose();
-    _epsCubit?.close();
     super.dispose();
   }
 
@@ -193,39 +164,9 @@ class _BasicInfoStepState extends State<BasicInfoStep> {
   }
 
   Widget _buildEpsSection() {
-    final cubit = _lazyEpsCubit();
-    debugPrint('[EPS] _buildEpsSection: cubit=$cubit, failed=$_epsCubitInitFailed');
-    if (_epsCubitInitFailed || cubit == null) {
-      debugPrint('[EPS] _buildEpsSection: showing fallback UI');
-      return GlassmorphicCard(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              const Icon(Icons.link_off, color: Colors.orangeAccent),
-              const SizedBox(width: 16),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Conexión EPS no disponible',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    Text(
-                      'No pudimos inicializar la conexión. Puedes continuar sin ella.',
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return EpsConnectButton(cubit: cubit);
+    // EPS connection feature has been removed (didn't work in production).
+    // Returns empty widget — feature was non-functional in Colombia.
+    return const SizedBox.shrink();
   }
 
   Widget _buildSexSelector() {
