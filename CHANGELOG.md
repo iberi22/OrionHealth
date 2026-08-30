@@ -46,6 +46,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - **Stale medical-standards.html** and **test_bloc_version.sh** from root (orphan outputs, content preserved elsewhere)
 
+### Compliance (Wave 9)
+- **GDPR DataExportService** (Ola 9.06): Portable ZIP export of all user data with pure-Dart encoder (no external dependencies). Repository pattern with abstract `DataExportRepository` interface and Isar implementation.
+- **GDPR RightToErasureRepository** (Ola 9.07): Irreversible deletion of all user data across 8 Isar collections in a single atomic `writeTxn`. Returns `ErasureCounts` receipt.
+- **HIPAA PhiAuditService** (Ola 9.08): Append-only audit log of all PHI access events (read/write/delete/export/share). Persisted to SecureStorage as JSON (encrypted at rest). No PHI content logged — only resource IDs.
+- **Ley 1581 HabeasDataConsent** (Ola 9.09): Explicit consent entity for Colombian data protection law. Requires 3 checkboxes (ARCO rights, processing purpose, data sharing) before any PHI collection.
+- **Ley 1581 ArcoRequest** (Ola 9.10): Request model for 4 ARCO rights (Acceso, Rectificación, Cancelación, Oposición) with 4 status states (pending/processing/processed/denied).
+- **WCAG 2.1 AA accessibility** (Ola 9.12): `docs/accessibility.md` conformance statement + WCAG badge in README.
+- **Privacy policy** (Ola 9.13): `docs/privacy-policy.md` with 13 sections covering GDPR (Art. 6/9/15-21), Ley 1581 (Art. 6/17/ARCO), HIPAA (§ 164.312/316/530), data retention, security measures.
+- **WCAG tooltips** (Ola 9.05): Added Spanish tooltips to 13 icon-only IconButtons across 8 files for screen reader support.
+
+### Quality
+- **CHANGELOG.md updated** (Ola 9.11): Full Wave 7+8+9 release notes with Keep a Changelog 1.1.0 format.
+- **SRS REQ-NF compliance matrix** (Ola 9.14): Updated `docs/SRS/02-non-functional-requirements.md` with status table for all 10 NFRs.
+- **scripts/RULES.md** (Ola 9.03): GitCore repo structure documentation.
+- **Root hygiene** (Ola 9.01-9.02, 9.07): 8 diagnostic .txt files moved to `docs/diagnostics/`, stale HTML/sh removed, root 100% clean.
+
+### Testing
+- **Test coverage for Wave 9** (1,299 LOC tests, 1.28x ratio vs code):
+  - `test/core/audit/` — 15 tests for HIPAA PhiAuditEvent + PhiAuditService
+  - `test/features/onboarding/` — 5 tests for HabeasDataConsent
+  - `test/features/user_profile/` — 14 tests for ArcoRequest, DataExport, RightToErasure
+  - `test/integration/compliance/` — 14 E2E tests for full compliance user journey
+- **All 55 new tests pass**: `flutter test` reports `All tests passed!`
+- **Compliance E2E coverage**:
+  - Step 1: Habeas Data consent (Ley 1581)
+  - Step 2: PHI audit events (HIPAA)
+  - Step 3: 4 ARCO rights requests
+  - Step 4: GDPR data export
+  - Step 5: GDPR right to erasure (irreversible)
+
 ---
 
 ## [0.8.1-beta] — 2026-06-04
