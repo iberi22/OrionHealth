@@ -1,5 +1,9 @@
 # Security Audit and Data Handling
 
+> **Privacy Policy**: See [docs/privacy-policy.md](docs/privacy-policy.md) for
+> our complete privacy policy including GDPR Art. 6/9/15-21, Ley 1581 de 2012,
+> HIPAA technical safeguards, and user rights (ARCO + GDPR + portability).
+
 ## Isar Database Encryption
 Isar does not natively support at-rest encryption in the open-source version, but we are simulating sensitive data handling by ensuring the database remains strictly on-device. We recommend moving to an encrypted SQLite (SQLCipher) or using `flutter_secure_storage` to encrypt specific sensitive fields before storing them in Isar if the data risk requires it.
 
