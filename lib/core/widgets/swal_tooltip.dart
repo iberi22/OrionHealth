@@ -25,7 +25,7 @@ class SWALTooltip extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: AppColors.glassBorder),
       ),
-      textStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 12),
+      textStyle: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
       child: child,
     );
   }

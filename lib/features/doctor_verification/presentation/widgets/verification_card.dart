@@ -49,7 +49,7 @@ class VerificationCard extends StatelessWidget {
                       Text(
                         'ID: ${doctor.id}',
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.white54,
                         ),
                       ),
@@ -86,7 +86,7 @@ class VerificationCard extends StatelessWidget {
                   SizedBox(width: 8),
                   Text(
                     'Perfil verificado correctamente',
-                    style: TextStyle(color: Colors.greenAccent, fontSize: 12),
+                    style: TextStyle(color: Colors.greenAccent, fontSize: 14),
                   ),
                 ],
               ),
@@ -135,7 +135,7 @@ class VerificationCard extends StatelessWidget {
             text,
             style: TextStyle(
               color: color,
-              fontSize: 10,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),

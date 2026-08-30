@@ -52,7 +52,7 @@ class ContributionCard extends StatelessWidget {
                     DateFormat('MMM dd, yyyy HH:mm').format(contribution.timestamp),
                     style: TextStyle(
                       color: Colors.white.withAlpha(150),
-                      fontSize: 12,
+                      fontSize: 14,
                     ),
                   ),
                 ],

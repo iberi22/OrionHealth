@@ -143,8 +143,8 @@ class _LlmSettingsView extends StatelessWidget {
                 labelColor: AppColors.primary,
                 unselectedLabelColor: Colors.white54,
                 labelStyle: const TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 10),
-                unselectedLabelStyle: const TextStyle(fontSize: 10),
+                    fontWeight: FontWeight.w600, fontSize: 14),
+                unselectedLabelStyle: const TextStyle(fontSize: 14),
                 dividerColor: Colors.transparent,
                 tabs: const [
                   Tab(
@@ -246,7 +246,7 @@ class _LocalModelsTab extends StatelessWidget {
                     child: Text(
                       '${kAvailableLocalModels.length} modelos',
                       style: const TextStyle(
-                          fontSize: 12, color: Colors.white54),
+                          fontSize: 14, color: Colors.white54),
                     ),
                   ),
                 ],
@@ -355,7 +355,7 @@ class _ModelListItem extends StatelessWidget {
                               'ACTIVO',
                               style: TextStyle(
                                 color: AppColors.primary,
-                                fontSize: 8,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -367,7 +367,7 @@ class _ModelListItem extends StatelessWidget {
                     Text(
                       size,
                       style: const TextStyle(
-                          color: Colors.white54, fontSize: 12),
+                          color: Colors.white54, fontSize: 14),
                     ),
                   ],
                 ),
@@ -397,14 +397,14 @@ class _ModelListItem extends StatelessWidget {
                   '${(progress * 100).toInt()}%',
                   style: TextStyle(
                     color: AppColors.secondary,
-                    fontSize: 11,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const Spacer(),
                 Text(
                   '${(sizeToMb(size) * progress).toInt()} MB / ${sizeToMb(size)} MB',
-                  style: const TextStyle(color: Colors.white38, fontSize: 10),
+                  style: const TextStyle(color: Colors.white38, fontSize: 14),
                 ),
               ],
             ),
@@ -426,7 +426,7 @@ class _ModelListItem extends StatelessWidget {
                       ? 'Compatible con tu dispositivo'
                       : 'Requiere $minRamStr RAM',
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 14,
                     color: compatible ? Colors.greenAccent : Colors.orangeAccent,
                   ),
                 ),
@@ -521,7 +521,7 @@ class _ModelListItem extends StatelessWidget {
           ),
           child: const Text(
             'No descargado',
-            style: TextStyle(color: Colors.white38, fontSize: 10),
+            style: TextStyle(color: Colors.white38, fontSize: 14),
           ),
         );
       case _DownloadStatus.downloading:
@@ -550,7 +550,7 @@ class _ModelListItem extends StatelessWidget {
                 'Descargando',
                 style: TextStyle(
                     color: AppColors.secondary,
-                    fontSize: 10,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500),
               ),
             ],
@@ -574,7 +574,7 @@ class _ModelListItem extends StatelessWidget {
                 'Listo',
                 style: TextStyle(
                     color: Colors.greenAccent,
-                    fontSize: 10,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500),
               ),
             ],
@@ -616,7 +616,7 @@ class _ModelListItem extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: isSecondary ? Colors.white54 : AppColors.primary,
               ),
@@ -712,7 +712,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                               Text(
                                 'Conecta con APIs externas de IA',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   color: Colors.white.withValues(alpha: 0.47),
                                 ),
                               ),
@@ -898,7 +898,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
                                   : 'OpenAI API. '
                                       'Obtén tu API Key en platform.openai.com.',
                           style: const TextStyle(
-                              color: Colors.white54, fontSize: 12),
+                              color: Colors.white54, fontSize: 14),
                         ),
                       ),
                     ],
@@ -921,7 +921,7 @@ class _CloudProviderTabState extends State<_CloudProviderTab> {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.white.withValues(alpha: 0.59),
               letterSpacing: 0.5,
@@ -1056,7 +1056,7 @@ class _ConnectionTestWidget extends StatelessWidget {
                     message ?? '✅ Conectado',
                     style: const TextStyle(
                         color: Colors.greenAccent,
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -1083,7 +1083,7 @@ class _ConnectionTestWidget extends StatelessWidget {
                       message ?? '❌ Error de conexión',
                       style: const TextStyle(
                           color: Colors.redAccent,
-                          fontSize: 13,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -1099,7 +1099,7 @@ class _ConnectionTestWidget extends StatelessWidget {
           const Text(
             'Prueba rápida',
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.white70,
             ),
@@ -1108,10 +1108,10 @@ class _ConnectionTestWidget extends StatelessWidget {
           TextField(
             controller: TextEditingController(text: testPrompt),
             maxLines: 2,
-            style: const TextStyle(color: Colors.white, fontSize: 13),
+            style: const TextStyle(color: Colors.white, fontSize: 14),
             decoration: InputDecoration(
               hintText: 'Escribe un mensaje para probar...',
-              hintStyle: const TextStyle(color: Colors.white24, fontSize: 13),
+              hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
               filled: true,
               fillColor: Colors.white.withValues(alpha: 0.03),
               contentPadding: const EdgeInsets.all(12),
@@ -1221,7 +1221,7 @@ class _ExecutionModeTab extends StatelessWidget {
                         Text(
                           'Define cómo se ejecutan los modelos de IA',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 14,
                             color: Colors.white70,
                           ),
                         ),
@@ -1328,7 +1328,7 @@ class _ExecutionModeTab extends StatelessWidget {
                               : '🔄 Modo híbrido: datos locales primero, '
                                   'cloud solo cuando sea necesario.',
                       style: const TextStyle(
-                          color: Colors.white54, fontSize: 12),
+                          color: Colors.white54, fontSize: 14),
                     ),
                   ),
                 ],
@@ -1379,7 +1379,7 @@ class _GeneralSettingsTab extends StatelessWidget {
                                 value: m,
                                 child: Text(m,
                                     style: const TextStyle(
-                                        color: Colors.white, fontSize: 12)),
+                                        color: Colors.white, fontSize: 14)),
                               ))
                           .toList(),
                       onChanged: (v) {
@@ -1403,7 +1403,7 @@ class _GeneralSettingsTab extends StatelessWidget {
                                 value: l,
                                 child: Text(l.toUpperCase(),
                                     style: const TextStyle(
-                                        color: Colors.white, fontSize: 12)),
+                                        color: Colors.white, fontSize: 14)),
                               ))
                           .toList(),
                       onChanged: (v) {
@@ -1440,7 +1440,7 @@ class _GeneralSettingsTab extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.file_download, color: AppColors.primary),
                     title: const Text('Exportar Datos', style: TextStyle(color: Colors.white, fontSize: 14)),
-                    subtitle: const Text('Descargar historial en formato FHIR JSON', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                    subtitle: const Text('Descargar historial en formato FHIR JSON', style: TextStyle(color: Colors.white54, fontSize: 14)),
                     onTap: () async {
                       await context.read<LlmSettingsCubit>().exportData();
                       if (context.mounted) {
@@ -1451,7 +1451,7 @@ class _GeneralSettingsTab extends StatelessWidget {
                             builder: (c) => AlertDialog(
                               backgroundColor: AppColors.surfaceVariant,
                               title: const Text('Datos Exportados', style: TextStyle(color: Colors.white)),
-                              content: SingleChildScrollView(child: Text(state.exportData!, style: const TextStyle(color: Colors.white70, fontSize: 10))),
+                              content: SingleChildScrollView(child: Text(state.exportData!, style: const TextStyle(color: Colors.white70, fontSize: 14))),
                               actions: [TextButton(onPressed: () => Navigator.pop(c), child: const Text('OK'))],
                             ),
                           );
@@ -1463,7 +1463,7 @@ class _GeneralSettingsTab extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.file_upload, color: AppColors.secondary),
                     title: const Text('Importar Datos', style: TextStyle(color: Colors.white, fontSize: 14)),
-                    subtitle: const Text('Cargar respaldo previo de datos médicos', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                    subtitle: const Text('Cargar respaldo previo de datos médicos', style: TextStyle(color: Colors.white54, fontSize: 14)),
                     onTap: () {
                       // Mock import
                       context.read<LlmSettingsCubit>().importData('{}');
@@ -1519,7 +1519,7 @@ class _SettingsTile extends StatelessWidget {
         title: Text(title,
             style: const TextStyle(color: Colors.white, fontSize: 14)),
         subtitle: Text(subtitle,
-            style: const TextStyle(color: Colors.white54, fontSize: 12)),
+            style: const TextStyle(color: Colors.white54, fontSize: 14)),
         trailing: trailing,
       ),
     );
@@ -1614,7 +1614,7 @@ class _ModeOption extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                         color: Colors.white.withValues(alpha: 0.47)),
                   ),
                   if (isSelected) ...[
@@ -1622,7 +1622,7 @@ class _ModeOption extends StatelessWidget {
                     Text(
                       description,
                       style: const TextStyle(
-                          fontSize: 11, color: Colors.white38),
+                          fontSize: 14, color: Colors.white38),
                     ),
                   ],
                 ],
@@ -1773,7 +1773,7 @@ class _CapabilityBadge extends StatelessWidget {
         style: TextStyle(
           color: color,
           fontWeight: FontWeight.bold,
-          fontSize: 12,
+          fontSize: 14,
         ),
       ),
     );

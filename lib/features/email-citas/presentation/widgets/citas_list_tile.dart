@@ -58,7 +58,7 @@ class CitasListTile extends StatelessWidget {
                   const Icon(Icons.access_time, size: 14, color: CyberTheme.secondary),
                   Text(
                     DateFormat('dd MMM yyyy, hh:mm a', 'es').format(appointment.dateTime),
-                    style: const TextStyle(color: CyberTheme.secondary, fontSize: 12),
+                    style: const TextStyle(color: CyberTheme.secondary, fontSize: 14),
                   ),
                 ],
               ),
@@ -75,7 +75,7 @@ class CitasListTile extends StatelessWidget {
               appointment.status.name.toUpperCase(),
               style: TextStyle(
                 color: color,
-                fontSize: 10,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),

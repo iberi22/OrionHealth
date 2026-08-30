@@ -69,7 +69,7 @@ class StandardsViewerPage extends StatelessWidget {
         ),
         subtitle: Text(
           subtitle,
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
+          style: const TextStyle(color: Colors.white70, fontSize: 14),
         ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,7 +79,7 @@ class StandardsViewerPage extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               stats,
-              style: const TextStyle(color: CyberTheme.secondary, fontSize: 10),
+              style: const TextStyle(color: CyberTheme.secondary, fontSize: 14),
             ),
           ],
         ),

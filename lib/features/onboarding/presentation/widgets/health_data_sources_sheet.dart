@@ -83,7 +83,7 @@ class _HealthDataSourcesSheetState extends State<HealthDataSourcesSheet> {
                         'Conectá tus apps deportivas y de salud',
                         style: TextStyle(
                           color: Colors.white38,
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                       ),
                     ],
@@ -94,7 +94,7 @@ class _HealthDataSourcesSheetState extends State<HealthDataSourcesSheet> {
                     '${_connected.length}/${sources.length}',
                     style: TextStyle(
                       color: CyberTheme.success.withValues(alpha: 0.7),
-                      fontSize: 13,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -265,7 +265,7 @@ class _SourceCard extends StatelessWidget {
                         source.description,
                         style: const TextStyle(
                           color: Colors.white38,
-                          fontSize: 11,
+                          fontSize: 14,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -289,7 +289,7 @@ class _SourceCard extends StatelessWidget {
                                       _dataTypeLabel(dt),
                                       style: const TextStyle(
                                         color: Colors.white30,
-                                        fontSize: 9,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   ))
@@ -318,7 +318,7 @@ class _SourceCard extends StatelessWidget {
                       'Conectar',
                       style: TextStyle(
                         color: Color(0xFF00D4FF),
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

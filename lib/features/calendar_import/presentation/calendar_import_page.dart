@@ -141,7 +141,7 @@ class _CalendarEventsListState extends State<_CalendarEventsList> {
                           Text(app.specialty, style: const TextStyle(color: CyberTheme.secondary)),
                           Text(
                             DateFormat('dd MMM yyyy, hh:mm a', 'es').format(app.dateTime),
-                            style: const TextStyle(fontSize: 12, color: Colors.white54),
+                            style: const TextStyle(fontSize: 14, color: Colors.white54),
                           ),
                         ],
                       ),

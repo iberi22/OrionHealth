@@ -108,7 +108,7 @@ class _AgentStatusCardState extends State<AgentStatusCard>
                   statusLabel,
                   style: TextStyle(
                     color: statusColor,
-                    fontSize: 12,
+                    fontSize: 14,
                   ),
                 ),
               ],

@@ -42,7 +42,7 @@ class MedicalIdQrView extends StatelessWidget {
             const SizedBox(height: 12),
             SelectableText(
               qr,
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 14),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),

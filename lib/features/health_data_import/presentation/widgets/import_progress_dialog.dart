@@ -59,7 +59,7 @@ class ImportProgressDialog extends StatelessWidget {
                       'Step ${state.currentStepNum} of ${state.totalSteps}',
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.6),
-                        fontSize: 12,
+                        fontSize: 14,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -70,7 +70,7 @@ class ImportProgressDialog extends StatelessWidget {
                       '${state.importedCount} imported',
                       style: const TextStyle(
                         color: AppColors.primary,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -84,7 +84,7 @@ class ImportProgressDialog extends StatelessWidget {
                 'Please keep the app open...',
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.5),
-                  fontSize: 11,
+                  fontSize: 14,
                   fontStyle: FontStyle.italic,
                 ),
               ),

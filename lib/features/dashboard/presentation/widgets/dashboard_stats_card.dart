@@ -110,7 +110,7 @@ class _StatItem extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 10,
+            fontSize: 14,
             color: Colors.white70,
           ),
           textAlign: TextAlign.center,

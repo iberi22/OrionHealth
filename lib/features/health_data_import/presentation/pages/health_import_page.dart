@@ -199,7 +199,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
                     const Expanded(
                       child: Text(
                         'Import your health data from connected apps and devices. Data from the last 30 days will be imported.',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ),
                   ],
@@ -347,7 +347,7 @@ class _DataTypeChip extends StatelessWidget {
         label,
         style: const TextStyle(
           color: AppColors.primary,
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: FontWeight.w500,
         ),
       ),

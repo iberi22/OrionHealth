@@ -94,7 +94,7 @@ class DataSourceCard extends StatelessWidget {
                             isAvailable ? 'Available' : 'Not available',
                             style: TextStyle(
                               color: isAvailable ? AppColors.primary : Colors.grey,
-                              fontSize: 12,
+                              fontSize: 14,
                             ),
                           ),
                         ],
@@ -109,7 +109,7 @@ class DataSourceCard extends StatelessWidget {
               _lastSyncText,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.6),
-                fontSize: 12,
+                fontSize: 14,
               ),
             ),
             const SizedBox(height: 16),

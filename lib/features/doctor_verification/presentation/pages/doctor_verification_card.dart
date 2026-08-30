@@ -49,7 +49,7 @@ class DoctorVerificationCard extends StatelessWidget {
               'FORMULARIO DE VERIFICACIÓN',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 14,
                 color: Colors.white54,
               ),
             ),

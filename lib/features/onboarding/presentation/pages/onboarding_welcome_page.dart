@@ -232,7 +232,7 @@ class _OnboardingWelcomePageState extends State<OnboardingWelcomePage> {
               'Conectá tu EPS para importar tus datos',
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.5),
-                fontSize: 13,
+                fontSize: 14,
               ),
             ),
             const SizedBox(width: 6),
@@ -306,7 +306,7 @@ class _OnboardingWelcomePageState extends State<OnboardingWelcomePage> {
                   color: hasConnections
                       ? CyberTheme.success.withValues(alpha: 0.8)
                       : Colors.white.withValues(alpha: 0.5),
-                  fontSize: 13,
+                  fontSize: 14,
                 ),
               ),
             ],
@@ -329,7 +329,7 @@ class _OnboardingWelcomePageState extends State<OnboardingWelcomePage> {
                   color: hasConnections
                       ? CyberTheme.success
                       : CyberTheme.primary,
-                  fontSize: 13,
+                  fontSize: 14,
                 ),
               ),
               style: OutlinedButton.styleFrom(
@@ -392,7 +392,7 @@ class _OnboardingWelcomePageState extends State<OnboardingWelcomePage> {
                     '${_epsData!.length} campos extraídos de tu portal EPS.',
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.5),
-                      fontSize: 12,
+                      fontSize: 14,
                     ),
                   ),
                 ],
@@ -439,7 +439,7 @@ class _OnboardingWelcomePageState extends State<OnboardingWelcomePage> {
               label.length > 16 ? '${label.substring(0, 15)}…' : label,
               style: TextStyle(
                 color: highlight ? CyberTheme.primary : Colors.white70,
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: highlight ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -488,7 +488,7 @@ class _OnboardingWelcomePageState extends State<OnboardingWelcomePage> {
               'Cambiar de EPS',
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.4),
-                fontSize: 13,
+                fontSize: 14,
               ),
             ),
           ),
@@ -744,7 +744,7 @@ class _EpsPickerSheetState extends State<_EpsPickerSheet> {
                       Text(p.name, style: const TextStyle(color: Colors.white)),
                   subtitle: Text(p.id,
                       style: const TextStyle(
-                          color: Colors.white38, fontSize: 12)),
+                          color: Colors.white38, fontSize: 14)),
                   onTap: () => Navigator.pop(context, p),
                 );
               },

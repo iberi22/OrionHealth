@@ -99,7 +99,7 @@ class EpsInfoModal extends StatelessWidget {
                         'El scraping ocurre 100% on-device.',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.7),
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -130,7 +130,7 @@ class EpsInfoModal extends StatelessWidget {
                         '${_steps.indexOf(step) + 1}',
                         style: const TextStyle(
                           color: Color(0xFF00D4FF),
-                          fontSize: 13,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -140,7 +140,7 @@ class EpsInfoModal extends StatelessWidget {
                         step,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.7),
-                          fontSize: 13,
+                          fontSize: 14,
                           height: 1.5,
                         ),
                       ),
@@ -180,7 +180,7 @@ class EpsInfoModal extends StatelessWidget {
                         'iniciar sesión nuevamente por seguridad.',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.7),
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -260,7 +260,7 @@ class EpsInfoModal extends StatelessWidget {
       text,
       style: TextStyle(
         color: Colors.white.withValues(alpha: 0.65),
-        fontSize: 13,
+        fontSize: 14,
         height: 1.6,
       ),
     );

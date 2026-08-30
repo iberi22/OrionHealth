@@ -124,7 +124,7 @@ class _OnboardingProfilePageState extends State<OnboardingProfilePage> {
                         'Podés editarlos si es necesario.',
                         style: TextStyle(
                           color: (CyberTheme.success).withValues(alpha: 0.8),
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                       ),
                     ),

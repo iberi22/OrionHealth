@@ -124,7 +124,7 @@ class BlogTile extends StatelessWidget {
                     child: Text(
                       post.category.toUpperCase(),
                       style: const TextStyle(
-                        fontSize: 10,
+                        fontSize: 14,
                         color: AppColors.secondary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -133,7 +133,7 @@ class BlogTile extends StatelessWidget {
                   Text(
                     post.date,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 14,
                       color: Colors.white.withValues(alpha: 0.5),
                     ),
                   ),

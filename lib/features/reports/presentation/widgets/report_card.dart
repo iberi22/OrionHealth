@@ -53,7 +53,7 @@ class ReportCard extends StatelessWidget {
                             dateStr,
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.6),
-                              fontSize: 12,
+                              fontSize: 14,
                             ),
                           ),
                         ],
@@ -145,7 +145,7 @@ class ReportCard extends StatelessWidget {
         report.statusLabel.toUpperCase(),
         style: TextStyle(
           color: color,
-          fontSize: 10,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
         ),

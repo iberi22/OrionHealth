@@ -219,7 +219,7 @@ class _HipaaConsentPageState extends State<HipaaConsentPage> {
                       'He leído y acepto la política de privacidad. Entiendo que mis datos '
                       'se almacenan localmente en mi dispositivo y que puedo revocar '
                       'mi consentimiento en cualquier momento.',
-                      style: TextStyle(color: Colors.white, fontSize: 13, height: 1.4),
+                      style: TextStyle(color: Colors.white, fontSize: 14, height: 1.4),
                     ),
                   ),
                 ],
@@ -276,7 +276,7 @@ class _HipaaConsentPageState extends State<HipaaConsentPage> {
               child: Text(
                 'Debes aceptar los términos para continuar usando OrionHealth',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white.withAlpha(120), fontSize: 11),
+                style: TextStyle(color: Colors.white.withAlpha(120), fontSize: 14),
               ),
             ),
           ],
@@ -295,9 +295,9 @@ class _HipaaConsentPageState extends State<HipaaConsentPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+              Text(title, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
               const SizedBox(height: 2),
-              Text(description, style: TextStyle(color: Colors.white.withAlpha(160), fontSize: 12, height: 1.3)),
+              Text(description, style: TextStyle(color: Colors.white.withAlpha(160), fontSize: 14, height: 1.3)),
             ],
           ),
         ),
@@ -313,7 +313,7 @@ class _HipaaConsentPageState extends State<HipaaConsentPage> {
         Expanded(
           child: Text(
             '✅ $text',
-            style: TextStyle(color: Colors.white.withAlpha(190), fontSize: 13, height: 1.3),
+            style: TextStyle(color: Colors.white.withAlpha(190), fontSize: 14, height: 1.3),
           ),
         ),
       ],
@@ -336,7 +336,7 @@ class _HipaaConsentPageState extends State<HipaaConsentPage> {
         content: SingleChildScrollView(
           child: Text(
             _privacyPolicyText,
-            style: TextStyle(color: Colors.white.withAlpha(200), fontSize: 13, height: 1.5),
+            style: TextStyle(color: Colors.white.withAlpha(200), fontSize: 14, height: 1.5),
           ),
         ),
         actions: [

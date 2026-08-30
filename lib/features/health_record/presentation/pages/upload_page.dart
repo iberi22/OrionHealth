@@ -111,7 +111,7 @@ class _SourceSelectionStep extends StatelessWidget {
               Expanded(child: Divider(color: Colors.white24)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text('O OTRAS OPCIONES', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                child: Text('O OTRAS OPCIONES', style: TextStyle(color: Colors.white38, fontSize: 14)),
               ),
               Expanded(child: Divider(color: Colors.white24)),
             ],
@@ -194,7 +194,7 @@ class _OptionCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       description,
-                      style: const TextStyle(color: Colors.white70, fontSize: 13),
+                      style: const TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                   ],
                 ),
@@ -275,7 +275,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
             const SizedBox(height: 24),
 
             Text('Archivo: ${widget.filePath.split('/').last}',
-                style: const TextStyle(color: AppColors.secondary, fontSize: 12)),
+                style: const TextStyle(color: AppColors.secondary, fontSize: 14)),
             const SizedBox(height: 16),
 
             GlassmorphicCard(
@@ -346,7 +346,7 @@ class _UploadDetailsStepState extends State<_UploadDetailsStep> {
                   contentPadding: EdgeInsets.all(12),
                   border: InputBorder.none,
                 ),
-                style: const TextStyle(fontSize: 13, color: Colors.white70),
+                style: const TextStyle(fontSize: 14, color: Colors.white70),
               ),
             ),
 
