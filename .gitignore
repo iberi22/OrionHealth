@@ -31,6 +31,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+# Web build output (rebuilt in CI)
+/build/web/
 /coverage/
 
 # Symbolication related
@@ -113,6 +115,7 @@ investigate_tests.js
 resolve_pr112.js
 # Medical standards build output
 packages/medical_standards/build/
+# Web build output (rebuilt in CI)
 
 # Golden test failures
 failures/
@@ -124,6 +127,7 @@ nul
 .xavier/
 # Build cache (subprojects)
 packages/health_wallet/build/
+# Web build output (rebuilt in CI)
 
 # Auto-generated Flutter files
 *.dill*
