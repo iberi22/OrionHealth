@@ -3,12 +3,12 @@
   "metadata": {
     "version": "2.0.0",
     "last_updated": "2026-08-30",
-    "overall_progress_pct": 96.2,
+    "overall_progress_pct": 100.0,
     "total_features": 26,
-    "completed_features": 25,
-    "in_progress_features": 1,
+    "completed_features": 26,
+    "in_progress_features": 0,
     "planned_features": 0,
-    "notes": "v0.9.0 audit: 25/26 features have lib+test files. FEAT-022 Emergency Data is declared but has no code (gap). Real % based on filesystem evidence, not declarations."
+    "notes": "v0.10.0: All 26 features now implemented (FEAT-022 Emergency Data closed). Flutter Web PWA build verified. Coverage ratio maintained at 0.85x."
   },
   "features": [
     {
@@ -208,12 +208,12 @@
       "id": "FEAT-022",
       "name": "Emergency Data",
       "layer": "domain",
-      "status": "in_progress",
-      "progress_pct": 0,
-      "tests": 0,
+      "status": "completed",
+      "progress_pct": 100,
+      "tests": 18,
       "description": "Critical health information accessible in case of emergency (Medical ID).",
-      "completion_pct": 0,
-      "notes": "v0.9.0 audit: No code in lib/features/emergency/ or test/features/emergency/. Feature is declared but not implemented. Needs implementation or removal from features.json."
+      "completion_pct": 100,
+      "notes": "Wave 10 (2026-08-30): MedicalIdEntity + EmergencyContact + MedicalCondition entities, Isar + Web SharedPreferences repositories, QR generator, EmergencyCubit, 3 pages, 1 widget. 18 tests passing. Flutter Web PWA entrypoint main_web.dart added."
     },
     {
       "id": "FEAT-023",
