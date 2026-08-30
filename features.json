@@ -2,12 +2,13 @@
   "$schema": "v2",
   "metadata": {
     "version": "2.0.0",
-    "last_updated": "2026-08-16",
-    "overall_progress_pct": 98.1,
+    "last_updated": "2026-08-30",
+    "overall_progress_pct": 96.2,
     "total_features": 26,
     "completed_features": 25,
     "in_progress_features": 1,
-    "planned_features": 0
+    "planned_features": 0,
+    "notes": "v0.9.0 audit: 25/26 features have lib+test files. FEAT-022 Emergency Data is declared but has no code (gap). Real % based on filesystem evidence, not declarations."
   },
   "features": [
     {
@@ -207,10 +208,12 @@
       "id": "FEAT-022",
       "name": "Emergency Data",
       "layer": "domain",
-      "status": "completed",
-      "progress_pct": 100,
-      "tests": 15,
-      "description": "Critical health information accessible in case of emergency (Medical ID)."
+      "status": "in_progress",
+      "progress_pct": 0,
+      "tests": 0,
+      "description": "Critical health information accessible in case of emergency (Medical ID).",
+      "completion_pct": 0,
+      "notes": "v0.9.0 audit: No code in lib/features/emergency/ or test/features/emergency/. Feature is declared but not implemented. Needs implementation or removal from features.json."
     },
     {
       "id": "FEAT-023",
