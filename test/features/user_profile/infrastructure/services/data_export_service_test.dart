@@ -67,6 +67,18 @@ class _MockRepo implements DataExportRepository {
 }
 
 void main() {
+  late Directory tempDir;
+
+  setUp(() async {
+    tempDir = Directory.systemTemp.createTempSync('orionhealth_test_');
+  });
+
+  tearDown(() {
+    if (tempDir.existsSync()) {
+      tempDir.deleteSync(recursive: true);
+    }
+  });
+
   group('DataExportService', () {
     late DataExportService service;
 
@@ -75,7 +87,7 @@ void main() {
     });
 
     test('exportUserData creates a valid ZIP file', () async {
-      final file = await service.exportUserData();
+      final file = await service.exportUserData(exportDir: tempDir.path);
 
       expect(file, isA<File>());
       expect(await file.exists(), true);
@@ -101,7 +113,7 @@ void main() {
     });
 
     test('ZIP contains README and JSON files', () async {
-      final file = await service.exportUserData();
+      final file = await service.exportUserData(exportDir: tempDir.path);
       final bytes = await file.readAsBytes();
 
       // Find End of Central Directory signature (0x06054b50 reversed)
