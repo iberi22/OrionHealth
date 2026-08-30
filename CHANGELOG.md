@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.9.0] — 2026-08-29
+
+### Added
+- **MedicalTextNormalizer** (Ola 8.01): Spanish medical abbreviation maps (TA, FC, IMC, FR, SpO2, Hb, HTA, DM, EPOC) for normalized RAG queries
+- **Embedding quality benchmark pipeline** (Ola 8.02): CLI script with 20+ medical queries, precision/recall/MRR measurement, regression reports
+- **SWALTooltip wrapper** (Ola 7.14): Centralized accessibility wrapper for icon buttons with theme-aware styling
+- **O(1) AppointmentsLookup service** (Ola 7.15): Date-indexed map replaces O(n) iteration in calendar grid (42 cells × N appointments → 42 lookups)
+- **25 feature pages + SRS docs sync** (Ola 7.12): Complete documentation site content with `docs/src/content/features/*.md`
+- **Apollo test helpers** (Ola 7.05/7.06): Centralized `mock_encryption_service.dart` and `mock_health.dart` for test deduplication
+- **Golden baselines regenerated** (Ola 7.11): 10 PNG baselines regenerated against current widget rendering
+- **Android Kotlin migration** (Ola 7.01): Migrate to Built-in Kotlin to fix `assembleDebug` APK failures
+- **PWA manifest fix** (Ola 7.02): Configure `AstroPWA manifestFilename` for Astro 7.2.x compatibility
+- **scripts/RULES.md** (Ola 9.03): Documentation of GitCore repo structure rules
+- **docs/public/README.md** (Ola 9.04): Documents PWA-only purpose, prevents regression of medical-standards JSON duplicates
+
+### Changed
+- **Flutter analyze: 0 info lints** (Ola 7.04): Resolved 135 info-level hints in `lib/` (encryptedSharedPreferences deprecations, curly_braces, prefer_final_fields, deprecated_member_use)
+- **Tooltips migrated to SWALTooltip** (Ola 7.14): `page_header.dart`, `appointments_page.dart`, `voice_chat_page.dart`, `connection_status_indicator.dart`
+- **Apollo calendar lookup optimized** (Ola 7.15): `_appointmentsLookup.hasAppointmentsOn(date)` replaces `_allAppointments.any(...)`
+- **Backend FHIR security hardened** (Ola 7.13): Auth middleware, errorHandler sanitization, IDOR prevention (+3142/-2678 LOC)
+- **Dependencies bumped** (Wave 8): flutter_blue_plus 2.3.8 → 2.3.12, record 6.2.1 → 7.1.1 (closed obsolete), connectivity_plus 7.1.1 → 7.3.1, just_audio 0.10.5 → 0.10.6, astro 7.1.6 → 7.2.4, postcss 8.5.25 → 8.5.26, esbuild 0.28.1 → 0.28.2, fast-uri 3.1.4 → 3.1.6
+- **Medical-standards JSON consolidated** (Ola 9.04): 8 duplicate files moved from `docs/public/` to `docs/legacy/public-deprecated/`
+
+### Fixed
+- **Golden screenshots test imports** (Ola 7.08): Added missing imports for `google_fonts`, mock helpers
+- **voice_chat tests** (Ola 7.09): Imports for `VoiceChatCubit`/`VoiceChatState` real classes
+- **app_init/smoke_init/widget tests** (Ola 7.10): Imports for `throwsA`, `isA`, `verify`, `Timeout`, `isTrue`
+- **RPConsentDocument API** (Ola 7.07): Constructor + `addSection` aligned with usage sites
+- **Allergy MockEncryptionService duplicate** (Ola 7.05): Extracted to shared helper, resolved collision with auth tests
+- **Data_sources MockHealth mismatch** (Ola 7.06): Unified with `HealthWrapper` API across tests
+- **Astro docs 0 warnings** (Ola 7.03): SNOMED CSS + deprecation warnings resolved
+
+### Security
+- **Backend FHIR IDOR + error leakage audit** (Ola 7.13): Comprehensive audit covering all `backend/src/routes/fhir/*.ts` endpoints. Auth middleware validates `req.user.id === patientId`. Error handler sanitizes stack traces in production (`NODE_ENV === 'production'`).
+- **IHCE auth middleware** (Ola 7.13): New `backend/src/middleware/auth.js` enforcing ownership checks
+
+### Removed
+- **Stale medical-standards.html** and **test_bloc_version.sh** from root (orphan outputs, content preserved elsewhere)
+
+---
+
 ## [0.8.1-beta] — 2026-06-04
 
 ### Added
