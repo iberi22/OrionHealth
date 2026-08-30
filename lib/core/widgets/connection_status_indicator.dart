@@ -335,6 +335,7 @@ class LocalConnectionStatus extends StatelessWidget {
                 SWALTooltip(
                   message: 'Reintentar',
                   child: IconButton(
+                    tooltip: 'Estado de conexión',
                     icon: const Icon(
                       Icons.refresh,
                       color: Colors.white38,

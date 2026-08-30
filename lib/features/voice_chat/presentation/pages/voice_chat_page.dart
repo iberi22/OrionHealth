@@ -73,6 +73,7 @@ class _VoiceChatPageState extends State<VoiceChatPage>
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
+                    tooltip: 'Volver',
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
@@ -84,6 +85,7 @@ class _VoiceChatPageState extends State<VoiceChatPage>
             SWALTooltip(
               message: 'Limpiar conversación',
               child: IconButton(
+                    tooltip: 'Borrar historial',
                 icon: const Icon(Icons.delete_outline, color: Colors.white70),
                 onPressed: () => _cubit.clearHistory(),
               ),

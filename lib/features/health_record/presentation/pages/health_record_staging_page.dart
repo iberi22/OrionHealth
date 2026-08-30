@@ -56,6 +56,7 @@ class _RecordHistoryView extends StatelessWidget {
         title: const Text('Historial Médico'),
         actions: [
           IconButton(
+                    tooltip: 'Compartir',
             icon: const Icon(Icons.ios_share, color: AppColors.secondary),
             onPressed: () {},
           ),

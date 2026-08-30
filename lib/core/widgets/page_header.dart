@@ -39,6 +39,7 @@ class PageHeader extends StatelessWidget {
                 SWALTooltip(
                   message: 'Volver',
                   child: IconButton(
+                    tooltip: 'Volver',
                     onPressed: onBackPress ?? () => Navigator.of(context).pop(),
                     icon: Icon(
                       backButtonIcon ?? Icons.arrow_back_ios_new,
