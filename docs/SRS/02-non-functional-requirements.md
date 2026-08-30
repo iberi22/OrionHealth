@@ -1,5 +1,33 @@
 ### 3.3 Non-functional Requirements
 
+## Compliance Matrix (last reviewed: 2026-08-29 — Wave 9)
+
+| REQ-NF | Requirement | Status | Implementation | Tests |
+|--------|-------------|--------|----------------|-------|
+| REQ-NF-001 | SSI / DIDs / VCs | ✅ Implemented | `packages/health_wallet/` | wallet tests |
+| REQ-NF-002 | AES-256-GCM at rest | ✅ Implemented | `lib/core/services/secure_storage_service.dart` | encryption tests |
+| REQ-NF-003 | TLS 1.3+ transit | ✅ Implemented | `docs/security/certificate-pinning.md` | n/a |
+| REQ-NF-004 | Zero-telemetry | ✅ Implemented | no analytics SDK in deps | n/a |
+| REQ-NF-005 | Cold start <2s, TTFT <500ms | ⚠ Partial | benchmarks partial | n/a |
+| REQ-NF-006 | APK <50MB, 60fps | ⚠ Partial | no automated CI measurement | n/a |
+| REQ-NF-007 | Airplane mode 100% | ✅ Implemented | all features local | widget tests |
+| REQ-NF-008 | Ley 1581 + Ley 2015 | ⚠ In Wave 9 | #1675 (HabeasDataConsent) + #1676 (ArcoRights) | pending |
+| REQ-NF-009 | GDPR portability + erasure | ⚠ In Wave 9 | #1672 (DataExport) + #1673 (RightToErasure) | pending |
+| REQ-NF-010 | WCAG 2.1 AA | ⚠ In Wave 9 | #1671 (semanticLabel) + Wave 7 SWALTooltip | pending |
+
+### Known Gaps (2026-08-29)
+
+- **REQ-NF-005** (Performance benchmarks): No automated cold-start measurement in CI.
+- **REQ-NF-006** (APK size + 60fps): No automated measurement. Manual check only.
+- **REQ-NF-008/009/010** (Compliance): Wave 9 issues dispatched to Jules (in flight).
+- **REQ-NF-010** (WCAG): External audit not performed. Self-assessment only.
+
+### Next review after Wave 9 merge
+
+This matrix is updated by the orchestrator after each wave. The "Status" column reflects actual implementation state, not aspirational goals.
+
+---
+
 #### 3.3.1 Security
 - **Self-Sovereign Identity (SSI)**: Implementation of DIDs and Verifiable Credentials via the \health_wallet\ package for secure, owner-controlled identity and data exchange.
 - **Encryption at Rest**: All sensitive health data is stored locally using **AES-256-GCM** encryption via Isar DB.
