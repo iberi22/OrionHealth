@@ -15,10 +15,12 @@ on-device AI models and Self-Sovereign Identity standards without relying on cen
 
 ## 📊 Project Status
 
-**v0.9.0** — Tests `325+ pass / 2 fail` (99.4%+) ✅ | **Real Score: 100%** (26 features, 4/5 layers, 0 golden) | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅ | 26/26 features declared completed ✅
+**v0.10.0** — All 26/26 features ✅ | **Real Score: 100%** | Flutter Web PWA Live at `app-orionhealth.pages.dev` 🚀 | 75/75 Wave 9+10 tests passing | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅
 
-### Wave 7+8+9 highlights
+### Wave 7+8+9+10 highlights
 
+- **FEAT-022 Emergency Data** (Wave 10): Medical ID + QR + ICE contact, lock-screen friendly, Isar + Web SharedPreferences
+- **Flutter Web PWA** (Wave 10): Deployed to `app-orionhealth.pages.dev` via Cloudflare Pages
 - **Accessibility**: SWALTooltip wrapper, semantic labels, WCAG 2.1 AA conformance
 - **Performance**: O(1) AppointmentsLookup service (calendar grid optimization)
 - **Backend security**: FHIR IDOR + error leakage audit (auth middleware, sanitized errors)
@@ -74,6 +76,28 @@ flutter build ios --flavor prod --dart-define=flavor=prod
 ```
 
 > **First-Run Note:** On initial startup, on-device AI models (Sherpa ONNX TTS, Gemma LLM) and embedded vector stores (Isar Agent Memory) initialize local models on hardware. No cloud accounts or API keys are required for core offline operation.
+
+---
+
+## 🚀 Deployment
+
+### Live URLs
+
+- **Public landing** (Astro): `orionhealth.pages.dev` — see `docs/`
+- **PWA demo** (Flutter Web): `app-orionhealth.pages.dev` — FEAT-022 demo
+- **Native apps**: Android/iOS via `flutter build apk/ios`
+
+### Deploy PWA
+
+```bash
+# Build
+flutter build web --release -t lib/main_web.dart --no-tree-shake-icons
+
+# Deploy
+wrangler pages deploy build/web --project-name=app-orionhealth
+```
+
+CI deploy runs on every push to main via `.github/workflows/deploy-web.yml`.
 
 ---
 

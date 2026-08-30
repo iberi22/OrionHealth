@@ -1,0 +1,56 @@
+name: OrionHealth Web PWA
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build Flutter Web PWA
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: |
+          flutter build web \
+            --release \
+            -t lib/main_web.dart \
+            --no-tree-shake-icons
+
+      - name: Deploy to Cloudflare Pages
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is not set"
+            exit 1
+          fi
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::error::CLOUDFLARE_ACCOUNT_ID is not set"
+            exit 1
+          fi
+          npx --yes wrangler pages deploy build/web \
+            --project-name=app-orionhealth \
+            --branch=main \
+            --commit-dirty=true
+
+      - name: Verify deployment
+        run: |
+          sleep 30
+          curl -s -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" \
+            https://app-orionhealth.pages.dev/
+          curl -s -o /dev/null -w "main.dart.js: %{http_code} %{size_download} bytes\n" \
+            https://app-orionhealth.pages.dev/main.dart.js
+          curl -s -o /dev/null -w "manifest.json: %{http_code} %{size_download} bytes\n" \
+            https://app-orionhealth.pages.dev/manifest.json
