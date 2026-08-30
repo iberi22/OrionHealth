@@ -65,14 +65,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  archive:
-    dependency: transitive
-    description:
-      name: archive
-      sha256: a96e8b390886ee8abb49b7bd3ac8df6f451c621619f52a26e815fdcf568959ff
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.9"
   argon2:
     dependency: "direct main"
     description:
@@ -317,10 +309,10 @@ packages:
     dependency: "direct dev"
     description:
       name: carp_themes_package
-      sha256: "9753723406efa78fe7f379d3a5a51751acd427b89f5787bfc64f2b89eb3a8f78"
+      sha256: "7df591fb8fb4ed2486d4bf4ce1975ba36a3fea40ef87853f5634d2996fde2057"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.5"
+    version: "0.2.0"
   characters:
     dependency: transitive
     description:
@@ -1126,14 +1118,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  image:
-    dependency: transitive
-    description:
-      name: image
-      sha256: f9881ff4998044947ec38d098bc7c8316ae1186fa786eddffdb867b9bc94dfce
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.8.0"
   image_picker:
     dependency: "direct main"
     description:
@@ -1745,14 +1729,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
-  posix:
-    dependency: transitive
-    description:
-      name: posix
-      sha256: "185ef7606574f789b40f289c233efa52e96dead518aed988e040a10737febb07"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.5.0"
   process:
     dependency: transitive
     description:
@@ -1877,10 +1853,10 @@ packages:
     dependency: "direct main"
     description:
       name: research_package
-      sha256: "399b3ed901aeb35641039dcf0a9ae3c96288054e30833b6ee4ae4cbbce566a3d"
+      sha256: "5f98dffc4cadb90133b9bef1189335c72db9c22f314fbbb8be04e8d8fd4f4641"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.4.1"
   retry:
     dependency: transitive
     description:
@@ -2061,10 +2037,10 @@ packages:
     dependency: transitive
     description:
       name: signature
-      sha256: "8056e091ad59c2eb5735fee975ec649d0caf8ce802bb1ffb1e0955b00a6d0daa"
+      sha256: e6b6a3629f5faa95055a24eba470abe3133d6fafecb5baedd1f7dbda78cdfb4c
       url: "https://pub.dev"
     source: hosted
-    version: "5.5.0"
+    version: "6.4.0"
   sky_engine:
     dependency: transitive
     description: flutter
