@@ -136,7 +136,7 @@ lib/
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing & Benchmarking
 
 ```bash
 # Run unit and widget tests
@@ -148,6 +148,10 @@ flutter test --watch
 # Coverage report
 flutter test --coverage
 genhtml coverage/lcov.info -o coverage/html
+
+# Run Embedding Quality Benchmark for Medical RAG
+dart run scripts/benchmark_embeddings.dart --help
+dart run scripts/benchmark_embeddings.dart --fixture test/fixtures/medical_benchmark_queries.json
 ```
 
 ---

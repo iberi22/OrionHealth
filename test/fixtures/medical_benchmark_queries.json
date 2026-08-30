@@ -1,0 +1,241 @@
+{
+  "documents": [
+    {
+      "id": "doc_001",
+      "content": "Paciente presenta dolor torácico agudo opresivo con irradiación a brazo izquierdo y diaforesis, sospecha de síndrome coronario agudo.",
+      "category": "symptoms"
+    },
+    {
+      "id": "doc_002",
+      "content": "Evaluación de dolor de pecho opresivo agudo e irradiación a mandíbula y brazo izquierdo.",
+      "category": "symptoms"
+    },
+    {
+      "id": "doc_003",
+      "content": "Control de hipertensión arterial esencial con enalapril 10mg cada 12 horas y monitoreo de presión arterial.",
+      "category": "medications"
+    },
+    {
+      "id": "doc_004",
+      "content": "Manejo de hipertensión arterial sistémica primaria mediante cambios en estilo de vida y antihipertensivos.",
+      "category": "medications"
+    },
+    {
+      "id": "doc_005",
+      "content": "Riesgo de interacción ibuprofeno-warfarina con incremento significativa de hemorragia y sangrado gastrointestinal.",
+      "category": "medications"
+    },
+    {
+      "id": "doc_006",
+      "content": "Administración conjunta de anticoagulantes como warfarina AINEs como ibuprofeno potencia riesgo de sangrado.",
+      "category": "medications"
+    },
+    {
+      "id": "doc_007",
+      "content": "Cefalea intensa holocraneana repentina acompañada de fotofobia, náuseas y rigidez de nuca.",
+      "category": "symptoms"
+    },
+    {
+      "id": "doc_008",
+      "content": "Dificultad respiratoria aguda disnea de esfuerzo y sibilancias audibles en paciente asmático.",
+      "category": "symptoms"
+    },
+    {
+      "id": "doc_009",
+      "content": "Fiebre elevada persistente de 39°C con escalofríos y diaforesis nocturna.",
+      "category": "symptoms"
+    },
+    {
+      "id": "doc_010",
+      "content": "Dolor abdominal agudo localizado en fosa ilíaca derecha con signo de Blumberg positivo, sospecha de apendicitis.",
+      "category": "symptoms"
+    },
+    {
+      "id": "doc_011",
+      "content": "Prescripción de metformina 850mg en diabetes mellitus tipo 2 para control de glucemia en ayunas.",
+      "category": "medications"
+    },
+    {
+      "id": "doc_012",
+      "content": "Ajuste de dosis de insulina glargina en paciente con diabetes mellitus descompensada.",
+      "category": "medications"
+    },
+    {
+      "id": "doc_013",
+      "content": "Tratamiento antibiótico con amoxicilina más ácido clavulánico para neumonía adquirida en la comunidad.",
+      "category": "medications"
+    },
+    {
+      "id": "doc_014",
+      "content": "Uso de omeprazol 20mg para gastritis crónica y profilaxis de úlcera péptica.",
+      "category": "medications"
+    },
+    {
+      "id": "doc_015",
+      "content": "Análisis de laboratorio hemoglobina glicosilada HbA1c elevación de 8.5 por ciento indicativo de mal control glucémico.",
+      "category": "lab_results"
+    },
+    {
+      "id": "doc_016",
+      "content": "Resultado de laboratorio de perfil lipídico con colesterol LDL elevado 180 mg/dL y triglicéridos altos.",
+      "category": "lab_results"
+    },
+    {
+      "id": "doc_017",
+      "content": "Prueba de función renal con creatinina sérica 2.1 mg/dL y nitrógeno ureico BUN elevado.",
+      "category": "lab_results"
+    },
+    {
+      "id": "doc_018",
+      "content": "Hemograma completo con leucocitosis 15000 y neutrofilia con desviación a la izquierda.",
+      "category": "lab_results"
+    },
+    {
+      "id": "doc_019",
+      "content": "Niveles de hormona estimulante de tiroides TSH elevada de 12 mIU/L en hipotiroidismo primario.",
+      "category": "lab_results"
+    },
+    {
+      "id": "doc_020",
+      "content": "Electrocardiograma de 12 derivaciones mostrando elevación del segmento ST en derivaciones anteriores.",
+      "category": "procedures"
+    },
+    {
+      "id": "doc_021",
+      "content": "Ecocardiograma transtorácico reporta fracción de eyección del ventrículo izquierdo FEVI conservada.",
+      "category": "procedures"
+    },
+    {
+      "id": "doc_022",
+      "content": "Tomografía axial computarizada TAC de tórax evidencia infiltrados pulmonares bilaterales.",
+      "category": "procedures"
+    },
+    {
+      "id": "doc_023",
+      "content": "Endoscopia digestiva alta revela erosiones gástricas múltiples en antro.",
+      "category": "procedures"
+    },
+    {
+      "id": "doc_024",
+      "content": "Radiografía de tórax PA y lateral sin alteraciones pleuropulmonares agudas.",
+      "category": "procedures"
+    },
+    {
+      "id": "doc_045",
+      "content": "Atención de urgencia por infarto agudo al miocardio con dolor de pecho irradiado a brazo izquierdo.",
+      "category": "symptoms"
+    },
+    {
+      "id": "doc_078",
+      "content": "Protocolo de dolor torácico agudo con irradiación a miembro superior izquierdo en sala de emergencia.",
+      "category": "symptoms"
+    }
+  ],
+  "queries": [
+    {
+      "query": "dolor torácico agudo con irradiación a brazo izquierdo",
+      "expected_doc_ids": ["doc_001", "doc_045", "doc_078"],
+      "category": "symptoms"
+    },
+    {
+      "query": "control de hipertensión",
+      "expected_doc_ids": ["doc_003", "doc_004"],
+      "category": "medications"
+    },
+    {
+      "query": "interacción ibuprofeno-warfarina",
+      "expected_doc_ids": ["doc_005", "doc_006"],
+      "category": "medications"
+    },
+    {
+      "query": "cefalea intensa con fotofobia y náuseas",
+      "expected_doc_ids": ["doc_007"],
+      "category": "symptoms"
+    },
+    {
+      "query": "dificultad respiratoria y sibilancias en asma",
+      "expected_doc_ids": ["doc_008"],
+      "category": "symptoms"
+    },
+    {
+      "query": "fiebre alta persistente con escalofríos",
+      "expected_doc_ids": ["doc_009"],
+      "category": "symptoms"
+    },
+    {
+      "query": "dolor en fosa ilíaca derecha sospecha apendicitis",
+      "expected_doc_ids": ["doc_010"],
+      "category": "symptoms"
+    },
+    {
+      "query": "tratamiento diabetes metformina glucemia",
+      "expected_doc_ids": ["doc_011"],
+      "category": "medications"
+    },
+    {
+      "query": "ajuste dosis insulina glargina",
+      "expected_doc_ids": ["doc_012"],
+      "category": "medications"
+    },
+    {
+      "query": "antibiótico amoxicilina ácido clavulánico neumonía",
+      "expected_doc_ids": ["doc_013"],
+      "category": "medications"
+    },
+    {
+      "query": "omeprazol para gastritis y úlcera",
+      "expected_doc_ids": ["doc_014"],
+      "category": "medications"
+    },
+    {
+      "query": "hemoglobina glicosilada HbA1c elevada",
+      "expected_doc_ids": ["doc_015"],
+      "category": "lab_results"
+    },
+    {
+      "query": "perfil lipídico colesterol LDL y triglicéridos",
+      "expected_doc_ids": ["doc_016"],
+      "category": "lab_results"
+    },
+    {
+      "query": "creatinina sérica y BUN función renal",
+      "expected_doc_ids": ["doc_017"],
+      "category": "lab_results"
+    },
+    {
+      "query": "hemograma con leucocitosis y neutrofilia",
+      "expected_doc_ids": ["doc_018"],
+      "category": "lab_results"
+    },
+    {
+      "query": "hormona estimulante de tiroides TSH hipotiroidismo",
+      "expected_doc_ids": ["doc_019"],
+      "category": "lab_results"
+    },
+    {
+      "query": "electrocardiograma elevación del segmento ST",
+      "expected_doc_ids": ["doc_020"],
+      "category": "procedures"
+    },
+    {
+      "query": "ecocardiograma fracción de eyección FEVI",
+      "expected_doc_ids": ["doc_021"],
+      "category": "procedures"
+    },
+    {
+      "query": "tomografía TAC de tórax infiltrados pulmonares",
+      "expected_doc_ids": ["doc_022"],
+      "category": "procedures"
+    },
+    {
+      "query": "endoscopia digestiva alta erosiones gástricas",
+      "expected_doc_ids": ["doc_023"],
+      "category": "procedures"
+    },
+    {
+      "query": "radiografía de tórax PA y lateral",
+      "expected_doc_ids": ["doc_024"],
+      "category": "procedures"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Feature Test Coverage Report
 
-Generated on: 2026-07-13 18:13:43.700611
+Generated on: 2026-08-30 01:04:11.723833
 
 | Feature | Domain | Application | Infrastructure | Presentation | Goldens |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -9,7 +9,7 @@ Generated on: 2026-07-13 18:13:43.700611
 | appointments | ✅ | ✅ | ✅ | ✅ | ✅ |
 | auth | ✅ | ✅ | ✅ | ✅ | ✅ |
 | calendar_import | ✅ | ✅ | ✅ | ✅ | ✅ |
-| clinical_assessments | ✅ | ❌ | ❌ | ✅ | ✅ |
+| clinical_assessments | ✅ | ✅ | ✅ | ✅ | ✅ |
 | dashboard | ✅ | ✅ | ✅ | ✅ | ✅ |
 | data_sources | ✅ | ✅ | ✅ | ✅ | ✅ |
 | doctor_verification | ✅ | ✅ | ✅ | ✅ | ✅ |
