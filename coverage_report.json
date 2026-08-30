@@ -53,8 +53,8 @@
     "name": "clinical_assessments",
     "layers": {
       "domain": true,
-      "application": false,
-      "infrastructure": false,
+      "application": true,
+      "infrastructure": true,
       "presentation": true,
       "goldens": true
     }
