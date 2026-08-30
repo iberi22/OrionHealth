@@ -176,3 +176,4 @@ ihce_sandbox*
 *.html
 !docs/**/*.html
 !coverage/**/*.html
+!web/index.html

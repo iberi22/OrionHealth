@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.10.0] — 2026-08-30
+
+### Added
+- **FEAT-022 Emergency Data (Medical ID)**: Complete implementation with MedicalIdEntity, EmergencyContact, MedicalCondition entities, Isar (mobile) + Web SharedPreferences repositories, QrGeneratorService, EmergencyCubit, 2 pages (lock-screen + edit), 1 widget (QR display with copy-to-clipboard)
+- **Flutter Web PWA target**: `lib/main_web.dart` dedicated entrypoint, `web/` target with PWA manifest customized for OrionHealth
+- **Custom splash screen** (`web/index.html`): Brand-styled loading screen with spinner, hides when Flutter app boots
+- **Cloudflare Pages deploy**: `app-orionhealth.pages.dev` project created and live (3 deployments: 85 files uploaded in 42s, then 3 incremental updates)
+- **CI workflow** (`.github/workflows/deploy-web.yml`): Auto-build + deploy on push to main
+- **18 Emergency Data tests**: entity (11) + QR generator (5) + use cases (4), 100% passing
+- **Privacy guarantees**: Medical ID NEVER includes SSN, address, photo, insurance numbers
+
+### Changed
+- **intl: ^0.20.3 → ^0.20.2**: Compatibility with Flutter 3.44 stable channel (both 3.41 CI and 3.44 local work with 0.20.2)
+- **features.json**: FEAT-022 status: in_progress → completed, overall_progress: 96.2% → 100%
+- **coverage_report.md**: Per-feature table updated (all 26 features at 100%)
+
+### Deployed
+- **PWA live**: https://app-orionhealth.pages.dev (200 OK, 2.6MB main.dart.js, 41ms TTFB)
+- **85 files uploaded**, bundle 2.6MB (main.dart.js) + 59MB total (with CanvasKit)
+- **Service worker**: Flutter default (auto-regenerated on build, handles SW cleanup)
+
+---
+
 ## [0.9.0] — 2026-08-29
 
 ### Added
