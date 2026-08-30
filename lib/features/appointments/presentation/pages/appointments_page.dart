@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../../core/widgets/swal_tooltip.dart';
 import '../../../email-citas/presentation/email_connect_page.dart';
 import '../../../calendar_import/presentation/calendar_import_page.dart';
+import '../../application/services/appointments_lookup.dart';
 import '../../domain/entities/appointment.dart';
 import '../../domain/repositories/appointment_repository.dart';
 import '../widgets/appointment_card.dart';
@@ -20,6 +22,7 @@ class AppointmentsPage extends StatefulWidget {
 class _AppointmentsPageState extends State<AppointmentsPage> {
   late final AppointmentRepository _repository;
   List<Appointment> _allAppointments = [];
+  AppointmentsLookup _appointmentsLookup = AppointmentsLookup.empty();
   bool _isLoading = true;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
@@ -37,54 +40,77 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
       final appointments = await _repository.getAppointments();
       setState(() {
         _allAppointments = appointments;
+        // Optimization: Pre-compute O(1) date lookup map once on load
+        // What: Convert appointment list to date-indexed lookup map
+        // Why: Avoid O(N) iterative searches on every calendar cell build
+        // Impact: Reduces 42 grid cell lookups from O(42*N) to O(42) per frame
+        _appointmentsLookup = AppointmentsLookup.fromList(appointments);
         _isLoading = false;
       });
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al cargar citas: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error al cargar citas: $e')));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final upcoming = _allAppointments
-        .where((a) => a.dateTime.isAfter(DateTime.now()) && a.status != AppointmentStatus.cancelled)
-        .toList()
-      ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    final upcoming =
+        _allAppointments
+            .where(
+              (a) =>
+                  a.dateTime.isAfter(DateTime.now()) &&
+                  a.status != AppointmentStatus.cancelled,
+            )
+            .toList()
+          ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
 
-    final past = _allAppointments
-        .where((a) => a.dateTime.isBefore(DateTime.now()) || a.status == AppointmentStatus.cancelled)
-        .toList()
-      ..sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    final past =
+        _allAppointments
+            .where(
+              (a) =>
+                  a.dateTime.isBefore(DateTime.now()) ||
+                  a.status == AppointmentStatus.cancelled,
+            )
+            .toList()
+          ..sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Citas'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.email_outlined),
-            tooltip: 'Importar desde correo',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const EmailConnectPage()),
-            ).then((_) => _loadAppointments()),
-          ),
-          IconButton(
-            icon: const Icon(Icons.calendar_month),
-            tooltip: 'Importar desde calendario',
-            onPressed: () async {
-              final result = await Navigator.push(
+          SWALTooltip(
+            message: 'Importar desde correo',
+            child: IconButton(
+              icon: const Icon(Icons.email_outlined),
+              onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CalendarImportPage()),
-              );
-              if (result == true) {
-                _loadAppointments();
-              }
-            },
+                MaterialPageRoute(
+                  builder: (context) => const EmailConnectPage(),
+                ),
+              ).then((_) => _loadAppointments()),
+            ),
+          ),
+          SWALTooltip(
+            message: 'Importar desde calendario',
+            child: IconButton(
+              icon: const Icon(Icons.calendar_month),
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CalendarImportPage(),
+                  ),
+                );
+                if (result == true) {
+                  _loadAppointments();
+                }
+              },
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.add),
@@ -109,10 +135,17 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                   ),
                   const SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
                       child: Text(
                         'Próximas',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: CyberTheme.secondary),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: CyberTheme.secondary,
+                        ),
                       ),
                     ),
                   ),
@@ -127,17 +160,26 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                           delegate: SliverChildBuilderDelegate(
                             (context, index) => AppointmentCard(
                               appointment: upcoming[index],
-                              onTap: () => _showAppointmentForm(appointment: upcoming[index]),
+                              onTap: () => _showAppointmentForm(
+                                appointment: upcoming[index],
+                              ),
                             ),
                             childCount: upcoming.length,
                           ),
                         ),
                   const SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
                       child: Text(
                         'Historial',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white54),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white54,
+                        ),
                       ),
                     ),
                   ),
@@ -152,7 +194,9 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                           delegate: SliverChildBuilderDelegate(
                             (context, index) => AppointmentCard(
                               appointment: past[index],
-                              onTap: () => _showAppointmentForm(appointment: past[index]),
+                              onTap: () => _showAppointmentForm(
+                                appointment: past[index],
+                              ),
                             ),
                             childCount: past.length,
                           ),
@@ -170,8 +214,15 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
   }
 
   Widget _buildCalendar() {
-    final daysInMonth = DateUtils.getDaysInMonth(_focusedDay.year, _focusedDay.month);
-    final firstDayOffset = DateUtils.firstDayOffset(_focusedDay.year, _focusedDay.month, MaterialLocalizations.of(context));
+    final daysInMonth = DateUtils.getDaysInMonth(
+      _focusedDay.year,
+      _focusedDay.month,
+    );
+    final firstDayOffset = DateUtils.firstDayOffset(
+      _focusedDay.year,
+      _focusedDay.month,
+      MaterialLocalizations.of(context),
+    );
     final monthName = DateFormat.MMMM('es').format(_focusedDay);
 
     return GlassmorphicCard(
@@ -184,17 +235,30 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
               children: [
                 Text(
                   '${monthName.toUpperCase()} ${_focusedDay.year}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
                 ),
                 Row(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.chevron_left, size: 20),
-                      onPressed: () => setState(() => _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1)),
+                      onPressed: () => setState(
+                        () => _focusedDay = DateTime(
+                          _focusedDay.year,
+                          _focusedDay.month - 1,
+                        ),
+                      ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.chevron_right, size: 20),
-                      onPressed: () => setState(() => _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1)),
+                      onPressed: () => setState(
+                        () => _focusedDay = DateTime(
+                          _focusedDay.year,
+                          _focusedDay.month + 1,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -216,16 +280,28 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                 final date = DateTime(_focusedDay.year, _focusedDay.month, day);
                 final isSelected = DateUtils.isSameDay(date, _selectedDay);
                 final isToday = DateUtils.isSameDay(date, DateTime.now());
-                final hasAppointment = _allAppointments.any((a) => DateUtils.isSameDay(a.dateTime, date));
+final hasAppointment = _appointmentsLookup.hasAppointmentsOn(
+                  date,
+                );
 
                 return InkWell(
                   onTap: () => setState(() => _selectedDay = date),
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: isSelected ? CyberTheme.primary.withValues(alpha: 0.2) : null,
+                      color: isSelected
+                          ? CyberTheme.primary.withValues(alpha: 0.2)
+                          : null,
                       borderRadius: BorderRadius.circular(8),
-                      border: isSelected ? Border.all(color: CyberTheme.primary) : (isToday ? Border.all(color: CyberTheme.secondary.withValues(alpha: 0.5)) : null),
+                      border: isSelected
+                          ? Border.all(color: CyberTheme.primary)
+                          : (isToday
+                                ? Border.all(
+                                    color: CyberTheme.secondary.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  )
+                                : null),
                     ),
                     child: Stack(
                       alignment: Alignment.center,
@@ -233,8 +309,14 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
                         Text(
                           '$day',
                           style: TextStyle(
-                            color: isSelected ? CyberTheme.primary : (isToday ? CyberTheme.secondary : Colors.white),
-                            fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected
+                                ? CyberTheme.primary
+                                : (isToday
+                                      ? CyberTheme.secondary
+                                      : Colors.white),
+                            fontWeight: isSelected || isToday
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                         if (hasAppointment)
