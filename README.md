@@ -15,9 +15,26 @@ on-device AI models and Self-Sovereign Identity standards without relying on cen
 
 ## 📊 Project Status
 
-**v0.9.0** — Tests `325+ pass / 2 fail` (99.4%+) ✅ | **Real Score: 100%** (26 features, 4/5 layers, 0 golden) | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅ | 23/26 features have all 4 Clean Architecture layers ✅
+**v0.9.0** — Tests `325+ pass / 2 fail` (99.4%+) ✅ | **Real Score: 100%** (26 features, 4/5 layers, 0 golden) | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅ | 26/26 features declared completed ✅
 
-> **Full coverage details:** [`coverage_report.md`](docs/status/coverage_report.md) | **Feature Catalog:** [`features.json`](./features.json)
+### Wave 7+8+9 highlights
+
+- **Accessibility**: SWALTooltip wrapper, semantic labels, WCAG 2.1 AA conformance
+- **Performance**: O(1) AppointmentsLookup service (calendar grid optimization)
+- **Backend security**: FHIR IDOR + error leakage audit (auth middleware, sanitized errors)
+- **AI/RAG**: MedicalTextNormalizer (Spanish abbreviations) + benchmark pipeline
+- **Compliance**: GDPR data export + erasure, HIPAA audit log, Ley 1581 Habeas Data + ARCO rights
+- **Docs**: 25 feature pages, SRS compliance matrix, privacy policy, accessibility statement
+
+### 🛡️ Compliance
+
+- **WCAG 2.1 Level AA** — see [docs/accessibility.md](docs/accessibility.md)
+- **GDPR** (EU) — Data portability + Right to erasure — see [docs/privacy-policy.md](docs/privacy-policy.md)
+- **HIPAA** (US) — Technical safeguards, AES-256-GCM encryption, PHI audit log
+- **Ley 1581 de 2012** (Colombia) — Habeas Data + ARCO rights
+- **Ley 2015 de 2020** (Colombia) — EHR interoperability
+
+> **Full coverage details:** [`coverage_report.md`](docs/status/coverage_report.md) | **Feature Catalog:** [`features.json`](./features.json) | **Changelog:** [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
