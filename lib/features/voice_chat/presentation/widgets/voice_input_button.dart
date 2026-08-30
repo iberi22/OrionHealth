@@ -28,7 +28,7 @@ class VoiceInputButton extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: Text(
                     'Suelta para enviar',
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                 ),
               Container(
@@ -60,7 +60,7 @@ class VoiceInputButton extends StatelessWidget {
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
                     'Mantén para hablar',
-                    style: TextStyle(color: Colors.white30, fontSize: 12),
+                    style: TextStyle(color: Colors.white30, fontSize: 14),
                   ),
                 ),
               if (isSpeaking)

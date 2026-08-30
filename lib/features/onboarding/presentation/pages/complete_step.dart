@@ -49,7 +49,7 @@ class CompleteStep extends StatelessWidget {
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                       const SizedBox(height: 4),
                       Text('Explora todas las funciones de OrionHealth',
-                          style: TextStyle(color: Colors.white.withAlpha(153), fontSize: 13)),
+                          style: TextStyle(color: Colors.white.withAlpha(153), fontSize: 14)),
                     ],
                   ),
                 ),

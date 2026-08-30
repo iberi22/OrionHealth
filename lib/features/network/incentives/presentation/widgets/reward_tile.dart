@@ -53,7 +53,7 @@ class RewardTile extends StatelessWidget {
                     '${reward.points} puntos requeridos',
                     style: TextStyle(
                       color: Colors.white.withAlpha(150),
-                      fontSize: 12,
+                      fontSize: 14,
                     ),
                   ),
                 ],
@@ -63,7 +63,7 @@ class RewardTile extends StatelessWidget {
               const Chip(
                 label: Text(
                   'RECLAMADO',
-                  style: TextStyle(fontSize: 10, color: Colors.white),
+                  style: TextStyle(fontSize: 14, color: Colors.white),
                 ),
                 backgroundColor: Colors.grey,
               )
@@ -78,7 +78,7 @@ class RewardTile extends StatelessWidget {
                 ),
                 child: const Text(
                   'RECLAMAR',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ),
           ],

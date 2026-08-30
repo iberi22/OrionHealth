@@ -129,7 +129,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('HEART RATE', style: TextStyle(color: Color(0xFF38BDF8), fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 2)),
+                  Text('HEART RATE', style: TextStyle(color: Color(0xFF38BDF8), fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 2)),
                   SizedBox(height: 4),
                   Text('Real-time BLE Sync', style: TextStyle(color: Colors.white60, fontSize: 14)),
                 ],
@@ -164,7 +164,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
                 _statusMessage ?? 'Device offline',
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.4),
-                  fontSize: 13,
+                  fontSize: 14,
                   fontStyle: FontStyle.italic,
                 ),
               ),
@@ -211,7 +211,7 @@ class _VitalsMonitorPageState extends State<VitalsMonitorPage> {
               child: const Icon(Icons.bluetooth, color: Color(0xFF38BDF8)),
             ),
             title: Text(device.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            subtitle: Text(device.type, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+            subtitle: Text(device.type, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 14)),
             trailing: TextButton(
               onPressed: () => _connectToDevice(device),
               child: const Text('CONNECT'),

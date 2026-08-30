@@ -78,7 +78,7 @@ class MedicationListTile extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 14,
                             color: isArchived ? Colors.grey[600] : Colors.grey[400],
                           ),
                         ),
@@ -97,7 +97,7 @@ class MedicationListTile extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   color: isArchived ? Colors.grey[600] : Colors.grey[400],
                                 ),
                               ),
@@ -123,7 +123,7 @@ class MedicationListTile extends StatelessWidget {
                     child: Text(
                       isArchived ? 'INACTIVO' : 'ACTIVO',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: isArchived ? Colors.grey : AppColors.primary,
                       ),

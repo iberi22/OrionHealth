@@ -30,7 +30,7 @@ class ResearchResultCard extends StatelessWidget {
                     result.source.toUpperCase(),
                     style: TextStyle(
                       color: _getSourceColor(result.source),
-                      fontSize: 10,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -39,7 +39,7 @@ class ResearchResultCard extends StatelessWidget {
                 if (result.confidence > 0)
                   Text(
                     '${(result.confidence * 100).toInt()}% conf.',
-                    style: const TextStyle(color: Colors.white54, fontSize: 12),
+                    style: const TextStyle(color: Colors.white54, fontSize: 14),
                   ),
               ],
             ),

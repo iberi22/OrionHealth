@@ -90,7 +90,7 @@ class _InteractionCheckerWidgetState extends State<InteractionCheckerWidget> {
             label: Text(drug),
             onDeleted: () => _removeDrug(drug),
             backgroundColor: CyberTheme.primary.withValues(alpha: 0.2),
-            labelStyle: const TextStyle(color: Colors.white, fontSize: 12),
+            labelStyle: const TextStyle(color: Colors.white, fontSize: 14),
             deleteIconColor: Colors.white54,
             side: const BorderSide(color: CyberTheme.primary),
           )).toList(),

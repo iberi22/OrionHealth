@@ -43,7 +43,7 @@ class DoctorCard extends StatelessWidget {
                   const SizedBox(width: 4),
                   Text(
                     rating.toStringAsFixed(1),
-                    style: const TextStyle(fontSize: 12, color: Colors.amber),
+                    style: const TextStyle(fontSize: 14, color: Colors.amber),
                   ),
                 ],
               ),

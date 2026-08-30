@@ -96,7 +96,7 @@ class AllergyCard extends StatelessWidget {
         label,
         style: TextStyle(
           color: color,
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
       ),

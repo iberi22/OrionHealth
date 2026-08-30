@@ -332,7 +332,7 @@ class _VolumeLevelIndicatorState extends State<VolumeLevelIndicator>
             child: Text(
               _getVolumeText(level),
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: _getVolumeColor(level),
               ),

@@ -35,7 +35,7 @@ class MessageBubble extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             _formatTime(message.timestamp),
-            style: const TextStyle(color: Colors.white30, fontSize: 10),
+            style: const TextStyle(color: Colors.white30, fontSize: 14),
           ),
         ],
       ),

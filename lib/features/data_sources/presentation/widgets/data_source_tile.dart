@@ -26,7 +26,7 @@ class DataSourceTile extends StatelessWidget {
           children: [
             Text(source.description, style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
             if (source.lastSync != null)
-              Text('Last sync: ${source.lastSync!.toLocal()}', style: const TextStyle(color: AppColors.secondary, fontSize: 12)),
+              Text('Last sync: ${source.lastSync!.toLocal()}', style: const TextStyle(color: AppColors.secondary, fontSize: 14)),
           ],
         ),
         trailing: Row(

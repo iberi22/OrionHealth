@@ -212,7 +212,7 @@ class _ConnectionStatusIndicatorState extends State<ConnectionStatusIndicator>
         key: ValueKey(widget.status),
         style: TextStyle(
           color: _getTextColor(),
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -361,7 +361,7 @@ class LocalConnectionStatus extends StatelessWidget {
               const Expanded(
                 child: Text(
                   'IA Local (LM Studio)',
-                  style: TextStyle(color: Colors.white60, fontSize: 13),
+                  style: TextStyle(color: Colors.white60, fontSize: 14),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -371,7 +371,7 @@ class LocalConnectionStatus extends StatelessWidget {
                 style: TextStyle(
                   color: isLocalAIReady ? Colors.green : Colors.orange,
                   fontWeight: FontWeight.w500,
-                  fontSize: 12,
+                  fontSize: 14,
                 ),
               ),
             ],
@@ -392,7 +392,7 @@ class LocalConnectionStatus extends StatelessWidget {
               const Expanded(
                 child: Text(
                   'Memoria Local (Isar)',
-                  style: TextStyle(color: Colors.white60, fontSize: 13),
+                  style: TextStyle(color: Colors.white60, fontSize: 14),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -402,7 +402,7 @@ class LocalConnectionStatus extends StatelessWidget {
                 style: TextStyle(
                   color: isMemoryReady ? Colors.green : Colors.red,
                   fontWeight: FontWeight.w500,
-                  fontSize: 12,
+                  fontSize: 14,
                 ),
               ),
             ],

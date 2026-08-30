@@ -123,7 +123,7 @@ class SyncPage extends StatelessWidget {
                 child: Text(
                   'Última sincronización: $lastSyncStr',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     color: Colors.white.withValues(alpha: 0.5),
                   ),
                   overflow: TextOverflow.ellipsis,

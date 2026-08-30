@@ -182,7 +182,7 @@ class _AlertSection extends StatelessWidget {
                 children: [
                   Text(title,
                       style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Colors.red)),
                   Text(content, style: const TextStyle(fontSize: 16)),

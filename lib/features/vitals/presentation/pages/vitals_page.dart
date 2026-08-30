@@ -153,7 +153,7 @@ class _VitalsPageState extends State<VitalsPage> {
                 Expanded(
                   child: Text(
                     label,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -168,7 +168,7 @@ class _VitalsPageState extends State<VitalsPage> {
                 color: CyberTheme.primary,
               ),
             ),
-            Text(unit, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+            Text(unit, style: const TextStyle(fontSize: 14, color: Colors.grey)),
           ],
         ),
       ),
@@ -193,7 +193,7 @@ class _VitalsPageState extends State<VitalsPage> {
                 Expanded(
                   child: Text(
                     'Presión',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -214,7 +214,7 @@ class _VitalsPageState extends State<VitalsPage> {
               ),
             ),
             const Text('mmHg',
-                style: TextStyle(fontSize: 10, color: Colors.grey)),
+                style: TextStyle(fontSize: 14, color: Colors.grey)),
           ],
         ),
       ),

@@ -142,7 +142,7 @@ class _MedicalResearchPageState extends State<MedicalResearchPage> with SingleTi
                     const SizedBox(height: 8),
                     const Text(
                       'Fuentes: PubMed, FDA, WHO, ClinicalTrials.gov',
-                      style: TextStyle(color: Colors.white30, fontSize: 10),
+                      style: TextStyle(color: Colors.white30, fontSize: 14),
                     ),
                   ],
                 ),
@@ -319,7 +319,7 @@ class _MedicalResearchPageState extends State<MedicalResearchPage> with SingleTi
                           const SizedBox(height: 4),
                           Text(
                             state.icd10Result!.synonyms.join(', '),
-                            style: const TextStyle(color: Colors.white54, fontSize: 13),
+                            style: const TextStyle(color: Colors.white54, fontSize: 14),
                           ),
                         ],
                       ],

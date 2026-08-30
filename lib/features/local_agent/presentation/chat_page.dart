@@ -76,7 +76,7 @@ class _ChatPageState extends State<ChatPage> {
             children: [
               Icon(Icons.circle, color: AppColors.primary, size: 8),
               SizedBox(width: 4),
-              Text('Online', style: TextStyle(fontSize: 12, color: AppColors.primary)),
+              Text('Online', style: TextStyle(fontSize: 14, color: AppColors.primary)),
             ],
           )
         ],
@@ -167,8 +167,8 @@ class _ChatMessageWidget extends StatelessWidget {
               if (message.citations.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 const Divider(color: Colors.white24),
-                const Text('Fuentes:', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white70)),
-                ...message.citations.map((c) => Text('• $c', style: const TextStyle(fontSize: 10, color: Colors.white54))),
+                const Text('Fuentes:', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white70)),
+                ...message.citations.map((c) => Text('• $c', style: const TextStyle(fontSize: 14, color: Colors.white54))),
               ],
             ],
           ),

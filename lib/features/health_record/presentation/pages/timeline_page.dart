@@ -178,7 +178,7 @@ class _TimelineItem extends StatelessWidget {
                             DateFormat('dd MMM yyyy').format(entry.date),
                             style: const TextStyle(
                               color: CyberTheme.secondary,
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -223,7 +223,7 @@ class _TimelineItem extends StatelessWidget {
                                Expanded(
                                  child: Text(
                                    'Rec: ${entry.metadata!['recommendations']}',
-                                   style: const TextStyle(fontSize: 12, color: CyberTheme.primary),
+                                   style: const TextStyle(fontSize: 14, color: CyberTheme.primary),
                                  ),
                                ),
                              ],

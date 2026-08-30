@@ -56,7 +56,7 @@ class AppointmentCard extends StatelessWidget {
                               Flexible(
                                 child: Text(
                                   DateFormat('dd MMM, hh:mm a', 'es').format(appointment.dateTime),
-                                  style: const TextStyle(color: CyberTheme.secondary, fontSize: 12),
+                                  style: const TextStyle(color: CyberTheme.secondary, fontSize: 14),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -71,7 +71,7 @@ class AppointmentCard extends StatelessWidget {
                                 Flexible(
                                   child: Text(
                                     appointment.source!,
-                                    style: const TextStyle(color: Colors.white54, fontSize: 12),
+                                    style: const TextStyle(color: Colors.white54, fontSize: 14),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -92,7 +92,7 @@ class AppointmentCard extends StatelessWidget {
                   ),
                   child: Text(
                     appointment.status.name.toUpperCase(),
-                    style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],

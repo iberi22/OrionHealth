@@ -84,7 +84,7 @@ class _StatusBadge extends StatelessWidget {
         style: TextStyle(
           color: _getStatusColor(),
           fontWeight: FontWeight.bold,
-          fontSize: 12,
+          fontSize: 14,
         ),
       ),
     );
@@ -128,7 +128,7 @@ class _StatItem extends StatelessWidget {
         ),
         Text(
           label,
-          style: const TextStyle(fontSize: 10, color: Colors.grey),
+          style: const TextStyle(fontSize: 14, color: Colors.grey),
           textAlign: TextAlign.center,
         ),
       ],

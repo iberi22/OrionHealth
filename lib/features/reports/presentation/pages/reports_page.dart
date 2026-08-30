@@ -94,7 +94,7 @@ class _ReportsPageState extends State<ReportsPage> {
                     content: SizedBox(
                       width: double.maxFinite,
                       child: SingleChildScrollView(
-                        child: SelectableText(fhir, style: const TextStyle(fontSize: 10, fontFamily: 'monospace')),
+                        child: SelectableText(fhir, style: const TextStyle(fontSize: 14, fontFamily: 'monospace')),
                       ),
                     ),
                     actions: [

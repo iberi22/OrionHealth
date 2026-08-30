@@ -134,7 +134,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
                   'Orion siempre será una aplicación 100% gratuita. Nuestro desarrollo '
                   'se sostiene gracias al apoyo en forma de donaciones para el '
                   'laboratorio Southwest AI Labs (SWAL).',
-                  style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 13, height: 1.4),
+                  style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 14, height: 1.4),
                 ),
               ],
             ),
@@ -164,7 +164,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
                   'Entiendo que Orion procesa mis datos de salud de forma estrictamente '
                   'local en mi dispositivo, para generar seguimientos médicos y recordatorios. '
                   'Ningún dato sale de mi nodo de Orion hacia internet.',
-                  style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 13, height: 1.4),
+                  style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 14, height: 1.4),
                 ),
                 const SizedBox(height: 12),
                 _buildCheckbox(
@@ -199,7 +199,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
                 Text(
                   'He leído y acepto la política de privacidad de OrionHealth. '
                   'Entiendo que puedo revocar mi consentimiento en cualquier momento.',
-                  style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 13, height: 1.4),
+                  style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 14, height: 1.4),
                 ),
                 const SizedBox(height: 12),
                 _buildCheckbox(
@@ -226,7 +226,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 13, height: 1.3),
+            style: TextStyle(color: Colors.white.withAlpha(179), fontSize: 14, height: 1.3),
           ),
         ),
       ],
@@ -266,7 +266,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
                   _biometricEnabled
                       ? 'Usa tu huella para acceder rápido y seguro'
                       : 'Huella no disponible en este dispositivo',
-                  style: TextStyle(color: Colors.white.withAlpha(153), fontSize: 12),
+                  style: TextStyle(color: Colors.white.withAlpha(153), fontSize: 14),
                 ),
               ],
             ),
@@ -309,7 +309,7 @@ class _PrivacyStepState extends State<PrivacyStep> {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(color: Colors.white, fontSize: 13),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
         ],

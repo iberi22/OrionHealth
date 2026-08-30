@@ -90,7 +90,7 @@ void main() async {
                 Text(
                   details.exception.toString().split('\n').first,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
                 ),
               ],
             ),

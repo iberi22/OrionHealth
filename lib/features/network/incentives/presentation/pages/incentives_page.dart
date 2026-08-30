@@ -143,7 +143,7 @@ class IncentivesView extends StatelessWidget {
         children: [
           const Text(
             'TOTAL DE PUNTOS',
-            style: TextStyle(color: Colors.white, letterSpacing: 2, fontSize: 12),
+            style: TextStyle(color: Colors.white, letterSpacing: 2, fontSize: 14),
           ),
           const SizedBox(height: 8),
           Text(
@@ -166,7 +166,7 @@ class IncentivesView extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             '${1000 - (totalPoints % 1000)} puntos para el siguiente nivel',
-            style: const TextStyle(color: Colors.grey, fontSize: 10),
+            style: const TextStyle(color: Colors.grey, fontSize: 14),
           ),
         ],
       ),

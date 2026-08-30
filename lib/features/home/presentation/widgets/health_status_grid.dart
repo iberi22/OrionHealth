@@ -116,7 +116,7 @@ class HealthStatusGrid extends StatelessWidget {
                 child: Text(
                   label,
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     color: Colors.white70,
                   ),
                   overflow: TextOverflow.ellipsis,
