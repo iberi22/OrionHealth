@@ -25,6 +25,7 @@ class _ChatPageState extends State<ChatPage> {
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
+                    tooltip: 'Volver',
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),

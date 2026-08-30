@@ -64,6 +64,7 @@ class _ChatPageState extends State<ChatPage> {
   AppBar _buildAppBar() {
     return AppBar(
       leading: IconButton(
+                    tooltip: 'Volver',
         icon: const Icon(Icons.arrow_back),
         onPressed: () => Navigator.of(context).pop(),
       ),
@@ -83,6 +84,7 @@ class _ChatPageState extends State<ChatPage> {
       centerTitle: true,
       actions: [
         IconButton(
+                    tooltip: 'Activar micrófono',
           icon: const Icon(Icons.mic),
           onPressed: () {
             Navigator.of(context).push(
@@ -91,6 +93,7 @@ class _ChatPageState extends State<ChatPage> {
           },
         ),
         IconButton(
+                    tooltip: 'Configuración',
           icon: const Icon(Icons.settings),
           onPressed: () {
             Navigator.of(context).push(
@@ -253,6 +256,7 @@ class _MessageComposer extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
+                    tooltip: 'Enviar mensaje',
             icon: const Icon(Icons.send, color: AppColors.primary),
             onPressed: onSend,
           ),

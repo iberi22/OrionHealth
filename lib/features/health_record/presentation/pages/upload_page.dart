@@ -30,6 +30,7 @@ class UploadPage extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Subir Registro'),
             leading: IconButton(
+                    tooltip: 'Cerrar',
               icon: const Icon(Icons.close),
               onPressed: () {
                 context.read<HealthRecordCubit>().reset();

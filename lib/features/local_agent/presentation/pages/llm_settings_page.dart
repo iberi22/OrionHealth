@@ -137,6 +137,7 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
             labelText: 'Gemini API Key',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             suffixIcon: IconButton(
+                    tooltip: 'Guardar configuración',
               icon: const Icon(Icons.save),
               onPressed: _saveApiKey,
             ),
@@ -163,6 +164,7 @@ class _LlmSettingsPageState extends State<LlmSettingsPage> {
           title: Text(model.filename),
           subtitle: Text('${(model.size / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB - ${model.parameters ?? "Unknown"}'),
           trailing: IconButton(
+                    tooltip: 'Eliminar',
             icon: const Icon(Icons.delete, color: Colors.red),
             onPressed: () async {
               await _modelDownloadService.deleteModel(model.filename);
