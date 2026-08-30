@@ -1,4 +1,6 @@
-/// RDA Parser for IHCE Colombia
+/// RDA Parser (legacy IHCE Colombia — disabled in Wave 12).
+/// Parser for the IHCE-specific RDA format. The endpoint never worked
+/// in production; this is a structural placeholder.
 /// Maps FHIR Composition/Bundle to simplified patient summary
 library;
 

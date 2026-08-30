@@ -23,7 +23,7 @@ class SyncPage extends StatelessWidget {
             children: [
               const PageHeader(
                 title: 'Sincronización',
-                subtitle: 'Gestiona la sincronización de tus datos de salud con IHCE y nodos locales.',
+                subtitle: 'Gestiona la sincronización de tus datos de salud con nodos locales y proveedores FHIR.',
                 showBackButton: true,
               ),
               Expanded(
@@ -108,7 +108,7 @@ class SyncPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Sincroniza tu perfil, medicamentos, alergias y signos vitales desde IHCE Colombia.',
+            'Sincroniza tu perfil, medicamentos, alergias y signos vitales con proveedores FHIR locales.',
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withValues(alpha: 0.7),

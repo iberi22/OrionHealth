@@ -1,6 +1,8 @@
-﻿/// Sync repository for IHCE Colombia
-/// Uses FhirClient natively from Flutter - no backend needed
-/// Communicates directly with IHCE FHIR APIs from the device
+﻿/// Sync repository (legacy IHCE Colombia — disabled in Wave 12).
+/// The IHCE Colombia integration was never operational in production.
+/// Token storage keys (`ihce_access_token`) are preserved for forward
+/// compatibility but no network calls are made.
+/// Future: replace with a generic FHIR R4 client or remove entirely.
 library;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
