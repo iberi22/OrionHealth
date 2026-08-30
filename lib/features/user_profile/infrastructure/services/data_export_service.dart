@@ -19,11 +19,13 @@ class DataExportService {
   DataExportService(this._repository, this._secureStorage);
 
   /// Exports all user data into a ZIP file. Returns path to generated file.
-  Future<File> exportUserData() async {
+  /// [exportDir] allows tests to inject a temp directory; otherwise uses
+  /// path_provider's application documents directory.
+  Future<File> exportUserData({String? exportDir}) async {
     final files = await _collectAllData();
-    final dir = await getApplicationDocumentsDirectory();
+    final dir = exportDir ?? await getApplicationDocumentsDirectory().then((d) => d.path);
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final output = File('${dir.path}/orionhealth_export_$timestamp.zip');
+    final output = File('$dir/orionhealth_export_$timestamp.zip');
 
     await output.writeAsBytes(_encodeZip(files));
     return output;
@@ -205,7 +207,7 @@ Last reviewed: 2026-08-29 — Wave 9
 class _ZipEntry {
   final String filename;
   final Uint8List content;
-  late int localFileOffset;
+  int localFileOffset = 0;
   late final Uint8List localFileHeader;
   late final Uint8List centralDirectoryEntry;
 
