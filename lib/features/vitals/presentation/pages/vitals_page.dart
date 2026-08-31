@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 import 'package:orionhealth_health/core/theme/cyber_theme.dart';
 import 'package:orionhealth_health/core/widgets/glassmorphic_card.dart';
+import 'package:orionhealth_health/core/widgets/swal_responsive.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'vitals_monitor_page.dart';
@@ -119,13 +120,14 @@ class _VitalsPageState extends State<VitalsPage> {
   }
 
   Widget _buildLatestVitalsGrid() {
+    final isCompact = MediaQuery.sizeOf(context).width < SWALBreakpoints.compact;
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 1.3,
+      crossAxisCount: isCompact ? 2 : 3,
+      crossAxisSpacing: SWALSpacing.md,
+      mainAxisSpacing: SWALSpacing.md,
+      childAspectRatio: isCompact ? 1.3 : 1.4,
       children: [
         _buildVitalCard(VitalSignType.heartRate, 'BPM', Icons.favorite),
         _buildVitalCard(VitalSignType.temperature, '°C', Icons.thermostat),
@@ -153,7 +155,7 @@ class _VitalsPageState extends State<VitalsPage> {
                 Expanded(
                   child: Text(
                     label,
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    style: const TextStyle(fontSize: SWALFonts.body, color: Colors.white70),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -168,7 +170,7 @@ class _VitalsPageState extends State<VitalsPage> {
                 color: CyberTheme.primary,
               ),
             ),
-            Text(unit, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+            Text(unit, style: const TextStyle(fontSize: SWALFonts.body, color: Colors.white70)),
           ],
         ),
       ),
@@ -193,7 +195,7 @@ class _VitalsPageState extends State<VitalsPage> {
                 Expanded(
                   child: Text(
                     'Presión',
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(fontSize: SWALFonts.body, color: Colors.white70),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -214,7 +216,7 @@ class _VitalsPageState extends State<VitalsPage> {
               ),
             ),
             const Text('mmHg',
-                style: TextStyle(fontSize: 14, color: Colors.grey)),
+                style: TextStyle(fontSize: SWALFonts.body, color: Colors.white70)),
           ],
         ),
       ),
