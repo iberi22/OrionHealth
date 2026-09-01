@@ -86,7 +86,7 @@ dependencies:
   flutter_inappwebview: ^6.1.5
   app_links: ^6.3.2
   multicast_dns: ^0.3.3
-  bonsoir: 7.1.4
+  bonsoir: 7.1.5
   just_audio: ^0.10.6
   record: ^6.2.1
   connectivity_plus: ^7.3.1
