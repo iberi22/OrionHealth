@@ -1,0 +1,49 @@
+name: e2e-web
+
+on:
+  workflow_run:
+    workflows: ["deploy-astro"]
+    types: [completed]
+  schedule:
+    - cron: '30 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  playwright-live:
+    name: "🎭 Playwright vs producción"
+    if: >
+      ${{ github.event_name != 'workflow_run' ||
+          github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      E2E_BASE_URL: https://orionhealth-web.iberi22.workers.dev
+    defaults:
+      run:
+        working-directory: src-astro
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure @swal/ui (file:../../../cores/swal-ui)
+        run: |
+          mkdir -p ../../../cores
+          [ -d ../../../cores/swal-ui ] || git clone --depth 1 https://github.com/iberi22/swal-ui.git ../../../cores/swal-ui
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright test tests/e2e/pwa-live.spec.ts --reporter=github
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-traces
+          path: src-astro/test-results/
+          retention-days: 7

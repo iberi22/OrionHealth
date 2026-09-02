@@ -10,7 +10,11 @@ const { title = 'OrionHealth — Web PWA' } = Astro.props;
     <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content="OrionHealth — santuario de salud personal, privado y offline-first (stack SWAL: Astro + Svelte 5 + @swal/ui + Cloudflare)" />
-    <link rel="manifest" href="/manifest.json" /><meta name="theme-color" content="#06b6d4" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#10B981" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <!-- SSR: @vite-pwa/astro no inyecta el registro en rutas dinamicas -> manual (PATRON docs/) -->
+    <script is:inline src="/registerSW.js"></script>
   </head>
   <body>
     <slot />

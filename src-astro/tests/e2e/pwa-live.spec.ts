@@ -53,10 +53,11 @@ test('offline: reload sin red sirve desde cache del SW', async ({ page, context 
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
+  // segunda visita YA bajo control del SW -> NetworkFirst guarda la raíz en caché
+  await page.goto('/');
   await context.setOffline(true);
   const resp = await page.reload({ waitUntil: 'domcontentloaded' });
-  // SSR root no está en precache → 200 desde SW fallback o desde red encolada;
-  // el requisito duro es que la navegación no reviente ni de error page
-  expect(resp).not.toBeNull();
+  expect(resp?.status()).toBe(200);
+  await expect(page).toHaveTitle(/OrionHealth/i);
   await context.setOffline(false);
 });

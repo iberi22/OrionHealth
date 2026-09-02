@@ -21,6 +21,12 @@ export default defineConfig({
         navigateFallback: null,
         runtimeCaching: [
           {
+            // SSR: cachear navegaciones visitadas para reload offline
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: { cacheName: 'pages', networkTimeoutSeconds: 3, expiration: { maxEntries: 32, maxAgeSeconds: 60 * 60 * 24 } },
+          },
+          {
             urlPattern: /\/api\/.*/i,
             handler: 'NetworkFirst',
             options: { cacheName: 'api', expiration: { maxEntries: 100, maxAgeSeconds: 60 * 5 } },
