@@ -1,0 +1,95 @@
+name: deploy-astro
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src-astro/**"
+      - ".github/workflows/deploy-astro.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  deployments: write
+  id-token: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: deploy-astro-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit-and-verify:
+    name: "🛡️ Preflight"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: src-astro
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure @swal/ui (file:../../../cores/swal-ui)
+        run: |
+          mkdir -p ../../../cores
+          if [ ! -d ../../../cores/swal-ui ]; then
+            echo "Cloning @swal/ui from iberi22/swal-ui..."
+            git clone --depth 1 https://github.com/iberi22/swal-ui.git ../../../cores/swal-ui
+          else
+            echo "@swal/ui already present"
+          fi
+          ls -la ../../../cores/swal-ui/package.json
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+        working-directory: src-astro
+      - run: pnpm run check
+      - run: pnpm test
+
+  deploy-astro:
+    name: "🚀 Deploy orionhealth-web"
+    needs: audit-and-verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: src-astro
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure @swal/ui (file:../../../cores/swal-ui)
+        run: |
+          mkdir -p ../../../cores
+          if [ ! -d ../../../cores/swal-ui ]; then
+            git clone --depth 1 https://github.com/iberi22/swal-ui.git ../../../cores/swal-ui
+          fi
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - name: Build SSR
+        run: pnpm run build
+      - name: Normalize Wrangler
+        run: node scripts/normalize-wrangler-config.mjs --target production
+      - name: Pre-deploy Check
+        run: node scripts/pre-deploy-check.js
+      - name: Deploy Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --yes wrangler@4.127.1 deploy --config dist/server/wrangler.json
+
+  smoke-test:
+    name: "🩺 Smoke"
+    needs: deploy-astro
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Smoke orionhealth-web
+        run: bash src-astro/scripts/deploy-smoke.sh
+        env:
+          APP_URL: https://orionhealth-web.iberi22.workers.dev
