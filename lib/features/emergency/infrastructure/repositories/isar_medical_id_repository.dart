@@ -12,6 +12,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../domain/entities/medical_id.dart';
 import '../../domain/repositories/medical_id_repository.dart';
+part 'isar_medical_id_repository.g.dart';
 
 /// Isar collection wrapper for MedicalIdEntity.
 /// Stored as JSON string to avoid build_runner codegen.

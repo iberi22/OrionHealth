@@ -2,6 +2,15 @@ import 'package:isar/isar.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../domain/repositories/data_export_repository.dart';
+import '../../domain/entities/user_profile.dart';
+import '../../../health_record/domain/entities/medical_record.dart';
+import '../../../medications/domain/entities/medication.dart';
+import '../../../allergies/domain/entities/allergy.dart';
+import '../../../appointments/domain/entities/appointment.dart';
+import '../../../settings/domain/entities/app_settings.dart';
+import '../../../doctor_verification/domain/entities/doctor_profile.dart';
+import '../../../reports/domain/entities/report.dart';
+import '../../../vitals/domain/entities/vital_sign.dart';
 
 /// Isar implementation of [DataExportRepository] for GDPR data export.
 @LazySingleton(as: DataExportRepository)
