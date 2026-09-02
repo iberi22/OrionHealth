@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.10.1] — 2026-09-02
+
+### Refactored
+- **EPS Colombia scraper removal**: Removed non-functional EPS Colombia scraper and cleaned up EPS stubs (`b40f2f28`, `92b8784f`)
+- **IHCE Colombia neutralization**: Neutralized IHCE Colombia integration and completed cleanup (`92b8784f`)
+
+### Fixed
+- **UI Legibility**: Increased fontSize >= 14 across app UI elements for Galaxy S22+ legibility and improved responsiveness (`0dc0f5af`, `b40f2f28`)
+
+### Deployed
+- **PWA Status**: PWA live deployment at https://app-orionhealth.pages.dev is at v0.10.0 (`593450b1`)
+
+---
+
 ## [0.10.0] — 2026-08-30
 
 ### Added
