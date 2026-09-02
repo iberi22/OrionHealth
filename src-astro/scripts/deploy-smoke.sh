@@ -13,6 +13,8 @@ check_status() {
 echo "[smoke] APP_URL=$APP_URL"
 check_status "app raíz" "$APP_URL"
 check_status "manifest" "$APP_URL/manifest.json"
+check_status "service worker" "$APP_URL/sw.js"
+check_status "registerSW" "$APP_URL/registerSW.js"
 # /api/ai/infer debe existir (405 si GET, 400 si POST sin body) — no 404
 check_status "api ai infer (existe)" "$APP_URL/api/ai/infer" "^405$|^400$|^402$"
 # HTML contiene AUI demo + ProBadge (prueba contenido, no solo 200)
