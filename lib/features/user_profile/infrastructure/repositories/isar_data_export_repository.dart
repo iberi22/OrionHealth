@@ -33,85 +33,85 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<int> countMedicalRecords(String userId) async {
-    return await _isar.medicalRecords.filter().userIdEqualTo(userId).count();
+    return await _isar.medicalRecords.where().count();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getMedicalRecords(String userId) async {
     final records =
-        await _isar.medicalRecords.filter().userIdEqualTo(userId).findAll();
+        await _isar.medicalRecords.where().findAll();
     return records.map((r) => r.toJson()).toList();
   }
 
   @override
   Future<int> countMedications(String userId) async {
-    return await _isar.medications.filter().userIdEqualTo(userId).count();
+    return await _isar.medications.where().count();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getMedications(String userId) async {
     final meds =
-        await _isar.medications.filter().userIdEqualTo(userId).findAll();
+        await _isar.medications.where().findAll();
     return meds.map((m) => m.toJson()).toList();
   }
 
   @override
   Future<int> countAllergies(String userId) async {
-    return await _isar.allergies.filter().userIdEqualTo(userId).count();
+    return await _isar.allergys.where().count();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getAllergies(String userId) async {
     final allergies =
-        await _isar.allergies.filter().userIdEqualTo(userId).findAll();
+        await _isar.allergys.where().findAll();
     return allergies.map((a) => a.toJson()).toList();
   }
 
   @override
   Future<int> countAppointments(String userId) async {
-    return await _isar.appointments.filter().userIdEqualTo(userId).count();
+    return await _isar.appointments.where().count();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getAppointments(String userId) async {
     final appts =
-        await _isar.appointments.filter().userIdEqualTo(userId).findAll();
+        await _isar.appointments.where().findAll();
     return appts.map((a) => a.toJson()).toList();
   }
 
   @override
   Future<int> countVitalSigns(String userId) async {
-    return await _isar.vitalSigns.filter().userIdEqualTo(userId).count();
+    return await _isar.vitalSigns.where().count();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getVitalSigns(String userId) async {
     final vitals =
-        await _isar.vitalSigns.filter().userIdEqualTo(userId).findAll();
+        await _isar.vitalSigns.where().findAll();
     return vitals.map((v) => v.toJson()).toList();
   }
 
   @override
   Future<int> countReports(String userId) async {
-    return await _isar.reports.filter().userIdEqualTo(userId).count();
+    return await _isar.reports.where().count();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getReports(String userId) async {
     final reports =
-        await _isar.reports.filter().userIdEqualTo(userId).findAll();
+        await _isar.reports.where().findAll();
     return reports.map((r) => r.toJson()).toList();
   }
 
   @override
   Future<int> countDoctorProfiles(String userId) async {
-    return await _isar.doctorProfiles.filter().userIdEqualTo(userId).count();
+    return await _isar.doctorProfiles.where().count();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getDoctorProfiles(String userId) async {
     final doctors =
-        await _isar.doctorProfiles.filter().userIdEqualTo(userId).findAll();
+        await _isar.doctorProfiles.where().findAll();
     return doctors.map((d) => d.toJson()).toList();
   }
 

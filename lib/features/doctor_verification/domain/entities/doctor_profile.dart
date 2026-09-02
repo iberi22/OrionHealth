@@ -70,4 +70,20 @@ class DoctorProfile {
     }
     return true;
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'isarId': isarId,
+        'fullName': fullName,
+        'specialty': specialty,
+        'licenseNumber': licenseNumber,
+        'countryCode': countryCode,
+        'institution': institution,
+        'yearsOfExperience': yearsOfExperience,
+        'languages': languages,
+        'verified': verified,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+      };
+
 }

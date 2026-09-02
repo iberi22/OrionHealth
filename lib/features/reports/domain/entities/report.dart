@@ -38,4 +38,13 @@ class Report {
         return 'Urgente';
     }
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'generatedAt': generatedAt?.toIso8601String(),
+        'title': title,
+        'content': content,
+        'status': status.name,
+      };
+
 }

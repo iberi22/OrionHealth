@@ -74,5 +74,15 @@ class Allergy {
       ..encryptedAllergen = encryptedAllergen ?? this.encryptedAllergen
       ..encryptedNotes = encryptedNotes ?? this.encryptedNotes;
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'allergen': allergen,
+        'encryptedAllergen': encryptedAllergen,
+        'severity': severity.name,
+        'notes': notes,
+        'encryptedNotes': encryptedNotes,
+      };
+
 }
 

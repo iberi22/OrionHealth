@@ -43,4 +43,17 @@ class Appointment {
   }
 
   bool get isPast => dateTime.isBefore(DateTime.now());
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'doctorName': doctorName,
+        'specialty': specialty,
+        'dateTime': dateTime.toIso8601String(),
+        'durationInMinutes': durationInMinutes,
+        'recurrenceRule': recurrenceRule,
+        'notes': notes,
+        'source': source,
+        'status': status.name,
+      };
+
 }

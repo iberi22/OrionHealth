@@ -35,46 +35,43 @@ class IsarRightToErasureRepository implements RightToErasureRepository {
 
       // Medical records
       counts.medicalRecords =
-          await _isar.medicalRecords.filter().userIdEqualTo(userId).count();
+          await _isar.medicalRecords.where().count();
       await _isar.medicalRecords
-          .filter()
-          .userIdEqualTo(userId)
+          .where()
           .deleteAll();
 
       // Medications
       counts.medications =
-          await _isar.medications.filter().userIdEqualTo(userId).count();
-      await _isar.medications.filter().userIdEqualTo(userId).deleteAll();
+          await _isar.medications.where().count();
+      await _isar.medications.where().deleteAll();
 
       // Allergies
       counts.allergies =
-          await _isar.allergies.filter().userIdEqualTo(userId).count();
-      await _isar.allergies.filter().userIdEqualTo(userId).deleteAll();
+          await _isar.allergys.where().count();
+      await _isar.allergys.where().deleteAll();
 
       // Appointments
       counts.appointments =
-          await _isar.appointments.filter().userIdEqualTo(userId).count();
+          await _isar.appointments.where().count();
       await _isar.appointments
-          .filter()
-          .userIdEqualTo(userId)
+          .where()
           .deleteAll();
 
       // Vital signs
       counts.vitalSigns =
-          await _isar.vitalSigns.filter().userIdEqualTo(userId).count();
-      await _isar.vitalSigns.filter().userIdEqualTo(userId).deleteAll();
+          await _isar.vitalSigns.where().count();
+      await _isar.vitalSigns.where().deleteAll();
 
       // Reports
       counts.reports =
-          await _isar.reports.filter().userIdEqualTo(userId).count();
-      await _isar.reports.filter().userIdEqualTo(userId).deleteAll();
+          await _isar.reports.where().count();
+      await _isar.reports.where().deleteAll();
 
       // Doctor profiles
       counts.doctorProfiles =
-          await _isar.doctorProfiles.filter().userIdEqualTo(userId).count();
+          await _isar.doctorProfiles.where().count();
       await _isar.doctorProfiles
-          .filter()
-          .userIdEqualTo(userId)
+          .where()
           .deleteAll();
     });
 
