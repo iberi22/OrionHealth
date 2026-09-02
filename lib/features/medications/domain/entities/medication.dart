@@ -91,4 +91,23 @@ class Medication {
         genericName,
         encryptedGenericName,
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'encryptedName': encryptedName,
+        'dosage': dosage,
+        'encryptedDosage': encryptedDosage,
+        'frequency': frequency,
+        'encryptedFrequency': encryptedFrequency,
+        'startDate': startDate.toIso8601String(),
+        'isActive': isActive,
+        'notes': notes,
+        'encryptedNotes': encryptedNotes,
+        'rxNormCode': rxNormCode,
+        'drugClass': drugClass,
+        'genericName': genericName,
+        'encryptedGenericName': encryptedGenericName,
+      };
+
 }

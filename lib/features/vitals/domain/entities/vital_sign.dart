@@ -66,4 +66,17 @@ class VitalSign {
         return '${value.toInt()} mg/dL';
     }
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'type': type.name,
+        'value': value,
+        'encryptedValue': encryptedValue,
+        'dateTime': dateTime.toIso8601String(),
+        'unit': unit,
+        'source': source,
+        'notes': notes,
+        'encryptedNotes': encryptedNotes,
+      };
+
 }

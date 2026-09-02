@@ -186,6 +186,42 @@ class UserProfile {
     )..id = id;
   }
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'age': age,
+        'weight': weight,
+        'height': height,
+        'bloodType': bloodType,
+        'avatarUrl': avatarUrl,
+        'uniqueId': uniqueId,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'allowCloudApi': allowCloudApi,
+        'onboardingCompleted': onboardingCompleted,
+        'birthDate': birthDate?.toIso8601String(),
+        'sex': sex,
+        'systolicBP': systolicBP,
+        'diastolicBP': diastolicBP,
+        'heartRate': heartRate,
+        'allergyName': allergyName,
+        'allergySeverity': allergySeverity,
+        'allergyNotes': allergyNotes,
+        'llmProvider': llmProvider,
+        'localModelName': localModelName,
+        'medicalConditions': medicalConditions,
+        'currentMedications': currentMedications,
+        'smokingStatus': smokingStatus,
+        'familyHistoryCvd': familyHistoryCvd,
+        'familyHistoryDiabetes': familyHistoryDiabetes,
+        'hasHypertension': hasHypertension,
+        'hasCardiovascularDisease': hasCardiovascularDisease,
+        'hasSteroidUse': hasSteroidUse,
+        'isEpsConnected': isEpsConnected,
+        'epsPatientId': epsPatientId,
+        'ethnicity': ethnicity,
+      };
+
   @override
   String toString() {
     return 'UserProfile(id: $id, name: $name, age: $age, weight: $weight, height: $height, bloodType: $bloodType, uniqueId: $uniqueId, sex: $sex, systolicBP: $systolicBP, diastolicBP: $diastolicBP, heartRate: $heartRate, birthDate: $birthDate, onboardingCompleted: $onboardingCompleted)';

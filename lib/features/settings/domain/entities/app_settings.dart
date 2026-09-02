@@ -33,6 +33,13 @@ class AppSettings {
     )..id = id;
   }
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'themeMode': themeMode,
+        'languageCode': languageCode,
+        'notificationsEnabled': notificationsEnabled,
+      };
+
   @override
   String toString() {
     return 'AppSettings(id: $id, themeMode: $themeMode, languageCode: $languageCode, notificationsEnabled: $notificationsEnabled)';
