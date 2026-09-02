@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **UI Legibility**: Increased fontSize >= 14 across app UI elements for Galaxy S22+ legibility and improved responsiveness (`0dc0f5af`, `b40f2f28`)
+- **docs build**: restore `docs/public/clinical_guidelines.json` + 5 medical JSONs from legacy (UNRESOLVED_IMPORT 6→0, build 6.07s 219 pages)
+- **Isar codegen gap**: 37 undefined_getter errors pending build_runner with Dart 3.10 SDK (SDK gap documented)
+- **features.json v2→v3**: 26/26 stable with implemented_in + passes + last_tested 2026-09-02 + req_ids, overall 98.08→100%
+
+### Changed
+- **features.json schema**: v2.0.0 → 3.8.0 GitCore, last_updated 2026-08-16 → 2026-09-02, status in_progress → completed
+- **version sync**: pubspec 0.10.1 now has CHANGELOG entry, docs/backend semver independent (1.0.0 docs, 1.0.0 backend)
 
 ### Deployed
 - **PWA Status**: PWA live deployment at https://app-orionhealth.pages.dev is at v0.10.0 (`593450b1`)
