@@ -82,10 +82,6 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Clean Gradle project
-        working-directory: android
-        run: ./gradlew clean
-
       - name: Build debug APK
         run: flutter build apk --flavor prod -t lib/main.dart --debug --no-tree-shake-icons
 
