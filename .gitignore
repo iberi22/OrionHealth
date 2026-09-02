@@ -180,3 +180,9 @@ ihce_sandbox*
 # Hermes & Wrangler (local only)
 .hermes/
 .wrangler/
+
+# Local test artifacts (Isar DBs) and agent harness
+/test_db_*/
+.atl/
+docs/plans/
+docs/SWAL/
