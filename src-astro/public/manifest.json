@@ -1,11 +1,11 @@
 {
-  "name": "orionhealth-web",
-  "short_name": "orionhealth-",
-  "description": "SWAL App PWA — template canonico Astro + Svelte + @swal/ui + edge-mesh + Xavier + LLM",
+  "name": "OrionHealth",
+  "short_name": "OrionHealth",
+  "description": "Santuario de salud personal, soberano y offline-first — stack SWAL (Astro + Svelte 5 + Cloudflare).",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020617",
-  "theme_color": "#06b6d4",
+  "theme_color": "#10B981",
   "orientation": "any",
   "icons": [
     {
@@ -21,5 +21,10 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": []
+  "screenshots": [],
+  "categories": [
+    "health",
+    "medical",
+    "lifestyle"
+  ]
 }
