@@ -4,8 +4,8 @@ import AstroPWA from '@vite-pwa/astro';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://iberi22.github.io',
-  base: '/OrionHealth',
+  site: 'https://orionhealth-docs.pages.dev',
+  base: '/',
   integrations: [
     tailwind({
       applyBaseStyles: true,
@@ -20,8 +20,8 @@ export default defineConfig({
         theme_color: '#10B981',
         background_color: '#121212',
         display: 'standalone',
-        start_url: '/OrionHealth/',
-        scope: '/OrionHealth/',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'favicon.svg',

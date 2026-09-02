@@ -3,7 +3,7 @@
 [![CI](https://github.com/iberi22/OrionHealth/actions/workflows/ci.yml/badge.svg)](https://github.com/iberi22/OrionHealth/actions/workflows/ci.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue?logo=flutter)](https://flutter.dev)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://iberi22.github.io/OrionHealth/)
+[![Docs](https://img.shields.io/badge/docs-Cloudflare%20Pages-blue)](https://orionhealth-docs.pages.dev/)
 [![Privacy First](https://img.shields.io/badge/Privacy-First-green)](https://github.com/iberi22/OrionHealth)
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG-2.1%20AA-green.svg)](docs/accessibility.md)
 
@@ -219,7 +219,7 @@ Distributed under the **AGPL-3.0 License**. See [LICENSE](./LICENSE) for more in
 ## 📞 Contact
 
 - **Repository**: [github.com/iberi22/OrionHealth](https://github.com/iberi22/OrionHealth)
-- **Documentation**: [iberi22.github.io/OrionHealth](https://iberi22.github.io/OrionHealth/)
+- **Documentation**: [orionhealth-docs.pages.dev](https://orionhealth-docs.pages.dev/)
 - **Issue Tracker**: [GitHub Issues](https://github.com/iberi22/OrionHealth/issues)
 
 ---

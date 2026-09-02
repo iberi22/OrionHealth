@@ -7,10 +7,10 @@ import rxnorm from "../../public/rxnorm.json";
 import snomed from "../../public/snomed.json";
 
 const SEARCH_INDEX = [
-  ...icd10.data.map(d => ({ ...d, standard: 'icd-10', url: `/OrionHealth/medical-standards/icd-10/${d.code}` })),
-  ...loinc.data.map(d => ({ ...d, standard: 'loinc', url: `/OrionHealth/medical-standards/loinc/${d.code}` })),
-  ...rxnorm.data.map(d => ({ ...d, standard: 'rxnorm', url: `/OrionHealth/medical-standards/rxnorm/${d.code}` })),
-  ...snomed.data.map(d => ({ ...d, standard: 'snomed', url: `/OrionHealth/medical-standards/snomed/${d.code}` })),
+  ...icd10.data.map(d => ({ ...d, standard: 'icd-10', url: `/medical-standards/icd-10/${d.code}` })),
+  ...loinc.data.map(d => ({ ...d, standard: 'loinc', url: `/medical-standards/loinc/${d.code}` })),
+  ...rxnorm.data.map(d => ({ ...d, standard: 'rxnorm', url: `/medical-standards/rxnorm/${d.code}` })),
+  ...snomed.data.map(d => ({ ...d, standard: 'snomed', url: `/medical-standards/snomed/${d.code}` })),
 ].map(item => ({
   code: item.code,
   name: item.displayName || item.name,
