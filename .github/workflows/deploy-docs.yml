@@ -1,16 +1,15 @@
-name: Deploy Astro Site to GitHub Pages
+name: Deploy Astro Site to Cloudflare Pages
 
 on:
   push:
     branches: [ main ]
     paths:
       - 'docs/**'
+      - '.github/workflows/deploy-docs.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 env:
   NODE_VERSION: '22'
@@ -43,18 +42,24 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: ./docs/dist
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.127.1"
+          workingDirectory: "docs"
+          command: pages deploy dist --project-name=orionhealth-docs
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+  smoke:
+    name: "🩺 Post-deploy smoke"
     needs: build
+    runs-on: ubuntu-latest
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Verify live endpoints
+        run: |
+          for path in "/" "/manifest.webmanifest" "/offline.html" "/medical-standards/" "/blog"; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" -L "https://orionhealth-docs.pages.dev$path")
+            echo "$path -> $code"
+            [ "$code" = "200" ] || exit 1
+          done
