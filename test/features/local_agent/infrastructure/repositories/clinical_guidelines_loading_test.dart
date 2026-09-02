@@ -72,6 +72,13 @@ void main() {
   });
 
   group('Clinical Guidelines Loading', () {
+    test('should verify asset path for clinical guidelines is loadable', () async {
+      final content = await rootBundle.loadString('assets/medical-standards/clinical_guidelines.json');
+      expect(content, isNotEmpty);
+      final decoded = jsonDecode(content) as Map<String, dynamic>;
+      expect(decoded['metadata']['standard'], 'Clinical Guidelines');
+    });
+
     test('should load clinical guidelines and populate new fields', () async {
       await repository.initialize();
 
