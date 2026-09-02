@@ -23,9 +23,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
 
     // ── Product flavors (dev / staging / prod) ─────────────
     flavorDimensions += listOf("environment")
@@ -81,4 +78,10 @@ flutter {
 dependencies {
     implementation("com.google.mlkit:genai-prompt:1.0.0-beta2")
     implementation("com.google.android.gms:play-services-tasks:18.0.2")
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }
