@@ -1,4 +1,4 @@
-name: OrionHealth Web PWA
+name: Deploy Flutter Web PWA
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    name: Build Flutter Web PWA
+    name: Build and Deploy Flutter Web PWA
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Flutter Web
+      - name: Build Flutter Web PWA
         run: |
           flutter build web \
             --release \
