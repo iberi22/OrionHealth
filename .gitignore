@@ -177,3 +177,6 @@ ihce_sandbox*
 !docs/**/*.html
 !coverage/**/*.html
 !web/index.html
+# Hermes & Wrangler (local only)
+.hermes/
+.wrangler/
