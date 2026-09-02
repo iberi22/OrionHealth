@@ -10,13 +10,15 @@ library;
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/medical_id.dart';
 import '../../domain/repositories/medical_id_repository.dart';
 
-@LazySingleton(as: MedicalIdRepository, env: ['web'])
+// NOTE: not registered via injectable — main_web.dart constructs it directly.
+// A LazySingleton(as: MedicalIdRepository, env: ['web']) here collides with
+// IsarMedicalIdRepository's env-less registration (injectable generator:
+// "registered more than once under the same environment").
 class WebMedicalIdRepository implements MedicalIdRepository {
   static const _prefix = 'emergency.medical_id.';
 
