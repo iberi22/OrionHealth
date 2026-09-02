@@ -38,31 +38,47 @@ class _LoginPageState extends State<LoginPage> {
       },
       builder: (context, state) {
         return Scaffold(
+          resizeToAvoidBottomInset: true,
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.health_and_safety,
-                    size: 80,
-                    color: Colors.blue,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    left: 24,
+                    right: 24,
+                    top: 24,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 24,
                   ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'OrionHealth',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight - 48,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.health_and_safety,
+                          size: 80,
+                          color: Colors.blue,
                         ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'OrionHealth',
+                          style:
+                              Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 48),
+                        if (state.status == AuthStatus.loading)
+                          const CircularProgressIndicator()
+                        else
+                          _buildAuthForm(context, state),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 48),
-                  if (state.status == AuthStatus.loading)
-                    const CircularProgressIndicator()
-                  else
-                    _buildAuthForm(context, state),
-                ],
-              ),
+                );
+              },
             ),
           ),
         );

@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../../core/widgets/swal_responsive.dart';
 import '../../../../core/theme/cyber_theme.dart';
 import '../../application/home_cubit.dart';
 import '../../application/home_state.dart';
@@ -33,7 +34,8 @@ class HealthStatusGrid extends StatelessWidget {
                     Expanded(
                       child: Text(
                         summaryText,
-                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: SWALFonts.body),
                       ),
                     ),
                   ],
@@ -44,10 +46,10 @@ class HealthStatusGrid extends StatelessWidget {
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 1.3,
+              crossAxisCount: context.isCompact ? 2 : 3,
+              crossAxisSpacing: SWALSpacing.md,
+              mainAxisSpacing: SWALSpacing.md,
+              childAspectRatio: context.isCompact ? 1.3 : 1.4,
               children: [
                 _buildVitalCard(
                   context,
@@ -116,7 +118,7 @@ class HealthStatusGrid extends StatelessWidget {
                 child: Text(
                   label,
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: SWALFonts.body,
                     color: Colors.white70,
                   ),
                   overflow: TextOverflow.ellipsis,

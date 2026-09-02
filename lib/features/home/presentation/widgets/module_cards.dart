@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
+import '../../../../core/widgets/swal_responsive.dart';
 import '../../domain/entities/home_module.dart';
 
 class ModuleCards extends StatelessWidget {
@@ -17,15 +18,16 @@ class ModuleCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isCompact = context.isCompact;
     // ignore_for_file: non_const_argument_for_const_parameter
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.1,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: isCompact ? 2 : 3,
+        crossAxisSpacing: SWALSpacing.md,
+        mainAxisSpacing: SWALSpacing.md,
+        childAspectRatio: isCompact ? 1.1 : 1.2,
       ),
       itemCount: modules.length,
       itemBuilder: (context, index) {
@@ -68,9 +70,12 @@ class _ModuleCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               module.title,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: SWALFonts.body,
                 color: Colors.white,
               ),
             ),

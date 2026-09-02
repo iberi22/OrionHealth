@@ -7,6 +7,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/widgets/swal_responsive.dart';
 import '../cubit/emergency_cubit.dart';
 
 class EmergencyIdPage extends StatefulWidget {
@@ -98,58 +99,71 @@ class _CriticalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     final fields = medicalId.toCriticalCard() as List<String>;
+    final isCompact = context.isCompact;
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Name + blood type prominently
-            Text(
-              medicalId.fullName as String,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight - 32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Name + blood type prominently — responsive font
+                  Text(
+                    medicalId.fullName as String,
+                    style: TextStyle(
+                      fontSize: isCompact ? 28 : 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Text(
+                    '${medicalId.bloodType.displayName} • ${medicalId.age} años',
+                    style: TextStyle(
+                      fontSize: isCompact ? 18 : 24,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const Divider(height: 32),
+                  // Allergies (critical)
+                  if ((medicalId.allergies as List).isNotEmpty)
+                    _AlertSection(
+                      icon: Icons.warning_amber_rounded,
+                      title: 'ALERGIAS',
+                      content: (medicalId.allergies as List).join('\n'),
+                    ),
+                  if ((medicalId.currentMedications as List).isNotEmpty)
+                    _AlertSection(
+                      icon: Icons.medication_outlined,
+                      title: 'MEDICAMENTOS',
+                      content:
+                          (medicalId.currentMedications as List).join('\n'),
+                    ),
+                  if ((medicalId.chronicConditions as List).isNotEmpty)
+                    _AlertSection(
+                      icon: Icons.medical_information_outlined,
+                      title: 'CONDICIONES',
+                      content: (medicalId.chronicConditions as List)
+                          .map((c) => '• ${c.name}')
+                          .join('\n'),
+                    ),
+                  const SizedBox(height: 24),
+                  // ICE contact at bottom — no Spacer, fixed spacing so scroll works
+                  _AlertSection(
+                    icon: Icons.phone,
+                    title: 'CONTACTO DE EMERGENCIA',
+                    content:
+                        '${medicalId.primaryContact.name}\n${medicalId.primaryContact.phone}',
+                  ),
+                ],
               ),
             ),
-            Text(
-              '${medicalId.bloodType.displayName} • ${medicalId.age} años',
-              style: const TextStyle(fontSize: 24, color: Colors.black87),
-            ),
-            const Divider(height: 32),
-            // Allergies (critical)
-            if ((medicalId.allergies as List).isNotEmpty)
-              _AlertSection(
-                icon: Icons.warning_amber_rounded,
-                title: 'ALERGIAS',
-                content: (medicalId.allergies as List).join('\n'),
-              ),
-            if ((medicalId.currentMedications as List).isNotEmpty)
-              _AlertSection(
-                icon: Icons.medication_outlined,
-                title: 'MEDICAMENTOS',
-                content: (medicalId.currentMedications as List).join('\n'),
-              ),
-            if ((medicalId.chronicConditions as List).isNotEmpty)
-              _AlertSection(
-                icon: Icons.medical_information_outlined,
-                title: 'CONDICIONES',
-                content: (medicalId.chronicConditions as List)
-                    .map((c) => '• ${c.name}')
-                    .join('\n'),
-              ),
-            const Spacer(),
-            // ICE contact at bottom
-            _AlertSection(
-              icon: Icons.phone,
-              title: 'CONTACTO DE EMERGENCIA',
-              content:
-                  '${medicalId.primaryContact.name}\n${medicalId.primaryContact.phone}',
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

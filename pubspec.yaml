@@ -39,7 +39,7 @@ dependencies:
   file_picker: ^10.3.7
   image_picker: ^1.2.1
   uuid: ^4.6.0
-  intl: ^0.20.2
+  intl: ^0.20.3
   timezone: ^0.9.4
   flutter_bloc: ^9.1.1
   get_it: ^9.2.1
@@ -68,8 +68,8 @@ dependencies:
   cryptography: ^2.7.0
   argon2: ^1.0.1
   shared_preferences: ^2.3.4
-  openai_dart: ^7.0.1
-  google_mlkit_text_recognition: ^0.15.1
+  openai_dart: ^8.1.0
+  google_mlkit_text_recognition: ^0.17.1
   flutter_blue_plus: ^2.3.12
   hex: ^0.2.0
   http: ^1.6.0
@@ -80,13 +80,13 @@ dependencies:
   sqflite: ^2.4.2+1
   mobile_scanner: ^7.4.0
   flutter_appauth: ^12.0.2
-  workmanager: ^0.9.0+3
+  workmanager: ^0.10.9
   device_calendar: ^4.3.3
   url_launcher: ^6.3.2
   flutter_inappwebview: ^6.1.5
   app_links: ^6.3.2
   multicast_dns: ^0.3.3
-  bonsoir: 7.1.4
+  bonsoir: ^7.1.5
   just_audio: ^0.10.6
   record: ^6.2.1
   connectivity_plus: ^7.3.1

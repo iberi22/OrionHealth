@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../core/theme/cyber_theme.dart';
-// EPS Colombia integration removed in Wave 12. Stub classes below preserve
-// the API surface so the rest of the file compiles without changes.
-// To fully remove, delete the methods that use these stubs in a follow-up.
+// EPS Colombia integration REMOVED in Wave 12 (dead code, kept for ABI).
+// ignore_for_file: unused_element, deprecated_member_use
+// To fully delete: remove methods that still reference EPS stubs in this file.
 import '../../infrastructure/services/country_detector.dart';
 import '../widgets/eps_info_modal.dart';
 import '../widgets/health_data_sources_sheet.dart';
 
 // ─────────────────────────────────────────────────────────────────────
-// EPS stubs (Wave 12: feature removed, signatures preserved for ABI)
+// EPS stubs — @deprecated, Wave 12 removed. Preserve API surface only.
+// Do not use for new code. Will be deleted in next cleanup.
 // ─────────────────────────────────────────────────────────────────────
+@Deprecated('EPS integration removed Wave12 — stub only, no network calls')
 class EPSProvider {
   final String id;
   final String name;
   const EPSProvider({required this.id, required this.name});
 }
 
+@Deprecated('EPS catalog removed Wave12 — returns empty')
 class EpsProvidersCatalog {
   static const _empty = EPSProvider(id: '', name: '');
   static EPSProvider? byId(String id) => _empty;
   static List<EPSProvider> get activeProviders => const [];
 }
 
+@Deprecated('EPS WebView removed Wave12 — always false')
 class EpsWebViewSession {
   EpsWebViewSession({FlutterSecureStorage? storage, required String epsId});
   Future<bool> hasActiveSession() async => false;
 }
 
+@Deprecated('EPS portal removed Wave12 — placeholder screen')
 class EpsPatientPortalScreen extends StatelessWidget {
   final EPSProvider provider;
   final bool autoConnect;
@@ -274,8 +279,13 @@ class _OnboardingWelcomePageState extends State<OnboardingWelcomePage> {
             GestureDetector(
               onTap: () => EpsInfoModal.show(context),
               child: Container(
-                width: 22,
-                height: 22,
+                constraints: const BoxConstraints(
+                  minWidth: 44,
+                  minHeight: 44,
+                ),
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
