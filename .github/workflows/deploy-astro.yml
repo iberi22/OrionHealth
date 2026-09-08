@@ -42,7 +42,7 @@ jobs:
           ls -la ../../../cores/swal-ui/package.json
       - uses: pnpm/action-setup@v4
         with: { version: 9 }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
       - run: pnpm install --frozen-lockfile
         working-directory: src-astro
@@ -67,7 +67,7 @@ jobs:
           fi
       - uses: pnpm/action-setup@v4
         with: { version: 9 }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
       - run: pnpm install --frozen-lockfile
       - name: Build SSR

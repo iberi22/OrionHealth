@@ -36,7 +36,7 @@ jobs:
           [ -d ../../../cores/swal-ui ] || git clone --depth 1 https://github.com/iberi22/swal-ui.git ../../../cores/swal-ui
       - uses: pnpm/action-setup@v4
         with: { version: 9 }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
