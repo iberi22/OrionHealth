@@ -9,7 +9,7 @@
 	},
 	"dependencies": {
 		"@astrojs/tailwind": "^5.1.5",
-		"@playwright/test": "^1.62.1",
+		"@playwright/test": "^1.63.0",
 		"@tailwindcss/postcss": "^4.3.2",
 		"astro": "^7.2.9",
 		"playwright": "^1.60.0",
