@@ -18,7 +18,7 @@
 	},
 	"devDependencies": {
 		"@astrojs/check": "0.9.10",
-		"@astrojs/sitemap": "^3.7.3",
+		"@astrojs/sitemap": "^3.7.4",
 		"@vite-pwa/astro": "^1.2.0",
 		"esbuild": "^0.28.2",
 		"lightningcss": "^1.32.0",
