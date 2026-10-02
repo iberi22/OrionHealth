@@ -78,7 +78,7 @@ class IsarRightToErasureRepository implements RightToErasureRepository {
     });
 
     final preferences = await SharedPreferences.getInstance();
-    if (!await preferences.remove(LocalEcosystemSubjectStore.preferenceKey)) {
+    if (!await preferences.remove(LocalEcosystemSubjectStore.prefsEntry)) {
       throw StateError(
         'Could not remove the ecosystem subject during erasure.',
       );
