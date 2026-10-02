@@ -17,24 +17,33 @@ This document provides guidelines and system architecture context for AI coding 
 
 ```
 OrionHealth/
-├── lib/                        # Main Flutter mobile app (Clean Architecture)
-│   ├── app/                    # App initialization, DI, routing
-│   ├── core/                   # Shared services, themes, widgets, utilities
-│   └── features/               # Feature modules (26 Clean Architecture features)
-├── backend/                    # Node.js/Express FHIR integration backend
-├── functions/                  # Cloud/Serverless functions
+├── lib/                        # Main Flutter app (Clean Architecture)
+│   ├── main.dart               # Mobile/desktop entry point
+│   ├── main_web.dart           # Flutter Web (PWA) entry point
+│   ├── core/                   # Shared infra (audit, config, di, domain, logging, medical, network, responsive, services, theme, utils, widgets)
+│   ├── features/               # Feature modules (26 Clean Architecture features)
+│   └── l10n/                   # Localization ARB files (l10n.yaml); l10n_backup/ is a legacy copy
+├── backend/                    # Node.js/Express FHIR integration backend (no deploy target yet)
+├── functions/                  # Cloud/Serverless functions (telegram-bot)
+├── src-astro/                  # Astro 7 + Svelte 5 web PWA (orionhealth-web, Cloudflare Workers); @swal/ui from github:iberi22/swal-ui
 ├── packages/                   # Dedicated local Dart packages
 │   ├── health_wallet/          # SSI/DID & Verifiable Credentials wallet
 │   ├── isar_agent_memory/      # Graph + Vector local DB for AI agent memory
 │   └── medical_standards/      # Medical terminology mappings (ICD-10, LOINC, etc.)
-├── docs/                       # Project documentation & SRS requirements
+├── docs/                       # Documentation site (Astro) + SRS, architecture, planning, status
 │   └── SRS/                    # Software Requirements Specifications (REQ-F-001 .. REQ-F-107)
-├── .gitcore/                   # GitCore & SWAL metadata, harnesses, and schemas
+├── .gitcore/                   # GitCore & SWAL metadata
 │   ├── docs/                   # SWAL_GOAL.md canonical copy
-│   └── features.json           # Canonical schema v2 feature status catalog
-├── android/                    # Android platform runner & AICore Kotlin plugins
-├── ios/                        # iOS platform runner
-└── test/                       # Root unit & widget test suite
+│   ├── harness/                # Harness scan reports
+│   └── features.json           # Canonical feature status catalog ($schema v2)
+├── .github/workflows/          # CI: ci, coverage, android_build, deploy-*, e2e-*, release, ...
+├── assets/                     # Images, icons, medical-standards JSON
+├── android/ ios/ web/ windows/ # Platform runners (android: AICore Kotlin plugins)
+├── test/                       # Root unit & widget test suite
+├── integration_test/           # On-device E2E tests (e2e-android workflow)
+├── test_driver/ golden/        # Test drivers / golden images
+├── scripts/ patches/           # Utility scripts / dependency patches
+└── wrangler.toml               # Cloudflare Pages config for the Flutter Web build
 ```
 
 ---
@@ -43,7 +52,7 @@ OrionHealth/
 
 - **Agent Routing & Service Mesh**: AI agents and services interface via standard protocol channels (e.g. `MethodChannel` for native AICore/Gemma bridge).
 - **Xavier Namespace**: Core agent orchestration and multi-agent coordination components reference `apps/xavier` in the SWAL repository ecosystem.
-- **GitCore Integration**: Repository metadata and feature tracking are maintained under `.gitcore/` following SWAL standards (`features.json` schema v2, `SRC.md`, `SWAL_GOAL.md`).
+- **GitCore Integration**: Repository metadata and feature tracking are maintained under `.gitcore/` following SWAL standards (`.gitcore/features.json` schema v2, root `SRC.md`, `.gitcore/docs/SWAL_GOAL.md`).
 
 ---
 
@@ -53,7 +62,7 @@ OrionHealth/
 2. **Clean Architecture**: Maintain standard layer separation (Presentation -> Application -> Domain <- Infrastructure).
 3. **Targeted Tests**: Always verify code changes with tailored unit/widget test runs.
 4. **Documentation Rules**:
-   - Keep `features.json` in sync with actual implementation.
+   - Keep `.gitcore/features.json` in sync with actual implementation.
    - Follow SWAL documentation guidelines (English for code/docs artifacts, bilingual README allowed).
 
 <!-- SWAL-ROUTING-START -->
