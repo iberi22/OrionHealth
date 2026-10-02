@@ -10,6 +10,7 @@
 ### Root Directory
 - `lib/` — Main Flutter application source code (Clean Architecture)
 - `backend/` — Node.js/Express backend server for FHIR data integration & sessions
+- `src-astro/` — Astro 7 + Svelte 5 web PWA (`orionhealth-web`, Cloudflare Workers)
 - `functions/` — Cloud & serverless utility functions
 - `packages/` — Local Dart/Flutter packages
   - `packages/health_wallet/` — Self-Sovereign Identity (SSI) / DID & Verifiable Credentials wallet
@@ -22,7 +23,7 @@
 - `.gitcore/` — GitCore & SWAL standards metadata
   - `.gitcore/docs/` — SWAL_GOAL.md canonical document
   - `.gitcore/features.json` — Feature catalog (schema v2)
-  - `.gitcore/SRC.md` — Local GitCore source code reference
+  - `.gitcore/harness/` — Harness scan reports
 - `android/` — Native Android platform code and `AicorePlugin.kt`
 - `ios/` — Native iOS platform code
 - `windows/` — Native Windows desktop platform runner
@@ -41,10 +42,12 @@ OrionHealth follows Clean Architecture with feature-first modularization:
 
 ```
 lib/
-├── app/                        # Main app entry, initialization & global routing
+├── main.dart / main_web.dart   # App entry points (mobile/desktop, Flutter Web)
+├── l10n/                       # Localization ARB files
 ├── core/                       # Shared infrastructure & utilities
 │   ├── config/                 # Environment & build configs (dev/staging/prod)
 │   ├── di/                     # Dependency Injection (GetIt + injectable)
+│   ├── logging/, audit/, network/, medical/, responsive/  # Cross-cutting infra
 │   ├── services/               # Core services (Audio, TTS, SecureStorage, AppLogger)
 │   ├── theme/                  # Theme definitions (CyberTheme dark mode)
 │   ├── utils/                  # Cache, error handling, lazy router
@@ -55,7 +58,7 @@ lib/
     ├── health_record/          # FHIR medical records & history
     ├── local_agent/            # Local RAG AI agent
     ├── voice_chat/             # Offline AI voice assistant
-    └── ...                     # (See features.json for full feature list)
+    └── ...                     # (See .gitcore/features.json for full feature list)
 ```
 
 ---

@@ -36,7 +36,7 @@ on-device AI models and Self-Sovereign Identity standards without relying on cen
 - **Ley 1581 de 2012** (Colombia) — Habeas Data + ARCO rights
 - **Ley 2015 de 2020** (Colombia) — EHR interoperability
 
-> **Full coverage details:** [`coverage_report.md`](docs/status/coverage_report.md) | **Feature Catalog:** [`features.json`](./features.json) | **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+> **Full coverage details:** [`coverage_report.md`](docs/status/coverage_report.md) | **Feature Catalog:** [`features.json`](./.gitcore/features.json) | **Changelog:** [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
