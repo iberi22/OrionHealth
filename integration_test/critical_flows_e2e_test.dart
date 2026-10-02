@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:isar/isar.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/main.dart' as app;
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// Isar 3 keeps a named instance open across tests; getIt.reset() does not
+/// close it, so every test after the first failed with "Instance has already
+/// been opened". Close it before rebuilding the container.
+Future<void> _resetDi() async {
+  await Isar.getInstance()?.close();
+  await di.getIt.reset();
+}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +24,7 @@ void main() {
     });
 
     testWidgets('1. Full Onboarding Flow', (tester) async {
-      await di.getIt.reset();
+      await _resetDi();
       await di.configureDependencies();
       await tester.pumpWidget(const app.MyApp());
       await tester.pump(const Duration(seconds: 2));
@@ -31,6 +40,19 @@ void main() {
       await tester.enterText(find.widgetWithText(TextField, 'Nombre completo'), 'Test User');
       await tester.enterText(find.widgetWithText(TextField, 'Peso (kg)'), '70');
       await tester.enterText(find.widgetWithText(TextField, 'Altura (cm)'), '175');
+      // nextStep() requires birth date and sex (OnboardingCubit validation).
+      await tester.ensureVisible(find.text('Fecha de nacimiento'));
+      await tester.tap(find.text('Fecha de nacimiento'));
+      await tester.pumpAndSettle();
+      // Date picker opens preselected on 1990-01-01; confirm with the last dialog button (OK).
+      await tester.tap(
+        find.descendant(of: find.byType(Dialog), matching: find.byType(TextButton)).last,
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Masculino'));
+      await tester.tap(find.text('Masculino'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Siguiente'));
       await tester.tap(find.text('Siguiente'));
       await tester.pumpAndSettle();
 
@@ -70,7 +92,7 @@ void main() {
     });
 
     testWidgets('2. Auth Flow: PIN Setup', (tester) async {
-      await di.getIt.reset();
+      await _resetDi();
       await di.configureDependencies();
 
       // Simulate that onboarding was completed but PIN is not yet set
@@ -94,7 +116,7 @@ void main() {
     });
 
     testWidgets('3. Home -> Appointments -> Create -> Delete', (tester) async {
-      await di.getIt.reset();
+      await _resetDi();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({'onboarding_completed': true});
 
@@ -138,7 +160,7 @@ void main() {
     });
 
     testWidgets('4. Health Record: Upload -> View -> Share', (tester) async {
-      await di.getIt.reset();
+      await _resetDi();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({'onboarding_completed': true});
 
@@ -188,7 +210,7 @@ void main() {
     });
 
     testWidgets('5. Local Agent: Ask question -> Receive response', (tester) async {
-      await di.getIt.reset();
+      await _resetDi();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({'onboarding_completed': true});
 
@@ -233,7 +255,7 @@ void main() {
     });
 
     testWidgets('6. Sync: Trigger sync and verify', (tester) async {
-      await di.getIt.reset();
+      await _resetDi();
       await di.configureDependencies();
       SharedPreferences.setMockInitialValues({'onboarding_completed': true});
 
