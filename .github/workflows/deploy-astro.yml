@@ -30,16 +30,6 @@ jobs:
         working-directory: src-astro
     steps:
       - uses: actions/checkout@v4
-      - name: Ensure @swal/ui (file:../../../cores/swal-ui)
-        run: |
-          mkdir -p ../../../cores
-          if [ ! -d ../../../cores/swal-ui ]; then
-            echo "Cloning @swal/ui from iberi22/swal-ui..."
-            git clone --depth 1 https://github.com/iberi22/swal-ui.git ../../../cores/swal-ui
-          else
-            echo "@swal/ui already present"
-          fi
-          ls -la ../../../cores/swal-ui/package.json
       - uses: pnpm/action-setup@v4
         with: { version: 9 }
       - uses: actions/setup-node@v4
@@ -59,12 +49,6 @@ jobs:
         working-directory: src-astro
     steps:
       - uses: actions/checkout@v4
-      - name: Ensure @swal/ui (file:../../../cores/swal-ui)
-        run: |
-          mkdir -p ../../../cores
-          if [ ! -d ../../../cores/swal-ui ]; then
-            git clone --depth 1 https://github.com/iberi22/swal-ui.git ../../../cores/swal-ui
-          fi
       - uses: pnpm/action-setup@v4
         with: { version: 9 }
       - uses: actions/setup-node@v4
