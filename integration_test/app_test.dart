@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -11,11 +10,8 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  // Crear directorio de screenshots
-  final screenshotsDir = Directory('integration_test/screenshots');
-  if (!screenshotsDir.existsSync()) {
-    screenshotsDir.createSync(recursive: true);
-  }
+  // NOTE: do not create directories here. This runs on the Android emulator,
+  // where the working dir is a read-only filesystem (errno 30).
 
   group('OrionHealth App - UI Integration Tests with Screenshots', () {
     testWidgets('Test 1: Main Navigation with populated Profile', (

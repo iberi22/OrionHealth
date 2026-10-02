@@ -55,7 +55,8 @@ jobs:
           api-level: 34
           arch: x86_64
           disable-animations: true
-          script: flutter test integration_test/app_test.dart integration_test/critical_flows_e2e_test.dart --flavor prod
+          # app_test.dart uses matchesGoldenFile (host-only, needs a writable fs) -> not runnable on-device.
+          script: flutter test integration_test/critical_flows_e2e_test.dart --flavor prod
 
   full:
     name: "🌙 E2E nightly completa"
