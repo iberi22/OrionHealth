@@ -34,6 +34,21 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- app_links owns import URLs; disable Flutter's competing handler. -->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="orionhealth" android:host="import" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="app-orionhealth.pages.dev" android:path="/import" />
+                <data android:scheme="https" android:host="orionhealth.app" android:path="/import" />
+            </intent-filter>
             <!-- OAuth redirect URI handler (flutter_appauth) -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'dart:async';
+import 'features/health_data_import/application/ecosystem_link_inbox.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:timezone/data/latest.dart' as tz;
@@ -50,6 +51,7 @@ void callbackDispatcher() {
 void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    EcosystemLinkInbox.instance.start();
     tz.initializeTimeZones();
 
     await Workmanager().initialize(

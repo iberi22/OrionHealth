@@ -8,13 +8,12 @@ import '../../../../core/theme/cyber_theme.dart';
 import '../../../local_agent/infrastructure/llm_service.dart';
 import '../../../local_agent/presentation/chat_page.dart';
 import '../../../vitals/presentation/pages/vitals_page.dart';
+import '../../../health_data_import/presentation/pages/health_import_page.dart';
 import '../../../medications/presentation/pages/medications_page.dart';
 import '../../../health_record/presentation/pages/timeline_page.dart';
 import '../../../meditation/presentation/meditation_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
 import '../../../medical_research/presentation/pages/medical_research_page.dart';
-import '../../../user_profile/domain/entities/user_profile.dart';
-import '../../../user_profile/domain/repositories/user_profile_repository.dart';
 import '../../application/home_cubit.dart';
 import '../../application/home_state.dart';
 import '../widgets/health_status_grid.dart';
@@ -47,6 +46,12 @@ class HomePageView extends StatelessWidget {
               floating: true,
               pinned: true,
               backgroundColor: Colors.transparent,
+              actions: [IconButton(
+                tooltip: 'Importar datos de salud',
+                icon: const Icon(Icons.import_export),
+                onPressed: () => Navigator.push<void>(context,
+                  MaterialPageRoute(builder: (_) => const HealthImportPage())),
+              )],
               flexibleSpace: FlexibleSpaceBar(
                 title: const Text(
                   'ORION HEALTH',

@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'package:health_contract/health_contract.dart' as contract;
 import '../../../vitals/domain/entities/vital_sign.dart';
 
 class HealthDataParser {
+  /// Strict ecosystem file parser. Contract errors must reach the review UI.
+  List<contract.Envelope> parseSwalHealth(String text) =>
+      contract.fromFile(text);
+
   /// Parses a CSV string into a list of [VitalSign] entities.
   /// Expected format: type,value,unit,dateTime
   List<VitalSign> parseCsv(String csvData) {
@@ -34,13 +39,15 @@ class HealthDataParser {
         final dateTime = DateTime.tryParse(dateStr);
 
         if (type != null && value != null && dateTime != null) {
-          results.add(VitalSign(
-            type: type,
-            value: value,
-            unit: _sanitizeString(unitStr),
-            dateTime: dateTime,
-            source: 'CSV_IMPORT',
-          ));
+          results.add(
+            VitalSign(
+              type: type,
+              value: value,
+              unit: _sanitizeString(unitStr),
+              dateTime: dateTime,
+              source: 'CSV_IMPORT',
+            ),
+          );
         }
       } catch (_) {
         // Skip malformed rows
@@ -96,13 +103,15 @@ class HealthDataParser {
           final dateTime = DateTime.tryParse(dateStr);
 
           if (type != null && dateTime != null) {
-            results.add(VitalSign(
-              type: type,
-              value: value,
-              unit: _sanitizeString(unit ?? ''),
-              dateTime: dateTime,
-              source: 'JSON_IMPORT',
-            ));
+            results.add(
+              VitalSign(
+                type: type,
+                value: value,
+                unit: _sanitizeString(unit ?? ''),
+                dateTime: dateTime,
+                source: 'JSON_IMPORT',
+              ),
+            );
           }
         }
       }
@@ -145,8 +154,12 @@ class HealthDataParser {
     final codings = code?['coding'] as List?;
     if (codings == null) return [];
 
-    final effectiveDateTimeStr = json['effectiveDateTime'] as String?;
-    final dateTime = effectiveDateTimeStr != null ? DateTime.tryParse(effectiveDateTimeStr) : DateTime.now();
+    final effectiveDateTimeStr =
+        (json['effectiveDateTime'] ?? json['effectivePeriod']?['start'])
+            as String?;
+    final dateTime = effectiveDateTimeStr != null
+        ? DateTime.tryParse(effectiveDateTimeStr)
+        : DateTime.now();
     if (dateTime == null) return [];
 
     final List<VitalSign> vitals = [];
@@ -154,13 +167,17 @@ class HealthDataParser {
     if (json['valueQuantity'] != null) {
       final type = _mapLoincToVitalType(codings);
       if (type != null) {
-        vitals.add(VitalSign(
-          type: type,
-          value: (json['valueQuantity']['value'] as num).toDouble(),
-          dateTime: dateTime,
-          unit: json['valueQuantity']['unit'] as String?,
-          source: 'FHIR_IMPORT',
-        ));
+        vitals.add(
+          VitalSign(
+            type: type,
+            value: (json['valueQuantity']['value'] as num).toDouble(),
+            dateTime: dateTime,
+            unit:
+                json['valueQuantity']['unit'] as String? ??
+                (type == VitalSignType.activeEnergy ? 'kcal' : null),
+            source: 'FHIR_IMPORT',
+          ),
+        );
       }
     }
 
@@ -171,13 +188,17 @@ class HealthDataParser {
         if (compCodings != null && comp['valueQuantity'] != null) {
           final type = _mapLoincToVitalType(compCodings);
           if (type != null) {
-            vitals.add(VitalSign(
-              type: type,
-              value: (comp['valueQuantity']['value'] as num).toDouble(),
-              dateTime: dateTime,
-              unit: comp['valueQuantity']['unit'] as String?,
-              source: 'FHIR_IMPORT',
-            ));
+            vitals.add(
+              VitalSign(
+                type: type,
+                value: (comp['valueQuantity']['value'] as num).toDouble(),
+                dateTime: dateTime,
+                unit:
+                    comp['valueQuantity']['unit'] as String? ??
+                    (type == VitalSignType.activeEnergy ? 'kcal' : null),
+                source: 'FHIR_IMPORT',
+              ),
+            );
           }
         }
       }
@@ -191,13 +212,22 @@ class HealthDataParser {
       if (coding['system'] == 'http://loinc.org') {
         final code = coding['code'] as String?;
         switch (code) {
-          case '8867-4': return VitalSignType.heartRate;
-          case '8310-5': return VitalSignType.temperature;
-          case '8480-6': return VitalSignType.bloodPressureSystolic;
-          case '8462-4': return VitalSignType.bloodPressureDiastolic;
-          case '2708-6': return VitalSignType.spO2;
-          case '59408-5': return VitalSignType.oxygenSaturation;
-          case '15074-8': return VitalSignType.bloodGlucose;
+          case '8867-4':
+            return VitalSignType.heartRate;
+          case '8310-5':
+            return VitalSignType.temperature;
+          case '8480-6':
+            return VitalSignType.bloodPressureSystolic;
+          case '8462-4':
+            return VitalSignType.bloodPressureDiastolic;
+          case '2708-6':
+            return VitalSignType.spO2;
+          case '59408-5':
+            return VitalSignType.oxygenSaturation;
+          case '15074-8':
+            return VitalSignType.bloodGlucose;
+          case '41981-2':
+            return VitalSignType.activeEnergy;
         }
       }
     }
@@ -227,6 +257,9 @@ class HealthDataParser {
         return VitalSignType.bloodPressureDiastolic;
       case 'spo2':
         return VitalSignType.spO2;
+      case 'activeenergy':
+      case 'activecalories':
+        return VitalSignType.activeEnergy;
       case 'steps':
         return VitalSignType.steps;
       case 'sleep':

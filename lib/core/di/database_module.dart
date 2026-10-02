@@ -5,6 +5,8 @@ import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import '../domain/entities/api_audit_log.dart';
+import '../../features/workouts/domain/entities/workout_session.dart';
+import '../../features/health_data_import/infrastructure/models/meal_log.dart';
 import '../../features/user_profile/domain/entities/user_profile.dart';
 import '../../features/local_agent/domain/chat_message.dart';
 import '../../features/health_record/domain/entities/medical_record.dart';
@@ -39,6 +41,9 @@ abstract class DatabaseModule {
     return Isar.open(
       [
         UserProfileSchema,
+        WorkoutSessionSchema,
+        MealLogSchema,
+        EcosystemDietaryProfileSchema,
         ApiAuditLogSchema,
         ChatMessageSchema,
         MedicalRecordSchema,
