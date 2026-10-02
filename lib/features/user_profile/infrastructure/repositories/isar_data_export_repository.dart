@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:isar/isar.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,10 +12,13 @@ import '../../../settings/domain/entities/app_settings.dart';
 import '../../../doctor_verification/domain/entities/doctor_profile.dart';
 import '../../../reports/domain/entities/report.dart';
 import '../../../vitals/domain/entities/vital_sign.dart';
+import '../../../workouts/domain/entities/workout_session.dart';
+import '../../../health_data_import/infrastructure/models/meal_log.dart';
 
 /// Isar implementation of [DataExportRepository] for GDPR data export.
 @LazySingleton(as: DataExportRepository)
-class IsarDataExportRepository implements DataExportRepository {
+class IsarDataExportRepository
+    implements DataExportRepository, EcosystemDataExportRepository {
   final Isar _isar;
 
   IsarDataExportRepository(this._isar);
@@ -26,8 +30,10 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<List<Map<String, dynamic>>> getUserProfiles(String userId) async {
-    final profiles =
-        await _isar.userProfiles.filter().uniqueIdEqualTo(userId).findAll();
+    final profiles = await _isar.userProfiles
+        .filter()
+        .uniqueIdEqualTo(userId)
+        .findAll();
     return profiles.map((p) => p.toJson()).toList();
   }
 
@@ -38,8 +44,7 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<List<Map<String, dynamic>>> getMedicalRecords(String userId) async {
-    final records =
-        await _isar.medicalRecords.where().findAll();
+    final records = await _isar.medicalRecords.where().findAll();
     return records.map((r) => r.toJson()).toList();
   }
 
@@ -50,8 +55,7 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<List<Map<String, dynamic>>> getMedications(String userId) async {
-    final meds =
-        await _isar.medications.where().findAll();
+    final meds = await _isar.medications.where().findAll();
     return meds.map((m) => m.toJson()).toList();
   }
 
@@ -62,8 +66,7 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<List<Map<String, dynamic>>> getAllergies(String userId) async {
-    final allergies =
-        await _isar.allergys.where().findAll();
+    final allergies = await _isar.allergys.where().findAll();
     return allergies.map((a) => a.toJson()).toList();
   }
 
@@ -74,8 +77,7 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<List<Map<String, dynamic>>> getAppointments(String userId) async {
-    final appts =
-        await _isar.appointments.where().findAll();
+    final appts = await _isar.appointments.where().findAll();
     return appts.map((a) => a.toJson()).toList();
   }
 
@@ -86,8 +88,7 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<List<Map<String, dynamic>>> getVitalSigns(String userId) async {
-    final vitals =
-        await _isar.vitalSigns.where().findAll();
+    final vitals = await _isar.vitalSigns.where().findAll();
     return vitals.map((v) => v.toJson()).toList();
   }
 
@@ -98,8 +99,7 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<List<Map<String, dynamic>>> getReports(String userId) async {
-    final reports =
-        await _isar.reports.where().findAll();
+    final reports = await _isar.reports.where().findAll();
     return reports.map((r) => r.toJson()).toList();
   }
 
@@ -110,8 +110,7 @@ class IsarDataExportRepository implements DataExportRepository {
 
   @override
   Future<List<Map<String, dynamic>>> getDoctorProfiles(String userId) async {
-    final doctors =
-        await _isar.doctorProfiles.where().findAll();
+    final doctors = await _isar.doctorProfiles.where().findAll();
     return doctors.map((d) => d.toJson()).toList();
   }
 
@@ -124,5 +123,21 @@ class IsarDataExportRepository implements DataExportRepository {
   Future<List<Map<String, dynamic>>> getAppSettings() async {
     final settings = await _isar.appSettings.where().findAll();
     return settings.map((s) => s.toJson()).toList();
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getEcosystemRecords() async {
+    final workouts = await _isar.workoutSessions.where().findAll();
+    final meals = await _isar.mealLogs.where().findAll();
+    final profiles = await _isar.ecosystemDietaryProfiles.where().findAll();
+    return [
+      ...workouts.map((record) => record.toJson()),
+      ...meals.map(
+        (record) => jsonDecode(record.envelopeJson) as Map<String, dynamic>,
+      ),
+      ...profiles.map(
+        (record) => jsonDecode(record.envelopeJson) as Map<String, dynamic>,
+      ),
+    ];
   }
 }

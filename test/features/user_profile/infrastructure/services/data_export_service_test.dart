@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/core/services/secure_storage_service.dart';
@@ -7,15 +8,10 @@ import 'package:orionhealth_health/features/user_profile/infrastructure/services
 
 class _MockRepo implements DataExportRepository {
   final List<Map<String, dynamic>> _profiles = [
-    {
-      'id': 1,
-      'name': 'Test User',
-      'age': 30,
-      'uniqueId': 'test_user',
-    }
+    {'id': 1, 'name': 'Test User', 'age': 30, 'uniqueId': 'test_user'},
   ];
   final List<Map<String, dynamic>> _meds = [
-    {'id': 1, 'name': 'Aspirin', 'dosage': '100mg'}
+    {'id': 1, 'name': 'Aspirin', 'dosage': '100mg'},
   ];
   final List<Map<String, dynamic>> _vitals = [
     {
@@ -23,8 +19,8 @@ class _MockRepo implements DataExportRepository {
       'heartRate': 72,
       'systolicBP': 120,
       'diastolicBP': 80,
-      'timestamp': '2026-08-29T10:00:00Z'
-    }
+      'timestamp': '2026-08-29T10:00:00Z',
+    },
   ];
 
   @override
@@ -35,11 +31,13 @@ class _MockRepo implements DataExportRepository {
   @override
   Future<int> countMedicalRecords(String userId) async => 0;
   @override
-  Future<List<Map<String, dynamic>>> getMedicalRecords(String userId) async => [];
+  Future<List<Map<String, dynamic>>> getMedicalRecords(String userId) async =>
+      [];
   @override
   Future<int> countMedications(String userId) async => _meds.length;
   @override
-  Future<List<Map<String, dynamic>>> getMedications(String userId) async => _meds;
+  Future<List<Map<String, dynamic>>> getMedications(String userId) async =>
+      _meds;
   @override
   Future<int> countAllergies(String userId) async => 0;
   @override
@@ -51,7 +49,8 @@ class _MockRepo implements DataExportRepository {
   @override
   Future<int> countVitalSigns(String userId) async => _vitals.length;
   @override
-  Future<List<Map<String, dynamic>>> getVitalSigns(String userId) async => _vitals;
+  Future<List<Map<String, dynamic>>> getVitalSigns(String userId) async =>
+      _vitals;
   @override
   Future<int> countReports(String userId) async => 0;
   @override
@@ -59,11 +58,20 @@ class _MockRepo implements DataExportRepository {
   @override
   Future<int> countDoctorProfiles(String userId) async => 0;
   @override
-  Future<List<Map<String, dynamic>>> getDoctorProfiles(String userId) async => [];
+  Future<List<Map<String, dynamic>>> getDoctorProfiles(String userId) async =>
+      [];
   @override
   Future<int> countAppSettings() async => 0;
   @override
   Future<List<Map<String, dynamic>>> getAppSettings() async => [];
+}
+
+class _EcosystemRepo extends _MockRepo
+    implements EcosystemDataExportRepository {
+  final Map<String, dynamic> record;
+  _EcosystemRepo(this.record);
+  @override
+  Future<List<Map<String, dynamic>>> getEcosystemRecords() async => [record];
 }
 
 void main() {
@@ -85,6 +93,41 @@ void main() {
     setUp(() {
       service = DataExportService(_MockRepo(), _MockSecureStorage());
     });
+
+    test(
+      'GDPR export includes the complete imported ecosystem envelope',
+      () async {
+        final record =
+            jsonDecode(
+                  File(
+                    'packages/health_contract/test/fixtures/valid/workout-session-01.json',
+                  ).readAsStringSync(),
+                )
+                as Map<String, dynamic>;
+        final ecosystemService = DataExportService(
+          _EcosystemRepo(record),
+          _MockSecureStorage(),
+        );
+        final file = await ecosystemService.exportUserData(
+          exportDir: tempDir.path,
+        );
+        final bytes = await file.readAsBytes();
+        expect(
+          _indexOf(bytes, utf8.encode('ecosystem_records.swalhealth.json')),
+          greaterThanOrEqualTo(0),
+        );
+        expect(
+          _indexOf(
+            bytes,
+            utf8.encode(const JsonEncoder.withIndent('  ').convert([record])),
+          ),
+          greaterThanOrEqualTo(0),
+        );
+        final summary = await ecosystemService.getExportSummary();
+        expect(summary.ecosystemRecords, 1);
+        expect(summary.total, 4);
+      },
+    );
 
     test('exportUserData creates a valid ZIP file', () async {
       final file = await service.exportUserData(exportDir: tempDir.path);
@@ -119,14 +162,19 @@ void main() {
       // Find End of Central Directory signature (0x06054b50 reversed)
       final eocdSig = <int>[0x50, 0x4B, 0x05, 0x06];
       final sigIndex = _indexOf(bytes, eocdSig);
-      expect(sigIndex, greaterThanOrEqualTo(0),
-          reason: 'ZIP should have End of Central Directory signature');
+      expect(
+        sigIndex,
+        greaterThanOrEqualTo(0),
+        reason: 'ZIP should have End of Central Directory signature',
+      );
 
       // Parse entry count from EOCD record
-      final entryCount =
-          (bytes[sigIndex + 10]) | (bytes[sigIndex + 11] << 8);
-      expect(entryCount, greaterThanOrEqualTo(10),
-          reason: 'ZIP should contain 10+ entries (README + 9 JSONs + metadata)');
+      final entryCount = (bytes[sigIndex + 10]) | (bytes[sigIndex + 11] << 8);
+      expect(
+        entryCount,
+        greaterThanOrEqualTo(10),
+        reason: 'ZIP should contain 10+ entries (README + 9 JSONs + metadata)',
+      );
 
       await file.delete();
     });
