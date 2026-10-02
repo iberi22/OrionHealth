@@ -81,6 +81,11 @@ class UserProfile {
   /// Ethnicity for risk calculations
   String? ethnicity;
 
+  /// Explicit user goals; never estimated from medical history.
+  double? dietaryGoalsKcalPerDay;
+  double? dietaryGoalsProteinGPerDay;
+  List<String> dietaryPreferences = [];
+
   UserProfile({
     this.name,
     this.age,
@@ -114,6 +119,9 @@ class UserProfile {
     this.isEpsConnected = false,
     this.epsPatientId,
     this.ethnicity,
+    this.dietaryGoalsKcalPerDay,
+    this.dietaryGoalsProteinGPerDay,
+    this.dietaryPreferences = const [],
   });
 
   UserProfile copyWith({
@@ -149,6 +157,9 @@ class UserProfile {
     bool? isEpsConnected,
     String? epsPatientId,
     String? ethnicity,
+    double? dietaryGoalsKcalPerDay,
+    double? dietaryGoalsProteinGPerDay,
+    List<String>? dietaryPreferences,
   }) {
     return UserProfile(
       name: name ?? this.name,
@@ -176,51 +187,61 @@ class UserProfile {
       currentMedications: currentMedications ?? this.currentMedications,
       smokingStatus: smokingStatus ?? this.smokingStatus,
       familyHistoryCvd: familyHistoryCvd ?? this.familyHistoryCvd,
-      familyHistoryDiabetes: familyHistoryDiabetes ?? this.familyHistoryDiabetes,
+      familyHistoryDiabetes:
+          familyHistoryDiabetes ?? this.familyHistoryDiabetes,
       hasHypertension: hasHypertension ?? this.hasHypertension,
-      hasCardiovascularDisease: hasCardiovascularDisease ?? this.hasCardiovascularDisease,
+      hasCardiovascularDisease:
+          hasCardiovascularDisease ?? this.hasCardiovascularDisease,
       hasSteroidUse: hasSteroidUse ?? this.hasSteroidUse,
       isEpsConnected: isEpsConnected ?? this.isEpsConnected,
       epsPatientId: epsPatientId ?? this.epsPatientId,
       ethnicity: ethnicity ?? this.ethnicity,
+      dietaryGoalsKcalPerDay:
+          dietaryGoalsKcalPerDay ?? this.dietaryGoalsKcalPerDay,
+      dietaryGoalsProteinGPerDay:
+          dietaryGoalsProteinGPerDay ?? this.dietaryGoalsProteinGPerDay,
+      dietaryPreferences: dietaryPreferences ?? this.dietaryPreferences,
     )..id = id;
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'age': age,
-        'weight': weight,
-        'height': height,
-        'bloodType': bloodType,
-        'avatarUrl': avatarUrl,
-        'uniqueId': uniqueId,
-        'email': email,
-        'phoneNumber': phoneNumber,
-        'allowCloudApi': allowCloudApi,
-        'onboardingCompleted': onboardingCompleted,
-        'birthDate': birthDate?.toIso8601String(),
-        'sex': sex,
-        'systolicBP': systolicBP,
-        'diastolicBP': diastolicBP,
-        'heartRate': heartRate,
-        'allergyName': allergyName,
-        'allergySeverity': allergySeverity,
-        'allergyNotes': allergyNotes,
-        'llmProvider': llmProvider,
-        'localModelName': localModelName,
-        'medicalConditions': medicalConditions,
-        'currentMedications': currentMedications,
-        'smokingStatus': smokingStatus,
-        'familyHistoryCvd': familyHistoryCvd,
-        'familyHistoryDiabetes': familyHistoryDiabetes,
-        'hasHypertension': hasHypertension,
-        'hasCardiovascularDisease': hasCardiovascularDisease,
-        'hasSteroidUse': hasSteroidUse,
-        'isEpsConnected': isEpsConnected,
-        'epsPatientId': epsPatientId,
-        'ethnicity': ethnicity,
-      };
+    'id': id,
+    'name': name,
+    'age': age,
+    'weight': weight,
+    'height': height,
+    'bloodType': bloodType,
+    'avatarUrl': avatarUrl,
+    'uniqueId': uniqueId,
+    'email': email,
+    'phoneNumber': phoneNumber,
+    'allowCloudApi': allowCloudApi,
+    'onboardingCompleted': onboardingCompleted,
+    'birthDate': birthDate?.toIso8601String(),
+    'sex': sex,
+    'systolicBP': systolicBP,
+    'diastolicBP': diastolicBP,
+    'heartRate': heartRate,
+    'allergyName': allergyName,
+    'allergySeverity': allergySeverity,
+    'allergyNotes': allergyNotes,
+    'llmProvider': llmProvider,
+    'localModelName': localModelName,
+    'medicalConditions': medicalConditions,
+    'currentMedications': currentMedications,
+    'smokingStatus': smokingStatus,
+    'familyHistoryCvd': familyHistoryCvd,
+    'familyHistoryDiabetes': familyHistoryDiabetes,
+    'hasHypertension': hasHypertension,
+    'hasCardiovascularDisease': hasCardiovascularDisease,
+    'hasSteroidUse': hasSteroidUse,
+    'isEpsConnected': isEpsConnected,
+    'epsPatientId': epsPatientId,
+    'ethnicity': ethnicity,
+    'dietaryGoalsKcalPerDay': dietaryGoalsKcalPerDay,
+    'dietaryGoalsProteinGPerDay': dietaryGoalsProteinGPerDay,
+    'dietaryPreferences': dietaryPreferences,
+  };
 
   @override
   String toString() {
@@ -229,15 +250,39 @@ class UserProfile {
 
   /// Validates the profile data
   bool validate() {
+    if (dietaryGoalsKcalPerDay != null &&
+        (!dietaryGoalsKcalPerDay!.isFinite || dietaryGoalsKcalPerDay! <= 0))
+      return false;
+    if (dietaryGoalsProteinGPerDay != null &&
+        (!dietaryGoalsProteinGPerDay!.isFinite ||
+            dietaryGoalsProteinGPerDay! < 0))
+      return false;
+    if (dietaryPreferences.any(
+      (ref) => !RegExp(r'^gos:diet/[a-z0-9]+(?:[-_][a-z0-9]+)*$').hasMatch(ref),
+    ))
+      return false;
+
     if (age != null && (age! < 0 || age! > 150)) return false;
     if (weight != null && weight! <= 0) return false;
     if (height != null && height! <= 0) return false;
-    if (systolicBP != null && (systolicBP! < 50 || systolicBP! > 250)) return false;
-    if (diastolicBP != null && (diastolicBP! < 30 || diastolicBP! > 150)) return false;
-    if (heartRate != null && (heartRate! < 30 || heartRate! > 220)) return false;
+    if (systolicBP != null && (systolicBP! < 50 || systolicBP! > 250))
+      return false;
+    if (diastolicBP != null && (diastolicBP! < 30 || diastolicBP! > 150))
+      return false;
+    if (heartRate != null && (heartRate! < 30 || heartRate! > 220))
+      return false;
 
     if (bloodType != null) {
-      const validBloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+      const validBloodTypes = [
+        'A+',
+        'A-',
+        'B+',
+        'B-',
+        'AB+',
+        'AB-',
+        'O+',
+        'O-',
+      ];
       if (!validBloodTypes.contains(bloodType)) return false;
     }
 

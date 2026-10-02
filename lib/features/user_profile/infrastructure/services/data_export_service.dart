@@ -23,7 +23,9 @@ class DataExportService {
   /// path_provider's application documents directory.
   Future<File> exportUserData({String? exportDir}) async {
     final files = await _collectAllData();
-    final dir = exportDir ?? await getApplicationDocumentsDirectory().then((d) => d.path);
+    final dir =
+        exportDir ??
+        await getApplicationDocumentsDirectory().then((d) => d.path);
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final output = File('$dir/orionhealth_export_$timestamp.zip');
 
@@ -44,6 +46,7 @@ class DataExportService {
       reports: await _repository.countReports(userId),
       doctorProfiles: await _repository.countDoctorProfiles(userId),
       appSettings: await _repository.countAppSettings(),
+      ecosystemRecords: (await _ecosystemRecords()).length,
     );
   }
 
@@ -104,6 +107,10 @@ class DataExportService {
       'data': await _repository.getAppSettings(),
     });
 
+    files['ecosystem_records.swalhealth.json'] = _jsonEncode(
+      await _ecosystemRecords(),
+    );
+
     files['metadata.json'] = _jsonEncode({
       'export_timestamp': DateTime.now().toUtc().toIso8601String(),
       'user_id': userId,
@@ -114,6 +121,13 @@ class DataExportService {
     });
 
     return files;
+  }
+
+  Future<List<Map<String, dynamic>>> _ecosystemRecords() {
+    final repository = _repository;
+    return repository is EcosystemDataExportRepository
+        ? (repository as EcosystemDataExportRepository).getEcosystemRecords()
+        : Future.value([]);
   }
 
   String _readmeContent(String userId) {
@@ -139,6 +153,7 @@ This ZIP contains all your personal data stored by OrionHealth:
 | `reports.json` | Generated health reports |
 | `doctor_profiles.json` | Verified doctor profiles you've saved |
 | `app_settings.json` | App preferences and configuration |
+| `ecosystem_records.swalhealth.json` | Imported workouts, meals and dietary profiles |
 
 ## Your Rights
 
@@ -173,10 +188,12 @@ Last reviewed: 2026-08-29 — Wave 9
   List<int> _encodeZip(Map<String, String> files) {
     final entries = <_ZipEntry>[];
     for (final entry in files.entries) {
-      entries.add(_ZipEntry(
-        filename: entry.key,
-        content: Uint8List.fromList(utf8.encode(entry.value)),
-      ));
+      entries.add(
+        _ZipEntry(
+          filename: entry.key,
+          content: Uint8List.fromList(utf8.encode(entry.value)),
+        ),
+      );
     }
 
     final builder = BytesBuilder();
@@ -194,11 +211,13 @@ Last reviewed: 2026-08-29 — Wave 9
       offset += entry.centralDirectoryEntry.length;
     }
 
-    builder.add(_endOfCentralDirectory(
-      entryCount: entries.length,
-      cdSize: offset - centralDirStart,
-      cdOffset: centralDirStart,
-    ));
+    builder.add(
+      _endOfCentralDirectory(
+        entryCount: entries.length,
+        cdSize: offset - centralDirStart,
+        cdOffset: centralDirStart,
+      ),
+    );
 
     return builder.toBytes();
   }
@@ -306,6 +325,7 @@ class ExportSummary {
   final int reports;
   final int doctorProfiles;
   final int appSettings;
+  final int ecosystemRecords;
 
   const ExportSummary({
     this.userProfile = 0,
@@ -317,9 +337,11 @@ class ExportSummary {
     this.reports = 0,
     this.doctorProfiles = 0,
     this.appSettings = 0,
+    this.ecosystemRecords = 0,
   });
 
-  int get total => userProfile +
+  int get total =>
+      userProfile +
       medicalRecords +
       medications +
       allergies +
@@ -327,18 +349,20 @@ class ExportSummary {
       vitalSigns +
       reports +
       doctorProfiles +
-      appSettings;
+      appSettings +
+      ecosystemRecords;
 
   Map<String, dynamic> toJson() => {
-        'user_profile': userProfile,
-        'medical_records': medicalRecords,
-        'medications': medications,
-        'allergies': allergies,
-        'appointments': appointments,
-        'vital_signs': vitalSigns,
-        'reports': reports,
-        'doctor_profiles': doctorProfiles,
-        'app_settings': appSettings,
-        'total': total,
-      };
+    'user_profile': userProfile,
+    'medical_records': medicalRecords,
+    'medications': medications,
+    'allergies': allergies,
+    'appointments': appointments,
+    'vital_signs': vitalSigns,
+    'reports': reports,
+    'doctor_profiles': doctorProfiles,
+    'app_settings': appSettings,
+    'ecosystem_records': ecosystemRecords,
+    'total': total,
+  };
 }

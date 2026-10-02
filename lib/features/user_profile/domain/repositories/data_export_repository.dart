@@ -39,3 +39,8 @@ abstract class DataExportRepository {
   Future<int> countAppSettings();
   Future<List<Map<String, dynamic>>> getAppSettings();
 }
+
+/// Optional ecosystem extension for repositories supporting imported records.
+abstract class EcosystemDataExportRepository {
+  Future<List<Map<String, dynamic>>> getEcosystemRecords();
+}
