@@ -1,0 +1,137 @@
+{
+  "valid/dietary-profile-01.json": [],
+  "valid/dietary-profile-02.json": [],
+  "valid/dietary-profile-03.json": [],
+  "valid/envelope-01.json": [],
+  "valid/envelope-02.json": [],
+  "valid/envelope-03.json": [],
+  "valid/meal-log-01.json": [],
+  "valid/meal-log-02.json": [],
+  "valid/meal-log-03.json": [],
+  "valid/workout-session-01.json": [],
+  "valid/workout-session-02.json": [],
+  "valid/workout-session-03.json": [],
+  "invalid/dietary-profile-01.json": [
+    "/extra: unknown property"
+  ],
+  "invalid/dietary-profile-02.json": [
+    "/id: invalid string"
+  ],
+  "invalid/dietary-profile-03.json": [
+    "/subject: invalid string"
+  ],
+  "invalid/dietary-profile-04.json": [
+    "/createdAt: invalid ISO date-time"
+  ],
+  "invalid/dietary-profile-05.json": [
+    "/source/app: unsupported value"
+  ],
+  "invalid/dietary-profile-06.json": [
+    "/gosDataset: invalid string"
+  ],
+  "invalid/dietary-profile-07.json": [
+    "/data/allergens/0: unsupported value"
+  ],
+  "invalid/dietary-profile-08.json": [
+    "/data/diets/0: invalid string"
+  ],
+  "invalid/dietary-profile-09.json": [
+    "/data/allergens: duplicate value"
+  ],
+  "invalid/dietary-profile-10.json": [
+    "/data/targets/kcalPerDay: invalid number"
+  ],
+  "invalid/dietary-profile-11.json": [
+    "/data/conditions: unknown property"
+  ],
+  "invalid/envelope-01.json": [
+    "/extra: unknown property"
+  ],
+  "invalid/envelope-02.json": [
+    "/id: invalid string"
+  ],
+  "invalid/envelope-03.json": [
+    "/subject: invalid string"
+  ],
+  "invalid/envelope-04.json": [
+    "/createdAt: invalid ISO date-time"
+  ],
+  "invalid/envelope-05.json": [
+    "/source/app: unsupported value"
+  ],
+  "invalid/envelope-06.json": [
+    "/gosDataset: invalid string"
+  ],
+  "invalid/envelope-07.json": [
+    "/data/items/0: exactly one of grams or servings required"
+  ],
+  "invalid/envelope-08.json": [
+    "/data/nutrition/calories: invalid number"
+  ],
+  "invalid/envelope-09.json": [
+    "/data/items/0/ref: invalid string"
+  ],
+  "invalid/envelope-10.json": [
+    "/data/nutrition/micros/iron: invalid number"
+  ],
+  "invalid/meal-log-01.json": [
+    "/extra: unknown property"
+  ],
+  "invalid/meal-log-02.json": [
+    "/id: invalid string"
+  ],
+  "invalid/meal-log-03.json": [
+    "/subject: invalid string"
+  ],
+  "invalid/meal-log-04.json": [
+    "/createdAt: invalid ISO date-time"
+  ],
+  "invalid/meal-log-05.json": [
+    "/source/app: unsupported value"
+  ],
+  "invalid/meal-log-06.json": [
+    "/gosDataset: invalid string"
+  ],
+  "invalid/meal-log-07.json": [
+    "/data/items/0: exactly one of grams or servings required"
+  ],
+  "invalid/meal-log-08.json": [
+    "/data/nutrition/calories: invalid number"
+  ],
+  "invalid/meal-log-09.json": [
+    "/data/items/0/ref: invalid string"
+  ],
+  "invalid/meal-log-10.json": [
+    "/data/nutrition/micros/iron: invalid number"
+  ],
+  "invalid/workout-session-01.json": [
+    "/extra: unknown property"
+  ],
+  "invalid/workout-session-02.json": [
+    "/id: invalid string"
+  ],
+  "invalid/workout-session-03.json": [
+    "/subject: invalid string"
+  ],
+  "invalid/workout-session-04.json": [
+    "/createdAt: invalid ISO date-time"
+  ],
+  "invalid/workout-session-05.json": [
+    "/source/app: unsupported value"
+  ],
+  "invalid/workout-session-06.json": [
+    "/gosDataset: invalid string"
+  ],
+  "invalid/workout-session-07.json": [
+    "/data/exercises/0/sets/0/rpe: invalid number"
+  ],
+  "invalid/workout-session-08.json": [
+    "/data/exercises/0/ref: invalid string"
+  ],
+  "invalid/workout-session-09.json": [
+    "/data/exercises/0/sets/0: reps, durationS or distanceM required"
+  ],
+  "invalid/workout-session-10.json": [
+    "/data/perceivedEffort: invalid number"
+  ]
+}
