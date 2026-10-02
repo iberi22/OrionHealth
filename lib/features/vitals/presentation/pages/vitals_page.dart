@@ -7,6 +7,7 @@ import 'package:orionhealth_health/core/widgets/swal_responsive.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:orionhealth_health/features/vitals/domain/repositories/vital_sign_repository.dart';
 import 'vitals_monitor_page.dart';
+import '../../../workouts/presentation/pages/workouts_page.dart';
 
 class VitalsPage extends StatefulWidget {
   const VitalsPage({super.key});
@@ -41,9 +42,9 @@ class _VitalsPageState extends State<VitalsPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading vitals: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error loading vitals: $e')));
     }
   }
 
@@ -53,6 +54,14 @@ class _VitalsPageState extends State<VitalsPage> {
       appBar: AppBar(
         title: const Text('Signos Vitales'),
         actions: [
+          IconButton(
+            tooltip: 'Entrenamientos',
+            icon: const Icon(Icons.fitness_center),
+            onPressed: () => Navigator.push<void>(
+              context,
+              MaterialPageRoute<void>(builder: (_) => const WorkoutsPage()),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.monitor_heart),
             onPressed: () => Navigator.push(
@@ -75,8 +84,11 @@ class _VitalsPageState extends State<VitalsPage> {
                     ),
                   ),
                   ...VitalSignType.values.map((type) {
-                    final vitalsOfType = _allVitals.where((v) => v.type == type).toList();
-                    if (vitalsOfType.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+                    final vitalsOfType = _allVitals
+                        .where((v) => v.type == type)
+                        .toList();
+                    if (vitalsOfType.isEmpty)
+                      return const SliverToBoxAdapter(child: SizedBox.shrink());
 
                     return SliverMainAxisGroup(
                       slivers: [
@@ -97,13 +109,13 @@ class _VitalsPageState extends State<VitalsPage> {
                         SliverPadding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final vital = vitalsOfType[index];
-                                return _buildVitalListTile(vital);
-                              },
-                              childCount: vitalsOfType.length,
-                            ),
+                            delegate: SliverChildBuilderDelegate((
+                              context,
+                              index,
+                            ) {
+                              final vital = vitalsOfType[index];
+                              return _buildVitalListTile(vital);
+                            }, childCount: vitalsOfType.length),
                           ),
                         ),
                       ],
@@ -120,7 +132,8 @@ class _VitalsPageState extends State<VitalsPage> {
   }
 
   Widget _buildLatestVitalsGrid() {
-    final isCompact = MediaQuery.sizeOf(context).width < SWALBreakpoints.compact;
+    final isCompact =
+        MediaQuery.sizeOf(context).width < SWALBreakpoints.compact;
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -155,7 +168,10 @@ class _VitalsPageState extends State<VitalsPage> {
                 Expanded(
                   child: Text(
                     label,
-                    style: const TextStyle(fontSize: SWALFonts.body, color: Colors.white70),
+                    style: const TextStyle(
+                      fontSize: SWALFonts.body,
+                      color: Colors.white70,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -170,7 +186,13 @@ class _VitalsPageState extends State<VitalsPage> {
                 color: CyberTheme.primary,
               ),
             ),
-            Text(unit, style: const TextStyle(fontSize: SWALFonts.body, color: Colors.white70)),
+            Text(
+              unit,
+              style: const TextStyle(
+                fontSize: SWALFonts.body,
+                color: Colors.white70,
+              ),
+            ),
           ],
         ),
       ),
@@ -195,7 +217,10 @@ class _VitalsPageState extends State<VitalsPage> {
                 Expanded(
                   child: Text(
                     'Presión',
-                    style: TextStyle(fontSize: SWALFonts.body, color: Colors.white70),
+                    style: TextStyle(
+                      fontSize: SWALFonts.body,
+                      color: Colors.white70,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -215,8 +240,10 @@ class _VitalsPageState extends State<VitalsPage> {
                 ),
               ),
             ),
-            const Text('mmHg',
-                style: TextStyle(fontSize: SWALFonts.body, color: Colors.white70)),
+            const Text(
+              'mmHg',
+              style: TextStyle(fontSize: SWALFonts.body, color: Colors.white70),
+            ),
           ],
         ),
       ),
@@ -241,6 +268,8 @@ class _VitalsPageState extends State<VitalsPage> {
 
   String _getVitalLabel(VitalSignType type) {
     switch (type) {
+      case VitalSignType.activeEnergy:
+        return 'Energía activa';
       case VitalSignType.heartRate:
         return 'Ritmo Cardíaco';
       case VitalSignType.temperature:
@@ -264,6 +293,8 @@ class _VitalsPageState extends State<VitalsPage> {
 
   IconData _getVitalIcon(VitalSignType type) {
     switch (type) {
+      case VitalSignType.activeEnergy:
+        return Icons.local_fire_department;
       case VitalSignType.heartRate:
         return Icons.favorite;
       case VitalSignType.temperature:
@@ -429,6 +460,8 @@ class _AddVitalBottomSheetState extends State<_AddVitalBottomSheet> {
 
   String _getVitalLabel(VitalSignType type) {
     switch (type) {
+      case VitalSignType.activeEnergy:
+        return 'Energía activa';
       case VitalSignType.heartRate:
         return 'Ritmo Cardíaco';
       case VitalSignType.temperature:
@@ -452,6 +485,8 @@ class _AddVitalBottomSheetState extends State<_AddVitalBottomSheet> {
 
   String _getVitalUnit(VitalSignType type) {
     switch (type) {
+      case VitalSignType.activeEnergy:
+        return 'kcal';
       case VitalSignType.heartRate:
         return 'BPM';
       case VitalSignType.temperature:

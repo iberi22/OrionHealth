@@ -12,6 +12,7 @@ enum VitalSignType {
   sleep,
   bloodGlucose,
   oxygenSaturation,
+  activeEnergy,
 }
 
 @collection
@@ -36,7 +37,7 @@ class VitalSign {
 
   String? encryptedNotes;
 
-    VitalSign({
+  VitalSign({
     required this.type,
     required this.dateTime,
     this.value = 0.0,
@@ -48,6 +49,8 @@ class VitalSign {
   /// Formatted value string for display purposes.
   String get formattedValue {
     switch (type) {
+      case VitalSignType.activeEnergy:
+        return '${value.toStringAsFixed(1)} kcal';
       case VitalSignType.heartRate:
         return '${value.toInt()} bpm';
       case VitalSignType.temperature:
@@ -68,15 +71,14 @@ class VitalSign {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': type.name,
-        'value': value,
-        'encryptedValue': encryptedValue,
-        'dateTime': dateTime.toIso8601String(),
-        'unit': unit,
-        'source': source,
-        'notes': notes,
-        'encryptedNotes': encryptedNotes,
-      };
-
+    'id': id,
+    'type': type.name,
+    'value': value,
+    'encryptedValue': encryptedValue,
+    'dateTime': dateTime.toIso8601String(),
+    'unit': unit,
+    'source': source,
+    'notes': notes,
+    'encryptedNotes': encryptedNotes,
+  };
 }

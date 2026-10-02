@@ -11,6 +11,7 @@ import '../../application/bloc/report_bloc.dart';
 import '../../domain/entities/report.dart';
 import '../widgets/report_card.dart';
 import 'report_detail_page.dart';
+import '../../../workouts/application/workout_fhir_export_service.dart';
 
 class ReportsPage extends StatefulWidget {
   const ReportsPage({super.key});
@@ -49,9 +50,7 @@ class _ReportsPageState extends State<ReportsPage> {
                           child: _PrimaryActionCard(),
                         ),
                       ),
-                      SliverToBoxAdapter(
-                        child: _buildFilterBar(),
-                      ),
+                      SliverToBoxAdapter(child: _buildFilterBar()),
                       if (state is ReportLoading)
                         const SliverFillRemaining(
                           hasScrollBody: false,
@@ -85,7 +84,9 @@ class _ReportsPageState extends State<ReportsPage> {
             label: 'Exportar FHIR',
             isSelected: false,
             onSelected: (_) async {
-              final fhir = await getIt<WalletService>().exportToFhir();
+              final walletBundle = await getIt<WalletService>().exportToFhir();
+              final fhir = await getIt<WorkoutFhirExportService>()
+                  .appendToBundle(walletBundle);
               if (mounted) {
                 showDialog(
                   context: context,
@@ -94,7 +95,13 @@ class _ReportsPageState extends State<ReportsPage> {
                     content: SizedBox(
                       width: double.maxFinite,
                       child: SingleChildScrollView(
-                        child: SelectableText(fhir, style: const TextStyle(fontSize: 14, fontFamily: 'monospace')),
+                        child: SelectableText(
+                          fhir,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
                       ),
                     ),
                     actions: [
@@ -125,26 +132,32 @@ class _ReportsPageState extends State<ReportsPage> {
           _FilterChip(
             label: 'Urgentes',
             isSelected: _selectedStatus == ReportStatus.urgent,
-            onSelected: (_) => setState(() => _selectedStatus = ReportStatus.urgent),
+            onSelected: (_) =>
+                setState(() => _selectedStatus = ReportStatus.urgent),
           ),
           const SizedBox(width: 8),
           _FilterChip(
             label: 'Finalizados',
             isSelected: _selectedStatus == ReportStatus.finalized,
-            onSelected: (_) => setState(() => _selectedStatus = ReportStatus.finalized),
+            onSelected: (_) =>
+                setState(() => _selectedStatus = ReportStatus.finalized),
           ),
           const SizedBox(width: 8),
           _FilterChip(
             label: 'Pendientes',
             isSelected: _selectedStatus == ReportStatus.pending,
-            onSelected: (_) => setState(() => _selectedStatus = ReportStatus.pending),
+            onSelected: (_) =>
+                setState(() => _selectedStatus = ReportStatus.pending),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> _buildFilteredReportList(BuildContext context, List<Report> allReports) {
+  List<Widget> _buildFilteredReportList(
+    BuildContext context,
+    List<Report> allReports,
+  ) {
     final filteredReports = _selectedStatus == null
         ? allReports
         : allReports.where((r) => r.status == _selectedStatus).toList();
@@ -180,25 +193,22 @@ class _ReportsPageState extends State<ReportsPage> {
 
       slivers.add(
         SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final report = entry.value[index];
-              return RepaintBoundary(
-                child: ReportCard(
-                  report: report,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ReportDetailPage(report: report),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-            childCount: entry.value.length,
-          ),
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final report = entry.value[index];
+            return RepaintBoundary(
+              child: ReportCard(
+                report: report,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReportDetailPage(report: report),
+                    ),
+                  );
+                },
+              ),
+            );
+          }, childCount: entry.value.length),
         ),
       );
     }
@@ -288,7 +298,10 @@ class _ReportsPageState extends State<ReportsPage> {
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => setState(() => _selectedStatus = null),
-              child: const Text('Limpiar Filtros', style: TextStyle(color: AppColors.primary)),
+              child: const Text(
+                'Limpiar Filtros',
+                style: TextStyle(color: AppColors.primary),
+              ),
             ),
           ],
         ),
@@ -339,10 +352,16 @@ class _PrimaryActionCard extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const Icon(Icons.analytics_outlined, color: AppColors.primary, size: 48),
+            const Icon(
+              Icons.analytics_outlined,
+              color: AppColors.primary,
+              size: 48,
+            ),
             const SizedBox(height: 16),
-            const Text('Generar Nuevo Informe',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Generar Nuevo Informe',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Text(
               'Utiliza la IA para analizar tus datos de salud recientes y generar un resumen detallado.',
@@ -354,14 +373,24 @@ class _PrimaryActionCard extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 48,
+                  vertical: 12,
+                ),
               ),
               onPressed: () {
-                context.read<ReportBloc>().add(GenerateReportEvent(
-                      prompt: 'Generar nuevo informe de salud',
-                      contextData: ['Signos vitales recientes', 'Alergias conocidas'],
-                    ));
+                context.read<ReportBloc>().add(
+                  GenerateReportEvent(
+                    prompt: 'Generar nuevo informe de salud',
+                    contextData: [
+                      'Signos vitales recientes',
+                      'Alergias conocidas',
+                    ],
+                  ),
+                );
               },
               child: const Text('Generar Ahora'),
             ),
