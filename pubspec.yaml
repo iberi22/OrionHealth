@@ -57,6 +57,8 @@ dependencies:
     path: packages/isar_agent_memory
   medical_standards:
     path: packages/medical_standards
+  health_contract:
+    path: packages/health_contract
   health_wallet:
     path: packages/health_wallet
   onnxruntime: ^1.4.1

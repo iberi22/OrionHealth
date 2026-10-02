@@ -8,6 +8,7 @@ import '../../application/health_import_cubit.dart';
 import '../../domain/entities/health_data_source.dart';
 import '../../application/health_import_state.dart';
 import '../widgets/data_source_card.dart';
+import 'ecosystem_transfer_page.dart';
 import '../widgets/import_progress_dialog.dart';
 
 class HealthImportPage extends StatelessWidget {
@@ -147,6 +148,13 @@ class _HealthImportViewState extends State<_HealthImportView> {
     );
   }
 
+  Widget _ecosystemAction(BuildContext context) => IconButton(
+    tooltip: 'Importar o compartir archivo SWAL',
+    icon: const Icon(Icons.import_export),
+    onPressed: () => Navigator.push<void>(context,
+      MaterialPageRoute(builder: (_) => const EcosystemTransferPage())),
+  );
+
   Widget _buildScaffold(BuildContext context, {required Widget child}) {
     return Scaffold(
       appBar: AppBar(
@@ -155,6 +163,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Import Health Data'),
+        actions: [_ecosystemAction(context)],
       ),
       body: child,
     );
@@ -169,6 +178,7 @@ class _HealthImportViewState extends State<_HealthImportView> {
         ),
         title: const Text('Import Health Data'),
         actions: [
+          _ecosystemAction(context),
           IconButton(
             icon: const Icon(Icons.refresh, color: AppColors.secondary),
             onPressed: () {

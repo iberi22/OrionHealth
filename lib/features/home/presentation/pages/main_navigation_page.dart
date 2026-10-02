@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2025 SouthWest AI Labs
 
 import 'package:flutter/material.dart';
+import '../../../health_data_import/application/ecosystem_link_inbox.dart';
+import '../../../health_data_import/presentation/pages/ecosystem_transfer_page.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../health_record/presentation/pages/health_record_staging_page.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
@@ -17,6 +19,33 @@ class MainNavigationPage extends StatefulWidget {
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
+  bool _reviewingLink = false;
+
+  @override
+  void initState() {
+    super.initState();
+    EcosystemLinkInbox.instance.onPending = _scheduleImport;
+    _scheduleImport();
+  }
+
+  void _scheduleImport() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted || _reviewingLink) return;
+      final uri = EcosystemLinkInbox.instance.take();
+      if (uri == null) return;
+      _reviewingLink = true;
+      await reviewEcosystemLink(context, uri);
+      _reviewingLink = false;
+      if (mounted) _scheduleImport();
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+  }
+
+  @override
+  void dispose() {
+    EcosystemLinkInbox.instance.onPending = null;
+    super.dispose();
+  }
 
   final List<Widget> _pages = [
     const HomePage(),
@@ -29,10 +58,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (i) => setState(() => _currentIndex = i),
