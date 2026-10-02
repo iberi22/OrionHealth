@@ -5,11 +5,16 @@ import '../../../vitals/domain/entities/vital_sign.dart';
 
 class FhirMapper {
   /// Maps FHIR Patient resource to UserProfile
-  static UserProfile mapPatient(Map<String, dynamic> json, UserProfile existingProfile) {
+  static UserProfile mapPatient(
+    Map<String, dynamic> json,
+    UserProfile existingProfile,
+  ) {
     if (json.isEmpty) return existingProfile;
     final name = _extractPatientName(json);
     final birthDateStr = json['birthDate'] as String?;
-    final birthDate = birthDateStr != null ? DateTime.tryParse(birthDateStr) : null;
+    final birthDate = birthDateStr != null
+        ? DateTime.tryParse(birthDateStr)
+        : null;
     final gender = json['gender'] as String?;
 
     final telecom = json['telecom'] as List?;
@@ -65,24 +70,33 @@ class FhirMapper {
 
     String? name;
     if (medicationCodeableConcept != null) {
-      name = medicationCodeableConcept['text'] as String? ??
-             (medicationCodeableConcept['coding'] as List?)?.first['display'] as String?;
+      name =
+          medicationCodeableConcept['text'] as String? ??
+          (medicationCodeableConcept['coding'] as List?)?.first['display']
+              as String?;
     } else if (medicationReference != null) {
-      name = medicationReference['display'] as String? ?? medicationReference['reference'] as String?;
+      name =
+          medicationReference['display'] as String? ??
+          medicationReference['reference'] as String?;
     }
 
     if (name == null) return null;
 
-    final effectiveDateTimeStr = json['effectiveDateTime'] as String? ??
-                                json['effectivePeriod']?['start'] as String? ??
-                                json['authoredOn'] as String?; // For MedicationRequest
-    final startDate = effectiveDateTimeStr != null ? DateTime.tryParse(effectiveDateTimeStr) : DateTime.now();
+    final effectiveDateTimeStr =
+        json['effectiveDateTime'] as String? ??
+        json['effectivePeriod']?['start'] as String? ??
+        json['authoredOn'] as String?; // For MedicationRequest
+    final startDate = effectiveDateTimeStr != null
+        ? DateTime.tryParse(effectiveDateTimeStr)
+        : DateTime.now();
 
     return Medication(
       name: name,
       isActive: json['status'] == 'active' || json['status'] == 'completed',
       startDate: startDate ?? DateTime.now(),
-      notes: json['note'] != null ? (json['note'] as List).map((n) => n['text']).join('\n') : null,
+      notes: json['note'] != null
+          ? (json['note'] as List).map((n) => n['text']).join('\n')
+          : null,
     );
   }
 
@@ -142,7 +156,9 @@ class FhirMapper {
     return Allergy(
       allergen: allergen,
       severity: severity,
-      notes: json['note'] != null ? (json['note'] as List).map((n) => n['text']).join('\n') : null,
+      notes: json['note'] != null
+          ? (json['note'] as List).map((n) => n['text']).join('\n')
+          : null,
     );
   }
 
@@ -175,8 +191,13 @@ class FhirMapper {
     final codings = code?['coding'] as List?;
     if (codings == null && json['component'] == null) return [];
 
-    final effectiveDateTimeStr = json['effectiveDateTime'] as String? ?? json['issued'] as String?;
-    final dateTime = effectiveDateTimeStr != null ? DateTime.tryParse(effectiveDateTimeStr) : DateTime.now();
+    final effectiveDateTimeStr =
+        json['effectiveDateTime'] as String? ??
+        json['effectivePeriod']?['start'] as String? ??
+        json['issued'] as String?;
+    final dateTime = effectiveDateTimeStr != null
+        ? DateTime.tryParse(effectiveDateTimeStr)
+        : DateTime.now();
     if (dateTime == null) return [];
 
     final List<VitalSign> vitals = [];
@@ -185,13 +206,15 @@ class FhirMapper {
     if (json['valueQuantity'] != null && codings != null) {
       final type = _mapLoincToVitalType(codings);
       if (type != null) {
-        vitals.add(VitalSign(
-          type: type,
-          value: (json['valueQuantity']['value'] as num).toDouble(),
-          dateTime: dateTime,
-          unit: json['valueQuantity']['unit'] as String?,
-          source: 'FHIR',
-        ));
+        vitals.add(
+          VitalSign(
+            type: type,
+            value: (json['valueQuantity']['value'] as num).toDouble(),
+            dateTime: dateTime,
+            unit: json['valueQuantity']['unit'] as String?,
+            source: 'FHIR',
+          ),
+        );
       }
     }
 
@@ -203,13 +226,15 @@ class FhirMapper {
         if (compCodings != null && comp['valueQuantity'] != null) {
           final type = _mapLoincToVitalType(compCodings);
           if (type != null) {
-            vitals.add(VitalSign(
-              type: type,
-              value: (comp['valueQuantity']['value'] as num).toDouble(),
-              dateTime: dateTime,
-              unit: comp['valueQuantity']['unit'] as String?,
-              source: 'FHIR',
-            ));
+            vitals.add(
+              VitalSign(
+                type: type,
+                value: (comp['valueQuantity']['value'] as num).toDouble(),
+                dateTime: dateTime,
+                unit: comp['valueQuantity']['unit'] as String?,
+                source: 'FHIR',
+              ),
+            );
           }
         }
       }
@@ -225,24 +250,41 @@ class FhirMapper {
 
       if (coding['system'] == 'http://loinc.org') {
         switch (code) {
-          case '8867-4': return VitalSignType.heartRate;
-          case '8310-5': return VitalSignType.temperature;
-          case '8480-6': return VitalSignType.bloodPressureSystolic;
-          case '8462-4': return VitalSignType.bloodPressureDiastolic;
-          case '2708-6': return VitalSignType.spO2;
-          case '59408-5': return VitalSignType.oxygenSaturation;
-          case '15074-8': return VitalSignType.bloodGlucose;
-          case '60621-0': return VitalSignType.steps;
-          case '93832-4': return VitalSignType.sleep;
+          // Duration is a workout component, not a heart-rate fallback.
+          case '55411-3':
+            return null;
+          case '41981-2':
+            return VitalSignType.activeEnergy;
+          case '8867-4':
+            return VitalSignType.heartRate;
+          case '8310-5':
+            return VitalSignType.temperature;
+          case '8480-6':
+            return VitalSignType.bloodPressureSystolic;
+          case '8462-4':
+            return VitalSignType.bloodPressureDiastolic;
+          case '2708-6':
+            return VitalSignType.spO2;
+          case '59408-5':
+            return VitalSignType.oxygenSaturation;
+          case '15074-8':
+            return VitalSignType.bloodGlucose;
+          case '60621-0':
+            return VitalSignType.steps;
+          case '93832-4':
+            return VitalSignType.sleep;
         }
       }
 
       // Fallback to display name matching
       if (display.contains('heart rate')) return VitalSignType.heartRate;
       if (display.contains('temperature')) return VitalSignType.temperature;
-      if (display.contains('systolic')) return VitalSignType.bloodPressureSystolic;
-      if (display.contains('diastolic')) return VitalSignType.bloodPressureDiastolic;
-      if (display.contains('oxygen saturation') || display.contains('spo2')) return VitalSignType.spO2;
+      if (display.contains('systolic'))
+        return VitalSignType.bloodPressureSystolic;
+      if (display.contains('diastolic'))
+        return VitalSignType.bloodPressureDiastolic;
+      if (display.contains('oxygen saturation') || display.contains('spo2'))
+        return VitalSignType.spO2;
       if (display.contains('glucose')) return VitalSignType.bloodGlucose;
       if (display.contains('steps')) return VitalSignType.steps;
       if (display.contains('sleep')) return VitalSignType.sleep;
