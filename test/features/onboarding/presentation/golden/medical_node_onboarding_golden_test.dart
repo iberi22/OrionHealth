@@ -6,7 +6,8 @@ import '../../../../core/golden_test_utils.dart';
 void main() {
   group('Medical Node Onboarding Golden Tests', () {
     testWidgets('Step 1: What is Medical Network', (tester) async {
-      setupGoldenTest(tester, size: const Size(1080, 1920));
+      tester.view.physicalSize = const Size(1080, 1920);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(wrapWithMaterial(const MedicalNodeOnboarding()));
       await tester.pumpAndSettle();
@@ -19,7 +20,8 @@ void main() {
     });
 
     testWidgets('Step 2: Secure Data Sharing', (tester) async {
-      setupGoldenTest(tester, size: const Size(1080, 1920));
+      tester.view.physicalSize = const Size(1080, 1920);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(wrapWithMaterial(const MedicalNodeOnboarding()));
       await tester.pumpAndSettle();
@@ -36,7 +38,8 @@ void main() {
     });
 
     testWidgets('Step 3: Patient Benefits', (tester) async {
-      setupGoldenTest(tester, size: const Size(1080, 1920));
+      tester.view.physicalSize = const Size(1080, 1920);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(wrapWithMaterial(const MedicalNodeOnboarding()));
       await tester.pumpAndSettle();

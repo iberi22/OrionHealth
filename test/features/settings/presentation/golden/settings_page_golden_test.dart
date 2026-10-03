@@ -64,7 +64,8 @@ void main() {
 
   group('LlmSettingsPage Golden Tests', () {
     testWidgets('Local Tab', (WidgetTester tester) async {
-      setupGoldenTest(tester, size: const Size(800, 1200));
+      tester.view.physicalSize = const Size(800, 1200);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(
         wrapWithMaterial(const LlmSettingsPage()),
@@ -79,7 +80,8 @@ void main() {
     });
 
     testWidgets('Cloud Tab', (WidgetTester tester) async {
-      setupGoldenTest(tester, size: const Size(800, 1200));
+      tester.view.physicalSize = const Size(800, 1200);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(
         wrapWithMaterial(const LlmSettingsPage()),
@@ -98,7 +100,8 @@ void main() {
     });
 
     testWidgets('Mode Tab', (WidgetTester tester) async {
-      setupGoldenTest(tester, size: const Size(800, 1200));
+      tester.view.physicalSize = const Size(800, 1200);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(
         wrapWithMaterial(const LlmSettingsPage()),
@@ -117,7 +120,8 @@ void main() {
     });
 
     testWidgets('App Tab', (WidgetTester tester) async {
-      setupGoldenTest(tester, size: const Size(800, 1200));
+      tester.view.physicalSize = const Size(800, 1200);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(
         wrapWithMaterial(const LlmSettingsPage()),
@@ -137,7 +141,8 @@ void main() {
 
     testWidgets('Loading State', (WidgetTester tester) async {
       when(() => mockCubit.state).thenReturn(LlmSettingsLoading());
-      setupGoldenTest(tester, size: const Size(800, 1200));
+      tester.view.physicalSize = const Size(800, 1200);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(
         wrapWithMaterial(const LlmSettingsPage()),

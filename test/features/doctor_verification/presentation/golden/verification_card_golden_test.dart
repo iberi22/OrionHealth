@@ -18,7 +18,8 @@ void main() {
   );
 
   testWidgets('VerificationCard golden test - pending', (tester) async {
-    setupGoldenTest(tester, size: const Size(600, 800)); // Increased size
+    tester.view.physicalSize = const Size(600, 800);
+      setupGoldenTest(tester); // Increased size
 
     await tester.pumpWidget(
       wrapWithMaterial(
@@ -46,7 +47,8 @@ void main() {
   });
 
   testWidgets('VerificationCard golden test - verified', (tester) async {
-    setupGoldenTest(tester, size: const Size(600, 800)); // Increased size
+    tester.view.physicalSize = const Size(600, 800);
+      setupGoldenTest(tester); // Increased size
 
     await tester.pumpWidget(
       wrapWithMaterial(
@@ -74,7 +76,8 @@ void main() {
   });
 
   testWidgets('VerificationCard golden test - rejected', (tester) async {
-    setupGoldenTest(tester, size: const Size(600, 800)); // Increased size
+    tester.view.physicalSize = const Size(600, 800);
+      setupGoldenTest(tester); // Increased size
 
     await tester.pumpWidget(
       wrapWithMaterial(
