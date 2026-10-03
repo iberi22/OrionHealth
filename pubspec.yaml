@@ -71,7 +71,7 @@ dependencies:
   argon2: ^1.0.1
   shared_preferences: ^2.3.4
   openai_dart: ^8.1.0
-  google_mlkit_text_recognition: ^0.17.1
+  google_mlkit_text_recognition: ^0.16.0
   flutter_blue_plus: ^2.3.12
   hex: ^0.2.0
   http: ^1.6.0
@@ -88,7 +88,7 @@ dependencies:
   flutter_inappwebview: ^6.1.5
   app_links: ^6.3.2
   multicast_dns: ^0.3.3
-  bonsoir: ^7.1.5
+  bonsoir: ^7.1.4
   just_audio: ^0.10.6
   record: ^6.2.1
   connectivity_plus: ^7.3.1

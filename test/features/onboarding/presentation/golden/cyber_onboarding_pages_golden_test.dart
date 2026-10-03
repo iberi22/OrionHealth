@@ -7,11 +7,12 @@ import '../../../../core/golden_test_utils.dart';
 void main() {
   group('Cyber Onboarding Pages Golden Tests', () {
     testWidgets('OnboardingWelcomePage - First Slide', (tester) async {
+      tester.view.physicalSize = const Size(360, 640);
       setupGoldenTest(tester);
 
       await tester.pumpWidget(wrapWithMaterial(
         Scaffold(
-          body: OnboardingWelcomePage(onNext: () {}),
+          body: OnboardingWelcomePage(onNext: () {}, onEpsDataReceived: (_) {}),
         ),
       ));
       await tester.pumpAndSettle();
@@ -24,6 +25,7 @@ void main() {
     });
 
     testWidgets('OnboardingCompletePage', (tester) async {
+      tester.view.physicalSize = const Size(360, 640);
       setupGoldenTest(tester);
 
       await tester.pumpWidget(wrapWithMaterial(
