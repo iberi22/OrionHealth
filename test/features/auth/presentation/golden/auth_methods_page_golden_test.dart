@@ -45,7 +45,7 @@ void main() {
 
       await tester.pumpWidget(wrapWithMaterial(
         const AuthMethodsPage(),
-        authCubit: mockAuthCubit,
+
       ));
       await tester.pump();
 
