@@ -48,7 +48,7 @@ void main() {
 
       await tester.pumpWidget(wrapWithMaterial(
         const LoginPage(),
-        authCubit: mockAuthCubit,
+
       ));
       await tester.pump();
 
@@ -66,7 +66,7 @@ void main() {
 
       await tester.pumpWidget(wrapWithMaterial(
         const LoginPage(),
-        authCubit: mockAuthCubit,
+
       ));
       await tester.pump();
 
@@ -83,7 +83,7 @@ void main() {
 
       await tester.pumpWidget(wrapWithMaterial(
         const SetupPinPage(),
-        authCubit: mockAuthCubit,
+
       ));
       await tester.pump();
 
@@ -100,7 +100,7 @@ void main() {
 
       await tester.pumpWidget(wrapWithMaterial(
         const AuthMethodsPage(),
-        authCubit: mockAuthCubit,
+
       ));
       await tester.pump();
 

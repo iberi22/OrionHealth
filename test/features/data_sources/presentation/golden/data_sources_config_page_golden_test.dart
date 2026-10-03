@@ -9,7 +9,7 @@ import 'package:orionhealth_health/features/data_sources/application/data_source
 import 'package:orionhealth_health/features/data_sources/application/data_source_state.dart';
 import 'package:orionhealth_health/features/data_sources/domain/entities/data_source_entity.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
-import '../../../../../core/golden_test_utils.dart';
+import '../../../../core/golden_test_utils.dart';
 
 class MockDataSourceCubit extends Mock implements DataSourceCubit {}
 
@@ -37,7 +37,8 @@ void main() {
     testWidgets('DataSourcesConfigPage matches golden - Loading state', (tester) async {
       when(() => mockCubit.state).thenReturn(DataSourceLoading());
 
-      setupGoldenTest(tester, size: const Size(360, 640));
+      tester.view.physicalSize = const Size(360, 640);
+      setupGoldenTest(tester);
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
 
@@ -51,7 +52,8 @@ void main() {
     testWidgets('DataSourcesConfigPage matches golden - Error state', (tester) async {
       when(() => mockCubit.state).thenReturn(const DataSourceError('Failed to load'));
 
-      setupGoldenTest(tester, size: const Size(360, 640));
+      tester.view.physicalSize = const Size(360, 640);
+      setupGoldenTest(tester);
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
 
@@ -64,7 +66,8 @@ void main() {
 
     testWidgets('DataSourcesConfigPage matches golden - Single disconnected source',
         (tester) async {
-      setupGoldenTest(tester, size: const Size(360, 640));
+      tester.view.physicalSize = const Size(360, 640);
+      setupGoldenTest(tester);
 
       final tSources = [
         const DataSource(
@@ -90,7 +93,8 @@ void main() {
 
     testWidgets('DataSourcesConfigPage matches golden - Mixed connected sources',
         (tester) async {
-      setupGoldenTest(tester, size: const Size(360, 800));
+      tester.view.physicalSize = const Size(360, 800);
+      setupGoldenTest(tester);
 
       final tSources = [
         const DataSource(

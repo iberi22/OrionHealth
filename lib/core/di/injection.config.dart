@@ -271,7 +271,7 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i68;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i138;
 import '../../features/local_agent/domain/usecases/get_chat_history_usecase.dart'
-    as _i181;
+    as _i180;
 import '../../features/local_agent/domain/usecases/send_chat_message_usecase.dart'
     as _i120;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
@@ -292,9 +292,9 @@ import '../../features/local_agent/infrastructure/llm_service.dart' as _i204;
 import '../../features/local_agent/infrastructure/rag_llm_service.dart'
     as _i267;
 import '../../features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart'
-    as _i77;
-import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
     as _i78;
+import '../../features/local_agent/infrastructure/repositories/json_medical_knowledge_repository.dart'
+    as _i77;
 import '../../features/local_agent/infrastructure/services/isar_vector_store_service.dart'
     as _i139;
 import '../../features/local_agent/infrastructure/services/llm_adapter_factory.dart'
@@ -499,7 +499,7 @@ import '../../features/voice_chat/application/voice_chat_cubit.dart' as _i238;
 import '../../features/voice_chat/domain/repositories/voice_chat_repository.dart'
     as _i143;
 import '../../features/voice_chat/domain/usecases/get_chat_history_usecase.dart'
-    as _i180;
+    as _i181;
 import '../../features/voice_chat/domain/usecases/send_message_usecase.dart'
     as _i229;
 import '../../features/voice_chat/infrastructure/datasources/chat_ai_datasource.dart'
@@ -669,15 +669,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i74.MedicalIdRepository>(
         () => _i75.IsarMedicalIdRepository(gh<_i65.Isar>()));
     gh.factory<_i76.MedicalKnowledgeRepository>(
-      () => _i77.AssetMedicalKnowledgeRepository(),
-      registerFor: {_mobile},
-    );
-    gh.factory<_i76.MedicalKnowledgeRepository>(
-      () => _i78.JsonMedicalKnowledgeRepository(),
+      () => _i77.JsonMedicalKnowledgeRepository(),
       registerFor: {
         _desktop,
         _test,
       },
+    );
+    gh.factory<_i76.MedicalKnowledgeRepository>(
+      () => _i78.AssetMedicalKnowledgeRepository(),
+      registerFor: {_mobile},
     );
     gh.lazySingleton<_i79.MedicalScraperService>(
         () => _i80.MedicalScraperServiceImpl(
@@ -893,9 +893,9 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i114.GetAvailableSourcesUseCase>(() =>
         _i114.GetAvailableSourcesUseCase(gh<_i50.HealthDataImportService>()));
     gh.factory<_i180.GetChatHistoryUseCase>(
-        () => _i180.GetChatHistoryUseCase(gh<_i143.VoiceChatRepository>()));
+        () => _i180.GetChatHistoryUseCase(gh<_i138.VectorStoreService>()));
     gh.factory<_i181.GetChatHistoryUseCase>(
-        () => _i181.GetChatHistoryUseCase(gh<_i138.VectorStoreService>()));
+        () => _i181.GetChatHistoryUseCase(gh<_i143.VoiceChatRepository>()));
     gh.factory<_i182.GetCredentialsUseCase>(
         () => _i182.GetCredentialsUseCase(gh<_i155.AuthRepository>()));
     gh.factory<_i183.GetDoctorProfileUseCase>(() =>
@@ -1055,7 +1055,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i237.VitalSignBloc(gh<_i140.VitalSignRepository>()));
     gh.factory<_i238.VoiceChatCubit>(() => _i238.VoiceChatCubit(
           gh<_i229.SendMessageUseCase>(),
-          gh<_i180.GetChatHistoryUseCase>(),
+          gh<_i181.GetChatHistoryUseCase>(),
           gh<_i143.VoiceChatRepository>(),
           gh<_i12.AudioService>(),
         ));

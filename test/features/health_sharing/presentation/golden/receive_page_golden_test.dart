@@ -46,8 +46,8 @@ void main() {
     await tester.pumpWidget(
       wrapWithMaterial(
         const ReceivePage(),
-        sharingCubit: mockSharingCubit,
-        authCubit: mockAuthCubit,
+
+
       ),
     );
     await tester.pump();

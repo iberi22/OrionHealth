@@ -94,8 +94,8 @@ void main() {
   Widget createTestWidget(Widget child) {
     return wrapWithMaterial(
       child,
-      sharingCubit: mockSharingCubit,
-      authCubit: mockAuthCubit,
+
+
     );
   }
 

@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/dashboard/domain/entities/dashboard_stats.dart';
 import 'package:orionhealth_health/features/dashboard/presentation/widgets/dashboard_stats_card.dart';
-import '../../../../../core/golden_test_utils.dart';
+import '../../../../core/golden_test_utils.dart';
 
 void main() {
   group('DashboardStatsCard Golden Tests', () {
     testWidgets('DashboardStatsCard matches golden with all stats', (tester) async {
-      setupGoldenTest(tester, size: const Size(360, 200));
+      tester.view.physicalSize = const Size(360, 200);
+      setupGoldenTest(tester);
 
       final now = DateTime(2023, 10, 27, 10, 30);
       const stats = DashboardStats(
@@ -38,7 +39,8 @@ void main() {
 
     testWidgets('DashboardStatsCard matches golden with last vital check date',
         (tester) async {
-      setupGoldenTest(tester, size: const Size(360, 200));
+      tester.view.physicalSize = const Size(360, 200);
+      setupGoldenTest(tester);
 
       final now = DateTime(2023, 10, 27, 10, 30);
       final stats = DashboardStats(
@@ -65,7 +67,8 @@ void main() {
     });
 
     testWidgets('DashboardStatsCard matches golden with zero values', (tester) async {
-      setupGoldenTest(tester, size: const Size(360, 200));
+      tester.view.physicalSize = const Size(360, 200);
+      setupGoldenTest(tester);
 
       const stats = DashboardStats(
         totalMedications: 0,

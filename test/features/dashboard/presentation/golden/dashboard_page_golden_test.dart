@@ -48,7 +48,8 @@ void main() {
       when(() => mockDashboardCubit.state).thenReturn(const DashboardLoading());
       when(() => mockDashboardCubit.stream).thenAnswer((_) => Stream.value(const DashboardLoading()));
 
-      setupGoldenTest(tester, size: const Size(360, 1000));
+      tester.view.physicalSize = const Size(360, 1000);
+      setupGoldenTest(tester);
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
 
@@ -62,7 +63,8 @@ void main() {
       when(() => mockDashboardCubit.state).thenReturn(const DashboardError('Error loading dashboard data'));
       when(() => mockDashboardCubit.stream).thenAnswer((_) => Stream.value(const DashboardError('Error loading dashboard data')));
 
-      setupGoldenTest(tester, size: const Size(360, 1000));
+      tester.view.physicalSize = const Size(360, 1000);
+      setupGoldenTest(tester);
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
 
@@ -83,7 +85,8 @@ void main() {
         activities: [],
       )));
 
-      setupGoldenTest(tester, size: const Size(360, 1000));
+      tester.view.physicalSize = const Size(360, 1000);
+      setupGoldenTest(tester);
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 
@@ -94,7 +97,8 @@ void main() {
     });
 
     testWidgets('Dashboard Loaded State', (tester) async {
-      setupGoldenTest(tester, size: const Size(360, 1200));
+      tester.view.physicalSize = const Size(360, 1200);
+      setupGoldenTest(tester);
       final fixedNow = DateTime(2023, 10, 27, 10, 30);
       final stats = DashboardStats(
         totalMedications: 5,

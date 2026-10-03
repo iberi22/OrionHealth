@@ -13,7 +13,8 @@ void main() {
     );
 
     testWidgets('Profile Section - Dark Mode', (WidgetTester tester) async {
-      setupGoldenTest(tester, size: const Size(400, 300));
+      tester.view.physicalSize = const Size(400, 300);
+      setupGoldenTest(tester);
 
       await tester.pumpWidget(
         wrapWithMaterial(
