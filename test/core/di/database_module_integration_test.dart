@@ -17,6 +17,11 @@ class MockPathProviderPlatform extends Fake with MockPlatformInterfaceMixin impl
 class TestModule extends DatabaseModule {}
 
 void main() {
+  setUpAll(() async {
+    // Como el resto de tests de Isar del repo: sin el binario nativo, Isar.open falla (libisar.so).
+    await Isar.initializeIsarCore(download: true);
+  });
+
   setUp(() {
     PathProviderPlatform.instance = MockPathProviderPlatform();
   });
