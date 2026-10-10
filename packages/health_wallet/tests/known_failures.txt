@@ -1,0 +1,22 @@
+# Known failures of packages/health_wallet.
+#
+# Consumed by ../../scripts/run_tests_with_known_failures.dart, which fails CI
+# for any failure that is NOT listed here and reports entries that start passing
+# as STALE, so this list can only shrink.
+#
+# Format: <path relative to this package> :: <test name> :: <reason>
+#
+# The three test files import package:flutter_test, but the package's
+# dev_dependencies declare `test` instead, so `flutter test` cannot compile them
+# on any SDK: "Couldn't resolve the package 'flutter_test'".
+# Adding `flutter_test: {sdk: flutter}` does not resolve either, because
+# flutter_test pins test_api 0.7.11 while isar_generator 3.1.0+1 requires
+# analyzer <6.0.0; version solving fails.
+# Reproduced on main in CI run 37894488944 and locally with Flutter 3.44.0.
+#
+# Each file registers one entry, because the load failure is reported as a test
+# named `loading <path>`.
+
+test/encryption_service_test.dart :: loading test/encryption_service_test.dart :: cannot compile: package:flutter_test is not a dependency of health_wallet and cannot be added (isar_generator 3.1.0+1 pins analyzer <6.0.0)
+test/sync_service_test.dart :: loading test/sync_service_test.dart :: cannot compile: package:flutter_test is not a dependency of health_wallet and cannot be added (isar_generator 3.1.0+1 pins analyzer <6.0.0)
+test/wallet_service_test.dart :: loading test/wallet_service_test.dart :: cannot compile: package:flutter_test is not a dependency of health_wallet and cannot be added (isar_generator 3.1.0+1 pins analyzer <6.0.0)

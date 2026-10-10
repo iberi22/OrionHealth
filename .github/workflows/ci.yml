@@ -6,6 +6,16 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  # Pinned instead of "latest stable" so an SDK bump cannot silently change the
+  # gate; same pin as coverage.yml, and the version the committed code
+  # generation was produced with.
+  FLUTTER_VERSION: '3.44.0'
+  # Native Isar library consumed by the Isar tests. It must match the Isar Core
+  # version the `isar` dependency expects (isar 3.1.0+1 -> release tag 3.1.0+1),
+  # otherwise initializeIsarCore rejects it with "Incorrect Isar Core version".
+  ISAR_VERSION: '3.1.0+1'
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -18,11 +28,36 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
       - name: Install dependencies
         run: flutter pub get
 
+      # .gitignore excludes *.g.dart and injection.config.dart, so a fresh
+      # checkout ships no generated code: every test touching an Isar collection
+      # or reading the DI graph fails to compile. Run 37894488944 reported
+      # 1760 passed / 410 failed without this step, while CI stayed green.
+      - name: Generate code (build_runner)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Isar tests call Isar.initializeIsarCore(download: true), but flutter_test
+      # replaces HttpClient, so the in-test download returns 400. Pre-download
+      # the native library instead: Isar looks for it next to the test script
+      # (the workspace root, gitignored via *.so) and
+      # test/offline/sync_offline_unit_test.dart plus
+      # integration_test/fhir_sync_test.dart hardcode /tmp/libisar.so.
+      - name: Download IsarCore native library
+        run: |
+          curl -fsSL -o libisar.so \
+            "https://github.com/isar/isar/releases/download/${ISAR_VERSION}/libisar_linux_x64.so"
+          cp libisar.so /tmp/libisar.so
+
+      # Informational: the root analyze run also reports issues in nested
+      # packages (health_wallet test files, health_contract), which are false
+      # positives of resolving them with the root package config. Kept
+      # non-gating on purpose until those are cleaned up; the exit codes are
+      # printed so the log stays honest.
       - name: Flutter Analyze
         run: |
           flutter analyze --no-fatal-infos --no-fatal-warnings; echo "ROOT_EXIT=$?"
@@ -33,22 +68,47 @@ jobs:
           echo "All analyzes complete"
         continue-on-error: true
 
+      # Gating. `flutter test | tee` returned tee's exit code, so a red suite
+      # concluded the job as success; the runner adds `set -o pipefail` back and
+      # only tolerates the failures explicitly registered (with a reason) in
+      # tests/known_failures.txt. Anything else fails the job, and registry
+      # entries that start passing are reported as stale.
       - name: Flutter Test (root)
-        run: flutter test --coverage --reporter expanded | tee test_output.txt
+        run: |
+          set -o pipefail
+          dart run scripts/run_tests_with_known_failures.dart --coverage \
+            | tee test_output.txt
 
       - name: Check Coverage Threshold
         run: python3 scripts/coverage_checker.py
 
-      - name: Flutter Test (packages)
+      - name: Flutter Test (medical_standards)
         run: |
-          for pkg in packages/health_wallet packages/medical_standards; do
-            echo "Testing $pkg..."
-            (cd $pkg && flutter test --reporter expanded) || echo "${pkg} tests had non-fatal failures"
-          done
+          cd packages/medical_standards
+          flutter pub get
+          flutter test --reporter expanded
+
+      # health_wallet's three test files import package:flutter_test, which is
+      # not in its dev_dependencies, so they cannot compile on any SDK; adding
+      # the dependency cannot resolve against isar_generator 3.1.0+1
+      # (analyzer <6.0.0). Reproduced on main in run 37894488944. Gated through
+      # the same known-failures runner, with its own registry.
+      - name: Flutter Test (health_wallet)
+        run: |
+          set -o pipefail
+          (cd packages/health_wallet && flutter pub get && dart run \
+            ../../scripts/run_tests_with_known_failures.dart \
+            --registry tests/known_failures.txt \
+            --json-out ../../test_output_health_wallet.json) \
+            | tee test_output_health_wallet.txt
 
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: test_output.txt
+          path: |
+            test_output.txt
+            test_output.json
+            test_output_health_wallet.txt
+            test_output_health_wallet.json
