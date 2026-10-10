@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.11.0-dev] — 2026-10-10 (unreleased)
+
+### Added
+- **Workout Sessions (FEAT-027)**: `WorkoutSession` Isar store, FHIR mapping and export service, workout UI (`fc52f43c`; `lib/features/workouts/`)
+- **Health Data Import & Ecosystem Link (FEAT-028)**: receive `swal.health/v1` files and deep links with consent confirmation (`76515908`), dietary-profile export with explicit consent (`97ff0130`; `lib/features/health_data_import/`, `EcosystemLinkInbox` wired in `lib/main.dart`)
+- **Health Contract package (FEAT-029)**: immutable Dart models, transports and validator for `swal.health/v1` (`54238adc`; `packages/health_contract/`)
+- **features.json**: 26 → 29 features; FEAT-025 (Data Sources) `in_progress` → `stable`
+
+### Fixed
+- **features.json reality sync**: corrected `implemented_in` for 18 features that pointed at paths that do not implement them (e.g. `lib/features/notifications/`, `lib/core/network/`, `lib/core/storage/`, `lib/core/responsive/`, `lib/features/onboarding/` for Local Agent, `lib/features/email-citas/` for Sync Service) and extended 2 more (`dashboard` + `home` shell, `appointments` + `email-citas`); every remaining claim now cites an existing path (verified 2026-10-10 against `origin/main` `02fb99e2`)
+- **AGENTS.md / SRC.md**: feature count 26 → 29; `packages/` map now lists `health_contract`; added `web/` target
+
+### Changed
+- **Dependabot bumps applied on `main`**: `sqflite` 2.4.3 and `sherpa_onnx` 1.13.7 (`d8c71854`), `/docs` group — playwright + @playwright/test 1.63.0, postcss 8.5.28, @astrojs/sitemap 3.7.4, svgo 4.1.0 (`02fb99e2`)
+- **CI**: OrionHealth CI stays green on `main`, but its test step is **non-gating** (`flutter test ... | tee`); run 37894488944 on `02fb99e2` reports **1760 passed / 2 skipped / 410 failed** because `ci.yml` never runs `dart run build_runner build` and the Isar `*.g.dart` files are missing.
+
+### Verification
+- **Local**: `packages/health_contract` → `dart pub get && dart test` = **78/78 pass, exit 0** (Dart 3.8.0). Root `flutter pub get` **fails locally** (app requires SDK `^3.10.0`; local Flutter 3.32 / Dart 3.8.0), so root `flutter analyze` and `flutter test` are **not verified locally**.
+- **CI**: `OrionHealth CI` success and `e2e-web` success on `main` `02fb99e2`; `e2e-android` still red nightly (tracked by #1720/#1726); `Dependabot Updates` fails for `/backend` and `/src-astro`.
+
+---
+
 ## [0.10.1] — 2026-09-02
 
 ### Refactored

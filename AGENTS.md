@@ -21,13 +21,14 @@ OrionHealth/
 │   ├── main.dart               # Mobile/desktop entry point
 │   ├── main_web.dart           # Flutter Web (PWA) entry point
 │   ├── core/                   # Shared infra (audit, config, di, domain, logging, medical, network, responsive, services, theme, utils, widgets)
-│   ├── features/               # Feature modules (26 Clean Architecture features)
+│   ├── features/               # Feature modules (29 Clean Architecture features; canonical list: .gitcore/features.json)
 │   └── l10n/                   # Localization ARB files (l10n.yaml); l10n_backup/ is a legacy copy
 ├── backend/                    # Node.js/Express FHIR integration backend (no deploy target yet)
 ├── functions/                  # Cloud/Serverless functions (telegram-bot)
 ├── src-astro/                  # Astro 7 + Svelte 5 web PWA (orionhealth-web, Cloudflare Workers); @swal/ui from github:iberi22/swal-ui
 ├── packages/                   # Dedicated local Dart packages
 │   ├── health_wallet/          # SSI/DID & Verifiable Credentials wallet
+│   ├── health_contract/        # Immutable Dart models/transports for the swal.health/v1 contract
 │   ├── isar_agent_memory/      # Graph + Vector local DB for AI agent memory
 │   └── medical_standards/      # Medical terminology mappings (ICD-10, LOINC, etc.)
 ├── docs/                       # Documentation site (Astro) + SRS, architecture, planning, status
