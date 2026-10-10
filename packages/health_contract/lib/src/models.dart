@@ -126,32 +126,160 @@ class MealLog extends HealthData {
   };
 }
 
+class SetDrop {
+  const SetDrop({required this.weightKg, required this.reps});
+  final num weightKg;
+  final num reps;
+  factory SetDrop.fromJson(Map<String, dynamic> json) =>
+      SetDrop(weightKg: json['weightKg'] as num, reps: json['reps'] as num);
+  Map<String, dynamic> toJson() => {'weightKg': weightKg, 'reps': reps};
+}
+
+class SetCluster {
+  const SetCluster({required this.reps, required this.restSec});
+  final num reps;
+  final num restSec;
+  factory SetCluster.fromJson(Map<String, dynamic> json) =>
+      SetCluster(reps: json['reps'] as num, restSec: json['restSec'] as num);
+  Map<String, dynamic> toJson() => {'reps': reps, 'restSec': restSec};
+}
+
+class SetSide {
+  SetSide({
+    this.weightKg,
+    this.reps,
+    this.durationS,
+    this.rir,
+    this.rpe,
+    this.weightOrigin,
+    List<SetDrop>? drops,
+    List<SetCluster>? clusters,
+  }) : drops = drops != null ? List.unmodifiable(drops) : null,
+       clusters = clusters != null ? List.unmodifiable(clusters) : null;
+
+  final num? weightKg;
+  final num? reps;
+  final num? durationS;
+  final num? rir;
+  final num? rpe;
+  final String? weightOrigin;
+  final List<SetDrop>? drops;
+  final List<SetCluster>? clusters;
+
+  factory SetSide.fromJson(Map<String, dynamic> json) => SetSide(
+    weightKg: json['weightKg'] as num?,
+    reps: json['reps'] as num?,
+    durationS: json['durationS'] as num?,
+    rir: json['rir'] as num?,
+    rpe: json['rpe'] as num?,
+    weightOrigin: json['weightOrigin'] as String?,
+    drops: json['drops'] != null
+        ? (json['drops'] as List)
+              .map((e) => SetDrop.fromJson(Map<String, dynamic>.from(e as Map)))
+              .toList()
+        : null,
+    clusters: json['clusters'] != null
+        ? (json['clusters'] as List)
+              .map(
+                (e) => SetCluster.fromJson(Map<String, dynamic>.from(e as Map)),
+              )
+              .toList()
+        : null,
+  );
+
+  Map<String, dynamic> toJson() => {
+    if (weightKg != null) 'weightKg': weightKg,
+    if (reps != null) 'reps': reps,
+    if (durationS != null) 'durationS': durationS,
+    if (rir != null) 'rir': rir,
+    if (rpe != null) 'rpe': rpe,
+    if (weightOrigin != null) 'weightOrigin': weightOrigin,
+    if (drops != null) 'drops': drops!.map((e) => e.toJson()).toList(),
+    if (clusters != null) 'clusters': clusters!.map((e) => e.toJson()).toList(),
+  };
+}
+
+class SetSides {
+  const SetSides({required this.left, required this.right});
+  final SetSide left;
+  final SetSide right;
+  factory SetSides.fromJson(Map<String, dynamic> json) => SetSides(
+    left: SetSide.fromJson(Map<String, dynamic>.from(json['L'] as Map)),
+    right: SetSide.fromJson(Map<String, dynamic>.from(json['R'] as Map)),
+  );
+  Map<String, dynamic> toJson() => {'L': left.toJson(), 'R': right.toJson()};
+}
+
 class ExerciseSet {
-  const ExerciseSet({
+  ExerciseSet({
     this.reps,
     this.weightKg,
     this.rpe,
     this.durationS,
     this.distanceM,
-  });
+    this.rir,
+    this.speedKph,
+    this.phase,
+    this.shape,
+    List<SetDrop>? drops,
+    List<SetCluster>? clusters,
+    this.sides,
+  }) : drops = drops != null ? List.unmodifiable(drops) : null,
+       clusters = clusters != null ? List.unmodifiable(clusters) : null;
+
   final num? reps;
   final num? weightKg;
   final num? rpe;
   final num? durationS;
   final num? distanceM;
+  final num? rir;
+  final num? speedKph;
+  final String? phase;
+  final String? shape;
+  final List<SetDrop>? drops;
+  final List<SetCluster>? clusters;
+  final SetSides? sides;
+
   factory ExerciseSet.fromJson(Map<String, dynamic> json) => ExerciseSet(
     reps: json['reps'] as num?,
     weightKg: json['weightKg'] as num?,
     rpe: json['rpe'] as num?,
     durationS: json['durationS'] as num?,
     distanceM: json['distanceM'] as num?,
+    rir: json['rir'] as num?,
+    speedKph: json['speedKph'] as num?,
+    phase: json['phase'] as String?,
+    shape: json['shape'] as String?,
+    drops: json['drops'] != null
+        ? (json['drops'] as List)
+              .map((e) => SetDrop.fromJson(Map<String, dynamic>.from(e as Map)))
+              .toList()
+        : null,
+    clusters: json['clusters'] != null
+        ? (json['clusters'] as List)
+              .map(
+                (e) => SetCluster.fromJson(Map<String, dynamic>.from(e as Map)),
+              )
+              .toList()
+        : null,
+    sides: json['sides'] != null
+        ? SetSides.fromJson(Map<String, dynamic>.from(json['sides'] as Map))
+        : null,
   );
+
   Map<String, dynamic> toJson() => {
     if (reps != null) 'reps': reps,
     if (weightKg != null) 'weightKg': weightKg,
     if (rpe != null) 'rpe': rpe,
     if (durationS != null) 'durationS': durationS,
     if (distanceM != null) 'distanceM': distanceM,
+    if (rir != null) 'rir': rir,
+    if (speedKph != null) 'speedKph': speedKph,
+    if (phase != null) 'phase': phase,
+    if (shape != null) 'shape': shape,
+    if (drops != null) 'drops': drops!.map((e) => e.toJson()).toList(),
+    if (clusters != null) 'clusters': clusters!.map((e) => e.toJson()).toList(),
+    if (sides != null) 'sides': sides!.toJson(),
   };
 }
 
