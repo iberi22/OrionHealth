@@ -14,6 +14,7 @@
 - `functions/` — Cloud & serverless utility functions
 - `packages/` — Local Dart/Flutter packages
   - `packages/health_wallet/` — Self-Sovereign Identity (SSI) / DID & Verifiable Credentials wallet
+  - `packages/health_contract/` — Immutable Dart models, transports and validator for the swal.health/v1 contract
   - `packages/isar_agent_memory/` — Graph + Vector local database for AI agent memory (Isar)
   - `packages/medical_standards/` — ICD-10, LOINC, RxNorm, SNOMED CT, FHIR mappings
 - `docs/` — Documentation & SRS specifications
@@ -33,6 +34,7 @@
 - `integration_test/` — End-to-end integration test scenarios
 - `golden/` — Reference golden images for visual regression tests
 - `scripts/` — Build and analysis utility scripts
+- `web/` — Flutter Web target (PWA build published to Cloudflare Pages via `wrangler.toml`)
 
 ---
 
@@ -52,7 +54,7 @@ lib/
 │   ├── theme/                  # Theme definitions (CyberTheme dark mode)
 │   ├── utils/                  # Cache, error handling, lazy router
 │   └── widgets/                # Reusable widgets & ErrorBoundary
-└── features/                   # 26 Feature modules
+└── features/                   # 29 Feature modules
     ├── auth/                   # Authentication & biometrics
     ├── dashboard/              # Centralized health dashboard
     ├── health_record/          # FHIR medical records & history
