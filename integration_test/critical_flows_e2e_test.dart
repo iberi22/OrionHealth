@@ -14,6 +14,16 @@ Future<void> _resetDi() async {
   await di.getIt.reset();
 }
 
+Future<void> _tapInView(WidgetTester tester, Finder finder) async {
+  final scrollable = find.byType(Scrollable);
+  if (scrollable.evaluate().isNotEmpty) {
+    await tester.scrollUntilVisible(finder, 120, scrollable: scrollable.last);
+  }
+  await tester.ensureVisible(finder);
+  await tester.tap(finder);
+  await tester.pumpAndSettle();
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -52,24 +62,19 @@ void main() {
       await tester.ensureVisible(find.text('Masculino'));
       await tester.tap(find.text('Masculino'));
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Siguiente'));
-      await tester.tap(find.text('Siguiente'));
-      await tester.pumpAndSettle();
+      await _tapInView(tester, find.text('Siguiente'));
 
       // Conditions Step
       expect(find.text('Condiciones de Salud'), findsOneWidget);
-      await tester.tap(find.text('Siguiente'));
-      await tester.pumpAndSettle();
+      await _tapInView(tester, find.text('Siguiente'));
 
       // Family History Step
       expect(find.text('Historial Familiar'), findsOneWidget);
-      await tester.tap(find.text('Siguiente'));
-      await tester.pumpAndSettle();
+      await _tapInView(tester, find.text('Siguiente'));
 
       // Medications Step
       expect(find.text('Medicamentos y Alergias'), findsOneWidget);
-      await tester.tap(find.text('Siguiente'));
-      await tester.pumpAndSettle();
+      await _tapInView(tester, find.text('Siguiente'));
 
       // Privacy Step
       expect(find.text('Privacidad y Seguridad'), findsOneWidget);
