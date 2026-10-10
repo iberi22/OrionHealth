@@ -138,6 +138,13 @@ docs/diagnostics/
 .git-core-protocol-version
 
 
+# Test run artifacts (written by scripts/run_tests_with_known_failures.dart)
+test_output.txt
+test_output.json
+test_output_health_wallet.txt
+test_output_health_wallet.json
+packages/health_wallet/test_output.json
+
 # Internal tools and scripts
 .skills/
 .openclaw/
