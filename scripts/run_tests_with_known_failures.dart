@@ -163,16 +163,25 @@ class _Report {
   int passed = 0;
   int skipped = 0;
   int? processExitCode;
+  int _registrySize = 0;
   final List<String> expectedFailures = <String>[];
   final List<String> unexpectedFailures = <String>[];
   final List<String> staleEntries = <String>[];
   final Set<String> matchedKeys = <String>{};
+  final Set<String> ranKeys = <String>{};
 
   bool get isGreen => unexpectedFailures.isEmpty;
 
   void printReport() {
     for (final entry in staleEntries) {
       stdout.writeln('STALE REGISTRY ENTRY (passes now, remove it): $entry');
+    }
+    final notRun = matchedKeys.length + staleEntries.length;
+    if (notRun < _registrySize) {
+      stdout.writeln('Note: ${_registrySize - notRun} registered '
+          'entr${_registrySize - notRun == 1 ? 'y' : 'ies'} did not run in this '
+          'invocation; the registry describes the whole suite, so run the '
+          'runner without path filters (and without --name) to judge it.');
     }
     stdout.writeln('---');
     stdout.writeln('Expected failures (registered): ${expectedFailures.length}');
@@ -245,7 +254,7 @@ class _Test {
 
 _Report _evaluate(List<String> logLines, List<KnownFailure> registry,
     String cwd, String registryPath) {
-  final report = _Report(registryPath);
+  final report = _Report(registryPath).._registrySize = registry.length;
   final suites = <int, String>{};
   final groups = <int, _Group>{};
   final tests = <int, _Test>{};
@@ -279,6 +288,11 @@ _Report _evaluate(List<String> logLines, List<KnownFailure> registry,
         final id = event['testID'] as int;
         final test = tests[id];
         if (test == null) break;
+        final file = suites[test.suiteId] ?? '?';
+        // A suite that fails to compile is reported as a test named
+        // `loading <absolute path>`; make that name portable across machines.
+        final name = _displayName(test, groups).replaceAll('$cwd/', '');
+        report.ranKeys.add('$file$_fieldSeparator$name');
         if (event['skipped'] == true) {
           report.skipped++;
           break;
@@ -287,10 +301,6 @@ _Report _evaluate(List<String> logLines, List<KnownFailure> registry,
           report.passed++;
           break;
         }
-        final file = suites[test.suiteId] ?? '?';
-        // A suite that fails to compile is reported as a test named
-        // `loading <absolute path>`; make that name portable across machines.
-        final name = _displayName(test, groups).replaceAll('$cwd/', '');
         final errorLine = _firstErrorLine(errors[id] ?? const <String>[]);
         final matches = registry
             .where((k) => k.file == file && k.name == name)
@@ -307,8 +317,11 @@ _Report _evaluate(List<String> logLines, List<KnownFailure> registry,
     }
   }
 
+  // An entry is stale only when its test ran and passed: a subset run says
+  // nothing about the entries it did not execute.
   for (final known in registry) {
-    if (!report.matchedKeys.contains(known.key)) {
+    if (report.ranKeys.contains(known.key) &&
+        !report.matchedKeys.contains(known.key)) {
       report.staleEntries.add(known.toString());
     }
   }
