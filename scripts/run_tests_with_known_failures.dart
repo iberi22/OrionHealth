@@ -34,8 +34,12 @@
 ///   `--json-out <path>`  where to keep the raw reporter output
 ///                      (default: test_output.json)
 ///
-/// Exit code 0: no unexpected failures. Exit code 1: at least one failing test
-/// is not registered, or the runner itself crashed.
+/// Exit code 0: the reporter finished with a `done` event and no failure is
+/// unaccounted for. Exit code 1: any of the following, which all mean the run
+/// cannot be trusted: an unregistered failure, a registered entry that now
+/// passes (stale), a reporter that never emitted `done` (crash/compiler death),
+/// no test ran at all, an `error` reported after a test already completed as
+/// success, or a `flutter test` exit code other than 0 or 1.
 library;
 
 import 'dart:convert';
@@ -164,13 +168,31 @@ class _Report {
   int skipped = 0;
   int? processExitCode;
   int _registrySize = 0;
+  bool sawDone = false;
+  bool doneSuccess = false;
   final List<String> expectedFailures = <String>[];
   final List<String> unexpectedFailures = <String>[];
   final List<String> staleEntries = <String>[];
   final Set<String> matchedKeys = <String>{};
   final Set<String> ranKeys = <String>{};
 
-  bool get isGreen => unexpectedFailures.isEmpty;
+  /// The gate must fail closed: it is only green when the reporter told us the
+  /// run finished (`done`), something actually ran, and every failure is either
+  /// registered or absent. A crash (exit 139) or a compiler death that emits no
+  /// `done` must never look like the registered-failures row.
+  bool get isGreen {
+    if (ranKeys.isEmpty) return false;
+    if (!sawDone) return false;
+    if (unexpectedFailures.isNotEmpty || staleEntries.isNotEmpty) return false;
+    if (!doneSuccess && expectedFailures.isEmpty) return false;
+    if (processExitCode != null &&
+        processExitCode != 0 &&
+        processExitCode != 1) {
+      return false;
+    }
+    if (processExitCode != 0 && expectedFailures.isEmpty) return false;
+    return true;
+  }
 
   void printReport() {
     for (final entry in staleEntries) {
@@ -194,12 +216,14 @@ class _Report {
     }
     stdout.writeln('---');
     stdout.writeln('flutter test exit code: $processExitCode');
-    stdout.writeln('Totals: $passed passed, $skipped skipped, '
+    stdout.writeln('Totals (non-hidden): $passed passed, $skipped skipped, '
         '${expectedFailures.length} registered failures, '
         '${unexpectedFailures.length} unexpected failures');
     if (isGreen) {
-      stdout.writeln(unexpectedFailures.isEmpty && expectedFailures.isEmpty
-          ? 'GREEN: the whole suite passed.'
+      // `isGreen` already requires a `done` event and at least one test, so
+      // this line is never printed when nothing ran.
+      stdout.writeln(expectedFailures.isEmpty
+          ? 'GREEN: the whole suite passed ($passed passed, $skipped skipped).'
           : 'GREEN (with ${expectedFailures.length} registered known '
               'failures): no unexpected failure.');
     } else {
@@ -259,6 +283,11 @@ _Report _evaluate(List<String> logLines, List<KnownFailure> registry,
   final groups = <int, _Group>{};
   final tests = <int, _Test>{};
   final errors = <int, List<String>>{};
+  // Test ids the reporter already reported as a success. An `error` for one of
+  // them afterwards means the test failed after it had completed, which the
+  // `testDone` result alone cannot express.
+  final completedAsSuccess = <int>{};
+  final postSuccessReported = <int>{};
 
   String relative(String path) =>
       path.startsWith('$cwd/') ? path.substring(cwd.length + 1) : path;
@@ -281,9 +310,22 @@ _Report _evaluate(List<String> logLines, List<KnownFailure> registry,
           test['name'] as String,
           (test['groupIDs'] as List?)?.cast<int>() ?? const <int>[],
         );
+      case 'done':
+        report.sawDone = true;
+        report.doneSuccess = event['success'] == true;
       case 'error':
         final id = event['testID'] as int;
         (errors[id] ??= <String>[]).add(event['error'] as String? ?? '');
+        if (completedAsSuccess.contains(id) && postSuccessReported.add(id)) {
+          final test = tests[id];
+          final file = test == null ? '?' : (suites[test.suiteId] ?? '?');
+          final name = test == null
+              ? '?'
+              : _displayName(test, groups).replaceAll('$cwd/', '');
+          report.unexpectedFailures.add('$file$_fieldSeparator$name :: '
+              'error reported after the test completed as success '
+              '[last error: ${_firstErrorLine(errors[id]!)}]');
+        }
       case 'testDone':
         final id = event['testID'] as int;
         final test = tests[id];
@@ -298,7 +340,11 @@ _Report _evaluate(List<String> logLines, List<KnownFailure> registry,
           break;
         }
         if (event['result'] == 'success') {
-          report.passed++;
+          completedAsSuccess.add(id);
+          // Hidden tests are the reporter's virtual nodes (for example the
+          // implicit `loading …` suite node); counting them inflates the pass
+          // total, so only real, non-hidden successes are reported.
+          if (event['hidden'] != true) report.passed++;
           break;
         }
         final errorLine = _firstErrorLine(errors[id] ?? const <String>[]);
