@@ -34,6 +34,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # Proof for the known-failures runner: replays every row of the T8 review
+      # fixture table (orchestration/wave-pi-2/results/T8-review-grok-r1.md)
+      # with a fake `flutter` and asserts the runner exit code. Gating, so a
+      # future edit that lets a crash, a compiler death, an empty run or a stale
+      # registry entry pass again fails CI here. Runs before the slow steps.
+      - name: Runner fixture tests (fake flutter)
+        run: dart run scripts/test_runner_fixtures.dart
+
       # .gitignore excludes *.g.dart and injection.config.dart, so a fresh
       # checkout ships no generated code: every test touching an Isar collection
       # or reading the DI graph fails to compile. Run 37894488944 reported
