@@ -49,14 +49,19 @@ void main() {
 
     test('speak calls bridge and plays audio', () async {
       final controller = StreamController<PlayerState>.broadcast();
+      final playRequested = Completer<void>();
       when(() => mockPlayer.playerStateStream).thenAnswer((_) => controller.stream);
       when(() => mockClient.post(any(), headers: any(named: 'headers'), body: any(named: 'body')))
           .thenAnswer((_) async => http.Response.bytes(Uint8List(100), 200));
+      when(() => mockPlayer.play()).thenAnswer((_) async {
+        playRequested.complete();
+      });
 
       final future = adapter.speak('Hello world');
 
-      // wait for bridge call and file write
-      await Future.delayed(const Duration(milliseconds: 100));
+      // Wait for the bridge call, the file write and play() instead of sleeping:
+      // a fixed delay made this test flaky on a loaded machine.
+      await playRequested.future.timeout(const Duration(seconds: 5));
 
       verify(() => mockClient.post(
         any(),
