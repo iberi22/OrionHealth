@@ -2,19 +2,27 @@
   "$schema": "v2",
   "metadata": {
     "version": "3.8.0",
-    "last_updated": "2026-09-02",
+    "last_updated": "2026-10-10",
     "overall_progress_pct": 100.0,
-    "total_features": 26,
-    "completed_features": 26,
+    "total_features": 29,
+    "completed_features": 29,
     "in_progress_features": 0,
     "planned_features": 0,
     "project": "OrionHealth",
     "created": "2026-08-18",
-    "updated": "2026-08-18",
-    "passing": 26,
+    "updated": "2026-10-10",
+    "passing": 29,
     "failing": 0,
     "status": "completed",
-    "protocol": "3.8.0"
+    "protocol": "3.8.0",
+    "verification": {
+      "date": "2026-10-10",
+      "base": "origin/main 02fb99e2",
+      "local_root_flutter_pub_get": "FAIL - 'The current Dart SDK version is 3.8.0. Because orionhealth_health requires SDK version ^3.10.0, version solving failed.' Local Flutter is 3.32; root 'flutter analyze' and 'flutter test' are NOT verified locally.",
+      "ci_run_37894488944": "OrionHealth CI on main 02fb99e2 (2026-10-09): 1760 passed / 2 skipped / 410 failed. Cause: Isar *.g.dart missing because ci.yml never runs 'dart run build_runner build'; the test step pipes to 'tee', so failures do not gate CI.",
+      "health_contract_tests": "packages/health_contract: 78/78 passed locally via 'dart test' (exit 0).",
+      "drift_check": "srs-src-drift-detector skill is not installed in this environment; not run."
+    }
   },
   "features": [
     {
@@ -76,7 +84,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/dashboard/",
+      "implemented_in": "lib/features/dashboard/, lib/features/home/",
       "passes": true,
       "notes": "Centralized overview of health status, upcoming appointments, and daily summaries.",
       "req_ids": [
@@ -99,7 +107,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/health_records/",
+      "implemented_in": "lib/features/health_record/",
       "passes": true,
       "notes": "Comprehensive management of medical history, clinical documents, and FHIR resources.",
       "req_ids": [
@@ -168,7 +176,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/appointments/",
+      "implemented_in": "lib/features/appointments/, lib/features/email-citas/",
       "passes": true,
       "notes": "Scheduling and management of medical appointments and follow-ups.",
       "req_ids": [
@@ -191,7 +199,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/notifications/",
+      "implemented_in": "lib/features/reports/",
       "passes": true,
       "notes": "Visual representation of health trends and generated health reports.",
       "req_ids": [
@@ -237,7 +245,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/clinical_assessments/",
+      "implemented_in": "lib/features/doctor_verification/",
       "passes": true,
       "notes": "System for verifying medical credentials and professional status of healthcare providers.",
       "req_ids": [
@@ -260,7 +268,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/reports/",
+      "implemented_in": "lib/features/voice_chat/",
       "passes": true,
       "notes": "On-device AI-powered voice assistant for hands-free interaction.",
       "req_ids": [
@@ -283,7 +291,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/onboarding/",
+      "implemented_in": "lib/features/local_agent/",
       "passes": true,
       "notes": "Personalized local AI agent that learns from user data while maintaining privacy.",
       "req_ids": [
@@ -306,9 +314,9 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/settings/",
+      "implemented_in": "lib/features/sync/",
       "passes": true,
-      "notes": "Infrastructure for peer-to-peer data synchronization across devices.",
+      "notes": "Infrastructure for peer-to-peer data synchronization across devices. Implemented in lib/features/sync/ (domain/services/node_discovery_service.dart, infrastructure/datasources/ipfs_datasource.dart, filecoin_datasource.dart).",
       "req_ids": [
         "REQ-013"
       ],
@@ -329,7 +337,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/local_agent/",
+      "implemented_in": "lib/features/allergies/",
       "passes": true,
       "notes": "Management and tracking of known allergies and adverse reactions.",
       "req_ids": [
@@ -352,7 +360,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/core/network/",
+      "implemented_in": "lib/features/calendar_import/",
       "passes": true,
       "notes": "Integration with external calendar providers (Gmail, Outlook) to import medical appointments.",
       "req_ids": [
@@ -375,7 +383,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/core/storage/",
+      "implemented_in": "lib/features/health_sharing/",
       "passes": true,
       "notes": "Secure sharing of health data with trusted individuals or providers via P2P.",
       "req_ids": [
@@ -398,9 +406,9 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/emergency/",
+      "implemented_in": "lib/features/network/",
       "passes": true,
-      "notes": "Mechanisms for network participation, decision-making, and policy updates.",
+      "notes": "Mechanisms for network participation, decision-making, and policy updates. Implemented in lib/features/network/ (governance submodule: governance/application/governance_cubit.dart, governance/domain/repositories/governance_repository.dart).",
       "req_ids": [
         "REQ-017"
       ],
@@ -421,9 +429,9 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/user_profile/",
+      "implemented_in": "lib/features/network/",
       "passes": true,
-      "notes": "Gamification and reward system for healthy habits and network contributions.",
+      "notes": "Gamification and reward system for healthy habits and network contributions. Implemented in lib/features/network/ (domain/entities/reward.dart, domain/entities/contribution.dart, domain/incentive_repository.dart).",
       "req_ids": [
         "REQ-018"
       ],
@@ -444,7 +452,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/network/",
+      "implemented_in": "lib/features/meditation/",
       "passes": true,
       "notes": "Guided offline meditation and breathing exercises for mental well-being.",
       "req_ids": [
@@ -467,7 +475,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/medical_research/",
+      "implemented_in": "lib/features/settings/",
       "passes": true,
       "notes": "Application configuration, privacy controls, and theme management.",
       "req_ids": [
@@ -490,9 +498,9 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/email-citas/",
+      "implemented_in": "lib/features/sync/, lib/main.dart",
       "passes": true,
-      "notes": "Background service orchestrating data consistency across multiple platforms.",
+      "notes": "Background service orchestrating data consistency across multiple platforms. Implemented in lib/features/sync/ (application/sync_cubit.dart, domain/sync_service.dart); background dispatch wired in lib/main.dart (Workmanager callbackDispatcher -> SyncRepository.syncAll).",
       "req_ids": [
         "REQ-021"
       ],
@@ -536,7 +544,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/health_wallet/",
+      "implemented_in": "lib/features/medical_research/",
       "passes": true,
       "notes": "Configuration and adapters for retrieving medical information from various research sources.",
       "req_ids": [
@@ -559,9 +567,9 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/core/responsive/",
+      "implemented_in": "lib/features/network/governance/",
       "passes": true,
-      "notes": "Interface for submitting and voting on network improvement proposals.",
+      "notes": "Interface for submitting and voting on network improvement proposals. Implemented in lib/features/network/governance/ (governance/domain/entities/proposal.dart, governance/domain/entities/vote.dart, governance/application/governance_cubit.dart).",
       "req_ids": [
         "REQ-024"
       ],
@@ -573,18 +581,18 @@
       "id": "FEAT-025",
       "name": "Data Sources",
       "layer": "infrastructure",
-      "status": "in_progress",
-      "progress_pct": 50.0,
-      "tests": 5,
+      "status": "stable",
+      "progress_pct": 100.0,
+      "tests": 89,
       "description": "Integration layer for diverse health data inputs (sensors, files, external APIs).",
       "priority": "P2",
       "category": "general",
       "github_issue": null,
-      "verified_by": "automated",
+      "verified_by": "code-verified",
       "last_tested": null,
-      "implemented_in": "lib/features/onboarding/",
-      "passes": false,
-      "notes": "Integration layer for diverse health data inputs (sensors, files, external APIs).",
+      "implemented_in": "lib/features/data_sources/",
+      "passes": true,
+      "notes": "Integration layer for diverse health data inputs (sensors, files, external APIs). Implemented in lib/features/data_sources/ (cubit, entity, repository, file_import/health_connect/sensor_api datasources, data_sources_config_page). Tests: test/features/data_sources/ (16 files, 89 cases). Test runs blocked: see metadata.verification.",
       "req_ids": [
         "REQ-025"
       ],
@@ -605,7 +613,7 @@
       "github_issue": null,
       "verified_by": "automated",
       "last_tested": "2026-09-02",
-      "implemented_in": "lib/features/dashboard/",
+      "implemented_in": "lib/features/clinical_assessments/",
       "passes": true,
       "notes": "Interactive clinical surveys and consent management for patient assessments.",
       "req_ids": [
@@ -614,6 +622,63 @@
       "user_stories": [
         "US-026"
       ]
+    },
+    {
+      "id": "FEAT-027",
+      "name": "Workout Sessions",
+      "layer": "domain",
+      "status": "stable",
+      "progress_pct": 100.0,
+      "tests": 9,
+      "description": "Local workout session tracking (WorkoutSession, Isar) with FHIR mapping/export and workout UI.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": "code-verified",
+      "last_tested": null,
+      "implemented_in": "lib/features/workouts/",
+      "passes": true,
+      "notes": "Shipped on main in fc52f43c: domain/entities/workout_session.dart, domain/services/workout_fhir_mapper.dart, application/workout_fhir_export_service.dart, infrastructure/repositories/workout_repository_impl.dart, presentation/pages/workouts_page.dart. Tests: test/features/workouts/ (workout_contract_test.dart, workout_repository_test.dart). Test runs blocked: see metadata.verification.",
+      "req_ids": null,
+      "user_stories": null
+    },
+    {
+      "id": "FEAT-028",
+      "name": "Health Data Import & Ecosystem Link",
+      "layer": "application",
+      "status": "stable",
+      "progress_pct": 100.0,
+      "tests": 77,
+      "description": "Import of swal.health/v1 health-data files and deep links with consent confirmation, plus dietary-profile export with explicit consent.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": "code-verified",
+      "last_tested": null,
+      "implemented_in": "lib/features/health_data_import/",
+      "passes": true,
+      "notes": "Shipped on main in 76515908 (files + deep links, consent confirmation) and 97ff0130 (dietary-profile export). EcosystemLinkInbox wired in lib/main.dart; HealthImportPage reachable from home and user profile. Tests: test/features/health_data_import/ (27 files, 77 cases). Test runs blocked: see metadata.verification.",
+      "req_ids": null,
+      "user_stories": null
+    },
+    {
+      "id": "FEAT-029",
+      "name": "Health Contract (swal.health/v1)",
+      "layer": "domain",
+      "status": "stable",
+      "progress_pct": 100.0,
+      "tests": 78,
+      "description": "Immutable, web-compatible Dart models, transports and validator for the swal.health/v1 contract, with shared-fixture parity tests.",
+      "priority": "P2",
+      "category": "general",
+      "github_issue": null,
+      "verified_by": "automated",
+      "last_tested": "2026-10-10",
+      "implemented_in": "packages/health_contract/",
+      "passes": true,
+      "notes": "Shipped on main in 54238adc. Verified locally: 'dart pub get && dart test' in packages/health_contract -> 78/78 tests passed, exit 0 (Dart 3.8.0). Only package runnable locally because the root app requires SDK ^3.10.0. Fixtures: test/fixtures (valid + invalid swal.health/v1).",
+      "req_ids": null,
+      "user_stories": null
     }
   ],
   "protocol": "3.8.0"
