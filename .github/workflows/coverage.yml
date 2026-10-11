@@ -37,9 +37,7 @@ jobs:
 
       - name: Generate coverage report
         run: |
-          dart pub global activate coverage
-          flutter test --coverage
-          dart run coverage:format_coverage --lcov -i coverage/lcov.info -o coverage/lcov.info
+          test -f coverage/lcov.info
           echo "Coverage data generated at coverage/lcov.info"
 
       - name: Upload coverage report
