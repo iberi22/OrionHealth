@@ -88,6 +88,13 @@ class HomeRepositoryImpl implements HomeRepository {
     // 3. Fallback to default modules
     final defaultModules = [
       const HomeModuleModel(
+        title: 'Citas',
+        iconCode: 0xe122, // Icons.calendar_month.codePoint
+        iconFontFamily: 'MaterialIcons',
+        color: Colors.blueAccent,
+        route: '/appointments',
+      ),
+      const HomeModuleModel(
         title: 'AI Assistant',
         iconCode: 0xe4f7, // Icons.psychology.codePoint
         iconFontFamily: 'MaterialIcons',
