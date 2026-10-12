@@ -271,11 +271,11 @@ import '../../features/local_agent/domain/services/llm_adapter.dart' as _i68;
 import '../../features/local_agent/domain/services/vector_store_service.dart'
     as _i136;
 import '../../features/local_agent/domain/usecases/get_chat_history_usecase.dart'
-    as _i177;
+    as _i178;
 import '../../features/local_agent/domain/usecases/send_chat_message_usecase.dart'
     as _i120;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_adapter.dart'
-    as _i70;
+    as _i69;
 import '../../features/local_agent/infrastructure/adapters/flutter_gemma_wrapper.dart'
     as _i45;
 import '../../features/local_agent/infrastructure/adapters/gemini_llm_adapter.dart'
@@ -285,7 +285,7 @@ import '../../features/local_agent/infrastructure/adapters/gemini_model_wrapper.
 import '../../features/local_agent/infrastructure/adapters/mock_llm_adapter.dart'
     as _i198;
 import '../../features/local_agent/infrastructure/adapters/openai_compatible_adapter.dart'
-    as _i69;
+    as _i70;
 import '../../features/local_agent/infrastructure/gemma_llm_service.dart'
     as _i202;
 import '../../features/local_agent/infrastructure/llm_service.dart' as _i201;
@@ -499,7 +499,7 @@ import '../../features/voice_chat/application/voice_chat_cubit.dart' as _i237;
 import '../../features/voice_chat/domain/repositories/voice_chat_repository.dart'
     as _i141;
 import '../../features/voice_chat/domain/usecases/get_chat_history_usecase.dart'
-    as _i178;
+    as _i177;
 import '../../features/voice_chat/domain/usecases/send_message_usecase.dart'
     as _i226;
 import '../../features/voice_chat/infrastructure/datasources/chat_ai_datasource.dart'
@@ -528,9 +528,9 @@ import 'memory_module.dart' as _i289;
 import 'network_module.dart' as _i288;
 import 'service_module.dart' as _i287;
 
-const String _mobile = 'mobile';
 const String _desktop = 'desktop';
 const String _test = 'test';
+const String _mobile = 'mobile';
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -654,12 +654,12 @@ extension GetItInjectableX on _i1.GetIt {
         _i67.LicenseVerifier(
             await getAsync<_i66.LicenseRegistryLocalDataSource>()));
     gh.lazySingleton<_i68.LlmAdapter>(
-      () => _i69.OpenaiCompatibleAdapter(),
-      instanceName: 'openai',
+      () => _i69.FlutterGemmaAdapter(wrapper: gh<_i45.FlutterGemmaWrapper>()),
+      instanceName: 'gemma',
     );
     gh.lazySingleton<_i68.LlmAdapter>(
-      () => _i70.FlutterGemmaAdapter(wrapper: gh<_i45.FlutterGemmaWrapper>()),
-      instanceName: 'gemma',
+      () => _i70.OpenaiCompatibleAdapter(),
+      instanceName: 'openai',
     );
     gh.lazySingleton<_i71.LocalLlmService>(() => _i71.LocalLlmService());
     gh.lazySingleton<_i72.LocalModelLocalDataSource>(
@@ -885,9 +885,9 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i114.GetAvailableSourcesUseCase>(() =>
         _i114.GetAvailableSourcesUseCase(gh<_i50.HealthDataImportService>()));
     gh.factory<_i177.GetChatHistoryUseCase>(
-        () => _i177.GetChatHistoryUseCase(gh<_i136.VectorStoreService>()));
+        () => _i177.GetChatHistoryUseCase(gh<_i141.VoiceChatRepository>()));
     gh.factory<_i178.GetChatHistoryUseCase>(
-        () => _i178.GetChatHistoryUseCase(gh<_i141.VoiceChatRepository>()));
+        () => _i178.GetChatHistoryUseCase(gh<_i136.VectorStoreService>()));
     gh.factory<_i179.GetCredentialsUseCase>(
         () => _i179.GetCredentialsUseCase(gh<_i153.AuthRepository>()));
     gh.factory<_i180.GetDoctorProfileUseCase>(() =>
@@ -1051,7 +1051,7 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i236.VitalSignBloc(gh<_i138.VitalSignRepository>()));
     gh.factory<_i237.VoiceChatCubit>(() => _i237.VoiceChatCubit(
           gh<_i226.SendMessageUseCase>(),
-          gh<_i178.GetChatHistoryUseCase>(),
+          gh<_i177.GetChatHistoryUseCase>(),
           gh<_i141.VoiceChatRepository>(),
           gh<_i12.AudioService>(),
         ));
