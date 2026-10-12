@@ -4,7 +4,12 @@ import 'package:orionhealth_health/core/medical/anonymizer_engine.dart';
 void main() {
   group('AnonymizerEngine', () {
     test('should produce surrogate for phone', () {
-      final engine = AnonymizerEngine();
+      // Seeded RNG: the default engine seeds Random from the wall clock and
+      // preservePhoneFormat fills every digit uniformly, so `contains('555')`
+      // failed about 1 run in 250 (CI run 38283097674 produced
+      // '+4 (537) 184-3555'; measured 0.4% over 5000 seeds). A fixed seed keeps
+      // exercising randomization while making the test deterministic.
+      final engine = AnonymizerEngine(seed: 42);
       final result = engine.surrogate('+1 (213) 555-1234', 'PHONE');
       expect(result, matches(r'^\+\d \(\d{3}\) \d{3}-\d{4}$'));
       expect(result, isNot(contains('555')));

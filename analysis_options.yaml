@@ -30,6 +30,12 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "packages/isar_agent_memory/**"
+    # health_contract is a standalone package with its own pubspec (including
+    # the `test` dev_dependency) and analysis_options; resolving its test
+    # files with the root package config produced false-positive
+    # `uri_does_not_exist` errors for package:test. It is analyzed separately
+    # with its own config (see the Flutter Analyze step in ci.yml).
+    - "packages/health_contract/**"
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

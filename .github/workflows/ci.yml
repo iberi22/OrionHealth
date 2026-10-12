@@ -61,15 +61,16 @@ jobs:
             "https://github.com/isar/isar/releases/download/${ISAR_VERSION}/libisar_linux_x64.so"
           cp libisar.so /tmp/libisar.so
 
-      # Informational: the root analyze run also reports issues in nested
-      # packages (health_wallet test files, health_contract), which are false
-      # positives of resolving them with the root package config. Kept
-      # non-gating on purpose until those are cleaned up; the exit codes are
-      # printed so the log stays honest.
+      # Informational: nested packages have their own pubspecs, so analyzing
+      # them with the root package config reports false positives (e.g.
+      # health_contract's `package:test` import). They are excluded from the
+      # root analysis_options and analyzed individually below with their own
+      # configs. Kept non-gating on purpose; the exit codes are printed so
+      # the log stays honest.
       - name: Flutter Analyze
         run: |
           flutter analyze --no-fatal-infos --no-fatal-warnings; echo "ROOT_EXIT=$?"
-          for pkg in packages/health_wallet packages/medical_standards; do
+          for pkg in packages/health_wallet packages/medical_standards packages/health_contract; do
             echo "Analyzing $pkg..."
             cd $pkg && flutter pub get && flutter analyze --no-fatal-infos --no-fatal-warnings; echo "${pkg}_EXIT=$?" && cd ../..
           done
