@@ -251,3 +251,7 @@ tasks.json
 *.sqlite-shm
 *.profraw
 # <<< GITCORE PUBLIC REPO HARDENING <<<
+
+# Internal planning lives in the private infra repo (swal-infra/orionhealth)
+docs/planning/
+.gitcore/harness/scan-report.json
