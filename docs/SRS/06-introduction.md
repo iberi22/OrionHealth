@@ -58,7 +58,7 @@ OrionHealth is a decentralized medical intelligence network and a privacy-first,
 
 *   `docs/ORIONHEALTH-ROADMAP.md`: Technical roadmap, phases, and statuses.
 
-*   `docs/planning/PLANNING.md`: Vision and three-layer architecture.
+*   Internal planning documents (vision, roadmap, sprints) are kept outside this public repository.
 
 *   `docs/FEATURE_AUDIT.md`: Detailed feature audit and metrics.
 
