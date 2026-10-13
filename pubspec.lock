@@ -309,18 +309,18 @@ packages:
     dependency: transitive
     description:
       name: carp_serializable
-      sha256: "4a78993c03577902f9996e29982c406d5d3c838fa174f18cc0eb53f49b352abd"
+      sha256: f039f8ea22e9437aef13fe7e9743c3761c76d401288dcb702eadd273c3e4dcef
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "2.0.1"
   carp_themes_package:
     dependency: "direct dev"
     description:
       name: carp_themes_package
-      sha256: dccc0fd656d37b422cfd338222da25717a1eb4efdcbe205ab5e60befdcdaa68c
+      sha256: "9753723406efa78fe7f379d3a5a51751acd427b89f5787bfc64f2b89eb3a8f78"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1"
+    version: "0.0.5"
   characters:
     dependency: transitive
     description:
@@ -477,10 +477,10 @@ packages:
     dependency: "direct main"
     description:
       name: device_info_plus
-      sha256: ade1c36f8355d6284c98e4a47992ea263887ed3d1acb281e37635dd45f04c4aa
+      sha256: b4fed1b2835da9d670d7bed7db79ae2a94b0f5ad6312268158a9b5479abbacdd
       url: "https://pub.dev"
     source: hosted
-    version: "13.3.0"
+    version: "12.4.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -1059,10 +1059,10 @@ packages:
     dependency: "direct main"
     description:
       name: health
-      sha256: "8dd9625c9c26379a5753ad24c33af1d3dc5ce1f36f19c03e17c676c2f8fdbb80"
+      sha256: "2d9e119f3a1d281139f93149b41032b9f80b759960875bc784c5a25dd3c17524"
       url: "https://pub.dev"
     source: hosted
-    version: "13.3.2"
+    version: "13.3.1"
   health_contract:
     dependency: "direct main"
     description:
@@ -1892,10 +1892,10 @@ packages:
     dependency: "direct main"
     description:
       name: research_package
-      sha256: "6869f8d25f6a8897db68465392bf0b4ff8d90dfe192276525960c86d40c90ebe"
+      sha256: "399b3ed901aeb35641039dcf0a9ae3c96288054e30833b6ee4ae4cbbce566a3d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.3.0"
   retry:
     dependency: transitive
     description:

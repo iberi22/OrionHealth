@@ -115,8 +115,12 @@ updates:
       - "dependencies"
     # Deferred breaking majors (2026-10-13, from PR #1748 all-dependencies):
     # each needs its own migration PR with device/build verification.
-    # NOTE 2026-10-13: device_info_plus 13 was re-included: health 13.3.2
-    # requires device_info_plus ^13.2.0 (coupled bump, basic getters only).
+    #
+    # The health-data stack must migrate TOGETHER (win32-6 camp): health
+    # >=13.3.2 needs device_info_plus ^13.2.0 which needs win32 ^6.0.1, while
+    # share_plus 12 / file_picker 10 pin win32 ^5.x; research_package 2.5.0
+    # needs carp_serializable ^3.0.0 which health 13.3.1 rejects. Do NOT bump
+    # one of them alone (CI proved solving fails); do a single migration PR.
     ignore:
       # google_fonts 9 requires Dart ^3.13.0; CI Flutter stable ships Dart
       # 3.12.0, so version solving fails outright. Revisit after SDK upgrade.
@@ -128,6 +132,17 @@ updates:
       # file_picker 10->13 (two majors): needs storage-permission flow re-test.
       - dependency-name: "file_picker"
         versions: [">= 11.0.0"]
+      # device_info_plus 12->13: needs API migration check; migrate with the
+      # health-data stack (see note above), NOT alone.
+      - dependency-name: "device_info_plus"
+        versions: [">= 13.0.0"]
+      # health >=13.3.2: coupled to device_info_plus 13 (win32-6 camp).
+      - dependency-name: "health"
+        versions: [">= 13.3.2"]
+      # research_package 2.5.0: coupled to carp_serializable 3, which health
+      # 13.3.1 rejects. Migrate with the health-data stack.
+      - dependency-name: "research_package"
+        versions: [">= 2.5.0"]
       # flutter_secure_storage 10->11: needs encrypted-prefs migration check.
       - dependency-name: "flutter_secure_storage"
         versions: [">= 11.0.0"]

@@ -48,7 +48,7 @@ dependencies:
   isar_flutter_libs: ^3.1.0+1
   objectbox_flutter_libs: any
   path_provider: ^2.1.5
-  device_info_plus: ^13.3.0
+  device_info_plus: ^12.2.0
   dio: ^5.11.1
   flutter_secure_storage: ^10.3.1
   flutter_markdown: ^0.7.7+1
@@ -63,7 +63,7 @@ dependencies:
     path: packages/health_wallet
   onnxruntime: ^1.4.1
   permission_handler: ^13.0.2
-  health: ^13.3.2
+  health: ^13.3.1
   google_fonts: ^8.2.1
   flutter_gemma: ^0.13.6
   local_auth: ^3.0.1
@@ -96,7 +96,7 @@ dependencies:
   sherpa_onnx: ^1.13.7
   flutter_tts: ^4.2.5
   freezed_annotation: ^2.4.1
-  research_package: 2.5.0
+  research_package: 2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -113,7 +113,7 @@ dev_dependencies:
   url_launcher_platform_interface: ^2.2.0
   plugin_platform_interface: ^2.1.0
   fake_async: ^1.3.1
-  carp_themes_package: ^0.2.1
+  carp_themes_package: ^0.0.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
