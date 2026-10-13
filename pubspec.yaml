@@ -37,19 +37,19 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   file_picker: ^10.3.7
-  image_picker: ^1.2.1
+  image_picker: ^1.2.4
   uuid: ^4.6.0
   intl: ^0.20.2
   timezone: ^0.9.4
   flutter_bloc: ^9.1.1
-  get_it: ^9.2.1
+  get_it: ^9.3.0
   injectable: ^2.7.1+4
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   objectbox_flutter_libs: any
   path_provider: ^2.1.5
   device_info_plus: ^12.2.0
-  dio: ^5.10.0
+  dio: ^5.11.1
   flutter_secure_storage: ^10.3.1
   flutter_markdown: ^0.7.7+1
   equatable: ^2.1.0
@@ -62,33 +62,33 @@ dependencies:
   health_wallet:
     path: packages/health_wallet
   onnxruntime: ^1.4.1
-  permission_handler: ^13.0.0
+  permission_handler: ^13.0.2
   health: ^13.3.1
   google_fonts: ^8.2.1
   flutter_gemma: ^0.13.6
   local_auth: ^3.0.1
   cryptography: ^2.7.0
   argon2: ^1.0.1
-  shared_preferences: ^2.3.4
+  shared_preferences: ^2.5.6
   openai_dart: ^8.1.0
-  google_mlkit_text_recognition: ^0.16.0
-  flutter_blue_plus: ^2.3.12
+  google_mlkit_text_recognition: ^0.17.1
+  flutter_blue_plus: ^2.3.14
   hex: ^0.2.0
   http: ^1.6.0
   crypto: ^3.0.7
   pointycastle: ^3.9.1
   google_generative_ai: ^0.4.7
   path: ^1.9.1
-  sqflite: ^2.4.2
-  mobile_scanner: ^7.4.0
+  sqflite: ^2.4.4+1
+  mobile_scanner: ^7.4.2
   flutter_appauth: ^12.0.2
   workmanager: ^0.10.9
   device_calendar: ^4.3.3
-  url_launcher: ^6.3.2
+  url_launcher: ^6.3.3
   flutter_inappwebview: ^6.1.5
   app_links: ^6.3.2
   multicast_dns: ^0.3.3
-  bonsoir: ^7.1.4
+  bonsoir: ^7.1.5
   just_audio: ^0.10.6
   record: ^6.2.1
   connectivity_plus: ^7.3.1

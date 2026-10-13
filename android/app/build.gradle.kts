@@ -76,8 +76,8 @@ flutter {
 }
 
 dependencies {
-    implementation("com.google.mlkit:genai-prompt:1.0.0-beta2")
-    implementation("com.google.android.gms:play-services-tasks:18.0.2")
+    implementation("com.google.mlkit:genai-prompt:1.0.0-beta4")
+    implementation("com.google.android.gms:play-services-tasks:18.4.1")
 }
 
 kotlin {
