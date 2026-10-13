@@ -122,6 +122,14 @@ updates:
     # needs carp_serializable ^3.0.0 which health 13.3.1 rejects. Do NOT bump
     # one of them alone (CI proved solving fails); do a single migration PR.
     ignore:
+      # intl 0.20.3: flutter_localizations is part of the pinned Flutter 3.44.0
+      # SDK and still requires intl 0.20.2, so `intl: ^0.20.3` fails version
+      # solving outright (PR #1757: "Because orionhealth_health depends on
+      # flutter_localizations from sdk which depends on intl 0.20.2, intl
+      # 0.20.2 is required ... version solving failed"). The SDK owns this pin;
+      # lift it with the next Flutter pin bump in ci.yml.
+      - dependency-name: "intl"
+        versions: [">= 0.20.3"]
       # google_fonts 9 requires Dart ^3.13.0; CI Flutter stable ships Dart
       # 3.12.0, so version solving fails outright. Revisit after SDK upgrade.
       - dependency-name: "google_fonts"
@@ -139,8 +147,10 @@ updates:
       # health >=13.3.2: coupled to device_info_plus 13 (win32-6 camp).
       - dependency-name: "health"
         versions: [">= 13.3.2"]
-      # research_package 2.5.0: coupled to carp_serializable 3, which health
-      # 13.3.1 rejects. Migrate with the health-data stack.
+      # research_package 2.4.1 (and its carp_themes_package 0.2.1 companion)
+      # landed 2026-10-13 and still resolves with health 13.3.1. 2.5.0 is
+      # coupled to carp_serializable 3, which health 13.3.1 rejects: migrate
+      # with the health-data stack.
       - dependency-name: "research_package"
         versions: [">= 2.5.0"]
       # flutter_secure_storage 10->11: needs encrypted-prefs migration check.
