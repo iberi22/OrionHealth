@@ -115,6 +115,8 @@ updates:
       - "dependencies"
     # Deferred breaking majors (2026-10-13, from PR #1748 all-dependencies):
     # each needs its own migration PR with device/build verification.
+    # NOTE 2026-10-13: device_info_plus 13 was re-included: health 13.3.2
+    # requires device_info_plus ^13.2.0 (coupled bump, basic getters only).
     ignore:
       # google_fonts 9 requires Dart ^3.13.0; CI Flutter stable ships Dart
       # 3.12.0, so version solving fails outright. Revisit after SDK upgrade.
@@ -126,9 +128,6 @@ updates:
       # file_picker 10->13 (two majors): needs storage-permission flow re-test.
       - dependency-name: "file_picker"
         versions: [">= 11.0.0"]
-      # device_info_plus 12->13: needs API migration check.
-      - dependency-name: "device_info_plus"
-        versions: [">= 13.0.0"]
       # flutter_secure_storage 10->11: needs encrypted-prefs migration check.
       - dependency-name: "flutter_secure_storage"
         versions: [">= 11.0.0"]
