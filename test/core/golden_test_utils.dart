@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:orionhealth_health/core/theme/app_theme.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
 
 /// Default surface of a `flutter test` view before a test customises it:
 /// 800x600 logical at devicePixelRatio 3.0 = 2400x1800 physical pixels.
@@ -12,6 +14,10 @@ const double _defaultDevicePixelRatio = 3.0;
 /// Wraps a widget in MaterialApp + Scaffold for golden testing.
 Widget wrapWithMaterial(Widget child, {String title = 'Test'}) {
   return MaterialApp(
+    theme: AppTheme.darkTheme,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    locale: const Locale('en'),
     home: Scaffold(body: Center(child: child)),
   );
 }

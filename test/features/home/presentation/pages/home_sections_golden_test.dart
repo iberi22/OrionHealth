@@ -80,9 +80,12 @@ void main() {
           providers: [
             BlocProvider<DashboardCubit>.value(value: mockDashboardCubit),
           ],
-          child: const MaterialApp(
-            themeMode: ThemeMode.dark,
-            home: Scaffold(
+          child: MaterialApp(
+            theme: AppTheme.darkTheme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('en'),
+            home: const Scaffold(
               body: HomeDashboardPage(),
             ),
           ),
