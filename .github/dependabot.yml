@@ -30,6 +30,23 @@ updates:
     open-pull-requests-limit: 2
     labels:
       - "dependencies"
+    # Deferred breaking majors (2026-10-13): each needs a dedicated migration
+    # PR with visual/type verification, NOT a silent monthly group bump.
+    ignore:
+      # tailwindcss 3->4: new CSS-first config; docs still ship tailwind.config.mjs.
+      - dependency-name: "tailwindcss"
+        versions: [">= 4.0.0"]
+      # @astrojs/tailwind 5->6: paired with the tailwindcss 4 migration.
+      - dependency-name: "@astrojs/tailwind"
+        versions: [">= 6.0.0"]
+      # typescript 6/7: @astrojs/check 0.9.x rejects TS 7 (broke deploy-astro
+      # preflight on src-astro via the same group). Unblock after check supports it.
+      - dependency-name: "typescript"
+        versions: [">= 6.0.0"]
+      # vite-plugin-pwa 1->2: workbox 7->8 precache/offline semantics; needs
+      # offline-fallback E2E re-verification against the new workbox build.
+      - dependency-name: "vite-plugin-pwa"
+        versions: [">= 2.0.0"]
     groups:
       # Version updates: everything into a single PR.
       all-dependencies:
@@ -70,6 +87,12 @@ updates:
     open-pull-requests-limit: 2
     labels:
       - "dependencies"
+    # 2026-10-13: typescript 7 broke `astro check` (@astrojs/check 0.9.x rejects
+    # TS 7: "astro check does not currently support TypeScript 7.0") and took
+    # deploy-astro red. Hold TS at 5.x until astro check supports 7.
+    ignore:
+      - dependency-name: "typescript"
+        versions: [">= 7.0.0"]
     groups:
       # Version updates: everything into a single PR.
       all-dependencies:
@@ -90,6 +113,34 @@ updates:
     open-pull-requests-limit: 2
     labels:
       - "dependencies"
+    # Deferred breaking majors (2026-10-13, from PR #1748 all-dependencies):
+    # each needs its own migration PR with device/build verification.
+    ignore:
+      # google_fonts 9 requires Dart ^3.13.0; CI Flutter stable ships Dart
+      # 3.12.0, so version solving fails outright. Revisit after SDK upgrade.
+      - dependency-name: "google_fonts"
+        versions: [">= 9.0.0"]
+      # cupertino_icons 2: major icon-font revamp; needs icon regression check.
+      - dependency-name: "cupertino_icons"
+        versions: [">= 2.0.0"]
+      # file_picker 10->13 (two majors): needs storage-permission flow re-test.
+      - dependency-name: "file_picker"
+        versions: [">= 11.0.0"]
+      # device_info_plus 12->13: needs API migration check.
+      - dependency-name: "device_info_plus"
+        versions: [">= 13.0.0"]
+      # flutter_secure_storage 10->11: needs encrypted-prefs migration check.
+      - dependency-name: "flutter_secure_storage"
+        versions: [">= 11.0.0"]
+      # app_links 6->7: needs deep-link regression check.
+      - dependency-name: "app_links"
+        versions: [">= 7.0.0"]
+      # record 6->7: needs audio pipeline re-test.
+      - dependency-name: "record"
+        versions: [">= 7.0.0"]
+      # share_plus 12->13: needs share-sheet regression check.
+      - dependency-name: "share_plus"
+        versions: [">= 13.0.0"]
     groups:
       # Version updates: everything into a single PR.
       all-dependencies:
@@ -110,6 +161,18 @@ updates:
     open-pull-requests-limit: 2
     labels:
       - "dependencies"
+    # Deferred toolchain majors (2026-10-13, from PR #1738): AGP 9 rejects
+    # `getDefaultProguardFile('proguard-android.txt')` used by
+    # flutter_inappwebview_android 1.1.3, breaking assembleProdDebug; Gradle 9
+    # also requires AGP 9. Migrate as one toolchain PR with a green device build.
+    ignore:
+      - dependency-name: "com.android.application"
+        versions: [">= 9.0.0"]
+      - dependency-name: "gradle-wrapper"
+        versions: [">= 9.0.0"]
+      # KGP 2.4 held with the AGP 8 toolchain until the AGP 9 migration lands.
+      - dependency-name: "org.jetbrains.kotlin.android"
+        versions: [">= 2.4.0"]
     groups:
       # Version updates: everything into a single PR.
       all-dependencies:
