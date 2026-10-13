@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const BASE = 'http://localhost:4321/OrionHealth';
+const BASE = 'http://localhost:4321';
 
 test('capture light mode', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });

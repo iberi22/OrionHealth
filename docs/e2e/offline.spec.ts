@@ -3,7 +3,8 @@ import { test, expect } from '@playwright/test';
 test.describe('PWA Offline Fallback', () => {
   test.beforeEach(async ({ page }) => {
     // Load the page and wait for Service Worker
-    await page.goto('/OrionHealth/');
+    // Site is served from root (astro `base: '/'`).
+    await page.goto('/');
     await page.evaluate(async () => {
       await navigator.serviceWorker.ready;
     });
@@ -15,7 +16,7 @@ test.describe('PWA Offline Fallback', () => {
     await context.setOffline(true);
 
     // Navigate to a non-existent page
-    await page.goto('/OrionHealth/offline-fallback-test-' + Date.now()).catch(() => {});
+    await page.goto('/offline-fallback-test-' + Date.now()).catch(() => {});
 
     // Verify it's the offline page
     const heading = page.locator('h1').first();
@@ -41,7 +42,7 @@ test.describe('PWA Offline Fallback', () => {
 
   test('should respect bilingual toggle on offline page', async ({ page, context }) => {
     await context.setOffline(true);
-    await page.goto('/OrionHealth/offline-lang-test').catch(() => {});
+    await page.goto('/offline-lang-test').catch(() => {});
 
     // Ensure we are on the offline page
     await expect(page.locator('#content-en')).toBeVisible({ timeout: 10000 });

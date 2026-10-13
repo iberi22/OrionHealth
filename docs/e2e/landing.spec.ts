@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-const BASE = '/OrionHealth';
+// Site is served from root (astro `base: '/'` since Cloudflare Pages migration f5372735).
+const BASE = '';
 
 test.describe('OrionHealth Landing Page', () => {
   test('should load hero section with title', async ({ page }) => {
@@ -191,8 +192,8 @@ test.describe('PWA & iOS Support', () => {
       const link = document.querySelector('link[rel="manifest"]');
       return link ? link.getAttribute('href') : null;
     });
-    // Astro 7.2.x PWA integration serves manifest as /OrionHealth/manifest.webmanifest
-    expect(manifestHref).toBe('/OrionHealth/manifest.webmanifest');
+    // Astro PWA integration serves manifest from site root (base '/').
+    expect(manifestHref).toBe('/manifest.webmanifest');
   });
 
   test('should have iOS meta tags', async ({ page }) => {
@@ -205,10 +206,10 @@ test.describe('PWA & iOS Support', () => {
 
     const appleTouchIcon = await page.locator('link[rel="apple-touch-icon"]');
     await expect(appleTouchIcon).toHaveAttribute('sizes', '180x180');
-    await expect(appleTouchIcon).toHaveAttribute('href', '/OrionHealth/apple-touch-icon.png');
+    await expect(appleTouchIcon).toHaveAttribute('href', '/apple-touch-icon.png');
 
     const startupImage = await page.locator('link[rel="apple-touch-startup-image"]');
-    await expect(startupImage).toHaveAttribute('href', '/OrionHealth/android-chrome-512x512.png');
+    await expect(startupImage).toHaveAttribute('href', '/android-chrome-512x512.png');
   });
 });
 
