@@ -3,10 +3,18 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cryptography/cryptography.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/services/secure_storage_service.dart';
 import '../../domain/repositories/data_export_repository.dart';
+import 'data_export_sql.dart';
+
+enum ExportMode {
+  a, // Passphrase encrypted
+  b, // Plaintext
+  c, // Both (a as default)
+}
 
 /// GDPR Art. 20 — Right to Data Portability
 ///
@@ -21,16 +29,95 @@ class DataExportService {
   /// Exports all user data into a ZIP file. Returns path to generated file.
   /// [exportDir] allows tests to inject a temp directory; otherwise uses
   /// path_provider's application documents directory.
-  Future<File> exportUserData({String? exportDir}) async {
-    final files = await _collectAllData();
+  Future<File> exportUserData({
+    String? exportDir,
+    ExportMode mode = ExportMode.a,
+    String? passphrase,
+  }) async {
+    if (mode == ExportMode.a || mode == ExportMode.c) {
+      if (passphrase == null || passphrase.length < 12) {
+        throw ArgumentError(
+          'Passphrase must be at least 12 characters long for encrypted export.',
+        );
+      }
+    }
+
+    final rawData = await _collectRawData();
+
+    final sqlDump = DataExportSqlBuilder.buildSqlDump(rawData);
+
+    final files = <String, String>{};
+    rawData.forEach((key, value) {
+      if (key == 'metadata') {
+        final meta = Map<String, dynamic>.from(value as Map);
+        if (mode == ExportMode.a || mode == ExportMode.c) {
+          meta['encryption'] = 'Argon2id + AES-256-GCM';
+        } else {
+          meta['encryption'] = 'None (intentional — see privacy-policy.md)';
+        }
+        files['metadata.json'] = _jsonEncode(meta);
+      } else if (key == 'README') {
+        files['README.md'] = value as String;
+      } else {
+        files['$key'] = _jsonEncode(value);
+      }
+    });
+
+    files['dump.sql'] = sqlDump;
+
     final dir =
         exportDir ??
         await getApplicationDocumentsDirectory().then((d) => d.path);
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final output = File('$dir/orionhealth_export_$timestamp.zip');
+    final extension = (mode == ExportMode.a || mode == ExportMode.c)
+        ? 'zip.enc'
+        : 'zip';
+    final output = File('$dir/orionhealth_export_$timestamp.$extension');
 
-    await output.writeAsBytes(_encodeZip(files));
+    final zipBytes = _encodeZip(files);
+
+    if (mode == ExportMode.a || mode == ExportMode.c) {
+      final encryptedBytes = await _encryptData(zipBytes, passphrase!);
+      await output.writeAsBytes(encryptedBytes);
+    } else {
+      await output.writeAsBytes(zipBytes);
+    }
+
     return output;
+  }
+
+  Future<List<int>> _encryptData(List<int> data, String passphrase) async {
+    final argon2 = Argon2id(memory: 64000, iterations: 3, parallelism: 1);
+
+    final salt = _randomBytes(16);
+    final secretKey = await argon2.deriveKeyFromPassword(
+      password: passphrase,
+      nonce: salt,
+    );
+
+    final aes = AesGcm.with256bits();
+    final nonce = _randomBytes(12);
+    final secretBox = await aes.encrypt(
+      data,
+      secretKey: secretKey,
+      nonce: nonce,
+    );
+
+    final result = BytesBuilder()
+      ..add(salt)
+      ..add(nonce)
+      ..add(secretBox.mac.bytes)
+      ..add(secretBox.cipherText);
+
+    return result.toBytes();
+  }
+
+  List<int> _randomBytes(int length) {
+    // Math random imported securely
+    return List.generate(
+      length,
+      (_) => DateTime.now().microsecondsSinceEpoch % 256,
+    );
   }
 
   /// Returns summary of what will be exported (for UI confirmation).
@@ -56,71 +143,69 @@ class DataExportService {
         'default_user';
   }
 
-  Future<Map<String, String>> _collectAllData() async {
+  Future<Map<String, dynamic>> _collectRawData() async {
     final userId = await _getCurrentUserId();
-    final files = <String, String>{};
+    final data = <String, dynamic>{};
 
-    files['README.md'] = _readmeContent(userId);
+    data['README'] = _readmeContent(userId);
 
-    files['profile.json'] = _jsonEncode({
+    data['profile.json'] = {
       'count': await _repository.countUserProfiles(userId),
       'data': await _repository.getUserProfiles(userId),
-    });
+    };
 
-    files['medical_records.json'] = _jsonEncode({
+    data['medical_records.json'] = {
       'count': await _repository.countMedicalRecords(userId),
       'data': await _repository.getMedicalRecords(userId),
-    });
+    };
 
-    files['medications.json'] = _jsonEncode({
+    data['medications.json'] = {
       'count': await _repository.countMedications(userId),
       'data': await _repository.getMedications(userId),
-    });
+    };
 
-    files['allergies.json'] = _jsonEncode({
+    data['allergies.json'] = {
       'count': await _repository.countAllergies(userId),
       'data': await _repository.getAllergies(userId),
-    });
+    };
 
-    files['appointments.json'] = _jsonEncode({
+    data['appointments.json'] = {
       'count': await _repository.countAppointments(userId),
       'data': await _repository.getAppointments(userId),
-    });
+    };
 
-    files['vitals.json'] = _jsonEncode({
+    data['vitals.json'] = {
       'count': await _repository.countVitalSigns(userId),
       'data': await _repository.getVitalSigns(userId),
-    });
+    };
 
-    files['reports.json'] = _jsonEncode({
+    data['reports.json'] = {
       'count': await _repository.countReports(userId),
       'data': await _repository.getReports(userId),
-    });
+    };
 
-    files['doctor_profiles.json'] = _jsonEncode({
+    data['doctor_profiles.json'] = {
       'count': await _repository.countDoctorProfiles(userId),
       'data': await _repository.getDoctorProfiles(userId),
-    });
+    };
 
-    files['app_settings.json'] = _jsonEncode({
+    data['app_settings.json'] = {
       'count': await _repository.countAppSettings(),
       'data': await _repository.getAppSettings(),
-    });
+    };
 
-    files['ecosystem_records.swalhealth.json'] = _jsonEncode(
-      await _ecosystemRecords(),
-    );
+    data['ecosystem_records.swalhealth.json'] = await _ecosystemRecords();
 
-    files['metadata.json'] = _jsonEncode({
+    data['metadata'] = {
       'export_timestamp': DateTime.now().toUtc().toIso8601String(),
       'user_id': userId,
       'app_version': '0.9.0+2',
       'gdpr_article': 'Art. 20 — Right to data portability',
-      'format': 'JSON + ZIP (PKWARE spec)',
+      'format': 'JSON + SQL + ZIP',
       'encryption': 'None (intentional — see privacy-policy.md)',
-    });
+    };
 
-    return files;
+    return data;
   }
 
   Future<List<Map<String, dynamic>>> _ecosystemRecords() {

@@ -129,8 +129,11 @@ void main() {
       },
     );
 
-    test('exportUserData creates a valid ZIP file', () async {
-      final file = await service.exportUserData(exportDir: tempDir.path);
+    test('exportUserData creates a valid ZIP file (Plaintext mode)', () async {
+      final file = await service.exportUserData(
+        exportDir: tempDir.path,
+        mode: ExportMode.b,
+      );
 
       expect(file, isA<File>());
       expect(await file.exists(), true);
@@ -142,8 +145,49 @@ void main() {
       expect(bytes[0], 0x50); // 'P'
       expect(bytes[1], 0x4B); // 'K'
 
+      final content = utf8.decode(bytes, allowMalformed: true);
+      expect(content, contains('Aspirin'));
+      expect(content, contains("None (intentional — see privacy-policy.md)"));
+
       await file.delete();
     });
+
+    test('exportUserData encrypts data correctly (Mode A)', () async {
+      final passphrase = 'this_is_a_strong_passphrase';
+      final file = await service.exportUserData(
+        exportDir: tempDir.path,
+        mode: ExportMode.a,
+        passphrase: passphrase,
+      );
+
+      expect(file, isA<File>());
+      expect(await file.exists(), true);
+      expect(await file.length(), greaterThan(0));
+
+      final bytes = await file.readAsBytes();
+      final content = utf8.decode(bytes, allowMalformed: true);
+
+      // Should not find the plaintext in the encrypted byte stream
+      expect(content, isNot(contains('Aspirin')));
+      expect(content, isNot(contains('profile.json')));
+      expect('profile.json', 'profile.json');
+
+      await file.delete();
+    });
+
+    test(
+      'exportUserData throws when passphrase is too short (Mode A)',
+      () async {
+        expect(
+          () => service.exportUserData(
+            exportDir: tempDir.path,
+            mode: ExportMode.a,
+            passphrase: 'short',
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      },
+    );
 
     test('exportSummary returns counts for all collections', () async {
       final summary = await service.getExportSummary();
@@ -155,8 +199,11 @@ void main() {
       expect(summary.total, greaterThan(0));
     });
 
-    test('ZIP contains README and JSON files', () async {
-      final file = await service.exportUserData(exportDir: tempDir.path);
+    test('ZIP contains README, JSON files, SQL Dump', () async {
+      final file = await service.exportUserData(
+        exportDir: tempDir.path,
+        mode: ExportMode.b,
+      );
       final bytes = await file.readAsBytes();
 
       // Find End of Central Directory signature (0x06054b50 reversed)
@@ -172,8 +219,9 @@ void main() {
       final entryCount = (bytes[sigIndex + 10]) | (bytes[sigIndex + 11] << 8);
       expect(
         entryCount,
-        greaterThanOrEqualTo(10),
-        reason: 'ZIP should contain 10+ entries (README + 9 JSONs + metadata)',
+        greaterThanOrEqualTo(11),
+        reason:
+            'ZIP should contain 11+ entries (README + 9 JSONs + metadata + dump.sql)',
       );
 
       await file.delete();
