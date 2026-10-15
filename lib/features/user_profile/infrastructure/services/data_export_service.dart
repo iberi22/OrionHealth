@@ -1,17 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
+
+import 'package:cryptography/cryptography.dart';
 
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/services/secure_storage_service.dart';
 import '../../domain/repositories/data_export_repository.dart';
+import 'data_export_sql.dart';
 
 /// GDPR Art. 20 — Right to Data Portability
 ///
 /// Generates a portable ZIP archive containing all user data in JSON format.
 /// Pure Dart ZIP encoder (no external dependencies).
+enum ExportMode { a, b, c }
+
 class DataExportService {
   final DataExportRepository _repository;
   final SecureStorageService _secureStorage;
@@ -21,16 +27,82 @@ class DataExportService {
   /// Exports all user data into a ZIP file. Returns path to generated file.
   /// [exportDir] allows tests to inject a temp directory; otherwise uses
   /// path_provider's application documents directory.
-  Future<File> exportUserData({String? exportDir}) async {
-    final files = await _collectAllData();
+  Future<File> exportUserData({
+    String? exportDir,
+    required ExportMode mode,
+    required bool userConsented,
+    String? passphrase,
+  }) async {
+    if (!userConsented) {
+      throw Exception('Explicit user consent is required to export health data.');
+    }
+
+    if (mode == ExportMode.b && passphrase != null) {
+      throw Exception('Plaintext export does not use a passphrase.');
+    }
+
+    if ((mode == ExportMode.a || mode == ExportMode.c) && (passphrase == null || passphrase.trim().isEmpty)) {
+      throw Exception('Passphrase is required for encrypted export.');
+    }
+
+    final isEncrypted = mode == ExportMode.a || mode == ExportMode.c;
+    final files = await _collectAllData(mode);
+
+    // Generate SQL Dump
+    final sqlDump = DataExportSqlBuilder.buildSqlDump(files: files);
+    files['export.sql'] = sqlDump;
+
     final dir =
         exportDir ??
         await getApplicationDocumentsDirectory().then((d) => d.path);
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final output = File('$dir/orionhealth_export_$timestamp.zip');
 
-    await output.writeAsBytes(_encodeZip(files));
+    final output = File('$dir/orionhealth_export_$timestamp${isEncrypted ? '.zip.enc' : '.zip'}');
+    final zipBytes = _encodeZip(files);
+
+    if (isEncrypted) {
+      final encryptedBytes = await _encryptData(zipBytes, passphrase!);
+      await output.writeAsBytes(encryptedBytes);
+    } else {
+      await output.writeAsBytes(zipBytes);
+    }
+
     return output;
+  }
+
+  Future<List<int>> _encryptData(List<int> data, String passphrase) async {
+    final rng = Random.secure();
+    final salt = List<int>.generate(16, (_) => rng.nextInt(256));
+    final nonce = List<int>.generate(12, (_) => rng.nextInt(256));
+
+    final argon2 = Argon2id(
+      memory: 64000,
+      parallelism: 3,
+      iterations: 3,
+      hashLength: 32,
+    );
+
+    final key = await argon2.deriveKeyFromPassword(
+      password: passphrase,
+      nonce: salt,
+    );
+
+    final secretKey = SecretKey(await key.extractBytes());
+
+    final algorithm = AesGcm.with256bits();
+    final secretBox = await algorithm.encrypt(
+      data,
+      secretKey: secretKey,
+      nonce: nonce,
+    );
+
+    final result = BytesBuilder();
+    result.add(salt);
+    result.add(nonce);
+    result.add(secretBox.mac.bytes);
+    result.add(secretBox.cipherText);
+
+    return result.toBytes();
   }
 
   /// Returns summary of what will be exported (for UI confirmation).
@@ -56,7 +128,7 @@ class DataExportService {
         'default_user';
   }
 
-  Future<Map<String, String>> _collectAllData() async {
+  Future<Map<String, String>> _collectAllData(ExportMode mode) async {
     final userId = await _getCurrentUserId();
     final files = <String, String>{};
 
@@ -117,7 +189,7 @@ class DataExportService {
       'app_version': '0.9.0+2',
       'gdpr_article': 'Art. 20 — Right to data portability',
       'format': 'JSON + ZIP (PKWARE spec)',
-      'encryption': 'None (intentional — see privacy-policy.md)',
+      'encryption': (mode == ExportMode.a || mode == ExportMode.c) ? 'Argon2id + AES-256-GCM' : 'None (intentional — see privacy-policy.md)',
     });
 
     return files;

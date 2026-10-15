@@ -110,6 +110,8 @@ void main() {
         );
         final file = await ecosystemService.exportUserData(
           exportDir: tempDir.path,
+          mode: ExportMode.b,
+          userConsented: true,
         );
         final bytes = await file.readAsBytes();
         expect(
@@ -130,7 +132,7 @@ void main() {
     );
 
     test('exportUserData creates a valid ZIP file', () async {
-      final file = await service.exportUserData(exportDir: tempDir.path);
+      final file = await service.exportUserData(exportDir: tempDir.path, mode: ExportMode.b, userConsented: true);
 
       expect(file, isA<File>());
       expect(await file.exists(), true);
@@ -145,6 +147,66 @@ void main() {
       await file.delete();
     });
 
+    test('Throws error if explicit consent is not provided', () async {
+      expect(
+        () => service.exportUserData(exportDir: tempDir.path, mode: ExportMode.b, userConsented: false),
+        throwsA(isA<Exception>().having((e) => e.toString(), 'message', contains('Explicit user consent is required'))),
+      );
+    });
+
+    test('Throws error if encrypted mode lacks passphrase', () async {
+      expect(
+        () => service.exportUserData(exportDir: tempDir.path, mode: ExportMode.a, userConsented: true),
+        throwsA(isA<Exception>().having((e) => e.toString(), 'message', contains('Passphrase is required'))),
+      );
+    });
+
+    test('Mode A exports an encrypted file and bytes do not contain plaintext JSON data', () async {
+      final file = await service.exportUserData(
+        exportDir: tempDir.path,
+        mode: ExportMode.a,
+        userConsented: true,
+        passphrase: 'supersecretpassphrase123',
+      );
+
+      expect(file.path.endsWith('.zip.enc'), isTrue);
+
+      final bytes = await file.readAsBytes();
+
+      // Should not contain plaintext data
+      expect(bytes, isNot(containsAll(utf8.encode('Aspirin'))));
+
+      await file.delete();
+    });
+
+    test('Mode A uses secure random salt and nonce for each export', () async {
+      final file1 = await service.exportUserData(
+        exportDir: tempDir.path,
+        mode: ExportMode.a,
+        userConsented: true,
+        passphrase: 'supersecretpassphrase123',
+      );
+
+      final file2 = await service.exportUserData(
+        exportDir: tempDir.path,
+        mode: ExportMode.a,
+        userConsented: true,
+        passphrase: 'supersecretpassphrase123',
+      );
+
+      final bytes1 = await file1.readAsBytes();
+      final bytes2 = await file2.readAsBytes();
+
+      // Salt and nonce are first 28 bytes
+      final saltNonce1 = bytes1.sublist(0, 28);
+      final saltNonce2 = bytes2.sublist(0, 28);
+
+      expect(saltNonce1, isNot(equals(saltNonce2)));
+
+      await file1.delete();
+      await file2.delete();
+    });
+
     test('exportSummary returns counts for all collections', () async {
       final summary = await service.getExportSummary();
 
@@ -156,7 +218,7 @@ void main() {
     });
 
     test('ZIP contains README and JSON files', () async {
-      final file = await service.exportUserData(exportDir: tempDir.path);
+      final file = await service.exportUserData(exportDir: tempDir.path, mode: ExportMode.b, userConsented: true);
       final bytes = await file.readAsBytes();
 
       // Find End of Central Directory signature (0x06054b50 reversed)

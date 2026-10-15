@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'data_export_consent_page.dart';
+import 'package:get_it/get_it.dart';
+import '../../infrastructure/services/data_export_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../features/auth/presentation/pages/receive_medical_data_page.dart';
@@ -143,18 +146,8 @@ class _UserProfileView extends StatelessWidget {
                         );
                       },
                     ),
-                    ProfileInfoTile(
-                      icon: Icons.import_export,
-                      title: AppLocalizations.of(context)!.importData,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HealthImportPage(),
-                          ),
-                        );
-                      },
-                    ),
+
+
                   ],
                 ),
                 const SizedBox(height: 32),
