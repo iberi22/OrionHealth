@@ -997,7 +997,7 @@
       "priority": "P2",
       "category": "general",
       "github_issue": null,
-      "verified_by": "gh run list -R iberi22/OrionHealth --workflow=ci.yml --limit 5; rg -c 'test' packages/health_wallet/tests/known_failures.txt || echo 0",
+      "verified_by": "gh run list -R iberi22/OrionHealth --workflow=ci.yml --limit 5; rg -c '^test/' packages/health_wallet/tests/known_failures.txt || echo 0",
       "last_tested": "2026-10-13",
       "implemented_in": "packages/health_wallet/",
       "tests": 35,
@@ -1007,7 +1007,7 @@
       "evidence_note": "All 3 test files (35 cases) are registered in packages/health_wallet/tests/known_failures.txt as non-compiling ('package:flutter_test' is not a dependency; blocked by isar_generator analyzer<6.0.0). known_failures = 3 counts registered test FILES, not failing cases. The CI gate stays green only because they are pre-registered.",
       "launch_blocker": false,
       "passes": false,
-      "notes": "packages/health_wallet/ (lib/, 18 Dart files) — measured 2026-10-15: 35 test cases; 3 registered in tests/known_failures.txt. Implementation detail: lib/, 18 Dart files.",
+      "notes": "packages/health_wallet/ (lib/, 18 Dart files) — measured 2026-10-15: 35 test cases; 3 registered (3 test files) in packages/health_wallet/tests/known_failures.txt. Implementation detail: lib/, 18 Dart files.",
       "req_ids": null,
       "user_stories": null
     },

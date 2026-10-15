@@ -543,7 +543,7 @@
       "presentation": 0,
       "tests": 35,
       "goldens": 0,
-      "description": "packages/health_wallet/ (lib/, 18 Dart files) — measured 2026-10-15: 35 test cases; 3 registered in tests/known_failures.txt.",
+      "description": "packages/health_wallet/ (lib/, 18 Dart files) — 35 test cases in 3 test files; all 3 files are registered as non-compiling in packages/health_wallet/tests/known_failures.txt.",
       "source_id": "FEAT-036",
       "gitcore_status": "partial",
       "progress_pct": 40
