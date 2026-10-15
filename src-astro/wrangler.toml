@@ -2,14 +2,14 @@ name = "orionhealth-web"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
-# --- Dominio canonico (owner decision 2026-10-15) ---
-# La web vive en https://orionhealth.swal.network (custom domain del Worker).
-# workers_dev = true a proposito: orionhealth-web.iberi22.workers.dev sigue
-# respondiendo como fallback / health-check.
-# El adapter @astrojs/cloudflare copia esto a dist/server/wrangler.json, que es
-# el config que usa `wrangler deploy`. Sin zone_id ni account_id aqui: se
-# resuelven en el deploy (OAuth de la maquina o CI), nunca en el repo publico.
-# OJO: claves top-level van ANTES de la primera tabla TOML ([[kv_namespaces]]).
+# --- Canonical domain (owner decision 2026-10-15) ---
+# The web lives at https://orionhealth.swal.network (Worker custom domain).
+# workers_dev = true on purpose: orionhealth-web.iberi22.workers.dev keeps
+# answering as a fallback / health check.
+# The @astrojs/cloudflare adapter copies this into dist/server/wrangler.json, which is
+# the config `wrangler deploy` uses. No zone_id or account_id here: they are resolved
+# at deploy time (machine OAuth or CI), never in the public repo.
+# NOTE: top-level keys must come BEFORE the first TOML table ([[kv_namespaces]]).
 workers_dev = true
 
 routes = [
@@ -37,7 +37,7 @@ binding = "AI"
 
 [vars]
 NODE_VERSION = "20"
-# Canonico para canonical/OG y normalize-wrangler-config.mjs.
+# Canonical URL for canonical/OG tags and normalize-wrangler-config.mjs.
 PUBLIC_SITE_URL = "https://orionhealth.swal.network"
-# Fallback workers.dev (health checks / propagacion DNS).
+# workers.dev fallback (health checks / DNS propagation).
 PUBLIC_FALLBACK_URL = "https://orionhealth-web.iberi22.workers.dev"

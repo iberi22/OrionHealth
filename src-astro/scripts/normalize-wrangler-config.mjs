@@ -14,12 +14,11 @@ function extractHostname(v) {
   if (!v || typeof v !== 'string') return null;
   try { const u = v.includes('://') ? new URL(v) : new URL(`https://${v}`); return u.hostname.replace(/\.$/, '').toLowerCase(); } catch { return v.replace(/^[a-z]+:\/\//i, '').split('/')[0].replace(/\.$/, '').toLowerCase(); }
 }
-// Rutas de produccion. Respeta el custom domain declarado en wrangler.toml:
-// para un custom domain el formato canonico es { pattern = "host", custom_domain = true }
-// (hostname exacto, SIN sufijo /* y SIN zone_name; la zona se resuelve en el deploy).
-// Idempotente: volver a correrlo no pierde el custom domain, y si PUBLIC_SITE_URL
-// es un subdominio lo reintroduce aunque las rutas se hayan borrado antes
-// (p.ej. `--target preview` seguido de `--target production`).
+// Production routes. Keeps the custom domain declared in wrangler.toml: a custom
+// domain is { pattern = "host", custom_domain = true } (exact hostname, no /* suffix,
+// no zone_name; the zone is resolved at deploy time). Idempotent: re-running it never
+// drops the custom domain, and PUBLIC_SITE_URL brings it back even if routes were
+// removed before (e.g. `--target preview` followed by `--target production`).
 function normalizeProductionRoutes(config) {
   const out = [];
   const seen = new Set();
@@ -32,8 +31,8 @@ function normalizeProductionRoutes(config) {
     out.push(zone ? { pattern: `${host}/*`, zone_name: zone } : { pattern: `${host}/*` });
   }
   const publicSiteUrl = extractHostname(config?.vars?.PUBLIC_SITE_URL);
-  // Recupera el dominio publico como custom domain de Workers. Nunca deduce una
-  // zona (zone_name) ni agrega www: solo se usan zonas declaradas explicitamente.
+  // Recover the public domain as a Workers custom domain. Never infer a zone
+  // (zone_name) or add www: only explicitly declared zones are used.
   if (publicSiteUrl && !seen.has(publicSiteUrl)) out.push({ pattern: publicSiteUrl, custom_domain: true });
   return out;
 }
@@ -53,9 +52,9 @@ async function main() {
     } else {
       config.routes = prodRoutes;
     }
-    // workers_dev explicito (wrangler.toml) manda: orionhealth-web lo mantiene
-    // true para que orionhealth-web.iberi22.workers.dev siga respondiendo como
-    // fallback/health-check ademas del custom domain.
+    // An explicit workers_dev in wrangler.toml wins: orionhealth-web keeps it true so
+    // orionhealth-web.iberi22.workers.dev keeps answering as a fallback/health check
+    // next to the custom domain.
     if (typeof config.workers_dev !== 'boolean') config.workers_dev = prodRoutes.length === 0;
     config.vars = { ...(config.vars ?? {}), PUBLIC_API_BASE_URL: config.vars?.PUBLIC_API_BASE_URL ?? '/api' };
   }

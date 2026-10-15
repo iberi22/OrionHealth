@@ -59,23 +59,23 @@ wrangler.toml (Cloudflare Pages)
 astro.config.mjs (cloudflare + svelte + VitePWA workbox)
 ```
 
-## Dominio y deploy (orionhealth-web)
+## Domain and deploy (orionhealth-web)
 
-- **Canonico:** <https://orionhealth.swal.network> — custom domain del Worker, declarado
-  en `wrangler.toml` como `routes = [{ pattern = "orionhealth.swal.network", custom_domain = true }]`.
-- `workers_dev = true` se mantiene a proposito: `orionhealth-web.iberi22.workers.dev` sigue
-  publicado como fallback / health-check.
-- Sin `account_id` ni `zone_id` en el repo: los resuelve el deploy (OAuth de la maquina o CI).
-- `site:` de `astro.config.mjs`, canonical/OG y `normalize-wrangler-config.mjs` parten de
-  `PUBLIC_SITE_URL` (default `https://orionhealth.swal.network`).
+- **Canonical:** <https://orionhealth.swal.network> — Worker custom domain, declared in
+  `wrangler.toml` as `routes = [{ pattern = "orionhealth.swal.network", custom_domain = true }]`.
+- `workers_dev = true` is kept on purpose: `orionhealth-web.iberi22.workers.dev` stays
+  published as a fallback / health check.
+- No `account_id` or `zone_id` in the repo: the deploy resolves them (machine OAuth or CI).
+- `site:` in `astro.config.mjs`, canonical/OG tags and `normalize-wrangler-config.mjs` start
+  from `PUBLIC_SITE_URL` (default `https://orionhealth.swal.network`).
 
-Deploy desde una maquina con OAuth (el token de CI todavia no es valido):
+Deploy from a machine with OAuth (the CI token is not valid yet):
 
 ```bash
 pnpm install --frozen-lockfile
-npx astro build                                  # astro check && astro build si check no se cuelga
+npx astro build                                  # astro check && astro build when check does not hang
 node scripts/normalize-wrangler-config.mjs --target production
-pnpm dlx wrangler@4.127.1 deploy --config dist/server/wrangler.json   # misma version que CI
+pnpm dlx wrangler@4.127.1 deploy --config dist/server/wrangler.json   # same version as CI
 ```
 
 ## Comandos

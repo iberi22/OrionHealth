@@ -24,8 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      # Dominio canonico (custom domain del Worker, ver src-astro/wrangler.toml).
-      # El fallback workers.dev se conserva para health checks (src-astro/scripts/deploy-smoke.sh).
+      # Canonical domain (Worker custom domain, see src-astro/wrangler.toml).
+      # The workers.dev fallback is kept for health checks (src-astro/scripts/deploy-smoke.sh).
       E2E_BASE_URL: https://orionhealth.swal.network
     defaults:
       run:
