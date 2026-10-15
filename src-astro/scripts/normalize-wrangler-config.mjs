@@ -32,21 +32,9 @@ function normalizeProductionRoutes(config) {
     out.push(zone ? { pattern: `${host}/*`, zone_name: zone } : { pattern: `${host}/*` });
   }
   const publicSiteUrl = extractHostname(config?.vars?.PUBLIC_SITE_URL);
-  if (publicSiteUrl) {
-    const labels = publicSiteUrl.split('.');
-    const apexLike = labels.length <= 2 || (labels.length === 3 && publicSiteUrl.startsWith('www.'));
-    if (!apexLike) {
-      // Subdominio: custom domain de Workers (nunca zone_name: la zona del apex
-      // no se deduce del host, y un zone_name mal inferido invalida el deploy).
-      if (!seen.has(publicSiteUrl)) out.push({ pattern: publicSiteUrl, custom_domain: true });
-    } else if (out.length === 0) {
-      // Fallback legacy (apps del template sin rutas declaradas, apex real).
-      const zone = publicSiteUrl.replace(/^www\./, '');
-      const hosts = new Set([publicSiteUrl]);
-      if (labels.length === 2 && !publicSiteUrl.startsWith('www.')) hosts.add(`www.${publicSiteUrl}`);
-      for (const h of [...hosts].sort()) out.push({ pattern: `${h}/*`, zone_name: zone });
-    }
-  }
+  // Recupera el dominio publico como custom domain de Workers. Nunca deduce una
+  // zona (zone_name) ni agrega www: solo se usan zonas declaradas explicitamente.
+  if (publicSiteUrl && !seen.has(publicSiteUrl)) out.push({ pattern: publicSiteUrl, custom_domain: true });
   return out;
 }
 
