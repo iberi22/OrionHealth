@@ -10,7 +10,7 @@
 ### Root Directory
 - `lib/` — Main Flutter application source code (Clean Architecture)
 - `backend/` — Node.js/Express backend server for FHIR data integration & sessions
-- `src-astro/` — Astro 7 + Svelte 5 web PWA (`orionhealth-web`, Cloudflare Workers)
+- `src-astro/` — Astro 7 + Svelte 5 web PWA (`orionhealth-web`, Cloudflare Workers, <https://orionhealth.swal.network>)
 - `functions/` — Cloud & serverless utility functions
 - `packages/` — Local Dart/Flutter packages
   - `packages/health_wallet/` — Self-Sovereign Identity (SSI) / DID & Verifiable Credentials wallet

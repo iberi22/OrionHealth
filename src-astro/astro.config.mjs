@@ -5,8 +5,14 @@ import AstroPWA from '@vite-pwa/astro';
 
 // SSR (Cloudflare Workers) + PWA via @vite-pwa/astro (mismo patrón que docs/,
 // que sí genera sw.js; vite-plugin-pwa crudo no emite SW con output:'server').
+//
+// Dominio canonico: https://orionhealth.swal.network (custom domain del Worker
+// orionhealth-web, ver wrangler.toml). orionhealth-web.iberi22.workers.dev queda
+// como fallback/health-check. Overridable con PUBLIC_SITE_URL (previews).
+const site = process.env.PUBLIC_SITE_URL ?? 'https://orionhealth.swal.network';
+
 export default defineConfig({
-  site: 'https://orionhealth-web.iberi22.workers.dev',
+  site,
   output: 'server',
   adapter: cloudflare(),
   integrations: [

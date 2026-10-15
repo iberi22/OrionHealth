@@ -2,6 +2,20 @@ name = "orionhealth-web"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
+# --- Dominio canonico (owner decision 2026-10-15) ---
+# La web vive en https://orionhealth.swal.network (custom domain del Worker).
+# workers_dev = true a proposito: orionhealth-web.iberi22.workers.dev sigue
+# respondiendo como fallback / health-check.
+# El adapter @astrojs/cloudflare copia esto a dist/server/wrangler.json, que es
+# el config que usa `wrangler deploy`. Sin zone_id ni account_id aqui: se
+# resuelven en el deploy (OAuth de la maquina o CI), nunca en el repo publico.
+# OJO: claves top-level van ANTES de la primera tabla TOML ([[kv_namespaces]]).
+workers_dev = true
+
+routes = [
+  { pattern = "orionhealth.swal.network", custom_domain = true }
+]
+
 # --- Modo demo publica: mesh-only (costo 0, datos P2P Yjs, sin backend) ---
 # Vault/R2/D1 NO aprovisionados a proposito (iberi22/swal-vault es privado;
 # la demo no procesa PHI real). Para activar billing/vault en una ola futura:
@@ -23,3 +37,7 @@ binding = "AI"
 
 [vars]
 NODE_VERSION = "20"
+# Canonico para canonical/OG y normalize-wrangler-config.mjs.
+PUBLIC_SITE_URL = "https://orionhealth.swal.network"
+# Fallback workers.dev (health checks / propagacion DNS).
+PUBLIC_FALLBACK_URL = "https://orionhealth-web.iberi22.workers.dev"
