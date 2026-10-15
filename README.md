@@ -15,7 +15,7 @@ on-device AI models and Self-Sovereign Identity standards without relying on cen
 
 ## 📊 Project Status
 
-**v0.10.1** — All 26/26 features ✅ | **Real Score: 100%** | Flutter Web PWA Live at `app-orionhealth.pages.dev` 🚀 | 75/75 Wave 9+10 tests passing | Offline-first AI ✅ | On-device TTS ✅ | Audio Recording ✅ | Secure Storage ✅ | Environment Config ✅ | Lazy Loading ✅
+**v0.11.0-dev** — 38 tracked capabilities measured 2026-10-15: **6 stable / 30 partial / 1 implemented / 1 paused** (canonical: [`.gitcore/features.json`](./.gitcore/features.json)) | Flutter Web PWA live at `app-orionhealth.pages.dev` (HTTP 200) and web landing at `orionhealth-web.iberi22.workers.dev` (HTTP 200) | Gated Flutter suite green on `main` (2026-10-13, run 38420604837) with 289 registered known failures | e2e-android red on `main`; docs deploy and repo homepage URL (HTTP 404) open
 
 ### Wave 7+8+9+10 highlights
 

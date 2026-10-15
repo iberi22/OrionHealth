@@ -1,5 +1,6 @@
 {
   "$schema": "v2",
+  "deprecated": "superseded by .gitcore/features.json on 2026-10-15",
   "metadata": {
     "version": "2.0.0",
     "last_updated": "2026-08-16",
