@@ -6,7 +6,7 @@ export default defineConfig({
   retries: 1,
   reporter: [['list']],
   use: {
-    baseURL: process.env.E2E_BASE_URL ?? 'https://orionhealth-web.iberi22.workers.dev',
+    baseURL: process.env.E2E_BASE_URL ?? 'https://orionhealth.swal.network',
     trace: 'off',
   },
   projects: [

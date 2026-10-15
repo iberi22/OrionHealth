@@ -59,6 +59,25 @@ wrangler.toml (Cloudflare Pages)
 astro.config.mjs (cloudflare + svelte + VitePWA workbox)
 ```
 
+## Domain and deploy (orionhealth-web)
+
+- **Canonical:** <https://orionhealth.swal.network> — Worker custom domain, declared in
+  `wrangler.toml` as `routes = [{ pattern = "orionhealth.swal.network", custom_domain = true }]`.
+- `workers_dev = true` is kept on purpose: `orionhealth-web.iberi22.workers.dev` stays
+  published as a fallback / health check.
+- No `account_id` or `zone_id` in the repo: the deploy resolves them (machine OAuth or CI).
+- `site:` in `astro.config.mjs`, canonical/OG tags and `normalize-wrangler-config.mjs` start
+  from `PUBLIC_SITE_URL` (default `https://orionhealth.swal.network`).
+
+Deploy from a machine with OAuth (the CI token is not valid yet):
+
+```bash
+pnpm install --frozen-lockfile
+npx astro build                                  # astro check && astro build when check does not hang
+node scripts/normalize-wrangler-config.mjs --target production
+pnpm dlx wrangler@4.127.1 deploy --config dist/server/wrangler.json   # same version as CI
+```
+
 ## Comandos
 
 ```bash

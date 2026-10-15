@@ -54,6 +54,12 @@ docs/.astro/
 docs/dist/
 docs/node_modules/
 
+# Web build artifacts (Astro/Cloudflare Workers, src-astro)
+# dist/server/wrangler.json es GENERADO por el adapter desde src-astro/wrangler.toml
+# (contiene el config real del deploy) -> no se versiona.
+src-astro/.astro/
+src-astro/dist/
+
 # Backup files
 *_backup_*/
 GIT_RECOVERY_PLAN.md

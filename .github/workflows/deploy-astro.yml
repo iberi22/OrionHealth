@@ -76,4 +76,7 @@ jobs:
       - name: Smoke orionhealth-web
         run: bash src-astro/scripts/deploy-smoke.sh
         env:
-          APP_URL: https://orionhealth-web.iberi22.workers.dev
+          # Canonico: custom domain del Worker (ver src-astro/wrangler.toml).
+          # workers.dev queda como fallback del script si el DNS aun propaga.
+          APP_URL: https://orionhealth.swal.network
+          FALLBACK_APP_URL: https://orionhealth-web.iberi22.workers.dev
