@@ -1,6 +1,8 @@
 import { test, expect, request } from '@playwright/test';
 
-const BASE = process.env.E2E_BASE_URL ?? 'https://orionhealth-web.iberi22.workers.dev';
+// Canonico: orionhealth.swal.network. Fallback health-check:
+// orionhealth-web.iberi22.workers.dev (E2E_BASE_URL lo sobreescribe).
+const BASE = process.env.E2E_BASE_URL ?? 'https://orionhealth.swal.network';
 
 test('raíz: 200, branding OrionHealth y tokens @swal/ui', async ({ page }) => {
   const errors: string[] = [];

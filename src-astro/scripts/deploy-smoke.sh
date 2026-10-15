@@ -2,7 +2,10 @@
 # deploy-smoke.sh — Post-deploy smoke para @swal/app-template (adaptado de worldexams/scripts/deploy-smoke.sh)
 # Checks: 1) app raíz 200, 2) /manifest.json 200, 3) /api/ai/infer 405/400 (existe), 4) HTML contiene AUI demo
 set -uo pipefail
-APP_URL="${APP_URL:-https://orionhealth-web.iberi22.workers.dev}"
+# Canonical domain (owner decision 2026-10-15): orionhealth.swal.network
+APP_URL="${APP_URL:-https://orionhealth.swal.network}"
+# Health-check fallback: the Worker is still published on workers.dev (workers_dev = true).
+FALLBACK_APP_URL="${FALLBACK_APP_URL:-https://orionhealth-web.iberi22.workers.dev}"
 FAILED=()
 http_code() { curl -s -o /dev/null -w '%{http_code}' -m 20 "$1"; }
 check_status() {
@@ -10,7 +13,11 @@ check_status() {
   local code; code=$(http_code "$url")
   if [[ "$code" =~ $expected ]]; then echo "  OK   [$code] $name"; else echo "  FAIL [$code] $name — $url"; FAILED+=("$name ($code)"); fi
 }
-echo "[smoke] APP_URL=$APP_URL"
+echo "[smoke] APP_URL=$APP_URL (fallback: $FALLBACK_APP_URL)"
+if [[ "$(http_code "$APP_URL")" == "000" && -n "$FALLBACK_APP_URL" ]]; then
+  echo "  WARN canonical domain not answering (DNS propagating?) -> fallback $FALLBACK_APP_URL"
+  APP_URL="$FALLBACK_APP_URL"
+fi
 check_status "app raíz" "$APP_URL"
 check_status "manifest" "$APP_URL/manifest.json"
 check_status "service worker" "$APP_URL/sw.js"

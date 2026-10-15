@@ -83,6 +83,7 @@ flutter build ios --flavor prod --dart-define=flavor=prod
 
 ### Live URLs
 
+- **Web PWA** (Astro 7 + Workers `orionhealth-web`): <https://orionhealth.swal.network> — `src-astro/` (fallback: `orionhealth-web.iberi22.workers.dev`)
 - **Public landing** (Astro): `orionhealth-docs.pages.dev` — see `docs/`
 - **PWA demo** (Flutter Web): `app-orionhealth.pages.dev` — FEAT-022 demo
 - **Native apps**: Android/iOS via `flutter build apk/ios`

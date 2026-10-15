@@ -24,7 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      E2E_BASE_URL: https://orionhealth-web.iberi22.workers.dev
+      # Canonical domain (Worker custom domain, see src-astro/wrangler.toml).
+      # The workers.dev fallback is kept for health checks (src-astro/scripts/deploy-smoke.sh).
+      E2E_BASE_URL: https://orionhealth.swal.network
     defaults:
       run:
         working-directory: src-astro
