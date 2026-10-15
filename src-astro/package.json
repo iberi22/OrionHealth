@@ -11,7 +11,9 @@
     "check": "astro check",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "e2e:ta": "E2E_TELEMETRY_DISABLED=1 e2e run",
+    "e2e:ta:live": "E2E_TELEMETRY_DISABLED=1 E2E_LIVE_URL=https://orionhealth-web.iberi22.workers.dev e2e run"
   },
   "dependencies": {
     "@swal/ui": "^0.2.0",
@@ -33,6 +35,8 @@
     "svelte": "^5.57.2",
     "typescript": "^6.0.3",
     "vite-plugin-pwa": "^2.0.0",
-    "vitest": "5.0.3"
+    "vitest": "5.0.3",
+    "@e2e-dev/web": "0.14.0",
+    "e2e": "0.20.0"
   }
 }
