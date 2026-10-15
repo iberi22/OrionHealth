@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **AGENTS.md / SRC.md**: feature count 26 → 29; `packages/` map now lists `health_contract`; added `web/` target
 
 ### Changed
+- **docs: reconcile feature ledgers with measured state (2026-10-15)** — `.gitcore/features.json` is now the single source of truth with 38 measured capabilities (6 `stable`, 30 `partial`, 1 `implemented`, 1 `paused`); every status carries `implemented_in`, test counts, `last_tested`, `verified_by` and an evidence note. Added launch-readiness entries for the public web deployment, the 404 repo homepage, Flutter suite health and the in-progress tester-army e2e smoke suite. `docs/src/data/features.json` was regenerated from the GitCore ledger (docs schema preserved; slugs now match `features-map.json`), and `docs/legacy/features.json` is marked `deprecated`.
 - **Dependabot bumps applied on `main`**: `sqflite` 2.4.3 and `sherpa_onnx` 1.13.7 (`d8c71854`), `/docs` group — playwright + @playwright/test 1.63.0, postcss 8.5.28, @astrojs/sitemap 3.7.4, svgo 4.1.0 (`02fb99e2`)
 - **CI**: OrionHealth CI stays green on `main`, but its test step is **non-gating** (`flutter test ... | tee`); run 37894488944 on `02fb99e2` reports **1760 passed / 2 skipped / 410 failed** because `ci.yml` never runs `dart run build_runner build` and the Isar `*.g.dart` files are missing.
 
