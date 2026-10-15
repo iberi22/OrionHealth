@@ -530,7 +530,7 @@
       "goldens": 0,
       "description": "No test file and no CI job; package.json declares 'vitest' but no spec exists. Not verified.",
       "source_id": "FEAT-035",
-      "gitcore_status": "implemented",
+      "gitcore_status": "partial",
       "progress_pct": 60
     },
     {
