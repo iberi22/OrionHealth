@@ -1,40 +1,49 @@
 # tester-army/e2e Suite for OrionHealth Web
 
-This directory contains the `@tester-army/e2e` suite for the Astro web frontend. It verifies the live deployment (`live` target) and optionally a local build (`local` target).
+This directory contains the `@tester-army/e2e` suite for the Astro web frontend. It verifies a local build of this checkout (`local` target) and the live deployment (`live` target).
 
 ## Installation
+
 Ensure you have `pnpm` installed and run from the `src-astro` directory:
-\`\`\`bash
+
+```bash
 pnpm install
-\`\`\`
+```
 
 ## Build
-To build the application, run:
-\`\`\`bash
+
+The `local` target builds the checkout itself (see `e2e:serve`), so an explicit build is optional:
+
+```bash
 pnpm run build
-\`\`\`
+```
 
 ## Run Tests
-*   **Local Target:** Runs against `pnpm run preview` on a random port. Ensure you have built the app first.
-    \`\`\`bash
+
+*   **Local Target:** builds and serves this checkout with the Cloudflare adapter's local `workerd` preview on `127.0.0.1`. No prior build and no Cloudflare credentials are needed: `CLOUDFLARE_VITE_FORCE_LOCAL=true` keeps every binding local instead of opening a remote connection.
+    ```bash
     pnpm run e2e:ta
-    \`\`\`
-*   **Live Target:** Runs against the deployed live URL (defaults to `https://orionhealth-web.iberi22.workers.dev`).
-    \`\`\`bash
-    pnpm run e2e:ta:live --target live
-    \`\`\`
+    ```
+*   **Live Target:** runs only against the deployed live URL (defaults to `https://orionhealth-web.iberi22.workers.dev`).
+    ```bash
+    pnpm run e2e:ta:live
+    ```
 
 ## Sandbox Test Run Results
 
-| Journey                                                       | Local | Live  |
-| ------------------------------------------------------------- | ----- | ----- |
-| home opens with its main heading and primary call to action   | Fail  | Pass  |
-| the AUI section renders                                       | Fail  | Pass  |
-| PWA manifest and service worker are served                    | Fail  | Pass  |
-| language or theme switch changes the UI                       | Fail  | Pass  |
-| unknown route shows a not-found page or redirects home        | Fail  | Pass  |
+| Journey                                                      | Local | Live |
+| ------------------------------------------------------------ | ----- | ---- |
+| home opens with its main heading and primary call to action  | Pass  | Pass |
+| the AUI section renders                                      | Pass  | Pass |
+| PWA manifest and service worker are served as real assets     | Pass  | Pass |
+| the document declares its locale, theme color and manifest   | Pass  | Pass |
+| unknown route shows a not-found page or redirects home        | Pass  | Pass |
 
-*Note: The local target failed during the sandbox run due to a Cloudflare API token requirement error from Wrangler in the non-interactive environment.*
+*Note: the earlier local column failed because `astro preview` was probed on `127.0.0.1` while it only listened on `localhost`, because the `AI` binding opened a remote connection that needs a Cloudflare token, and because the `preview` command can exit before readiness while the run never checked the PWA responses. The `local` target now builds, serves on `127.0.0.1`, forces local bindings and asserts the real response bodies.*
+
+### Not supported: theme / language switching
+
+This demo ships no runtime theme or language switch: `ProBadge.svelte` is a static billing badge, and `Layout.astro` hard-codes `<html lang="es">` plus a single `theme-color`. The suite therefore checks the declared metadata (locale, PWA theme color, manifest link) instead of a switch. A switching journey needs a real switcher in the app first.
 
 ## Persona Charters for Bug Bash
 
