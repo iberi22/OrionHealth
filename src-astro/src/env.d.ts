@@ -8,3 +8,15 @@ declare module '@swal/ui' {
 }
 declare module '@swal/ui/tokens' {}
 declare module '@swal/ui/toast' { export const toast: any; }
+
+declare module 'node:fs' {
+  export function readFileSync(path: any, encoding?: string): string;
+  export function existsSync(path: any): boolean;
+}
+declare module 'node:path' {
+  export function resolve(...paths: string[]): string;
+}
+declare const process: {
+  cwd(): string;
+  env: Record<string, string | undefined>;
+};
