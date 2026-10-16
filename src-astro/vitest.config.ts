@@ -1,6 +1,11 @@
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      'astro:middleware': 'astro/middleware',
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
