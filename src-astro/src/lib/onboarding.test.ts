@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { ONBOARDING_STEPS, onboardingStepIds } from './onboarding';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 describe('Onboarding Module', () => {
   it('should have correct step ids in order', () => {
@@ -36,20 +36,18 @@ describe('Onboarding Module', () => {
   });
 
   it('should integrate with index.astro to render steps', () => {
-    const indexPath = path.resolve(__dirname, '../pages/index.astro');
     let indexSource = '';
     try {
-      indexSource = fs.readFileSync(indexPath, 'utf-8');
-    } catch (e) {
-      // Allow test to pass if run from project root, just for safety
+      indexSource = fs.readFileSync(path.resolve(process.cwd(), 'src-astro/src/pages/index.astro'), 'utf-8');
+    } catch (err) {
       try {
-        indexSource = fs.readFileSync(path.resolve(process.cwd(), 'src-astro/src/pages/index.astro'), 'utf-8');
-      } catch (err) {
+        indexSource = fs.readFileSync(path.resolve(process.cwd(), 'src/pages/index.astro'), 'utf-8');
+      } catch (err2) {
         throw new Error('Could not find index.astro file');
       }
     }
 
-    expect(indexSource).toContain('ONBOARDING_STEPS');
-    expect(indexSource).toContain('.map(');
+    expect(indexSource).toContain('id="onboarding"');
+    expect(indexSource).toContain('ONBOARDING_STEPS.map(');
   });
 });

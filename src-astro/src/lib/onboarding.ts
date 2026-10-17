@@ -13,23 +13,23 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: 'on-device',
-    title: 'Privacidad total en tu dispositivo',
-    body: 'Tus datos de salud nunca salen de tu teléfono. Funcionamiento offline nativo PWA.',
+    title: 'Datos en tu dispositivo',
+    body: 'Tus datos de salud se guardan en tu dispositivo. Funcionamiento offline nativo PWA.',
   },
   {
     id: 'local-ai',
-    title: 'Asistente Inteligente Local',
-    body: 'IA integrada directamente en el navegador (cuando lo soporte), sin envíos a la nube ni límites diarios.',
+    title: 'Asistente inteligente local',
+    body: 'IA integrada directamente en el navegador (cuando lo soporte), sin límites diarios.',
   },
   {
     id: 'device-lock',
-    title: 'Bloqueo Biométrico',
-    body: 'Protege tu historial médico con el PIN o huella dactilar de tu dispositivo móvil.',
+    title: 'Bloqueo biométrico opcional',
+    body: 'Protege el acceso a la app con el PIN o huella dactilar (opcional, cuando tu navegador lo soporte).',
   },
   {
     id: 'own-your-data',
-    title: 'Dueño de tus Datos',
-    body: 'Exporta, importa y controla tus registros clínicos cuando quieras.',
+    title: 'Dueño de tus datos',
+    body: 'Usa la app completa para gestionar tus registros clínicos cuando quieras.',
   }
 ];
 
