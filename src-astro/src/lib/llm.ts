@@ -1,6 +1,6 @@
 // llm.ts — capa agentica LLM SWAL
 // Reusa ProviderRouter + Clavis + xavier-gpud de cores/swal-agent-runner/src/services/llm/
-// El modelo de negocio no habla directo a OpenAI — pasa por este router con memoria RAG + billing socio.
+// El modelo de negocio no habla directo a OpenAI — pasa por este router con memoria RAG + on-device AI local.
 
 import { xavierSearch } from './xavier';
 
@@ -11,7 +11,8 @@ export type LLMResponse = { text: string; model: string; fromCache?: boolean; vi
 // API interna para feature detect
 type BrowserPromptAPI = {
   create: () => Promise<{ prompt: (text: string) => Promise<string>; destroy: () => void }>;
-  availability: () => Promise<'readily' | 'after-download' | 'no'>;
+  availability?: () => Promise<'unavailable' | 'downloadable' | 'downloading' | 'available'>;
+  capabilities?: () => Promise<{ available: 'no' | 'after-download' | 'readily' }>;
 };
 
 function getLanguageModel(): BrowserPromptAPI | undefined {
@@ -41,20 +42,37 @@ export async function llmComplete(req: LLMRequest): Promise<LLMResponse> {
   const fullPrompt = `${system}${ctx}${req.prompt}`;
 
   const lm = getLanguageModel();
+  let available = false;
   if (lm) {
     try {
-      const session = await lm.create();
-      const text = await session.prompt(fullPrompt);
-      if (typeof session.destroy === 'function') {
-        session.destroy();
+      if (typeof lm.availability === 'function') {
+        const state = await lm.availability();
+        available = state === 'available';
+      } else if (typeof lm.capabilities === 'function') {
+        const state = await lm.capabilities();
+        available = state.available === 'readily';
       }
-      return { text, model: 'browser-prompt-api', via: 'local' };
+    } catch {
+      available = false;
+    }
+  }
+
+  if (available && lm) {
+    try {
+      const session = await lm.create();
+      try {
+        const text = await session.prompt(fullPrompt);
+        return { text, model: 'browser-prompt-api', via: 'local' };
+      } finally {
+        if (typeof session.destroy === 'function') {
+          session.destroy();
+        }
+      }
     } catch (e) {
       // Prompt privacy: NO logear el contenido del prompt
       console.warn('[llm] fallo en browser prompt API, usando fallback');
     }
   }
 
-  console.log('[llm] complete fallback', { model: req.model ?? 'auto', via: 'local' });
-  return { text: `${system}${ctx}LLM local stub (sin CF): implementa ProviderRouter en src/lib/llm.ts (ver swal-agent-runner llm-provider-manager.ts)`, model: req.model ?? 'stub', via: 'local' };
+  return { text: 'Modelo local no disponible.', model: req.model ?? 'fallback', via: 'local' };
 }
