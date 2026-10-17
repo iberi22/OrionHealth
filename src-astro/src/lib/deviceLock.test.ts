@@ -5,7 +5,7 @@ describe('deviceLock', () => {
   beforeEach(() => {
     vi.stubGlobal('crypto', {
       getRandomValues: (arr: Uint8Array) => {
-        for(let i=0; i<arr.length; i++) arr[i] = 1;
+        for(let i=0; i<arr.length; i++) arr[i] = 42; // use 42 to easily assert it was changed
         return arr;
       }
     });
@@ -84,6 +84,27 @@ describe('deviceLock', () => {
       expect(args.publicKey.authenticatorSelection.residentKey).toBe('preferred');
     });
 
+    it('generates challenge and user id using crypto.getRandomValues', async () => {
+      const mockCreate = vi.fn().mockResolvedValue({ id: 'fake-cred' });
+      vi.stubGlobal('navigator', {
+        credentials: { create: mockCreate }
+      });
+
+      const getRandomValuesSpy = vi.spyOn(globalThis.crypto, 'getRandomValues');
+
+      await registerDeviceLock();
+
+      expect(mockCreate).toHaveBeenCalledTimes(1);
+      const args = mockCreate.mock.calls[0][0];
+
+      const challenge = args.publicKey.challenge as Uint8Array;
+      const userId = args.publicKey.user.id as Uint8Array;
+
+      expect(getRandomValuesSpy).toHaveBeenCalledTimes(2);
+      expect(challenge[0]).toBe(42); // Asserts our stub was called
+      expect(userId[0]).toBe(42);    // Asserts our stub was called
+    });
+
     it('prevents caller from weakening security options', async () => {
       const mockCreate = vi.fn().mockResolvedValue({ id: 'fake-cred' });
       vi.stubGlobal('navigator', {
@@ -158,6 +179,26 @@ describe('deviceLock', () => {
       // Decoded bytes of "fake-cred"
       const expectedDecoded = new Uint8Array([102, 97, 107, 101, 45, 99, 114, 101, 100]);
       expect(allowCreds[0].id).toEqual(expectedDecoded);
+    });
+
+    it('generates challenge using crypto.getRandomValues', async () => {
+      const fakeCredBase64 = 'ZmFrZS1jcmVk';
+      const mockGet = vi.fn().mockResolvedValue({ id: fakeCredBase64 });
+      vi.stubGlobal('navigator', {
+        credentials: { get: mockGet }
+      });
+
+      const getRandomValuesSpy = vi.spyOn(globalThis.crypto, 'getRandomValues');
+
+      await verifyDeviceLock(fakeCredBase64);
+
+      expect(mockGet).toHaveBeenCalledTimes(1);
+      const args = mockGet.mock.calls[0][0];
+
+      const challenge = args.publicKey.challenge as Uint8Array;
+
+      expect(getRandomValuesSpy).toHaveBeenCalledTimes(1);
+      expect(challenge[0]).toBe(42); // Asserts our stub was called
     });
 
     it('returns false when credential id does not match', async () => {
