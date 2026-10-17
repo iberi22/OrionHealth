@@ -96,8 +96,16 @@ describe('llm via browser prompt api', () => {
       ...consoleInfoSpy.mock.calls,
       ...consoleErrorSpy.mock.calls,
       ...consoleDebugSpy.mock.calls
-    ].map(args => args.join(' '));
+    ].map(args => args.map((a: any) => typeof a === 'string' ? a : JSON.stringify(a)).join(' '));
 
     expect(allCalls.some(call => call.includes('datos privados'))).toBe(false);
+  });
+
+
+  it('verifica que el spy detecta texto anidado en objetos', () => {
+    const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    console.log('[llm] fallo', { prompt: 'secreto filtrado' });
+    const allCalls = consoleLogSpy.mock.calls.map(args => args.map((a: any) => typeof a === 'string' ? a : JSON.stringify(a)).join(' '));
+    expect(allCalls.some(call => call.includes('secreto filtrado'))).toBe(true);
   });
 });
