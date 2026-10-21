@@ -35,12 +35,25 @@ export interface ShardMeta {
   chunks: number;
   /** sha256 of the model file the shard was embedded with (refused when it differs). */
   model_sha256?: string;
+  /** sha256 of `<id>.text.json.gz` (chunk texts). When absent the file is fetched best-effort. */
+  text_sha256?: string;
 }
+
+export interface ModelRef { id: string; revision: string; file_sha256: string; dtype: string; dim: number; parts: ModelPart[] }
 
 export interface CorpusIndex {
   corpus_version: string;
-  model: { id: string; revision: string; file_sha256: string; dtype: string; dim: number; parts: ModelPart[] };
+  /** null = no embedding model (lexical-only corpus). */
+  model: ModelRef | null;
+  /** sha256 of cards.json.gz (verified when present). */
+  cards_sha256?: string;
   shards: ShardMeta[];
+}
+
+export interface SearchResponse {
+  mode: 'lexical' | 'hybrid';
+  degraded: null | 'model-missing' | 'model-error' | 'vectors-missing';
+  hits: SearchHit[];
 }
 
 export interface InstallProgress { phase: 'model' | 'shards'; file: string; done: number; total: number }
@@ -48,7 +61,7 @@ export interface InstallProgress { phase: 'model' | 'shards'; file: string; done
 export interface StatusInfo { installed: boolean; version: string | null; shards: string[] }
 
 export type RpcRequest =
-  | { id: number; type: 'install'; index: CorpusIndex; baseUrl: string; shardIds: string[] }
+  | { id: number; type: 'install'; index: CorpusIndex; baseUrl: string; shardIds: string[]; installModel?: boolean }
   | { id: number; type: 'status' }
   | { id: number; type: 'search'; query: string; k?: number }
   | { id: number; type: 'delete'; version?: string };
@@ -56,7 +69,7 @@ export type RpcRequest =
 export type RpcResult = {
   install: StatusInfo;
   status: StatusInfo;
-  search: SearchHit[];
+  search: SearchResponse;
   delete: StatusInfo;
 };
 
