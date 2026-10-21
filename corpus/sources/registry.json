@@ -176,7 +176,7 @@
       "acquisition": "oai-pmh",
       "endpoints": null,
       "licence": {
-        "id": "unverified",
+        "id": "per-article (unverified: mostly CC BY, some CC BY-NC)",
         "family": "cc-by",
         "url": null,
         "verified": false,
@@ -186,11 +186,11 @@
       "storage_max": "fulltext",
       "default_funding_class": "unknown",
       "cadence": "P1W",
-      "screenshot": true,
+      "screenshot": false,
       "priority": 1,
       "status": "pending_licence_review",
       "rate_limit_rps": 0.5,
-      "notes": "per-article licence; es/pt"
+      "notes": "per-article licence; es/pt; also publishes CC BY-NC; the entry's licence_family governs"
     },
     {
       "id": "co-minsalud-gpc",
@@ -988,10 +988,10 @@
       "kind": "national_ministry",
       "country": "GQ",
       "org": "Ministerio de Sanidad y Bienestar Social",
-      "homepage": "https://www.guineaecuatorialpress.com/",
+      "homepage": "https://minsabs.invalid/",
       "entry_urls": [],
       "hosts": [
-        "www.guineaecuatorialpress.com"
+        "minsabs.invalid"
       ],
       "languages": [
         "es"
@@ -1014,7 +1014,7 @@
       "priority": 1,
       "status": "pending_licence_review",
       "rate_limit_rps": 0.5,
-      "notes": ""
+      "notes": "official site not confirmed; reserved .invalid placeholder authorises no real host (schema needs a URI and one host). Press-office pages are excluded by policy."
     },
     {
       "id": "br-conitec-pcdt",
@@ -1214,7 +1214,7 @@
       "storage_max": "fulltext",
       "default_funding_class": "public",
       "cadence": "P1W",
-      "screenshot": true,
+      "screenshot": false,
       "priority": 2,
       "status": "active",
       "rate_limit_rps": 3,
@@ -1240,7 +1240,7 @@
       "acquisition": "api",
       "endpoints": null,
       "licence": {
-        "id": "oa_comm",
+        "id": "per-article (oa_comm: CC0/CC BY/CC BY-SA/CC BY-ND)",
         "family": "cc-by",
         "url": null,
         "verified": true,
@@ -1250,11 +1250,11 @@
       "storage_max": "fulltext",
       "default_funding_class": "unknown",
       "cadence": "P1W",
-      "screenshot": true,
+      "screenshot": false,
       "priority": 2,
       "status": "active",
       "rate_limit_rps": 3,
-      "notes": "oa_comm only unless NC gate"
+      "notes": "oa_comm only unless NC gate; the entry's licence_family governs (CC BY-ND forbids summaries)"
     },
     {
       "id": "us-pubmed",
@@ -1285,7 +1285,7 @@
       "storage_max": "metadata_only",
       "default_funding_class": "unknown",
       "cadence": "P1W",
-      "screenshot": true,
+      "screenshot": false,
       "priority": 2,
       "status": "active",
       "rate_limit_rps": 3,
@@ -1357,7 +1357,7 @@
       "storage_max": "metadata_only",
       "default_funding_class": "unknown",
       "cadence": "P1W",
-      "screenshot": true,
+      "screenshot": false,
       "priority": 2,
       "status": "pending_licence_review",
       "rate_limit_rps": 0.5,
@@ -1732,7 +1732,7 @@
         "evidence": null
       },
       "storage_max": "metadata_only",
-      "default_funding_class": "public",
+      "default_funding_class": "nonprofit",
       "cadence": "P1M",
       "screenshot": true,
       "priority": 3,
@@ -1800,13 +1800,13 @@
         "evidence": null
       },
       "storage_max": "metadata_only",
-      "default_funding_class": "public",
+      "default_funding_class": "nonprofit",
       "cadence": "P1M",
       "screenshot": true,
       "priority": 4,
       "status": "pending_licence_review",
       "rate_limit_rps": 0.5,
-      "notes": ""
+      "notes": "society guidelines, out of scope until the owner adds them"
     },
     {
       "id": "jp-minds",
@@ -2004,13 +2004,13 @@
         "evidence": null
       },
       "storage_max": "metadata_only",
-      "default_funding_class": "public",
+      "default_funding_class": "nonprofit",
       "cadence": "P1M",
       "screenshot": true,
       "priority": 4,
       "status": "pending_licence_review",
       "rate_limit_rps": 0.5,
-      "notes": ""
+      "notes": "society guidelines, out of scope until the owner adds them"
     },
     {
       "id": "ch-bag",

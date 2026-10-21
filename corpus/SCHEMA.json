@@ -240,38 +240,46 @@
           }
         },
         "evidence_level": {
-          "type": "object",
-          "required": [
-            "scale",
-            "level",
-            "grade",
-            "basis"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "scale": {
-              "const": "OCEBM-2011"
+          "description": "Only if the source states it; otherwise null.",
+          "oneOf": [
+            {
+              "type": "null"
             },
-            "level": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 5
-            },
-            "grade": {
-              "type": [
-                "string",
-                "null"
+            {
+              "type": "object",
+              "required": [
+                "scale",
+                "level",
+                "grade",
+                "basis"
               ],
-              "description": "Filled only when the source states it."
-            },
-            "basis": {
-              "type": [
-                "string",
-                "null"
-              ],
-              "description": "For example publication_type."
+              "additionalProperties": false,
+              "properties": {
+                "scale": {
+                  "const": "OCEBM-2011"
+                },
+                "level": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "grade": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Filled only when the source states it."
+                },
+                "basis": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "For example publication_type."
+                }
+              }
             }
-          }
+          ]
         },
         "icd10": {
           "type": "array",
