@@ -115,8 +115,13 @@ export async function installCorpus(d: InstallDeps): Promise<void> {
         await store.writeFile(version, names[i], bodies[i]);
         expected[names[i]] = await sha256Hex(bodies[i]);
       }
-      // chunk texts (lexical quality): verified when the index declares a hash, best-effort otherwise
+      // chunk texts (lexical quality): requires a declared hash; skipped otherwise
       const textName = `${s.id}.text.json.gz`;
+      if (!s.text_sha256) {
+        // never install unverified text: keep the shard metadata-only
+        console.warn(`[rag] shard ${s.id}: text_sha256 missing, skipping ${textName}`);
+        continue;
+      }
       let text: Uint8Array | null = null;
       if (prevVersion && old && old.sha256 === s.sha256 && (!s.text_sha256 || old.text_sha256 === s.text_sha256)) {
         text = await store.readFile(prevVersion, textName);

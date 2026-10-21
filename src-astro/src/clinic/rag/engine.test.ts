@@ -25,7 +25,7 @@ async function corpus() {
   files.set('/c/s1.text.json.gz', gz({ texts: { 'e1#0': { text: 'Beta blockers reduce mortality in reduced ejection fraction.' }, 'e2#0': { text: 'Zorblatt syndrome is rare.' } } }));
   const index: CorpusIndex = {
     corpus_version: 'v1', model: null, cards_sha256: await sha256Hex(files.get('/c/cards.json.gz')!),
-    shards: [{ id: 's1', chapter: 'I', bytes: 1, sha256: await sha256Hex(cat(...sf)), chunks: 2 }],
+    shards: [{ id: 's1', chapter: 'I', bytes: 1, sha256: await sha256Hex(cat(...sf)), chunks: 2, text_sha256: await sha256Hex(files.get('/c/s1.text.json.gz')!) }],
   };
   const fetcher = async (u: string) => (files.has(u) ? new Response(files.get(u) as BodyInit) : new Response(null, { status: 404 }));
   const store = new CorpusStore(new MemoryFileStore());

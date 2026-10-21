@@ -2,18 +2,30 @@ import { normalize, tokenize } from './tokenize';
 
 export interface ExtractiveSentence { text: string; start: number; end: number; highlights: Array<[number, number]> }
 
+const ABBREVIATIONS = new Set(['dr', 'dra', 'sr', 'sra', 'vs', 'approx', 'etc', 'fig', 'no', 'mr', 'mrs', 'ms', 'prof', 'cf', 'aprox', 'ej', 'pág', 'pag']);
+
 /** Data only: top sentences by overlap with the (expanded) query terms; highlight ranges are relative to sentence.text. */
 export function extractive(text: string, terms: string[], maxSentences = 2): ExtractiveSentence[] {
   const set = new Set(terms.flatMap((t) => tokenize(t)));
   if (set.size === 0) return [];
   const sentences: Array<{ text: string; start: number; end: number; idx: number }> = [];
-  const re = /[^.!?\n]+[.!?]*/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(text))) {
-    const raw = m[0];
+  const ranges: Array<[number, number]> = [];
+  let from = 0;
+  const push = (end: number) => { if (end > from) ranges.push([from, end]); from = end; };
+  for (const m of text.matchAll(/[.!?]+(?=\s+\p{Lu}|\s*$)|\n/gu)) {
+    const end = m.index! + m[0].length;
+    if (m[0] !== '\n' && m[0].endsWith('.')) {
+      const word = /(\S*)$/.exec(text.slice(from, m.index! + m[0].length - 1))![1];
+      if (ABBREVIATIONS.has(word.toLowerCase()) || /^(\p{L}\.)+\p{L}$/iu.test(word)) continue;
+    }
+    push(end);
+  }
+  push(text.length);
+  for (const [s0, e0] of ranges) {
+    const raw = text.slice(s0, e0);
     const lead = raw.length - raw.trimStart().length;
     const t = raw.trim();
-    if (t) sentences.push({ text: t, start: m.index + lead, end: m.index + lead + t.length, idx: sentences.length });
+    if (t) sentences.push({ text: t, start: s0 + lead, end: s0 + lead + t.length, idx: sentences.length });
   }
   const scored = sentences.map((s) => {
     const highlights: Array<[number, number]> = [];
