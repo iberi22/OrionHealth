@@ -1,0 +1,72 @@
+export type Lang = 'es' | 'en';
+
+const en = {
+  'funding.public': 'Public funding',
+  'funding.nonprofit': 'Non-profit funding',
+  'funding.mixed': 'Mixed funding',
+  'funding.unknown': 'Funding unknown',
+  'coi.none': 'COI: none declared',
+  'coi.declared': 'COI: declared (tap to read)',
+  'coi.unknown': 'COI: unknown',
+  'level': 'Evidence level',
+  'published': 'Published',
+  'retrieved': 'Retrieved',
+  'age.guideline': 'Guideline older than 5 years',
+  'age.study': 'Study older than 10 years',
+  'licence': 'Licence',
+  'citation': 'Citation',
+  'copy': 'Copy citation',
+  'copied': 'Copied',
+  'link': 'Open source record',
+  'link.offline': 'Link unavailable offline',
+  'why': 'Why this card',
+  'detail.text': 'Permitted text',
+  'detail.metaonly': 'Metadata only: the publisher licence does not allow storing or showing the full text.',
+  'detail.provenance': 'Provenance',
+  'detail.url': 'URL',
+  'detail.hash': 'Hash',
+  'detail.screenshot': 'Screenshot',
+  'detail.retracted': 'This record has been retracted. Do not rely on it.',
+  'detail.supersedes': 'This record supersedes',
+  'detail.superseded': 'This record has been superseded by',
+  'detail.close': 'Close',
+} as const;
+
+const es: Record<keyof typeof en, string> = {
+  'funding.public': 'Financiación pública',
+  'funding.nonprofit': 'Financiación sin ánimo de lucro',
+  'funding.mixed': 'Financiación mixta',
+  'funding.unknown': 'Financiación desconocida',
+  'coi.none': 'COI: ninguno declarado',
+  'coi.declared': 'COI: declarado (toca para leer)',
+  'coi.unknown': 'COI: desconocido',
+  'level': 'Nivel de evidencia',
+  'published': 'Publicado',
+  'retrieved': 'Recuperado',
+  'age.guideline': 'Guía con más de 5 años',
+  'age.study': 'Estudio con más de 10 años',
+  'licence': 'Licencia',
+  'citation': 'Cita',
+  'copy': 'Copiar cita',
+  'copied': 'Copiado',
+  'link': 'Abrir registro original',
+  'link.offline': 'Enlace no disponible sin conexión',
+  'why': 'Por qué esta tarjeta',
+  'detail.text': 'Texto permitido',
+  'detail.metaonly': 'Solo metadatos: la licencia del editor no permite guardar ni mostrar el texto completo.',
+  'detail.provenance': 'Procedencia',
+  'detail.url': 'URL',
+  'detail.hash': 'Hash',
+  'detail.screenshot': 'Captura',
+  'detail.retracted': 'Este registro fue retractado. No te bases en él.',
+  'detail.supersedes': 'Este registro reemplaza a',
+  'detail.superseded': 'Este registro fue reemplazado por',
+  'detail.close': 'Cerrar',
+};
+
+export type StringKey = keyof typeof en;
+export const STRINGS: Record<Lang, Record<string, string>> = { es, en };
+
+export function t(lang: Lang, key: string): string {
+  return STRINGS[lang]?.[key] ?? key;
+}
