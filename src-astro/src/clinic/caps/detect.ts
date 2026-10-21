@@ -58,24 +58,27 @@ async function attempt<T>(fn: () => T | Promise<T>, fallback: T): Promise<T> {
 
 function probeModuleWorker(env: CapsEnv): boolean {
   if (typeof env.Worker !== 'function') return false;
+  // The `type` getter is what proves module-worker support. Under a CSP that
+  // blocks data: (e.g. /clinic/* worker-src 'self' blob:) the constructor throws
+  // AFTER reading `type`, so the flag must be returned regardless of the throw.
+  let read = false;
+  const opts = {
+    get type() {
+      read = true;
+      return 'module';
+    },
+  };
   try {
-    let read = false;
-    const opts = {
-      get type() {
-        read = true;
-        return 'module';
-      },
-    };
     const w = new env.Worker('data:text/javascript,', opts as { type?: string });
     try {
       w.terminate();
     } catch {
       /* ignore */
     }
-    return read;
   } catch {
-    return false;
+    /* blocked or unsupported: judged by `read` below */
   }
+  return read;
 }
 
 export async function detectCaps(env: CapsEnv = globalThis as unknown as CapsEnv): Promise<Caps> {
@@ -106,7 +109,8 @@ export async function detectCaps(env: CapsEnv = globalThis as unknown as CapsEnv
   const freeBytes =
     quotaBytes !== null ? Math.max(0, quotaBytes - (usageBytes ?? 0)) : null;
   const persisted = await attempt(
-    async () => (await (nav.storage?.persisted?.() ?? nav.storage?.persist?.())) === true,
+    // Never fall back to persist(): it may show a permission prompt. Detection is read-only.
+    async () => (await nav.storage?.persisted?.()) === true,
     false,
   );
   const opfs = await attempt(async () => {

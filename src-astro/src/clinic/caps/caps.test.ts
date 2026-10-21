@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { detectCaps, type CapsEnv } from './detect';
 import { resolveBudget, type Budget } from './budgets';
 import { resolveTier } from './tiers';
@@ -33,6 +33,7 @@ function fullEnv(over: Partial<CapsEnv> = {}): CapsEnv {
       deviceMemory: 4,
       storage: {
         estimate: async () => ({ quota: 10 * GB, usage: 1 * GB }),
+        persisted: async () => true,
         persist: async () => true,
         getDirectory: async () => ({}),
       },
@@ -82,6 +83,57 @@ describe('detectCaps', () => {
   it('flags Worker that ignores type:module', async () => {
     const c = await detectCaps(fullEnv({ Worker: NoModuleWorker as unknown as CapsEnv['Worker'] }));
     expect(c.missing).toContain('moduleWorker');
+  });
+  it('keeps moduleWorker when the CSP blocks the data: probe after type was read', async () => {
+    class CspBlockedWorker {
+      constructor(_url: string, opts?: { type?: string }) {
+        void opts?.type;
+        throw new Error('SecurityError: blocked by worker-src');
+      }
+      terminate() {}
+    }
+    const c = await detectCaps(
+      fullEnv({ Worker: CspBlockedWorker as unknown as CapsEnv['Worker'] }),
+    );
+    expect(c.missing).not.toContain('moduleWorker');
+  });
+  it('flags moduleWorker when the Worker throws without reading type', async () => {
+    class ThrowingWorker {
+      constructor(_url: string, _opts?: { type?: string }) {
+        throw new Error('nope');
+      }
+      terminate() {}
+    }
+    const c = await detectCaps(fullEnv({ Worker: ThrowingWorker as unknown as CapsEnv['Worker'] }));
+    expect(c.missing).toContain('moduleWorker');
+  });
+  it('flags decompressionStream when gzip is rejected', async () => {
+    const c = await detectCaps(
+      fullEnv({
+        DecompressionStream: class {
+          constructor(_f: string) {
+            throw new TypeError('gzip unsupported');
+          }
+        } as unknown as CapsEnv['DecompressionStream'],
+      }),
+    );
+    expect(c.missing).toContain('decompressionStream');
+  });
+  it('never calls storage.persist() while probing persisted state', async () => {
+    const persist = vi.fn(async () => true);
+    const c = await detectCaps(
+      fullEnv({
+        navigator: {
+          storage: {
+            estimate: async () => ({ quota: 10 * GB, usage: 0 }),
+            persist,
+            getDirectory: async () => ({}),
+          },
+        },
+      }),
+    );
+    expect(persist).not.toHaveBeenCalled();
+    expect(c.persisted).toBe(false);
   });
   it('catches throwing probes', async () => {
     const c = await detectCaps(
@@ -180,6 +232,12 @@ describe('resolveTier', () => {
     ['gpu unknown memory', { deviceMemory: null, gpu: { available: true, maxBufferSize: 2 * GB } }],
   ])('L2 blocked: %s', (_n, over) => {
     const c = caps(over);
+    const r = resolveTier(c, resolveBudget(c), { semantic: false, generative: true });
+    expect(r.l2Eligible).toBe(false);
+    expect(r.tier).toBe('L0');
+  });
+  it('no L2 on low profile even when Prompt API is available', () => {
+    const c = caps({ promptApi: 'available', deviceMemory: 2 });
     const r = resolveTier(c, resolveBudget(c), { semantic: false, generative: true });
     expect(r.l2Eligible).toBe(false);
     expect(r.tier).toBe('L0');
