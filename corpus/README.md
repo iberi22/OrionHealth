@@ -14,13 +14,12 @@ Policy and data for the evidence corpus used by the RAG pipeline.
 | `SCHEMA.json` | owner-only | JSON Schema (draft 2020-12), v2, for entry records and the manifest |
 | `MANIFEST.json` | generated | Output of `scripts/corpus/build-manifest.mjs`; schema v2, empty at `2026.43.0` |
 | `entries/<source>/<yyyy>/<safe-id>.json` | refresh bot | One record per file (data-only) |
-| `screenshots/<source>/<safe-id>.png` | refresh bot | Provenance, first viewport only (data-only) |
 
 ## Who may edit what
 
 - Owner-only via `.github/CODEOWNERS`: `corpus/sources/registry.json`, `corpus/sources/registry.schema.json`, `corpus/sources/expansions.json`, `corpus/FUNDERS.json`, `corpus/SCHEMA.json`, `scripts/corpus/`, `.github/workflows/evidence-refresh.yml`, `.github/workflows/corpus-validate.yml`, `.github/jules/`.
 - Jules and other autonomous agents are data-only: they may write only `corpus/entries/**`, `corpus/sources/state.json` and `corpus/MANIFEST.json` (regenerated through the build script). They never edit the registry; new sources are proposed in the PR body as `propose-source | url | reason`. They must not touch any owner-only path.
-- A PR that changes entries, screenshots or the manifest must change nothing else (validator rule 11).
+- A PR that changes entries or the manifest must change nothing else.
 
 ## Source registry
 
