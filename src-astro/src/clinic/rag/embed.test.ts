@@ -24,4 +24,18 @@ describe('embed', () => {
     await embedder.embedPassages(['x']);
     expect(seen).toEqual([['query: dolor'], ['passage: x']]);
   });
+
+  it('does not cache a rejected load', async () => {
+    let calls = 0;
+    const embedder = createEmbedder(async () => {
+      if (++calls === 1) throw new Error('boom');
+      return {
+        tokenizer: () => ({ attention_mask: { data: [1] } }),
+        model: async () => ({ last_hidden_state: { data: new Float32Array([1, 0]), dims: [1, 1, 2] } }),
+      };
+    });
+    await expect(embedder.embedQuery('x')).rejects.toThrow('boom');
+    expect((await embedder.embedQuery('x'))[0]).toBeCloseTo(1, 6);
+    expect(calls).toBe(2);
+  });
 });

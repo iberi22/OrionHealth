@@ -5,18 +5,28 @@ export interface EmbedBackend {
 }
 export type EmbedLoader = () => Promise<EmbedBackend>;
 
-/** Real loader (transformers.js loaded through a variable specifier; package added separately). */
-export function transformersLoader(modelDir: string): EmbedLoader {
+/** Reads a file saved by the installer in OPFS (null when absent). */
+export type ModelFileReader = (name: string) => Promise<Uint8Array | null>;
+
+/** Real loader: transformers.js reading the model the installer saved in OPFS (never the network). */
+export function transformersLoader(readFile: ModelFileReader): EmbedLoader {
   return async () => {
-    const spec = '@huggingface/transformers';
-    const t = (await import(/* @vite-ignore */ spec)) as {
+    const t = (await import('@huggingface/transformers')) as unknown as {
       env: Record<string, unknown>;
       AutoTokenizer: { from_pretrained(id: string): Promise<EmbedBackend['tokenizer']> };
       AutoModel: { from_pretrained(id: string, o: Record<string, unknown>): Promise<EmbedBackend['model']> };
     };
     t.env.allowRemoteModels = false;
-    t.env.allowLocalModels = true;
-    t.env.localModelPath = modelDir;
+    t.env.allowLocalModels = false;
+    t.env.useBrowserCache = false;
+    t.env.useCustomCache = true;
+    t.env.customCache = {
+      async match(key: string) {
+        const bytes = await readFile(key.split('/').pop() ?? key);
+        return bytes ? new Response(bytes as BodyInit) : undefined;
+      },
+      async put() { /* read-only */ },
+    };
     const tokenizer = await t.AutoTokenizer.from_pretrained('me5s-q8');
     const model = await t.AutoModel.from_pretrained('me5s-q8', { dtype: 'q8' });
     return { tokenizer, model };
@@ -48,7 +58,8 @@ export function createEmbedder(loader: EmbedLoader) {
   let backend: Promise<EmbedBackend> | null = null;
   async function run(texts: string[]): Promise<Float32Array[]> {
     backend ??= loader();
-    const be = await backend;
+    let be: EmbedBackend;
+    try { be = await backend; } catch (e) { backend = null; throw e; }
     const inputs = await be.tokenizer(texts, { padding: true, truncation: true, max_length: 512 });
     const { last_hidden_state } = await be.model(inputs);
     return meanPoolNormalize(last_hidden_state.data, last_hidden_state.dims, inputs.attention_mask.data);
