@@ -1,0 +1,968 @@
+{
+  "schema_version": 1,
+  "note": "Owner-only. Curated es<->en<->pt synonym and abbreviation groups for query expansion; every term in a group is equivalent.",
+  "groups": [
+    {
+      "id": "g001",
+      "concept": "hypertension",
+      "es": [
+        "hipertensión",
+        "hipertensión arterial",
+        "HTA"
+      ],
+      "en": [
+        "hypertension",
+        "high blood pressure",
+        "HTN"
+      ],
+      "pt": [
+        "hipertensão",
+        "HAS"
+      ]
+    },
+    {
+      "id": "g002",
+      "concept": "diabetes",
+      "es": [
+        "diabetes mellitus",
+        "DM"
+      ],
+      "en": [
+        "diabetes mellitus",
+        "DM"
+      ],
+      "pt": [
+        "diabetes mellitus",
+        "DM"
+      ]
+    },
+    {
+      "id": "g003",
+      "concept": "type 2 diabetes",
+      "es": [
+        "diabetes tipo 2",
+        "DM2"
+      ],
+      "en": [
+        "type 2 diabetes",
+        "T2DM"
+      ],
+      "pt": [
+        "diabetes tipo 2",
+        "DM2"
+      ]
+    },
+    {
+      "id": "g004",
+      "concept": "myocardial infarction",
+      "es": [
+        "infarto agudo de miocardio",
+        "IAM",
+        "infarto"
+      ],
+      "en": [
+        "myocardial infarction",
+        "MI",
+        "heart attack"
+      ],
+      "pt": [
+        "infarto agudo do miocárdio",
+        "IAM"
+      ]
+    },
+    {
+      "id": "g005",
+      "concept": "heart failure",
+      "es": [
+        "insuficiencia cardiaca",
+        "IC"
+      ],
+      "en": [
+        "heart failure",
+        "HF",
+        "CHF"
+      ],
+      "pt": [
+        "insuficiência cardíaca",
+        "IC"
+      ]
+    },
+    {
+      "id": "g006",
+      "concept": "stroke",
+      "es": [
+        "accidente cerebrovascular",
+        "ACV",
+        "ictus"
+      ],
+      "en": [
+        "stroke",
+        "CVA"
+      ],
+      "pt": [
+        "acidente vascular cerebral",
+        "AVC"
+      ]
+    },
+    {
+      "id": "g007",
+      "concept": "chronic kidney disease",
+      "es": [
+        "enfermedad renal crónica",
+        "ERC"
+      ],
+      "en": [
+        "chronic kidney disease",
+        "CKD"
+      ],
+      "pt": [
+        "doença renal crônica",
+        "DRC"
+      ]
+    },
+    {
+      "id": "g008",
+      "concept": "COPD",
+      "es": [
+        "EPOC",
+        "enfermedad pulmonar obstructiva crónica"
+      ],
+      "en": [
+        "COPD",
+        "chronic obstructive pulmonary disease"
+      ],
+      "pt": [
+        "DPOC",
+        "doença pulmonar obstrutiva crônica"
+      ]
+    },
+    {
+      "id": "g009",
+      "concept": "asthma",
+      "es": [
+        "asma"
+      ],
+      "en": [
+        "asthma"
+      ],
+      "pt": [
+        "asma"
+      ]
+    },
+    {
+      "id": "g010",
+      "concept": "pneumonia",
+      "es": [
+        "neumonía"
+      ],
+      "en": [
+        "pneumonia"
+      ],
+      "pt": [
+        "pneumonia"
+      ]
+    },
+    {
+      "id": "g011",
+      "concept": "tuberculosis",
+      "es": [
+        "tuberculosis",
+        "TB"
+      ],
+      "en": [
+        "tuberculosis",
+        "TB"
+      ],
+      "pt": [
+        "tuberculose",
+        "TB"
+      ]
+    },
+    {
+      "id": "g012",
+      "concept": "HIV",
+      "es": [
+        "VIH",
+        "virus de inmunodeficiencia humana"
+      ],
+      "en": [
+        "HIV",
+        "human immunodeficiency virus"
+      ],
+      "pt": [
+        "HIV",
+        "vírus da imunodeficiência humana"
+      ]
+    },
+    {
+      "id": "g013",
+      "concept": "AIDS",
+      "es": [
+        "SIDA"
+      ],
+      "en": [
+        "AIDS"
+      ],
+      "pt": [
+        "AIDS",
+        "SIDA"
+      ]
+    },
+    {
+      "id": "g014",
+      "concept": "malaria",
+      "es": [
+        "malaria",
+        "paludismo"
+      ],
+      "en": [
+        "malaria"
+      ],
+      "pt": [
+        "malária"
+      ]
+    },
+    {
+      "id": "g015",
+      "concept": "dengue",
+      "es": [
+        "dengue"
+      ],
+      "en": [
+        "dengue"
+      ],
+      "pt": [
+        "dengue"
+      ]
+    },
+    {
+      "id": "g016",
+      "concept": "Zika",
+      "es": [
+        "zika"
+      ],
+      "en": [
+        "Zika virus"
+      ],
+      "pt": [
+        "zika"
+      ]
+    },
+    {
+      "id": "g017",
+      "concept": "Chagas disease",
+      "es": [
+        "enfermedad de Chagas",
+        "Chagas"
+      ],
+      "en": [
+        "Chagas disease",
+        "American trypanosomiasis"
+      ],
+      "pt": [
+        "doença de Chagas"
+      ]
+    },
+    {
+      "id": "g018",
+      "concept": "COVID-19",
+      "es": [
+        "COVID-19",
+        "enfermedad por coronavirus"
+      ],
+      "en": [
+        "COVID-19",
+        "coronavirus disease"
+      ],
+      "pt": [
+        "COVID-19"
+      ]
+    },
+    {
+      "id": "g019",
+      "concept": "influenza",
+      "es": [
+        "gripe",
+        "influenza"
+      ],
+      "en": [
+        "influenza",
+        "flu"
+      ],
+      "pt": [
+        "gripe",
+        "influenza"
+      ]
+    },
+    {
+      "id": "g020",
+      "concept": "sepsis",
+      "es": [
+        "sepsis",
+        "septicemia"
+      ],
+      "en": [
+        "sepsis"
+      ],
+      "pt": [
+        "sepse"
+      ]
+    },
+    {
+      "id": "g021",
+      "concept": "pregnancy",
+      "es": [
+        "embarazo",
+        "gestación"
+      ],
+      "en": [
+        "pregnancy",
+        "gestation"
+      ],
+      "pt": [
+        "gravidez",
+        "gestação"
+      ]
+    },
+    {
+      "id": "g022",
+      "concept": "preeclampsia",
+      "es": [
+        "preeclampsia"
+      ],
+      "en": [
+        "preeclampsia"
+      ],
+      "pt": [
+        "pré-eclâmpsia"
+      ]
+    },
+    {
+      "id": "g023",
+      "concept": "gestational diabetes",
+      "es": [
+        "diabetes gestacional"
+      ],
+      "en": [
+        "gestational diabetes",
+        "GDM"
+      ],
+      "pt": [
+        "diabetes gestacional"
+      ]
+    },
+    {
+      "id": "g024",
+      "concept": "cesarean section",
+      "es": [
+        "cesárea"
+      ],
+      "en": [
+        "cesarean section",
+        "C-section"
+      ],
+      "pt": [
+        "cesariana"
+      ]
+    },
+    {
+      "id": "g025",
+      "concept": "breast cancer",
+      "es": [
+        "cáncer de mama"
+      ],
+      "en": [
+        "breast cancer"
+      ],
+      "pt": [
+        "câncer de mama"
+      ]
+    },
+    {
+      "id": "g026",
+      "concept": "cervical cancer",
+      "es": [
+        "cáncer de cuello uterino",
+        "cáncer cervicouterino"
+      ],
+      "en": [
+        "cervical cancer"
+      ],
+      "pt": [
+        "câncer do colo do útero"
+      ]
+    },
+    {
+      "id": "g027",
+      "concept": "colorectal cancer",
+      "es": [
+        "cáncer colorrectal"
+      ],
+      "en": [
+        "colorectal cancer",
+        "CRC"
+      ],
+      "pt": [
+        "câncer colorretal"
+      ]
+    },
+    {
+      "id": "g028",
+      "concept": "lung cancer",
+      "es": [
+        "cáncer de pulmón"
+      ],
+      "en": [
+        "lung cancer"
+      ],
+      "pt": [
+        "câncer de pulmão"
+      ]
+    },
+    {
+      "id": "g029",
+      "concept": "prostate cancer",
+      "es": [
+        "cáncer de próstata"
+      ],
+      "en": [
+        "prostate cancer"
+      ],
+      "pt": [
+        "câncer de próstata"
+      ]
+    },
+    {
+      "id": "g030",
+      "concept": "depression",
+      "es": [
+        "depresión",
+        "trastorno depresivo"
+      ],
+      "en": [
+        "depression",
+        "major depressive disorder",
+        "MDD"
+      ],
+      "pt": [
+        "depressão",
+        "transtorno depressivo"
+      ]
+    },
+    {
+      "id": "g031",
+      "concept": "anxiety",
+      "es": [
+        "ansiedad",
+        "trastorno de ansiedad"
+      ],
+      "en": [
+        "anxiety",
+        "anxiety disorder"
+      ],
+      "pt": [
+        "ansiedade",
+        "transtorno de ansiedade"
+      ]
+    },
+    {
+      "id": "g032",
+      "concept": "schizophrenia",
+      "es": [
+        "esquizofrenia"
+      ],
+      "en": [
+        "schizophrenia"
+      ],
+      "pt": [
+        "esquizofrenia"
+      ]
+    },
+    {
+      "id": "g033",
+      "concept": "dementia",
+      "es": [
+        "demencia"
+      ],
+      "en": [
+        "dementia"
+      ],
+      "pt": [
+        "demência"
+      ]
+    },
+    {
+      "id": "g034",
+      "concept": "Alzheimer disease",
+      "es": [
+        "enfermedad de Alzheimer"
+      ],
+      "en": [
+        "Alzheimer disease",
+        "AD"
+      ],
+      "pt": [
+        "doença de Alzheimer"
+      ]
+    },
+    {
+      "id": "g035",
+      "concept": "epilepsy",
+      "es": [
+        "epilepsia"
+      ],
+      "en": [
+        "epilepsy"
+      ],
+      "pt": [
+        "epilepsia"
+      ]
+    },
+    {
+      "id": "g036",
+      "concept": "obesity",
+      "es": [
+        "obesidad"
+      ],
+      "en": [
+        "obesity"
+      ],
+      "pt": [
+        "obesidade"
+      ]
+    },
+    {
+      "id": "g037",
+      "concept": "body mass index",
+      "es": [
+        "índice de masa corporal",
+        "IMC"
+      ],
+      "en": [
+        "body mass index",
+        "BMI"
+      ],
+      "pt": [
+        "índice de massa corporal",
+        "IMC"
+      ]
+    },
+    {
+      "id": "g038",
+      "concept": "dyslipidemia",
+      "es": [
+        "dislipidemia",
+        "hipercolesterolemia"
+      ],
+      "en": [
+        "dyslipidemia",
+        "hypercholesterolemia"
+      ],
+      "pt": [
+        "dislipidemia",
+        "hipercolesterolemia"
+      ]
+    },
+    {
+      "id": "g039",
+      "concept": "atrial fibrillation",
+      "es": [
+        "fibrilación auricular",
+        "FA"
+      ],
+      "en": [
+        "atrial fibrillation",
+        "AF",
+        "AFib"
+      ],
+      "pt": [
+        "fibrilação atrial",
+        "FA"
+      ]
+    },
+    {
+      "id": "g040",
+      "concept": "deep vein thrombosis",
+      "es": [
+        "trombosis venosa profunda",
+        "TVP"
+      ],
+      "en": [
+        "deep vein thrombosis",
+        "DVT"
+      ],
+      "pt": [
+        "trombose venosa profunda",
+        "TVP"
+      ]
+    },
+    {
+      "id": "g041",
+      "concept": "pulmonary embolism",
+      "es": [
+        "embolia pulmonar",
+        "TEP"
+      ],
+      "en": [
+        "pulmonary embolism",
+        "PE"
+      ],
+      "pt": [
+        "embolia pulmonar",
+        "TEP"
+      ]
+    },
+    {
+      "id": "g042",
+      "concept": "anemia",
+      "es": [
+        "anemia"
+      ],
+      "en": [
+        "anemia"
+      ],
+      "pt": [
+        "anemia"
+      ]
+    },
+    {
+      "id": "g043",
+      "concept": "malnutrition",
+      "es": [
+        "desnutrición"
+      ],
+      "en": [
+        "malnutrition",
+        "undernutrition"
+      ],
+      "pt": [
+        "desnutrição"
+      ]
+    },
+    {
+      "id": "g044",
+      "concept": "diarrhea",
+      "es": [
+        "diarrea",
+        "enfermedad diarreica aguda",
+        "EDA"
+      ],
+      "en": [
+        "diarrhea",
+        "diarrhoea"
+      ],
+      "pt": [
+        "diarreia"
+      ]
+    },
+    {
+      "id": "g045",
+      "concept": "urinary tract infection",
+      "es": [
+        "infección urinaria",
+        "ITU"
+      ],
+      "en": [
+        "urinary tract infection",
+        "UTI"
+      ],
+      "pt": [
+        "infecção urinária",
+        "ITU"
+      ]
+    },
+    {
+      "id": "g046",
+      "concept": "vaccination",
+      "es": [
+        "vacunación",
+        "inmunización"
+      ],
+      "en": [
+        "vaccination",
+        "immunization"
+      ],
+      "pt": [
+        "vacinação",
+        "imunização"
+      ]
+    },
+    {
+      "id": "g047",
+      "concept": "antibiotic",
+      "es": [
+        "antibiótico",
+        "antimicrobiano"
+      ],
+      "en": [
+        "antibiotic",
+        "antimicrobial"
+      ],
+      "pt": [
+        "antibiótico",
+        "antimicrobiano"
+      ]
+    },
+    {
+      "id": "g048",
+      "concept": "antimicrobial resistance",
+      "es": [
+        "resistencia antimicrobiana",
+        "RAM"
+      ],
+      "en": [
+        "antimicrobial resistance",
+        "AMR"
+      ],
+      "pt": [
+        "resistência antimicrobiana",
+        "RAM"
+      ]
+    },
+    {
+      "id": "g049",
+      "concept": "clinical practice guideline",
+      "es": [
+        "guía de práctica clínica",
+        "GPC"
+      ],
+      "en": [
+        "clinical practice guideline",
+        "CPG"
+      ],
+      "pt": [
+        "diretriz clínica",
+        "protocolo clínico e diretrizes terapêuticas",
+        "PCDT"
+      ]
+    },
+    {
+      "id": "g050",
+      "concept": "systematic review",
+      "es": [
+        "revisión sistemática"
+      ],
+      "en": [
+        "systematic review"
+      ],
+      "pt": [
+        "revisão sistemática"
+      ]
+    },
+    {
+      "id": "g051",
+      "concept": "randomized controlled trial",
+      "es": [
+        "ensayo clínico aleatorizado",
+        "ECA"
+      ],
+      "en": [
+        "randomized controlled trial",
+        "RCT"
+      ],
+      "pt": [
+        "ensaio clínico randomizado",
+        "ECR"
+      ]
+    },
+    {
+      "id": "g052",
+      "concept": "primary health care",
+      "es": [
+        "atención primaria de salud",
+        "APS"
+      ],
+      "en": [
+        "primary health care",
+        "PHC"
+      ],
+      "pt": [
+        "atenção primária à saúde",
+        "APS"
+      ]
+    },
+    {
+      "id": "g053",
+      "concept": "emergency department",
+      "es": [
+        "urgencias",
+        "servicio de urgencias"
+      ],
+      "en": [
+        "emergency department",
+        "ED",
+        "emergency room"
+      ],
+      "pt": [
+        "pronto-socorro",
+        "urgência"
+      ]
+    },
+    {
+      "id": "g054",
+      "concept": "intensive care unit",
+      "es": [
+        "unidad de cuidados intensivos",
+        "UCI"
+      ],
+      "en": [
+        "intensive care unit",
+        "ICU"
+      ],
+      "pt": [
+        "unidade de terapia intensiva"
+      ]
+    },
+    {
+      "id": "g055",
+      "concept": "blood pressure",
+      "es": [
+        "presión arterial",
+        "tensión arterial",
+        "PA"
+      ],
+      "en": [
+        "blood pressure",
+        "BP"
+      ],
+      "pt": [
+        "pressão arterial",
+        "PA"
+      ]
+    },
+    {
+      "id": "g056",
+      "concept": "heart rate",
+      "es": [
+        "frecuencia cardiaca",
+        "FC"
+      ],
+      "en": [
+        "heart rate",
+        "HR"
+      ],
+      "pt": [
+        "frequência cardíaca",
+        "FC"
+      ]
+    },
+    {
+      "id": "g057",
+      "concept": "oxygen saturation",
+      "es": [
+        "saturación de oxígeno",
+        "SatO2"
+      ],
+      "en": [
+        "oxygen saturation",
+        "SpO2"
+      ],
+      "pt": [
+        "saturação de oxigênio",
+        "SpO2"
+      ]
+    },
+    {
+      "id": "g058",
+      "concept": "glycated hemoglobin",
+      "es": [
+        "hemoglobina glicosilada",
+        "HbA1c"
+      ],
+      "en": [
+        "glycated hemoglobin",
+        "HbA1c"
+      ],
+      "pt": [
+        "hemoglobina glicada",
+        "HbA1c"
+      ]
+    },
+    {
+      "id": "g059",
+      "concept": "essential medicines",
+      "es": [
+        "medicamentos esenciales"
+      ],
+      "en": [
+        "essential medicines",
+        "EML"
+      ],
+      "pt": [
+        "medicamentos essenciais",
+        "RENAME"
+      ]
+    },
+    {
+      "id": "g060",
+      "concept": "adverse event",
+      "es": [
+        "evento adverso",
+        "efecto adverso"
+      ],
+      "en": [
+        "adverse event",
+        "adverse effect",
+        "AE"
+      ],
+      "pt": [
+        "evento adverso",
+        "efeito adverso"
+      ]
+    },
+    {
+      "id": "g061",
+      "concept": "contraindication",
+      "es": [
+        "contraindicación"
+      ],
+      "en": [
+        "contraindication"
+      ],
+      "pt": [
+        "contraindicação"
+      ]
+    },
+    {
+      "id": "g062",
+      "concept": "health technology assessment",
+      "es": [
+        "evaluación de tecnologías sanitarias",
+        "ETS"
+      ],
+      "en": [
+        "health technology assessment"
+      ],
+      "pt": [
+        "avaliação de tecnologias em saúde",
+        "ATS"
+      ]
+    },
+    {
+      "id": "g063",
+      "concept": "maternal mortality",
+      "es": [
+        "mortalidad materna"
+      ],
+      "en": [
+        "maternal mortality"
+      ],
+      "pt": [
+        "mortalidade materna"
+      ]
+    },
+    {
+      "id": "g064",
+      "concept": "breastfeeding",
+      "es": [
+        "lactancia materna"
+      ],
+      "en": [
+        "breastfeeding"
+      ],
+      "pt": [
+        "aleitamento materno"
+      ]
+    }
+  ]
+}

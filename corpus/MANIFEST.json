@@ -1,0 +1,25 @@
+{
+  "schema_version": 2,
+  "corpus_version": "2026.43.0",
+  "generated_at": "1970-01-01T00:00:00Z",
+  "last_refresh": {
+    "week": null,
+    "marker": null
+  },
+  "counts": {
+    "by_source": {},
+    "by_funding_class": {
+      "public": 0,
+      "nonprofit": 0,
+      "mixed": 0,
+      "industry": 0,
+      "unknown": 0
+    },
+    "by_text_policy": {
+      "fulltext": 0,
+      "abstract": 0,
+      "metadata_only": 0
+    }
+  },
+  "entries": []
+}

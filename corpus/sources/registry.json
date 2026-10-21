@@ -1,0 +1,2224 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "noncommercial_distribution": false,
+    "extract_max_words": 50,
+    "excluded_funding": [
+      "industry"
+    ]
+  },
+  "sources": [
+    {
+      "id": "int-who-iris",
+      "name": "WHO IRIS",
+      "kind": "intl_org",
+      "country": "INT",
+      "org": "World Health Organization",
+      "homepage": "https://iris.who.int/",
+      "entry_urls": [],
+      "hosts": [
+        "iris.who.int",
+        "www.who.int"
+      ],
+      "languages": [
+        "en",
+        "es",
+        "pt"
+      ],
+      "ingest": "curated",
+      "acquisition": "oai-pmh",
+      "endpoints": null,
+      "licence": {
+        "id": "CC-BY-NC-SA-3.0-IGO",
+        "family": "cc-by-nc-sa",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": "NC gate: fulltext only if policy.noncommercial_distribution"
+    },
+    {
+      "id": "int-who-guidelines",
+      "name": "WHO guidelines",
+      "kind": "intl_org",
+      "country": "INT",
+      "org": "World Health Organization",
+      "homepage": "https://www.who.int/publications/who-guidelines",
+      "entry_urls": [],
+      "hosts": [
+        "www.who.int",
+        "iris.who.int"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "CC-BY-NC-SA-3.0-IGO",
+        "family": "cc-by-nc-sa",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "int-paho-iris",
+      "name": "PAHO IRIS",
+      "kind": "intl_org",
+      "country": "INT",
+      "org": "Pan American Health Organization",
+      "homepage": "https://iris.paho.org/",
+      "entry_urls": [],
+      "hosts": [
+        "iris.paho.org",
+        "www.paho.org"
+      ],
+      "languages": [
+        "es",
+        "en",
+        "pt"
+      ],
+      "ingest": "curated",
+      "acquisition": "oai-pmh",
+      "endpoints": null,
+      "licence": {
+        "id": "CC-BY-NC-SA-3.0-IGO",
+        "family": "cc-by-nc-sa",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "int-paho-bigg",
+      "name": "BIGG GRADE guideline database",
+      "kind": "intl_org",
+      "country": "INT",
+      "org": "Pan American Health Organization",
+      "homepage": "https://sites.bvsalud.org/bigg/en/biblio/",
+      "entry_urls": [],
+      "hosts": [
+        "sites.bvsalud.org",
+        "www.paho.org"
+      ],
+      "languages": [
+        "es",
+        "en",
+        "pt"
+      ],
+      "ingest": "curated",
+      "acquisition": "html",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "int-scielo",
+      "name": "SciELO",
+      "kind": "literature_db",
+      "country": "INT",
+      "org": "SciELO",
+      "homepage": "https://www.scielo.org/",
+      "entry_urls": [],
+      "hosts": [
+        "www.scielo.org",
+        "scielo.org"
+      ],
+      "languages": [
+        "es",
+        "pt",
+        "en"
+      ],
+      "ingest": "bulk",
+      "acquisition": "oai-pmh",
+      "endpoints": null,
+      "licence": {
+        "id": "per-article (unverified: mostly CC BY, some CC BY-NC)",
+        "family": "cc-by",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "unknown",
+      "cadence": "P1W",
+      "screenshot": false,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": "per-article licence; es/pt; also publishes CC BY-NC; the entry's licence_family governs"
+    },
+    {
+      "id": "co-minsalud-gpc",
+      "name": "Guías de Práctica Clínica MinSalud",
+      "kind": "national_ministry",
+      "country": "CO",
+      "org": "Ministerio de Salud y Protección Social",
+      "homepage": "https://gpc.minsalud.gov.co/",
+      "entry_urls": [
+        "https://gpc.minsalud.gov.co/gpc/Paginas/gpc.aspx"
+      ],
+      "hosts": [
+        "gpc.minsalud.gov.co",
+        "www.minsalud.gov.co"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "co-iets",
+      "name": "Instituto de Evaluación Tecnológica en Salud",
+      "kind": "hta_agency",
+      "country": "CO",
+      "org": "IETS",
+      "homepage": "https://www.iets.org.co/",
+      "entry_urls": [],
+      "hosts": [
+        "www.iets.org.co",
+        "iets.org.co"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "mx-cenetec",
+      "name": "CENETEC Guías de Práctica Clínica",
+      "kind": "guideline_body",
+      "country": "MX",
+      "org": "CENETEC-Salud",
+      "homepage": "https://www.gob.mx/salud/cenetec",
+      "entry_urls": [],
+      "hosts": [
+        "www.gob.mx",
+        "cenetec-difusion.com"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "mx-imss-gpc",
+      "name": "IMSS Guías de Práctica Clínica",
+      "kind": "guideline_body",
+      "country": "MX",
+      "org": "Instituto Mexicano del Seguro Social",
+      "homepage": "https://www.imss.gob.mx/",
+      "entry_urls": [],
+      "hosts": [
+        "www.imss.gob.mx"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "ar-msal",
+      "name": "Ministerio de Salud de Argentina (BANCOS)",
+      "kind": "national_ministry",
+      "country": "AR",
+      "org": "Ministerio de Salud de la Nación",
+      "homepage": "https://bancos.salud.gob.ar/",
+      "entry_urls": [],
+      "hosts": [
+        "bancos.salud.gob.ar",
+        "www.argentina.gob.ar"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "CC-BY-4.0?",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": "licence CC BY 4.0 from memory, to verify"
+    },
+    {
+      "id": "cl-minsal-ges",
+      "name": "MINSAL Guías GES",
+      "kind": "national_ministry",
+      "country": "CL",
+      "org": "Ministerio de Salud de Chile",
+      "homepage": "https://www.minsal.cl/",
+      "entry_urls": [],
+      "hosts": [
+        "www.minsal.cl"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "es-guiasalud",
+      "name": "GuíaSalud",
+      "kind": "guideline_body",
+      "country": "ES",
+      "org": "Ministerio de Sanidad / GuíaSalud",
+      "homepage": "https://portal.guiasalud.es/",
+      "entry_urls": [],
+      "hosts": [
+        "portal.guiasalud.es"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "es-sanidad",
+      "name": "Ministerio de Sanidad de España",
+      "kind": "national_ministry",
+      "country": "ES",
+      "org": "Ministerio de Sanidad",
+      "homepage": "https://www.sanidad.gob.es/",
+      "entry_urls": [],
+      "hosts": [
+        "www.sanidad.gob.es"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "pe-minsa",
+      "name": "MINSA Perú",
+      "kind": "national_ministry",
+      "country": "PE",
+      "org": "Ministerio de Salud del Perú",
+      "homepage": "https://www.gob.pe/minsa",
+      "entry_urls": [],
+      "hosts": [
+        "www.gob.pe",
+        "www.minsa.gob.pe"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "ec-msp",
+      "name": "MSP Ecuador",
+      "kind": "national_ministry",
+      "country": "EC",
+      "org": "Ministerio de Salud Pública del Ecuador",
+      "homepage": "https://www.salud.gob.ec/",
+      "entry_urls": [],
+      "hosts": [
+        "www.salud.gob.ec"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "bo-minsalud",
+      "name": "Ministerio de Salud de Bolivia",
+      "kind": "national_ministry",
+      "country": "BO",
+      "org": "Ministerio de Salud y Deportes",
+      "homepage": "https://www.minsalud.gob.bo/",
+      "entry_urls": [],
+      "hosts": [
+        "www.minsalud.gob.bo"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "py-mspbs",
+      "name": "MSPBS Paraguay",
+      "kind": "national_ministry",
+      "country": "PY",
+      "org": "Ministerio de Salud Pública y Bienestar Social",
+      "homepage": "https://www.mspbs.gov.py/",
+      "entry_urls": [],
+      "hosts": [
+        "www.mspbs.gov.py"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "uy-msp",
+      "name": "MSP Uruguay",
+      "kind": "national_ministry",
+      "country": "UY",
+      "org": "Ministerio de Salud Pública",
+      "homepage": "https://www.gub.uy/ministerio-salud-publica/",
+      "entry_urls": [],
+      "hosts": [
+        "www.gub.uy"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "ve-mpps",
+      "name": "MPPS Venezuela",
+      "kind": "national_ministry",
+      "country": "VE",
+      "org": "Ministerio del Poder Popular para la Salud",
+      "homepage": "https://www.mpps.gob.ve/",
+      "entry_urls": [],
+      "hosts": [
+        "www.mpps.gob.ve"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "cr-ministerio-salud",
+      "name": "Ministerio de Salud de Costa Rica",
+      "kind": "national_ministry",
+      "country": "CR",
+      "org": "Ministerio de Salud",
+      "homepage": "https://www.ministeriodesalud.go.cr/",
+      "entry_urls": [],
+      "hosts": [
+        "www.ministeriodesalud.go.cr"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "cr-ccss",
+      "name": "CCSS Costa Rica",
+      "kind": "guideline_body",
+      "country": "CR",
+      "org": "Caja Costarricense de Seguro Social",
+      "homepage": "https://www.ccss.sa.cr/",
+      "entry_urls": [],
+      "hosts": [
+        "www.ccss.sa.cr"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "pa-minsa",
+      "name": "MINSA Panamá",
+      "kind": "national_ministry",
+      "country": "PA",
+      "org": "Ministerio de Salud de Panamá",
+      "homepage": "https://www.minsa.gob.pa/",
+      "entry_urls": [],
+      "hosts": [
+        "www.minsa.gob.pa"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "gt-mspas",
+      "name": "MSPAS Guatemala",
+      "kind": "national_ministry",
+      "country": "GT",
+      "org": "Ministerio de Salud Pública y Asistencia Social",
+      "homepage": "https://www.mspas.gob.gt/",
+      "entry_urls": [],
+      "hosts": [
+        "www.mspas.gob.gt"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "hn-sesal",
+      "name": "SESAL Honduras",
+      "kind": "national_ministry",
+      "country": "HN",
+      "org": "Secretaría de Salud de Honduras",
+      "homepage": "https://www.salud.gob.hn/",
+      "entry_urls": [],
+      "hosts": [
+        "www.salud.gob.hn"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "sv-minsal",
+      "name": "MINSAL El Salvador",
+      "kind": "national_ministry",
+      "country": "SV",
+      "org": "Ministerio de Salud de El Salvador",
+      "homepage": "https://www.salud.gob.sv/",
+      "entry_urls": [],
+      "hosts": [
+        "www.salud.gob.sv"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "ni-minsa",
+      "name": "MINSA Nicaragua",
+      "kind": "national_ministry",
+      "country": "NI",
+      "org": "Ministerio de Salud de Nicaragua",
+      "homepage": "https://www.minsa.gob.ni/",
+      "entry_urls": [],
+      "hosts": [
+        "www.minsa.gob.ni"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "cu-minsap",
+      "name": "MINSAP Cuba (Infomed)",
+      "kind": "national_ministry",
+      "country": "CU",
+      "org": "Ministerio de Salud Pública de Cuba",
+      "homepage": "https://www.infomed.sld.cu/",
+      "entry_urls": [],
+      "hosts": [
+        "www.infomed.sld.cu",
+        "salud.msp.gob.cu"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "do-msp",
+      "name": "MSP República Dominicana",
+      "kind": "national_ministry",
+      "country": "DO",
+      "org": "Ministerio de Salud Pública",
+      "homepage": "https://www.msp.gob.do/",
+      "entry_urls": [],
+      "hosts": [
+        "www.msp.gob.do"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "gq-minsabs",
+      "name": "MINSABS Guinea Ecuatorial",
+      "kind": "national_ministry",
+      "country": "GQ",
+      "org": "Ministerio de Sanidad y Bienestar Social",
+      "homepage": "https://minsabs.invalid/",
+      "entry_urls": [],
+      "hosts": [
+        "minsabs.invalid"
+      ],
+      "languages": [
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 1,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": "official site not confirmed; reserved .invalid placeholder authorises no real host (schema needs a URI and one host). Press-office pages are excluded by policy."
+    },
+    {
+      "id": "br-conitec-pcdt",
+      "name": "CONITEC PCDT",
+      "kind": "hta_agency",
+      "country": "BR",
+      "org": "CONITEC",
+      "homepage": "https://www.gov.br/conitec/pt-br",
+      "entry_urls": [],
+      "hosts": [
+        "www.gov.br"
+      ],
+      "languages": [
+        "pt"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 2,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": "PCDTs are Portarias (Lei 9.610 art. 8); gov.br CC BY-ND 3.0? verify"
+    },
+    {
+      "id": "pt-dgs",
+      "name": "DGS Normas clínicas",
+      "kind": "national_ministry",
+      "country": "PT",
+      "org": "Direção-Geral da Saúde",
+      "homepage": "https://www.dgs.pt/",
+      "entry_urls": [],
+      "hosts": [
+        "www.dgs.pt"
+      ],
+      "languages": [
+        "pt"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 2,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "us-uspstf",
+      "name": "USPSTF",
+      "kind": "guideline_body",
+      "country": "US",
+      "org": "US Preventive Services Task Force",
+      "homepage": "https://www.uspreventiveservicestaskforce.org/",
+      "entry_urls": [],
+      "hosts": [
+        "www.uspreventiveservicestaskforce.org"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html",
+      "endpoints": null,
+      "licence": {
+        "id": "public-domain",
+        "family": "public-domain",
+        "url": null,
+        "verified": true,
+        "verified_at": "2026-10-21",
+        "evidence": "design addendum 2026-10-21 s4 / base s3.1"
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 2,
+      "status": "active",
+      "rate_limit_rps": 0.5,
+      "notes": "minus third-party figures"
+    },
+    {
+      "id": "us-cdc",
+      "name": "CDC (MMWR R&R, treatment guidelines)",
+      "kind": "national_ministry",
+      "country": "US",
+      "org": "Centers for Disease Control and Prevention",
+      "homepage": "https://www.cdc.gov/",
+      "entry_urls": [],
+      "hosts": [
+        "www.cdc.gov"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "public-domain",
+        "family": "public-domain",
+        "url": null,
+        "verified": true,
+        "verified_at": "2026-10-21",
+        "evidence": "design addendum 2026-10-21 s4 / base s3.1"
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 2,
+      "status": "active",
+      "rate_limit_rps": 0.5,
+      "notes": "minus third-party figures"
+    },
+    {
+      "id": "us-ahrq",
+      "name": "AHRQ",
+      "kind": "national_ministry",
+      "country": "US",
+      "org": "Agency for Healthcare Research and Quality",
+      "homepage": "https://www.ahrq.gov/",
+      "entry_urls": [],
+      "hosts": [
+        "www.ahrq.gov"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "public-domain",
+        "family": "public-domain",
+        "url": null,
+        "verified": true,
+        "verified_at": "2026-10-21",
+        "evidence": "design addendum 2026-10-21 s4 / base s3.1"
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 2,
+      "status": "active",
+      "rate_limit_rps": 0.5,
+      "notes": "minus third-party figures"
+    },
+    {
+      "id": "us-ctgov",
+      "name": "ClinicalTrials.gov",
+      "kind": "trial_registry",
+      "country": "US",
+      "org": "US National Library of Medicine",
+      "homepage": "https://clinicaltrials.gov/",
+      "entry_urls": [],
+      "hosts": [
+        "clinicaltrials.gov"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "bulk",
+      "acquisition": "api",
+      "endpoints": null,
+      "licence": {
+        "id": "public-domain",
+        "family": "public-domain",
+        "url": null,
+        "verified": true,
+        "verified_at": "2026-10-21",
+        "evidence": "design addendum 2026-10-21 s4 / base s3.1"
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "public",
+      "cadence": "P1W",
+      "screenshot": false,
+      "priority": 2,
+      "status": "active",
+      "rate_limit_rps": 3,
+      "notes": ""
+    },
+    {
+      "id": "us-pmc-oa",
+      "name": "PubMed Central Open Access",
+      "kind": "literature_db",
+      "country": "US",
+      "org": "US National Library of Medicine",
+      "homepage": "https://pmc.ncbi.nlm.nih.gov/",
+      "entry_urls": [],
+      "hosts": [
+        "pmc.ncbi.nlm.nih.gov",
+        "www.ncbi.nlm.nih.gov",
+        "europepmc.org"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "bulk",
+      "acquisition": "api",
+      "endpoints": null,
+      "licence": {
+        "id": "per-article (oa_comm: CC0/CC BY/CC BY-SA/CC BY-ND)",
+        "family": "cc-by",
+        "url": null,
+        "verified": true,
+        "verified_at": "2026-10-21",
+        "evidence": "design addendum 2026-10-21 s4 / base s3.1"
+      },
+      "storage_max": "fulltext",
+      "default_funding_class": "unknown",
+      "cadence": "P1W",
+      "screenshot": false,
+      "priority": 2,
+      "status": "active",
+      "rate_limit_rps": 3,
+      "notes": "oa_comm only unless NC gate; the entry's licence_family governs (CC BY-ND forbids summaries)"
+    },
+    {
+      "id": "us-pubmed",
+      "name": "PubMed",
+      "kind": "literature_db",
+      "country": "US",
+      "org": "US National Library of Medicine",
+      "homepage": "https://pubmed.ncbi.nlm.nih.gov/",
+      "entry_urls": [],
+      "hosts": [
+        "pubmed.ncbi.nlm.nih.gov",
+        "eutils.ncbi.nlm.nih.gov"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "bulk",
+      "acquisition": "api",
+      "endpoints": null,
+      "licence": {
+        "id": "publisher-copyright",
+        "family": "copyright",
+        "url": null,
+        "verified": true,
+        "verified_at": "2026-10-21",
+        "evidence": "design addendum 2026-10-21 s4 / base s3.1"
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "unknown",
+      "cadence": "P1W",
+      "screenshot": false,
+      "priority": 2,
+      "status": "active",
+      "rate_limit_rps": 3,
+      "notes": ""
+    },
+    {
+      "id": "int-cochrane",
+      "name": "Cochrane Library",
+      "kind": "literature_db",
+      "country": "INT",
+      "org": "Cochrane",
+      "homepage": "https://www.cochranelibrary.com/",
+      "entry_urls": [],
+      "hosts": [
+        "www.cochranelibrary.com",
+        "pubmed.ncbi.nlm.nih.gov"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html",
+      "endpoints": null,
+      "licence": {
+        "id": "wiley-copyright",
+        "family": "copyright",
+        "url": null,
+        "verified": true,
+        "verified_at": "2026-10-21",
+        "evidence": "design addendum 2026-10-21 s4 / base s3.1"
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "unknown",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 2,
+      "status": "active",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "int-bvs-lilacs",
+      "name": "BVS / LILACS",
+      "kind": "literature_db",
+      "country": "INT",
+      "org": "BIREME / PAHO",
+      "homepage": "https://lilacs.bvsalud.org/",
+      "entry_urls": [],
+      "hosts": [
+        "lilacs.bvsalud.org",
+        "bvsalud.org"
+      ],
+      "languages": [
+        "es",
+        "pt",
+        "en"
+      ],
+      "ingest": "bulk",
+      "acquisition": "api",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "unknown",
+      "cadence": "P1W",
+      "screenshot": false,
+      "priority": 2,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "uk-nice",
+      "name": "NICE guidance",
+      "kind": "hta_agency",
+      "country": "GB",
+      "org": "National Institute for Health and Care Excellence",
+      "homepage": "https://www.nice.org.uk/",
+      "entry_urls": [],
+      "hosts": [
+        "www.nice.org.uk"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "nice-terms",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "uk-sign",
+      "name": "SIGN guidelines",
+      "kind": "guideline_body",
+      "country": "GB",
+      "org": "Scottish Intercollegiate Guidelines Network",
+      "homepage": "https://www.sign.ac.uk/",
+      "entry_urls": [],
+      "hosts": [
+        "www.sign.ac.uk"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "ie-ncec",
+      "name": "NCEC Ireland",
+      "kind": "guideline_body",
+      "country": "IE",
+      "org": "National Clinical Effectiveness Committee",
+      "homepage": "https://www.gov.ie/en/collection/c9fa9a-national-clinical-guidelines/",
+      "entry_urls": [],
+      "hosts": [
+        "www.gov.ie"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "ca-ctfphc",
+      "name": "Canadian Task Force on Preventive Health Care",
+      "kind": "guideline_body",
+      "country": "CA",
+      "org": "Canadian Task Force on Preventive Health Care",
+      "homepage": "https://canadiantaskforce.ca/",
+      "entry_urls": [],
+      "hosts": [
+        "canadiantaskforce.ca"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "au-nhmrc",
+      "name": "NHMRC guidelines",
+      "kind": "guideline_body",
+      "country": "AU",
+      "org": "National Health and Medical Research Council",
+      "homepage": "https://www.nhmrc.gov.au/",
+      "entry_urls": [],
+      "hosts": [
+        "www.nhmrc.gov.au"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "CC-BY-4.0?",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": "licence from memory, to verify"
+    },
+    {
+      "id": "nz-moh",
+      "name": "NZ Ministry of Health",
+      "kind": "national_ministry",
+      "country": "NZ",
+      "org": "Manatū Hauora",
+      "homepage": "https://www.health.govt.nz/",
+      "entry_urls": [],
+      "hosts": [
+        "www.health.govt.nz"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "in-icmr",
+      "name": "ICMR Standard Treatment Workflows",
+      "kind": "national_ministry",
+      "country": "IN",
+      "org": "Indian Council of Medical Research",
+      "homepage": "https://www.icmr.gov.in/",
+      "entry_urls": [],
+      "hosts": [
+        "www.icmr.gov.in"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "za-ndoh",
+      "name": "South Africa NDoH (STG/EML)",
+      "kind": "national_ministry",
+      "country": "ZA",
+      "org": "National Department of Health",
+      "homepage": "https://www.health.gov.za/",
+      "entry_urls": [],
+      "hosts": [
+        "www.health.gov.za"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "int-unicef",
+      "name": "UNICEF health",
+      "kind": "intl_org",
+      "country": "INT",
+      "org": "UNICEF",
+      "homepage": "https://www.unicef.org/health",
+      "entry_urls": [],
+      "hosts": [
+        "www.unicef.org"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "int-unaids",
+      "name": "UNAIDS",
+      "kind": "intl_org",
+      "country": "INT",
+      "org": "UNAIDS",
+      "homepage": "https://www.unaids.org/",
+      "entry_urls": [],
+      "hosts": [
+        "www.unaids.org"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "int-msf",
+      "name": "MSF Medical Guidelines",
+      "kind": "ngo",
+      "country": "INT",
+      "org": "Médecins Sans Frontières",
+      "homepage": "https://medicalguidelines.msf.org/",
+      "entry_urls": [],
+      "hosts": [
+        "medicalguidelines.msf.org"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "nonprofit",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 3,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "fr-has",
+      "name": "Haute Autorité de Santé",
+      "kind": "hta_agency",
+      "country": "FR",
+      "org": "HAS",
+      "homepage": "https://www.has-sante.fr/",
+      "entry_urls": [],
+      "hosts": [
+        "www.has-sante.fr"
+      ],
+      "languages": [
+        "fr"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "de-awmf",
+      "name": "AWMF Leitlinien",
+      "kind": "guideline_body",
+      "country": "DE",
+      "org": "AWMF",
+      "homepage": "https://www.awmf.org/",
+      "entry_urls": [],
+      "hosts": [
+        "www.awmf.org"
+      ],
+      "languages": [
+        "de"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "nonprofit",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": "society guidelines, out of scope until the owner adds them"
+    },
+    {
+      "id": "jp-minds",
+      "name": "Minds Guideline Library",
+      "kind": "guideline_body",
+      "country": "JP",
+      "org": "Japan Council for Quality Health Care",
+      "homepage": "https://minds.jcqhc.or.jp/",
+      "entry_urls": [],
+      "hosts": [
+        "minds.jcqhc.or.jp"
+      ],
+      "languages": [
+        "ja"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "it-snlg",
+      "name": "SNLG Istituto Superiore di Sanità",
+      "kind": "guideline_body",
+      "country": "IT",
+      "org": "Istituto Superiore di Sanità",
+      "homepage": "https://www.iss.it/",
+      "entry_urls": [],
+      "hosts": [
+        "www.iss.it"
+      ],
+      "languages": [
+        "it"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "se-sbu",
+      "name": "SBU Sweden",
+      "kind": "hta_agency",
+      "country": "SE",
+      "org": "Statens beredning för medicinsk och social utvärdering",
+      "homepage": "https://www.sbu.se/",
+      "entry_urls": [],
+      "hosts": [
+        "www.sbu.se"
+      ],
+      "languages": [
+        "sv"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "no-fhi",
+      "name": "Norwegian Institute of Public Health",
+      "kind": "national_ministry",
+      "country": "NO",
+      "org": "Folkehelseinstituttet",
+      "homepage": "https://www.fhi.no/",
+      "entry_urls": [],
+      "hosts": [
+        "www.fhi.no"
+      ],
+      "languages": [
+        "no"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "dk-sst",
+      "name": "Sundhedsstyrelsen",
+      "kind": "national_ministry",
+      "country": "DK",
+      "org": "Sundhedsstyrelsen",
+      "homepage": "https://www.sst.dk/",
+      "entry_urls": [],
+      "hosts": [
+        "www.sst.dk"
+      ],
+      "languages": [
+        "da"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "fi-kaypa",
+      "name": "Käypä hoito",
+      "kind": "guideline_body",
+      "country": "FI",
+      "org": "Finnish Medical Society Duodecim",
+      "homepage": "https://www.kaypahoito.fi/",
+      "entry_urls": [],
+      "hosts": [
+        "www.kaypahoito.fi"
+      ],
+      "languages": [
+        "fi"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "nonprofit",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": "society guidelines, out of scope until the owner adds them"
+    },
+    {
+      "id": "ch-bag",
+      "name": "Bundesamt für Gesundheit",
+      "kind": "national_ministry",
+      "country": "CH",
+      "org": "BAG / OFSP",
+      "homepage": "https://www.bag.admin.ch/",
+      "entry_urls": [],
+      "hosts": [
+        "www.bag.admin.ch"
+      ],
+      "languages": [
+        "de",
+        "fr"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "be-kce",
+      "name": "KCE Belgium",
+      "kind": "hta_agency",
+      "country": "BE",
+      "org": "Belgian Health Care Knowledge Centre",
+      "homepage": "https://kce.fgov.be/",
+      "entry_urls": [],
+      "hosts": [
+        "kce.fgov.be"
+      ],
+      "languages": [
+        "en",
+        "fr",
+        "nl"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "sg-moh",
+      "name": "MOH Singapore",
+      "kind": "national_ministry",
+      "country": "SG",
+      "org": "Ministry of Health",
+      "homepage": "https://www.moh.gov.sg/",
+      "entry_urls": [],
+      "hosts": [
+        "www.moh.gov.sg"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "my-moh",
+      "name": "MOH Malaysia",
+      "kind": "national_ministry",
+      "country": "MY",
+      "org": "Ministry of Health Malaysia",
+      "homepage": "https://www.moh.gov.my/",
+      "entry_urls": [],
+      "hosts": [
+        "www.moh.gov.my"
+      ],
+      "languages": [
+        "en",
+        "ms"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "ng-fmoh",
+      "name": "Federal Ministry of Health Nigeria",
+      "kind": "national_ministry",
+      "country": "NG",
+      "org": "Federal Ministry of Health",
+      "homepage": "https://www.health.gov.ng/",
+      "entry_urls": [],
+      "hosts": [
+        "www.health.gov.ng"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    },
+    {
+      "id": "ke-moh",
+      "name": "Ministry of Health Kenya",
+      "kind": "national_ministry",
+      "country": "KE",
+      "org": "Ministry of Health",
+      "homepage": "https://www.health.go.ke/",
+      "entry_urls": [],
+      "hosts": [
+        "www.health.go.ke"
+      ],
+      "languages": [
+        "en"
+      ],
+      "ingest": "curated",
+      "acquisition": "html+pdf",
+      "endpoints": null,
+      "licence": {
+        "id": "unverified",
+        "family": "unknown",
+        "url": null,
+        "verified": false,
+        "verified_at": null,
+        "evidence": null
+      },
+      "storage_max": "metadata_only",
+      "default_funding_class": "public",
+      "cadence": "P1M",
+      "screenshot": true,
+      "priority": 4,
+      "status": "pending_licence_review",
+      "rate_limit_rps": 0.5,
+      "notes": ""
+    }
+  ]
+}
