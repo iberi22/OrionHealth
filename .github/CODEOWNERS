@@ -17,7 +17,9 @@ lib/features/ @iberi22
 test/ @iberi22
 
 # Evidence corpus policy (owner-only)
-corpus/ALLOWLIST.json @iberi22
+corpus/sources/registry.json @iberi22
+corpus/sources/registry.schema.json @iberi22
+corpus/sources/expansions.json @iberi22
 corpus/FUNDERS.json @iberi22
 corpus/SCHEMA.json @iberi22
 scripts/corpus/ @iberi22

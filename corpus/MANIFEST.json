@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "corpus_version": "2026.43.0",
   "generated_at": "1970-01-01T00:00:00Z",
   "last_refresh": {
@@ -7,15 +7,7 @@
     "marker": null
   },
   "counts": {
-    "by_source": {
-      "pmc-oa": 0,
-      "pubmed": 0,
-      "ctgov": 0,
-      "uspstf": 0,
-      "cochrane": 0,
-      "who": 0,
-      "nice": 0
-    },
+    "by_source": {},
     "by_funding_class": {
       "public": 0,
       "nonprofit": 0,
@@ -25,6 +17,7 @@
     },
     "by_text_policy": {
       "fulltext": 0,
+      "abstract": 0,
       "metadata_only": 0
     }
   },
