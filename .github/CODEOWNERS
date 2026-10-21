@@ -15,3 +15,12 @@ lib/features/ @iberi22
 
 # Tests
 test/ @iberi22
+
+# Evidence corpus policy (owner-only)
+corpus/ALLOWLIST.json @iberi22
+corpus/FUNDERS.json @iberi22
+corpus/SCHEMA.json @iberi22
+scripts/corpus/ @iberi22
+.github/workflows/evidence-refresh.yml @iberi22
+.github/workflows/corpus-validate.yml @iberi22
+.github/jules/ @iberi22

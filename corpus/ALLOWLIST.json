@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "note": "Owner-only (CODEOWNERS). Only the sources below may enter the evidence corpus. Vendor, sponsored, press-release and CME-sponsor pages are never allowed, whatever the host. MinSalud GPC and IETS stay off this list until their licences are checked (owner decision).",
+  "sources": [
+    {
+      "id": "pmc-oa",
+      "hosts": ["www.ncbi.nlm.nih.gov", "ftp.ncbi.nlm.nih.gov"],
+      "acquisition": "oa_service",
+      "subset": "oa_comm",
+      "licences": ["CC0-1.0", "CC-BY-2.0", "CC-BY-2.5", "CC-BY-3.0", "CC-BY-4.0"],
+      "text_policy": "fulltext"
+    },
+    {
+      "id": "pubmed",
+      "hosts": ["eutils.ncbi.nlm.nih.gov", "pubmed.ncbi.nlm.nih.gov"],
+      "acquisition": "efetch_xml",
+      "licences": ["publisher-copyright"],
+      "text_policy": "metadata_only"
+    },
+    {
+      "id": "ctgov",
+      "hosts": ["clinicaltrials.gov"],
+      "acquisition": "api",
+      "licences": ["public-domain"],
+      "text_policy": "fulltext"
+    },
+    {
+      "id": "uspstf",
+      "hosts": ["www.uspreventiveservicestaskforce.org"],
+      "acquisition": "scrape",
+      "licences": ["public-domain"],
+      "text_policy": "fulltext"
+    },
+    {
+      "id": "cochrane",
+      "hosts": ["www.cochranelibrary.com", "eutils.ncbi.nlm.nih.gov", "pubmed.ncbi.nlm.nih.gov"],
+      "acquisition": "scrape+pubmed",
+      "licences": ["wiley-copyright"],
+      "text_policy": "metadata_only"
+    },
+    {
+      "id": "who",
+      "hosts": ["www.who.int", "iris.who.int"],
+      "acquisition": "iris",
+      "licences": ["CC-BY-NC-SA-3.0-IGO"],
+      "text_policy": "metadata_only",
+      "text_policy_reason": "metadata_only until legal review clears the NC clause"
+    },
+    {
+      "id": "nice",
+      "hosts": ["www.nice.org.uk"],
+      "acquisition": "scrape",
+      "licences": ["nice-terms"],
+      "text_policy": "metadata_only"
+    }
+  ],
+  "pending_licence_check": [
+    {"id": "minsalud_gpc", "status": "off"},
+    {"id": "iets", "status": "off"}
+  ],
+  "never_allowed": ["vendor", "sponsored", "press-release", "cme-sponsor"]
+}

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "orion-health/corpus/schema.json",
+  "title": "Evidence corpus schemas",
+  "description": "Two schemas: $defs.entry (one corpus record per file) and $defs.manifest (corpus/MANIFEST.json). Plain JSON Schema cannot express every rule; the validator (scripts/corpus/validate-corpus.mjs) enforces the rest. Rules not expressible here: when text_policy is metadata_only, sections must be []; funding_class industry is rejected at admission; every funders[].class must match FUNDERS.json; manifest entries must be sorted by id and unique.",
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "description": "Every field is required. Use null where a field does not apply. content_sha256 is the sha256 of the canonical JSON (sorted keys, UTF-8, no whitespace) computed without content_sha256, retrieved_at and screenshot. When text_policy is metadata_only, sections must be [].",
+      "required": ["id", "source", "url", "title", "lang", "doc_type", "published", "updated", "retrieved_at", "licence", "text_policy", "acquisition", "funding_class", "funders", "coi", "evidence_level", "icd10", "mesh", "retracted", "supersedes", "sections", "content_sha256", "screenshot"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9_-]+:[A-Za-z0-9._-]+$", "description": "Source prefix, colon, source-local id (e.g. nct:NCT01234567)."},
+        "source": {"type": "string", "enum": ["pmc-oa", "pubmed", "ctgov", "uspstf", "cochrane", "who", "nice"]},
+        "url": {"type": "string", "format": "uri", "description": "Host must belong to the source in ALLOWLIST.json."},
+        "title": {"type": "string", "minLength": 1},
+        "lang": {"type": "string", "pattern": "^[a-z]{2,3}$"},
+        "doc_type": {"type": "string", "enum": ["trial_record", "trial_results", "guideline", "recommendation", "systematic_review", "primary_study", "review", "other"]},
+        "published": {"type": ["string", "null"], "format": "date"},
+        "updated": {"type": ["string", "null"], "format": "date"},
+        "retrieved_at": {"type": "string", "format": "date-time", "pattern": "Z$", "description": "UTC, not in the future."},
+        "licence": {"type": "string", "minLength": 1, "description": "Must be one the source allows in ALLOWLIST.json."},
+        "text_policy": {"type": "string", "enum": ["fulltext", "metadata_only"]},
+        "acquisition": {"type": "string", "enum": ["api", "oa_service", "efetch_xml", "scrape", "scrape+pubmed", "iris"]},
+        "funding_class": {"type": "string", "enum": ["public", "nonprofit", "mixed", "industry", "unknown"], "description": "industry is rejected at admission."},
+        "funders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "class", "ror"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "class": {"type": "string", "enum": ["public", "nonprofit", "industry"]},
+              "ror": {"type": ["string", "null"], "pattern": "^https://ror\\.org/"}
+            }
+          }
+        },
+        "coi": {
+          "type": "object",
+          "required": ["status", "text"],
+          "additionalProperties": false,
+          "properties": {
+            "status": {"type": "string", "enum": ["declared", "none_declared", "unknown"]},
+            "text": {"type": ["string", "null"], "maxLength": 1000}
+          }
+        },
+        "evidence_level": {
+          "type": "object",
+          "required": ["scale", "level", "grade", "basis"],
+          "additionalProperties": false,
+          "properties": {
+            "scale": {"const": "OCEBM-2011"},
+            "level": {"type": "integer", "minimum": 1, "maximum": 5},
+            "grade": {"type": ["string", "null"], "description": "Filled only when the source states it."},
+            "basis": {"type": ["string", "null"], "description": "For example publication_type."}
+          }
+        },
+        "icd10": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "mesh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "retracted": {"type": "boolean", "const": false, "description": "Retracted records are rejected."},
+        "supersedes": {"type": ["string", "null"], "pattern": "^[a-z0-9_-]+:[A-Za-z0-9._-]+$"},
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["heading", "text"],
+            "additionalProperties": false,
+            "properties": {
+              "heading": {"type": "string"},
+              "text": {"type": "string"}
+            }
+          }
+        },
+        "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "screenshot": {"type": ["string", "null"], "pattern": "^corpus/screenshots/[a-z0-9._-]+/[a-z0-9._-]+\\.png$", "description": "Required PNG for scrape entries; null for api entries."}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "description": "corpus/MANIFEST.json, generated by scripts/corpus/build-manifest.mjs. entries are sorted by id and must match the files exactly.",
+      "required": ["schema_version", "corpus_version", "generated_at", "last_refresh", "counts", "entries"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {"const": 1},
+        "corpus_version": {"type": "string", "pattern": "^[0-9]{4}\\.[0-9]{1,2}\\.[0-9]+$"},
+        "generated_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "last_refresh": {
+          "type": "object",
+          "required": ["week", "marker"],
+          "additionalProperties": false,
+          "properties": {
+            "week": {"type": ["string", "null"], "pattern": "^[0-9]{4}-W[0-9]{2}$"},
+            "marker": {"type": ["string", "null"]}
+          }
+        },
+        "counts": {
+          "type": "object",
+          "required": ["by_source", "by_funding_class", "by_text_policy"],
+          "additionalProperties": false,
+          "properties": {
+            "by_source": {"type": "object", "propertyNames": {"enum": ["pmc-oa", "pubmed", "ctgov", "uspstf", "cochrane", "who", "nice"]}, "additionalProperties": {"type": "integer", "minimum": 0}},
+            "by_funding_class": {"type": "object", "propertyNames": {"enum": ["public", "nonprofit", "mixed", "industry", "unknown"]}, "additionalProperties": {"type": "integer", "minimum": 0}},
+            "by_text_policy": {"type": "object", "propertyNames": {"enum": ["fulltext", "metadata_only"]}, "additionalProperties": {"type": "integer", "minimum": 0}}
+          }
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "path", "sha256"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z0-9_-]+:[A-Za-z0-9._-]+$"},
+              "path": {"type": "string", "pattern": "^corpus/entries/[a-z0-9._-]+/[0-9]{4}/[a-z0-9._-]+\\.json$"},
+              "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            }
+          }
+        }
+      }
+    }
+  }
+}
