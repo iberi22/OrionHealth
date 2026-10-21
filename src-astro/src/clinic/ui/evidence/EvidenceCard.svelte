@@ -1,6 +1,7 @@
 <script lang="ts">
   import Badges from './Badges.svelte';
   import { ageWarning, externalLink } from './badges';
+  import { isMetaOnly, sourceHref as recordHref } from './policy';
   import { vancouver } from './citation';
   import { clampQuote, highlightSegments, rangeSegments } from './snippet';
   import { t, type Lang } from './strings';
@@ -17,8 +18,8 @@
     year: card.published?.slice(0, 4), volume: card.volume, issue: card.issue, pages: card.pages,
     pmid: card.pmid, doi: card.doi, nct: card.nct,
   }));
-  const metaOnly = $derived(!card.text);
-  const sourceHref = $derived(card.url ?? link);
+  const metaOnly = $derived(isMetaOnly(card));
+  const sourceHref = $derived(recordHref(card));
   const quote = $derived(metaOnly && card.quote ? clampQuote(card.quote) : null);
   const segs = $derived(card.snippet
     ? (card.highlightRanges ? rangeSegments(card.snippet, card.highlightRanges) : highlightSegments(card.snippet, card.highlights))
@@ -50,7 +51,7 @@
   {#if quote}
     <blockquote class="quote">
       <p>“{quote}”</p>
-      <footer>{t(lang, 'quote')}{card.issuer ? ` — ${card.issuer}` : ''}</footer>
+      <footer>{t(lang, 'quote')}{card.issuer ? ` — ${card.issuer}` : ''}{#if sourceHref}<br><span class="src">{sourceHref}</span>{/if}</footer>
     </blockquote>
   {:else if segs.length}
     <p class="snippet">{#each segs as s}{#if s.hit}<mark>{s.text}</mark>{:else}{s.text}{/if}{/each}</p>

@@ -24,6 +24,8 @@ export interface EvidenceCardData extends Card {
   superseded_by?: string | null;
   /** Permitted full text; absent when the licence is metadata-only. */
   text?: string;
+  /** Text policy of the record: full text, quote only, or metadata only. Falls back to the licence family when absent. */
+  text_policy?: 'full' | 'quote' | 'metadata';
   content_hash?: string;
   screenshot_url?: string;
   /** Publisher or agency that issued the record. */
