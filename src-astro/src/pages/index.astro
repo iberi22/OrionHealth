@@ -4,6 +4,7 @@ import { Button, Card, Badge, StatusBadge } from '@swal/ui';
 import AuiRenderer from '../components/AuiRenderer.svelte';
 import ProBadge from '../components/ProBadge.svelte';
 import type { AuiSpec } from '../lib/aui';
+import { ONBOARDING_STEPS } from '../lib/onboarding';
 
 const demoAui: AuiSpec = {
   version: 1,
@@ -31,6 +32,20 @@ const stats = [
       Tus datos nunca salen de tu dispositivo. Esta web es la demo pública del stack SWAL:
       Astro 7 + Svelte 5 + <code>@swal/ui</code> + PWA offline sobre Cloudflare Workers.
     </p>
+
+    <section id="onboarding">
+      <h2>Cómo empezar</h2>
+      <div class="stats">
+        {ONBOARDING_STEPS.map((s) => (
+          <Card variant="surface" padding="md">
+            <div class="stat">
+              <strong>{s.title}</strong>
+              <span class="hint">{s.body}</span>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </section>
 
     <div class="stats">
       {stats.map((s) => (
