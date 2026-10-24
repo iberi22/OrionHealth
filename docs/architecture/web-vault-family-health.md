@@ -109,9 +109,12 @@ interface Grant {
 - Presets: **Guardian (acudiente de primer nivel)** = every personal category, `write`, alerts on, trustee for
   recovery. **Caregiver** = emergency, medications, allergies, vitals, appointments, `read`. **Emergency only** =
   emergency, `read`. Custom = any set.
-- **Revoke** = owner rotates the CEK of that category (epoch+1), re-encrypts nothing old, re-grants the new epoch to
-  remaining grantees and publishes a signed `revoke` membership event. Data already seen by the revoked member
-  cannot be unseen; the UI says so before confirming.
+- **Revoke** = owner publishes one revoke marker `{ kind: 'revoke', grantId }` (a `grant` envelope sealed with CK,
+  signed by the owner) for every grant of that grantee and category, rotates the CEK of that category (epoch+1),
+  re-encrypts nothing old and re-grants the new epoch to remaining grantees. Every receiver derives the revoked set
+  from the replicated markers: a marker counts only when its envelope author is the grant's `from`, and a revoked
+  grant no longer authorizes writes (§5) on any device. Data already seen by the revoked member cannot be unseen;
+  the UI says so before confirming.
 - Dependent profiles (child, or an elder without a phone) are owned by the member who created them, who holds
   their keys; the dependent can later be **handed over** to their own device (keys transferred, creator becomes
   guardian).
