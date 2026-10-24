@@ -20,7 +20,7 @@ export interface VaultSessionOptions {
   window?: Window; // for mocking in tests
 }
 
-export function createVaultSession(opts: VaultSessionOptions): VaultService & { withMrs: <T>(fn: (mrs: Uint8Array) => T | Promise<T>) => Promise<T>, ready: () => Promise<void>, bundle: () => MemberBundle | null, importMrs: (mrs: Uint8Array, displayName: string) => Promise<void> } {
+export function createVaultSession(opts: VaultSessionOptions): VaultService & { withMrs: <T>(fn: (mrs: Uint8Array) => T | Promise<T>) => Promise<T>, ready: () => Promise<void>, bundle: () => MemberBundle | null, importMrs: (mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }) => Promise<void> } {
   const dbName = opts.dbName ?? 'orion-meta';
   const dbPromise = openDB(dbName, 1, {
     upgrade(db) {
@@ -139,16 +139,38 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
     bundle(): MemberBundle | null {
       return currentState === 'unlocked' ? _bundle : null;
     },
-    async importMrs(mrs: Uint8Array, displayName: string): Promise<void> {
-      const sealedBundle = await get<string>('orion/bundle');
-      if (sealedBundle) {
-        try { _bundle = await openBundle(mrs, await get<string>('orion/meta/memberId') ?? '', sealedBundle); } catch(e) {}
+    /**
+     * Recovery: installs a recovered MRS on this device. Registers / unlocks a passkey first (the MRS is
+     * wrapped by its KEK), then stores the member bundle. On a new phone the bundle and memberId come
+     * from the circle replica (`restore`); on the same device they are read locally.
+     */
+    async importMrs(mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }): Promise<void> {
+      try {
+        await vault.unlock({ passkey: true });
+        prfSupported = true;
+      } catch (e: any) {
+        if (e.code === 'NO_PASSKEY') {
+          prfSupported = false;
+          throw new VaultSessionError('PRF_UNSUPPORTED', 'Authenticator does not support PRF');
+        }
+        throw e;
       }
-      const wrapped = await (vault as any).wrapBytes(mrs);
-      await put('orion/mrs', wrapped);
-      _displayName = displayName;
+      const memberId = restore?.memberId ?? (await get<string>('orion/meta/memberId'));
+      const sealedBundle = restore?.sealedBundle ?? (await get<string>('orion/bundle'));
+      if (!memberId || !sealedBundle) {
+        throw new VaultSessionError('NO_BUNDLE', 'Recovered secret has no member bundle to open');
+      }
+      // Fails (and stores nothing) if the secret does not open this member's bundle.
+      const bundle = await openBundle(mrs, memberId, sealedBundle);
+      await put('orion/bundle', sealedBundle);
+      await put('orion/meta/memberId', memberId);
+      await put('orion/mrs', await (vault as any).wrapBytes(mrs));
       await put('orion/meta/displayName', displayName);
+      _bundle = bundle;
+      _memberId = memberId;
+      _displayName = displayName;
       updateState('unlocked');
+      setupListeners();
     },
     async capabilities(): Promise<VaultCapabilities> {
       const indexedDb = typeof indexedDB !== 'undefined';

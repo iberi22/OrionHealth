@@ -148,19 +148,25 @@ describe('VaultSession', () => {
     expect(session.state()).toBe('locked');
   });
 
-  it('importMrs(mrs, displayName) for recovery', async () => {
-    const session = createVaultSession({ passkey: provider, dbName: 'test-import' });
-    await session.ready();
-
-    // Fake MRS
-    const mrs = new Uint8Array(32).fill(99);
+  it('importMrs restores the same member on a new device and rejects a wrong secret', async () => {
+    const deviceA = createVaultSession({ passkey: provider, dbName: 'test-import-a' });
+    await deviceA.ready();
+    const { memberId } = await deviceA.create('Rosa');
+    const mrs = await deviceA.withMrs((m) => m.slice());
     const { openDB } = await import('idb');
-    const metaDb = await openDB('test-import', 1);
-    await metaDb.delete('meta', 'orion/bundle');
-    await session.create('tmp'); await session.importMrs(mrs, 'Imported User');
+    const metaA = await openDB('test-import-a', 1);
+    const sealedBundle = (await metaA.get('meta', 'orion/bundle')) as string;
+    metaA.close();
 
-    expect(session.state()).toBe('unlocked');
-    expect(session.displayName()).toBe('Imported User');
+    const deviceB = createVaultSession({ passkey: provider, dbName: 'test-import-b' });
+    await deviceB.ready();
+    await expect(deviceB.importMrs(new Uint8Array(32).fill(7), 'Rosa', { memberId, sealedBundle })).rejects.toThrow();
+    expect(deviceB.state()).not.toBe('unlocked');
+
+    await deviceB.importMrs(mrs, 'Rosa', { memberId, sealedBundle });
+    expect(deviceB.state()).toBe('unlocked');
+    expect(deviceB.memberId()).toBe(memberId);
+    expect(deviceB.bundle()?.memberId).toBe(memberId);
   });
 
   it('ready() resolves once the initial state is known', async () => {
