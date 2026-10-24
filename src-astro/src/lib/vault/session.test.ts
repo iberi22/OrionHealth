@@ -34,23 +34,6 @@ vi.mock('./recoveryCode.ts', async () => {
 });
 
 
-vi.mock('@swal/vault/web', async () => {
-  const original = await vi.importActual('@swal/vault/web') as any;
-  return {
-    ...original,
-    createVaultClient: (opts: any) => {
-      const client = original.createVaultClient(opts);
-      client.wrapBytes = async (mrs: Uint8Array) => {
-        return await client.wrapKey(mrs);
-      };
-      client.unwrapBytes = async (wrapped: string) => {
-        return await client.unwrapKey(wrapped);
-      };
-      return client;
-    }
-  };
-});
-
 describe('VaultSession', () => {
   let provider: MockPasskeyProvider;
 

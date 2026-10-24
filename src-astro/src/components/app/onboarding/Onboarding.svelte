@@ -58,7 +58,8 @@
       recoveryCode = res.recoveryCode;
       currentStep = 'recovery';
     } catch (e) {
-      if (e && typeof e === 'object' && 'code' in e && e.code === 'NO_PASSKEY') {
+      console.error('vault.create failed', e);
+      if (e && typeof e === 'object' && 'code' in e && (e.code === 'NO_PASSKEY' || e.code === 'CANCELLED')) {
         createError = 'Creación cancelada. Inténtalo de nuevo.';
       } else {
         readOnly = true;

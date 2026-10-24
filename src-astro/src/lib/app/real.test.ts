@@ -7,22 +7,6 @@ import { RealKernel } from './real/kernel.impl';
 import { loadServices } from './services';
 import { createRealServices } from './real';
 
-// Same shim as vault/session.test.ts: the session calls wrapBytes/unwrapBytes on the vault client.
-vi.mock('@swal/vault/web', async () => {
-  const original = (await vi.importActual('@swal/vault/web')) as Record<string, unknown> & {
-    createVaultClient: (o: unknown) => Record<string, (...a: unknown[]) => Promise<unknown>>;
-  };
-  return {
-    ...original,
-    createVaultClient: (opts: unknown) => {
-      const client = original.createVaultClient(opts);
-      client.wrapBytes = (mrs) => client.wrapKey!(mrs);
-      client.unwrapBytes = (w) => client.unwrapKey!(w);
-      return client;
-    },
-  };
-});
-
 const passkey: PasskeyPrfProvider = {
   async getPrfOutput() {
     return new Uint8Array(32).fill(42);
