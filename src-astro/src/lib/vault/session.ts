@@ -164,7 +164,7 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
       const bundle = await openBundle(mrs, memberId, sealedBundle);
       await put('orion/bundle', sealedBundle);
       await put('orion/meta/memberId', memberId);
-      await put('orion/mrs', await (vault as any).wrapBytes(mrs));
+      await put('orion/mrs', await vault.wrapKey(mrs));
       await put('orion/meta/displayName', displayName);
       _bundle = bundle;
       _memberId = memberId;
@@ -237,7 +237,7 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
       await put('orion/meta/memberId', memberId);
       await put('orion/meta/displayName', displayName);
 
-      const wrappedMrs = await (vault as any).wrapBytes(mrs);
+      const wrappedMrs = await vault.wrapKey(mrs);
       await put('orion/mrs', wrappedMrs);
 
       const codeBytes = newRecoveryCode();
@@ -269,7 +269,7 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
         throw new VaultSessionError('EMPTY', 'No vault found');
       }
 
-      const mrs = await (vault as any).unwrapBytes(wrappedMrs);
+      const mrs = await vault.unwrapKey(wrappedMrs);
       // const mrs = new Uint8Array(32);
 
       _memberId = await get<string>('orion/meta/memberId') ?? null;
@@ -315,7 +315,7 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
 
       let mrs: Uint8Array | null = null;
       try {
-        mrs = await (vault as any).unwrapBytes(wrappedMrs);
+        mrs = await vault.unwrapKey(wrappedMrs);
         return await fn(mrs!);
       } finally {
         if (mrs) mrs.fill(0);

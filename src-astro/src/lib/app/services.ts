@@ -1,8 +1,13 @@
-// Chooses the service implementation for the SPA. Until lib/app/real.ts is wired (task "wire real
-// services"), the app runs on the in-memory demo, so no data is ever persisted in clear.
+// Chooses the service implementation for the SPA: the real, encrypted-at-rest services, or the
+// in-memory demo (PUBLIC_SERVICES=mock, or a browser without IndexedDB / WebAuthn).
 import type { Services } from '../contracts/services';
 
-export async function loadServices(): Promise<Services> {
-  const { createMockServices } = await import('../contracts/mock');
-  return createMockServices();
+export async function loadServices(): Promise<Services & { demo: boolean }> {
+  const forceMock = import.meta.env.PUBLIC_SERVICES === 'mock';
+  if (forceMock || typeof indexedDB === 'undefined' || typeof PublicKeyCredential === 'undefined') {
+    const { createMockServices } = await import('../contracts/mock');
+    return { ...createMockServices(), demo: true };
+  }
+  const { createRealServices } = await import('./real');
+  return createRealServices();
 }

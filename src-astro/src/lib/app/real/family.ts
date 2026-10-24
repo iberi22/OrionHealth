@@ -40,6 +40,9 @@ interface Request {
   invite: Invite;
 }
 
+/** How long the admin keeps the key-room connection open after sending the handover. */
+const HANDOVER_LINGER_MS = 5 * 60 * 1000;
+
 const ckAad = (circleId: string, to: string, epoch: number) => utf8(`orion/v1|${circleId}|circle-key|${to}|${epoch}`);
 
 export function createFamilyCircleService(
@@ -182,7 +185,9 @@ export function createFamilyCircleService(
     // of a message on a second room (<inviteRoom>.keys). It is wrapped to the joiner and signed by the admin.
     const conn = await opts.transport.join(await roomOf(req.invite.s));
     await conn.send({ signPub: me.signPub, boxPub: me.boxPub, deviceId: kernel.deviceId(), displayName: JSON.stringify(payload) });
-    conn.close();
+    // The joiner may not be connected to this room yet (WebRTC needs a moment to link the peers and
+    // sync the doc), so the connection stays open for a grace period instead of closing right away.
+    setTimeout(() => conn.close(), HANDOVER_LINGER_MS);
   };
 
   return {

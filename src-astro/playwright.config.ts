@@ -21,7 +21,7 @@ export default defineConfig({
       name: 'app-local',
       testIgnore: /pwa-live\.spec\.ts/,
       grepInvert: process.env.E2E_REAL === '1' ? undefined : /@real/,
-      use: { ...chromium, baseURL: `http://127.0.0.1:${PORT}` },
+      use: { ...chromium, baseURL: `http://localhost:${PORT}` },
     },
     {
       name: 'live',

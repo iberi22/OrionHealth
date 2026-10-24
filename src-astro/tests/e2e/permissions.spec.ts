@@ -1,46 +1,25 @@
 import { test, expect } from '@playwright/test';
 import { addVirtualPasskey } from './helpers/webauthn';
 import { startSignaling } from './helpers/signaling';
+import { createVault, navigateInApp, reloadAndUnlock, visit } from './helpers/vault';
 
 test.describe('Permissions', () => {
-  test('guardian grant, read vitals, missing access, and revocation @real', async ({ browser }) => {
+  test('guardian grant, read vitals, missing access, and revocation @real', async ({ browser, baseURL }) => {
     await startSignaling();
 
-    const adminContext = await browser.newContext();
+    const adminContext = await browser.newContext({ baseURL });
     const adminPage = await adminContext.newPage();
     await addVirtualPasskey(adminPage);
 
-    const joinerContext = await browser.newContext();
+    const joinerContext = await browser.newContext({ baseURL });
     const joinerPage = await joinerContext.newPage();
     await addVirtualPasskey(joinerPage);
 
     // Setup Admin
-    await adminPage.goto('/app/onboarding');
-    await adminPage.getByRole('button', { name: 'Siguiente' }).click();
-    await adminPage.getByRole('button', { name: 'Empezar' }).click();
-    await adminPage.getByLabel('¿Cómo te llamas?').fill('Admin');
-    await adminPage.getByRole('button', { name: 'Crear passkey' }).click();
-
-    // Confirm recovery code
-    const recoveryCodeText = await adminPage.locator('.code-display').textContent();
-    const recoveryCode = recoveryCodeText!.trim();
-    const parts = recoveryCode.includes('-') ? recoveryCode.split('-') : recoveryCode.split(' ');
-    const inputs = adminPage.locator('.input-group input');
-    const inputCount = await inputs.count();
-    for (let i = 0; i < inputCount; i++) {
-      const id = await inputs.nth(i).getAttribute('id');
-      const labelText = await adminPage.locator(`label[for="${id}"]`).textContent();
-      const partIdx = parseInt(labelText!.replace('Parte ', ''), 10) - 1;
-      await inputs.nth(i).fill(parts[partIdx]);
-    }
-    await adminPage.getByRole('button', { name: 'Confirmar' }).click();
-    await adminPage.getByLabel('Nombre completo').fill('Admin Admin');
-    await adminPage.getByRole('button', { name: 'Guardar perfil' }).click();
-    await adminPage.getByRole('button', { name: 'Omitir por ahora' }).click();
-    await adminPage.getByRole('button', { name: 'Entrar a la app' }).click();
+    await createVault(adminPage, 'Admin');
 
     // Admin creates circle
-    await adminPage.goto('/app/family');
+    await visit(adminPage, '/app/family');
     await adminPage.getByLabel('Nombre del círculo').fill('La Familia');
     await adminPage.getByRole('button', { name: 'Crear círculo' }).click();
     await expect(adminPage.getByRole('heading', { name: 'La Familia' })).toBeVisible();
@@ -52,13 +31,16 @@ test.describe('Permissions', () => {
     const inviteUrl = await inviteUrlInput.inputValue();
 
     // Joiner joins
-    await joinerPage.goto(inviteUrl);
+    // Joining needs the joiner's own (unlocked) vault; the invite is opened client-side.
+    await createVault(joinerPage, 'Joiner');
+    const invite = new URL(inviteUrl);
+    await navigateInApp(joinerPage, invite.pathname + invite.hash);
     await joinerPage.getByLabel('Tu nombre').fill('Joiner');
     await joinerPage.getByRole('button', { name: 'Unirse' }).click();
 
     // Admin approves
     const sasCodeLocator = joinerPage.locator('.sas-code');
-    await expect(sasCodeLocator).toBeVisible();
+    await expect(sasCodeLocator).toBeVisible({ timeout: 20_000 }); // WebRTC handshake over local signaling
     const sasCode = await sasCodeLocator.textContent();
 
     await adminPage.getByRole('button', { name: 'Cerrar' }).click();
@@ -72,11 +54,11 @@ test.describe('Permissions', () => {
 
     // Wait for the joiner page to successfully redirect/reflect the approved join.
     // The user might be redirected to /app once approved, but let's navigate to ensure state.
-    await joinerPage.goto('/app/family');
+    await visit(joinerPage, '/app/family');
     await expect(joinerPage.getByRole('heading', { name: 'La Familia' })).toBeVisible();
 
     // Admin creates a vital record
-    await adminPage.goto('/app/records');
+    await visit(adminPage, '/app/records');
     await adminPage.getByRole('tab', { name: 'Signos vitales' }).click();
     await adminPage.getByRole('button', { name: 'Añadir' }).click();
     await adminPage.locator('select#vital-type').selectOption('bp'); // Presión arterial
@@ -88,12 +70,12 @@ test.describe('Permissions', () => {
     await expect(adminPage.getByText('120/80')).toBeVisible();
 
     // Joiner goes to guardian view - should not see the record
-    await joinerPage.goto('/app/family/guardian');
+    await visit(joinerPage, '/app/family/guardian');
     await expect(joinerPage.getByText('Actualmente no eres acudiente')).toBeVisible();
-    await expect(joinerPage.getByText('120/80')).not.toBeVisible();
+    await expect(joinerPage.getByText(/120 mmHg \/ 80/)).not.toBeVisible();
 
     // Admin grants Guardian to Joiner
-    await adminPage.goto('/app/family/permissions');
+    await visit(adminPage, '/app/family/permissions');
     await adminPage.getByLabel('Miembro familiar').selectOption({ label: 'Joiner' });
     await adminPage.getByLabel('Nivel de acceso').selectOption('guardian');
 
@@ -103,24 +85,27 @@ test.describe('Permissions', () => {
     await adminPage.getByRole('button', { name: 'Otorgar acceso' }).click();
 
     // Ensure it shows up in "Permisos otorgados"
-    await expect(adminPage.getByText('Joiner')).toBeVisible();
-    await expect(adminPage.getByRole('button', { name: 'Revocar' })).toBeVisible();
+    await expect(adminPage.locator('.grant-list .grant-item').getByText('Joiner').first()).toBeVisible();
+    // A guardian grant is one grant per category, each with its own Revocar button
+    await expect(adminPage.getByRole('button', { name: 'Revocar' }).first()).toBeVisible();
 
     // Joiner reloads Guardian view and can now read the vitals
-    await joinerPage.reload();
-    // Wait for summary to load
-    await expect(joinerPage.getByRole('heading', { name: 'Admin Admin' })).toBeVisible();
-    await expect(joinerPage.getByText('120/80')).toBeVisible();
+    await reloadAndUnlock(joinerPage, '/app/family/guardian');
+    await expect(joinerPage.getByRole('heading', { name: 'Admin', exact: true })).toBeVisible();
+    await expect(joinerPage.getByText(/120 mmHg \/ 80/)).toBeVisible();
 
-    // Admin revokes access
-    adminPage.once('dialog', async (dialog) => {
-      await dialog.accept(); // Confirm revocation warning
-    });
-    await adminPage.getByRole('button', { name: 'Revocar' }).click();
+    // Admin revokes access (every category grant)
+    adminPage.on('dialog', (dialog) => void dialog.accept()); // Confirm revocation warnings
+    const revokeButtons = adminPage.getByRole('button', { name: 'Revocar' });
+    while ((await revokeButtons.count()) > 0) {
+      const before = await revokeButtons.count();
+      await revokeButtons.first().click();
+      await expect(revokeButtons).toHaveCount(before - 1);
+    }
     await expect(adminPage.getByRole('button', { name: 'Revocar' })).not.toBeVisible();
 
     // Admin creates new vital record
-    await adminPage.goto('/app/records');
+    await visit(adminPage, '/app/records');
     await adminPage.getByRole('tab', { name: 'Signos vitales' }).click();
     await adminPage.getByRole('button', { name: 'Añadir' }).click();
     await adminPage.locator('select#vital-type').selectOption('bp');
@@ -129,11 +114,13 @@ test.describe('Permissions', () => {
     await adminPage.getByRole('button', { name: 'Guardar' }).click();
     await expect(adminPage.getByText('130/85')).toBeVisible();
 
-    // Joiner should stop seeing new data (won't see 130/85)
-    await joinerPage.reload();
-    await expect(joinerPage.getByRole('heading', { name: 'Admin Admin' })).toBeVisible();
-    await expect(joinerPage.getByText('120/80')).toBeVisible(); // Might still see old data since revocation doesn't erase what was already seen (as stated in the confirm dialog)
-    await expect(joinerPage.getByText('130/85')).not.toBeVisible();
+    // After revocation the joiner no longer reads any of the admin's data: the guardian view is empty
+    // (what was already seen cannot be erased from a person's memory, as the confirm dialog says, but
+    // the app keeps showing nothing).
+    await reloadAndUnlock(joinerPage, '/app/family/guardian');
+    await expect(joinerPage.getByText('Actualmente no eres acudiente')).toBeVisible();
+    await expect(joinerPage.getByText(/120 mmHg \/ 80/)).not.toBeVisible();
+    await expect(joinerPage.getByText(/130 mmHg \/ 85/)).not.toBeVisible();
 
     await adminContext.close();
     await joinerContext.close();

@@ -90,6 +90,29 @@ describe('HealthCircleService', () => {
     expect(rulesOther).toHaveLength(0);
   });
 
+  it('notifies on putAlertRule and returns only the newest version of an edited rule', async () => {
+    const rule: AlertRule = {
+      kind: 'alert-rule',
+      recordId: 'rule-edit',
+      owner: kernel.memberId(),
+      updatedAt: Date.now(),
+      subject: kernel.memberId(),
+      vital: 'bp',
+      comparator: '>',
+      threshold: 160,
+      notify: [kernel.memberId()],
+      enabled: true,
+    };
+    const onChange = vi.fn();
+    health.onChange(onChange);
+    await health.putAlertRule(rule);
+    await health.putAlertRule({ ...rule, enabled: false, threshold: 150 });
+    expect(onChange).toHaveBeenCalled();
+    const rules = await health.alertRules(kernel.memberId());
+    expect(rules).toHaveLength(1);
+    expect(rules[0]).toMatchObject({ enabled: false, threshold: 150 });
+  });
+
   it('evaluates vitals and generates alerts via onEnvelope', async () => {
     const rule: AlertRule = {
       kind: 'alert-rule',
