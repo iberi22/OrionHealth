@@ -9,6 +9,8 @@ import { signEvent } from '../../family/membership';
 import { createGrant } from '../../family/grants';
 import { createKernel, type KernelSession } from './kernel.impl';
 import { KernelError } from './kernel';
+import { createGrantsService } from './grants';
+import { circleOf, copyAll, newDevice } from './kernel.testkit';
 
 let dbN = 0;
 
@@ -151,5 +153,53 @@ describe('RealKernel', () => {
     const write2 = await rosaK.seal({ category: 'vitals', owner: a.memberId, plaintext: { value: 171 } });
     await expect(ana.publish(write2)).resolves.toBeUndefined();
     expect(await ana.open(write2)).toEqual({ value: 171 });
+  });
+});
+
+describe('RealKernel revocation (spec §5, §6)', () => {
+  // Judge repro K1: the revoke markers replicated by grants.ts must bind every device, not only the owner's.
+  it('a third member rejects a write made with a revoked write grant', async () => {
+    const [ana, rosa, carlos] = [await newDevice(), await newDevice(), await newDevice()];
+    await circleOf([ana, rosa, carlos]);
+    const a = ana.kernel.bundle(), r = rosa.kernel.bundle(), c = carlos.kernel.bundle();
+    const gA = createGrantsService(ana.kernel), gR = createGrantsService(rosa.kernel), gC = createGrantsService(carlos.kernel);
+    await gA.grant(r.memberId, 'custom', { categories: ['vitals'], access: 'write' });
+    await gA.grant(c.memberId, 'custom', { categories: ['vitals'], access: 'read' });
+    await copyAll(ana.kernel, [rosa.kernel, carlos.kernel]);
+    await gR.syncReceivedKeys();
+    await gC.syncReceivedKeys();
+
+    // Before the revocation Rosa's write is valid everywhere.
+    const before = await rosa.kernel.seal({ category: 'vitals', owner: a.memberId, plaintext: { value: 1 } });
+    await expect(carlos.kernel.publish(before)).resolves.toBeUndefined();
+
+    const rosaGrant = (await gA.grantsGiven()).find((g) => g.to === r.memberId)!;
+    await gA.revoke(rosaGrant.id);
+    await ana.kernel.revokeGrant(rosaGrant.id); // what real.ts does on the owner device only
+    await copyAll(ana.kernel, [rosa.kernel, carlos.kernel]);
+    expect((await gC.grantsReceived()).length).toBeGreaterThan(0);
+
+    // Rosa keeps the old epoch key and signs another write with it.
+    const forged = await rosa.kernel.seal({ category: 'vitals', owner: a.memberId, plaintext: { value: 999 } });
+    expect(forged.epoch).toBe(before.epoch);
+    await expect(carlos.kernel.publish(forged)).rejects.toMatchObject({ code: 'INVALID', message: 'unauthorized-write' });
+    await expect(ana.kernel.publish(forged)).rejects.toMatchObject({ code: 'INVALID' });
+    expect(await carlos.kernel.envelopes({ owner: a.memberId, category: 'vitals' })).toHaveLength(1);
+  });
+
+  it('a revoke marker by anyone other than the grant owner revokes nothing', async () => {
+    const [ana, rosa, carlos] = [await newDevice(), await newDevice(), await newDevice()];
+    await circleOf([ana, rosa, carlos]);
+    const a = ana.kernel.bundle(), r = rosa.kernel.bundle();
+    const gA = createGrantsService(ana.kernel), gR = createGrantsService(rosa.kernel);
+    await gA.grant(r.memberId, 'custom', { categories: ['vitals'], access: 'write' });
+    await copyAll(ana.kernel, [rosa.kernel, carlos.kernel]);
+    await gR.syncReceivedKeys();
+    const [g] = await gA.grantsGiven();
+    // Carlos (a member, not the owner) publishes a marker for Ana's grant.
+    const marker = await carlos.kernel.seal({ category: 'grant', plaintext: { kind: 'revoke', grantId: g!.id } });
+    await carlos.kernel.publish(marker);
+    const write = await rosa.kernel.seal({ category: 'vitals', owner: a.memberId, plaintext: { value: 2 } });
+    await expect(carlos.kernel.publish(write)).resolves.toBeUndefined();
   });
 });

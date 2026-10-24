@@ -349,18 +349,30 @@ export class RealKernel implements Kernel {
     return openEnvelope(env, key);
   }
 
-  /** Signed grants of the circle (spec §6), read from `grant` envelopes this member can open. */
-  private async grants(): Promise<Grant[]> {
-    const out: Grant[] = [];
+  /**
+   * Signed grants of the circle and the revoked set (spec §6), read from the `grant` envelopes this member
+   * can open. A revocation is a `{ kind: 'revoke', grantId }` marker; it counts only when the marker
+   * envelope's author (authenticated by the envelope signature at acceptance) is the grant's `from`.
+   * Every device derives the same set from the replicated markers; `revokeGrant` only adds local ids.
+   */
+  private async grantState(): Promise<{ grants: Grant[]; revoked: Set<string> }> {
+    const grants: Grant[] = [];
+    const markers: { grantId: string; author: string }[] = [];
     for (const env of await this.opts.store.listByCategory('grant')) {
+      let pt: unknown;
       try {
-        const g = (await this.open(env)) as Grant;
-        if (g && g.v === 1 && typeof g.sig === 'string') out.push(g);
+        pt = await this.open(env);
       } catch {
-        /* unreadable */
+        continue; // unreadable
       }
+      if (!pt || typeof pt !== 'object') continue;
+      const o = pt as Partial<Grant> & { kind?: unknown; grantId?: unknown };
+      if (o.kind === 'revoke' && typeof o.grantId === 'string') markers.push({ grantId: o.grantId, author: env.author });
+      else if (o.v === 1 && typeof o.sig === 'string') grants.push(o as Grant);
     }
-    return out;
+    const revoked = new Set(this.revoked);
+    for (const m of markers) if (grants.some((g) => g.id === m.grantId && g.from === m.author)) revoked.add(m.grantId);
+    return { grants, revoked };
   }
 
   /** Validates and stores an envelope. Returns false for an identical duplicate. */
@@ -374,10 +386,11 @@ export class RealKernel implements Kernel {
       const pub = await this.signPubOf(env.author);
       if (!pub || !(await verifyEnvelope(env, pub))) throw new KernelError('INVALID', 'invalid-signature');
     } else {
+      const { grants, revoked } = await this.grantState();
       const res = await validateEnvelope(env, {
         state: await this.circle(),
-        grants: await this.grants(),
-        revoked: this.revoked,
+        grants,
+        revoked,
         signPubOf: (id) => this.signPubOf(id),
         now: this.now(),
       });
@@ -415,7 +428,8 @@ export class RealKernel implements Kernel {
     return () => this.lockSubs.delete(cb);
   }
 
-  /** For revocation (spec §6): grants with these ids no longer authorize writes. */
+  /** For revocation (spec §6): grants with these ids no longer authorize writes on this device. The
+   *  circle-wide source is the signed revoke markers (grantState); this only adds to it. */
   async revokeGrant(grantId: string) {
     this.revoked.add(grantId);
     await this.persist();
