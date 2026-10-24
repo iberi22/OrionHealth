@@ -15,6 +15,9 @@ export default defineConfig({
   site,
   output: 'server',
   adapter: cloudflare(),
+  security: {
+    csp: true
+  },
   integrations: [
     svelte(),
     AstroPWA({
