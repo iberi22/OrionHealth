@@ -18,28 +18,26 @@ class IsarMedicationRepository implements MedicationRepository {
     this._encryptionService,
   );
 
+  Future<String> _safeDecrypt(String data) async {
+    try {
+      return await _encryptionService.decryptHealthData(data);
+    } catch (_) {
+      return data;
+    }
+  }
+
   Future<Medication> _decryptMedication(Medication medication) async {
     final copy = _copyMedication(medication);
     if (copy.encryptedName != null)
-      copy.name = await _encryptionService.decryptHealthData(
-        copy.encryptedName!,
-      );
+      copy.name = await _safeDecrypt(copy.encryptedName!);
     if (copy.encryptedDosage != null)
-      copy.dosage = await _encryptionService.decryptHealthData(
-        copy.encryptedDosage!,
-      );
+      copy.dosage = await _safeDecrypt(copy.encryptedDosage!);
     if (copy.encryptedFrequency != null)
-      copy.frequency = await _encryptionService.decryptHealthData(
-        copy.encryptedFrequency!,
-      );
+      copy.frequency = await _safeDecrypt(copy.encryptedFrequency!);
     if (copy.encryptedNotes != null)
-      copy.notes = await _encryptionService.decryptHealthData(
-        copy.encryptedNotes!,
-      );
+      copy.notes = await _safeDecrypt(copy.encryptedNotes!);
     if (copy.encryptedGenericName != null)
-      copy.genericName = await _encryptionService.decryptHealthData(
-        copy.encryptedGenericName!,
-      );
+      copy.genericName = await _safeDecrypt(copy.encryptedGenericName!);
     return copy;
   }
 

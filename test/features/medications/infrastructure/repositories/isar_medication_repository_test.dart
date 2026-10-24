@@ -69,7 +69,13 @@ void main() {
         isActive: true,
       );
 
+      final nameBefore = medication.name;
+      final encryptedNameBefore = medication.encryptedName;
+
       await repository.saveMedication(medication);
+
+      expect(medication.name, nameBefore);
+      expect(medication.encryptedName, encryptedNameBefore);
 
       // Verify raw data in Isar is encrypted and not equal to plaintext
       final rawMedication = await isar.medications.where().findFirst();
@@ -93,6 +99,22 @@ void main() {
       expect(medications.first.frequency, 'Cada 8 horas');
     },
   );
+
+  test('Should fallback to returning raw plaintext when decrypt fails', () async {
+    await isar.writeTxn(() async {
+      final legacyMed = Medication(
+        name: 'PlaintextMed',
+        startDate: DateTime.now(),
+      );
+      legacyMed.encryptedName = 'PlaintextMed';
+      await isar.medications.put(legacyMed);
+    });
+
+    final medications = await repository.getAllMedications();
+    expect(medications.length, 1);
+    expect(medications.first.name, 'PlaintextMed');
+    expect(medications.first.encryptedName, 'PlaintextMed');
+  });
 
   test('Should delete a medication', () async {
     final medication = Medication(

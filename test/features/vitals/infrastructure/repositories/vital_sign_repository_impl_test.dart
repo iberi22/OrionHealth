@@ -144,7 +144,13 @@ void main() {
           notes: 'Normal',
         );
 
+        final valueBefore = vital.encryptedValue;
+        final notesBefore = vital.encryptedNotes;
+
         await repository.saveVitalSign(vital);
+
+        expect(vital.encryptedValue, valueBefore);
+        expect(vital.encryptedNotes, notesBefore);
 
         // Verify raw data in Isar is encrypted (does not contain plaintext)
         final rawVital = await isar.vitalSigns.where().findFirst();
@@ -159,5 +165,21 @@ void main() {
         expect(vitals.first.notes, 'Normal');
       },
     );
+
+    test('Should fallback to raw plaintext when decrypt fails', () async {
+      await isar.writeTxn(() async {
+        final legacyVital = VitalSign(
+          type: VitalSignType.bloodPressureSystolic,
+          value: 120.0,
+          dateTime: DateTime.now(),
+        );
+        legacyVital.encryptedNotes = 'PlaintextNotes';
+        await isar.vitalSigns.put(legacyVital);
+      });
+
+      final vitals = await repository.getAllVitalSigns();
+      expect(vitals.length, 1);
+      expect(vitals.first.notes, 'PlaintextNotes');
+    });
   });
 }

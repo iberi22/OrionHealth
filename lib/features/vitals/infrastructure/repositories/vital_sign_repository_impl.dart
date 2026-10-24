@@ -38,17 +38,21 @@ class VitalSignRepositoryImpl implements VitalSignRepository {
     return copy;
   }
 
+  Future<String> _safeDecrypt(String data) async {
+    try {
+      return await _encryptionService.decryptHealthData(data);
+    } catch (_) {
+      return data;
+    }
+  }
+
   Future<VitalSign> _decryptVitalSign(VitalSign vitalSign) async {
     final copy = _copyVitalSign(vitalSign);
     if (copy.encryptedValue != null) {
-      copy.encryptedValue = await _encryptionService.decryptHealthData(
-        copy.encryptedValue!,
-      );
+      copy.encryptedValue = await _safeDecrypt(copy.encryptedValue!);
     }
     if (copy.encryptedNotes != null) {
-      copy.encryptedNotes = await _encryptionService.decryptHealthData(
-        copy.encryptedNotes!,
-      );
+      copy.encryptedNotes = await _safeDecrypt(copy.encryptedNotes!);
     }
     return copy;
   }
