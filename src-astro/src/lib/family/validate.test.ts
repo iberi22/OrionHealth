@@ -113,7 +113,7 @@ describe('validateEnvelope', () => {
       now: 0 // envelope time (150) is used, which is > expiresAt (100)
     };
     const res = await validateEnvelope(env, ctx);
-    expect(res).toEqual({ ok: false, reason: 'unauthorized-write' });
+    expect(res).toEqual({ ok: false, reason: 'expired' });
   });
 
   test('accepts grant valid at envelope hlc but expired now', async () => {
@@ -139,7 +139,66 @@ describe('validateEnvelope', () => {
     const ctx: ValidateContext = {
       state, grants: [grant], revoked: new Set(),
       signPubOf: async (id) => id === 'a' ? pair.publicSpki : ownerPair.publicSpki,
-      now: 200 // current time (200) > expiresAt (100), but envelope time (50) < expiresAt
+      now: 200 // current time (200) > expiresAt (100), but envelope time (50) < expiresAt. Note: grace is 72h.
+    };
+    const res = await validateEnvelope(env, ctx);
+    expect(res).toEqual({ ok: true });
+  });
+
+  test('backdated write after expiry + grace is rejected as expired', async () => {
+    const pair = await generateSigningPair();
+    const ownerPair = await generateSigningPair();
+    // backdated envelope timestamp: expiresAt (100) > envelopeMs (50)
+    const envBase: Omit<Envelope, 'sig'> = {
+      v: 1, id: '1', circle: 'c', owner: 'ownerId', author: 'a', device: 'd',
+      category: 'emergency', epoch: 1, hlc: '50-0-d', nonce: 'n', ct: 'c'
+    };
+    const sig = await sign(pair.privatePkcs8, canonical(envBase, ['sig']));
+    const env: Envelope = { ...envBase, sig };
+
+    const grantBase: Omit<Grant, 'sig'> = { v: 1, id: 'g1', circle: 'c', from: 'ownerId', to: 'a', category: 'emergency', epoch: 1, access: 'write', expiresAt: 100, ephPub: 'e', wrapped: 'w' };
+    const grantSig = await sign(ownerPair.privatePkcs8, canonical(grantBase, ['sig']));
+    const grant: Grant = { ...grantBase, sig: grantSig };
+
+    const state: CircleState = {
+      circleId: 'c', name: 'n', epoch: 1, members: {
+        'a': { memberId: 'a', displayName: 'A', role: 'member', signPub: pair.publicSpki, boxPub: 'b', devices: ['d'], guardianOf: [], dependent: false, removed: false },
+        'ownerId': { memberId: 'ownerId', displayName: 'O', role: 'member', signPub: ownerPair.publicSpki, boxPub: 'b', devices: [], guardianOf: [], dependent: false, removed: false }
+      }
+    };
+    const ctx: ValidateContext = {
+      state, grants: [grant], revoked: new Set(),
+      signPubOf: async (id) => id === 'a' ? pair.publicSpki : ownerPair.publicSpki,
+      now: 100 + 72 * 60 * 60 * 1000 + 1 // now > expiresAt + EXPIRY_GRACE_MS
+    };
+    const res = await validateEnvelope(env, ctx);
+    expect(res).toEqual({ ok: false, reason: 'expired' });
+  });
+
+  test('late-arriving write within grace is accepted', async () => {
+    const pair = await generateSigningPair();
+    const ownerPair = await generateSigningPair();
+    const envBase: Omit<Envelope, 'sig'> = {
+      v: 1, id: '1', circle: 'c', owner: 'ownerId', author: 'a', device: 'd',
+      category: 'emergency', epoch: 1, hlc: '50-0-d', nonce: 'n', ct: 'c'
+    };
+    const sig = await sign(pair.privatePkcs8, canonical(envBase, ['sig']));
+    const env: Envelope = { ...envBase, sig };
+
+    const grantBase: Omit<Grant, 'sig'> = { v: 1, id: 'g1', circle: 'c', from: 'ownerId', to: 'a', category: 'emergency', epoch: 1, access: 'write', expiresAt: 100, ephPub: 'e', wrapped: 'w' };
+    const grantSig = await sign(ownerPair.privatePkcs8, canonical(grantBase, ['sig']));
+    const grant: Grant = { ...grantBase, sig: grantSig };
+
+    const state: CircleState = {
+      circleId: 'c', name: 'n', epoch: 1, members: {
+        'a': { memberId: 'a', displayName: 'A', role: 'member', signPub: pair.publicSpki, boxPub: 'b', devices: ['d'], guardianOf: [], dependent: false, removed: false },
+        'ownerId': { memberId: 'ownerId', displayName: 'O', role: 'member', signPub: ownerPair.publicSpki, boxPub: 'b', devices: [], guardianOf: [], dependent: false, removed: false }
+      }
+    };
+    const ctx: ValidateContext = {
+      state, grants: [grant], revoked: new Set(),
+      signPubOf: async (id) => id === 'a' ? pair.publicSpki : ownerPair.publicSpki,
+      now: 100 + 72 * 60 * 60 * 1000 // now <= expiresAt + EXPIRY_GRACE_MS
     };
     const res = await validateEnvelope(env, ctx);
     expect(res).toEqual({ ok: true });
