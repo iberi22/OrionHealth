@@ -74,6 +74,10 @@ export async function parseCode(text: string): Promise<Uint8Array> {
     .replace(/[O]/g, '0')
     .replace(/[IL]/g, '1');
 
+  if (normalized.length !== 54) {
+    throw new RecoveryCodeError('Code must be exactly 54 characters', 'INVALID_LENGTH');
+  }
+
   if (!/^[0-9ABCDEFGHJKMNPQRSTVWXYZ]+$/.test(normalized)) {
     throw new RecoveryCodeError('Invalid characters in code', 'BAD_CHARACTERS');
   }
@@ -139,7 +143,7 @@ export function pickConfirmationGroups(code: string, n: number): number[] {
   const indices = Array.from({ length: numGroups }, (_, i) => i);
   // Shuffle array
   for (let i = indices.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = globalThis.crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
     [indices[i], indices[j]] = [indices[j], indices[i]];
   }
 
