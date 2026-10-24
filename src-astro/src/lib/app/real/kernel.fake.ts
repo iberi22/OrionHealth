@@ -142,6 +142,12 @@ export class FakeKernel implements Kernel {
     return currentEpoch(this.b, category);
   }
 
+  async setCircle(circleId: string, genesis: { memberId: string; signPub: string }) {
+    this.guard();
+    this.directory.set(genesis.memberId, { signPub: genesis.signPub, boxPub: this.directory.get(genesis.memberId)?.boxPub ?? '' });
+    if (!this.circleState) this.circleState = { circleId, name: '', epoch: 0, members: {} };
+  }
+
   async circle() {
     return this.circleState;
   }

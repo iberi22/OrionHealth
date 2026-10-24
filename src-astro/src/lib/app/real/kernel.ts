@@ -17,7 +17,7 @@ export class KernelError extends Error {
 }
 
 /** Categories sealed with the circle key CK instead of a personal CEK (spec §4). */
-export const CIRCLE_KEYED: readonly Category[] = ['circle', 'grant', 'membership', 'recovery', 'alert'];
+export const CIRCLE_KEYED: readonly Category[] = ['circle', 'grant', 'membership', 'recovery', 'alert', 'bundle'];
 
 export interface SealRequest {
   category: Category;
@@ -63,6 +63,11 @@ export interface Kernel {
   /** Adds epoch+1 for one of my personal categories (revocation, spec §6) and re-publishes the bundle. */
   rotateCategory(category: PersonalCategory): Promise<number>;
 
+  /**
+   * Joins the kernel to a circle: its id and the genesis admin obtained through the SAS channel (spec §7).
+   * Membership envelopes are reduced with this pinned genesis; without it circle() is null.
+   */
+  setCircle(circleId: string, genesis: { memberId: string; signPub: string }): Promise<void>;
   circle(): Promise<CircleState | null>;
   /** Signing SPKI of a circle member (or me); null if unknown. */
   signPubOf(memberId: string): Promise<string | null>;

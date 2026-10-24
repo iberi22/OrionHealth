@@ -20,7 +20,7 @@ export interface VaultSessionOptions {
   window?: Window; // for mocking in tests
 }
 
-export function createVaultSession(opts: VaultSessionOptions): VaultService & { withMrs: <T>(fn: (mrs: Uint8Array) => T | Promise<T>) => Promise<T>, ready: () => Promise<void>, bundle: () => MemberBundle | null, importMrs: (mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }) => Promise<void> } {
+export function createVaultSession(opts: VaultSessionOptions): VaultService & { withMrs: <T>(fn: (mrs: Uint8Array) => T | Promise<T>) => Promise<T>, ready: () => Promise<void>, bundle: () => MemberBundle | null, importMrs: (mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }) => Promise<void>, saveBundle: (bundle: MemberBundle) => Promise<string>, putMeta: (key: string, value: string) => Promise<void>, getMeta: (key: string) => Promise<string | undefined> } {
   const dbName = opts.dbName ?? 'orion-meta';
   const dbPromise = openDB(dbName, 1, {
     upgrade(db) {
@@ -171,6 +171,20 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
       _displayName = displayName;
       updateState('unlocked');
       setupListeners();
+    },
+    /** Re-seals the (mutated) bundle with the MRS, stores it and returns the sealed blob for replication. */
+    async saveBundle(bundle: MemberBundle): Promise<string> {
+      const sealed = await self.withMrs((mrs) => sealBundle(mrs, bundle));
+      await put('orion/bundle', sealed);
+      _bundle = bundle;
+      return sealed;
+    },
+    /** Opaque metadata for the kernel; callers store only ciphertext here (keys are sealed by the caller). */
+    async putMeta(key: string, value: string): Promise<void> {
+      await put(`orion/kv/${key}`, value);
+    },
+    async getMeta(key: string): Promise<string | undefined> {
+      return get<string>(`orion/kv/${key}`);
     },
     async capabilities(): Promise<VaultCapabilities> {
       const indexedDb = typeof indexedDB !== 'undefined';
