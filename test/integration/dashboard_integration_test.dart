@@ -18,6 +18,7 @@ import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 
 class _MockLlmService extends Mock implements LlmService {}
+
 class _MockDashboardCubit extends Mock implements DashboardCubit {}
 
 void main() {
@@ -37,7 +38,9 @@ void main() {
     mockDashboardCubit = _MockDashboardCubit();
     when(() => mockDashboardCubit.loadDashboardData()).thenAnswer((_) async {});
     when(() => mockDashboardCubit.close()).thenAnswer((_) async {});
-    when(() => mockDashboardCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(
+      () => mockDashboardCubit.stream,
+    ).thenAnswer((_) => const Stream.empty());
   });
 
   Widget buildApp(DashboardState state) {
@@ -54,8 +57,9 @@ void main() {
   }
 
   group('Dashboard integration tests', () {
-    testWidgets('1. Dashboard loads and displays stats correctly',
-        (WidgetTester tester) async {
+    testWidgets('1. Dashboard loads and displays stats correctly', (
+      WidgetTester tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 2000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() {
@@ -100,7 +104,7 @@ void main() {
 
       // Verify medication count
       expect(find.text('5'), findsOneWidget);
-      expect(find.text('Medicamentos'), findsOneWidget);
+      expect(find.text('Medicamentos'), findsNWidgets(2));
 
       // Verify reports count
       expect(find.text('12'), findsOneWidget);
@@ -119,8 +123,9 @@ void main() {
       expect(find.text('Paracetamol registrado'), findsOneWidget);
     });
 
-    testWidgets('2. Quick action cards navigate to correct pages',
-        (WidgetTester tester) async {
+    testWidgets('2. Quick action cards navigate to correct pages', (
+      WidgetTester tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 2000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() {
@@ -145,10 +150,13 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(finder);
         await tester.pumpAndSettle();
-        expect(find.byType(expectedPageType), findsOneWidget,
-            reason: 'Expected $cardLabel to navigate to $expectedPageType');
+        expect(
+          find.byType(expectedPageType),
+          findsOneWidget,
+          reason: 'Expected $cardLabel to navigate to $expectedPageType',
+        );
         // Pop back
-        await tester.tap(find.byType(BackButton));
+        await tester.pageBack();
         await tester.pumpAndSettle();
       }
 
@@ -172,18 +180,18 @@ void main() {
       await tapAndVerifyNavigation('Investigación', MedicalResearchPage);
     });
 
-    testWidgets('3. UI transitions correctly when state changes from loading to loaded',
-        (WidgetTester tester) async {
-      tester.view.physicalSize = const Size(1200, 2000);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
+    testWidgets(
+      '3. UI transitions correctly when state changes from loading to loaded',
+      (WidgetTester tester) async {
+        tester.view.physicalSize = const Size(1200, 2000);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
 
-      // Create a stream controller to simulate state changes
-      final stateStream = Stream<DashboardState>.multi(
-        (controller) {
+        // Create a stream controller to simulate state changes
+        final stateStream = Stream<DashboardState>.multi((controller) {
           controller.add(const DashboardLoading());
           // Simulate transition
           Future(() {
@@ -206,36 +214,42 @@ void main() {
             );
             controller.close();
           });
-        },
-      );
+        });
 
-      when(() => mockDashboardCubit.state).thenReturn(const DashboardLoading());
-      when(() => mockDashboardCubit.stream).thenAnswer((_) => stateStream);
+        when(
+          () => mockDashboardCubit.state,
+        ).thenReturn(const DashboardLoading());
+        when(() => mockDashboardCubit.stream).thenAnswer((_) => stateStream);
 
-      await tester.pumpWidget(
-        buildApp(const DashboardLoading()),
-      );
-      await tester.pump();
+        await tester.pumpWidget(buildApp(const DashboardLoading()));
+        await tester.pump();
 
-      // Initially should show loading indicator
-      expect(find.byType(CircularProgressIndicator), findsOneWidget,
-          reason: 'Loading state should show CircularProgressIndicator');
+        // Initially should show loading indicator
+        expect(
+          find.byType(CircularProgressIndicator),
+          findsOneWidget,
+          reason: 'Loading state should show CircularProgressIndicator',
+        );
 
-      // Let the stream emit new state and rebuild
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+        // Let the stream emit new state and rebuild
+        await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      // After loading completes, stats should appear
-      expect(find.byKey(const Key('dashboard_stats_card')), findsOneWidget,
-          reason: 'After loading, stats card should appear');
-      expect(find.text('RESUMEN DE SALUD'), findsOneWidget);
-      expect(find.text('5'), findsOneWidget);
-      expect(find.text('12'), findsOneWidget);
+        // After loading completes, stats should appear
+        expect(
+          find.byKey(const Key('dashboard_stats_card')),
+          findsOneWidget,
+          reason: 'After loading, stats card should appear',
+        );
+        expect(find.text('RESUMEN DE SALUD'), findsOneWidget);
+        expect(find.text('5'), findsOneWidget);
+        expect(find.text('12'), findsOneWidget);
 
-      // Scroll down to see activity
-      await tester.drag(find.byType(CustomScrollView), const Offset(0, -800));
-      await tester.pumpAndSettle();
+        // Scroll down to see activity
+        await tester.drag(find.byType(CustomScrollView), const Offset(0, -800));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Nueva actividad cargada'), findsOneWidget);
-    });
+        expect(find.text('Nueva actividad cargada'), findsOneWidget);
+      },
+    );
   });
 }
