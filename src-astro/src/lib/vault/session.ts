@@ -1,6 +1,8 @@
 import { createVaultClient, type PasskeyPrfProvider } from '@swal/vault/web';
 import { openDB } from 'idb';
-import { randomBytes, hkdf, aesKey, sealBlob, memberIdFromSpki, b64u } from '../crypto/index.js';
+import { randomBytes } from '../crypto/index.js';
+import { createMemberBundle, sealBundle, openBundle, type MemberBundle } from './keyring.ts';
+import { newRecoveryCode, formatCode, wrapMrsWithCode } from './recoveryCode.ts';
 import type { VaultCapabilities, VaultService, VaultState } from '../contracts/services.js';
 
 export class VaultSessionError extends Error {
@@ -18,12 +20,12 @@ export interface VaultSessionOptions {
   window?: Window; // for mocking in tests
 }
 
-export function createVaultSession(opts: VaultSessionOptions): VaultService & { withMrs: <T>(fn: (mrs: Uint8Array) => T | Promise<T>) => Promise<T> } {
-  const dbName = opts.dbName ?? 'orion-vault';
+export function createVaultSession(opts: VaultSessionOptions): VaultService & { withMrs: <T>(fn: (mrs: Uint8Array) => T | Promise<T>) => Promise<T>, ready: () => Promise<void>, bundle: () => MemberBundle | null, importMrs: (mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }) => Promise<void> } {
+  const dbName = opts.dbName ?? 'orion-meta';
   const dbPromise = openDB(dbName, 1, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains('orion')) {
-        db.createObjectStore('orion');
+      if (!db.objectStoreNames.contains('meta')) {
+        db.createObjectStore('meta');
       }
     },
   });
@@ -37,6 +39,9 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
   let currentState: VaultState = 'unsupported';
   let _memberId: string | null = null;
   let _displayName: string | null = null;
+  let _bundle: MemberBundle | null = null;
+  let resolveInit: () => void;
+  const initPromise = new Promise<void>(r => resolveInit = r);
   const stateListeners = new Set<(s: VaultState) => void>();
   let prfSupported: boolean | 'unknown' = 'unknown';
 
@@ -55,19 +60,21 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
   };
 
   const getDb = async () => (await dbPromise);
-  const get = async <T>(k: string): Promise<T | undefined> => (await getDb()).get('orion', k);
-  const put = async (k: string, v: any) => (await getDb()).put('orion', v, k);
+  const get = async <T>(k: string): Promise<T | undefined> => (await getDb()).get('meta', k);
+  const put = async (k: string, v: any) => (await getDb()).put('meta', v, k);
 
   const init = async () => {
     const caps = await self.capabilities();
     if (!caps.webauthn || !caps.indexedDb) {
       updateState('unsupported');
+      resolveInit();
       return;
     }
 
     const wrappedMrs = await get<string>('orion/mrs');
     if (!wrappedMrs) {
       updateState('empty');
+      resolveInit();
       return;
     }
 
@@ -78,6 +85,7 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
     } else {
       updateState('locked');
     }
+    resolveInit();
   };
 
   const resetActivityTimer = () => {
@@ -95,7 +103,7 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
       if (visibilityTimer) clearTimeout(visibilityTimer);
       visibilityTimer = setTimeout(() => {
         self.lock();
-      }, 60 * 1000);
+      }, autoLockMinutes * 60 * 1000);
     } else {
       if (visibilityTimer) {
         clearTimeout(visibilityTimer);
@@ -125,6 +133,45 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
   };
 
   const self = {
+    ready(): Promise<void> {
+      return initPromise;
+    },
+    bundle(): MemberBundle | null {
+      return currentState === 'unlocked' ? _bundle : null;
+    },
+    /**
+     * Recovery: installs a recovered MRS on this device. Registers / unlocks a passkey first (the MRS is
+     * wrapped by its KEK), then stores the member bundle. On a new phone the bundle and memberId come
+     * from the circle replica (`restore`); on the same device they are read locally.
+     */
+    async importMrs(mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }): Promise<void> {
+      try {
+        await vault.unlock({ passkey: true });
+        prfSupported = true;
+      } catch (e: any) {
+        if (e.code === 'NO_PASSKEY') {
+          prfSupported = false;
+          throw new VaultSessionError('PRF_UNSUPPORTED', 'Authenticator does not support PRF');
+        }
+        throw e;
+      }
+      const memberId = restore?.memberId ?? (await get<string>('orion/meta/memberId'));
+      const sealedBundle = restore?.sealedBundle ?? (await get<string>('orion/bundle'));
+      if (!memberId || !sealedBundle) {
+        throw new VaultSessionError('NO_BUNDLE', 'Recovered secret has no member bundle to open');
+      }
+      // Fails (and stores nothing) if the secret does not open this member's bundle.
+      const bundle = await openBundle(mrs, memberId, sealedBundle);
+      await put('orion/bundle', sealedBundle);
+      await put('orion/meta/memberId', memberId);
+      await put('orion/mrs', await (vault as any).wrapBytes(mrs));
+      await put('orion/meta/displayName', displayName);
+      _bundle = bundle;
+      _memberId = memberId;
+      _displayName = displayName;
+      updateState('unlocked');
+      setupListeners();
+    },
     async capabilities(): Promise<VaultCapabilities> {
       const indexedDb = typeof indexedDB !== 'undefined';
       const webauthn = typeof PublicKeyCredential !== 'undefined';
@@ -144,41 +191,45 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
         throw new VaultSessionError('UNSUPPORTED', 'WebAuthn or IndexedDB not supported');
       }
 
+      const existing = await get<string>('orion/mrs');
+      if (existing) {
+        throw new VaultSessionError('EXISTS', 'Vault already exists');
+      }
+
       try {
         await vault.unlock({ passkey: true });
         prfSupported = true;
       } catch (e: any) {
         if (e.code === 'NO_PASSKEY') {
           prfSupported = false;
+          if (e.name === 'NotAllowedError' || (e.message && e.message.includes('cancelada'))) {
+            throw new VaultSessionError('CANCELLED', 'User cancelled passkey creation');
+          }
           throw new VaultSessionError('PRF_UNSUPPORTED', 'Authenticator does not support PRF');
         }
         throw e;
       }
 
-      const devId = await vault.getDeviceIdentity();
-      const memberId = await memberIdFromSpki(devId.publicKey);
-
       const mrs = randomBytes(32);
+      const bundle = await createMemberBundle(mrs);
+      const memberId = bundle.memberId;
+
+      const sealedBundle = await sealBundle(mrs, bundle);
+      await put('orion/bundle', sealedBundle);
 
       _memberId = memberId;
       _displayName = displayName;
+      _bundle = bundle;
       await put('orion/meta/memberId', memberId);
       await put('orion/meta/displayName', displayName);
 
-      const wrappedMrs = await vault.wrapKey(mrs);
+      const wrappedMrs = await (vault as any).wrapBytes(mrs);
       await put('orion/mrs', wrappedMrs);
 
-      const rc = randomBytes(32);
-      const rcKeyInfo = 'orion/v1/recovery-code';
-      const rcKeyBytes = await hkdf(rc, new Uint8Array(0), rcKeyInfo);
-      const rcKey = await aesKey(rcKeyBytes);
-      await sealBlob(rcKey, mrs, new Uint8Array(0));
-      // Constructing 24-words/base32 recovery code. Returning wrapped part.
-      // But the issue mentions: 32 random bytes RC; it wraps MRS (AES-GCM... RC, MRS)
-      // "and the wrapped blob is published as a recovery envelope"
-      // the recovery code itself is derived from the RC
-      // The rc is what we give out.
-      const recoveryCode = b64u(rc);
+      const codeBytes = newRecoveryCode();
+      const recoveryCode = await formatCode(codeBytes);
+      const recoveryBlob = await wrapMrsWithCode(recoveryCode, mrs, memberId);
+      await put('orion/recovery-blob', recoveryBlob);
 
       mrs.fill(0);
       updateState('unlocked');
@@ -204,8 +255,18 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
         throw new VaultSessionError('EMPTY', 'No vault found');
       }
 
+      const mrs = await (vault as any).unwrapBytes(wrappedMrs);
+      // const mrs = new Uint8Array(32);
+
       _memberId = await get<string>('orion/meta/memberId') ?? null;
       _displayName = await get<string>('orion/meta/displayName') ?? null;
+
+      const sealedBundle = await get<string>('orion/bundle');
+      if (sealedBundle && _memberId) {
+        _bundle = await openBundle(mrs, _memberId, sealedBundle);
+      }
+      mrs.fill(0);
+
       updateState('unlocked');
       setupListeners();
     },
@@ -215,6 +276,7 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
       teardownListeners();
       _memberId = null;
       _displayName = null;
+      _bundle = null;
       updateState('locked');
     },
 
@@ -239,15 +301,18 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
 
       let mrs: Uint8Array | null = null;
       try {
-        mrs = await vault.unwrapKey(wrappedMrs);
-        return await fn(mrs);
+        mrs = await (vault as any).unwrapBytes(wrappedMrs);
+        return await fn(mrs!);
       } finally {
         if (mrs) mrs.fill(0);
       }
     }
   };
 
-  init().catch(console.error);
+  init().catch((err) => {
+    console.error(err);
+    resolveInit();
+  });
 
   return self;
 }
