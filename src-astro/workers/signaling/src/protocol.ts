@@ -34,7 +34,15 @@ export interface PublishMessage {
   [key: string]: any;
 }
 
-export type SignalingMessage = SubscribeMessage | UnsubscribeMessage | PublishMessage;
+export interface PingMessage {
+  type: 'ping';
+}
+
+export interface PongMessage {
+  type: 'pong';
+}
+
+export type SignalingMessage = SubscribeMessage | UnsubscribeMessage | PublishMessage | PingMessage | PongMessage;
 
 export function handleMessage(state: SignalingState, conn: WebSocket, msgStr: string) {
   if (msgStr.length > MAX_PAYLOAD_SIZE) {
@@ -55,6 +63,10 @@ export function handleMessage(state: SignalingState, conn: WebSocket, msgStr: st
   }
 
   switch (msg.type) {
+    case 'ping':
+    case 'pong':
+      // Handled natively by Durable Object WebSocket auto-responses or explicitly ignored here
+      break;
     case 'subscribe': {
       if (!Array.isArray(msg.topics)) return;
       let myTopics = state.connections.get(conn);

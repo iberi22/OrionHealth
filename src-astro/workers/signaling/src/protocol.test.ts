@@ -129,6 +129,13 @@ describe('Signaling Protocol', () => {
     expect(ws1.isClosed).toBe(false);
   });
 
+  it('ignores ping and pong messages (handled natively by DO auto-responses)', () => {
+    handleMessage(state, ws1 as unknown as WebSocket, JSON.stringify({ type: 'ping' }));
+    handleMessage(state, ws1 as unknown as WebSocket, JSON.stringify({ type: 'pong' }));
+    expect(ws1.sent.length).toBe(0);
+    expect(ws1.isClosed).toBe(false);
+  });
+
   it('ignores valid JSON without correct type', () => {
     handleMessage(state, ws1 as unknown as WebSocket, JSON.stringify({ unknown: 'message' }));
     expect(ws1.sent.length).toBe(0);

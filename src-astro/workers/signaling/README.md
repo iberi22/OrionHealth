@@ -22,7 +22,7 @@ The server never stores or reads the contents of the payload messages. Connectio
 
 ## Manual Deploy
 
-Deploying this worker must be done manually by an authorized repository owner with the necessary Cloudflare credentials.
+Deploying this worker must be done manually by an authorized repository owner with the necessary Cloudflare credentials. It uses a single migration `v1` with `new_sqlite_classes` configured in `wrangler.toml` (no `new_classes` are used, avoiding Free plan restrictions).
 
 ```bash
 cd workers/signaling
