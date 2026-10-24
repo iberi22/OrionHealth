@@ -1,0 +1,5 @@
+# pnpm 11 refuses dependency build scripts unless allowed here (CI has no global allowlist).
+allowBuilds:
+  esbuild: true
+  workerd: true
+  sharp: true
