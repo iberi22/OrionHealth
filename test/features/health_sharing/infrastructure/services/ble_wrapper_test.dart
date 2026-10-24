@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/health_sharing/infrastructure/ble_wrapper.dart';
@@ -10,26 +11,28 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
 
   setUp(() {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
     bleWrapper = BleWrapper();
     log.clear();
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      log.add(methodCall);
-      if (methodCall.method == 'startAdvertising') {
-        return null;
-      }
-      if (methodCall.method == 'stopAdvertising') {
-        return null;
-      }
-      return null;
-    });
+          log.add(methodCall);
+          if (methodCall.method == 'startAdvertising') {
+            return null;
+          }
+          if (methodCall.method == 'stopAdvertising') {
+            return null;
+          }
+          return null;
+        });
   });
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
     bleWrapper.dispose();
+    debugDefaultTargetPlatformOverride = null;
   });
 
   group('BleWrapper', () {
@@ -72,8 +75,8 @@ void main() {
     test('startAdvertise handles MissingPluginException gracefully', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-        throw MissingPluginException();
-      });
+            throw MissingPluginException();
+          });
 
       await bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n');
 
