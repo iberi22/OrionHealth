@@ -85,7 +85,23 @@ void main() {
 
       const channel = EventChannel('fr.skyost.bonsoir.discovery');
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockStreamHandler(channel, _MockStreamHandler());
+          .setMockStreamHandler(
+            channel,
+            MockStreamHandler.inline(
+              onListen: (args, events) {
+                events.success({
+                  'id': 'discovery.resolved',
+                  'type': 'discoveryServiceResolved',
+                  'service': {
+                    'name': 'OrionHealth Test Device',
+                    'type': '_orion-health._tcp',
+                    'port': 9124,
+                    'hostname': '127.0.0.1',
+                  },
+                });
+              },
+            ),
+          );
 
       final devices = await service.discoverDevices(
         timeout: const Duration(milliseconds: 100),
@@ -226,7 +242,7 @@ class _FakeHttpClient implements HttpClient {
   @override
   Duration? connectionTimeout;
   @override
-  Duration? idleTimeout;
+  Duration idleTimeout = const Duration(seconds: 15);
   @override
   int? maxConnectionsPerHost;
   @override
@@ -390,14 +406,14 @@ class _FakeHttpResponse implements HttpResponse {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _FakeHttpClientResponse extends StreamView<Uint8List>
+class _FakeHttpClientResponse extends StreamView<List<int>>
     implements HttpClientResponse {
   @override
   final int statusCode;
   final List<int> _body;
 
   _FakeHttpClientResponse(this.statusCode, this._body)
-    : super(Stream.value(Uint8List.fromList(_body)));
+    : super(Stream<List<int>>.value(_body));
 
   @override
   Future<String> readAsString({Encoding encoding = utf8}) async {
