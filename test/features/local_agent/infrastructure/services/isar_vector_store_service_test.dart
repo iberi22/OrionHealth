@@ -16,6 +16,9 @@ class MockIsar extends Mock implements Isar {}
 class MockMemoryNodeCollection extends Mock
     implements IsarCollection<MemoryNode> {}
 
+class MockQueryBuilder extends Mock
+    implements QueryBuilder<MemoryNode, MemoryNode, QWhere> {}
+
 void main() {
   late MockMemoryGraph mockMemoryGraph;
   late MockMedicalKnowledgeRepository mockMedicalRepo;
@@ -159,9 +162,18 @@ void main() {
 
     group('createSummaryNode', () {
       test('throws when no child nodes found', () async {
+        final mockIsar = MockIsar();
+        final mockCollection = MockMemoryNodeCollection();
+
+        when(() => mockMemoryGraph.isar).thenReturn(mockIsar);
         when(
-          () => mockMemoryGraph.getNodesByLayer(any()),
-        ).thenAnswer((_) async => []);
+          () => mockIsar.collection<MemoryNode>(),
+        ).thenReturn(mockCollection);
+        final mockQueryBuilder = MockQueryBuilder();
+        when(() => mockCollection.where()).thenReturn(mockQueryBuilder);
+        when(
+          () => mockQueryBuilder.findAll(),
+        ).thenAnswer((_) async => <MemoryNode>[]);
 
         await expectLater(
           () => service.createSummaryNode('Summary', ['nonexistent']),
