@@ -34,6 +34,7 @@
     "@astrojs/svelte": "^9.0.1",
     "@e2e-dev/web": "0.14.0",
     "@playwright/test": "1.64.0",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
     "@types/qrcode": "1.5.6",
     "@vite-pwa/astro": "1.2.0",
     "autoprefixer": "10.6.1",
