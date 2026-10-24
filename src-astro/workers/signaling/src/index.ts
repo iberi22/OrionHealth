@@ -3,10 +3,15 @@ import { handleMessage, type SignalingState, IDLE_TIMEOUT_MS } from './protocol'
 export interface Env {
   SIGNALING_ROOM: DurableObjectNamespace;
   ORIGIN_ALLOWLIST?: string;
+  ENVIRONMENT?: string;
 }
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    if (env.ENVIRONMENT === 'production' && !env.ORIGIN_ALLOWLIST) {
+      return new Response('Forbidden', { status: 403 });
+    }
+
     if (env.ORIGIN_ALLOWLIST) {
       const origin = request.headers.get('Origin') || '';
       const allowedOrigins = env.ORIGIN_ALLOWLIST.split(',').map(s => s.trim());
@@ -133,8 +138,13 @@ export class SignalingRoom {
     const now = Date.now();
     for (const ws of this.stateDO.getWebSockets()) {
       const attachment = ws.deserializeAttachment();
-      if (attachment && typeof attachment.lastActive === 'number') {
-        if (now - attachment.lastActive >= IDLE_TIMEOUT_MS) {
+      if (attachment) {
+        const autoResponseTimestamp = this.stateDO.getWebSocketAutoResponseTimestamp(ws);
+        const autoTime = autoResponseTimestamp ? autoResponseTimestamp.getTime() : 0;
+        const msgTime = typeof attachment.lastActive === 'number' ? attachment.lastActive : 0;
+        const lastActive = Math.max(autoTime, msgTime);
+
+        if (lastActive > 0 && now - lastActive >= IDLE_TIMEOUT_MS) {
           ws.close(1011, 'Idle timeout');
           this.cleanupWebSocket(ws);
         }
