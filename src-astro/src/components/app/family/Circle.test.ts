@@ -37,6 +37,19 @@ describe('family area and join flow', () => {
     expect(document.body.textContent).toContain('Luis');
   });
 
+  it('tells a removed member it is no longer in the circle and hides circle actions', async () => {
+    const services = createMockServices(Date.now());
+    await services.vault.unlock();
+    const circle = (await services.family.circle())!;
+    circle.members['m-ana']!.removed = true;
+    setServices(services);
+    app = mount(Circle, { target: document.body });
+    await new Promise(r => setTimeout(r, 0));
+    flushSync();
+    expect(document.querySelector('[data-testid="circle-removed"]')).not.toBeNull();
+    expect(document.body.textContent).not.toContain('Invitar');
+  });
+
   it('renders the join page and shows SAS on submit', async () => {
     const services = createMockServices(Date.now());
     setServices(services);
