@@ -9,18 +9,18 @@ void main() {
       expect(Breakpoints.isMobile(600), isFalse);
     });
 
-    test('isTablet returns true for width >= 600 and width < 1440', () {
+    test('isTablet returns true for width >= 600 and width < 1024', () {
       expect(Breakpoints.isTablet(600), isTrue);
-      expect(Breakpoints.isTablet(1024), isTrue);
-      expect(Breakpoints.isTablet(1439), isTrue);
+
+      expect(Breakpoints.isTablet(1023), isTrue);
       expect(Breakpoints.isTablet(599), isFalse);
-      expect(Breakpoints.isTablet(1440), isFalse);
+      expect(Breakpoints.isTablet(1024), isFalse);
     });
 
-    test('isDesktop returns true for width >= 1440', () {
-      expect(Breakpoints.isDesktop(1440), isTrue);
+    test('isDesktop returns true for width >= 1024', () {
+      expect(Breakpoints.isDesktop(1024), isTrue);
       expect(Breakpoints.isDesktop(1920), isTrue);
-      expect(Breakpoints.isDesktop(1439), isFalse);
+      expect(Breakpoints.isDesktop(1023), isFalse);
     });
   });
 }

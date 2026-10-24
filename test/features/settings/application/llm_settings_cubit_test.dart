@@ -11,7 +11,10 @@ import 'package:orionhealth_health/features/settings/domain/repositories/setting
 import 'package:orionhealth_health/features/settings/domain/services/device_capability_service.dart';
 
 class MockSettingsRepository extends Mock implements SettingsRepository {}
-class MockDeviceCapabilityService extends Mock implements DeviceCapabilityService {}
+
+class MockDeviceCapabilityService extends Mock
+    implements DeviceCapabilityService {}
+
 class MockLlmAdapter extends Mock implements LlmAdapter {}
 
 class _MockHttpOverrides extends HttpOverrides {
@@ -21,8 +24,12 @@ class _MockHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     final client = _MockHttpClient();
-    when(() => client.getUrl(any())).thenAnswer((_) async => _MockHttpClientRequest(statusCode: statusCode));
-    when(() => client.openUrl(any(), any())).thenAnswer((_) async => _MockHttpClientRequest(statusCode: statusCode));
+    when(
+      () => client.getUrl(any()),
+    ).thenAnswer((_) async => _MockHttpClientRequest(statusCode: statusCode));
+    when(
+      () => client.openUrl(any(), any()),
+    ).thenAnswer((_) async => _MockHttpClientRequest(statusCode: statusCode));
     return client;
   }
 }
@@ -62,10 +69,12 @@ class _MockHttpHeaders extends Mock implements HttpHeaders {
   void removeAll(String name) {}
 }
 
-class _MockHttpClientResponse extends Mock implements HttpClientResponse {
+class _MockHttpClientResponse extends StreamView<List<int>>
+    implements HttpClientResponse {
   @override
   final int statusCode;
-  _MockHttpClientResponse({required this.statusCode});
+  _MockHttpClientResponse({required this.statusCode})
+    : super(Stream<List<int>>.fromIterable([utf8.encode('{}')]));
 
   @override
   int get contentLength => 0;
@@ -75,18 +84,38 @@ class _MockHttpClientResponse extends Mock implements HttpClientResponse {
       HttpClientResponseCompressionState.notCompressed;
 
   @override
-  StreamSubscription<List<int>> listen(void Function(List<int> event)? onData,
-      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
-    return Stream<List<int>>.fromIterable([utf8.encode('{}')]).listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError,
-    );
-  }
+  X509Certificate? get certificate => null;
 
   @override
-  Future<bool> any(bool Function(List<int> element) test) async => false;
+  HttpConnectionInfo? get connectionInfo => null;
+
+  @override
+  List<Cookie> get cookies => [];
+
+  @override
+  Future<Socket> detachSocket() async => throw UnimplementedError();
+
+  @override
+  HttpHeaders get headers => _MockHttpHeaders();
+
+  @override
+  bool get isRedirect => false;
+
+  @override
+  bool get persistentConnection => true;
+
+  @override
+  String get reasonPhrase => 'OK';
+
+  @override
+  Future<HttpClientResponse> redirect([
+    String? method,
+    Uri? url,
+    bool? followLoops,
+  ]) async => this;
+
+  @override
+  List<RedirectInfo> get redirects => [];
 }
 
 void main() {
@@ -120,12 +149,20 @@ void main() {
     mockDeviceCapabilityService = MockDeviceCapabilityService();
     mockLlmAdapter = MockLlmAdapter();
 
-    when(() => mockRepository.getLlmConfig()).thenAnswer((_) async => testConfig);
+    when(
+      () => mockRepository.getLlmConfig(),
+    ).thenAnswer((_) async => testConfig);
     when(() => mockRepository.saveLlmConfig(any())).thenAnswer((_) async {});
-    when(() => mockRepository.getAppSettings()).thenAnswer((_) async => AppSettings());
+    when(
+      () => mockRepository.getAppSettings(),
+    ).thenAnswer((_) async => AppSettings());
     when(() => mockRepository.saveAppSettings(any())).thenAnswer((_) async {});
-    when(() => mockDeviceCapabilityService.detectCapability()).thenAnswer((_) async => testCapability);
-    when(() => mockLlmAdapter.listInstalledModels()).thenAnswer((_) async => []);
+    when(
+      () => mockDeviceCapabilityService.detectCapability(),
+    ).thenAnswer((_) async => testCapability);
+    when(
+      () => mockLlmAdapter.listInstalledModels(),
+    ).thenAnswer((_) async => []);
 
     cubit = LlmSettingsCubit(
       mockRepository,
@@ -143,16 +180,21 @@ void main() {
       expect(cubit.state, isA<LlmSettingsInitial>());
     });
 
-    test('loadSettings emits Loading then Loaded with config from repository', () async {
-      await cubit.loadSettings();
+    test(
+      'loadSettings emits Loading then Loaded with config from repository',
+      () async {
+        await cubit.loadSettings();
 
-      expect(cubit.state, isA<LlmSettingsLoaded>());
-      final loadedState = cubit.state as LlmSettingsLoaded;
-      expect(loadedState.config.selectedModel, testConfig.selectedModel);
-    });
+        expect(cubit.state, isA<LlmSettingsLoaded>());
+        final loadedState = cubit.state as LlmSettingsLoaded;
+        expect(loadedState.config.selectedModel, testConfig.selectedModel);
+      },
+    );
 
     test('loadSettings emits error when repository fails', () async {
-      when(() => mockRepository.getLlmConfig()).thenThrow(Exception('DB error'));
+      when(
+        () => mockRepository.getLlmConfig(),
+      ).thenThrow(Exception('DB error'));
 
       await cubit.loadSettings();
 
@@ -172,7 +214,10 @@ void main() {
     test('updateSelectedModel saves config and updates state', () async {
       await cubit.loadSettings();
       await cubit.updateSelectedModel('new-model');
-      expect((cubit.state as LlmSettingsLoaded).config.selectedModel, 'new-model');
+      expect(
+        (cubit.state as LlmSettingsLoaded).config.selectedModel,
+        'new-model',
+      );
       verify(() => mockRepository.saveLlmConfig(any())).called(greaterThan(0));
     });
 
@@ -186,7 +231,10 @@ void main() {
     test('updateAllowCloudApiCalls updates state', () async {
       await cubit.loadSettings();
       await cubit.updateAllowCloudApiCalls(false);
-      expect((cubit.state as LlmSettingsLoaded).config.allowCloudApiCalls, false);
+      expect(
+        (cubit.state as LlmSettingsLoaded).config.allowCloudApiCalls,
+        false,
+      );
       verify(() => mockRepository.saveLlmConfig(any())).called(greaterThan(0));
     });
 
@@ -207,7 +255,10 @@ void main() {
     test('updateBaseUrl updates state', () async {
       await cubit.loadSettings();
       await cubit.updateBaseUrl('https://example.com');
-      expect((cubit.state as LlmSettingsLoaded).config.baseUrl, 'https://example.com');
+      expect(
+        (cubit.state as LlmSettingsLoaded).config.baseUrl,
+        'https://example.com',
+      );
       verify(() => mockRepository.saveLlmConfig(any())).called(greaterThan(0));
     });
 
@@ -227,21 +278,31 @@ void main() {
 
     test('downloadModel updates progress and handles completion', () async {
       final progressController = StreamController<int>();
-      when(() => mockLlmAdapter.installModel(
-        modelId: any(named: 'modelId'),
-        url: any(named: 'url'),
-      )).thenAnswer((_) => progressController.stream);
+      when(
+        () => mockLlmAdapter.installModel(
+          modelId: any(named: 'modelId'),
+          url: any(named: 'url'),
+        ),
+      ).thenAnswer((_) => progressController.stream);
 
       await cubit.loadSettings();
       await cubit.downloadModel('gemma-3-270m');
 
-      expect((cubit.state as LlmSettingsLoaded).downloadProgress['gemma-3-270m'], 0.0);
+      expect(
+        (cubit.state as LlmSettingsLoaded).downloadProgress['gemma-3-270m'],
+        0.0,
+      );
 
       progressController.add(50);
       await Future.delayed(Duration.zero);
-      expect((cubit.state as LlmSettingsLoaded).downloadProgress['gemma-3-270m'], 0.5);
+      expect(
+        (cubit.state as LlmSettingsLoaded).downloadProgress['gemma-3-270m'],
+        0.5,
+      );
 
-      when(() => mockLlmAdapter.listInstalledModels()).thenAnswer((_) async => ['gemma-3-270m']);
+      when(
+        () => mockLlmAdapter.listInstalledModels(),
+      ).thenAnswer((_) async => ['gemma-3-270m']);
 
       await progressController.close();
       await Future.delayed(Duration.zero);
@@ -253,10 +314,12 @@ void main() {
 
     test('downloadModel handles error', () async {
       final progressController = StreamController<int>();
-      when(() => mockLlmAdapter.installModel(
-        modelId: any(named: 'modelId'),
-        url: any(named: 'url'),
-      )).thenAnswer((_) => progressController.stream);
+      when(
+        () => mockLlmAdapter.installModel(
+          modelId: any(named: 'modelId'),
+          url: any(named: 'url'),
+        ),
+      ).thenAnswer((_) => progressController.stream);
 
       await cubit.loadSettings();
       await cubit.downloadModel('gemma-3-270m');
@@ -271,26 +334,40 @@ void main() {
 
     test('cancelDownload stops subscription and clears progress', () async {
       final progressController = StreamController<int>();
-      when(() => mockLlmAdapter.installModel(
-        modelId: any(named: 'modelId'),
-        url: any(named: 'url'),
-      )).thenAnswer((_) => progressController.stream);
+      when(
+        () => mockLlmAdapter.installModel(
+          modelId: any(named: 'modelId'),
+          url: any(named: 'url'),
+        ),
+      ).thenAnswer((_) => progressController.stream);
       when(() => mockLlmAdapter.cancelDownload(any())).thenAnswer((_) async {});
 
       await cubit.loadSettings();
       await cubit.downloadModel('gemma-3-270m');
 
-      expect((cubit.state as LlmSettingsLoaded).downloadProgress.containsKey('gemma-3-270m'), isTrue);
+      expect(
+        (cubit.state as LlmSettingsLoaded).downloadProgress.containsKey(
+          'gemma-3-270m',
+        ),
+        isTrue,
+      );
 
       await cubit.cancelDownload('gemma-3-270m');
 
-      expect((cubit.state as LlmSettingsLoaded).downloadProgress.containsKey('gemma-3-270m'), isFalse);
+      expect(
+        (cubit.state as LlmSettingsLoaded).downloadProgress.containsKey(
+          'gemma-3-270m',
+        ),
+        isFalse,
+      );
       expect(progressController.hasListener, isFalse);
     });
 
     test('deleteModel uninstalls and refreshes list, handles error', () async {
       when(() => mockLlmAdapter.uninstallModel(any())).thenAnswer((_) async {});
-      when(() => mockLlmAdapter.listInstalledModels()).thenAnswer((_) async => []);
+      when(
+        () => mockLlmAdapter.listInstalledModels(),
+      ).thenAnswer((_) async => []);
 
       await cubit.loadSettings();
       await cubit.deleteModel('gemma-3-270m');
@@ -298,9 +375,14 @@ void main() {
       expect((cubit.state as LlmSettingsLoaded).installedModels, isEmpty);
       verify(() => mockLlmAdapter.uninstallModel('gemma-3-270m')).called(1);
 
-      when(() => mockLlmAdapter.uninstallModel(any())).thenThrow(Exception('Delete error'));
+      when(
+        () => mockLlmAdapter.uninstallModel(any()),
+      ).thenThrow(Exception('Delete error'));
       await cubit.deleteModel('gemma-3-270m');
-      expect((cubit.state as LlmSettingsLoaded).connectionError, contains('Delete error'));
+      expect(
+        (cubit.state as LlmSettingsLoaded).connectionError,
+        contains('Delete error'),
+      );
     });
 
     test('verifyConnection for local provider returns verified true', () async {
@@ -319,7 +401,10 @@ void main() {
       // Test without key (Platform.environment should be empty in tests)
       await cubit.verifyConnection();
       expect((cubit.state as LlmSettingsLoaded).connectionVerified, isFalse);
-      expect((cubit.state as LlmSettingsLoaded).connectionError, contains('GEMINI_API_KEY'));
+      expect(
+        (cubit.state as LlmSettingsLoaded).connectionError,
+        contains('GEMINI_API_KEY'),
+      );
     });
 
     test('verifyConnection for openai succeeds when API returns 200', () async {
@@ -331,7 +416,11 @@ void main() {
         await cubit.verifyConnection();
 
         final loadedState = cubit.state as LlmSettingsLoaded;
-        expect(loadedState.connectionVerified, isTrue, reason: loadedState.connectionError);
+        expect(
+          loadedState.connectionVerified,
+          isTrue,
+          reason: loadedState.connectionError,
+        );
       }, _MockHttpOverrides(statusCode: 200));
     });
 
