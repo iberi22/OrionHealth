@@ -1,6 +1,8 @@
 import type { CircleState, Envelope, Grant } from '../contracts/types.js';
 import { verify, canonical } from '../crypto/index.js';
 
+export const EXPIRY_GRACE_MS = 72 * 60 * 60 * 1000;
+
 export function isEnvelope(env: unknown): env is Envelope {
   if (!env || typeof env !== 'object') return false;
   const e = env as any;
@@ -77,20 +79,31 @@ export async function validateEnvelope(
         g.category === env.category &&
         g.epoch === env.epoch &&
         g.access === 'write' &&
-        !ctx.revoked.has(g.id) &&
-        (g.expiresAt === undefined || g.expiresAt > envelopeMs)
+        !ctx.revoked.has(g.id)
     );
 
     let authorized = false;
+    let expired = false;
     for (const g of applicableGrants) {
       const grantValid = await verify(ownerPub, canonical(g, ['sig']), g.sig);
       if (grantValid) {
-        authorized = true;
-        break;
+        const isExpired =
+          g.expiresAt !== undefined &&
+          (g.expiresAt <= envelopeMs || ctx.now > g.expiresAt + EXPIRY_GRACE_MS);
+
+        if (isExpired) {
+          expired = true;
+        } else {
+          authorized = true;
+          break;
+        }
       }
     }
 
     if (!authorized) {
+      if (expired) {
+        return { ok: false, reason: 'expired' };
+      }
       return { ok: false, reason: 'unauthorized-write' };
     }
   }
