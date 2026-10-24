@@ -2,9 +2,9 @@ name: OrionHealth CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feat/orion-flutter ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, feat/orion-flutter ]
 
 env:
   # Pinned instead of "latest stable" so an SDK bump cannot silently change the
