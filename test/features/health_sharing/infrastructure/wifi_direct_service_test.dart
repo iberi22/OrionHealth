@@ -20,28 +20,28 @@ void main() {
     const bonsoirChannel = MethodChannel('fr.skyost.bonsoir');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(bonsoirChannel, (methodCall) async {
-      switch (methodCall.method) {
-        case 'discovery.initialize':
-        case 'discovery.start':
-        case 'discovery.stop':
-        case 'broadcast.initialize':
-        case 'broadcast.start':
-        case 'broadcast.stop':
-          return null;
-        default:
-          return null;
-      }
-    });
+          switch (methodCall.method) {
+            case 'discovery.initialize':
+            case 'discovery.start':
+            case 'discovery.stop':
+            case 'broadcast.initialize':
+            case 'broadcast.start':
+            case 'broadcast.stop':
+              return null;
+            default:
+              return null;
+          }
+        });
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (methodCall) async {
-      if (methodCall.method == 'mdnsDiscover') {
-        return [
-          {'name': 'OrionHealth Test Device', 'address': '127.0.0.1:9124'},
-        ];
-      }
-      return null;
-    });
+          if (methodCall.method == 'mdnsDiscover') {
+            return [
+              {'name': 'OrionHealth Test Device', 'address': '127.0.0.1:9124'},
+            ];
+          }
+          return null;
+        });
   });
 
   tearDown(() async {
@@ -51,7 +51,10 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(const MethodChannel('fr.skyost.bonsoir'), null);
+        .setMockMethodCallHandler(
+          const MethodChannel('fr.skyost.bonsoir'),
+          null,
+        );
   });
 
   group('WifiDirectService', () {
@@ -100,87 +103,82 @@ void main() {
       expect(service.serverAddress, isNotNull);
     });
 
-    test(
-      'full transfer with PIN verification success',
-      () async {
-        // Requires real network — skip in CI mode
-        // Run with `flutter test` to execute
-        await service.initialize();
-        const pin = '1234';
+    test('full transfer with PIN verification success', () async {
+      // Requires real network — skip in CI mode
+      // Run with `flutter test` to execute
+      await service.initialize();
+      const pin = '1234';
 
-        // Start server with PIN
-        await service.startServer(port: 0);
-        final address = service.serverAddress!;
+      // Start server with PIN
+      await service.startServer(port: 0);
+      // Map 0.0.0.0 to localhost for loopback tests
+      final address = service.serverAddress!.replaceAll('0.0.0.0', '127.0.0.1');
 
-        final package = SharedHealthPackage(
-          id: 'test',
-          senderNodeId: 'sender',
-          recipientNodeId: 'recipient',
-          createdAt: DateTime.now(),
-          expiresAt: DateTime.now().add(const Duration(minutes: 5)),
-          payload: const EncryptedPayload(
-            encryptedData: 'data',
-            iv: 'iv',
-            ephemeralPublicKey: 'key',
-          ),
-          metadata: PackageMetadata(
-            packageType: 'full',
-            consentVerified: true,
-            includedCategories: {DataCategory.vitalSigns},
-            appVersion: '1.0.0',
-            pinHash: SharedHealthPackage.hashPin(pin),
-          ),
-          signature: 'sig',
-        );
+      final package = SharedHealthPackage(
+        id: 'test',
+        senderNodeId: 'sender',
+        recipientNodeId: 'recipient',
+        createdAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(minutes: 5)),
+        payload: const EncryptedPayload(
+          encryptedData: 'data',
+          iv: 'iv',
+          ephemeralPublicKey: 'key',
+        ),
+        metadata: PackageMetadata(
+          packageType: 'full',
+          consentVerified: true,
+          includedCategories: {DataCategory.vitalSigns},
+          appVersion: '1.0.0',
+          pinHash: SharedHealthPackage.hashPin(pin),
+        ),
+        signature: 'sig',
+      );
 
-        // We expect the data to be received
-        final dataFuture = service.incomingData.first;
+      // We expect the data to be received
+      final dataFuture = service.incomingData.first;
 
-        // Send data to self
-        final result = await service.sendData(address, package);
+      // Send data to self
+      final result = await service.sendData(address, package);
 
-        expect(result.success, isTrue);
-        final receivedPackage = await dataFuture;
-        expect(receivedPackage.id, 'test');
-      },
-    );
+      expect(result.success, isTrue);
+      final receivedPackage = await dataFuture;
+      expect(receivedPackage.id, 'test');
+    });
 
-    test(
-      'transfer with expired package failure',
-      () async {
-        await service.initialize();
+    test('transfer with expired package failure', () async {
+      await service.initialize();
 
-        await service.startServer(port: 0);
-        final address = service.serverAddress!;
+      await service.startServer(port: 0);
+      final address = service.serverAddress!.replaceAll('0.0.0.0', '127.0.0.1');
 
-        final package = SharedHealthPackage(
-          id: 'test',
-          senderNodeId: 'sender',
-          recipientNodeId: 'recipient',
-          createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-          expiresAt: DateTime.now().subtract(
-            const Duration(minutes: 5),
-          ), // Expired
-          payload: const EncryptedPayload(
-            encryptedData: 'data',
-            iv: 'iv',
-            ephemeralPublicKey: 'key',
-          ),
-          metadata: PackageMetadata(
-            packageType: 'full',
-            consentVerified: true,
-            includedCategories: {DataCategory.vitalSigns},
-            appVersion: '1.0.0',
-          ),
-          signature: 'sig',
-        );
+      final package = SharedHealthPackage(
+        id: 'test',
+        senderNodeId: 'sender',
+        recipientNodeId: 'recipient',
+        createdAt: DateTime.now().subtract(const Duration(hours: 1)),
+        expiresAt: DateTime.now().subtract(
+          const Duration(minutes: 5),
+        ), // Expired
+        payload: const EncryptedPayload(
+          encryptedData: 'data',
+          iv: 'iv',
+          ephemeralPublicKey: 'key',
+        ),
+        metadata: PackageMetadata(
+          packageType: 'full',
+          consentVerified: true,
+          includedCategories: {DataCategory.vitalSigns},
+          appVersion: '1.0.0',
+        ),
+        signature: 'sig',
+      );
 
-        final result = await service.sendData(address, package);
+      final result = await service.sendData(address, package);
 
-        expect(result.success, isFalse);
-        expect(result.error, contains('410'));
-      },
-    );
+      expect(result.success, isFalse);
+      expect(result.error, contains('410'));
+    });
 
     test('stop() resets state correctly', () async {
       await service.initialize();
