@@ -52,7 +52,7 @@ Reglas:
 - Si necesitas datos, usa "data": {"kind":"${domainConfig.entities[0]?.xavierKind ?? 'item'}","query":"..."}
 - Devuelve {version:1, components:[{id,type,props}]}`;
 
-export async function generateAui(prompt: string, useMemory = true): Promise<AuiSpec> {
+export async function generateAui(prompt: string, useMemory = true, personal = false): Promise<AuiSpec> {
   // RAG opcional: busca memoria relevante para contexto (ej: ordenes recientes, vehiculos)
   let rag = '';
   if (useMemory) {
@@ -61,7 +61,7 @@ export async function generateAui(prompt: string, useMemory = true): Promise<Aui
   }
   const fullPrompt = rag ? `Contexto:\n${rag}\n\nPedido UI: ${prompt}` : prompt;
 
-  const res = await llmComplete({ prompt: fullPrompt, system: AUI_SYSTEM, useMemory: false });
+  const res = await llmComplete({ prompt: fullPrompt, system: AUI_SYSTEM, useMemory: false, personal });
   try {
     const parsed = JSON.parse(res.text);
     return validateAui(parsed);
