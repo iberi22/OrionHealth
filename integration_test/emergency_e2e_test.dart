@@ -94,6 +94,7 @@ void main() {
       Future<void> fill(String label, String value) async {
         final field = find.widgetWithText(TextFormField, label);
         await tester.scrollUntilVisible(field, 100, scrollable: editList);
+        await tester.pumpAndSettle();
         await tester.enterText(field, value);
         await tester.pumpAndSettle();
       }
@@ -103,6 +104,7 @@ void main() {
 
       final bloodType = find.byType(DropdownButtonFormField<BloodType>);
       await tester.scrollUntilVisible(bloodType, 100, scrollable: editList);
+      await tester.pumpAndSettle();
       await tester.tap(bloodType);
       await tester.pumpAndSettle();
       await tester.tap(find.text('O Positivo').last);
@@ -114,6 +116,8 @@ void main() {
 
       final saveButton = find.byIcon(Icons.save);
       await tester.scrollUntilVisible(saveButton, 100, scrollable: editList);
+      await tester
+          .pumpAndSettle(); // let the scroll fling finish before tapping
       await tester.tap(saveButton);
 
       await tester.pumpAndSettle();
