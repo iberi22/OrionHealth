@@ -15,8 +15,4 @@ bindings = [
 
 [[migrations]]
 tag = "v1"
-new_classes = ["SignalingRoom"]
-
-[[migrations]]
-tag = "v2"
 new_sqlite_classes = ["SignalingRoom"]

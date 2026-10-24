@@ -1,4 +1,5 @@
 import { InviteError, computeSas, inviteRoom, type Invite } from './invite';
+import { fromB64u } from '../crypto/index';
 
 export interface InviteHello {
   signPub: string;
@@ -14,7 +15,7 @@ export interface InviteConnection {
 }
 
 export interface InviteTransport {
-  join(roomId: string): Promise<InviteConnection>;
+  join(roomId: string, opts?: { secret?: Uint8Array }): Promise<InviteConnection>;
 }
 
 /** How long a side keeps the invite room open after the peer's hello arrived. */
@@ -37,7 +38,7 @@ export class InviteChannel {
     }
 
     const roomId = await inviteRoom(invite.s);
-    const conn = await this.transport.join(roomId);
+    const conn = await this.transport.join(roomId, { secret: fromB64u(invite.s) });
 
     return new Promise<InviteResult>((resolve, reject) => {
       let timeoutId: ReturnType<typeof setTimeout>;

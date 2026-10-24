@@ -109,9 +109,12 @@ interface Grant {
 - Presets: **Guardian (acudiente de primer nivel)** = every personal category, `write`, alerts on, trustee for
   recovery. **Caregiver** = emergency, medications, allergies, vitals, appointments, `read`. **Emergency only** =
   emergency, `read`. Custom = any set.
-- **Revoke** = owner rotates the CEK of that category (epoch+1), re-encrypts nothing old, re-grants the new epoch to
-  remaining grantees and publishes a signed `revoke` membership event. Data already seen by the revoked member
-  cannot be unseen; the UI says so before confirming.
+- **Revoke** = owner publishes one revoke marker `{ kind: 'revoke', grantId }` (a `grant` envelope sealed with CK,
+  signed by the owner) for every grant of that grantee and category, rotates the CEK of that category (epoch+1),
+  re-encrypts nothing old and re-grants the new epoch to remaining grantees. Every receiver derives the revoked set
+  from the replicated markers: a marker counts only when its envelope author is the grant's `from`, and a revoked
+  grant no longer authorizes writes (§5) on any device. Data already seen by the revoked member cannot be unseen;
+  the UI says so before confirming.
 - Dependent profiles (child, or an elder without a phone) are owned by the member who created them, who holds
   their keys; the dependent can later be **handed over** to their own device (keys transferred, creator becomes
   guardian).
@@ -129,7 +132,15 @@ interface Grant {
   owner of a dependent profile).
 - The current state is a pure reducer over the log (`lib/family/membership.ts`): invalid events are ignored, not
   thrown, and a test proves that reordering valid events yields the same state.
-- Removing a member rotates CK and every member re-grants personal categories without the removed member.
+- **Removing a member.** The admin publishes `remove`, generates CK[epoch+1] and hands it to every remaining
+  (non-dependent) member as a signed `circle-key` handover wrapped to the member's box key, sealed with the
+  previous CK. When a device accepts a membership envelope and the reduced log shows a removed member, that device
+  (every remaining member, the admin included) applies §6 revoke to each personal category it had granted to a
+  removed member, expired grants included: revoke markers, CEK epoch+1, re-grant of the new epoch to the remaining
+  grantees that are still members. The kernel awaits this rotation before the `publish` of the membership envelope
+  resolves, so on the admin's device `removeMember` returns with the categories already rotated. A member whose
+  device was offline rotates when the `remove` reaches it; until then its newest CEKs stay readable by the removed
+  member. The removed member keeps what it already decrypted.
 
 ### Invite with short authentication string (SAS)
 
@@ -143,10 +154,17 @@ interface Grant {
 
 ## 8. Replication (mesh)
 
-- One Yjs doc per circle. Room = b64url(HMAC-SHA-256(CK₀, "orion/v1/room"))[0..22]; `y-webrtc` `password` =
-  b64url(HKDF(CK₀, info="orion/v1/transport")). CK₀ (the first epoch) stays the room secret so removed members
-  keep no access to future keys, only to an unreadable room; on removal the admin migrates the circle to a new
-  room derived from the new CK and the old room is abandoned.
+- One Yjs doc per room. Room(CK) = b64url(HMAC-SHA-256(CK, "orion/v1/room"))[0..22]; `y-webrtc` `password` =
+  b64url(HKDF(CK, info="orion/v1/transport")). The full replica of a device lives in Room(newest CK it holds) and
+  carries every envelope of the circle. When a device registers a newer CK (after a removal) it closes the full
+  replica of the old room and opens the room of the new CK, seeded from the store, so a removed member, who never
+  receives the new CK, cannot derive the room where new envelopes travel.
+- For every older CK epoch it holds, a device keeps a **handover room** Room(CK[e]) that carries only circle-keyed
+  envelopes sealed with CK[e] (the `remove`, the `circle-key` handovers, revoke markers and re-grants published
+  before the rotation). Nothing sealed with a newer CK or a personal CEK is ever pushed into it. A member that was
+  offline during the removal meets the others there, unwraps the new CK and moves to the new room. Remote
+  envelopes in a handover room are accepted only from current, non-removed members. Handover rooms stay open while
+  the vault is unlocked; there is one per older epoch.
 - Y.Map `env` keyed by envelope id is **transport only**. The replica is the validated envelope store: a remote
   envelope is validated (§5) and only then written to the store; nothing is ever deleted from the `Y.Map` by a peer
   reaction, remote deletes and overwrites are ignored, and the device re-publishes the last valid envelope for that
@@ -157,23 +175,91 @@ interface Grant {
 - Signaling: own Worker `orionhealth-signal` at `wss://signal.orionhealth.swal.network` (`src-astro/workers/signaling/`,
   Durable Object implementing the y-webrtc signaling protocol, topics opaque, `PUBLIC_SIGNALING_URL` overrides).
   It never sees envelopes. Deploy is a separate owner-approved step.
-- Without peers online the app keeps working locally; sync resumes when two circle devices meet.
+- Without peers online the app keeps working locally; sync resumes when two circle devices meet. Because the
+  Y.Doc is ephemeral, every time a device opens a replica it **seeds** it from the store: every stored envelope of
+  the circle (plus the member's own envelopes written before the circle existed, circle `local`) goes into the
+  `Y.Map` in one transaction, without re-validation (they were validated on arrival) and without replacing an id
+  already in the map. Envelopes written while a peer was offline therefore reach it after both restart.
+- Peers deliver in any order. A remote envelope rejected for `unknown-author`, `author-not-member`,
+  `unknown-owner` or `unauthorized-write` (its author's `approve` or the owner's grant may still be on its way)
+  waits in a **pending queue** and is re-validated after every accepted `membership` or `grant` envelope and after
+  a new circle key is registered; it is stored only if it then passes §5. Any other rejection (bad signature,
+  malformed, `ID_CONFLICT`) is final. The queue lives in memory, is cleared on lock and holds at most 500
+  envelopes (oldest dropped first); an envelope dropped from it, or rejected before a restart, is picked up again
+  when a peer that holds it seeds a new replica.
 
 ## 9. Recovery (losing a phone)
+
+Every recovery payload is a `recovery` envelope sealed with CK. A receiver uses a payload only when its author is
+bound to it; anything else is ignored, never thrown:
+
+| `kind` | Accepted only when |
+|---|---|
+| `policy`, `share`, `code-blob` | `env.author === env.owner === payload.member` (a member speaks only for themself) |
+| `device-add-pending` | `env.author` is a current, non-removed **admin**, `env.author !== payload.member`, the temporary identity's signature over the request verifies, and it has not expired |
+| `approval` | `env.author === payload.trusteeId`, the trustee is in the member's own `policy`, and the request id matches |
+
+Bundles used to restore are the newest `bundle` envelope with `env.author === env.owner === memberId`.
+The member publishes the current sealed bundle when it sets a trustee policy or publishes its code blob, so a
+bundle created before the circle existed is still in the replica.
+
+### 9.1 Recovery code
 
 - On onboarding the member gets a **recovery code**: 32 random bytes RC as 54 Crockford base32 characters (52 + 2
   checksum) in 14 groups of 4 (the last one of 2), see `vault/recoveryCode.ts`. It wraps MRS
   (`AES-GCM(HKDF(RC, salt=memberId, info="orion/v1/recovery-code"), MRS)`, AAD `orion/v1/recovery|<memberId>`); the
-  wrapped blob is stored locally (`orion/recovery-blob`) and published as a `recovery` envelope. Code + any replica = recovery without family.
+  wrapped blob is stored locally (`orion/recovery-blob`).
+- Next to the code the user is always offered an encrypted file `orion-recovery.json`
+  (`{v:1, kind:"orion-recovery", memberId, blob, bundle}`: the code-wrapped MRS and the MBK-sealed bundle; nothing in
+  it is readable without the code). `RecoveryService.recoveryFile()` regenerates it with the current bundle, so the
+  app can offer it again later (planned in Settings).
+- As soon as the member belongs to a circle the device publishes a `code-blob` envelope with the same blob (and the
+  current bundle). Decision D4 (2026-10-24): the blob lives **in the circle replica and in the user's file**; there
+  is no server copy.
+- Recovery by code: code + file on an empty device recovers the identity and keys (same `memberId`); code alone works
+  on the same browser (local blob) or on a new device that joined the circle through a recovery invitation (§9.3),
+  which gives it the replica. A bundle from the replica is preferred over the one in the file (it is newer).
+
+### 9.2 Trustees
+
 - In a circle the member picks **trustees** and a threshold k (default 2 of 3, minimum 2; a single guardian may be
   1-of-1 only with an explicit warning). MRS is split with `shamir-secret-sharing`; share *i* is wrapped to trustee
-  *i*'s box key like a grant and published as a `recovery` envelope addressed to that trustee.
-- New device flow: install → "recover" → creates a temporary keypair → joins via an invite from any admin (SAS) →
-  publishes `recovery-request{member, tempBoxPub}` → each trustee sees a prompt, verifies by call/in person, approves
-  with **their own passkey**, re-wraps their share to `tempBoxPub` → the new device combines k shares → MRS →
-  registers a new passkey → reads the bundle replica → everything decrypts → publishes `device-add` and
-  `device-revoke` for the lost phone.
+  *i*'s box key like a grant and published as a `share` payload addressed to that trustee.
 - k−1 shares reveal nothing; a test proves k−1 shares fail and k succeed.
+
+### 9.3 Recovery invitation and new-device flow
+
+A brand-new device has no bundle, no CK and no replica, so it cannot sign as the member or read the circle. An admin
+lets it in with a **recovery invitation** for one named member:
+
+1. Admin (≠ the member being recovered) runs `createRecoveryInvite(memberId)` and shares the link
+   `…/app/recovery#<b64url({c, s, e, m})>` (`m` = memberId; the fragment never reaches a server).
+2. The new device creates a **temporary identity** (ECDSA sign pair + ECDH box pair; `tempId =
+   memberIdFromSpki(tempSignPub)`) and signs the request
+   `canonical({v:1, kind:"recovery-request", circle, member, requestId, tempSignPub, tempBoxPub, deviceId})`.
+   It joins the invite room (§7) with its temporary keys as the hello and the signed request in the hello payload.
+3. Both screens show the SAS of §7 (bound to the temporary signing key). The admin taps "match" only if equal.
+4. The admin publishes `device-add-pending{requestId, member, temp:{id, signPub, boxPub, deviceId}, requestSig, sas,
+   expiresAt}`: the pending `device-add` of that temporary identity for the claimed member, vouched by the admin
+   (= `env.author`). It then hands over, signed by the admin and wrapped to `tempBoxPub`
+   (info `orion/v1/circle-key`, AAD `orion/v1|<circle>|recovery-key|<tempId>|<epoch>`), every CK epoch and the pinned
+   genesis, on `<inviteRoom>.recovery`.
+5. The new device runs the kernel in **guest mode**: with the CK it can receive, validate, store, relay and open circle
+   envelopes, but it has no identity, so it can never seal or sign. The temporary identity signs only the request.
+6. Each trustee sees the request with its real provenance: the claimed member, the temporary identity, the admin who
+   vouched and the SAS. The trustee verifies the SAS with the member by call or in person, then approves; approval
+   requires a fresh passkey re-authentication (`VaultSession.reauth()`, WebAuthn assertion with user verification)
+   and re-wraps the share to `tempBoxPub` (AAD `orion/v1/recovery-request|<member>|<requestId>|<tempBoxPub>`).
+   A request that is not bound to a valid `device-add-pending` is rejected.
+7. The new device combines k approvals (from trustees of the member's own policy) → MRS → opens the member's bundle
+   from the replica → registers a **new** passkey (a stale `passkeyCredId` on the device is discarded first) →
+   leaves guest mode keeping the circle and CK → publishes `device-add` for itself and `device-revoke` for the
+   member's other devices.
+
+Residual risks: an admin and k trustees who all skip the out-of-band SAS check can hand a member's MRS to an
+impostor; several pending requests for the same member must be treated as suspicious by the UI. The device only
+trusts the admin whose key it saw in the SAS channel; before combining it checks that this admin is an admin of
+the reduced circle.
 
 ## 10. Family health area
 
@@ -208,15 +294,22 @@ device when it syncs, so an alert still fires if the elder's phone goes offline 
 - Tampered envelope (any field) → rejected. Wrong AAD → decrypt fails.
 - Write by a non-grantee or with an expired grant → rejected by the receiver.
 - Membership reducer: invalid events ignored; permutation of valid events → same state.
-- Recovery: k−1 shares fail, k shares succeed; recovery code round-trip.
+- Recovery: k−1 shares fail, k shares succeed; recovery code round-trip; an approval for a request not vouched by an
+  admin is refused (the "harvest" attack); a fresh empty device recovers with 2 of 3 and with code + file.
 - Revocation: revoked member cannot decrypt epoch+1 envelopes.
 - Lock: after `lock()` or tab hidden for the timeout, no CEK or MRS reachable from the services.
 
 ## 13. Open risks
 
 - Membership backdating: `hlc` is chosen by the author, so a removed member could sign events dated before their
-  removal. v1 accepts this risk (removal also rotates CK and migrates the room, so such events reach nobody new);
-  a causal DAG (`prev` hashes) is the planned fix.
+  removal. v1 accepts this risk. Removal rotates CK and moves the circle to the new room, and handover rooms ignore
+  removed authors, so such events reach only a device that has not yet seen the `remove` (it then replicates them
+  into the new room once it migrates); a causal DAG (`prev` hashes) is the planned fix.
+- Removal is only as fast as each grantor's device: a member offline during the removal keeps its current CEK
+  epochs readable by the removed member until the `remove` reaches it and it rotates (§7). Old rooms stay
+  reachable by the removed member, who sees the metadata (§8) of the circle-keyed envelopes sealed with the old CK.
+- A member admitted after a rotation receives only the newest CK, so it cannot open membership or grant envelopes
+  sealed with older epochs (pre-existing; the admin's handover carries one epoch).
 
 - Metadata in §8 is visible to every circle device.
 - WebRTC without TURN fails on some NATs; two devices on the same Wi-Fi always sync.

@@ -1,18 +1,27 @@
 <script lang="ts">
-  import { getServices } from '../../../lib/contracts/services';
-  import type { Member, VaultState } from '../../../lib/contracts/types';
+  import { getServices, type PendingRecovery, type PendingRecoveryJoin } from '../../../lib/contracts/services';
+  import type { CircleState, VaultState } from '../../../lib/contracts/types';
   import TrusteePicker from './TrusteePicker.svelte';
   import RestoreWizard from './RestoreWizard.svelte';
   import { onMount } from 'svelte';
-  import { navigate } from '../routes';
 
   const services = getServices();
 
   let vaultState = $state<VaultState>(services.vault.state());
   let currentTab = $state<'plan' | 'requests' | 'restore'>('plan');
 
-  let pendingRequests = $state<{ requestId: string; member: Member; at: number }[]>([]);
+  let pendingRequests = $state<PendingRecovery[]>([]);
   let requestConfirmed = $state<Record<string, boolean>>({});
+  let requestError = $state<string | null>(null);
+
+  // Admin side: recovery invitations for a member's new device (spec §9.3)
+  let circle = $state<CircleState | null>(null);
+  let inviteFor = $state('');
+  let recoveryInviteUrl = $state('');
+  let pendingJoins = $state<PendingRecoveryJoin[]>([]);
+  const me = $derived(services.vault.memberId());
+  const isAdmin = $derived(!!circle && !!me && circle.members[me]?.role === 'admin');
+  const others = $derived(circle ? Object.values(circle.members).filter((m) => m.memberId !== me && !m.removed && !m.dependent) : []);
 
   $effect(() => {
     const unsub = services.vault.onState((s) => {
@@ -24,20 +33,50 @@
     return unsub;
   });
 
+  async function refresh() {
+    if (vaultState !== 'unlocked') return;
+    pendingRequests = await services.recovery.pendingRequests();
+    pendingJoins = await services.recovery.pendingRecoveryJoins();
+  }
+
+  // Requests and devices arrive from the mesh; there is no change feed for them, so the tab polls.
+  $effect(() => {
+    if (currentTab !== 'requests' || vaultState !== 'unlocked') return;
+    const t = setInterval(() => void refresh().catch(() => undefined), 2000);
+    return () => clearInterval(t);
+  });
+
   onMount(async () => {
     if (vaultState !== 'unlocked') {
       currentTab = 'restore';
     }
 
     if (vaultState === 'unlocked') {
-      pendingRequests = await services.recovery.pendingRequests();
+      circle = await services.family.circle();
+      await refresh();
     }
   });
 
-  async function approve(requestId: string) {
-    if (!requestConfirmed[requestId]) return;
-    await services.recovery.approve(requestId);
-    pendingRequests = await services.recovery.pendingRequests();
+  async function answer(requestId: string, approve: boolean) {
+    requestError = null;
+    if (approve && !requestConfirmed[requestId]) return;
+    try {
+      // approve(…, true) asks for a fresh passkey verification before the share leaves this device
+      await services.recovery.approve(requestId, approve);
+    } catch (e) {
+      requestError = e instanceof Error ? e.message : String(e);
+    }
+    await refresh();
+  }
+
+  async function createRecoveryInvite() {
+    if (!inviteFor) return;
+    recoveryInviteUrl = (await services.recovery.createRecoveryInvite(inviteFor)).url;
+  }
+
+  async function answerJoin(requestId: string, matches: boolean) {
+    await services.recovery.approveRecoveryJoin(requestId, matches);
+    await refresh();
   }
 </script>
 
@@ -56,17 +95,51 @@
     {:else if currentTab === 'requests'}
       <div class="requests">
         <h2>Solicitudes esperando mi aprobación</h2>
+        {#if requestError}
+          <p class="error">{requestError}</p>
+        {/if}
         {#if pendingRequests.length === 0}
           <p>No hay solicitudes pendientes.</p>
         {:else}
-          {#each pendingRequests as req}
+          {#each pendingRequests as req (req.requestId)}
             <div class="request-card">
-              <p><strong>{req.member.displayName}</strong> quiere recuperar el acceso en un nuevo dispositivo.</p>
+              <p>Solicitud de recuperación para la cuenta de <strong>{req.member.displayName}</strong>.</p>
+              <p class="provenance">
+                Desde un dispositivo nuevo (<code>{req.requester.id.slice(0, 8)}</code>), verificado por
+                <strong>{req.vouchedBy.displayName}</strong>.
+              </p>
+              <p>Código en la pantalla del dispositivo: <span class="sas">{req.sas}</span></p>
               <label>
                 <input type="checkbox" bind:checked={requestConfirmed[req.requestId]} />
-                Confirma por llamada o en persona que es {req.member.displayName} quien lo pide.
+                Llamé o vi en persona a {req.member.displayName} y su pantalla muestra este mismo código.
               </label>
-              <button disabled={!requestConfirmed[req.requestId]} onclick={() => approve(req.requestId)}>Aprobar con mi passkey</button>
+              <button disabled={!requestConfirmed[req.requestId]} onclick={() => answer(req.requestId, true)}>Aprobar con mi passkey</button>
+              <button class="secondary" onclick={() => answer(req.requestId, false)}>Rechazar</button>
+            </div>
+          {/each}
+        {/if}
+
+        {#if isAdmin}
+          <h2>Dispositivo nuevo de un miembro</h2>
+          <p>Si un miembro perdió su teléfono, crea una invitación de recuperación y comparte el enlace con esa persona.</p>
+          <div class="invite-row">
+            <select bind:value={inviteFor} aria-label="Miembro a recuperar">
+              <option value="">Elige un miembro</option>
+              {#each others as m (m.memberId)}
+                <option value={m.memberId}>{m.displayName}</option>
+              {/each}
+            </select>
+            <button disabled={!inviteFor} onclick={createRecoveryInvite}>Crear invitación de recuperación</button>
+          </div>
+          {#if recoveryInviteUrl}
+            <input class="recovery-invite-url" type="text" readonly value={recoveryInviteUrl} aria-label="Enlace de recuperación" />
+          {/if}
+          {#each pendingJoins as j (j.requestId)}
+            <div class="request-card">
+              <p>Un dispositivo dice ser de <strong>{j.member.displayName}</strong>. Código: <span class="sas">{j.sas}</span></p>
+              <p>Confirma solo si su pantalla muestra el mismo código.</p>
+              <button onclick={() => answerJoin(j.requestId, true)}>Coincide</button>
+              <button class="secondary" onclick={() => answerJoin(j.requestId, false)}>No coincide</button>
             </div>
           {/each}
         {/if}
@@ -116,6 +189,32 @@
     padding: 0.5rem 1rem;
     border-radius: var(--oh-radius);
     cursor: pointer;
+  }
+  button.secondary {
+    background: transparent;
+    color: var(--oh-text);
+    border: 1px solid var(--oh-muted);
+    margin-left: 0.5rem;
+  }
+  .sas {
+    font-family: var(--oh-font-mono);
+    font-weight: bold;
+    letter-spacing: 0.1em;
+  }
+  .provenance {
+    font-size: 0.9em;
+  }
+  .invite-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .recovery-invite-url {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .error {
+    color: var(--oh-danger);
   }
   button:disabled {
     background: var(--oh-muted);

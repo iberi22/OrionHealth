@@ -23,7 +23,7 @@ export class FakeKernel implements Kernel {
   private store = new Map<string, Envelope>();
   private foreign = new Map<string, Uint8Array>();
   private circleKeys = new Map<number, Uint8Array>();
-  private envSubs = new Set<(e: Envelope) => void>();
+  private envSubs = new Set<(e: Envelope) => void | Promise<void>>();
   private lockSubs = new Set<() => void>();
   private counter = 0;
   circleState: CircleState | null = null;
@@ -197,7 +197,7 @@ export class FakeKernel implements Kernel {
     const pub = await this.signPubOf(env.author);
     if (!pub || !(await verifyEnvelope(env, pub))) throw new KernelError('INVALID', `bad signature on ${env.id}`);
     this.store.set(env.id, env);
-    this.envSubs.forEach((cb) => cb(env));
+    await Promise.allSettled([...this.envSubs].map(async (cb) => cb(env)));
     return true;
   }
 
@@ -219,7 +219,7 @@ export class FakeKernel implements Kernel {
     return [...this.store.values()].filter((e) => (!filter.owner || e.owner === filter.owner) && (!filter.category || e.category === filter.category));
   }
 
-  onEnvelope(cb: (env: Envelope) => void) {
+  onEnvelope(cb: (env: Envelope) => void | Promise<void>) {
     this.envSubs.add(cb);
     return () => this.envSubs.delete(cb);
   }
