@@ -214,6 +214,14 @@ _Report issues anytime - we're listening!_`;
  * Main handler for incoming Telegram webhooks
  */
 export default async function handler(request: Request): Promise<Response> {
+  // Check authorization
+  const secretToken = request.headers.get('X-Telegram-Bot-Api-Secret-Token');
+  const expectedToken = process.env.TELEGRAM_WEBHOOK_SECRET;
+
+  if (!secretToken || secretToken !== expectedToken) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   // Only accept POST requests
   if (request.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
