@@ -60,7 +60,7 @@ test.describe('@real Recovery Spoofing', () => {
     // Admin sees the pending join, verifies the SAS, and clicks "Coincide" to vouch
     const join = admin.page.locator('.request-card', { hasText: 'dice ser de' });
     await expect(join).toContainText(sas, { timeout: 20_000 });
-    await join.getByRole('button', { name: 'Coincide' }).click();
+    await join.getByRole('button', { name: 'Coincide', exact: true }).click();
     await expect(device.getByRole('heading', { name: 'Esperando aprobaciones' })).toBeVisible({ timeout: 20_000 });
 
     // Dave (trustee) sees the recovery request
