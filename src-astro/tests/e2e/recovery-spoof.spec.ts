@@ -102,7 +102,7 @@ test.describe('@real Recovery Spoofing', () => {
     await expect(charlieCard).not.toBeVisible({ timeout: 10_000 });
 
     // The device shows 1 of 2 approvals
-    await expect(device.getByText('1 de 2 aprobaciones')).toBeVisible({ timeout: 30_000 });
+    await expect(device.locator('.approvals')).toHaveText(/Aprobaciones recibidas:\s*1\s*de\s*2/, { timeout: 30_000 });
 
     for (const ctx of [admin.context, bea.context, charlie.context, dave.context, fresh]) {
       await ctx.close();
