@@ -2,6 +2,7 @@
   import { getServices } from '../../../lib/contracts/services';
   import type { RecoveryProgress } from '../../../lib/contracts/types';
   import { onMount } from 'svelte';
+  import { navigate } from '../routes';
 
   const services = getServices();
 
@@ -99,7 +100,7 @@
       </div>
     {:else if method === 'code'}
       <div class="method-content">
-        <p>Ingresa tu código de recuperación de 24 palabras o los caracteres alfanuméricos:</p>
+        <p>Ingresa tu código de recuperación de 54 caracteres o los caracteres alfanuméricos:</p>
         <textarea bind:value={recoveryCode} placeholder="Escribe tu código aquí..." rows="3"></textarea>
         <label class="file">
           Archivo de recuperación (orion-recovery.json), necesario en un dispositivo nuevo:
@@ -132,6 +133,16 @@
       <div class="approvals">
         Aprobaciones recibidas: <strong>{progress.approvals}</strong> de <strong>{progress.threshold}</strong>
       </div>
+      <div class="code-fallback">
+        <h4>¿Ya tienes tu código?</h4>
+        <div class="method-content code-fallback-content">
+          <textarea bind:value={recoveryCode} placeholder="Escribe tu código aquí..." rows="2"></textarea>
+          {#if codeError}
+            <div class="error">{codeError}</div>
+          {/if}
+          <button disabled={!recoveryCode} onclick={startWithCode} class="primary">Tengo mi código</button>
+        </div>
+      </div>
     </div>
   {:else if progress.step === 'combining'}
     <div class="progress-view">
@@ -147,7 +158,7 @@
     <div class="progress-view success">
       <h3>¡Recuperación completada!</h3>
       <p>Has recuperado el acceso a tu cuenta exitosamente.</p>
-      <button class="primary" onclick={() => window.location.reload()}>Ir al inicio</button>
+      <button class="primary" onclick={() => navigate('/app')}>Ir al inicio</button>
     </div>
   {/if}
 </div>
@@ -241,5 +252,11 @@
   }
   .success {
     border: 2px solid var(--oh-accent);
+  }
+  .code-fallback {
+    margin-top: 2rem;
+  }
+  .code-fallback-content {
+    text-align: left;
   }
 </style>
