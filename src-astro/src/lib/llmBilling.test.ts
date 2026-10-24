@@ -2,6 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { llmComplete } from './llm';
 
 describe('llm billing gate', () => {
+  it('rechaza con PHI_BLOCKED si personal es true', async () => {
+    await expect(llmComplete({ prompt: 'mi diabetes', personal: true })).rejects.toThrow(
+      expect.objectContaining({ code: 'PHI_BLOCKED' })
+    );
+  });
+
   it('bloquea si credito agotado (free)', async () => {
     const res = await llmComplete({ prompt: 'hola', tierId: 'free', estimatedTokens: 1 });
     expect(res.model).toBe('billing-blocked');
