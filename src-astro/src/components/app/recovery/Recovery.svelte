@@ -3,6 +3,7 @@
   import type { CircleState, VaultState } from '../../../lib/contracts/types';
   import TrusteePicker from './TrusteePicker.svelte';
   import RestoreWizard from './RestoreWizard.svelte';
+  import RecoveryInviteDialog from './RecoveryInviteDialog.svelte';
   import { onMount } from 'svelte';
 
   const services = getServices();
@@ -18,6 +19,7 @@
   let circle = $state<CircleState | null>(null);
   let inviteFor = $state('');
   let recoveryInviteUrl = $state('');
+  let inviteForMemberName = $state('');
   let pendingJoins = $state<PendingRecoveryJoin[]>([]);
   const me = $derived(services.vault.memberId());
   const isAdmin = $derived(!!circle && !!me && circle.members[me]?.role === 'admin');
@@ -39,11 +41,15 @@
     pendingJoins = await services.recovery.pendingRecoveryJoins();
   }
 
-  // Requests and devices arrive from the mesh; there is no change feed for them, so the tab polls.
   $effect(() => {
     if (currentTab !== 'requests' || vaultState !== 'unlocked') return;
+    const unsub = services.family.onChange(() => void refresh().catch(() => undefined));
+    // The recovery contract has no change feed and pending recovery joins live in memory: keep polling too.
     const t = setInterval(() => void refresh().catch(() => undefined), 2000);
-    return () => clearInterval(t);
+    return () => {
+      unsub();
+      clearInterval(t);
+    };
   });
 
   onMount(async () => {
@@ -64,13 +70,21 @@
       // approve(…, true) asks for a fresh passkey verification before the share leaves this device
       await services.recovery.approve(requestId, approve);
     } catch (e) {
-      requestError = e instanceof Error ? e.message : String(e);
+      const msg = e instanceof Error ? e.message : String(e);
+      if (msg.includes('CANCELLED')) {
+        requestError = 'Operación cancelada por el usuario.';
+      } else if (msg.includes('NO_UV')) {
+        requestError = 'No se pudo verificar la identidad del usuario (passkey).';
+      } else {
+        requestError = msg;
+      }
     }
     await refresh();
   }
 
   async function createRecoveryInvite() {
     if (!inviteFor) return;
+    inviteForMemberName = others.find((m) => m.memberId === inviteFor)?.displayName || '';
     recoveryInviteUrl = (await services.recovery.createRecoveryInvite(inviteFor)).url;
   }
 
@@ -104,11 +118,15 @@
           {#each pendingRequests as req (req.requestId)}
             <div class="request-card">
               <p>Solicitud de recuperación para la cuenta de <strong>{req.member.displayName}</strong>.</p>
+              {#if pendingRequests.filter(r => r.member.memberId === req.member.memberId).length > 1}
+                <p class="error warning">¡Atención! Hay múltiples solicitudes de recuperación activas para este miembro.</p>
+              {/if}
               <p class="provenance">
-                Desde un dispositivo nuevo (<code>{req.requester.id.slice(0, 8)}</code>), verificado por
+                Desde un dispositivo nuevo (<code>{req.requester.id.slice(0, 8)}</code>, ID: {req.requester.deviceId}), verificado por
                 <strong>{req.vouchedBy.displayName}</strong>.
               </p>
               <p>Código en la pantalla del dispositivo: <span class="sas">{req.sas}</span></p>
+              <p class="provenance">Vence: {new Date(req.expiresAt).toLocaleString()}</p>
               <label>
                 <input type="checkbox" bind:checked={requestConfirmed[req.requestId]} />
                 Llamé o vi en persona a {req.member.displayName} y su pantalla muestra este mismo código.
@@ -132,7 +150,11 @@
             <button disabled={!inviteFor} onclick={createRecoveryInvite}>Crear invitación de recuperación</button>
           </div>
           {#if recoveryInviteUrl}
-            <input class="recovery-invite-url" type="text" readonly value={recoveryInviteUrl} aria-label="Enlace de recuperación" />
+            <RecoveryInviteDialog 
+              inviteUrl={recoveryInviteUrl} 
+              memberName={inviteForMemberName} 
+              onClose={() => { recoveryInviteUrl = ''; inviteForMemberName = ''; inviteFor = ''; }} 
+            />
           {/if}
           {#each pendingJoins as j (j.requestId)}
             <div class="request-card">

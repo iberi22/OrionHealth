@@ -40,7 +40,9 @@ test.describe('@real Recovery Spoofing', () => {
     await admin.page.getByRole('button', { name: 'Solicitudes' }).click();
     await admin.page.getByLabel('Miembro a recuperar').selectOption({ label: 'Bea' });
     await admin.page.getByRole('button', { name: 'Crear invitación de recuperación' }).click();
-    const inviteUrl = await admin.page.locator('.recovery-invite-url').inputValue();
+    const inviteUrl = await admin.page.getByLabel('Enlace de recuperación').inputValue();
+    // The invitation dialog is modal: close it before waiting for the device's request
+    await admin.page.getByRole('button', { name: 'Cerrar' }).click();
     expect(inviteUrl).toContain('/app/recovery#');
 
     // Fresh browser context (new device) opens the invite link
