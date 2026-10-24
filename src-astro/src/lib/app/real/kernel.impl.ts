@@ -168,6 +168,25 @@ export class RealKernel implements Kernel {
     if (this.guest && this.opts.session.state() !== 'unlocked') this.drop();
   }
 
+  /**
+   * Re-offers to validation the envelopes of the replica doc that are not stored yet. The replica validates a
+   * remote envelope once, on arrival; in the initial sync an envelope can arrive before the membership log that
+   * makes it valid and is then dropped. The recovering device calls this until its view is complete.
+   */
+  async resync(): Promise<number> {
+    if (!this.replica) return 0;
+    let added = 0;
+    for (const env of [...this.replica.doc.getMap<Envelope>('env').values()]) {
+      if (await this.opts.store.get(env.id)) continue;
+      try {
+        if (await this.accept(env)) added++;
+      } catch {
+        /* still invalid */
+      }
+    }
+    return added;
+  }
+
   /** Reading and relaying circle envelopes is also allowed in guest mode. */
   private guardRead() {
     if (this.guest && this.circleInfo) return;

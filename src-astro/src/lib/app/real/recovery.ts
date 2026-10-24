@@ -33,6 +33,8 @@ export interface RecoveryGuestKernel {
   enterGuest(circleId: string, genesis: { memberId: string; signPub: string }, keys: { epoch: number; raw: Uint8Array }[]): Promise<void>;
   leaveGuest(): void;
   load(): Promise<void>;
+  /** Re-validates replica envelopes that were dropped because they arrived before what makes them valid. */
+  resync(): Promise<number>;
 }
 
 export interface RecoveryOptions {
@@ -104,6 +106,7 @@ interface RecoveryFile {
 const CK_INFO = 'orion/v1/circle-key';
 const HELLO_KIND = 'orion/recovery-hello';
 const HANDOVER_LINGER_MS = 5 * 60 * 1000;
+const RESYNC_MS = 2000;
 export const RECOVERY_FILE_NAME = 'orion-recovery.json';
 
 const keyAad = (circleId: string, tempId: string, epoch: number) => utf8(`orion/v1|${circleId}|recovery-key|${tempId}|${epoch}`);
@@ -328,6 +331,13 @@ export function createRecoveryService(
       }),
     );
     setProgress({ step: 'awaiting-approvals' });
+    // Envelopes dropped by the replica because they arrived before the membership log are offered again.
+    const timer = setInterval(() => {
+      void (async () => {
+        if ((await kernel.resync?.()) && attempt === a) await collect();
+      })().catch(() => undefined);
+    }, RESYNC_MS);
+    a.offs.push(() => clearInterval(timer));
     await collect();
   }
 
@@ -387,6 +397,8 @@ export function createRecoveryService(
     }
     await kernel.load?.();
     stopAttempt(true);
+    // Records that reached the guest before it could validate them become readable now.
+    await kernel.resync?.().catch(() => 0);
     if (blob && !(await session.recoveryBlob())) await session.putRecoveryBlob(blob);
     await announceDevice().catch(() => undefined);
     setProgress({ step: 'done' });
