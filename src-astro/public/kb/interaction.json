@@ -1,0 +1,1993 @@
+[
+  {
+    "id": "interaction:10324_36437",
+    "system": "interaction",
+    "code": "10324_36437",
+    "title": "Tamoxifen - Sertraline",
+    "body": "Severity: major\nDescription: Reduced clinical efficacy of tamoxifen in breast cancer prevention.\nMechanism: Inhibition of CYP2D6 prevents conversion of tamoxifen to its active metabolites.",
+    "related": [
+      "Tamoxifen",
+      "Sertraline"
+    ]
+  },
+  {
+    "id": "interaction:10324_4493",
+    "system": "interaction",
+    "code": "10324_4493",
+    "title": "Tamoxifen - Fluoxetine",
+    "body": "Severity: major\nDescription: Reduced clinical efficacy of tamoxifen in breast cancer prevention.\nMechanism: Inhibition of CYP2D6 prevents conversion of tamoxifen to its active metabolites.",
+    "related": [
+      "Tamoxifen",
+      "Fluoxetine"
+    ]
+  },
+  {
+    "id": "interaction:10324_7934",
+    "system": "interaction",
+    "code": "10324_7934",
+    "title": "Tamoxifen - Paroxetine",
+    "body": "Severity: major\nDescription: Reduced clinical efficacy of tamoxifen in breast cancer prevention.\nMechanism: Inhibition of CYP2D6 prevents conversion of tamoxifen to its active metabolites.",
+    "related": [
+      "Tamoxifen",
+      "Paroxetine"
+    ]
+  },
+  {
+    "id": "interaction:1039156_1191",
+    "system": "interaction",
+    "code": "1039156_1191",
+    "title": "Apixaban - Aspirin",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Apixaban",
+      "Aspirin"
+    ]
+  },
+  {
+    "id": "interaction:1039156_32968",
+    "system": "interaction",
+    "code": "1039156_32968",
+    "title": "Apixaban - Clopidogrel",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Apixaban",
+      "Clopidogrel"
+    ]
+  },
+  {
+    "id": "interaction:1039156_3350",
+    "system": "interaction",
+    "code": "1039156_3350",
+    "title": "Apixaban - Diclofenac",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Apixaban",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:1039156_5640",
+    "system": "interaction",
+    "code": "1039156_5640",
+    "title": "Apixaban - Ibuprofen",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Apixaban",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:1039156_7299",
+    "system": "interaction",
+    "code": "1039156_7299",
+    "title": "Apixaban - Naproxen",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Apixaban",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:10582_1897",
+    "system": "interaction",
+    "code": "10582_1897",
+    "title": "Levothyroxine - Calcium carbonate",
+    "body": "Severity: moderate\nDescription: Reduced drug absorption leading to therapeutic failure.\nMechanism: Formation of insoluble chelates in the gastrointestinal tract.",
+    "related": [
+      "Levothyroxine",
+      "Calcium carbonate"
+    ]
+  },
+  {
+    "id": "interaction:1114195_1191",
+    "system": "interaction",
+    "code": "1114195_1191",
+    "title": "Rivaroxaban - Aspirin",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Rivaroxaban",
+      "Aspirin"
+    ]
+  },
+  {
+    "id": "interaction:1114195_32968",
+    "system": "interaction",
+    "code": "1114195_32968",
+    "title": "Rivaroxaban - Clopidogrel",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Rivaroxaban",
+      "Clopidogrel"
+    ]
+  },
+  {
+    "id": "interaction:1114195_3350",
+    "system": "interaction",
+    "code": "1114195_3350",
+    "title": "Rivaroxaban - Diclofenac",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Rivaroxaban",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:1114195_5640",
+    "system": "interaction",
+    "code": "1114195_5640",
+    "title": "Rivaroxaban - Ibuprofen",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Rivaroxaban",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:1114195_7299",
+    "system": "interaction",
+    "code": "1114195_7299",
+    "title": "Rivaroxaban - Naproxen",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Rivaroxaban",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:11289_1191",
+    "system": "interaction",
+    "code": "11289_1191",
+    "title": "Warfarin - Aspirin",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Warfarin",
+      "Aspirin"
+    ]
+  },
+  {
+    "id": "interaction:11289_18631",
+    "system": "interaction",
+    "code": "11289_18631",
+    "title": "Warfarin - Azithromycin",
+    "body": "Severity: major\nDescription: Enhanced anticoagulant effect increases bleeding risk significantly.\nMechanism: Inhibition of CYP450 enzymes and alteration of Vitamin K-producing gut flora.",
+    "related": [
+      "Warfarin",
+      "Azithromycin"
+    ]
+  },
+  {
+    "id": "interaction:11289_21212",
+    "system": "interaction",
+    "code": "11289_21212",
+    "title": "Warfarin - Clarithromycin",
+    "body": "Severity: major\nDescription: Enhanced anticoagulant effect increases bleeding risk significantly.\nMechanism: Inhibition of CYP450 enzymes and alteration of Vitamin K-producing gut flora.",
+    "related": [
+      "Warfarin",
+      "Clarithromycin"
+    ]
+  },
+  {
+    "id": "interaction:11289_2551",
+    "system": "interaction",
+    "code": "11289_2551",
+    "title": "Warfarin - Ciprofloxacin",
+    "body": "Severity: major\nDescription: Enhanced anticoagulant effect increases bleeding risk significantly.\nMechanism: Inhibition of CYP450 enzymes and alteration of Vitamin K-producing gut flora.",
+    "related": [
+      "Warfarin",
+      "Ciprofloxacin"
+    ]
+  },
+  {
+    "id": "interaction:11289_32968",
+    "system": "interaction",
+    "code": "11289_32968",
+    "title": "Warfarin - Clopidogrel",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Warfarin",
+      "Clopidogrel"
+    ]
+  },
+  {
+    "id": "interaction:11289_3350",
+    "system": "interaction",
+    "code": "11289_3350",
+    "title": "Warfarin - Diclofenac",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Warfarin",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:11289_5640",
+    "system": "interaction",
+    "code": "11289_5640",
+    "title": "Warfarin - Ibuprofen",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Warfarin",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:11289_7299",
+    "system": "interaction",
+    "code": "11289_7299",
+    "title": "Warfarin - Naproxen",
+    "body": "Severity: major\nDescription: Increased risk of serious gastrointestinal bleeding and systemic hemorrhage.\nMechanism: Synergistic effect on coagulation cascade and platelet aggregation inhibition.",
+    "related": [
+      "Warfarin",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:11289_82122",
+    "system": "interaction",
+    "code": "11289_82122",
+    "title": "Warfarin - Levofloxacin",
+    "body": "Severity: major\nDescription: Enhanced anticoagulant effect increases bleeding risk significantly.\nMechanism: Inhibition of CYP450 enzymes and alteration of Vitamin K-producing gut flora.",
+    "related": [
+      "Warfarin",
+      "Levofloxacin"
+    ]
+  },
+  {
+    "id": "interaction:1202_11170",
+    "system": "interaction",
+    "code": "1202_11170",
+    "title": "Atenolol - Verapamil",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Atenolol",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:1202_145507",
+    "system": "interaction",
+    "code": "1202_145507",
+    "title": "Atenolol - Glimepiride",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Atenolol",
+      "Glimepiride"
+    ]
+  },
+  {
+    "id": "interaction:1202_3443",
+    "system": "interaction",
+    "code": "1202_3443",
+    "title": "Atenolol - Diltiazem",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Atenolol",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:1202_4820",
+    "system": "interaction",
+    "code": "1202_4820",
+    "title": "Atenolol - Gliclazide",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Atenolol",
+      "Gliclazide"
+    ]
+  },
+  {
+    "id": "interaction:135561_35827",
+    "system": "interaction",
+    "code": "135561_35827",
+    "title": "Sildenafil - Isosorbide mononitrate",
+    "body": "Severity: major\nDescription: Severe, potentially fatal hypotension. Co-administration is strictly contraindicated.\nMechanism: Potentiation of nitric oxide-mediated vasodilation via cGMP accumulation.",
+    "related": [
+      "Sildenafil",
+      "Isosorbide mononitrate"
+    ]
+  },
+  {
+    "id": "interaction:135561_7434",
+    "system": "interaction",
+    "code": "135561_7434",
+    "title": "Sildenafil - Nitroglycerin",
+    "body": "Severity: major\nDescription: Severe, potentially fatal hypotension. Co-administration is strictly contraindicated.\nMechanism: Potentiation of nitric oxide-mediated vasodilation via cGMP accumulation.",
+    "related": [
+      "Sildenafil",
+      "Nitroglycerin"
+    ]
+  },
+  {
+    "id": "interaction:1488564_4603",
+    "system": "interaction",
+    "code": "1488564_4603",
+    "title": "Dapagliflozin - Furosemide",
+    "body": "Severity: minor\nDescription: Increased risk of volume depletion, hypotension, and electrolyte disturbances.\nMechanism: Additive osmotic and pharmacological diuretic effects.",
+    "related": [
+      "Dapagliflozin",
+      "Furosemide"
+    ]
+  },
+  {
+    "id": "interaction:1488564_5487",
+    "system": "interaction",
+    "code": "1488564_5487",
+    "title": "Dapagliflozin - Hydrochlorothiazide",
+    "body": "Severity: minor\nDescription: Increased risk of volume depletion, hypotension, and electrolyte disturbances.\nMechanism: Additive osmotic and pharmacological diuretic effects.",
+    "related": [
+      "Dapagliflozin",
+      "Hydrochlorothiazide"
+    ]
+  },
+  {
+    "id": "interaction:1488564_9997",
+    "system": "interaction",
+    "code": "1488564_9997",
+    "title": "Dapagliflozin - Spironolactone",
+    "body": "Severity: minor\nDescription: Increased risk of volume depletion, hypotension, and electrolyte disturbances.\nMechanism: Additive osmotic and pharmacological diuretic effects.",
+    "related": [
+      "Dapagliflozin",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:153165_32968",
+    "system": "interaction",
+    "code": "153165_32968",
+    "title": "Esomeprazole - Clopidogrel",
+    "body": "Severity: moderate\nDescription: Reduced antiplatelet efficacy of clopidogrel, increasing cardiovascular risk.\nMechanism: Inhibition of CYP2C19 prevents conversion of clopidogrel to its active form.",
+    "related": [
+      "Esomeprazole",
+      "Clopidogrel"
+    ]
+  },
+  {
+    "id": "interaction:1545631_4603",
+    "system": "interaction",
+    "code": "1545631_4603",
+    "title": "Empagliflozin - Furosemide",
+    "body": "Severity: minor\nDescription: Increased risk of volume depletion, hypotension, and electrolyte disturbances.\nMechanism: Additive osmotic and pharmacological diuretic effects.",
+    "related": [
+      "Empagliflozin",
+      "Furosemide"
+    ]
+  },
+  {
+    "id": "interaction:1545631_5487",
+    "system": "interaction",
+    "code": "1545631_5487",
+    "title": "Empagliflozin - Hydrochlorothiazide",
+    "body": "Severity: minor\nDescription: Increased risk of volume depletion, hypotension, and electrolyte disturbances.\nMechanism: Additive osmotic and pharmacological diuretic effects.",
+    "related": [
+      "Empagliflozin",
+      "Hydrochlorothiazide"
+    ]
+  },
+  {
+    "id": "interaction:1545631_9997",
+    "system": "interaction",
+    "code": "1545631_9997",
+    "title": "Empagliflozin - Spironolactone",
+    "body": "Severity: minor\nDescription: Increased risk of volume depletion, hypotension, and electrolyte disturbances.\nMechanism: Additive osmotic and pharmacological diuretic effects.",
+    "related": [
+      "Empagliflozin",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:1603_11170",
+    "system": "interaction",
+    "code": "1603_11170",
+    "title": "Bisoprolol - Verapamil",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Bisoprolol",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:1603_145507",
+    "system": "interaction",
+    "code": "1603_145507",
+    "title": "Bisoprolol - Glimepiride",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Bisoprolol",
+      "Glimepiride"
+    ]
+  },
+  {
+    "id": "interaction:1603_3443",
+    "system": "interaction",
+    "code": "1603_3443",
+    "title": "Bisoprolol - Diltiazem",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Bisoprolol",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:1603_4820",
+    "system": "interaction",
+    "code": "1603_4820",
+    "title": "Bisoprolol - Gliclazide",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Bisoprolol",
+      "Gliclazide"
+    ]
+  },
+  {
+    "id": "interaction:18631_11170",
+    "system": "interaction",
+    "code": "18631_11170",
+    "title": "Azithromycin - Verapamil",
+    "body": "Severity: moderate\nDescription: Potential for severe hypotension and acute kidney injury.\nMechanism: Inhibition of CYP3A4-mediated metabolism of calcium channel blockers.",
+    "related": [
+      "Azithromycin",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:18631_17767",
+    "system": "interaction",
+    "code": "18631_17767",
+    "title": "Azithromycin - Amlodipine",
+    "body": "Severity: moderate\nDescription: Potential for severe hypotension and acute kidney injury.\nMechanism: Inhibition of CYP3A4-mediated metabolism of calcium channel blockers.",
+    "related": [
+      "Azithromycin",
+      "Amlodipine"
+    ]
+  },
+  {
+    "id": "interaction:18631_3443",
+    "system": "interaction",
+    "code": "18631_3443",
+    "title": "Azithromycin - Diltiazem",
+    "body": "Severity: moderate\nDescription: Potential for severe hypotension and acute kidney injury.\nMechanism: Inhibition of CYP3A4-mediated metabolism of calcium channel blockers.",
+    "related": [
+      "Azithromycin",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:18631_7424",
+    "system": "interaction",
+    "code": "18631_7424",
+    "title": "Azithromycin - Nifedipine",
+    "body": "Severity: moderate\nDescription: Potential for severe hypotension and acute kidney injury.\nMechanism: Inhibition of CYP3A4-mediated metabolism of calcium channel blockers.",
+    "related": [
+      "Azithromycin",
+      "Nifedipine"
+    ]
+  },
+  {
+    "id": "interaction:19001_3350",
+    "system": "interaction",
+    "code": "19001_3350",
+    "title": "Irbesartan - Diclofenac",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Irbesartan",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:19001_5640",
+    "system": "interaction",
+    "code": "19001_5640",
+    "title": "Irbesartan - Ibuprofen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Irbesartan",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:19001_7299",
+    "system": "interaction",
+    "code": "19001_7299",
+    "title": "Irbesartan - Naproxen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Irbesartan",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:19001_9997",
+    "system": "interaction",
+    "code": "19001_9997",
+    "title": "Irbesartan - Spironolactone",
+    "body": "Severity: major\nDescription: Combination increases risk of life-threatening hyperkalemia.\nMechanism: Additive potassium-sparing effects in the distal nephron.",
+    "related": [
+      "Irbesartan",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:1998_3350",
+    "system": "interaction",
+    "code": "1998_3350",
+    "title": "Captopril - Diclofenac",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Captopril",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:1998_5640",
+    "system": "interaction",
+    "code": "1998_5640",
+    "title": "Captopril - Ibuprofen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Captopril",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:1998_7299",
+    "system": "interaction",
+    "code": "1998_7299",
+    "title": "Captopril - Naproxen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Captopril",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:1998_9997",
+    "system": "interaction",
+    "code": "1998_9997",
+    "title": "Captopril - Spironolactone",
+    "body": "Severity: major\nDescription: Combination increases risk of life-threatening hyperkalemia.\nMechanism: Additive potassium-sparing effects in the distal nephron.",
+    "related": [
+      "Captopril",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:2002_1039156",
+    "system": "interaction",
+    "code": "2002_1039156",
+    "title": "Carbamazepine - Apixaban",
+    "body": "Severity: moderate\nDescription: Reduced efficacy of the co-administered drug.\nMechanism: Induction of hepatic enzymes (CYP3A4) increases drug metabolism.",
+    "related": [
+      "Carbamazepine",
+      "Apixaban"
+    ]
+  },
+  {
+    "id": "interaction:2002_1114195",
+    "system": "interaction",
+    "code": "2002_1114195",
+    "title": "Carbamazepine - Rivaroxaban",
+    "body": "Severity: moderate\nDescription: Reduced efficacy of the co-administered drug.\nMechanism: Induction of hepatic enzymes (CYP3A4) increases drug metabolism.",
+    "related": [
+      "Carbamazepine",
+      "Rivaroxaban"
+    ]
+  },
+  {
+    "id": "interaction:2002_11289",
+    "system": "interaction",
+    "code": "2002_11289",
+    "title": "Carbamazepine - Warfarin",
+    "body": "Severity: moderate\nDescription: Reduced efficacy of the co-administered drug.\nMechanism: Induction of hepatic enzymes (CYP3A4) increases drug metabolism.",
+    "related": [
+      "Carbamazepine",
+      "Warfarin"
+    ]
+  },
+  {
+    "id": "interaction:2002_321988",
+    "system": "interaction",
+    "code": "2002_321988",
+    "title": "Carbamazepine - Escitalopram",
+    "body": "Severity: moderate\nDescription: Reduced efficacy of the co-administered drug.\nMechanism: Induction of hepatic enzymes (CYP3A4) increases drug metabolism.",
+    "related": [
+      "Carbamazepine",
+      "Escitalopram"
+    ]
+  },
+  {
+    "id": "interaction:2002_36437",
+    "system": "interaction",
+    "code": "2002_36437",
+    "title": "Carbamazepine - Sertraline",
+    "body": "Severity: moderate\nDescription: Reduced efficacy of the co-administered drug.\nMechanism: Induction of hepatic enzymes (CYP3A4) increases drug metabolism.",
+    "related": [
+      "Carbamazepine",
+      "Sertraline"
+    ]
+  },
+  {
+    "id": "interaction:2002_4493",
+    "system": "interaction",
+    "code": "2002_4493",
+    "title": "Carbamazepine - Fluoxetine",
+    "body": "Severity: moderate\nDescription: Reduced efficacy of the co-administered drug.\nMechanism: Induction of hepatic enzymes (CYP3A4) increases drug metabolism.",
+    "related": [
+      "Carbamazepine",
+      "Fluoxetine"
+    ]
+  },
+  {
+    "id": "interaction:2002_7934",
+    "system": "interaction",
+    "code": "2002_7934",
+    "title": "Carbamazepine - Paroxetine",
+    "body": "Severity: moderate\nDescription: Reduced efficacy of the co-administered drug.\nMechanism: Induction of hepatic enzymes (CYP3A4) increases drug metabolism.",
+    "related": [
+      "Carbamazepine",
+      "Paroxetine"
+    ]
+  },
+  {
+    "id": "interaction:20352_11170",
+    "system": "interaction",
+    "code": "20352_11170",
+    "title": "Carvedilol - Verapamil",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Carvedilol",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:20352_145507",
+    "system": "interaction",
+    "code": "20352_145507",
+    "title": "Carvedilol - Glimepiride",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Carvedilol",
+      "Glimepiride"
+    ]
+  },
+  {
+    "id": "interaction:20352_3443",
+    "system": "interaction",
+    "code": "20352_3443",
+    "title": "Carvedilol - Diltiazem",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Carvedilol",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:20352_4820",
+    "system": "interaction",
+    "code": "20352_4820",
+    "title": "Carvedilol - Gliclazide",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Carvedilol",
+      "Gliclazide"
+    ]
+  },
+  {
+    "id": "interaction:21212_11170",
+    "system": "interaction",
+    "code": "21212_11170",
+    "title": "Clarithromycin - Verapamil",
+    "body": "Severity: moderate\nDescription: Potential for severe hypotension and acute kidney injury.\nMechanism: Inhibition of CYP3A4-mediated metabolism of calcium channel blockers.",
+    "related": [
+      "Clarithromycin",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:21212_17767",
+    "system": "interaction",
+    "code": "21212_17767",
+    "title": "Clarithromycin - Amlodipine",
+    "body": "Severity: moderate\nDescription: Potential for severe hypotension and acute kidney injury.\nMechanism: Inhibition of CYP3A4-mediated metabolism of calcium channel blockers.",
+    "related": [
+      "Clarithromycin",
+      "Amlodipine"
+    ]
+  },
+  {
+    "id": "interaction:21212_3443",
+    "system": "interaction",
+    "code": "21212_3443",
+    "title": "Clarithromycin - Diltiazem",
+    "body": "Severity: moderate\nDescription: Potential for severe hypotension and acute kidney injury.\nMechanism: Inhibition of CYP3A4-mediated metabolism of calcium channel blockers.",
+    "related": [
+      "Clarithromycin",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:21212_7424",
+    "system": "interaction",
+    "code": "21212_7424",
+    "title": "Clarithromycin - Nifedipine",
+    "body": "Severity: moderate\nDescription: Potential for severe hypotension and acute kidney injury.\nMechanism: Inhibition of CYP3A4-mediated metabolism of calcium channel blockers.",
+    "related": [
+      "Clarithromycin",
+      "Nifedipine"
+    ]
+  },
+  {
+    "id": "interaction:214354_3350",
+    "system": "interaction",
+    "code": "214354_3350",
+    "title": "Candesartan - Diclofenac",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Candesartan",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:214354_5640",
+    "system": "interaction",
+    "code": "214354_5640",
+    "title": "Candesartan - Ibuprofen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Candesartan",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:214354_7299",
+    "system": "interaction",
+    "code": "214354_7299",
+    "title": "Candesartan - Naproxen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Candesartan",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:214354_9997",
+    "system": "interaction",
+    "code": "214354_9997",
+    "title": "Candesartan - Spironolactone",
+    "body": "Severity: major\nDescription: Combination increases risk of life-threatening hyperkalemia.\nMechanism: Additive potassium-sparing effects in the distal nephron.",
+    "related": [
+      "Candesartan",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:236430_10689",
+    "system": "interaction",
+    "code": "236430_10689",
+    "title": "Duloxetine - Tramadol",
+    "body": "Severity: major\nDescription: High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.\nMechanism: Additive serotonergic effects via reuptake inhibition and direct receptor stimulation.",
+    "related": [
+      "Duloxetine",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:236430_704",
+    "system": "interaction",
+    "code": "236430_704",
+    "title": "Duloxetine - Amitriptyline",
+    "body": "Severity: moderate\nDescription: Risk of serotonin syndrome and increased levels of tricyclic antidepressants.\nMechanism: Additive pharmacodynamic effects and inhibition of hepatic metabolism.",
+    "related": [
+      "Duloxetine",
+      "Amitriptyline"
+    ]
+  },
+  {
+    "id": "interaction:236430_8123",
+    "system": "interaction",
+    "code": "236430_8123",
+    "title": "Duloxetine - Phenelzine",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Duloxetine",
+      "Phenelzine"
+    ]
+  },
+  {
+    "id": "interaction:236430_9744",
+    "system": "interaction",
+    "code": "236430_9744",
+    "title": "Duloxetine - Selegiline",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Duloxetine",
+      "Selegiline"
+    ]
+  },
+  {
+    "id": "interaction:2551_3350",
+    "system": "interaction",
+    "code": "2551_3350",
+    "title": "Ciprofloxacin - Diclofenac",
+    "body": "Severity: moderate\nDescription: Possible increased risk of CNS stimulation and convulsive seizures.\nMechanism: Antagonism of GABA-mediated inhibitory neurotransmission.",
+    "related": [
+      "Ciprofloxacin",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:2551_5640",
+    "system": "interaction",
+    "code": "2551_5640",
+    "title": "Ciprofloxacin - Ibuprofen",
+    "body": "Severity: moderate\nDescription: Possible increased risk of CNS stimulation and convulsive seizures.\nMechanism: Antagonism of GABA-mediated inhibitory neurotransmission.",
+    "related": [
+      "Ciprofloxacin",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:2551_7299",
+    "system": "interaction",
+    "code": "2551_7299",
+    "title": "Ciprofloxacin - Naproxen",
+    "body": "Severity: moderate\nDescription: Possible increased risk of CNS stimulation and convulsive seizures.\nMechanism: Antagonism of GABA-mediated inhibitory neurotransmission.",
+    "related": [
+      "Ciprofloxacin",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:2598_10689",
+    "system": "interaction",
+    "code": "2598_10689",
+    "title": "Clonazepam - Tramadol",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Clonazepam",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:2598_7052",
+    "system": "interaction",
+    "code": "2598_7052",
+    "title": "Clonazepam - Morphine",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Clonazepam",
+      "Morphine"
+    ]
+  },
+  {
+    "id": "interaction:2598_7804",
+    "system": "interaction",
+    "code": "2598_7804",
+    "title": "Clonazepam - Oxycodone",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Clonazepam",
+      "Oxycodone"
+    ]
+  },
+  {
+    "id": "interaction:29046_3350",
+    "system": "interaction",
+    "code": "29046_3350",
+    "title": "Lisinopril - Diclofenac",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Lisinopril",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:29046_5640",
+    "system": "interaction",
+    "code": "29046_5640",
+    "title": "Lisinopril - Ibuprofen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Lisinopril",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:29046_7299",
+    "system": "interaction",
+    "code": "29046_7299",
+    "title": "Lisinopril - Naproxen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Lisinopril",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:29046_9997",
+    "system": "interaction",
+    "code": "29046_9997",
+    "title": "Lisinopril - Spironolactone",
+    "body": "Severity: major\nDescription: Combination increases risk of life-threatening hyperkalemia.\nMechanism: Additive potassium-sparing effects in the distal nephron.",
+    "related": [
+      "Lisinopril",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:301542_11170",
+    "system": "interaction",
+    "code": "301542_11170",
+    "title": "Rosuvastatin - Verapamil",
+    "body": "Severity: moderate\nDescription: Increased serum statin levels and risk of muscle-related side effects.\nMechanism: CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism.",
+    "related": [
+      "Rosuvastatin",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:301542_18631",
+    "system": "interaction",
+    "code": "301542_18631",
+    "title": "Rosuvastatin - Azithromycin",
+    "body": "Severity: major\nDescription: Increased risk of myopathy and potentially fatal rhabdomyolysis.\nMechanism: CYP3A4 inhibition increases statin serum concentrations to toxic levels.",
+    "related": [
+      "Rosuvastatin",
+      "Azithromycin"
+    ]
+  },
+  {
+    "id": "interaction:301542_21212",
+    "system": "interaction",
+    "code": "301542_21212",
+    "title": "Rosuvastatin - Clarithromycin",
+    "body": "Severity: major\nDescription: Increased risk of myopathy and potentially fatal rhabdomyolysis.\nMechanism: CYP3A4 inhibition increases statin serum concentrations to toxic levels.",
+    "related": [
+      "Rosuvastatin",
+      "Clarithromycin"
+    ]
+  },
+  {
+    "id": "interaction:301542_3443",
+    "system": "interaction",
+    "code": "301542_3443",
+    "title": "Rosuvastatin - Diltiazem",
+    "body": "Severity: moderate\nDescription: Increased serum statin levels and risk of muscle-related side effects.\nMechanism: CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism.",
+    "related": [
+      "Rosuvastatin",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:321207_35827",
+    "system": "interaction",
+    "code": "321207_35827",
+    "title": "Tadalafil - Isosorbide mononitrate",
+    "body": "Severity: major\nDescription: Severe, potentially fatal hypotension. Co-administration is strictly contraindicated.\nMechanism: Potentiation of nitric oxide-mediated vasodilation via cGMP accumulation.",
+    "related": [
+      "Tadalafil",
+      "Isosorbide mononitrate"
+    ]
+  },
+  {
+    "id": "interaction:321207_7434",
+    "system": "interaction",
+    "code": "321207_7434",
+    "title": "Tadalafil - Nitroglycerin",
+    "body": "Severity: major\nDescription: Severe, potentially fatal hypotension. Co-administration is strictly contraindicated.\nMechanism: Potentiation of nitric oxide-mediated vasodilation via cGMP accumulation.",
+    "related": [
+      "Tadalafil",
+      "Nitroglycerin"
+    ]
+  },
+  {
+    "id": "interaction:321988_10689",
+    "system": "interaction",
+    "code": "321988_10689",
+    "title": "Escitalopram - Tramadol",
+    "body": "Severity: major\nDescription: High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.\nMechanism: Additive serotonergic effects via reuptake inhibition and direct receptor stimulation.",
+    "related": [
+      "Escitalopram",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:321988_11002",
+    "system": "interaction",
+    "code": "321988_11002",
+    "title": "Escitalopram - Valproic acid",
+    "body": "Severity: moderate\nDescription: Increased plasma concentrations of valproate, potentially increasing toxicity.\nMechanism: Inhibition of valproate metabolism by certain SSRIs.",
+    "related": [
+      "Escitalopram",
+      "Valproic acid"
+    ]
+  },
+  {
+    "id": "interaction:321988_3350",
+    "system": "interaction",
+    "code": "321988_3350",
+    "title": "Escitalopram - Diclofenac",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Escitalopram",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:321988_5640",
+    "system": "interaction",
+    "code": "321988_5640",
+    "title": "Escitalopram - Ibuprofen",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Escitalopram",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:321988_704",
+    "system": "interaction",
+    "code": "321988_704",
+    "title": "Escitalopram - Amitriptyline",
+    "body": "Severity: moderate\nDescription: Risk of serotonin syndrome and increased levels of tricyclic antidepressants.\nMechanism: Additive pharmacodynamic effects and inhibition of hepatic metabolism.",
+    "related": [
+      "Escitalopram",
+      "Amitriptyline"
+    ]
+  },
+  {
+    "id": "interaction:321988_7299",
+    "system": "interaction",
+    "code": "321988_7299",
+    "title": "Escitalopram - Naproxen",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Escitalopram",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:321988_8123",
+    "system": "interaction",
+    "code": "321988_8123",
+    "title": "Escitalopram - Phenelzine",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Escitalopram",
+      "Phenelzine"
+    ]
+  },
+  {
+    "id": "interaction:321988_9744",
+    "system": "interaction",
+    "code": "321988_9744",
+    "title": "Escitalopram - Selegiline",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Escitalopram",
+      "Selegiline"
+    ]
+  },
+  {
+    "id": "interaction:3322_10689",
+    "system": "interaction",
+    "code": "3322_10689",
+    "title": "Diazepam - Tramadol",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Diazepam",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:3322_7052",
+    "system": "interaction",
+    "code": "3322_7052",
+    "title": "Diazepam - Morphine",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Diazepam",
+      "Morphine"
+    ]
+  },
+  {
+    "id": "interaction:3322_7804",
+    "system": "interaction",
+    "code": "3322_7804",
+    "title": "Diazepam - Oxycodone",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Diazepam",
+      "Oxycodone"
+    ]
+  },
+  {
+    "id": "interaction:3407_4603",
+    "system": "interaction",
+    "code": "3407_4603",
+    "title": "Digoxin - Furosemide",
+    "body": "Severity: moderate\nDescription: Increased risk of digoxin toxicity due to electrolyte imbalances.\nMechanism: Hypokalemia and hypomagnesemia sensitize the myocardium to digoxin.",
+    "related": [
+      "Digoxin",
+      "Furosemide"
+    ]
+  },
+  {
+    "id": "interaction:3407_5487",
+    "system": "interaction",
+    "code": "3407_5487",
+    "title": "Digoxin - Hydrochlorothiazide",
+    "body": "Severity: moderate\nDescription: Increased risk of digoxin toxicity due to electrolyte imbalances.\nMechanism: Hypokalemia and hypomagnesemia sensitize the myocardium to digoxin.",
+    "related": [
+      "Digoxin",
+      "Hydrochlorothiazide"
+    ]
+  },
+  {
+    "id": "interaction:3521_3350",
+    "system": "interaction",
+    "code": "3521_3350",
+    "title": "Ramipril - Diclofenac",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Ramipril",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:3521_5640",
+    "system": "interaction",
+    "code": "3521_5640",
+    "title": "Ramipril - Ibuprofen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Ramipril",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:3521_7299",
+    "system": "interaction",
+    "code": "3521_7299",
+    "title": "Ramipril - Naproxen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Ramipril",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:3521_9997",
+    "system": "interaction",
+    "code": "3521_9997",
+    "title": "Ramipril - Spironolactone",
+    "body": "Severity: major\nDescription: Combination increases risk of life-threatening hyperkalemia.\nMechanism: Additive potassium-sparing effects in the distal nephron.",
+    "related": [
+      "Ramipril",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:36437_10689",
+    "system": "interaction",
+    "code": "36437_10689",
+    "title": "Sertraline - Tramadol",
+    "body": "Severity: major\nDescription: High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.\nMechanism: Additive serotonergic effects via reuptake inhibition and direct receptor stimulation.",
+    "related": [
+      "Sertraline",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:36437_11002",
+    "system": "interaction",
+    "code": "36437_11002",
+    "title": "Sertraline - Valproic acid",
+    "body": "Severity: moderate\nDescription: Increased plasma concentrations of valproate, potentially increasing toxicity.\nMechanism: Inhibition of valproate metabolism by certain SSRIs.",
+    "related": [
+      "Sertraline",
+      "Valproic acid"
+    ]
+  },
+  {
+    "id": "interaction:36437_3350",
+    "system": "interaction",
+    "code": "36437_3350",
+    "title": "Sertraline - Diclofenac",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Sertraline",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:36437_5640",
+    "system": "interaction",
+    "code": "36437_5640",
+    "title": "Sertraline - Ibuprofen",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Sertraline",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:36437_704",
+    "system": "interaction",
+    "code": "36437_704",
+    "title": "Sertraline - Amitriptyline",
+    "body": "Severity: moderate\nDescription: Risk of serotonin syndrome and increased levels of tricyclic antidepressants.\nMechanism: Additive pharmacodynamic effects and inhibition of hepatic metabolism.",
+    "related": [
+      "Sertraline",
+      "Amitriptyline"
+    ]
+  },
+  {
+    "id": "interaction:36437_7299",
+    "system": "interaction",
+    "code": "36437_7299",
+    "title": "Sertraline - Naproxen",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Sertraline",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:36437_8123",
+    "system": "interaction",
+    "code": "36437_8123",
+    "title": "Sertraline - Phenelzine",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Sertraline",
+      "Phenelzine"
+    ]
+  },
+  {
+    "id": "interaction:36437_9744",
+    "system": "interaction",
+    "code": "36437_9744",
+    "title": "Sertraline - Selegiline",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Sertraline",
+      "Selegiline"
+    ]
+  },
+  {
+    "id": "interaction:36567_11170",
+    "system": "interaction",
+    "code": "36567_11170",
+    "title": "Simvastatin - Verapamil",
+    "body": "Severity: moderate\nDescription: Increased serum statin levels and risk of muscle-related side effects.\nMechanism: CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism.",
+    "related": [
+      "Simvastatin",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:36567_18631",
+    "system": "interaction",
+    "code": "36567_18631",
+    "title": "Simvastatin - Azithromycin",
+    "body": "Severity: major\nDescription: Increased risk of myopathy and potentially fatal rhabdomyolysis.\nMechanism: CYP3A4 inhibition increases statin serum concentrations to toxic levels.",
+    "related": [
+      "Simvastatin",
+      "Azithromycin"
+    ]
+  },
+  {
+    "id": "interaction:36567_21212",
+    "system": "interaction",
+    "code": "36567_21212",
+    "title": "Simvastatin - Clarithromycin",
+    "body": "Severity: major\nDescription: Increased risk of myopathy and potentially fatal rhabdomyolysis.\nMechanism: CYP3A4 inhibition increases statin serum concentrations to toxic levels.",
+    "related": [
+      "Simvastatin",
+      "Clarithromycin"
+    ]
+  },
+  {
+    "id": "interaction:36567_3443",
+    "system": "interaction",
+    "code": "36567_3443",
+    "title": "Simvastatin - Diltiazem",
+    "body": "Severity: moderate\nDescription: Increased serum statin levels and risk of muscle-related side effects.\nMechanism: CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism.",
+    "related": [
+      "Simvastatin",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:3827_3350",
+    "system": "interaction",
+    "code": "3827_3350",
+    "title": "Enalapril - Diclofenac",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Enalapril",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:3827_5640",
+    "system": "interaction",
+    "code": "3827_5640",
+    "title": "Enalapril - Ibuprofen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Enalapril",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:3827_7299",
+    "system": "interaction",
+    "code": "3827_7299",
+    "title": "Enalapril - Naproxen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Enalapril",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:3827_9997",
+    "system": "interaction",
+    "code": "3827_9997",
+    "title": "Enalapril - Spironolactone",
+    "body": "Severity: major\nDescription: Combination increases risk of life-threatening hyperkalemia.\nMechanism: Additive potassium-sparing effects in the distal nephron.",
+    "related": [
+      "Enalapril",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:39786_10689",
+    "system": "interaction",
+    "code": "39786_10689",
+    "title": "Venlafaxine - Tramadol",
+    "body": "Severity: major\nDescription: High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.\nMechanism: Additive serotonergic effects via reuptake inhibition and direct receptor stimulation.",
+    "related": [
+      "Venlafaxine",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:39786_704",
+    "system": "interaction",
+    "code": "39786_704",
+    "title": "Venlafaxine - Amitriptyline",
+    "body": "Severity: moderate\nDescription: Risk of serotonin syndrome and increased levels of tricyclic antidepressants.\nMechanism: Additive pharmacodynamic effects and inhibition of hepatic metabolism.",
+    "related": [
+      "Venlafaxine",
+      "Amitriptyline"
+    ]
+  },
+  {
+    "id": "interaction:39786_8123",
+    "system": "interaction",
+    "code": "39786_8123",
+    "title": "Venlafaxine - Phenelzine",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Venlafaxine",
+      "Phenelzine"
+    ]
+  },
+  {
+    "id": "interaction:39786_9744",
+    "system": "interaction",
+    "code": "39786_9744",
+    "title": "Venlafaxine - Selegiline",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Venlafaxine",
+      "Selegiline"
+    ]
+  },
+  {
+    "id": "interaction:40188_3350",
+    "system": "interaction",
+    "code": "40188_3350",
+    "title": "Losartan - Diclofenac",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Losartan",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:40188_5640",
+    "system": "interaction",
+    "code": "40188_5640",
+    "title": "Losartan - Ibuprofen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Losartan",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:40188_7299",
+    "system": "interaction",
+    "code": "40188_7299",
+    "title": "Losartan - Naproxen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Losartan",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:40188_9997",
+    "system": "interaction",
+    "code": "40188_9997",
+    "title": "Losartan - Spironolactone",
+    "body": "Severity: major\nDescription: Combination increases risk of life-threatening hyperkalemia.\nMechanism: Additive potassium-sparing effects in the distal nephron.",
+    "related": [
+      "Losartan",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:42463_11170",
+    "system": "interaction",
+    "code": "42463_11170",
+    "title": "Pravastatin - Verapamil",
+    "body": "Severity: moderate\nDescription: Increased serum statin levels and risk of muscle-related side effects.\nMechanism: CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism.",
+    "related": [
+      "Pravastatin",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:42463_3443",
+    "system": "interaction",
+    "code": "42463_3443",
+    "title": "Pravastatin - Diltiazem",
+    "body": "Severity: moderate\nDescription: Increased serum statin levels and risk of muscle-related side effects.\nMechanism: CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism.",
+    "related": [
+      "Pravastatin",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:4450_1897",
+    "system": "interaction",
+    "code": "4450_1897",
+    "title": "Alendronate - Calcium carbonate",
+    "body": "Severity: moderate\nDescription: Reduced drug absorption leading to therapeutic failure.\nMechanism: Formation of insoluble chelates in the gastrointestinal tract.",
+    "related": [
+      "Alendronate",
+      "Calcium carbonate"
+    ]
+  },
+  {
+    "id": "interaction:4493_10689",
+    "system": "interaction",
+    "code": "4493_10689",
+    "title": "Fluoxetine - Tramadol",
+    "body": "Severity: major\nDescription: High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.\nMechanism: Additive serotonergic effects via reuptake inhibition and direct receptor stimulation.",
+    "related": [
+      "Fluoxetine",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:4493_11002",
+    "system": "interaction",
+    "code": "4493_11002",
+    "title": "Fluoxetine - Valproic acid",
+    "body": "Severity: moderate\nDescription: Increased plasma concentrations of valproate, potentially increasing toxicity.\nMechanism: Inhibition of valproate metabolism by certain SSRIs.",
+    "related": [
+      "Fluoxetine",
+      "Valproic acid"
+    ]
+  },
+  {
+    "id": "interaction:4493_3350",
+    "system": "interaction",
+    "code": "4493_3350",
+    "title": "Fluoxetine - Diclofenac",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Fluoxetine",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:4493_5640",
+    "system": "interaction",
+    "code": "4493_5640",
+    "title": "Fluoxetine - Ibuprofen",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Fluoxetine",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:4493_704",
+    "system": "interaction",
+    "code": "4493_704",
+    "title": "Fluoxetine - Amitriptyline",
+    "body": "Severity: moderate\nDescription: Risk of serotonin syndrome and increased levels of tricyclic antidepressants.\nMechanism: Additive pharmacodynamic effects and inhibition of hepatic metabolism.",
+    "related": [
+      "Fluoxetine",
+      "Amitriptyline"
+    ]
+  },
+  {
+    "id": "interaction:4493_7299",
+    "system": "interaction",
+    "code": "4493_7299",
+    "title": "Fluoxetine - Naproxen",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Fluoxetine",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:4493_8123",
+    "system": "interaction",
+    "code": "4493_8123",
+    "title": "Fluoxetine - Phenelzine",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Fluoxetine",
+      "Phenelzine"
+    ]
+  },
+  {
+    "id": "interaction:4493_9744",
+    "system": "interaction",
+    "code": "4493_9744",
+    "title": "Fluoxetine - Selegiline",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Fluoxetine",
+      "Selegiline"
+    ]
+  },
+  {
+    "id": "interaction:596_10689",
+    "system": "interaction",
+    "code": "596_10689",
+    "title": "Alprazolam - Tramadol",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Alprazolam",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:596_7052",
+    "system": "interaction",
+    "code": "596_7052",
+    "title": "Alprazolam - Morphine",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Alprazolam",
+      "Morphine"
+    ]
+  },
+  {
+    "id": "interaction:596_7804",
+    "system": "interaction",
+    "code": "596_7804",
+    "title": "Alprazolam - Oxycodone",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Alprazolam",
+      "Oxycodone"
+    ]
+  },
+  {
+    "id": "interaction:6470_10689",
+    "system": "interaction",
+    "code": "6470_10689",
+    "title": "Lorazepam - Tramadol",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Lorazepam",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:6470_7052",
+    "system": "interaction",
+    "code": "6470_7052",
+    "title": "Lorazepam - Morphine",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Lorazepam",
+      "Morphine"
+    ]
+  },
+  {
+    "id": "interaction:6470_7804",
+    "system": "interaction",
+    "code": "6470_7804",
+    "title": "Lorazepam - Oxycodone",
+    "body": "Severity: major\nDescription: Extreme risk of profound sedation, respiratory depression, and fatal overdose.\nMechanism: Synergistic CNS depression through GABA-A and mu-opioid receptor pathways.",
+    "related": [
+      "Lorazepam",
+      "Oxycodone"
+    ]
+  },
+  {
+    "id": "interaction:6711_3350",
+    "system": "interaction",
+    "code": "6711_3350",
+    "title": "Methotrexate - Diclofenac",
+    "body": "Severity: major\nDescription: Increased methotrexate toxicity, including bone marrow suppression and GI toxicity.\nMechanism: NSAIDs reduce renal clearance of methotrexate via tubular secretion inhibition.",
+    "related": [
+      "Methotrexate",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:6711_5640",
+    "system": "interaction",
+    "code": "6711_5640",
+    "title": "Methotrexate - Ibuprofen",
+    "body": "Severity: major\nDescription: Increased methotrexate toxicity, including bone marrow suppression and GI toxicity.\nMechanism: NSAIDs reduce renal clearance of methotrexate via tubular secretion inhibition.",
+    "related": [
+      "Methotrexate",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:6711_7299",
+    "system": "interaction",
+    "code": "6711_7299",
+    "title": "Methotrexate - Naproxen",
+    "body": "Severity: major\nDescription: Increased methotrexate toxicity, including bone marrow suppression and GI toxicity.\nMechanism: NSAIDs reduce renal clearance of methotrexate via tubular secretion inhibition.",
+    "related": [
+      "Methotrexate",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:6809_5970",
+    "system": "interaction",
+    "code": "6809_5970",
+    "title": "Metformin - Iohexol",
+    "body": "Severity: moderate\nDescription: Risk of lactic acidosis if renal function is impaired by contrast medium.\nMechanism: Contrast-induced nephropathy can lead to metformin accumulation.",
+    "related": [
+      "Metformin",
+      "Iohexol"
+    ]
+  },
+  {
+    "id": "interaction:6918_11170",
+    "system": "interaction",
+    "code": "6918_11170",
+    "title": "Metoprolol - Verapamil",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Metoprolol",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:6918_145507",
+    "system": "interaction",
+    "code": "6918_145507",
+    "title": "Metoprolol - Glimepiride",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Metoprolol",
+      "Glimepiride"
+    ]
+  },
+  {
+    "id": "interaction:6918_3443",
+    "system": "interaction",
+    "code": "6918_3443",
+    "title": "Metoprolol - Diltiazem",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Metoprolol",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:6918_4820",
+    "system": "interaction",
+    "code": "6918_4820",
+    "title": "Metoprolol - Gliclazide",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Metoprolol",
+      "Gliclazide"
+    ]
+  },
+  {
+    "id": "interaction:69749_3350",
+    "system": "interaction",
+    "code": "69749_3350",
+    "title": "Valsartan - Diclofenac",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Valsartan",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:69749_5640",
+    "system": "interaction",
+    "code": "69749_5640",
+    "title": "Valsartan - Ibuprofen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Valsartan",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:69749_7299",
+    "system": "interaction",
+    "code": "69749_7299",
+    "title": "Valsartan - Naproxen",
+    "body": "Severity: moderate\nDescription: NSAIDs may reduce antihypertensive effect and increase risk of acute renal failure.\nMechanism: Prostaglandin inhibition leads to afferent arteriole constriction.",
+    "related": [
+      "Valsartan",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:69749_9997",
+    "system": "interaction",
+    "code": "69749_9997",
+    "title": "Valsartan - Spironolactone",
+    "body": "Severity: major\nDescription: Combination increases risk of life-threatening hyperkalemia.\nMechanism: Additive potassium-sparing effects in the distal nephron.",
+    "related": [
+      "Valsartan",
+      "Spironolactone"
+    ]
+  },
+  {
+    "id": "interaction:7646_32968",
+    "system": "interaction",
+    "code": "7646_32968",
+    "title": "Omeprazole - Clopidogrel",
+    "body": "Severity: moderate\nDescription: Reduced antiplatelet efficacy of clopidogrel, increasing cardiovascular risk.\nMechanism: Inhibition of CYP2C19 prevents conversion of clopidogrel to its active form.",
+    "related": [
+      "Omeprazole",
+      "Clopidogrel"
+    ]
+  },
+  {
+    "id": "interaction:7934_10689",
+    "system": "interaction",
+    "code": "7934_10689",
+    "title": "Paroxetine - Tramadol",
+    "body": "Severity: major\nDescription: High risk of serotonin syndrome, characterized by mental status changes and neuromuscular hyperactivity.\nMechanism: Additive serotonergic effects via reuptake inhibition and direct receptor stimulation.",
+    "related": [
+      "Paroxetine",
+      "Tramadol"
+    ]
+  },
+  {
+    "id": "interaction:7934_11002",
+    "system": "interaction",
+    "code": "7934_11002",
+    "title": "Paroxetine - Valproic acid",
+    "body": "Severity: moderate\nDescription: Increased plasma concentrations of valproate, potentially increasing toxicity.\nMechanism: Inhibition of valproate metabolism by certain SSRIs.",
+    "related": [
+      "Paroxetine",
+      "Valproic acid"
+    ]
+  },
+  {
+    "id": "interaction:7934_3350",
+    "system": "interaction",
+    "code": "7934_3350",
+    "title": "Paroxetine - Diclofenac",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Paroxetine",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:7934_5640",
+    "system": "interaction",
+    "code": "7934_5640",
+    "title": "Paroxetine - Ibuprofen",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Paroxetine",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:7934_704",
+    "system": "interaction",
+    "code": "7934_704",
+    "title": "Paroxetine - Amitriptyline",
+    "body": "Severity: moderate\nDescription: Risk of serotonin syndrome and increased levels of tricyclic antidepressants.\nMechanism: Additive pharmacodynamic effects and inhibition of hepatic metabolism.",
+    "related": [
+      "Paroxetine",
+      "Amitriptyline"
+    ]
+  },
+  {
+    "id": "interaction:7934_7299",
+    "system": "interaction",
+    "code": "7934_7299",
+    "title": "Paroxetine - Naproxen",
+    "body": "Severity: moderate\nDescription: Increased risk of upper gastrointestinal bleeding.\nMechanism: SSRIs impair platelet aggregation by depleting serotonin stores in platelets.",
+    "related": [
+      "Paroxetine",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:7934_8123",
+    "system": "interaction",
+    "code": "7934_8123",
+    "title": "Paroxetine - Phenelzine",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Paroxetine",
+      "Phenelzine"
+    ]
+  },
+  {
+    "id": "interaction:7934_9744",
+    "system": "interaction",
+    "code": "7934_9744",
+    "title": "Paroxetine - Selegiline",
+    "body": "Severity: major\nDescription: Extreme risk of fatal serotonin syndrome.\nMechanism: Synergistic increase in synaptic serotonin levels due to combined reuptake inhibition and decreased degradation.",
+    "related": [
+      "Paroxetine",
+      "Selegiline"
+    ]
+  },
+  {
+    "id": "interaction:82122_3350",
+    "system": "interaction",
+    "code": "82122_3350",
+    "title": "Levofloxacin - Diclofenac",
+    "body": "Severity: moderate\nDescription: Possible increased risk of CNS stimulation and convulsive seizures.\nMechanism: Antagonism of GABA-mediated inhibitory neurotransmission.",
+    "related": [
+      "Levofloxacin",
+      "Diclofenac"
+    ]
+  },
+  {
+    "id": "interaction:82122_5640",
+    "system": "interaction",
+    "code": "82122_5640",
+    "title": "Levofloxacin - Ibuprofen",
+    "body": "Severity: moderate\nDescription: Possible increased risk of CNS stimulation and convulsive seizures.\nMechanism: Antagonism of GABA-mediated inhibitory neurotransmission.",
+    "related": [
+      "Levofloxacin",
+      "Ibuprofen"
+    ]
+  },
+  {
+    "id": "interaction:82122_7299",
+    "system": "interaction",
+    "code": "82122_7299",
+    "title": "Levofloxacin - Naproxen",
+    "body": "Severity: moderate\nDescription: Possible increased risk of CNS stimulation and convulsive seizures.\nMechanism: Antagonism of GABA-mediated inhibitory neurotransmission.",
+    "related": [
+      "Levofloxacin",
+      "Naproxen"
+    ]
+  },
+  {
+    "id": "interaction:83367_11170",
+    "system": "interaction",
+    "code": "83367_11170",
+    "title": "Atorvastatin - Verapamil",
+    "body": "Severity: moderate\nDescription: Increased serum statin levels and risk of muscle-related side effects.\nMechanism: CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism.",
+    "related": [
+      "Atorvastatin",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:83367_18631",
+    "system": "interaction",
+    "code": "83367_18631",
+    "title": "Atorvastatin - Azithromycin",
+    "body": "Severity: major\nDescription: Increased risk of myopathy and potentially fatal rhabdomyolysis.\nMechanism: CYP3A4 inhibition increases statin serum concentrations to toxic levels.",
+    "related": [
+      "Atorvastatin",
+      "Azithromycin"
+    ]
+  },
+  {
+    "id": "interaction:83367_21212",
+    "system": "interaction",
+    "code": "83367_21212",
+    "title": "Atorvastatin - Clarithromycin",
+    "body": "Severity: major\nDescription: Increased risk of myopathy and potentially fatal rhabdomyolysis.\nMechanism: CYP3A4 inhibition increases statin serum concentrations to toxic levels.",
+    "related": [
+      "Atorvastatin",
+      "Clarithromycin"
+    ]
+  },
+  {
+    "id": "interaction:83367_3443",
+    "system": "interaction",
+    "code": "83367_3443",
+    "title": "Atorvastatin - Diltiazem",
+    "body": "Severity: moderate\nDescription: Increased serum statin levels and risk of muscle-related side effects.\nMechanism: CYP3A4 inhibition by diltiazem or verapamil slows statin metabolism.",
+    "related": [
+      "Atorvastatin",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:8787_11170",
+    "system": "interaction",
+    "code": "8787_11170",
+    "title": "Propranolol - Verapamil",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Propranolol",
+      "Verapamil"
+    ]
+  },
+  {
+    "id": "interaction:8787_145507",
+    "system": "interaction",
+    "code": "8787_145507",
+    "title": "Propranolol - Glimepiride",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Propranolol",
+      "Glimepiride"
+    ]
+  },
+  {
+    "id": "interaction:8787_3443",
+    "system": "interaction",
+    "code": "8787_3443",
+    "title": "Propranolol - Diltiazem",
+    "body": "Severity: major\nDescription: Risk of severe bradycardia, heart block, and decreased cardiac output.\nMechanism: Synergistic negative inotropic and chronotropic effects on the myocardium.",
+    "related": [
+      "Propranolol",
+      "Diltiazem"
+    ]
+  },
+  {
+    "id": "interaction:8787_4820",
+    "system": "interaction",
+    "code": "8787_4820",
+    "title": "Propranolol - Gliclazide",
+    "body": "Severity: moderate\nDescription: Masking of hypoglycemic symptoms and delayed recovery from low blood sugar.\nMechanism: Blockade of beta-adrenergic receptors prevents compensatory tachycardia.",
+    "related": [
+      "Propranolol",
+      "Gliclazide"
+    ]
+  }
+]

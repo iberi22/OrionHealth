@@ -1,0 +1,78 @@
+{
+  "updatedAt": "2026-10-24T04:25:12.924Z",
+  "systems": {
+    "guideline": {
+      "count": 10,
+      "metadata": {
+        "standard": "Clinical Guidelines",
+        "version": "1.0.0",
+        "lastUpdated": "2025-05-15",
+        "source": "WHO, CDC, AHA/ACC, GINA, ADA, APA, IDSA, ACG",
+        "totalCount": 10
+      }
+    },
+    "interaction": {
+      "count": 181,
+      "metadata": {
+        "standard": "Drug-Drug Interactions",
+        "version": "1.1.0",
+        "lastUpdated": "2026-05-13",
+        "source": "OrionHealth Internal Safety DB",
+        "totalCount": 181
+      }
+    },
+    "icd10": {
+      "count": 2100,
+      "metadata": {
+        "standard": "ICD-10",
+        "version": "2024-2",
+        "lastUpdated": "2024-05-24",
+        "source": "WHO ICD-10-CM 2024",
+        "sourceUrl": "https://www.who.int/standards/classifications/classification-of-diseases",
+        "totalCount": 2100
+      }
+    },
+    "loinc": {
+      "count": 145,
+      "metadata": {
+        "standard": "LOINC",
+        "version": "2.77",
+        "lastUpdated": "2026-05-02",
+        "source": "LOINC.org / Regenstrief Institute + CDC",
+        "license": "LOINC is copyright Regenstrief Institute - Free for use",
+        "totalCount": 145
+      }
+    },
+    "rxnorm": {
+      "count": 121,
+      "metadata": {
+        "standard": "RxNorm",
+        "version": "2026-03-10",
+        "lastUpdated": "2026-05-13",
+        "source": "RxNorm (NLM / UMLS) + WHO ATC",
+        "sourceUrl": "https://rxnav.nlm.nih.gov/",
+        "totalCount": 121
+      }
+    },
+    "snomed": {
+      "count": 87,
+      "metadata": {
+        "standard": "SNOMED CT",
+        "version": "International Edition 2024",
+        "lastUpdated": "2026-05-02",
+        "source": "SNOMED International / NLM UMLS",
+        "sourceUrl": "https://www.snomed.org/",
+        "totalCount": 87
+      }
+    },
+    "symptom": {
+      "count": 154,
+      "metadata": {
+        "standard": "Symptom-Checker",
+        "version": "1.0",
+        "lastUpdated": "2026-05-13",
+        "description": "Mapping from symptoms to potential ICD-10 diagnoses with holistic relevance and red flags. Covers 154 common symptoms across 7 body systems."
+      }
+    }
+  }
+}
