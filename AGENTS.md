@@ -66,6 +66,14 @@ OrionHealth/
    - Keep `.gitcore/features.json` in sync with actual implementation.
    - Follow SWAL documentation guidelines (English for code/docs artifacts, bilingual README allowed).
 
+---
+
+## Remote agents (Jules) — web tasks in `src-astro/`
+
+- Setup for a web task is only `cd src-astro && pnpm install --frozen-lockfile`. Do not run `flutter`, `dart`, Gradle or any Android/iOS tooling.
+- Verify with the targeted `pnpm vitest run <path>` and `pnpm run check` named in the task. Do not run `pnpm run build`, Playwright or deploys: CI verifies.
+- Spec of the web vault and family circle: `docs/architecture/web-vault-family-health.md`. Contracts in `src-astro/src/lib/contracts/` and `src-astro/src/lib/crypto/` are frozen during a wave.
+
 <!-- SWAL-ROUTING-START -->
 ## SWAL Routing Minimalista (SDD Hibrido F1)
 > Antes de crear `.gitcore/sdd/` aplica routing organico (gentle-ai v2.3.0).
