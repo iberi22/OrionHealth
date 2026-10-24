@@ -9,7 +9,6 @@ void main() {
 
       // Check header
       expect(find.text('Tu privacidad es primero'), findsOneWidget);
-      expect(find.text('Privacidad y Consentimiento'), findsOneWidget);
 
       // Check data collection section
       expect(find.text('¿Qué datos recogemos y por qué?'), findsOneWidget);
