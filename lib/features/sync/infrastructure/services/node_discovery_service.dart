@@ -16,8 +16,8 @@ class NodeDiscoveryService implements domain.NodeDiscoveryService {
   final BonsoirDiscovery Function(String type)? _discoveryFactory;
 
   NodeDiscoveryService({
-    BonsoirBroadcast Function(BonsoirService)? broadcastFactory,
-    BonsoirDiscovery Function(String type)? discoveryFactory,
+    @ignoreParam BonsoirBroadcast Function(BonsoirService)? broadcastFactory,
+    @ignoreParam BonsoirDiscovery Function(String type)? discoveryFactory,
   }) : _broadcastFactory = broadcastFactory,
        _discoveryFactory = discoveryFactory;
 
