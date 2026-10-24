@@ -16,6 +16,7 @@ export async function transportPassword(ck0: Uint8Array): Promise<string> {
 
 export interface CircleReplicaOptions {
   circleId: string;
+  /** Circle key that names the room and its transport password (spec §8: the kernel passes the newest CK). */
   ck0: Uint8Array;
   validate: (env: Envelope) => Promise<boolean> | boolean;
   sink: (env: Envelope) => void | Promise<void>;
@@ -23,7 +24,14 @@ export interface CircleReplicaOptions {
 }
 
 export interface CircleReplica {
+  /** Room name derived from the key the replica was opened with. */
+  room: string;
   add(env: Envelope): Promise<void>;
+  /**
+   * Puts already validated envelopes (the local store) into the Y.Map in one transaction, without calling
+   * validate or sink. Idempotent: ids already known keep their first envelope (immutable by id).
+   */
+  seed(envs: Envelope[]): void;
   destroy(): void;
   // internal use, e.g. tests that manually sync
   doc: Y.Doc;
@@ -36,8 +44,8 @@ export async function createCircleReplica(opts: CircleReplicaOptions): Promise<C
 
   let provider: any = null;
 
+  const room = await circleRoom(opts.ck0);
   if (opts.connect !== false) {
-    const room = await circleRoom(opts.ck0);
     const password = await transportPassword(opts.ck0);
     const signalingUrl = import.meta.env?.PUBLIC_SIGNALING_URL || 'wss://signal.orionhealth.swal.network';
 
@@ -96,6 +104,7 @@ export async function createCircleReplica(opts: CircleReplicaOptions): Promise<C
   }
 
   return {
+    room,
     async add(env: Envelope) {
       const known = validCache.get(env.id);
       if (known) {
@@ -107,6 +116,17 @@ export async function createCircleReplica(opts: CircleReplicaOptions): Promise<C
       validCache.set(env.id, env);
       doc.transact(() => {
         envMap.set(env.id, env);
+      });
+    },
+    seed(envs: Envelope[]) {
+      const fresh = envs.filter((env) => !validCache.has(env.id));
+      if (!fresh.length) return;
+      for (const env of fresh) validCache.set(env.id, env);
+      doc.transact(() => {
+        for (const env of fresh) {
+          const cur = envMap.get(env.id);
+          if (!cur || !same(cur, env)) envMap.set(env.id, env);
+        }
       });
     },
     destroy() {

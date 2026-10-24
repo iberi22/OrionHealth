@@ -54,8 +54,11 @@ export async function validateEnvelope(
   }
 
   const member = ctx.state?.members[env.author];
-  if (!member || member.removed) {
+  if (!member) {
     return { ok: false, reason: 'author-not-member' };
+  }
+  if (member.removed) {
+    return { ok: false, reason: 'author-removed' };
   }
 
   if (env.author !== env.owner) {
@@ -63,6 +66,8 @@ export async function validateEnvelope(
     if (!ownerPub) {
       return { ok: false, reason: 'unknown-owner' };
     }
+
+    const envelopeMs = parseInt(env.hlc.split('-')[0]!, 10);
 
     const applicableGrants = ctx.grants.filter(
       (g) =>
@@ -73,7 +78,7 @@ export async function validateEnvelope(
         g.epoch === env.epoch &&
         g.access === 'write' &&
         !ctx.revoked.has(g.id) &&
-        (g.expiresAt === undefined || g.expiresAt > ctx.now)
+        (g.expiresAt === undefined || g.expiresAt > envelopeMs)
     );
 
     let authorized = false;
