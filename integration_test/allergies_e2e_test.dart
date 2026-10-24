@@ -5,43 +5,56 @@ import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/allergies/presentation/pages/allergies_page.dart';
 import 'package:orionhealth_health/features/allergies/domain/repositories/allergy_repository.dart';
 import 'package:orionhealth_health/features/allergies/domain/entities/allergy.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:isar/isar.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
+import 'utils/pump_until.dart';
 import 'utils/video_recorder.dart';
-
-class MockAllergyRepository extends Mock implements AllergyRepository {}
-
-class FakeAllergy extends Fake implements Allergy {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  late MockAllergyRepository mockRepository;
-
   setUpAll(() async {
     await di.configureDependencies();
-    registerFallbackValue(Allergy(id: 0, allergen: '', severity: AllergySeverity.mild));
-    registerFallbackValue(FakeAllergy());
-  });
-
-  setUp(() {
-    mockRepository = MockAllergyRepository();
-    di.getIt.allowReassignment = true;
-    di.getIt.registerSingleton<AllergyRepository>(mockRepository);
-
-    when(() => mockRepository.getAllergies()).thenAnswer((_) async => []);
+    await initializeDateFormatting('es', null);
   });
 
   group('Allergies Flow - True E2E Tests', () {
     testWidgets('E2E: CRUD Allergies', (WidgetTester tester) async {
-      final allergies = [
-        Allergy(id: 1, allergen: 'Penicilina', severity: AllergySeverity.severe),
-        Allergy(id: 2, allergen: 'Polen', severity: AllergySeverity.mild),
-      ];
+      final repo = di.getIt<AllergyRepository>();
+      final isar = di.getIt<Isar>();
 
-      when(() => mockRepository.getAllergies()).thenAnswer((_) async => allergies);
+      // Clean start for the test
+      await isar.writeTxn(() async {
+        await isar.allergys.clear();
+      });
 
-      await tester.pumpWidget(const MaterialApp(home: AllergiesPage()));
-      await tester.pumpAndSettle();
+      // Add some initial data so it's not completely empty
+      await repo.saveAllergy(
+        Allergy(allergen: 'Penicilina', severity: AllergySeverity.severe),
+      );
+      await repo.saveAllergy(
+        Allergy(allergen: 'Polen', severity: AllergySeverity.mild),
+      );
+
+      Widget buildApp() {
+        return MaterialApp(
+          home: const AllergiesPage(),
+          theme: ThemeData.dark(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
+        );
+      }
+
+      await tester.pumpWidget(buildApp());
+      await pumpUntilFound(tester, find.text('Penicilina'));
       await VideoRecorder.recordStep(tester, 'allergies', '01_list');
 
       expect(find.text('Penicilina'), findsOneWidget);
@@ -50,22 +63,30 @@ void main() {
       // Add allergy
       await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
-      await tester.enterText(find.widgetWithText(TextFormField, 'Alérgeno'), 'Nueces');
-
-      when(() => mockRepository.saveAllergy(any())).thenAnswer((_) async {
-        allergies.add(Allergy(id: 3, allergen: 'Nueces', severity: AllergySeverity.mild));
-        when(() => mockRepository.getAllergies()).thenAnswer((_) async => allergies);
-      });
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Alérgeno'),
+        'Nueces',
+      );
 
       await tester.tap(find.text('GUARDAR'));
-      await tester.pumpAndSettle();
 
-      verify(() => mockRepository.saveAllergy(any())).called(1);
-
-      // The real Cubit calls loadAllergies() after saveAllergy(), which calls repo.getAllergies()
-      await tester.pumpAndSettle();
-      expect(find.text('Nueces'), findsOneWidget);
+      await pumpUntilFound(tester, find.text('Nueces'));
       await VideoRecorder.recordStep(tester, 'allergies', '02_added');
+
+      expect(find.text('Nueces'), findsOneWidget);
+
+      // RESTART WIDGET TREE & VERIFY PERSISTENCE
+      await tester.pumpWidget(Container()); // unmount
+      await tester.pumpWidget(buildApp());
+      await pumpUntilFound(tester, find.text('Nueces'));
+      await VideoRecorder.recordStep(
+        tester,
+        'allergies',
+        '03_restarted_persistence',
+      );
+
+      // Nueces should still be there from real DB
+      expect(find.text('Nueces'), findsOneWidget);
     });
   });
 }

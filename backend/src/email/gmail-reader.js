@@ -1,8 +1,8 @@
 const { google } = require('googleapis');
 const { parseMedicalEmail } = require('./medical-parser');
 
-async function fetchGmailAppointments(auth) {
-  const gmail = google.gmail({ version: 'v1', auth });
+async function fetchGmailAppointments(auth, gmailClient = null) {
+  const gmail = gmailClient || google.gmail({ version: 'v1', auth });
   const appointments = [];
 
   try {

@@ -8,7 +8,7 @@
     "dev": "tsx watch index.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "keywords": [
     "telegram",
