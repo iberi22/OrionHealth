@@ -11,48 +11,64 @@ class VitalSignRepositoryImpl implements VitalSignRepository {
 
   VitalSignRepositoryImpl(this._isar, this._encryptionService);
 
+  VitalSign _copyVitalSign(VitalSign v) {
+    final copy = VitalSign(
+      type: v.type,
+      dateTime: v.dateTime,
+      unit: v.unit,
+      source: v.source,
+    )..id = v.id;
+    copy.encryptedValue = v.encryptedValue;
+    copy.encryptedNotes = v.encryptedNotes;
+    return copy;
+  }
+
   Future<VitalSign> _encryptVitalSign(VitalSign vitalSign) async {
-    if (vitalSign.encryptedValue != null) {
-      vitalSign.encryptedValue = await _encryptionService.encryptHealthData(
-        vitalSign.encryptedValue!,
+    final copy = _copyVitalSign(vitalSign);
+    if (copy.encryptedValue != null) {
+      copy.encryptedValue = await _encryptionService.encryptHealthData(
+        copy.encryptedValue!,
       );
     }
-    if (vitalSign.encryptedNotes != null) {
-      vitalSign.encryptedNotes = await _encryptionService.encryptHealthData(
-        vitalSign.encryptedNotes!,
+    if (copy.encryptedNotes != null) {
+      copy.encryptedNotes = await _encryptionService.encryptHealthData(
+        copy.encryptedNotes!,
       );
     }
-    return vitalSign;
+    return copy;
   }
 
   Future<VitalSign> _decryptVitalSign(VitalSign vitalSign) async {
-    if (vitalSign.encryptedValue != null) {
-      vitalSign.encryptedValue = await _encryptionService.decryptHealthData(
-        vitalSign.encryptedValue!,
+    final copy = _copyVitalSign(vitalSign);
+    if (copy.encryptedValue != null) {
+      copy.encryptedValue = await _encryptionService.decryptHealthData(
+        copy.encryptedValue!,
       );
     }
-    if (vitalSign.encryptedNotes != null) {
-      vitalSign.encryptedNotes = await _encryptionService.decryptHealthData(
-        vitalSign.encryptedNotes!,
+    if (copy.encryptedNotes != null) {
+      copy.encryptedNotes = await _encryptionService.decryptHealthData(
+        copy.encryptedNotes!,
       );
     }
-    return vitalSign;
+    return copy;
   }
 
   @override
   Future<void> saveVitalSign(VitalSign vitalSign) async {
-    await _encryptVitalSign(vitalSign);
+    final encrypted = await _encryptVitalSign(vitalSign);
     await _isar.writeTxn(() async {
-      await _isar.vitalSigns.put(vitalSign);
+      await _isar.vitalSigns.put(encrypted);
     });
   }
 
   @override
   Future<void> saveVitalSigns(List<VitalSign> vitalSigns) async {
     if (vitalSigns.isEmpty) return;
-    await Future.wait(vitalSigns.map((v) => _encryptVitalSign(v)));
+    final encryptedList = await Future.wait(
+      vitalSigns.map((v) => _encryptVitalSign(v)),
+    );
     await _isar.writeTxn(() async {
-      await _isar.vitalSigns.putAll(vitalSigns);
+      await _isar.vitalSigns.putAll(encryptedList);
     });
   }
 

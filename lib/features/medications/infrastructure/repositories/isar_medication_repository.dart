@@ -19,54 +19,73 @@ class IsarMedicationRepository implements MedicationRepository {
   );
 
   Future<Medication> _decryptMedication(Medication medication) async {
-    if (medication.encryptedName != null)
-      medication.name = await _encryptionService.decryptHealthData(
-        medication.encryptedName!,
+    final copy = _copyMedication(medication);
+    if (copy.encryptedName != null)
+      copy.name = await _encryptionService.decryptHealthData(
+        copy.encryptedName!,
       );
-    if (medication.encryptedDosage != null)
-      medication.dosage = await _encryptionService.decryptHealthData(
-        medication.encryptedDosage!,
+    if (copy.encryptedDosage != null)
+      copy.dosage = await _encryptionService.decryptHealthData(
+        copy.encryptedDosage!,
       );
-    if (medication.encryptedFrequency != null)
-      medication.frequency = await _encryptionService.decryptHealthData(
-        medication.encryptedFrequency!,
+    if (copy.encryptedFrequency != null)
+      copy.frequency = await _encryptionService.decryptHealthData(
+        copy.encryptedFrequency!,
       );
-    if (medication.encryptedNotes != null)
-      medication.notes = await _encryptionService.decryptHealthData(
-        medication.encryptedNotes!,
+    if (copy.encryptedNotes != null)
+      copy.notes = await _encryptionService.decryptHealthData(
+        copy.encryptedNotes!,
       );
-    if (medication.encryptedGenericName != null)
-      medication.genericName = await _encryptionService.decryptHealthData(
-        medication.encryptedGenericName!,
+    if (copy.encryptedGenericName != null)
+      copy.genericName = await _encryptionService.decryptHealthData(
+        copy.encryptedGenericName!,
       );
-    return medication;
+    return copy;
   }
 
   Future<Medication> _encryptMedication(Medication medication) async {
-    final plainName = medication.encryptedName ?? 'Unknown';
-    medication.encryptedName = await _encryptionService.encryptHealthData(
-      plainName,
-    );
+    final copy = _copyMedication(medication);
+    final plainName = copy.encryptedName;
+    if (plainName == null)
+      throw ArgumentError('Medication name cannot be null during encryption');
+    copy.encryptedName = await _encryptionService.encryptHealthData(plainName);
 
-    if (medication.encryptedDosage != null) {
-      medication.encryptedDosage = await _encryptionService.encryptHealthData(
-        medication.encryptedDosage!,
+    if (copy.encryptedDosage != null) {
+      copy.encryptedDosage = await _encryptionService.encryptHealthData(
+        copy.encryptedDosage!,
       );
     }
-    if (medication.encryptedFrequency != null) {
-      medication.encryptedFrequency = await _encryptionService
-          .encryptHealthData(medication.encryptedFrequency!);
-    }
-    if (medication.encryptedNotes != null) {
-      medication.encryptedNotes = await _encryptionService.encryptHealthData(
-        medication.encryptedNotes!,
+    if (copy.encryptedFrequency != null) {
+      copy.encryptedFrequency = await _encryptionService.encryptHealthData(
+        copy.encryptedFrequency!,
       );
     }
-    if (medication.encryptedGenericName != null) {
-      medication.encryptedGenericName = await _encryptionService
-          .encryptHealthData(medication.encryptedGenericName!);
+    if (copy.encryptedNotes != null) {
+      copy.encryptedNotes = await _encryptionService.encryptHealthData(
+        copy.encryptedNotes!,
+      );
     }
-    return medication;
+    if (copy.encryptedGenericName != null) {
+      copy.encryptedGenericName = await _encryptionService.encryptHealthData(
+        copy.encryptedGenericName!,
+      );
+    }
+    return copy;
+  }
+
+  Medication _copyMedication(Medication m) {
+    final copy = Medication(
+      startDate: m.startDate,
+      isActive: m.isActive,
+      rxNormCode: m.rxNormCode,
+      drugClass: m.drugClass,
+    )..id = m.id;
+    copy.encryptedName = m.encryptedName;
+    copy.encryptedDosage = m.encryptedDosage;
+    copy.encryptedFrequency = m.encryptedFrequency;
+    copy.encryptedNotes = m.encryptedNotes;
+    copy.encryptedGenericName = m.encryptedGenericName;
+    return copy;
   }
 
   @override
@@ -77,9 +96,9 @@ class IsarMedicationRepository implements MedicationRepository {
 
   @override
   Future<void> saveMedication(Medication medication) async {
-    await _encryptMedication(medication);
+    final encrypted = await _encryptMedication(medication);
     await _isar.writeTxn(() async {
-      await _isar.medications.put(medication);
+      await _isar.medications.put(encrypted);
     });
   }
 
@@ -122,14 +141,12 @@ class IsarMedicationRepository implements MedicationRepository {
 
     // 2. Search in Isar cache (previously searched medications)
     final allCached = await getAllMedications();
-    final cachedResults = allCached
-        .where(
-          (m) =>
-              m.name.toLowerCase().contains(query.toLowerCase()) ||
-              (m.genericName?.toLowerCase().contains(query.toLowerCase()) ??
-                  false),
-        )
-        .toList();
+    final cachedResults = allCached.where((m) {
+      final name = m.encryptedName;
+      if (name == null) return false;
+      return name.toLowerCase().contains(query.toLowerCase()) ||
+          (m.genericName?.toLowerCase().contains(query.toLowerCase()) ?? false);
+    }).toList();
 
     for (var m in cachedResults) {
       if (m.rxNormCode != null) mergedResults[m.rxNormCode!] = m;

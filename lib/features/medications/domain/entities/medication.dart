@@ -7,7 +7,12 @@ class Medication {
   Id id = Isar.autoIncrement;
 
   @ignore
-  String get name => encryptedName ?? 'Unknown';
+  String get name {
+    if (encryptedName == null)
+      throw StateError('Medication name is missing or has not been decrypted');
+    return encryptedName!;
+  }
+
   set name(String val) => encryptedName = val;
 
   String? encryptedName;
@@ -48,7 +53,7 @@ class Medication {
     this.id = Isar.autoIncrement,
     required this.startDate,
     this.isActive = true,
-    String name = 'Unknown',
+    String? name,
     String? dosage,
     String? frequency,
     String? notes,
@@ -56,7 +61,7 @@ class Medication {
     this.rxNormCode,
     this.drugClass,
   }) {
-    this.name = name;
+    if (name != null) this.name = name;
     this.dosage = dosage;
     this.frequency = frequency;
     this.notes = notes;
