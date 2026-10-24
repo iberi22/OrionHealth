@@ -25,9 +25,9 @@ const currentPath = Astro.url.pathname;
     {docs.map((doc: CollectionEntry<'docs'>) => (
       <li>
         <a
-          href={`/docs/${doc.slug}`}
-          class={currentPath === `/docs/${doc.slug}` || currentPath === `/docs/${doc.slug}/` ? 'active' : ''}
-          aria-current={currentPath === `/docs/${doc.slug}` || currentPath === `/docs/${doc.slug}/` ? 'page' : undefined}
+          href={`/docs/${doc.id}`}
+          class={currentPath === `/docs/${doc.id}` || currentPath === `/docs/${doc.id}/` ? 'active' : ''}
+          aria-current={currentPath === `/docs/${doc.id}` || currentPath === `/docs/${doc.id}/` ? 'page' : undefined}
         >
           {doc.data.title}
         </a>
