@@ -10,12 +10,10 @@ test.describe('@real Recovery Spoofing', () => {
   test("a non-admin cannot start recovery; a trustee's decline survives a reload", async ({ browser, baseURL }) => {
     await startSignaling();
 
-    const [admin, bea, charlie, dave] = await Promise.all([
-      newMember(browser, baseURL, 'Alice'),
-      newMember(browser, baseURL, 'Bea'),
-      newMember(browser, baseURL, 'Charlie'),
-      newMember(browser, baseURL, 'Dave')
-    ]);
+    const admin = await newMember(browser, baseURL, 'Alice');
+    const bea = await newMember(browser, baseURL, 'Bea');
+    const charlie = await newMember(browser, baseURL, 'Charlie');
+    const dave = await newMember(browser, baseURL, 'Dave');
 
     await createCircle(admin.page, 'Trust Circle');
     await inviteAndJoin(admin.page, bea.page, 'Bea');
@@ -81,6 +79,8 @@ test.describe('@real Recovery Spoofing', () => {
 
     // Dave reloads and unlocks
     await reloadAndUnlock(dave.page, '/app/recovery');
+    await visit(dave.page, '/app/recovery');
+    await expect(dave.page.getByRole('button', { name: 'Solicitudes' })).toBeVisible({ timeout: 30_000 });
     await dave.page.getByRole('button', { name: 'Solicitudes' }).click({ timeout: 30_000 });
     await expect(dave.page.getByRole('heading', { name: 'Solicitudes esperando mi aprobación' })).toBeVisible();
     await expect(dave.page.locator('.request-card', { hasText: 'Solicitud de recuperación para la cuenta de' })).not.toBeVisible();
