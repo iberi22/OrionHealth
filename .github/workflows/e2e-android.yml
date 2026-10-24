@@ -76,18 +76,7 @@ jobs:
           api-level: 34
           arch: x86_64
           disable-animations: true
-          script: |
-            mkdir -p test-results
-            adb logcat -c
-            rc=0
-            for f in ${{ steps.changed-tests.outputs.tests }}; do
-              echo "Running $f..."
-              flutter test $f --flavor prod || rc=1
-            done
-            if [ $rc -ne 0 ]; then
-              adb logcat -d > test-results/logcat.txt
-            fi
-            exit $rc
+          script: bash scripts/ci/run_changed_e2e.sh ${{ steps.changed-tests.outputs.tests }}
       - uses: actions/upload-artifact@v4
         if: failure() && steps.changed-tests.outputs.skip != 'true'
         with:
