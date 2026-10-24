@@ -10,7 +10,7 @@ vi.mock('../../family/sync', () => ({
   createCircleReplica: vi.fn(async () => {
     // y-webrtc throws when a second provider is opened for the same room
     await new Promise((r) => setTimeout(r, 5));
-    const replica = { destroyed: false, add: async () => undefined, destroy() { this.destroyed = true; }, doc: {} };
+    const replica = { destroyed: false, room: 'r', add: async () => undefined, seed: () => undefined, destroy() { this.destroyed = true; }, doc: {} };
     created.push(replica);
     return replica;
   }),

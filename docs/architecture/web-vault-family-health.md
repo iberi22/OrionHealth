@@ -160,7 +160,18 @@ interface Grant {
 - Signaling: own Worker `orionhealth-signal` at `wss://signal.orionhealth.swal.network` (`src-astro/workers/signaling/`,
   Durable Object implementing the y-webrtc signaling protocol, topics opaque, `PUBLIC_SIGNALING_URL` overrides).
   It never sees envelopes. Deploy is a separate owner-approved step.
-- Without peers online the app keeps working locally; sync resumes when two circle devices meet.
+- Without peers online the app keeps working locally; sync resumes when two circle devices meet. Because the
+  Y.Doc is ephemeral, every time a device opens a replica it **seeds** it from the store: every stored envelope of
+  the circle (plus the member's own envelopes written before the circle existed, circle `local`) goes into the
+  `Y.Map` in one transaction, without re-validation (they were validated on arrival) and without replacing an id
+  already in the map. Envelopes written while a peer was offline therefore reach it after both restart.
+- Peers deliver in any order. A remote envelope rejected for `unknown-author`, `author-not-member`,
+  `unknown-owner` or `unauthorized-write` (its author's `approve` or the owner's grant may still be on its way)
+  waits in a **pending queue** and is re-validated after every accepted `membership` or `grant` envelope and after
+  a new circle key is registered; it is stored only if it then passes §5. Any other rejection (bad signature,
+  malformed, `ID_CONFLICT`) is final. The queue lives in memory, is cleared on lock and holds at most 500
+  envelopes (oldest dropped first); an envelope dropped from it, or rejected before a restart, is picked up again
+  when a peer that holds it seeds a new replica.
 
 ## 9. Recovery (losing a phone)
 
