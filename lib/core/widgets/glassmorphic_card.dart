@@ -34,7 +34,7 @@ class GlassmorphicCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.white.withAlpha(40)),
               ),
-              child: child,
+              child: Material(type: MaterialType.transparency, child: child),
             ),
           ),
         ),
