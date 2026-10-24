@@ -78,8 +78,10 @@ class _MedicationsPageState extends State<MedicationsPage> {
     );
   }
 
-
-  Widget _buildMedicationsList(BuildContext context, List<Medication> medications) {
+  Widget _buildMedicationsList(
+    BuildContext context,
+    List<Medication> medications,
+  ) {
     return RefreshIndicator(
       onRefresh: () => context.read<MedicationsCubit>().loadMedications(),
       child: ListView.builder(
@@ -99,7 +101,9 @@ class _MedicationsPageState extends State<MedicationsPage> {
   void _showMedicationForm(BuildContext context, {Medication? medication}) {
     final nameController = TextEditingController(text: medication?.name);
     final dosageController = TextEditingController(text: medication?.dosage);
-    final frequencyController = TextEditingController(text: medication?.frequency);
+    final frequencyController = TextEditingController(
+      text: medication?.frequency,
+    );
     final notesController = TextEditingController(text: medication?.notes);
     DateTime selectedDate = medication?.startDate ?? DateTime.now();
     bool isActive = medication?.isActive ?? true;
@@ -111,142 +115,178 @@ class _MedicationsPageState extends State<MedicationsPage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) => StatefulBuilder(
-        builder: (bottomSheetContext, setModalState) => Container(
-          decoration: const BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom,
-            top: 20,
-            left: 20,
-            right: 20,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      medication == null ? 'Nuevo Medicamento' : 'Editar Medicamento',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+        builder: (bottomSheetContext, setModalState) => Material(
+          color: AppColors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom,
+              top: 20,
+              left: 20,
+              right: 20,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        medication == null
+                            ? 'Nuevo Medicamento'
+                            : 'Editar Medicamento',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
                       ),
-                    ),
-                    if (medication != null)
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                        onPressed: () async {
-                          await cubit.deleteMedication(medication.id);
-                          if (!bottomSheetContext.mounted) return;
-                          Navigator.pop(bottomSheetContext);
-                        },
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                _buildTextField(nameController, 'Nombre', Icons.medication),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(child: _buildTextField(dosageController, 'Dosis', Icons.scale)),
-                    const SizedBox(width: 12),
-                    Expanded(child: _buildTextField(frequencyController, 'Frecuencia', Icons.repeat)),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.calendar_today, color: AppColors.secondary),
-                  title: const Text('Fecha de inicio'),
-                  subtitle: Text(DateFormat('dd MMM yyyy').format(selectedDate)),
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: bottomSheetContext,
-                      initialDate: selectedDate,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      builder: (context, child) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: const ColorScheme.dark(
-                              primary: AppColors.primary,
-                              onPrimary: Colors.black,
-                              surface: AppColors.surface,
-                              onSurface: Colors.white,
-                            ),
+                      if (medication != null)
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.redAccent,
                           ),
-                          child: child!,
+                          onPressed: () async {
+                            await cubit.deleteMedication(medication.id);
+                            if (!bottomSheetContext.mounted) return;
+                            Navigator.pop(bottomSheetContext);
+                          },
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  _buildTextField(nameController, 'Nombre', Icons.medication),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildTextField(
+                          dosageController,
+                          'Dosis',
+                          Icons.scale,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildTextField(
+                          frequencyController,
+                          'Frecuencia',
+                          Icons.repeat,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Material(
+                    color: Colors.transparent,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(
+                        Icons.calendar_today,
+                        color: AppColors.secondary,
+                      ),
+                      title: const Text('Fecha de inicio'),
+                      subtitle: Text(
+                        DateFormat('dd MMM yyyy').format(selectedDate),
+                      ),
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: bottomSheetContext,
+                          initialDate: selectedDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: const ColorScheme.dark(
+                                  primary: AppColors.primary,
+                                  onPrimary: Colors.black,
+                                  surface: AppColors.surface,
+                                  onSurface: Colors.white,
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
                         );
+                        if (date != null) {
+                          setModalState(() => selectedDate = date);
+                        }
                       },
-                    );
-                    if (date != null) {
-                      setModalState(() => selectedDate = date);
-                    }
-                  },
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Activo'),
-                  secondary: Icon(
-                    isActive ? Icons.check_circle : Icons.pause_circle,
-                    color: isActive ? AppColors.primary : Colors.grey,
+                    ),
                   ),
-                  value: isActive,
-                  activeThumbColor: AppColors.primary,
-                  onChanged: (val) => setModalState(() => isActive = val),
-                ),
-                _buildTextField(notesController, 'Notas', Icons.notes, maxLines: 3),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  Material(
+                    color: Colors.transparent,
+                    child: SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Activo'),
+                      secondary: Icon(
+                        isActive ? Icons.check_circle : Icons.pause_circle,
+                        color: isActive ? AppColors.primary : Colors.grey,
+                      ),
+                      value: isActive,
+                      activeThumbColor: AppColors.primary,
+                      onChanged: (val) => setModalState(() => isActive = val),
+                    ),
+                  ),
+                  _buildTextField(
+                    notesController,
+                    'Notas',
+                    Icons.notes,
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (nameController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(bottomSheetContext).showSnackBar(
+                            const SnackBar(
+                              content: Text('El nombre es requerido'),
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          );
+                          return;
+                        }
+
+                        final newMedication = Medication(
+                          id: medication?.id ?? Isar.autoIncrement,
+                          name: nameController.text,
+                          dosage: dosageController.text,
+                          frequency: frequencyController.text,
+                          startDate: selectedDate,
+                          isActive: isActive,
+                          notes: notesController.text,
+                        );
+
+                        await cubit.saveMedication(newMedication);
+                        if (!bottomSheetContext.mounted) return;
+                        Navigator.pop(bottomSheetContext);
+                      },
+                      child: Text(
+                        medication == null ? 'GUARDAR' : 'ACTUALIZAR',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                        ),
                       ),
                     ),
-                    onPressed: () async {
-                      if (nameController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(bottomSheetContext).showSnackBar(
-                          const SnackBar(
-                            content: Text('El nombre es requerido'),
-                            backgroundColor: Colors.redAccent,
-                          ),
-                        );
-                        return;
-                      }
-
-                      final newMedication = Medication(
-                        id: medication?.id ?? Isar.autoIncrement,
-                        name: nameController.text,
-                        dosage: dosageController.text,
-                        frequency: frequencyController.text,
-                        startDate: selectedDate,
-                        isActive: isActive,
-                        notes: notesController.text,
-                      );
-
-                      await cubit.saveMedication(newMedication);
-                      if (!bottomSheetContext.mounted) return;
-                      Navigator.pop(bottomSheetContext);
-                    },
-                    child: Text(
-                      medication == null ? 'GUARDAR' : 'ACTUALIZAR',
-                      style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),
-                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-              ],
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ),

@@ -7,17 +7,20 @@ class Medication {
   Id id = Isar.autoIncrement;
 
   @ignore
-  late String name;
+  String get name => encryptedName ?? 'Unknown';
+  set name(String val) => encryptedName = val;
 
   String? encryptedName;
 
   @ignore
-  String? dosage;
+  String? get dosage => encryptedDosage;
+  set dosage(String? val) => encryptedDosage = val;
 
   String? encryptedDosage;
 
   @ignore
-  String? frequency;
+  String? get frequency => encryptedFrequency;
+  set frequency(String? val) => encryptedFrequency = val;
 
   String? encryptedFrequency;
 
@@ -26,7 +29,8 @@ class Medication {
   bool isActive = true;
 
   @ignore
-  String? notes;
+  String? get notes => encryptedNotes;
+  set notes(String? val) => encryptedNotes = val;
 
   String? encryptedNotes;
 
@@ -35,22 +39,29 @@ class Medication {
   String? drugClass;
 
   @ignore
-  String? genericName;
+  String? get genericName => encryptedGenericName;
+  set genericName(String? val) => encryptedGenericName = val;
 
   String? encryptedGenericName;
 
-    Medication({
+  Medication({
     this.id = Isar.autoIncrement,
     required this.startDate,
     this.isActive = true,
-    this.name = 'Unknown',
-    this.dosage,
-    this.frequency,
-    this.notes,
-    this.genericName,
+    String name = 'Unknown',
+    String? dosage,
+    String? frequency,
+    String? notes,
+    String? genericName,
     this.rxNormCode,
     this.drugClass,
-  });
+  }) {
+    this.name = name;
+    this.dosage = dosage;
+    this.frequency = frequency;
+    this.notes = notes;
+    this.genericName = genericName;
+  }
 
   @override
   bool operator ==(Object other) =>
@@ -75,39 +86,38 @@ class Medication {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        name,
-        encryptedName,
-        dosage,
-        encryptedDosage,
-        frequency,
-        encryptedFrequency,
-        startDate,
-        isActive,
-        notes,
-        encryptedNotes,
-        rxNormCode,
-        drugClass,
-        genericName,
-        encryptedGenericName,
-      );
+    id,
+    name,
+    encryptedName,
+    dosage,
+    encryptedDosage,
+    frequency,
+    encryptedFrequency,
+    startDate,
+    isActive,
+    notes,
+    encryptedNotes,
+    rxNormCode,
+    drugClass,
+    genericName,
+    encryptedGenericName,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'encryptedName': encryptedName,
-        'dosage': dosage,
-        'encryptedDosage': encryptedDosage,
-        'frequency': frequency,
-        'encryptedFrequency': encryptedFrequency,
-        'startDate': startDate.toIso8601String(),
-        'isActive': isActive,
-        'notes': notes,
-        'encryptedNotes': encryptedNotes,
-        'rxNormCode': rxNormCode,
-        'drugClass': drugClass,
-        'genericName': genericName,
-        'encryptedGenericName': encryptedGenericName,
-      };
-
+    'id': id,
+    'name': name,
+    'encryptedName': encryptedName,
+    'dosage': dosage,
+    'encryptedDosage': encryptedDosage,
+    'frequency': frequency,
+    'encryptedFrequency': encryptedFrequency,
+    'startDate': startDate.toIso8601String(),
+    'isActive': isActive,
+    'notes': notes,
+    'encryptedNotes': encryptedNotes,
+    'rxNormCode': rxNormCode,
+    'drugClass': drugClass,
+    'genericName': genericName,
+    'encryptedGenericName': encryptedGenericName,
+  };
 }
