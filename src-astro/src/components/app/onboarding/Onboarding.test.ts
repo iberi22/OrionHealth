@@ -107,7 +107,7 @@ describe('Onboarding', () => {
     expect(routes.navigate).toHaveBeenCalledWith('/app');
   });
 
-  it('cancelled passkey prompt offers a retry instead of read-only', async () => {
+  it('NO_PASSKEY triggers read-only mode instead of a retry', async () => {
     app = mount(Onboarding, { target: document.body });
     flushSync();
 
@@ -135,9 +135,7 @@ describe('Onboarding', () => {
     await new Promise(r => setTimeout(r, 10)); // wait for async vault.create
     await flushSync();
 
-    // Step should still be create-vault, not capability-check
-    expect(document.body.textContent).toContain('Crear tu bóveda segura');
-    expect(document.body.textContent).toContain('Creación cancelada. Inténtalo de nuevo.');
+    expect(document.body.textContent).toContain('Modo de solo lectura');
   });
 
   it('session CANCELLED error offers a retry instead of read-only', async () => {
