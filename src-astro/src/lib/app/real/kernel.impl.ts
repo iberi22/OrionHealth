@@ -115,7 +115,16 @@ export class RealKernel implements Kernel {
     await this.startReplica();
   }
 
-  private async persist() {
+  private persisting: Promise<void> = Promise.resolve();
+  /** Serialized: each write snapshots the keys when it runs, so the last write holds the latest state
+   *  (addCircleKey() and setCircle() persist back to back). */
+  private persist(): Promise<void> {
+    const run = this.persisting.then(() => this.persistNow());
+    this.persisting = run.catch(() => undefined);
+    return run;
+  }
+
+  private async persistNow() {
     const b = this.bundle();
     const ks: Keystore = {
       circle: this.circleInfo,
