@@ -15,27 +15,7 @@ const { title = 'OrionHealth', variant = 'site' } = Astro.props;
 ---
 
 <Layout title={title}>
-  <script is:inline>
-    const theme = (() => {
-      try {
-        if (typeof localStorage !== 'undefined' && localStorage.getItem('oh-theme')) {
-          return localStorage.getItem('oh-theme');
-        }
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
-        }
-      } catch (e) {
-        // ignore
-      }
-      return 'light';
-    })();
-
-    if (theme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-  </script>
+  <script is:inline src="/theme-init.js"></script>
 
   <div class="bg-noise"></div>
   <div class="bg-grid"></div>
