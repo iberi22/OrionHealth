@@ -4,6 +4,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
 import 'package:orionhealth_health/features/about/presentation/pages/about_page.dart';
 import 'package:orionhealth_health/features/user_profile/presentation/pages/user_profile_page.dart';
+import 'package:orionhealth_health/features/user_profile/presentation/widgets/profile_info_tile.dart';
 import 'package:isar/isar.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -46,13 +47,17 @@ void main() {
 
         // Navigate to About OrionHealth
         // Use pumpUntilFound to wait for the UI to be ready
-        final aboutTile = find.text(l10n.aboutOrionHealth);
-        await pumpUntilFound(tester, aboutTile);
+        final tile = find.widgetWithText(
+          ProfileInfoTile,
+          l10n.aboutOrionHealth,
+        );
+        await tester.ensureVisible(tile);
+        await tester.pumpAndSettle();
         await VideoRecorder.recordStep(tester, 'about', '01_user_profile');
 
-        await tester.scrollUntilVisible(aboutTile, 100);
-        await tester.tap(aboutTile);
-        await tester.pumpAndSettle();
+        await tester.tap(tile);
+        await tester.pump();
+        await pumpUntilFound(tester, find.byType(AboutPage));
 
         // Verify About Page is shown
         expect(find.byType(AboutPage), findsOneWidget);
