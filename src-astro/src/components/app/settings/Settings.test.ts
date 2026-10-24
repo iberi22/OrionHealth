@@ -67,7 +67,7 @@ describe('Settings', () => {
     app = mount(Settings, { target: document.body });
     flushSync();
 
-    const onboardBtn = document.querySelector('.secondary-btn') as HTMLButtonElement;
+    const onboardBtn = [...document.querySelectorAll('button')].find((b) => b.textContent?.includes('Cómo funciona')) as HTMLButtonElement;
     onboardBtn.click();
     flushSync();
 
@@ -85,5 +85,20 @@ describe('Settings', () => {
 
     expect(localStorage.getItem('oh-theme')).toBe('dark');
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+  });
+
+  it('downloads the encrypted recovery file', async () => {
+    const recoveryFile = vi.spyOn(mockServices.recovery, 'recoveryFile').mockResolvedValue({ filename: 'orion-recovery.json', content: '{"v":1}' });
+    const createUrl = vi.fn().mockReturnValue('blob:x');
+    const revokeUrl = vi.fn();
+    Object.assign(URL, { createObjectURL: createUrl, revokeObjectURL: revokeUrl });
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    app = mount(Settings, { target: document.body });
+    flushSync();
+    const button = [...document.querySelectorAll('button')].find((b) => b.textContent?.includes('Descargar archivo de recuperación'))!;
+    button.click();
+    await vi.waitFor(() => expect(click).toHaveBeenCalled());
+    expect(recoveryFile).toHaveBeenCalled();
+    expect(createUrl).toHaveBeenCalled();
   });
 });

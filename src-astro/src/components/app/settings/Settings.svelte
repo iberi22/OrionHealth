@@ -61,6 +61,23 @@
     } catch(e) {}
   }
 
+  async function downloadRecoveryFile() {
+    try {
+      const { filename, content } = await services.recovery.recoveryFile();
+      const blob = new Blob([content], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Failed to download recovery file', e);
+    }
+  }
+
   function lockNow() {
     services.vault.lock();
     navigate('/app/lock');
@@ -113,6 +130,9 @@
 
   <div class="settings-group">
     <h2>Acerca de</h2>
+    <div class="setting-item">
+      <button class="secondary-btn" onclick={downloadRecoveryFile}>Descargar archivo de recuperación</button>
+    </div>
     <div class="setting-item">
       <button class="secondary-btn" onclick={openOnboarding}>Cómo funciona</button>
     </div>

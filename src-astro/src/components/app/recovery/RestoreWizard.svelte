@@ -66,6 +66,17 @@
 <div class="restore-wizard">
   {#if progress.step === 'idle' || progress.step === 'failed'}
     <h2>Recuperar acceso</h2>
+    {#if progress.step === 'failed' && progress.error}
+      <div class="error" style="margin-bottom: 1rem;">
+        {#if progress.error.includes('CANCELLED')}
+          Operación cancelada por el usuario.
+        {:else if progress.error.includes('NO_UV')}
+          No se pudo verificar la identidad del usuario (passkey).
+        {:else}
+          {progress.error}
+        {/if}
+      </div>
+    {/if}
     <p>Elige un método para recuperar tu cuenta en este dispositivo.</p>
 
     <div class="methods">
