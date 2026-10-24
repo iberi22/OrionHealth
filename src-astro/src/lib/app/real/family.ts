@@ -23,15 +23,12 @@ interface Genesis {
   signPub: string;
 }
 
-/** Key handover payload (initial CK0 or a rotated epoch), wrapped to the recipient's box key. */
-interface KeyHandover {
+interface Handover {
   circleId: string;
   to: string;
-  epoch: number;
-  ephPub: string;
-  wrapped: string;
+  keys: { epoch: number; ephPub: string; wrapped: string }[];
 }
-type SignedHandover = KeyHandover & { sig: string };
+type SignedJoinHandover = Handover & { sig: string };
 
 interface Request {
   requestId: string;
@@ -85,7 +82,7 @@ export function createFamilyCircleService(
     await kernel.publish(await kernel.seal({ category: 'membership', circle: ev.circle, plaintext: signed }));
   };
 
-  const handoverBytes = (h: KeyHandover) => canonical(h, ['sig']);
+  const joinHandoverBytes = (h: Handover) => canonical(h, ['sig']);
 
   /** Reduces the membership log (and reads the circle name) without applying any key. */
   const reduce = async (): Promise<CircleState | null> => {
@@ -176,11 +173,19 @@ export function createFamilyCircleService(
   /** Signs the CK handover to `to` (admin side) and sends it over the invite's key room. */
   const handOver = async (req: Request, subjectId: string) => {
     const me = kernel.bundle();
-    const epoch = await currentEpoch();
-    if (epoch === null || !circleId) throw new Error('NO_CIRCLE');
-    const w = await kernel.wrapKeyFor({ circleEpoch: epoch }, req.hello.boxPub, CK_INFO, ckAad(circleId, subjectId, epoch));
-    const h: KeyHandover = { circleId, to: subjectId, epoch: w.epoch, ephPub: w.ephPub, wrapped: w.wrapped };
-    const payload: SignedHandover = { ...h, sig: await sign(me.signPkcs8, handoverBytes(h)) };
+    const current = await currentEpoch();
+    if (current === null || !circleId) throw new Error('NO_CIRCLE');
+    const keys: Handover['keys'] = [];
+    for (let e = 0; e <= current; e++) {
+      try {
+        const w = await kernel.wrapKeyFor({ circleEpoch: e }, req.hello.boxPub, CK_INFO, ckAad(circleId, subjectId, e));
+        keys.push({ epoch: e, ephPub: w.ephPub, wrapped: w.wrapped });
+      } catch {
+        /* epoch not held by this admin */
+      }
+    }
+    const h: Handover = { circleId, to: subjectId, keys };
+    const payload: SignedJoinHandover = { ...h, sig: await sign(me.signPkcs8, joinHandoverBytes(h)) };
     // Contract gap: the invite transport only carries InviteHello, so the payload rides in displayName
     // of a message on a second room (<inviteRoom>.keys). It is wrapped to the joiner and signed by the admin.
     const conn = await opts.transport.join(await roomOf(req.invite.s));
@@ -265,13 +270,15 @@ export function createFamilyCircleService(
         void (async () => {
           try {
             if (msg.signPub !== peer.signPub) return;
-            const p = JSON.parse(msg.displayName) as SignedHandover;
+            const p = JSON.parse(msg.displayName) as SignedJoinHandover;
             const myId = kernel.memberId();
-            const h: KeyHandover = { circleId: p.circleId, to: p.to, epoch: p.epoch, ephPub: p.ephPub, wrapped: p.wrapped };
-            if (h.circleId !== invite.c || h.to !== myId) return;
-            if (!(await verify(peer.signPub, handoverBytes(h), p.sig))) return;
-            const raw = await kernel.unwrapForMe(h.ephPub, h.wrapped, CK_INFO, ckAad(h.circleId, myId, h.epoch));
-            kernel.addCircleKey(h.epoch, raw);
+            const h: Handover = { circleId: p.circleId, to: p.to, keys: p.keys };
+            if (h.circleId !== invite.c || h.to !== myId || !Array.isArray(h.keys)) return;
+            if (!(await verify(peer.signPub, joinHandoverBytes(h), p.sig))) return;
+            for (const k of h.keys) {
+              const raw = await kernel.unwrapForMe(k.ephPub, k.wrapped, CK_INFO, ckAad(h.circleId, myId, k.epoch));
+              kernel.addCircleKey(k.epoch, raw);
+            }
             off();
             conn.close();
             notify();

@@ -57,7 +57,7 @@ describe('family handover', () => {
          if (msg.displayName) {
              try {
                  const payload = JSON.parse(msg.displayName);
-                 if (payload.circleId && payload.sig) {
+                 if (payload.circleId && payload.keys && payload.sig) {
                      // Corrupt the signature to forge it
                      payload.sig = 'forged_signature';
                      msg.displayName = JSON.stringify(payload);
@@ -100,6 +100,7 @@ describe('family handover', () => {
                  if (payload.circleId && payload.sig) {
                      // Change the destination to the wrong member
                      payload.to = kernels[0]!.memberId(); // Point back to Ana instead of Rosa
+
                      msg.displayName = JSON.stringify(payload);
                  }
              } catch(e) {}
