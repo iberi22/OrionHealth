@@ -20,9 +20,7 @@ void main() {
   setUp(() async {
     await getIt.reset();
     mockCapabilityService = MockDeviceCapabilityService();
-    when(
-      () => mockCapabilityService.isEmulator(),
-    ).thenAnswer((_) async => false);
+    when(() => mockCapabilityService.isEmulator()).thenAnswer((_) async => false);
   });
 
   group('ServiceModule DI', () {
@@ -31,8 +29,7 @@ void main() {
       final module = TestServiceModule();
 
       gh.lazySingletonAsync<FlutterSecureStorage>(
-        () => module.storage(mockCapabilityService),
-      );
+          () => module.storage(mockCapabilityService));
       gh.lazySingleton<FlutterAppAuth>(() => module.appAuth);
       gh.lazySingleton<http.Client>(() => module.httpClient);
 
@@ -47,8 +44,7 @@ void main() {
       final module = TestServiceModule();
 
       gh.lazySingletonAsync<FlutterSecureStorage>(
-        () => module.storage(mockCapabilityService),
-      );
+          () => module.storage(mockCapabilityService));
       gh.lazySingleton<http.Client>(() => module.httpClient);
 
       final storage1 = await getIt.getAsync<FlutterSecureStorage>();

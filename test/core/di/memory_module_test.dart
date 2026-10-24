@@ -7,9 +7,7 @@ import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
 
 class TestMemoryModule extends MemoryModule {}
-
 class MockIsar extends Mock implements Isar {}
-
 class MockEmbeddingsAdapter extends Mock implements EmbeddingsAdapter {}
 
 void main() {
