@@ -9,9 +9,18 @@ class MockPasskeyProvider implements PasskeyPrfProvider {
   failCancel = false;
   async getPrfOutput(_salt: Uint8Array): Promise<Uint8Array> {
     if (this.failCancel) {
-      const e = new Error('creacion de passkey cancelada');
-      e.name = 'NotAllowedError';
-      (e as any).code = 'NO_PASSKEY';
+      // DOMException 'code' is read-only (which maps to legacy error codes).
+      // The application code expects `code === 'NO_PASSKEY'` or handles DOMException `name`.
+      // The internal vault client throws a custom Error with `.code = 'NO_PASSKEY'`
+      // but its `.cause` or original error logic preserves the name.
+      // We'll mimic what the internal `@swal/vault` passkey logic does by throwing a mock
+      // error that has both. Actually, Svelte/browser throws a real DOMException to the internal client,
+      // and the internal client passes the `name` or original error. Let's just create an Error that looks like what `@swal/vault` throws when PRF fails due to cancellation:
+      // Wait, in `session.ts`, it says: `if (e.code === 'NO_PASSKEY') { if (e.name === 'NotAllowedError') ... }`
+      // Wait, the previous test threw `const e = new Error(); e.name = 'NotAllowedError'; e.code = 'NO_PASSKEY'`.
+      // We can use Object.defineProperty for code if it is a DOMException, or just use Object.assign.
+      const e = new DOMException('creacion de passkey cancelada', 'NotAllowedError');
+      Object.defineProperty(e, 'code', { value: 'NO_PASSKEY', configurable: true });
       throw e;
     }
     if (this.failPrf) {
@@ -97,15 +106,30 @@ describe('VaultSession', () => {
     expect(session.bundle()).not.toBeNull();
   });
 
-  it('user cancellation (CANCELLED) is distinct from missing PRF', async () => {
+  it('user cancellation (CANCELLED) is distinct from missing PRF in create, unlock, and importMrs', async () => {
     const session = createVaultSession({ passkey: provider, dbName: 'test-cancel' });
     await session.ready();
     provider.failCancel = true;
     await expect(session.create('Test Cancel')).rejects.toThrow('User cancelled passkey creation');
 
     provider.failCancel = false;
+    const { memberId } = await session.create('Test Success');
+    const mrs = await session.withMrs(m => m.slice());
+
+    const { openDB } = await import('idb');
+    const metaDb = await openDB('test-cancel', 1);
+    const sealedBundle = (await metaDb.get('meta', 'orion/bundle')) as string;
+    session.lock();
+
+    provider.failCancel = true;
+    await expect(session.unlock()).rejects.toThrow('User cancelled passkey operation');
+    await expect(session.importMrs(mrs, 'Test', { memberId, sealedBundle })).rejects.toThrow('User cancelled passkey operation');
+
+    provider.failCancel = false;
     provider.failPrf = true;
-    await expect(session.create('Test PRF')).rejects.toThrow('Authenticator does not support PRF');
+    const session2 = createVaultSession({ passkey: provider, dbName: 'test-cancel-2' });
+    await session2.ready();
+    await expect(session2.create('Test PRF')).rejects.toThrow('Authenticator does not support PRF');
   });
 
   it('hidden-tab lock follows setAutoLockMinutes', async () => {
@@ -284,7 +308,7 @@ describe('VaultSession', () => {
       withCredentials(async () => ({ response: { authenticatorData: authData(0x01) } }));
       await expect(session.reauth()).rejects.toMatchObject({ code: 'NO_UV' });
       withCredentials(async () => {
-        throw Object.assign(new Error('denied'), { name: 'NotAllowedError' });
+        throw new DOMException('denied', 'NotAllowedError');
       });
       await expect(session.reauth()).rejects.toMatchObject({ code: 'CANCELLED' });
       session.lock();
