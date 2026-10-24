@@ -19,18 +19,24 @@ void main() {
     });
 
     test('throws StateError when queried before initialize', () {
-      expect(() => repo.searchByCode('E11'), throwsA(isA<StateError>()));
-      expect(() => repo.searchByTerm('diabetes'), throwsA(isA<StateError>()));
-      expect(() => repo.getAllCodes(), throwsA(isA<StateError>()));
+      expect(
+        () => repo.searchByCode('E11'),
+        throwsA(isA<StateError>()),
+      );
+      expect(
+        () => repo.searchByTerm('diabetes'),
+        throwsA(isA<StateError>()),
+      );
+      expect(
+        () => repo.getAllCodes(),
+        throwsA(isA<StateError>()),
+      );
     });
 
-    test(
-      'initialize completes without error (files may not exist in test)',
-      () async {
-        await repo.initialize();
-        expect(repo.isInitialized, isTrue);
-      },
-    );
+    test('initialize completes without error (files may not exist in test)', () async {
+      await repo.initialize();
+      expect(repo.isInitialized, isTrue);
+    });
 
     test('getStats returns proper structure after init', () async {
       await repo.initialize();
@@ -64,10 +70,7 @@ void main() {
 
     test('searchByTermInStandard returns empty when no match', () async {
       await repo.initialize();
-      final results = await repo.searchByTermInStandard(
-        'xyznonexistent',
-        'ICD-10',
-      );
+      final results = await repo.searchByTermInStandard('xyznonexistent', 'ICD-10');
       expect(results, isEmpty);
     });
 

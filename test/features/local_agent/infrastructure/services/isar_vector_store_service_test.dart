@@ -7,12 +7,10 @@ import 'package:orionhealth_health/features/local_agent/domain/services/vector_s
 import 'package:orionhealth_health/features/local_agent/infrastructure/services/isar_vector_store_service.dart';
 
 class MockMemoryGraph extends Mock implements MemoryGraph {}
-
 class MockMedicalKnowledgeRepository extends Mock
     implements MedicalKnowledgeRepository {}
 
 class MockIsar extends Mock implements Isar {}
-
 class MockMemoryNodeCollection extends Mock
     implements IsarCollection<MemoryNode> {}
 
@@ -40,36 +38,32 @@ void main() {
 
     group('search', () {
       test('returns results from hybrid search', () async {
-        when(
-          () => mockMemoryGraph.hybridSearch(
-            any(),
-            topK: any(named: 'topK'),
-            alpha: any(named: 'alpha'),
-          ),
-        ).thenAnswer(
-          (_) async => [
-            _createRecord('Diabetes treatment', DateTime.now()),
-            _createRecord('Blood pressure monitor', DateTime.now()),
-          ],
-        );
+        when(() => mockMemoryGraph.hybridSearch(
+              any(),
+              topK: any(named: 'topK'),
+              alpha: any(named: 'alpha'),
+            )).thenAnswer((_) async => [
+              _createRecord('Diabetes treatment', DateTime.now()),
+              _createRecord('Blood pressure monitor', DateTime.now()),
+            ]);
 
         final results = await service.search('diabetes', limit: 3);
 
         expect(results, hasLength(2));
         expect(results.first, 'Diabetes treatment');
-        verify(
-          () => mockMemoryGraph.hybridSearch('diabetes', topK: 3, alpha: 0.5),
-        ).called(1);
+        verify(() => mockMemoryGraph.hybridSearch(
+              'diabetes',
+              topK: 3,
+              alpha: 0.5,
+            )).called(1);
       });
 
       test('returns empty list when no results', () async {
-        when(
-          () => mockMemoryGraph.hybridSearch(
-            any(),
-            topK: any(named: 'topK'),
-            alpha: any(named: 'alpha'),
-          ),
-        ).thenAnswer((_) async => []);
+        when(() => mockMemoryGraph.hybridSearch(
+              any(),
+              topK: any(named: 'topK'),
+              alpha: any(named: 'alpha'),
+            )).thenAnswer((_) async => []);
 
         final results = await service.search('nonexistent');
 
@@ -79,13 +73,11 @@ void main() {
 
     group('addDocument', () {
       test('stores node with embedding via MemoryGraph', () async {
-        when(
-          () => mockMemoryGraph.storeNodeWithEmbedding(
-            content: any(named: 'content'),
-            metadata: any(named: 'metadata'),
-            deduplicate: any(named: 'deduplicate'),
-          ),
-        ).thenAnswer((_) async => 1);
+        when(() => mockMemoryGraph.storeNodeWithEmbedding(
+              content: any(named: 'content'),
+              metadata: any(named: 'metadata'),
+              deduplicate: any(named: 'deduplicate'),
+            )).thenAnswer((_) async => 1);
 
         await service.addDocument(
           'med:ICD-10:E11',
@@ -93,34 +85,28 @@ void main() {
           {'standard': 'ICD-10', 'code': 'E11'},
         );
 
-        verify(
-          () => mockMemoryGraph.storeNodeWithEmbedding(
-            content: 'Type 2 diabetes [ICD-10] - Endocrine',
-            metadata: {
-              'externalId': 'med:ICD-10:E11',
-              'standard': 'ICD-10',
-              'code': 'E11',
-            },
-            deduplicate: true,
-          ),
-        ).called(1);
+        verify(() => mockMemoryGraph.storeNodeWithEmbedding(
+              content: 'Type 2 diabetes [ICD-10] - Endocrine',
+              metadata: {
+                'externalId': 'med:ICD-10:E11',
+                'standard': 'ICD-10',
+                'code': 'E11',
+              },
+              deduplicate: true,
+            )).called(1);
       });
     });
 
     group('searchWithReRanking', () {
       test('returns first results by default (no re-ranking)', () async {
-        when(
-          () => mockMemoryGraph.hybridSearch(
-            any(),
-            topK: any(named: 'topK'),
-            alpha: any(named: 'alpha'),
-          ),
-        ).thenAnswer(
-          (_) async => [
-            _createRecord('Result 1', DateTime(2026, 1, 1)),
-            _createRecord('Result 2', DateTime(2026, 1, 2)),
-          ],
-        );
+        when(() => mockMemoryGraph.hybridSearch(
+              any(),
+              topK: any(named: 'topK'),
+              alpha: any(named: 'alpha'),
+            )).thenAnswer((_) async => [
+              _createRecord('Result 1', DateTime(2026, 1, 1)),
+              _createRecord('Result 2', DateTime(2026, 1, 2)),
+            ]);
 
         final results = await service.searchWithReRanking(
           'test',
@@ -133,13 +119,11 @@ void main() {
       });
 
       test('returns empty list for empty candidates', () async {
-        when(
-          () => mockMemoryGraph.hybridSearch(
-            any(),
-            topK: any(named: 'topK'),
-            alpha: any(named: 'alpha'),
-          ),
-        ).thenAnswer((_) async => []);
+        when(() => mockMemoryGraph.hybridSearch(
+              any(),
+              topK: any(named: 'topK'),
+              alpha: any(named: 'alpha'),
+            )).thenAnswer((_) async => []);
 
         final results = await service.searchWithReRanking(
           'test',
@@ -177,12 +161,13 @@ void main() {
 }
 
 /// Helper to create a SearchRecord for tests.
-({MemoryNode node, double score}) _createRecord(
-  String content,
-  DateTime createdAt,
-) {
+({MemoryNode node, double score}) _createRecord(String content, DateTime createdAt) {
   return (
-    node: MemoryNode(content: content, createdAt: createdAt, type: 'test'),
+    node: MemoryNode(
+      content: content,
+      createdAt: createdAt,
+      type: 'test',
+    ),
     score: 1.0,
   );
 }
