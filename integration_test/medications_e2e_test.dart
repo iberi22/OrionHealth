@@ -2,68 +2,95 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/features/medications/presentation/pages/medications_page.dart';
-import 'package:orionhealth_health/features/medications/application/medications_cubit.dart';
-import 'package:orionhealth_health/features/medications/application/medications_state.dart';
 import 'package:orionhealth_health/features/medications/domain/entities/medication.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:get_it/get_it.dart';
+import 'package:orionhealth_health/features/medications/domain/repositories/medication_repository.dart';
+import 'package:orionhealth_health/core/di/injection.dart' as di;
+import 'package:isar/isar.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'utils/video_recorder.dart';
-
-class MockMedicationsCubit extends Mock implements MedicationsCubit {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  late MockMedicationsCubit mockCubit;
-
-  setUpAll(() {
-    registerFallbackValue(Medication(id: 0, name: '', startDate: DateTime.now()));
-  });
-
-  setUp(() {
-    mockCubit = MockMedicationsCubit();
-    GetIt.instance.registerSingleton<MedicationsCubit>(mockCubit);
-
-    when(() => mockCubit.loadMedications()).thenAnswer((_) async {});
-    when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
-  });
-
-  tearDown(() {
-    GetIt.instance.unregister<MedicationsCubit>();
+  setUpAll(() async {
+    await di.configureDependencies();
+    await initializeDateFormatting('es', null);
   });
 
   group('Medications Flow - E2E Tests', () {
-    testWidgets('E2E: CRUD Medications', (WidgetTester tester) async {
-      final meds = [
-        Medication(id: 1, name: 'Aspirina', dosage: '100mg', startDate: DateTime.now()),
-      ];
+    testWidgets('E2E: CRUD Medications and Persistence', (
+      WidgetTester tester,
+    ) async {
+      final repo = di.getIt<MedicationRepository>();
+      final isar = di.getIt<Isar>();
 
-      when(() => mockCubit.state).thenReturn(MedicationsLoaded(meds));
+      // Clean start for the test
+      await isar.writeTxn(() async {
+        await isar.medications.clear();
+      });
 
-      await tester.pumpWidget(const MaterialApp(home: MedicationsPage()));
+      // Add initial data
+      await repo.saveMedication(
+        Medication(
+          name: 'Aspirina',
+          dosage: '100mg',
+          startDate: DateTime.now(),
+        ),
+      );
+
+      Widget buildApp() {
+        return MaterialApp(
+          home: const MedicationsPage(),
+          theme: ThemeData.dark(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
+        );
+      }
+
+      await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
       await VideoRecorder.recordStep(tester, 'medications', '01_list');
 
       expect(find.text('Aspirina'), findsOneWidget);
 
-      // Add
+      // Add new medication
       await tester.tap(find.byIcon(Icons.add));
       await tester.pumpAndSettle();
-      await tester.enterText(find.widgetWithText(TextField, 'Nombre'), 'Metformina');
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Nombre'),
+        'Metformina',
+      );
       await tester.enterText(find.widgetWithText(TextField, 'Dosis'), '500mg');
-
-      when(() => mockCubit.saveMedication(any())).thenAnswer((_) async {
-        meds.add(Medication(id: 2, name: 'Metformina', dosage: '500mg', startDate: DateTime.now()));
-        when(() => mockCubit.state).thenReturn(MedicationsLoaded(meds));
-      });
 
       await tester.tap(find.text('GUARDAR'));
       await tester.pumpAndSettle();
+      await tester
+          .pumpAndSettle(); // additional pump might be needed for list update
 
-      verify(() => mockCubit.saveMedication(any())).called(1);
-      await tester.pumpAndSettle();
       expect(find.text('Metformina'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'medications', '02_added');
+
+      // Restart Widget Tree & Verify Persistence
+      await tester.pumpWidget(Container()); // unmount
+      await tester.pumpWidget(buildApp());
+      await tester.pumpAndSettle();
+      await VideoRecorder.recordStep(
+        tester,
+        'medications',
+        '03_restarted_persistence',
+      );
+
+      // Both Aspirina and Metformina should be in the list
+      expect(find.text('Aspirina'), findsOneWidget);
+      expect(find.text('Metformina'), findsOneWidget);
     });
   });
 }
