@@ -49,3 +49,35 @@ export async function navigateInApp(page: Page, path: string): Promise<void> {
     dispatchEvent(new PopStateEvent('popstate'));
   }, path);
 }
+
+/** The routed area (the shell wrapper has its own area-shell test id). */
+const anyArea = (page: Page) => page.locator('[data-testid^="area-"]:not([data-testid="area-shell"])').first();
+
+/** If the vault gate shows the lock screen, unlocks with the passkey (client-side, same session). */
+export async function unlockIfLocked(page: Page): Promise<void> {
+  const area = anyArea(page);
+  await expect(area).toBeVisible();
+  if ((await area.getAttribute('data-testid')) === 'area-lock') {
+    await page.getByRole('button', { name: 'Desbloquear' }).click();
+    await expect(page.locator('[data-testid="area-home"]')).toBeVisible();
+  }
+}
+
+/**
+ * Opens an app route keeping/restoring an unlocked session: a full page load (goto/reload) starts a
+ * new locked session, so this loads the SPA once and then navigates client-side, unlocking when the
+ * gate asks for it.
+ */
+export async function visit(page: Page, path: string): Promise<void> {
+  if (!/\/app/.test(page.url())) await page.goto('/app');
+  await unlockIfLocked(page);
+  await navigateInApp(page, path);
+  await expect(anyArea(page)).toBeVisible();
+}
+
+/** Full reload followed by unlocking (what a user does after closing/reopening the tab). */
+export async function reloadAndUnlock(page: Page, path: string): Promise<void> {
+  await page.goto(path);
+  await unlockIfLocked(page);
+  await navigateInApp(page, path);
+}

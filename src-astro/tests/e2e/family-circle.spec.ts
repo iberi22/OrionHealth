@@ -1,59 +1,28 @@
 import { test, expect } from '@playwright/test';
 import { addVirtualPasskey } from './helpers/webauthn';
 import { startSignaling } from './helpers/signaling';
+import { createVault, navigateInApp, visit } from './helpers/vault';
 
 test.describe('Family Circle', () => {
-  test('creates a circle, invites and joins with local signaling @real', async ({ browser }) => {
+  test('creates a circle, invites and joins with local signaling @real', async ({ browser, baseURL }) => {
     // Start local signaling
     await startSignaling();
 
     // Context 1: Admin
-    const adminContext = await browser.newContext();
+    const adminContext = await browser.newContext({ baseURL });
     const adminPage = await adminContext.newPage();
     await addVirtualPasskey(adminPage);
 
     // Context 2: Joiner
-    const joinerContext = await browser.newContext();
+    const joinerContext = await browser.newContext({ baseURL });
     const joinerPage = await joinerContext.newPage();
     await addVirtualPasskey(joinerPage);
 
     // Admin sets up vault and circle
-    await adminPage.goto('/app/onboarding');
-    await adminPage.getByRole('button', { name: 'Siguiente' }).click();
-    await adminPage.getByRole('button', { name: 'Empezar' }).click();
-
-    // Create vault
-    await adminPage.getByLabel('¿Cómo te llamas?').fill('Admin');
-    await adminPage.getByRole('button', { name: 'Crear passkey' }).click();
-
-    // Confirm recovery code
-    const recoveryCodeText = await adminPage.locator('.code-display').textContent();
-    const recoveryCode = recoveryCodeText!.trim();
-    const parts = recoveryCode.includes('-') ? recoveryCode.split('-') : recoveryCode.split(' ');
-
-    // Fill the 3 required inputs
-    const inputs = adminPage.locator('.input-group input');
-    const inputCount = await inputs.count();
-    for (let i = 0; i < inputCount; i++) {
-      const id = await inputs.nth(i).getAttribute('id');
-      const idx = parseInt(id!.replace('part-', ''), 10);
-      const labelText = await adminPage.locator(`label[for="${id}"]`).textContent();
-      // labelText looks like "Parte X" where X is 1-based index of the part in the original code
-      const partIdx = parseInt(labelText!.replace('Parte ', ''), 10) - 1;
-      await inputs.nth(i).fill(parts[partIdx]);
-    }
-    await adminPage.getByRole('button', { name: 'Confirmar' }).click();
-
-    // Basic profile
-    await adminPage.getByLabel('Nombre completo').fill('Admin Admin');
-    await adminPage.getByRole('button', { name: 'Guardar perfil' }).click();
-
-    // Skip Family step during onboarding and go to /app
-    await adminPage.getByRole('button', { name: 'Omitir por ahora' }).click();
-    await adminPage.getByRole('button', { name: 'Entrar a la app' }).click();
+    await createVault(adminPage, 'Admin');
 
     // Navigate to Family and create a circle
-    await adminPage.goto('/app/family');
+    await visit(adminPage, '/app/family');
     await adminPage.getByLabel('Nombre del círculo').fill('La Familia');
     await adminPage.getByRole('button', { name: 'Crear círculo' }).click();
 
@@ -69,13 +38,17 @@ test.describe('Family Circle', () => {
     expect(inviteUrl).toBeTruthy();
 
     // Joiner navigates to invite URL
-    await joinerPage.goto(inviteUrl);
+    // Joining needs the joiner's own (unlocked) vault, so the joiner creates one first and opens the
+    // invite client-side (a full load of the link would start a locked session).
+    await createVault(joinerPage, 'Joiner');
+    const invite = new URL(inviteUrl);
+    await navigateInApp(joinerPage, invite.pathname + invite.hash);
     await joinerPage.getByLabel('Tu nombre').fill('Joiner');
     await joinerPage.getByRole('button', { name: 'Unirse' }).click();
 
     // Joiner sees SAS code
     const sasCodeLocator = joinerPage.locator('.sas-code');
-    await expect(sasCodeLocator).toBeVisible();
+    await expect(sasCodeLocator).toBeVisible({ timeout: 20_000 }); // WebRTC handshake over local signaling
     const sasCode = await sasCodeLocator.textContent();
     expect(sasCode).toBeTruthy();
 

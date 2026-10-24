@@ -121,6 +121,7 @@ export class RealKernel implements Kernel {
     this.circleKeys.clear();
     this.revoked.clear();
     this.circleInfo = undefined;
+    this.generation++;
     this.replica?.destroy();
     this.replica = null;
     this.loaded = false;
@@ -133,10 +134,24 @@ export class RealKernel implements Kernel {
     }
   }
 
-  private async startReplica() {
+  private starting: Promise<void> | null = null;
+  /** Bumped on every lock so a replica that finishes opening after lock() is discarded. */
+  private generation = 0;
+
+  /** Idempotent and serialized: load(), setCircle() and addCircleKey() can race, and y-webrtc throws
+   *  when a second provider is opened for a room that already has one. */
+  private startReplica(): Promise<void> {
+    this.starting ??= this.openReplica().finally(() => {
+      this.starting = null;
+    });
+    return this.starting;
+  }
+
+  private async openReplica() {
+    const gen = this.generation;
     const ck0 = this.circleKeys.get(0);
     if (this.replica || !this.circleInfo || !ck0 || this.opts.connect === false) return;
-    this.replica = await createCircleReplica({
+    const replica = await createCircleReplica({
       circleId: this.circleInfo.id,
       ck0,
       validate: async (env) => {
@@ -150,6 +165,12 @@ export class RealKernel implements Kernel {
       // accept() already stored it
       sink: () => {},
     });
+    if (gen !== this.generation) {
+      // locked while the replica was opening: do not keep it around
+      replica.destroy();
+      return;
+    }
+    this.replica = replica;
   }
 
   // ---------- identity ----------
