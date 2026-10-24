@@ -1,0 +1,1423 @@
+[
+  {
+    "id": "rxnorm:29046",
+    "system": "rxnorm",
+    "code": "29046",
+    "title": "Lisinopril",
+    "body": "category: ACE Inhibitors",
+    "related": [
+      "lisinopril",
+      "Prinivil",
+      "Zestril",
+      "ECA"
+    ]
+  },
+  {
+    "id": "rxnorm:3827",
+    "system": "rxnorm",
+    "code": "3827",
+    "title": "Enalapril",
+    "body": "category: ACE Inhibitors",
+    "related": [
+      "enalapril",
+      "Renitec",
+      "ACE"
+    ]
+  },
+  {
+    "id": "rxnorm:1998",
+    "system": "rxnorm",
+    "code": "1998",
+    "title": "Captopril",
+    "body": "category: ACE Inhibitors",
+    "related": [
+      "captopril",
+      "Capoten"
+    ]
+  },
+  {
+    "id": "rxnorm:3521",
+    "system": "rxnorm",
+    "code": "3521",
+    "title": "Ramipril",
+    "body": "category: ACE Inhibitors",
+    "related": [
+      "ramipril",
+      "Altace",
+      "Tritace"
+    ]
+  },
+  {
+    "id": "rxnorm:40188",
+    "system": "rxnorm",
+    "code": "40188",
+    "title": "Losartan",
+    "body": "category: ARBs",
+    "related": [
+      "losartán",
+      "Cozaar",
+      "ARA-II"
+    ]
+  },
+  {
+    "id": "rxnorm:69749",
+    "system": "rxnorm",
+    "code": "69749",
+    "title": "Valsartan",
+    "body": "category: ARBs",
+    "related": [
+      "valsartán",
+      "Diovan"
+    ]
+  },
+  {
+    "id": "rxnorm:214354",
+    "system": "rxnorm",
+    "code": "214354",
+    "title": "Candesartan",
+    "body": "category: ARBs",
+    "related": [
+      "candesartán",
+      "Atacand"
+    ]
+  },
+  {
+    "id": "rxnorm:19001",
+    "system": "rxnorm",
+    "code": "19001",
+    "title": "Irbesartan",
+    "body": "category: ARBs",
+    "related": [
+      "irbesartán",
+      "Aprovel"
+    ]
+  },
+  {
+    "id": "rxnorm:6918",
+    "system": "rxnorm",
+    "code": "6918",
+    "title": "Metoprolol",
+    "body": "category: Beta Blockers",
+    "related": [
+      "metoprolol",
+      "Lopressor",
+      "Toprol",
+      "betabloqueante"
+    ]
+  },
+  {
+    "id": "rxnorm:1202",
+    "system": "rxnorm",
+    "code": "1202",
+    "title": "Atenolol",
+    "body": "category: Beta Blockers",
+    "related": [
+      "atenolol",
+      "Tenormin"
+    ]
+  },
+  {
+    "id": "rxnorm:8787",
+    "system": "rxnorm",
+    "code": "8787",
+    "title": "Propranolol",
+    "body": "category: Beta Blockers",
+    "related": [
+      "propranolol",
+      "Inderal"
+    ]
+  },
+  {
+    "id": "rxnorm:20352",
+    "system": "rxnorm",
+    "code": "20352",
+    "title": "Carvedilol",
+    "body": "category: Beta Blockers",
+    "related": [
+      "carvedilol",
+      "Coreg"
+    ]
+  },
+  {
+    "id": "rxnorm:1603",
+    "system": "rxnorm",
+    "code": "1603",
+    "title": "Bisoprolol",
+    "body": "category: Beta Blockers",
+    "related": [
+      "bisoprolol",
+      "Concor"
+    ]
+  },
+  {
+    "id": "rxnorm:17767",
+    "system": "rxnorm",
+    "code": "17767",
+    "title": "Amlodipine",
+    "body": "category: Calcium Channel Blockers",
+    "related": [
+      "amlodipino",
+      "Norvasc",
+      "bloqueador calcio"
+    ]
+  },
+  {
+    "id": "rxnorm:7424",
+    "system": "rxnorm",
+    "code": "7424",
+    "title": "Nifedipine",
+    "body": "category: Calcium Channel Blockers",
+    "related": [
+      "nifedipino",
+      "Adalat",
+      "Procardia"
+    ]
+  },
+  {
+    "id": "rxnorm:11170",
+    "system": "rxnorm",
+    "code": "11170",
+    "title": "Verapamil",
+    "body": "category: Calcium Channel Blockers",
+    "related": [
+      "verapamilo",
+      "Isoptin",
+      "Calan"
+    ]
+  },
+  {
+    "id": "rxnorm:3443",
+    "system": "rxnorm",
+    "code": "3443",
+    "title": "Diltiazem",
+    "body": "category: Calcium Channel Blockers",
+    "related": [
+      "diltiazem",
+      "Cardizem"
+    ]
+  },
+  {
+    "id": "rxnorm:5487",
+    "system": "rxnorm",
+    "code": "5487",
+    "title": "Hydrochlorothiazide",
+    "body": "category: Diuretics",
+    "related": [
+      "hidroclorotiazida",
+      "HCTZ",
+      "diurético tiazídico"
+    ]
+  },
+  {
+    "id": "rxnorm:4603",
+    "system": "rxnorm",
+    "code": "4603",
+    "title": "Furosemide",
+    "body": "category: Diuretics",
+    "related": [
+      "furosemida",
+      "Lasix",
+      "diurético de asa"
+    ]
+  },
+  {
+    "id": "rxnorm:9997",
+    "system": "rxnorm",
+    "code": "9997",
+    "title": "Spironolactone",
+    "body": "category: Diuretics",
+    "related": [
+      "espironolactona",
+      "Aldactone",
+      "diurético ahorrador potasio"
+    ]
+  },
+  {
+    "id": "rxnorm:83367",
+    "system": "rxnorm",
+    "code": "83367",
+    "title": "Atorvastatin",
+    "body": "category: Statins",
+    "related": [
+      "atorvastatina",
+      "Lipitor",
+      "estatina"
+    ]
+  },
+  {
+    "id": "rxnorm:36567",
+    "system": "rxnorm",
+    "code": "36567",
+    "title": "Simvastatin",
+    "body": "category: Statins",
+    "related": [
+      "simvastatina",
+      "Zocor"
+    ]
+  },
+  {
+    "id": "rxnorm:301542",
+    "system": "rxnorm",
+    "code": "301542",
+    "title": "Rosuvastatin",
+    "body": "category: Statins",
+    "related": [
+      "rosuvastatina",
+      "Crestor"
+    ]
+  },
+  {
+    "id": "rxnorm:42463",
+    "system": "rxnorm",
+    "code": "42463",
+    "title": "Pravastatin",
+    "body": "category: Statins",
+    "related": [
+      "pravastatina",
+      "Pravachol"
+    ]
+  },
+  {
+    "id": "rxnorm:11289",
+    "system": "rxnorm",
+    "code": "11289",
+    "title": "Warfarin",
+    "body": "category: Anticoagulants",
+    "related": [
+      "warfarina",
+      "Coumadin",
+      "anticoagulante"
+    ]
+  },
+  {
+    "id": "rxnorm:1039156",
+    "system": "rxnorm",
+    "code": "1039156",
+    "title": "Apixaban",
+    "body": "category: Anticoagulants",
+    "related": [
+      "apixabán",
+      "Eliquis",
+      "anticoagulante directo"
+    ]
+  },
+  {
+    "id": "rxnorm:1114195",
+    "system": "rxnorm",
+    "code": "1114195",
+    "title": "Rivaroxaban",
+    "body": "category: Anticoagulants",
+    "related": [
+      "rivaroxabán",
+      "Xarelto"
+    ]
+  },
+  {
+    "id": "rxnorm:32968",
+    "system": "rxnorm",
+    "code": "32968",
+    "title": "Clopidogrel",
+    "body": "category: Antiplatelets",
+    "related": [
+      "clopidogrel",
+      "Plavix",
+      "antiagregante"
+    ]
+  },
+  {
+    "id": "rxnorm:1191",
+    "system": "rxnorm",
+    "code": "1191",
+    "title": "Aspirin",
+    "body": "category: Antiplatelets",
+    "related": [
+      "aspirina",
+      "ácido acetilsalicílico",
+      "AAS",
+      "aspirina infantil"
+    ]
+  },
+  {
+    "id": "rxnorm:3407",
+    "system": "rxnorm",
+    "code": "3407",
+    "title": "Digoxin",
+    "body": "category: Cardiac Glycosides",
+    "related": [
+      "digoxina",
+      "Lanoxin",
+      "digital"
+    ]
+  },
+  {
+    "id": "rxnorm:7434",
+    "system": "rxnorm",
+    "code": "7434",
+    "title": "Nitroglycerin",
+    "body": "category: Anti-anginals",
+    "related": [
+      "nitroglicerina",
+      "NTG",
+      "nitro"
+    ]
+  },
+  {
+    "id": "rxnorm:35827",
+    "system": "rxnorm",
+    "code": "35827",
+    "title": "Isosorbide mononitrate",
+    "body": "category: Anti-anginals",
+    "related": [
+      "mononitrato de isosorbide",
+      "Ismo"
+    ]
+  },
+  {
+    "id": "rxnorm:6809",
+    "system": "rxnorm",
+    "code": "6809",
+    "title": "Metformin",
+    "body": "category: Antidiabetics",
+    "related": [
+      "metformina",
+      "Glucophage",
+      "biguanida"
+    ]
+  },
+  {
+    "id": "rxnorm:274783",
+    "system": "rxnorm",
+    "code": "274783",
+    "title": "Insulin glargine",
+    "body": "category: Insulins",
+    "related": [
+      "insulina glargina",
+      "Lantus",
+      "insulina basal"
+    ]
+  },
+  {
+    "id": "rxnorm:214532",
+    "system": "rxnorm",
+    "code": "214532",
+    "title": "Insulin aspart",
+    "body": "category: Insulins",
+    "related": [
+      "insulina aspart",
+      "NovoRapid",
+      "insulina rápida"
+    ]
+  },
+  {
+    "id": "rxnorm:161245",
+    "system": "rxnorm",
+    "code": "161245",
+    "title": "Insulin lispro",
+    "body": "category: Insulins",
+    "related": [
+      "insulina lispro",
+      "Humalog"
+    ]
+  },
+  {
+    "id": "rxnorm:352388",
+    "system": "rxnorm",
+    "code": "352388",
+    "title": "Insulin detemir",
+    "body": "category: Insulins",
+    "related": [
+      "insulina detemir",
+      "Levemir"
+    ]
+  },
+  {
+    "id": "rxnorm:1359720",
+    "system": "rxnorm",
+    "code": "1359720",
+    "title": "Insulin degludec",
+    "body": "category: Insulins",
+    "related": [
+      "insulina degludec",
+      "Tresiba"
+    ]
+  },
+  {
+    "id": "rxnorm:4820",
+    "system": "rxnorm",
+    "code": "4820",
+    "title": "Gliclazide",
+    "body": "category: Sulfonylureas",
+    "related": [
+      "gliclazida",
+      "Diamicron",
+      "sulfonilurea"
+    ]
+  },
+  {
+    "id": "rxnorm:145507",
+    "system": "rxnorm",
+    "code": "145507",
+    "title": "Glimepiride",
+    "body": "category: Sulfonylureas",
+    "related": [
+      "glimepirida",
+      "Amaryl"
+    ]
+  },
+  {
+    "id": "rxnorm:593411",
+    "system": "rxnorm",
+    "code": "593411",
+    "title": "Sitagliptin",
+    "body": "category: DPP-4 Inhibitors",
+    "related": [
+      "sitagliptina",
+      "Januvia",
+      "DPP-4"
+    ]
+  },
+  {
+    "id": "rxnorm:1545631",
+    "system": "rxnorm",
+    "code": "1545631",
+    "title": "Empagliflozin",
+    "body": "category: SGLT2 Inhibitors",
+    "related": [
+      "empagliflozina",
+      "Jardiance",
+      "SGLT2",
+      "gliflozina"
+    ]
+  },
+  {
+    "id": "rxnorm:1488564",
+    "system": "rxnorm",
+    "code": "1488564",
+    "title": "Dapagliflozin",
+    "body": "category: SGLT2 Inhibitors",
+    "related": [
+      "dapagliflozina",
+      "Farxiga",
+      "Forxiga"
+    ]
+  },
+  {
+    "id": "rxnorm:476577",
+    "system": "rxnorm",
+    "code": "476577",
+    "title": "Liraglutide",
+    "body": "category: GLP-1 Agonists",
+    "related": [
+      "liraglutida",
+      "Victoza",
+      "Saxenda",
+      "GLP-1"
+    ]
+  },
+  {
+    "id": "rxnorm:1991302",
+    "system": "rxnorm",
+    "code": "1991302",
+    "title": "Semaglutide",
+    "body": "category: GLP-1 Agonists",
+    "related": [
+      "semaglutida",
+      "Ozempic",
+      "Wegovy",
+      "Rybelsus"
+    ]
+  },
+  {
+    "id": "rxnorm:1551291",
+    "system": "rxnorm",
+    "code": "1551291",
+    "title": "Dulaglutide",
+    "body": "category: GLP-1 Agonists",
+    "related": [
+      "dulaglutida",
+      "Trulicity"
+    ]
+  },
+  {
+    "id": "rxnorm:723",
+    "system": "rxnorm",
+    "code": "723",
+    "title": "Amoxicillin",
+    "body": "category: Antibiotics",
+    "related": [
+      "amoxicilina",
+      "Amoxil",
+      "penicilina"
+    ]
+  },
+  {
+    "id": "rxnorm:214178",
+    "system": "rxnorm",
+    "code": "214178",
+    "title": "Amoxicillin-clavulanate",
+    "body": "category: Antibiotics",
+    "related": [
+      "amoxicilina-clavulánico",
+      "Augmentin",
+      "Amoxiclav"
+    ]
+  },
+  {
+    "id": "rxnorm:2231",
+    "system": "rxnorm",
+    "code": "2231",
+    "title": "Cephalexin",
+    "body": "category: Cephalosporins",
+    "related": [
+      "cefalexina",
+      "Keflex",
+      "cefalosporina"
+    ]
+  },
+  {
+    "id": "rxnorm:2220",
+    "system": "rxnorm",
+    "code": "2220",
+    "title": "Ceftriaxone",
+    "body": "category: Cephalosporins",
+    "related": [
+      "ceftriaxona",
+      "Rocephin",
+      "cefalosporina 3ra"
+    ]
+  },
+  {
+    "id": "rxnorm:2551",
+    "system": "rxnorm",
+    "code": "2551",
+    "title": "Ciprofloxacin",
+    "body": "category: Fluoroquinolones",
+    "related": [
+      "ciprofloxacino",
+      "Cipro",
+      "quinolona"
+    ]
+  },
+  {
+    "id": "rxnorm:82122",
+    "system": "rxnorm",
+    "code": "82122",
+    "title": "Levofloxacin",
+    "body": "category: Fluoroquinolones",
+    "related": [
+      "levofloxacino",
+      "Tavanic",
+      "Levaquin"
+    ]
+  },
+  {
+    "id": "rxnorm:18631",
+    "system": "rxnorm",
+    "code": "18631",
+    "title": "Azithromycin",
+    "body": "category: Macrolides",
+    "related": [
+      "azitromicina",
+      "Zithromax",
+      "macrólido"
+    ]
+  },
+  {
+    "id": "rxnorm:21212",
+    "system": "rxnorm",
+    "code": "21212",
+    "title": "Clarithromycin",
+    "body": "category: Macrolides",
+    "related": [
+      "claritromicina",
+      "Biaxin"
+    ]
+  },
+  {
+    "id": "rxnorm:3640",
+    "system": "rxnorm",
+    "code": "3640",
+    "title": "Doxycycline",
+    "body": "category: Tetracyclines",
+    "related": [
+      "doxiciclina",
+      "Vibramycin",
+      "tetraciclina"
+    ]
+  },
+  {
+    "id": "rxnorm:6922",
+    "system": "rxnorm",
+    "code": "6922",
+    "title": "Metronidazole",
+    "body": "category: Antibiotics",
+    "related": [
+      "metronidazol",
+      "Flagyl",
+      "antiparasitario"
+    ]
+  },
+  {
+    "id": "rxnorm:190361",
+    "system": "rxnorm",
+    "code": "190361",
+    "title": "Sulfamethoxazole-trimethoprim",
+    "body": "category: Sulfonamides",
+    "related": [
+      "trimetoprim-sulfa",
+      "Bactrim",
+      "TMP-SMX",
+      "Septra"
+    ]
+  },
+  {
+    "id": "rxnorm:2582",
+    "system": "rxnorm",
+    "code": "2582",
+    "title": "Clindamycin",
+    "body": "category: Antibiotics",
+    "related": [
+      "clindamicina",
+      "Cleocin"
+    ]
+  },
+  {
+    "id": "rxnorm:7393",
+    "system": "rxnorm",
+    "code": "7393",
+    "title": "Nitrofurantoin",
+    "body": "category: Urinary Antibiotics",
+    "related": [
+      "nitrofurantoína",
+      "Macrobid"
+    ]
+  },
+  {
+    "id": "rxnorm:5640",
+    "system": "rxnorm",
+    "code": "5640",
+    "title": "Ibuprofen",
+    "body": "category: NSAIDs",
+    "related": [
+      "ibuprofeno",
+      "Advil",
+      "Motrin",
+      "AINE"
+    ]
+  },
+  {
+    "id": "rxnorm:7299",
+    "system": "rxnorm",
+    "code": "7299",
+    "title": "Naproxen",
+    "body": "category: NSAIDs",
+    "related": [
+      "naproxeno",
+      "Naprosyn",
+      "Aleve"
+    ]
+  },
+  {
+    "id": "rxnorm:3350",
+    "system": "rxnorm",
+    "code": "3350",
+    "title": "Diclofenac",
+    "body": "category: NSAIDs",
+    "related": [
+      "diclofenaco",
+      "Voltaren",
+      "Cataflam"
+    ]
+  },
+  {
+    "id": "rxnorm:161",
+    "system": "rxnorm",
+    "code": "161",
+    "title": "Acetaminophen",
+    "body": "category: Analgesics",
+    "related": [
+      "paracetamol",
+      "acetaminofén",
+      "Tylenol",
+      "Dolex"
+    ]
+  },
+  {
+    "id": "rxnorm:10689",
+    "system": "rxnorm",
+    "code": "10689",
+    "title": "Tramadol",
+    "body": "category: Opioids",
+    "related": [
+      "tramadol",
+      "Tramal",
+      "analgésico opioide"
+    ]
+  },
+  {
+    "id": "rxnorm:7052",
+    "system": "rxnorm",
+    "code": "7052",
+    "title": "Morphine",
+    "body": "category: Opioids",
+    "related": [
+      "morfina"
+    ]
+  },
+  {
+    "id": "rxnorm:7804",
+    "system": "rxnorm",
+    "code": "7804",
+    "title": "Oxycodone",
+    "body": "category: Opioids",
+    "related": [
+      "oxicodona",
+      "OxyContin",
+      "Percocet"
+    ]
+  },
+  {
+    "id": "rxnorm:25480",
+    "system": "rxnorm",
+    "code": "25480",
+    "title": "Gabapentin",
+    "body": "category: Neuropathic Pain",
+    "related": [
+      "gabapentina",
+      "Neurontin",
+      "dolor neuropático"
+    ]
+  },
+  {
+    "id": "rxnorm:187832",
+    "system": "rxnorm",
+    "code": "187832",
+    "title": "Pregabalin",
+    "body": "category: Neuropathic Pain",
+    "related": [
+      "pregabalina",
+      "Lyrica"
+    ]
+  },
+  {
+    "id": "rxnorm:435",
+    "system": "rxnorm",
+    "code": "435",
+    "title": "Albuterol",
+    "body": "category: Bronchodilators",
+    "related": [
+      "salbutamol",
+      "albuterol",
+      "Ventolin",
+      "broncodilatador"
+    ]
+  },
+  {
+    "id": "rxnorm:5975",
+    "system": "rxnorm",
+    "code": "5975",
+    "title": "Ipratropium",
+    "body": "category: Anticholinergics",
+    "related": [
+      "ipratropio",
+      "Atrovent"
+    ]
+  },
+  {
+    "id": "rxnorm:41126",
+    "system": "rxnorm",
+    "code": "41126",
+    "title": "Fluticasone",
+    "body": "category: Inhaled Corticosteroids",
+    "related": [
+      "fluticasona",
+      "Flovent",
+      "corticoide inhalado"
+    ]
+  },
+  {
+    "id": "rxnorm:17641",
+    "system": "rxnorm",
+    "code": "17641",
+    "title": "Budesonide",
+    "body": "category: Inhaled Corticosteroids",
+    "related": [
+      "budesonida",
+      "Pulmicort"
+    ]
+  },
+  {
+    "id": "rxnorm:88249",
+    "system": "rxnorm",
+    "code": "88249",
+    "title": "Montelukast",
+    "body": "category: Leukotriene Antagonists",
+    "related": [
+      "montelukast",
+      "Singulair",
+      "antileucotrieno"
+    ]
+  },
+  {
+    "id": "rxnorm:32834",
+    "system": "rxnorm",
+    "code": "32834",
+    "title": "Loratadine",
+    "body": "category: Antihistamines",
+    "related": [
+      "loratadina",
+      "Claritin",
+      "antihistamínico"
+    ]
+  },
+  {
+    "id": "rxnorm:20610",
+    "system": "rxnorm",
+    "code": "20610",
+    "title": "Cetirizine",
+    "body": "category: Antihistamines",
+    "related": [
+      "cetirizina",
+      "Zyrtec"
+    ]
+  },
+  {
+    "id": "rxnorm:42355",
+    "system": "rxnorm",
+    "code": "42355",
+    "title": "Fexofenadine",
+    "body": "category: Antihistamines",
+    "related": [
+      "fexofenadina",
+      "Allegra"
+    ]
+  },
+  {
+    "id": "rxnorm:7646",
+    "system": "rxnorm",
+    "code": "7646",
+    "title": "Omeprazole",
+    "body": "category: PPIs",
+    "related": [
+      "omeprazol",
+      "Prilosec",
+      "IBP",
+      "inhibidor bomba protones"
+    ]
+  },
+  {
+    "id": "rxnorm:40534",
+    "system": "rxnorm",
+    "code": "40534",
+    "title": "Pantoprazole",
+    "body": "category: PPIs",
+    "related": [
+      "pantoprazol",
+      "Protonix"
+    ]
+  },
+  {
+    "id": "rxnorm:153165",
+    "system": "rxnorm",
+    "code": "153165",
+    "title": "Esomeprazole",
+    "body": "category: PPIs",
+    "related": [
+      "esomeprazol",
+      "Nexium"
+    ]
+  },
+  {
+    "id": "rxnorm:29935",
+    "system": "rxnorm",
+    "code": "29935",
+    "title": "Lansoprazole",
+    "body": "category: PPIs",
+    "related": [
+      "lansoprazol",
+      "Prevacid"
+    ]
+  },
+  {
+    "id": "rxnorm:9143",
+    "system": "rxnorm",
+    "code": "9143",
+    "title": "Ranitidine",
+    "body": "category: H2 Antagonists",
+    "related": [
+      "ranitidina",
+      "Zantac",
+      "antihistamínico H2"
+    ]
+  },
+  {
+    "id": "rxnorm:4278",
+    "system": "rxnorm",
+    "code": "4278",
+    "title": "Famotidine",
+    "body": "category: H2 Antagonists",
+    "related": [
+      "famotidina",
+      "Pepcid"
+    ]
+  },
+  {
+    "id": "rxnorm:26225",
+    "system": "rxnorm",
+    "code": "26225",
+    "title": "Ondansetron",
+    "body": "category: Antiemetics",
+    "related": [
+      "ondansetrón",
+      "Zofran",
+      "antiemético"
+    ]
+  },
+  {
+    "id": "rxnorm:6915",
+    "system": "rxnorm",
+    "code": "6915",
+    "title": "Metoclopramide",
+    "body": "category: Prokinetics",
+    "related": [
+      "metoclopramida",
+      "Plasil"
+    ]
+  },
+  {
+    "id": "rxnorm:6448",
+    "system": "rxnorm",
+    "code": "6448",
+    "title": "Loperamide",
+    "body": "category: Antidiarrheals",
+    "related": [
+      "loperamida",
+      "Imodium",
+      "antidiarreico"
+    ]
+  },
+  {
+    "id": "rxnorm:1538",
+    "system": "rxnorm",
+    "code": "1538",
+    "title": "Bismuth subsalicylate",
+    "body": "category: Antidiarrheals",
+    "related": [
+      "subsalicilato de bismuto",
+      "Pepto-Bismol"
+    ]
+  },
+  {
+    "id": "rxnorm:596",
+    "system": "rxnorm",
+    "code": "596",
+    "title": "Alprazolam",
+    "body": "category: Benzodiazepines",
+    "related": [
+      "alprazolam",
+      "Xanax",
+      "ansiolítico",
+      "benzodiazepina"
+    ]
+  },
+  {
+    "id": "rxnorm:6470",
+    "system": "rxnorm",
+    "code": "6470",
+    "title": "Lorazepam",
+    "body": "category: Benzodiazepines",
+    "related": [
+      "lorazepam",
+      "Ativan"
+    ]
+  },
+  {
+    "id": "rxnorm:3322",
+    "system": "rxnorm",
+    "code": "3322",
+    "title": "Diazepam",
+    "body": "category: Benzodiazepines",
+    "related": [
+      "diazepam",
+      "Valium"
+    ]
+  },
+  {
+    "id": "rxnorm:2598",
+    "system": "rxnorm",
+    "code": "2598",
+    "title": "Clonazepam",
+    "body": "category: Benzodiazepines",
+    "related": [
+      "clonazepam",
+      "Rivotril"
+    ]
+  },
+  {
+    "id": "rxnorm:4493",
+    "system": "rxnorm",
+    "code": "4493",
+    "title": "Fluoxetine",
+    "body": "category: SSRIs",
+    "related": [
+      "fluoxetina",
+      "Prozac",
+      "ISRS",
+      "antidepresivo"
+    ]
+  },
+  {
+    "id": "rxnorm:36437",
+    "system": "rxnorm",
+    "code": "36437",
+    "title": "Sertraline",
+    "body": "category: SSRIs",
+    "related": [
+      "sertralina",
+      "Zoloft"
+    ]
+  },
+  {
+    "id": "rxnorm:321988",
+    "system": "rxnorm",
+    "code": "321988",
+    "title": "Escitalopram",
+    "body": "category: SSRIs",
+    "related": [
+      "escitalopram",
+      "Lexapro",
+      "Cipralex"
+    ]
+  },
+  {
+    "id": "rxnorm:7934",
+    "system": "rxnorm",
+    "code": "7934",
+    "title": "Paroxetine",
+    "body": "category: SSRIs",
+    "related": [
+      "paroxetina",
+      "Paxil"
+    ]
+  },
+  {
+    "id": "rxnorm:39786",
+    "system": "rxnorm",
+    "code": "39786",
+    "title": "Venlafaxine",
+    "body": "category: SNRIs",
+    "related": [
+      "venlafaxina",
+      "Effexor",
+      "IRSN"
+    ]
+  },
+  {
+    "id": "rxnorm:236430",
+    "system": "rxnorm",
+    "code": "236430",
+    "title": "Duloxetine",
+    "body": "category: SNRIs",
+    "related": [
+      "duloxetina",
+      "Cymbalta"
+    ]
+  },
+  {
+    "id": "rxnorm:15996",
+    "system": "rxnorm",
+    "code": "15996",
+    "title": "Mirtazapine",
+    "body": "category: Antidepressants",
+    "related": [
+      "mirtazapina",
+      "Remeron"
+    ]
+  },
+  {
+    "id": "rxnorm:704",
+    "system": "rxnorm",
+    "code": "704",
+    "title": "Amitriptyline",
+    "body": "category: Tricyclic Antidepressants",
+    "related": [
+      "amitriptilina",
+      "ADT",
+      "antidepresivo tricíclico"
+    ]
+  },
+  {
+    "id": "rxnorm:2002",
+    "system": "rxnorm",
+    "code": "2002",
+    "title": "Carbamazepine",
+    "body": "category: Anticonvulsants",
+    "related": [
+      "carbamazepina",
+      "Tegretol",
+      "anticonvulsivante",
+      "estabilizador ánimo"
+    ]
+  },
+  {
+    "id": "rxnorm:11002",
+    "system": "rxnorm",
+    "code": "11002",
+    "title": "Valproic acid",
+    "body": "category: Anticonvulsants",
+    "related": [
+      "ácido valproico",
+      "valproato",
+      "Depakote"
+    ]
+  },
+  {
+    "id": "rxnorm:28439",
+    "system": "rxnorm",
+    "code": "28439",
+    "title": "Lamotrigine",
+    "body": "category: Anticonvulsants",
+    "related": [
+      "lamotrigina",
+      "Lamictal"
+    ]
+  },
+  {
+    "id": "rxnorm:137130",
+    "system": "rxnorm",
+    "code": "137130",
+    "title": "Levetiracetam",
+    "body": "category: Anticonvulsants",
+    "related": [
+      "levetiracetam",
+      "Keppra"
+    ]
+  },
+  {
+    "id": "rxnorm:6901",
+    "system": "rxnorm",
+    "code": "6901",
+    "title": "Methylphenidate",
+    "body": "category: Stimulants",
+    "related": [
+      "metilfenidato",
+      "Ritalin",
+      "Concerta",
+      "TDAH"
+    ]
+  },
+  {
+    "id": "rxnorm:10582",
+    "system": "rxnorm",
+    "code": "10582",
+    "title": "Levothyroxine",
+    "body": "category: Thyroid Hormones",
+    "related": [
+      "levotiroxina",
+      "Synthroid",
+      "Eutirox",
+      "T4",
+      "hipotiroidismo"
+    ]
+  },
+  {
+    "id": "rxnorm:8640",
+    "system": "rxnorm",
+    "code": "8640",
+    "title": "Prednisone",
+    "body": "category: Corticosteroids",
+    "related": [
+      "prednisona",
+      "corticoide",
+      "esteroide"
+    ]
+  },
+  {
+    "id": "rxnorm:3264",
+    "system": "rxnorm",
+    "code": "3264",
+    "title": "Dexamethasone",
+    "body": "category: Corticosteroids",
+    "related": [
+      "dexametasona",
+      "Decadron"
+    ]
+  },
+  {
+    "id": "rxnorm:5492",
+    "system": "rxnorm",
+    "code": "5492",
+    "title": "Hydrocortisone",
+    "body": "category: Corticosteroids",
+    "related": [
+      "hidrocortisona",
+      "cortisol"
+    ]
+  },
+  {
+    "id": "rxnorm:4450",
+    "system": "rxnorm",
+    "code": "4450",
+    "title": "Alendronate",
+    "body": "category: Bisphosphonates",
+    "related": [
+      "alendronato",
+      "Fosamax",
+      "bifosfonato",
+      "osteoporosis"
+    ]
+  },
+  {
+    "id": "rxnorm:1897",
+    "system": "rxnorm",
+    "code": "1897",
+    "title": "Calcium carbonate",
+    "body": "category: Minerals",
+    "related": [
+      "carbonato de calcio",
+      "calcio",
+      "suplemento calcio"
+    ]
+  },
+  {
+    "id": "rxnorm:24188",
+    "system": "rxnorm",
+    "code": "24188",
+    "title": "Vitamin D3",
+    "body": "category: Vitamins",
+    "related": [
+      "colecalciferol",
+      "vitamina D3",
+      "vitamina D"
+    ]
+  },
+  {
+    "id": "rxnorm:10324",
+    "system": "rxnorm",
+    "code": "10324",
+    "title": "Tamoxifen",
+    "body": "category: Antiestrogens",
+    "related": [
+      "tamoxifeno",
+      "Nolvadex",
+      "cáncer mama"
+    ]
+  },
+  {
+    "id": "rxnorm:6711",
+    "system": "rxnorm",
+    "code": "6711",
+    "title": "Methotrexate",
+    "body": "category: Antimetabolites",
+    "related": [
+      "metotrexato",
+      "MTX",
+      "quimioterapia"
+    ]
+  },
+  {
+    "id": "rxnorm:135561",
+    "system": "rxnorm",
+    "code": "135561",
+    "title": "Sildenafil",
+    "body": "category: PDE5 Inhibitors",
+    "related": [
+      "sildenafil",
+      "Viagra",
+      "disfunción eréctil"
+    ]
+  },
+  {
+    "id": "rxnorm:321207",
+    "system": "rxnorm",
+    "code": "321207",
+    "title": "Tadalafil",
+    "body": "category: PDE5 Inhibitors",
+    "related": [
+      "tadalafilo",
+      "Cialis"
+    ]
+  },
+  {
+    "id": "rxnorm:4441",
+    "system": "rxnorm",
+    "code": "4441",
+    "title": "Finasteride",
+    "body": "category: 5-alpha Reductase Inhibitors",
+    "related": [
+      "finasteride",
+      "Proscar",
+      "HPB",
+      "alopecia"
+    ]
+  },
+  {
+    "id": "rxnorm:38454",
+    "system": "rxnorm",
+    "code": "38454",
+    "title": "Tamsulosin",
+    "body": "category: Alpha Blockers",
+    "related": [
+      "tamsulosina",
+      "Flomax",
+      "HPB"
+    ]
+  },
+  {
+    "id": "rxnorm:558",
+    "system": "rxnorm",
+    "code": "558",
+    "title": "Allopurinol",
+    "body": "category: Xanthine Oxidase Inhibitors",
+    "related": [
+      "alopurinol",
+      "Zyloprim",
+      "gota"
+    ]
+  },
+  {
+    "id": "rxnorm:2683",
+    "system": "rxnorm",
+    "code": "2683",
+    "title": "Colchicine",
+    "body": "category: Anti-gout",
+    "related": [
+      "colchicina",
+      "gota"
+    ]
+  },
+  {
+    "id": "rxnorm:8123",
+    "system": "rxnorm",
+    "code": "8123",
+    "title": "Phenelzine",
+    "body": "category: MAOIs",
+    "related": [
+      "phenelzine",
+      "Nardil"
+    ]
+  },
+  {
+    "id": "rxnorm:9744",
+    "system": "rxnorm",
+    "code": "9744",
+    "title": "Selegiline",
+    "body": "category: MAOIs",
+    "related": [
+      "selegiline",
+      "Emsam",
+      "Eldepryl"
+    ]
+  },
+  {
+    "id": "rxnorm:5970",
+    "system": "rxnorm",
+    "code": "5970",
+    "title": "Iohexol",
+    "body": "category: Contrast Agents",
+    "related": [
+      "iohexol",
+      "Omnipaque"
+    ]
+  }
+]

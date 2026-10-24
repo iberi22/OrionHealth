@@ -1,0 +1,1727 @@
+[
+  {
+    "id": "symptom:Chest Pain",
+    "system": "symptom",
+    "code": "Chest Pain",
+    "title": "Chest Pain",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I20.9\",\"score\":0.9,\"reason\":\"Angina pectoris\"},{\"code\":\"I21\",\"score\":0.9,\"reason\":\"Myocardial infarction\"},{\"code\":\"K21.9\",\"score\":0.5,\"reason\":\"GERD\"},{\"code\":\"F41.0\",\"score\":0.4,\"reason\":\"Panic attack\"}]\nRed Flags: {\"en\":\"Crushing pain, radiating to jaw/left arm, sweating\",\"es\":\"Dolor opresivo, irradiado a mandíbula/brazo izquierdo, sudoración\"}",
+    "related": [
+      "dolor de pecho",
+      "angina",
+      "chest pressure"
+    ]
+  },
+  {
+    "id": "symptom:Palpitations",
+    "system": "symptom",
+    "code": "Palpitations",
+    "title": "Palpitations",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I48.91\",\"score\":0.8,\"reason\":\"Atrial fibrillation\"},{\"code\":\"F41.1\",\"score\":0.7,\"reason\":\"Anxiety\"},{\"code\":\"E05.9\",\"score\":0.6,\"reason\":\"Hyperthyroidism\"},{\"code\":\"I47.1\",\"score\":0.8,\"reason\":\"SVT\"}]\nRed Flags: {\"en\":\"Fainting, dizziness, chest pain\",\"es\":\"Desmayo, mareo, dolor de pecho\"}",
+    "related": [
+      "palpitaciones",
+      "heart racing",
+      "latidos rápidos"
+    ]
+  },
+  {
+    "id": "symptom:Shortness of breath on exertion",
+    "system": "symptom",
+    "code": "Shortness of breath on exertion",
+    "title": "Shortness of breath on exertion",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I50.9\",\"score\":0.9,\"reason\":\"Heart failure\"},{\"code\":\"J44.9\",\"score\":0.8,\"reason\":\"COPD\"},{\"code\":\"D64.9\",\"score\":0.6,\"reason\":\"Anemia\"}]\nRed Flags: {\"en\":\"Difficulty breathing at rest, blue lips\",\"es\":\"Dificultad para respirar en reposo, labios azulados\"}",
+    "related": [
+      "disnea de esfuerzo",
+      "breathless walking"
+    ]
+  },
+  {
+    "id": "symptom:Syncope (Fainting)",
+    "system": "symptom",
+    "code": "Syncope (Fainting)",
+    "title": "Syncope (Fainting)",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"R55\",\"score\":0.8,\"reason\":\"Vasovagal syncope\"},{\"code\":\"I45.9\",\"score\":0.7,\"reason\":\"Arrhythmia\"},{\"code\":\"I95.1\",\"score\":0.6,\"reason\":\"Orthostatic hypotension\"}]\nRed Flags: {\"en\":\"Fainting during exercise, chest pain\",\"es\":\"Desmayo durante el ejercicio, dolor de pecho\"}",
+    "related": [
+      "síncope",
+      "desmayo",
+      "fainting"
+    ]
+  },
+  {
+    "id": "symptom:Leg Edema",
+    "system": "symptom",
+    "code": "Leg Edema",
+    "title": "Leg Edema",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I50.9\",\"score\":0.9,\"reason\":\"Heart failure\"},{\"code\":\"I83.9\",\"score\":0.7,\"reason\":\"Varicose veins\"},{\"code\":\"N18.9\",\"score\":0.6,\"reason\":\"CKD\"}]\nRed Flags: {\"en\":\"Unilateral swelling with pain (DVT risk)\",\"es\":\"Hinchazón unilateral con dolor (riesgo de TVP)\"}",
+    "related": [
+      "edema",
+      "hinchazón de piernas",
+      "swollen ankles"
+    ]
+  },
+  {
+    "id": "symptom:Cold extremities",
+    "system": "symptom",
+    "code": "Cold extremities",
+    "title": "Cold extremities",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I73.9\",\"score\":0.8,\"reason\":\"PVD\"},{\"code\":\"I73.0\",\"score\":0.9,\"reason\":\"Raynaud's\"},{\"code\":\"E03.9\",\"score\":0.6,\"reason\":\"Hypothyroidism\"}]\nRed Flags: {\"en\":\"Sudden coldness with pain and pallor\",\"es\":\"Frialdad súbita con dolor y palidez\"}",
+    "related": [
+      "manos frías",
+      "pies fríos",
+      "cold hands"
+    ]
+  },
+  {
+    "id": "symptom:Cyanosis",
+    "system": "symptom",
+    "code": "Cyanosis",
+    "title": "Cyanosis",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"J96.9\",\"score\":0.9,\"reason\":\"Respiratory failure\"},{\"code\":\"I50.9\",\"score\":0.8,\"reason\":\"Heart failure\"},{\"code\":\"J44.1\",\"score\":0.8,\"reason\":\"COPD exacerbation\"}]\nRed Flags: {\"en\":\"Sudden onset with gasping\",\"es\":\"Inicio súbito con jadeo\"}",
+    "related": [
+      "cianosis",
+      "labios azules",
+      "blue lips"
+    ]
+  },
+  {
+    "id": "symptom:High blood pressure",
+    "system": "symptom",
+    "code": "High blood pressure",
+    "title": "High blood pressure",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I10\",\"score\":1,\"reason\":\"Essential hypertension\"},{\"code\":\"N28.9\",\"score\":0.5,\"reason\":\"Renal disease\"},{\"code\":\"E11\",\"score\":0.4,\"reason\":\"Diabetes impact\"}]\nRed Flags: {\"en\":\"Severe headache, blurred vision, confusion\",\"es\":\"Dolor de cabeza severo, visión borrosa, confusión\"}",
+    "related": [
+      "presión alta",
+      "hipertensión",
+      "hypertension"
+    ]
+  },
+  {
+    "id": "symptom:Tachycardia",
+    "system": "symptom",
+    "code": "Tachycardia",
+    "title": "Tachycardia",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"R00.0\",\"score\":0.9,\"reason\":\"Tachycardia, unspecified\"},{\"code\":\"F41.1\",\"score\":0.7,\"reason\":\"Anxiety\"},{\"code\":\"E05.9\",\"score\":0.8,\"reason\":\"Hyperthyroidism\"}]\nRed Flags: {\"en\":\"Heart rate >150 at rest, chest pain\",\"es\":\"Frecuencia >150 en reposo, dolor de pecho\"}",
+    "related": [
+      "taquicardia",
+      "fast heart rate",
+      "pulso rápido"
+    ]
+  },
+  {
+    "id": "symptom:Bradycardia",
+    "system": "symptom",
+    "code": "Bradycardia",
+    "title": "Bradycardia",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"R00.1\",\"score\":0.9,\"reason\":\"Bradycardia\"},{\"code\":\"E03.9\",\"score\":0.7,\"reason\":\"Hypothyroidism\"},{\"code\":\"I44.9\",\"score\":0.8,\"reason\":\"Heart block\"}]\nRed Flags: {\"en\":\"Fainting, extreme fatigue, dizziness\",\"es\":\"Desmayo, fatiga extrema, mareo\"}",
+    "related": [
+      "bradicardia",
+      "slow heart rate",
+      "pulso lento"
+    ]
+  },
+  {
+    "id": "symptom:Irregular heart beat",
+    "system": "symptom",
+    "code": "Irregular heart beat",
+    "title": "Irregular heart beat",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I49.9\",\"score\":0.9,\"reason\":\"Arrhythmia\"},{\"code\":\"I48.91\",\"score\":0.9,\"reason\":\"Atrial fibrillation\"},{\"code\":\"I47.1\",\"score\":0.8,\"reason\":\"SVT\"}]\nRed Flags: {\"en\":\"Sudden dizziness, chest pain\",\"es\":\"Mareo súbito, dolor de pecho\"}",
+    "related": [
+      "pulso irregular",
+      "arritmia",
+      "arrhythmia"
+    ]
+  },
+  {
+    "id": "symptom:Claudication",
+    "system": "symptom",
+    "code": "Claudication",
+    "title": "Claudication",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I73.9\",\"score\":0.9,\"reason\":\"Peripheral vascular disease\"},{\"code\":\"M54.16\",\"score\":0.6,\"reason\":\"Sciatica\"},{\"code\":\"I83.9\",\"score\":0.5,\"reason\":\"Venous insufficiency\"}]\nRed Flags: {\"en\":\"Pain at rest, skin ulcers, cold foot\",\"es\":\"Dolor en reposo, úlceras en piel, pie frío\"}",
+    "related": [
+      "claudicación",
+      "dolor de pierna al caminar",
+      "leg pain walking"
+    ]
+  },
+  {
+    "id": "symptom:Orthopnea",
+    "system": "symptom",
+    "code": "Orthopnea",
+    "title": "Orthopnea",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I50.9\",\"score\":0.9,\"reason\":\"Heart failure\"},{\"code\":\"J44.9\",\"score\":0.7,\"reason\":\"COPD\"},{\"code\":\"E66.9\",\"score\":0.5,\"reason\":\"Obesity\"}]\nRed Flags: {\"en\":\"Severe gasping for air\",\"es\":\"Jadeo severo por aire\"}",
+    "related": [
+      "ortopnea",
+      "falta de aire al acostarse",
+      "breathless lying down"
+    ]
+  },
+  {
+    "id": "symptom:Paroxysmal Nocturnal Dyspnea",
+    "system": "symptom",
+    "code": "Paroxysmal Nocturnal Dyspnea",
+    "title": "Paroxysmal Nocturnal Dyspnea",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I50.9\",\"score\":1,\"reason\":\"Congestive heart failure\"},{\"code\":\"J45.9\",\"score\":0.7,\"reason\":\"Nocturnal asthma\"}]\nRed Flags: {\"en\":\"Frequent episodes, severe distress\",\"es\":\"Episodios frecuentes, angustia severa\"}",
+    "related": [
+      "disnea paroxística nocturna",
+      "waking up gasping"
+    ]
+  },
+  {
+    "id": "symptom:Jugular Venous Distention",
+    "system": "symptom",
+    "code": "Jugular Venous Distention",
+    "title": "Jugular Venous Distention",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I50.0\",\"score\":1,\"reason\":\"Right heart failure\"},{\"code\":\"I27.9\",\"score\":0.8,\"reason\":\"Pulmonary hypertension\"}]\nRed Flags: {\"en\":\"Associated with severe edema and dyspnea\",\"es\":\"Asociado a edema severo y disnea\"}",
+    "related": [
+      "venas del cuello hinchadas",
+      "JVD"
+    ]
+  },
+  {
+    "id": "symptom:Heart murmur",
+    "system": "symptom",
+    "code": "Heart murmur",
+    "title": "Heart murmur",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I35.0\",\"score\":0.8,\"reason\":\"Aortic stenosis\"},{\"code\":\"I34.0\",\"score\":0.8,\"reason\":\"Mitral regurgitation\"},{\"code\":\"I38\",\"score\":0.9,\"reason\":\"Endocarditis\"}]\nRed Flags: {\"en\":\"Fever (endocarditis), fainting, dyspnea\",\"es\":\"Fiebre (endocarditis), desmayo, disnea\"}",
+    "related": [
+      "soplo",
+      "soplo cardíaco"
+    ]
+  },
+  {
+    "id": "symptom:Cardiac Fatigue",
+    "system": "symptom",
+    "code": "Cardiac Fatigue",
+    "title": "Cardiac Fatigue",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I50.9\",\"score\":0.8,\"reason\":\"Heart failure\"},{\"code\":\"D64.9\",\"score\":0.7,\"reason\":\"Anemia\"},{\"code\":\"F32.9\",\"score\":0.6,\"reason\":\"Depression\"}]\nRed Flags: {\"en\":\"Inability to perform basic hygiene\",\"es\":\"Incapacidad para higiene básica\"}",
+    "related": [
+      "fatiga",
+      "cansancio extremo",
+      "exhaustion"
+    ]
+  },
+  {
+    "id": "symptom:Orthostatic Dizziness",
+    "system": "symptom",
+    "code": "Orthostatic Dizziness",
+    "title": "Orthostatic Dizziness",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I95.1\",\"score\":0.9,\"reason\":\"Orthostatic hypotension\"},{\"code\":\"E86.0\",\"score\":0.8,\"reason\":\"Dehydration\"},{\"code\":\"D64.9\",\"score\":0.6,\"reason\":\"Anemia\"}]\nRed Flags: {\"en\":\"Frequent falls, loss of consciousness\",\"es\":\"Caídas frecuentes, pérdida de conciencia\"}",
+    "related": [
+      "mareo al levantarse",
+      "lightheaded standing"
+    ]
+  },
+  {
+    "id": "symptom:Chest Tightness",
+    "system": "symptom",
+    "code": "Chest Tightness",
+    "title": "Chest Tightness",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"J45.9\",\"score\":0.8,\"reason\":\"Asthma\"},{\"code\":\"I20.9\",\"score\":0.8,\"reason\":\"Angina\"},{\"code\":\"F41.0\",\"score\":0.7,\"reason\":\"Panic attack\"}]\nRed Flags: {\"en\":\"Pain radiating to jaw, sweating\",\"es\":\"Dolor irradiado a mandíbula, sudoración\"}",
+    "related": [
+      "opresión en el pecho",
+      "apretón en pecho"
+    ]
+  },
+  {
+    "id": "symptom:Sudden weight gain",
+    "system": "symptom",
+    "code": "Sudden weight gain",
+    "title": "Sudden weight gain",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I50.9\",\"score\":0.9,\"reason\":\"Heart failure (fluid)\"},{\"code\":\"N04.9\",\"score\":0.8,\"reason\":\"Nephrotic syndrome\"},{\"code\":\"E03.9\",\"score\":0.6,\"reason\":\"Hypothyroidism\"}]\nRed Flags: {\"en\":\">2kg in 2 days, leg swelling\",\"es\":\">2kg en 2 días, hinchazón de piernas\"}",
+    "related": [
+      "aumento de peso súbito",
+      "retención de líquidos"
+    ]
+  },
+  {
+    "id": "symptom:Lightheadedness",
+    "system": "symptom",
+    "code": "Lightheadedness",
+    "title": "Lightheadedness",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I95.9\",\"score\":0.7,\"reason\":\"Hypotension\"},{\"code\":\"R55\",\"score\":0.7,\"reason\":\"Near-syncope\"},{\"code\":\"F41.1\",\"score\":0.6,\"reason\":\"Anxiety\"}]\nRed Flags: {\"en\":\"Chest pain, palpitations\",\"es\":\"Dolor de pecho, palpitaciones\"}",
+    "related": [
+      "aturdimiento",
+      "mareo leve"
+    ]
+  },
+  {
+    "id": "symptom:Diaphoresis (Cold sweat)",
+    "system": "symptom",
+    "code": "Diaphoresis (Cold sweat)",
+    "title": "Diaphoresis (Cold sweat)",
+    "body": "Category: cardiovascular\nMatches: [{\"code\":\"I21\",\"score\":0.9,\"reason\":\"Myocardial infarction\"},{\"code\":\"E16.2\",\"score\":0.8,\"reason\":\"Hypoglycemia\"},{\"code\":\"F41.0\",\"score\":0.7,\"reason\":\"Panic attack\"}]\nRed Flags: {\"en\":\"Crushing chest pain, confusion\",\"es\":\"Dolor opresivo, confusión\"}",
+    "related": [
+      "sudoración fría",
+      "transpiración excesiva"
+    ]
+  },
+  {
+    "id": "symptom:Cough",
+    "system": "symptom",
+    "code": "Cough",
+    "title": "Cough",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J40\",\"score\":0.8,\"reason\":\"Bronchitis\"},{\"code\":\"J45.9\",\"score\":0.7,\"reason\":\"Asthma\"},{\"code\":\"J18.9\",\"score\":0.6,\"reason\":\"Pneumonia\"},{\"code\":\"K21.9\",\"score\":0.4,\"reason\":\"GERD\"}]\nRed Flags: {\"en\":\"Coughing blood, high fever, chest pain\",\"es\":\"Tos con sangre, fiebre alta, dolor de pecho\"}",
+    "related": [
+      "tos",
+      "dry cough",
+      "tos con flema"
+    ]
+  },
+  {
+    "id": "symptom:Wheezing",
+    "system": "symptom",
+    "code": "Wheezing",
+    "title": "Wheezing",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J45.9\",\"score\":0.9,\"reason\":\"Asthma\"},{\"code\":\"J44.1\",\"score\":0.8,\"reason\":\"COPD\"},{\"code\":\"J18.9\",\"score\":0.5,\"reason\":\"Pneumonia\"}]\nRed Flags: {\"en\":\"Inability to speak, blue lips\",\"es\":\"Incapacidad para hablar, labios azules\"}",
+    "related": [
+      "sibilancias",
+      "pitidos al respirar",
+      "wheeze"
+    ]
+  },
+  {
+    "id": "symptom:Shortness of breath (Dyspnea)",
+    "system": "symptom",
+    "code": "Shortness of breath (Dyspnea)",
+    "title": "Shortness of breath (Dyspnea)",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J45.41\",\"score\":0.9,\"reason\":\"Asthma attack\"},{\"code\":\"I50.9\",\"score\":0.8,\"reason\":\"Heart failure\"},{\"code\":\"J18.9\",\"score\":0.7,\"reason\":\"Pneumonia\"}]\nRed Flags: {\"en\":\"Sudden onset, severe distress\",\"es\":\"Inicio súbito, angustia severa\"}",
+    "related": [
+      "disnea",
+      "falta de aire",
+      "breathless"
+    ]
+  },
+  {
+    "id": "symptom:Sputum production",
+    "system": "symptom",
+    "code": "Sputum production",
+    "title": "Sputum production",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J42\",\"score\":0.8,\"reason\":\"Chronic bronchitis\"},{\"code\":\"J47.9\",\"score\":0.8,\"reason\":\"Bronchiectasis\"},{\"code\":\"J18.9\",\"score\":0.7,\"reason\":\"Pneumonia\"}]\nRed Flags: {\"en\":\"Rust colored or foul smelling sputum\",\"es\":\"Esputo color óxido o maloliente\"}",
+    "related": [
+      "flemas",
+      "expectoración",
+      "phlegm"
+    ]
+  },
+  {
+    "id": "symptom:Hemoptysis",
+    "system": "symptom",
+    "code": "Hemoptysis",
+    "title": "Hemoptysis",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"C34.9\",\"score\":0.8,\"reason\":\"Lung cancer\"},{\"code\":\"A15.0\",\"score\":0.8,\"reason\":\"Tuberculosis\"},{\"code\":\"I26.9\",\"score\":0.8,\"reason\":\"Pulmonary embolism\"}]\nRed Flags: {\"en\":\"Large volume of blood (>100ml)\",\"es\":\"Gran volumen de sangre (>100ml)\"}",
+    "related": [
+      "tos con sangre",
+      "sangre al toser"
+    ]
+  },
+  {
+    "id": "symptom:Pleuritic Chest Pain",
+    "system": "symptom",
+    "code": "Pleuritic Chest Pain",
+    "title": "Pleuritic Chest Pain",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"R09.1\",\"score\":0.8,\"reason\":\"Pleurisy\"},{\"code\":\"I26.9\",\"score\":0.9,\"reason\":\"Pulmonary embolism\"},{\"code\":\"J18.9\",\"score\":0.7,\"reason\":\"Pneumonia\"}]\nRed Flags: {\"en\":\"Sudden onset, combined with dyspnea\",\"es\":\"Inicio súbito, combinado con disnea\"}",
+    "related": [
+      "dolor pleurítico",
+      "dolor al respirar",
+      "sharp breath pain"
+    ]
+  },
+  {
+    "id": "symptom:Snoring",
+    "system": "symptom",
+    "code": "Snoring",
+    "title": "Snoring",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"G47.33\",\"score\":0.9,\"reason\":\"Sleep apnea\"},{\"code\":\"E66.9\",\"score\":0.7,\"reason\":\"Obesity\"},{\"code\":\"J35.2\",\"score\":0.6,\"reason\":\"Adenoid hypertrophy\"}]\nRed Flags: {\"en\":\"Waking up gasping, excessive day sleepiness\",\"es\":\"Despertar jadeando, sueño diurno excesivo\"}",
+    "related": [
+      "ronquidos",
+      "apnea",
+      "snore"
+    ]
+  },
+  {
+    "id": "symptom:Hoarseness",
+    "system": "symptom",
+    "code": "Hoarseness",
+    "title": "Hoarseness",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J04.0\",\"score\":0.8,\"reason\":\"Laryngitis\"},{\"code\":\"K21.9\",\"score\":0.7,\"reason\":\"GERD\"},{\"code\":\"C32.9\",\"score\":0.6,\"reason\":\"Laryngeal cancer\"}]\nRed Flags: {\"en\":\"Lasting >3 weeks, difficulty swallowing\",\"es\":\"Dura >3 semanas, dificultad para tragar\"}",
+    "related": [
+      "ronquera",
+      "disfonía",
+      "hoarse voice"
+    ]
+  },
+  {
+    "id": "symptom:Stridor",
+    "system": "symptom",
+    "code": "Stridor",
+    "title": "Stridor",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J05.0\",\"score\":0.9,\"reason\":\"Croup\"},{\"code\":\"T17.9\",\"score\":1,\"reason\":\"Foreign body\"},{\"code\":\"J38.0\",\"score\":0.8,\"reason\":\"Vocal cord paralysis\"}]\nRed Flags: {\"en\":\"Difficulty swallowing, drooling\",\"es\":\"Dificultad para tragar, babeo\"}",
+    "related": [
+      "estridor",
+      "noisy breathing",
+      "pitido inspiratorio"
+    ]
+  },
+  {
+    "id": "symptom:Tachypnea",
+    "system": "symptom",
+    "code": "Tachypnea",
+    "title": "Tachypnea",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"R06.0\",\"score\":0.8,\"reason\":\"Dyspnea\"},{\"code\":\"J80\",\"score\":0.9,\"reason\":\"ARDS\"},{\"code\":\"I26.9\",\"score\":0.8,\"reason\":\"Pulmonary embolism\"}]\nRed Flags: {\"en\":\"Rate >30, use of accessory muscles\",\"es\":\"Frecuencia >30, uso de músculos accesorios\"}",
+    "related": [
+      "taquipnea",
+      "respiración rápida",
+      "fast breathing"
+    ]
+  },
+  {
+    "id": "symptom:Nasal Congestion",
+    "system": "symptom",
+    "code": "Nasal Congestion",
+    "title": "Nasal Congestion",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J01.90\",\"score\":0.8,\"reason\":\"Sinusitis\"},{\"code\":\"J30.9\",\"score\":0.9,\"reason\":\"Allergic rhinitis\"},{\"code\":\"J00\",\"score\":0.9,\"reason\":\"Common cold\"}]\nRed Flags: {\"en\":\"Eye swelling, high fever\",\"es\":\"Hinchazón de ojos, fiebre alta\"}",
+    "related": [
+      "congestión nasal",
+      "nariz tapada"
+    ]
+  },
+  {
+    "id": "symptom:Rhinorrhea",
+    "system": "symptom",
+    "code": "Rhinorrhea",
+    "title": "Rhinorrhea",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J00\",\"score\":0.9,\"reason\":\"Common cold\"},{\"code\":\"J30.9\",\"score\":0.9,\"reason\":\"Hay fever\"},{\"code\":\"J01.9\",\"score\":0.7,\"reason\":\"Sinusitis\"}]\nRed Flags: {\"en\":\"One-sided clear fluid after head injury\",\"es\":\"Líquido claro unilateral tras golpe en cabeza\"}",
+    "related": [
+      "rinorrea",
+      "moqueo",
+      "runny nose"
+    ]
+  },
+  {
+    "id": "symptom:Sore Throat",
+    "system": "symptom",
+    "code": "Sore Throat",
+    "title": "Sore Throat",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J02.9\",\"score\":0.9,\"reason\":\"Pharyngitis\"},{\"code\":\"J03.9\",\"score\":0.9,\"reason\":\"Tonsillitis\"},{\"code\":\"B27.9\",\"score\":0.7,\"reason\":\"Mononucleosis\"}]\nRed Flags: {\"en\":\"Inability to swallow saliva, drooling\",\"es\":\"Incapacidad para tragar saliva, babeo\"}",
+    "related": [
+      "dolor de garganta",
+      "odinofagia"
+    ]
+  },
+  {
+    "id": "symptom:Sneezing",
+    "system": "symptom",
+    "code": "Sneezing",
+    "title": "Sneezing",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J30.9\",\"score\":0.9,\"reason\":\"Allergic rhinitis\"},{\"code\":\"J00\",\"score\":0.8,\"reason\":\"Common cold\"}]\nRed Flags: {\"en\":\"Associated with severe facial pain\",\"es\":\"Asociado a dolor facial severo\"}",
+    "related": [
+      "estornudos",
+      "estornudar"
+    ]
+  },
+  {
+    "id": "symptom:Anosmia",
+    "system": "symptom",
+    "code": "Anosmia",
+    "title": "Anosmia",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"U07.1\",\"score\":0.8,\"reason\":\"COVID-19\"},{\"code\":\"J01.9\",\"score\":0.7,\"reason\":\"Sinusitis\"},{\"code\":\"G30.9\",\"score\":0.5,\"reason\":\"Early Alzheimer's\"}]\nRed Flags: {\"en\":\"Sudden onset with neurological symptoms\",\"es\":\"Inicio súbito con síntomas neurológicos\"}",
+    "related": [
+      "pérdida de olfato",
+      "no huelo nada"
+    ]
+  },
+  {
+    "id": "symptom:Sinus pressure",
+    "system": "symptom",
+    "code": "Sinus pressure",
+    "title": "Sinus pressure",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J01.90\",\"score\":0.9,\"reason\":\"Acute sinusitis\"},{\"code\":\"J30.9\",\"score\":0.7,\"reason\":\"Allergic rhinitis\"}]\nRed Flags: {\"en\":\"High fever, severe headache, eye swelling\",\"es\":\"Fiebre alta, dolor de cabeza severo, ojos hinchados\"}",
+    "related": [
+      "presión sinusal",
+      "dolor de senos paranasales"
+    ]
+  },
+  {
+    "id": "symptom:Morning cough",
+    "system": "symptom",
+    "code": "Morning cough",
+    "title": "Morning cough",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J42\",\"score\":0.8,\"reason\":\"Chronic bronchitis\"},{\"code\":\"K21.9\",\"score\":0.7,\"reason\":\"GERD\"},{\"code\":\"J45.9\",\"score\":0.6,\"reason\":\"Asthma\"}]\nRed Flags: {\"en\":\"Weight loss, night sweats\",\"es\":\"Pérdida de peso, sudores nocturnos\"}",
+    "related": [
+      "tos matutina",
+      "tos al despertar"
+    ]
+  },
+  {
+    "id": "symptom:Nocturnal cough",
+    "system": "symptom",
+    "code": "Nocturnal cough",
+    "title": "Nocturnal cough",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J45.9\",\"score\":0.9,\"reason\":\"Asthma (Cough variant)\"},{\"code\":\"I50.9\",\"score\":0.8,\"reason\":\"Heart failure\"},{\"code\":\"K21.9\",\"score\":0.7,\"reason\":\"GERD\"}]\nRed Flags: {\"en\":\"Waking up gasping for air\",\"es\":\"Despertar jadeando por aire\"}",
+    "related": [
+      "tos nocturna",
+      "tos al dormir"
+    ]
+  },
+  {
+    "id": "symptom:Difficulty inhaling",
+    "system": "symptom",
+    "code": "Difficulty inhaling",
+    "title": "Difficulty inhaling",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J38.0\",\"score\":0.8,\"reason\":\"Vocal cord issues\"},{\"code\":\"J05.0\",\"score\":0.7,\"reason\":\"Croup\"}]\nRed Flags: {\"en\":\"Noisy high-pitched sound (stridor)\",\"es\":\"Sonido agudo al respirar (estridor)\"}",
+    "related": [
+      "dificultad para inspirar"
+    ]
+  },
+  {
+    "id": "symptom:Difficulty exhaling",
+    "system": "symptom",
+    "code": "Difficulty exhaling",
+    "title": "Difficulty exhaling",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J45.9\",\"score\":0.9,\"reason\":\"Asthma\"},{\"code\":\"J44.1\",\"score\":0.9,\"reason\":\"COPD\"}]\nRed Flags: {\"en\":\"Silent chest (no breath sounds)\",\"es\":\"Tórax silente (sin sonidos respiratorios)\"}",
+    "related": [
+      "dificultad para espirar"
+    ]
+  },
+  {
+    "id": "symptom:Breathlessness at rest",
+    "system": "symptom",
+    "code": "Breathlessness at rest",
+    "title": "Breathlessness at rest",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"I26.9\",\"score\":0.9,\"reason\":\"PE\"},{\"code\":\"J96.0\",\"score\":1,\"reason\":\"Acute resp failure\"},{\"code\":\"I50.9\",\"score\":0.8,\"reason\":\"Heart failure\"}]\nRed Flags: {\"en\":\"Emergency - call help immediately\",\"es\":\"Emergencia - llame a urgencias\"}",
+    "related": [
+      "falta de aire en reposo"
+    ]
+  },
+  {
+    "id": "symptom:Chest wall retraction",
+    "system": "symptom",
+    "code": "Chest wall retraction",
+    "title": "Chest wall retraction",
+    "body": "Category: respiratory\nMatches: [{\"code\":\"J05.0\",\"score\":0.9,\"reason\":\"Croup (children)\"},{\"code\":\"J45.9\",\"score\":0.8,\"reason\":\"Severe asthma\"}]\nRed Flags: {\"en\":\"Visible sucking in of skin between ribs\",\"es\":\"Hundimiento visible de piel entre costillas\"}",
+    "related": [
+      "tiraje intercostal",
+      "retracción costal"
+    ]
+  },
+  {
+    "id": "symptom:Headache",
+    "system": "symptom",
+    "code": "Headache",
+    "title": "Headache",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G43.9\",\"score\":0.9,\"reason\":\"Migraine\"},{\"code\":\"G44.2\",\"score\":0.8,\"reason\":\"Tension headache\"},{\"code\":\"I10\",\"score\":0.5,\"reason\":\"Hypertension\"}]\nRed Flags: {\"en\":\"Sudden 'thunderclap' intensity, fever, neck stiffness\",\"es\":\"Dolor súbito 'en trueno', fiebre, cuello rígido\"}",
+    "related": [
+      "dolor de cabeza",
+      "cefalea",
+      "migraine"
+    ]
+  },
+  {
+    "id": "symptom:Vertigo",
+    "system": "symptom",
+    "code": "Vertigo",
+    "title": "Vertigo",
+    "body": "Category: neurological\nMatches: [{\"code\":\"H81.1\",\"score\":0.9,\"reason\":\"BPPV\"},{\"code\":\"H81.0\",\"score\":0.8,\"reason\":\"Meniere's disease\"},{\"code\":\"A88.1\",\"score\":0.7,\"reason\":\"Vestibular neuritis\"}]\nRed Flags: {\"en\":\"Double vision, weakness, slurred speech\",\"es\":\"Visión doble, debilidad, habla arrastrada\"}",
+    "related": [
+      "vértigo",
+      "mareo rotatorio",
+      "dizziness"
+    ]
+  },
+  {
+    "id": "symptom:Paresthesia (Numbness)",
+    "system": "symptom",
+    "code": "Paresthesia (Numbness)",
+    "title": "Paresthesia (Numbness)",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G62.9\",\"score\":0.8,\"reason\":\"Neuropathy\"},{\"code\":\"G56.0\",\"score\":0.8,\"reason\":\"Carpal tunnel\"},{\"code\":\"G35\",\"score\":0.7,\"reason\":\"Multiple sclerosis\"}]\nRed Flags: {\"en\":\"Sudden onset one side, facial involvement\",\"es\":\"Inicio súbito un lado, afectación facial\"}",
+    "related": [
+      "entumecimiento",
+      "hormigueo",
+      "tingling"
+    ]
+  },
+  {
+    "id": "symptom:Muscle Weakness",
+    "system": "symptom",
+    "code": "Muscle Weakness",
+    "title": "Muscle Weakness",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G70.0\",\"score\":0.8,\"reason\":\"Myasthenia gravis\"},{\"code\":\"G35\",\"score\":0.7,\"reason\":\"Multiple sclerosis\"},{\"code\":\"G61.0\",\"score\":0.9,\"reason\":\"Guillain-Barré\"}]\nRed Flags: {\"en\":\"Symmetric rising weakness, respiratory issues\",\"es\":\"Debilidad ascendente simétrica, problemas respiratorios\"}",
+    "related": [
+      "debilidad muscular",
+      "poca fuerza"
+    ]
+  },
+  {
+    "id": "symptom:Tremor",
+    "system": "symptom",
+    "code": "Tremor",
+    "title": "Tremor",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G20\",\"score\":0.9,\"reason\":\"Parkinson's\"},{\"code\":\"G25.0\",\"score\":0.9,\"reason\":\"Essential tremor\"},{\"code\":\"E05.9\",\"score\":0.7,\"reason\":\"Hyperthyroidism\"}]\nRed Flags: {\"en\":\"Sudden onset, severe functional impact\",\"es\":\"Inicio súbito, impacto funcional severo\"}",
+    "related": [
+      "temblor",
+      "temblor de manos"
+    ]
+  },
+  {
+    "id": "symptom:Seizures",
+    "system": "symptom",
+    "code": "Seizures",
+    "title": "Seizures",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G40.9\",\"score\":1,\"reason\":\"Epilepsy\"},{\"code\":\"R56.0\",\"score\":0.8,\"reason\":\"Febrile seizure (kids)\"},{\"code\":\"I63.9\",\"score\":0.6,\"reason\":\"Stroke related\"}]\nRed Flags: {\"en\":\"Status epilepticus (duration >5 min)\",\"es\":\"Status epilepticus (duración >5 min)\"}",
+    "related": [
+      "convulsiones",
+      "ataque",
+      "fit"
+    ]
+  },
+  {
+    "id": "symptom:Memory Loss",
+    "system": "symptom",
+    "code": "Memory Loss",
+    "title": "Memory Loss",
+    "body": "Category: neurological\nMatches: [{\"code\":\"F03.9\",\"score\":0.9,\"reason\":\"Dementia\"},{\"code\":\"G30.9\",\"score\":0.9,\"reason\":\"Alzheimer's\"},{\"code\":\"F32.9\",\"score\":0.6,\"reason\":\"Pseudo-dementia (Depression)\"}]\nRed Flags: {\"en\":\"Sudden confusion, rapid decline\",\"es\":\"Confusión súbita, declive rápido\"}",
+    "related": [
+      "pérdida de memoria",
+      "olvidos"
+    ]
+  },
+  {
+    "id": "symptom:Confusion",
+    "system": "symptom",
+    "code": "Confusion",
+    "title": "Confusion",
+    "body": "Category: neurological\nMatches: [{\"code\":\"F05.9\",\"score\":1,\"reason\":\"Delirium\"},{\"code\":\"E15\",\"score\":0.8,\"reason\":\"Hypoglycemia\"},{\"code\":\"N39.0\",\"score\":0.7,\"reason\":\"UTI (elderly)\"}]\nRed Flags: {\"en\":\"Associated with high fever or head injury\",\"es\":\"Asociado a fiebre alta o golpe en cabeza\"}",
+    "related": [
+      "confusión",
+      "desorientación",
+      "confused"
+    ]
+  },
+  {
+    "id": "symptom:Dysarthria",
+    "system": "symptom",
+    "code": "Dysarthria",
+    "title": "Dysarthria",
+    "body": "Category: neurological\nMatches: [{\"code\":\"I63.9\",\"score\":0.9,\"reason\":\"Stroke\"},{\"code\":\"G35\",\"score\":0.7,\"reason\":\"Multiple sclerosis\"},{\"code\":\"G20\",\"score\":0.6,\"reason\":\"Parkinson's\"}]\nRed Flags: {\"en\":\"Sudden onset - Stroke protocol\",\"es\":\"Inicio súbito - Protocolo de Ictus\"}",
+    "related": [
+      "dificultad para hablar",
+      "habla arrastrada"
+    ]
+  },
+  {
+    "id": "symptom:Dysphagia",
+    "system": "symptom",
+    "code": "Dysphagia",
+    "title": "Dysphagia",
+    "body": "Category: neurological\nMatches: [{\"code\":\"K22.4\",\"score\":0.8,\"reason\":\"Esophageal spasm\"},{\"code\":\"G70.0\",\"score\":0.7,\"reason\":\"Myasthenia gravis\"},{\"code\":\"C15.9\",\"score\":0.6,\"reason\":\"Esophageal cancer\"}]\nRed Flags: {\"en\":\"Inability to swallow liquids or saliva\",\"es\":\"Incapacidad para tragar líquidos o saliva\"}",
+    "related": [
+      "dificultad para tragar",
+      "atragantamiento"
+    ]
+  },
+  {
+    "id": "symptom:Vision loss",
+    "system": "symptom",
+    "code": "Vision loss",
+    "title": "Vision loss",
+    "body": "Category: neurological\nMatches: [{\"code\":\"H40.9\",\"score\":0.8,\"reason\":\"Glaucoma\"},{\"code\":\"H35.3\",\"score\":0.8,\"reason\":\"Macular degeneration\"},{\"code\":\"G37.0\",\"score\":0.9,\"reason\":\"Optic neuritis\"}]\nRed Flags: {\"en\":\"Sudden 'curtain' closing, eye pain\",\"es\":\"Cierre súbito 'en cortina', dolor ocular\"}",
+    "related": [
+      "pérdida de visión",
+      "veo borroso"
+    ]
+  },
+  {
+    "id": "symptom:Tinnitus",
+    "system": "symptom",
+    "code": "Tinnitus",
+    "title": "Tinnitus",
+    "body": "Category: neurological\nMatches: [{\"code\":\"H93.1\",\"score\":1,\"reason\":\"Tinnitus\"},{\"code\":\"H81.0\",\"score\":0.8,\"reason\":\"Meniere's\"},{\"code\":\"H90.3\",\"score\":0.7,\"reason\":\"Hearing loss\"}]\nRed Flags: {\"en\":\"Pulsatile tinnitus, sudden hearing loss\",\"es\":\"Acúfeno pulsátil, pérdida auditiva súbita\"}",
+    "related": [
+      "zumbido de oídos",
+      "tinitus",
+      "ringing"
+    ]
+  },
+  {
+    "id": "symptom:Ataxia",
+    "system": "symptom",
+    "code": "Ataxia",
+    "title": "Ataxia",
+    "body": "Category: neurological\nMatches: [{\"code\":\"R27.0\",\"score\":0.8,\"reason\":\"Ataxia\"},{\"code\":\"G31.2\",\"score\":0.7,\"reason\":\"Alcoholic cerebellar degeneration\"},{\"code\":\"G35\",\"score\":0.7,\"reason\":\"Multiple sclerosis\"}]\nRed Flags: {\"en\":\"Sudden onset with headache or vomiting\",\"es\":\"Inicio súbito con dolor de cabeza o vómitos\"}",
+    "related": [
+      "ataxia",
+      "falta de coordinación",
+      "clumsy"
+    ]
+  },
+  {
+    "id": "symptom:Loss of Balance",
+    "system": "symptom",
+    "code": "Loss of Balance",
+    "title": "Loss of Balance",
+    "body": "Category: neurological\nMatches: [{\"code\":\"R29.6\",\"score\":0.8,\"reason\":\"Frequent falls\"},{\"code\":\"G20\",\"score\":0.7,\"reason\":\"Parkinson's\"},{\"code\":\"H81.1\",\"score\":0.6,\"reason\":\"BPPV\"}]\nRed Flags: {\"en\":\"Unable to stand or walk\",\"es\":\"Incapaz de estar de pie o caminar\"}",
+    "related": [
+      "pérdida de equilibrio",
+      "caídas"
+    ]
+  },
+  {
+    "id": "symptom:Neuralgia",
+    "system": "symptom",
+    "code": "Neuralgia",
+    "title": "Neuralgia",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G50.0\",\"score\":0.9,\"reason\":\"Trigeminal neuralgia\"},{\"code\":\"B02.22\",\"score\":0.8,\"reason\":\"Postherpetic neuralgia\"}]\nRed Flags: {\"en\":\"Severe unbearable electric shocks\",\"es\":\"Choques eléctricos severos insoportables\"}",
+    "related": [
+      "dolor neurálgico",
+      "dolor eléctrico",
+      "nerve pain"
+    ]
+  },
+  {
+    "id": "symptom:Facial Droop",
+    "system": "symptom",
+    "code": "Facial Droop",
+    "title": "Facial Droop",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G51.0\",\"score\":0.9,\"reason\":\"Bell's palsy\"},{\"code\":\"I63.9\",\"score\":1,\"reason\":\"Stroke\"}]\nRed Flags: {\"en\":\"Arm weakness, speech changes (FAST)\",\"es\":\"Debilidad en brazo, habla alterada (FAST)\"}",
+    "related": [
+      "cara caída",
+      "boca torcida"
+    ]
+  },
+  {
+    "id": "symptom:Ptosis",
+    "system": "symptom",
+    "code": "Ptosis",
+    "title": "Ptosis",
+    "body": "Category: neurological\nMatches: [{\"code\":\"H02.4\",\"score\":0.8,\"reason\":\"Ptosis\"},{\"code\":\"G70.0\",\"score\":0.9,\"reason\":\"Myasthenia gravis\"},{\"code\":\"G90.2\",\"score\":0.8,\"reason\":\"Horner syndrome\"}]\nRed Flags: {\"en\":\"New onset, unequal pupils\",\"es\":\"Nuevo inicio, pupilas desiguales\"}",
+    "related": [
+      "párpado caído",
+      "ptosis"
+    ]
+  },
+  {
+    "id": "symptom:Altered Sensation",
+    "system": "symptom",
+    "code": "Altered Sensation",
+    "title": "Altered Sensation",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G62.9\",\"score\":0.8,\"reason\":\"Neuropathy\"},{\"code\":\"G35\",\"score\":0.7,\"reason\":\"MS\"}]\nRed Flags: {\"en\":\"Saddle anesthesia (numbness in groin area)\",\"es\":\"Anestesia en silla de montar (ingle)\"}",
+    "related": [
+      "sensación alterada",
+      "no siento bien"
+    ]
+  },
+  {
+    "id": "symptom:Somnolence",
+    "system": "symptom",
+    "code": "Somnolence",
+    "title": "Somnolence",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G47.1\",\"score\":0.8,\"reason\":\"Hypersomnia\"},{\"code\":\"E03.9\",\"score\":0.7,\"reason\":\"Hypothyroidism\"},{\"code\":\"G47.33\",\"score\":0.7,\"reason\":\"Sleep apnea\"}]\nRed Flags: {\"en\":\"Difficult to wake up, lethargy\",\"es\":\"Difícil de despertar, letargo\"}",
+    "related": [
+      "somnolencia",
+      "mucho sueño"
+    ]
+  },
+  {
+    "id": "symptom:Insomnia",
+    "system": "symptom",
+    "code": "Insomnia",
+    "title": "Insomnia",
+    "body": "Category: neurological\nMatches: [{\"code\":\"G47.0\",\"score\":1,\"reason\":\"Insomnia\"},{\"code\":\"F32.9\",\"score\":0.8,\"reason\":\"Depression\"},{\"code\":\"F41.1\",\"score\":0.8,\"reason\":\"Anxiety\"}]\nRed Flags: {\"en\":\"Total lack of sleep for days\",\"es\":\"Falta total de sueño por días\"}",
+    "related": [
+      "insomnio",
+      "no puedo dormir"
+    ]
+  },
+  {
+    "id": "symptom:Loss of Consciousness",
+    "system": "symptom",
+    "code": "Loss of Consciousness",
+    "title": "Loss of Consciousness",
+    "body": "Category: neurological\nMatches: [{\"code\":\"R55\",\"score\":0.9,\"reason\":\"Syncope\"},{\"code\":\"G40.9\",\"score\":0.8,\"reason\":\"Seizure\"},{\"code\":\"I63.9\",\"score\":0.7,\"reason\":\"Stroke\"}]\nRed Flags: {\"en\":\"Traumatic head injury preceding\",\"es\":\"Golpe en cabeza previo\"}",
+    "related": [
+      "pérdida de conocimiento",
+      "desmayado"
+    ]
+  },
+  {
+    "id": "symptom:Double vision",
+    "system": "symptom",
+    "code": "Double vision",
+    "title": "Double vision",
+    "body": "Category: neurological\nMatches: [{\"code\":\"H53.2\",\"score\":1,\"reason\":\"Diplopia\"},{\"code\":\"G70.0\",\"score\":0.8,\"reason\":\"Myasthenia gravis\"},{\"code\":\"I63.9\",\"score\":0.7,\"reason\":\"Stroke\"}]\nRed Flags: {\"en\":\"Sudden onset with headache\",\"es\":\"Inicio súbito con dolor de cabeza\"}",
+    "related": [
+      "visión doble",
+      "diplopía"
+    ]
+  },
+  {
+    "id": "symptom:Abdominal Pain",
+    "system": "symptom",
+    "code": "Abdominal Pain",
+    "title": "Abdominal Pain",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K52.9\",\"score\":0.7,\"reason\":\"Gastroenteritis\"},{\"code\":\"K58.9\",\"score\":0.7,\"reason\":\"IBS\"},{\"code\":\"K35.8\",\"score\":0.6,\"reason\":\"Appendicitis\"}]\nRed Flags: {\"en\":\"Rigid abdomen, severe pain, high fever\",\"es\":\"Abdomen rígido, dolor severo, fiebre alta\"}",
+    "related": [
+      "dolor abdominal",
+      "dolor de panza",
+      "stomach ache"
+    ]
+  },
+  {
+    "id": "symptom:Nausea",
+    "system": "symptom",
+    "code": "Nausea",
+    "title": "Nausea",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"R11.0\",\"score\":0.8,\"reason\":\"Nausea\"},{\"code\":\"K21.9\",\"score\":0.7,\"reason\":\"GERD\"},{\"code\":\"K52.9\",\"score\":0.7,\"reason\":\"Gastroenteritis\"}]\nRed Flags: {\"en\":\"Associated with chest pain\",\"es\":\"Asociado a dolor de pecho\"}",
+    "related": [
+      "náuseas",
+      "ganas de vomitar"
+    ]
+  },
+  {
+    "id": "symptom:Vomiting",
+    "system": "symptom",
+    "code": "Vomiting",
+    "title": "Vomiting",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"R11.1\",\"score\":0.8,\"reason\":\"Vomiting\"},{\"code\":\"K52.9\",\"score\":0.9,\"reason\":\"Gastroenteritis\"},{\"code\":\"K21.9\",\"score\":0.6,\"reason\":\"GERD\"}]\nRed Flags: {\"en\":\"Vomiting blood, fecal odor\",\"es\":\"Vómito con sangre, olor fecal\"}",
+    "related": [
+      "vómitos",
+      "trasbocar"
+    ]
+  },
+  {
+    "id": "symptom:Diarrhea",
+    "system": "symptom",
+    "code": "Diarrhea",
+    "title": "Diarrhea",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K52.9\",\"score\":1,\"reason\":\"Gastroenteritis\"},{\"code\":\"K58.0\",\"score\":0.8,\"reason\":\"IBS-D\"},{\"code\":\"A09\",\"score\":0.9,\"reason\":\"Infectious diarrhea\"}]\nRed Flags: {\"en\":\"Blood in stool, signs of dehydration\",\"es\":\"Sangre en heces, signos de deshidratación\"}",
+    "related": [
+      "diarrea",
+      "soltura"
+    ]
+  },
+  {
+    "id": "symptom:Constipation",
+    "system": "symptom",
+    "code": "Constipation",
+    "title": "Constipation",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K59.0\",\"score\":1,\"reason\":\"Constipation\"},{\"code\":\"K58.1\",\"score\":0.8,\"reason\":\"IBS-C\"},{\"code\":\"E03.9\",\"score\":0.6,\"reason\":\"Hypothyroidism\"}]\nRed Flags: {\"en\":\"No gas or stool for days, severe bloating\",\"es\":\"Sin gases ni heces por días, hinchazón severa\"}",
+    "related": [
+      "estreñimiento",
+      "no puedo ir al baño"
+    ]
+  },
+  {
+    "id": "symptom:Heartburn",
+    "system": "symptom",
+    "code": "Heartburn",
+    "title": "Heartburn",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K21.9\",\"score\":1,\"reason\":\"GERD\"},{\"code\":\"K29.7\",\"score\":0.8,\"reason\":\"Gastritis\"},{\"code\":\"K25.9\",\"score\":0.7,\"reason\":\"Peptic ulcer\"}]\nRed Flags: {\"en\":\"Weight loss, difficulty swallowing\",\"es\":\"Pérdida de peso, dificultad para tragar\"}",
+    "related": [
+      "acidez",
+      "reflujo",
+      "heartburn"
+    ]
+  },
+  {
+    "id": "symptom:Bloating",
+    "system": "symptom",
+    "code": "Bloating",
+    "title": "Bloating",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"R14.0\",\"score\":0.8,\"reason\":\"Flatulence\"},{\"code\":\"K58.9\",\"score\":0.7,\"reason\":\"IBS\"},{\"code\":\"E73.9\",\"score\":0.6,\"reason\":\"Lactose intolerance\"}]\nRed Flags: {\"en\":\"Rapid increase in girth, persistent pain\",\"es\":\"Aumento rápido de perímetro, dolor persistente\"}",
+    "related": [
+      "hinchazón abdominal",
+      "gases",
+      "bloated"
+    ]
+  },
+  {
+    "id": "symptom:Flatulence",
+    "system": "symptom",
+    "code": "Flatulence",
+    "title": "Flatulence",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"R14.3\",\"score\":0.8,\"reason\":\"Flatulence\"},{\"code\":\"K58.9\",\"score\":0.7,\"reason\":\"IBS\"}]\nRed Flags: {\"en\":\"Associated with severe malabsorption signs\",\"es\":\"Asociado a signos de malabsorción severa\"}",
+    "related": [
+      "flatulencia",
+      "gases excesivos"
+    ]
+  },
+  {
+    "id": "symptom:Loss of Appetite",
+    "system": "symptom",
+    "code": "Loss of Appetite",
+    "title": "Loss of Appetite",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"R63.0\",\"score\":0.8,\"reason\":\"Anorexia\"},{\"code\":\"F32.9\",\"score\":0.7,\"reason\":\"Depression\"},{\"code\":\"C80.1\",\"score\":0.6,\"reason\":\"Cancer indicator\"}]\nRed Flags: {\"en\":\"Unintended rapid weight loss\",\"es\":\"Pérdida de peso rápida no intencionada\"}",
+    "related": [
+      "falta de apetito",
+      "no tengo hambre"
+    ]
+  },
+  {
+    "id": "symptom:Jaundice",
+    "system": "symptom",
+    "code": "Jaundice",
+    "title": "Jaundice",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K74.6\",\"score\":0.8,\"reason\":\"Cirrhosis\"},{\"code\":\"K80.8\",\"score\":0.8,\"reason\":\"Gallstones\"},{\"code\":\"B19.9\",\"score\":0.9,\"reason\":\"Hepatitis\"}]\nRed Flags: {\"en\":\"Dark urine, pale stools, confusion\",\"es\":\"Orina oscura, heces pálidas, confusión\"}",
+    "related": [
+      "ictericia",
+      "piel amarilla",
+      "ojos amarillos"
+    ]
+  },
+  {
+    "id": "symptom:Melena (Black stools)",
+    "system": "symptom",
+    "code": "Melena (Black stools)",
+    "title": "Melena (Black stools)",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K25.9\",\"score\":0.9,\"reason\":\"Bleeding ulcer\"},{\"code\":\"K29.0\",\"score\":0.8,\"reason\":\"Acute gastritis\"},{\"code\":\"C16.9\",\"score\":0.7,\"reason\":\"Gastric cancer\"}]\nRed Flags: {\"en\":\"Dizziness, fast heart rate\",\"es\":\"Mareo, ritmo cardíaco rápido\"}",
+    "related": [
+      "heces negras",
+      "melena"
+    ]
+  },
+  {
+    "id": "symptom:Hematochezia (Blood in stool)",
+    "system": "symptom",
+    "code": "Hematochezia (Blood in stool)",
+    "title": "Hematochezia (Blood in stool)",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K64.9\",\"score\":0.8,\"reason\":\"Hemorrhoids\"},{\"code\":\"K51.9\",\"score\":0.8,\"reason\":\"Ulcerative colitis\"},{\"code\":\"C18.9\",\"score\":0.7,\"reason\":\"Colon cancer\"}]\nRed Flags: {\"en\":\"Large amount of blood, weight loss\",\"es\":\"Gran cantidad de sangre, pérdida de peso\"}",
+    "related": [
+      "sangre en heces",
+      "sangrado rectal"
+    ]
+  },
+  {
+    "id": "symptom:Hematemesis (Vomiting blood)",
+    "system": "symptom",
+    "code": "Hematemesis (Vomiting blood)",
+    "title": "Hematemesis (Vomiting blood)",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K25.4\",\"score\":0.9,\"reason\":\"Bleeding peptic ulcer\"},{\"code\":\"I85.0\",\"score\":1,\"reason\":\"Esophageal varices\"}]\nRed Flags: {\"en\":\"Emergency - risk of shock\",\"es\":\"Emergencia - riesgo de shock\"}",
+    "related": [
+      "vómito con sangre",
+      "hematemesis"
+    ]
+  },
+  {
+    "id": "symptom:Change in bowel habits",
+    "system": "symptom",
+    "code": "Change in bowel habits",
+    "title": "Change in bowel habits",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"C18.9\",\"score\":0.7,\"reason\":\"Colon cancer\"},{\"code\":\"K58.9\",\"score\":0.8,\"reason\":\"IBS\"}]\nRed Flags: {\"en\":\"Persistent change >4 weeks in elderly\",\"es\":\"Cambio persistente >4 semanas en ancianos\"}",
+    "related": [
+      "cambio en ritmo intestinal"
+    ]
+  },
+  {
+    "id": "symptom:Rectal pain",
+    "system": "symptom",
+    "code": "Rectal pain",
+    "title": "Rectal pain",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K60.2\",\"score\":0.8,\"reason\":\"Anal fissure\"},{\"code\":\"K62.89\",\"score\":0.7,\"reason\":\"Proctitis\"},{\"code\":\"K64.9\",\"score\":0.7,\"reason\":\"Hemorrhoids\"}]\nRed Flags: {\"en\":\"Severe pain, fever, abscess\",\"es\":\"Dolor severo, fiebre, absceso\"}",
+    "related": [
+      "dolor rectal",
+      "dolor al defecar"
+    ]
+  },
+  {
+    "id": "symptom:Pruritus ani",
+    "system": "symptom",
+    "code": "Pruritus ani",
+    "title": "Pruritus ani",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"L29.0\",\"score\":0.8,\"reason\":\"Pruritus ani\"},{\"code\":\"B80\",\"score\":0.9,\"reason\":\"Pinworms\"}]\nRed Flags: {\"en\":\"Visible parasites, skin breakdown\",\"es\":\"Parásitos visibles, lesiones en piel\"}",
+    "related": [
+      "picor anal",
+      "comezón anal"
+    ]
+  },
+  {
+    "id": "symptom:Dark Urine",
+    "system": "symptom",
+    "code": "Dark Urine",
+    "title": "Dark Urine",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"R82.2\",\"score\":0.8,\"reason\":\"Bilirubinuria\"},{\"code\":\"E86.0\",\"score\":0.7,\"reason\":\"Dehydration\"},{\"code\":\"K76.9\",\"score\":0.8,\"reason\":\"Liver disease\"}]\nRed Flags: {\"en\":\"Combined with yellow eyes\",\"es\":\"Combinado con ojos amarillos\"}",
+    "related": [
+      "orina oscura",
+      "color coca-cola"
+    ]
+  },
+  {
+    "id": "symptom:Pale Stools",
+    "system": "symptom",
+    "code": "Pale Stools",
+    "title": "Pale Stools",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K83.1\",\"score\":0.9,\"reason\":\"Bile duct obstruction\"},{\"code\":\"K74.6\",\"score\":0.7,\"reason\":\"Cirrhosis\"}]\nRed Flags: {\"en\":\"Combined with jaundice and dark urine\",\"es\":\"Combinado con ictericia y orina oscura\"}",
+    "related": [
+      "heces pálidas",
+      "acolia"
+    ]
+  },
+  {
+    "id": "symptom:Early satiety",
+    "system": "symptom",
+    "code": "Early satiety",
+    "title": "Early satiety",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"C16.9\",\"score\":0.7,\"reason\":\"Gastric cancer\"},{\"code\":\"K31.84\",\"score\":0.8,\"reason\":\"Gastroparesis\"}]\nRed Flags: {\"en\":\"Weight loss, persistent vomiting\",\"es\":\"Pérdida de peso, vómitos persistentes\"}",
+    "related": [
+      "saciedad precoz",
+      "me lleno rápido"
+    ]
+  },
+  {
+    "id": "symptom:Stomach cramps",
+    "system": "symptom",
+    "code": "Stomach cramps",
+    "title": "Stomach cramps",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K52.9\",\"score\":0.8,\"reason\":\"Gastroenteritis\"},{\"code\":\"K58.9\",\"score\":0.7,\"reason\":\"IBS\"}]\nRed Flags: {\"en\":\"Severe worsening pain\",\"es\":\"Dolor que empeora severamente\"}",
+    "related": [
+      "retortijones",
+      "cólicos"
+    ]
+  },
+  {
+    "id": "symptom:Dyspepsia",
+    "system": "symptom",
+    "code": "Dyspepsia",
+    "title": "Dyspepsia",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"K30\",\"score\":1,\"reason\":\"Dyspepsia\"},{\"code\":\"K21.9\",\"score\":0.8,\"reason\":\"GERD\"},{\"code\":\"K29.7\",\"score\":0.8,\"reason\":\"Gastritis\"}]\nRed Flags: {\"en\":\"Black stools, weight loss\",\"es\":\"Heces negras, pérdida de peso\"}",
+    "related": [
+      "indigestión",
+      "dispepsia"
+    ]
+  },
+  {
+    "id": "symptom:Unexplained weight loss",
+    "system": "symptom",
+    "code": "Unexplained weight loss",
+    "title": "Unexplained weight loss",
+    "body": "Category: gastrointestinal\nMatches: [{\"code\":\"C80.1\",\"score\":0.8,\"reason\":\"Cancer\"},{\"code\":\"E11\",\"score\":0.7,\"reason\":\"Diabetes\"},{\"code\":\"E05.9\",\"score\":0.7,\"reason\":\"Hyperthyroidism\"}]\nRed Flags: {\"en\":\">5% body weight in 6-12 months\",\"es\":\">5% peso corporal en 6-12 meses\"}",
+    "related": [
+      "pérdida de peso inexplicable"
+    ]
+  },
+  {
+    "id": "symptom:Joint Pain",
+    "system": "symptom",
+    "code": "Joint Pain",
+    "title": "Joint Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M25.50\",\"score\":0.8,\"reason\":\"Arthralgia\"},{\"code\":\"M19.90\",\"score\":0.8,\"reason\":\"Osteoarthritis\"},{\"code\":\"M06.9\",\"score\":0.7,\"reason\":\"Rheumatoid arthritis\"}]\nRed Flags: {\"en\":\"Red, hot, swollen joint with fever\",\"es\":\"Articulación roja, caliente e hinchada con fiebre\"}",
+    "related": [
+      "dolor articular",
+      "dolor de articulaciones"
+    ]
+  },
+  {
+    "id": "symptom:Joint Swelling",
+    "system": "symptom",
+    "code": "Joint Swelling",
+    "title": "Joint Swelling",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M25.40\",\"score\":0.9,\"reason\":\"Joint effusion\"},{\"code\":\"M10.9\",\"score\":0.8,\"reason\":\"Gout\"},{\"code\":\"M06.9\",\"score\":0.7,\"reason\":\"RA\"}]\nRed Flags: {\"en\":\"Traumatic onset with inability to move\",\"es\":\"Inicio traumático con incapacidad de mover\"}",
+    "related": [
+      "hinchazón articular",
+      "articulación inflamada"
+    ]
+  },
+  {
+    "id": "symptom:Joint Stiffness",
+    "system": "symptom",
+    "code": "Joint Stiffness",
+    "title": "Joint Stiffness",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M25.60\",\"score\":0.8,\"reason\":\"Stiffness\"},{\"code\":\"M06.9\",\"score\":0.9,\"reason\":\"RA (morning stiffness)\"},{\"code\":\"M19.9\",\"score\":0.7,\"reason\":\"OA\"}]\nRed Flags: {\"en\":\"Stiffness >1 hour in the morning\",\"es\":\"Rigidez >1 hora por la mañana\"}",
+    "related": [
+      "rigidez articular",
+      "articulaciones tiesas"
+    ]
+  },
+  {
+    "id": "symptom:Muscle Pain",
+    "system": "symptom",
+    "code": "Muscle Pain",
+    "title": "Muscle Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M79.10\",\"score\":0.9,\"reason\":\"Myalgia\"},{\"code\":\"B34.9\",\"score\":0.7,\"reason\":\"Viral infection\"},{\"code\":\"M79.7\",\"score\":0.7,\"reason\":\"Fibromyalgia\"}]\nRed Flags: {\"en\":\"Severe pain with dark urine (Rhabdomyolysis)\",\"es\":\"Dolor severo con orina oscura (Rabdomiólisis)\"}",
+    "related": [
+      "dolor muscular",
+      "mialgia"
+    ]
+  },
+  {
+    "id": "symptom:Muscle Weakness",
+    "system": "symptom",
+    "code": "Muscle Weakness",
+    "title": "Muscle Weakness",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M62.81\",\"score\":0.8,\"reason\":\"Muscle weakness\"},{\"code\":\"G70.0\",\"score\":0.7,\"reason\":\"Myasthenia\"},{\"code\":\"E03.9\",\"score\":0.6,\"reason\":\"Hypothyroidism\"}]\nRed Flags: {\"en\":\"Sudden onset, difficulty breathing\",\"es\":\"Inicio súbito, dificultad para respirar\"}",
+    "related": [
+      "debilidad muscular",
+      "flojera"
+    ]
+  },
+  {
+    "id": "symptom:Muscle Cramps",
+    "system": "symptom",
+    "code": "Muscle Cramps",
+    "title": "Muscle Cramps",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"R25.2\",\"score\":1,\"reason\":\"Cramps\"},{\"code\":\"E87.6\",\"score\":0.7,\"reason\":\"Hypokalemia\"},{\"code\":\"E83.51\",\"score\":0.7,\"reason\":\"Hypocalcemia\"}]\nRed Flags: {\"en\":\"Combined with severe electrolyte signs\",\"es\":\"Combinado con signos electrolíticos severos\"}",
+    "related": [
+      "calambres",
+      "tirones"
+    ]
+  },
+  {
+    "id": "symptom:Back Pain",
+    "system": "symptom",
+    "code": "Back Pain",
+    "title": "Back Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M54.5\",\"score\":0.9,\"reason\":\"Low back pain\"},{\"code\":\"M54.16\",\"score\":0.7,\"reason\":\"Sciatica\"},{\"code\":\"M51.2\",\"score\":0.7,\"reason\":\"Herniated disc\"}]\nRed Flags: {\"en\":\"Bowel/bladder incontinence, leg weakness\",\"es\":\"Incontinencia, debilidad en piernas\"}",
+    "related": [
+      "dolor de espalda",
+      "lumbago"
+    ]
+  },
+  {
+    "id": "symptom:Neck Pain",
+    "system": "symptom",
+    "code": "Neck Pain",
+    "title": "Neck Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M54.2\",\"score\":0.9,\"reason\":\"Cervicalgia\"},{\"code\":\"M50.2\",\"score\":0.7,\"reason\":\"Cervical disc displacement\"}]\nRed Flags: {\"en\":\"Fever and neck stiffness (Meningitis risk)\",\"es\":\"Fiebre y rigidez de nuca (riesgo Meningitis)\"}",
+    "related": [
+      "dolor de cuello",
+      "cervicalgia"
+    ]
+  },
+  {
+    "id": "symptom:Limited ROM",
+    "system": "symptom",
+    "code": "Limited ROM",
+    "title": "Limited ROM",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M25.60\",\"score\":0.8,\"reason\":\"Stiffness\"},{\"code\":\"M75.0\",\"score\":0.9,\"reason\":\"Frozen shoulder\"}]\nRed Flags: {\"en\":\"Sudden locked joint\",\"es\":\"Articulación bloqueada súbitamente\"}",
+    "related": [
+      "rango de movimiento limitado",
+      "no puedo mover el brazo"
+    ]
+  },
+  {
+    "id": "symptom:Bone Pain",
+    "system": "symptom",
+    "code": "Bone Pain",
+    "title": "Bone Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M81.0\",\"score\":0.6,\"reason\":\"Osteoporosis related\"},{\"code\":\"C79.5\",\"score\":0.7,\"reason\":\"Bone metastasis\"}]\nRed Flags: {\"en\":\"Deep, boring pain, worse at night\",\"es\":\"Dolor profundo, peor por la noche\"}",
+    "related": [
+      "dolor de huesos"
+    ]
+  },
+  {
+    "id": "symptom:Foot Pain",
+    "system": "symptom",
+    "code": "Foot Pain",
+    "title": "Foot Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M77.3\",\"score\":0.8,\"reason\":\"Plantar fasciitis\"},{\"code\":\"M10.9\",\"score\":0.7,\"reason\":\"Gout (Podagra)\"}]\nRed Flags: {\"en\":\"Diabetic foot ulcers\",\"es\":\"Úlceras en pie diabético\"}",
+    "related": [
+      "dolor de pies",
+      "dolor de talón"
+    ]
+  },
+  {
+    "id": "symptom:Hand Pain",
+    "system": "symptom",
+    "code": "Hand Pain",
+    "title": "Hand Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"G56.0\",\"score\":0.8,\"reason\":\"Carpal tunnel\"},{\"code\":\"M19.9\",\"score\":0.7,\"reason\":\"OA\"},{\"code\":\"M06.9\",\"score\":0.7,\"reason\":\"RA\"}]\nRed Flags: {\"en\":\"Loss of grip strength\",\"es\":\"Pérdida de fuerza de agarre\"}",
+    "related": [
+      "dolor de manos"
+    ]
+  },
+  {
+    "id": "symptom:Shoulder Pain",
+    "system": "symptom",
+    "code": "Shoulder Pain",
+    "title": "Shoulder Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M75.1\",\"score\":0.8,\"reason\":\"Rotator cuff\"},{\"code\":\"M75.0\",\"score\":0.8,\"reason\":\"Adhesive capsulitis\"}]\nRed Flags: {\"en\":\"Combined with chest pain\",\"es\":\"Combinado con dolor de pecho\"}",
+    "related": [
+      "dolor de hombro"
+    ]
+  },
+  {
+    "id": "symptom:Knee Pain",
+    "system": "symptom",
+    "code": "Knee Pain",
+    "title": "Knee Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M17.9\",\"score\":0.9,\"reason\":\"Knee OA\"},{\"code\":\"M23.2\",\"score\":0.8,\"reason\":\"Meniscus tear\"}]\nRed Flags: {\"en\":\"Inability to bear weight\",\"es\":\"Incapacidad de cargar peso\"}",
+    "related": [
+      "dolor de rodilla"
+    ]
+  },
+  {
+    "id": "symptom:Hip Pain",
+    "system": "symptom",
+    "code": "Hip Pain",
+    "title": "Hip Pain",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M16.9\",\"score\":0.9,\"reason\":\"Hip OA\"},{\"code\":\"M70.6\",\"score\":0.8,\"reason\":\"Trochanteric bursitis\"}]\nRed Flags: {\"en\":\"Inability to walk, shortened/rotated leg\",\"es\":\"Incapacidad de caminar, pierna acortada/rotada\"}",
+    "related": [
+      "dolor de cadera"
+    ]
+  },
+  {
+    "id": "symptom:Clicking joints",
+    "system": "symptom",
+    "code": "Clicking joints",
+    "title": "Clicking joints",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M25.8\",\"score\":0.6,\"reason\":\"Joint popping\"},{\"code\":\"M19.9\",\"score\":0.6,\"reason\":\"OA\"}]\nRed Flags: {\"en\":\"Pain or locking with the click\",\"es\":\"Dolor o bloqueo con el chasquido\"}",
+    "related": [
+      "chasquidos articulares",
+      "me crujen los huesos"
+    ]
+  },
+  {
+    "id": "symptom:Muscle wasting",
+    "system": "symptom",
+    "code": "Muscle wasting",
+    "title": "Muscle wasting",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M62.5\",\"score\":0.8,\"reason\":\"Muscle atrophy\"},{\"code\":\"G12.21\",\"score\":0.6,\"reason\":\"ALS\"},{\"code\":\"E43\",\"score\":0.7,\"reason\":\"Malnutrition\"}]\nRed Flags: {\"en\":\"Rapid loss, associated weakness\",\"es\":\"Pérdida rápida, debilidad asociada\"}",
+    "related": [
+      "pérdida de masa muscular",
+      "músculo flojo"
+    ]
+  },
+  {
+    "id": "symptom:Limb Numbness",
+    "system": "symptom",
+    "code": "Limb Numbness",
+    "title": "Limb Numbness",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"G62.9\",\"score\":0.8,\"reason\":\"Neuropathy\"},{\"code\":\"M54.1\",\"score\":0.7,\"reason\":\"Radiculopathy\"}]\nRed Flags: {\"en\":\"Complete loss of sensation\",\"es\":\"Pérdida completa de sensibilidad\"}",
+    "related": [
+      "entumecimiento de extremidades"
+    ]
+  },
+  {
+    "id": "symptom:Difficulty walking",
+    "system": "symptom",
+    "code": "Difficulty walking",
+    "title": "Difficulty walking",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"R26.2\",\"score\":0.8,\"reason\":\"Difficulty walking\"},{\"code\":\"M16.9\",\"score\":0.7,\"reason\":\"Hip OA\"},{\"code\":\"G20\",\"score\":0.7,\"reason\":\"Parkinson's\"}]\nRed Flags: {\"en\":\"Sudden inability, frequent falls\",\"es\":\"Incapacidad súbita, caídas frecuentes\"}",
+    "related": [
+      "dificultad para caminar",
+      "cojera"
+    ]
+  },
+  {
+    "id": "symptom:Morning stiffness",
+    "system": "symptom",
+    "code": "Morning stiffness",
+    "title": "Morning stiffness",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M06.9\",\"score\":1,\"reason\":\"RA\"},{\"code\":\"M19.9\",\"score\":0.7,\"reason\":\"OA\"},{\"code\":\"M45.9\",\"score\":0.8,\"reason\":\"Ankylosing spondylitis\"}]\nRed Flags: {\"en\":\"Lasting >1 hour\",\"es\":\"Dura >1 hora\"}",
+    "related": [
+      "rigidez matutina"
+    ]
+  },
+  {
+    "id": "symptom:Tenderness",
+    "system": "symptom",
+    "code": "Tenderness",
+    "title": "Tenderness",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M79.7\",\"score\":0.8,\"reason\":\"Fibromyalgia\"},{\"code\":\"M79.60\",\"score\":0.7,\"reason\":\"Limb pain\"}]\nRed Flags: {\"en\":\"Point tenderness over a bone after trauma\",\"es\":\"Dolor puntual sobre hueso tras trauma\"}",
+    "related": [
+      "sensibilidad al tacto",
+      "me duele si me tocan"
+    ]
+  },
+  {
+    "id": "symptom:Spasms",
+    "system": "symptom",
+    "code": "Spasms",
+    "title": "Spasms",
+    "body": "Category: musculoskeletal\nMatches: [{\"code\":\"M62.83\",\"score\":0.9,\"reason\":\"Muscle spasm\"},{\"code\":\"G24.9\",\"score\":0.7,\"reason\":\"Dystonia\"}]\nRed Flags: {\"en\":\"Severe persistent painful contractions\",\"es\":\"Contracciones dolorosas persistentes severas\"}",
+    "related": [
+      "espasmos",
+      "contracciones involuntarias"
+    ]
+  },
+  {
+    "id": "symptom:Rash",
+    "system": "symptom",
+    "code": "Rash",
+    "title": "Rash",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L23.9\",\"score\":0.8,\"reason\":\"Contact dermatitis\"},{\"code\":\"L50.9\",\"score\":0.8,\"reason\":\"Hives\"},{\"code\":\"B00.9\",\"score\":0.6,\"reason\":\"Herpes\"}]\nRed Flags: {\"en\":\"Fever, mouth blisters, purple spots\",\"es\":\"Fiebre, ampollas en boca, manchas púrpuras\"}",
+    "related": [
+      "erupción",
+      "ronchas",
+      "skin rash"
+    ]
+  },
+  {
+    "id": "symptom:Pruritus (Itching)",
+    "system": "symptom",
+    "code": "Pruritus (Itching)",
+    "title": "Pruritus (Itching)",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L29.9\",\"score\":1,\"reason\":\"Pruritus\"},{\"code\":\"L20.9\",\"score\":0.8,\"reason\":\"Atopic dermatitis\"},{\"code\":\"K74.6\",\"score\":0.5,\"reason\":\"Liver disease related\"}]\nRed Flags: {\"en\":\"Combined with jaundice\",\"es\":\"Combinado con ictericia\"}",
+    "related": [
+      "picor",
+      "comezón",
+      "itching"
+    ]
+  },
+  {
+    "id": "symptom:Xerosis (Dry skin)",
+    "system": "symptom",
+    "code": "Xerosis (Dry skin)",
+    "title": "Xerosis (Dry skin)",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L85.3\",\"score\":1,\"reason\":\"Dry skin\"},{\"code\":\"E03.9\",\"score\":0.7,\"reason\":\"Hypothyroidism\"},{\"code\":\"L20.9\",\"score\":0.7,\"reason\":\"Eczema\"}]\nRed Flags: {\"en\":\"Severe cracking and infection\",\"es\":\"Agrietamiento severo e infección\"}",
+    "related": [
+      "piel seca",
+      "sequedad"
+    ]
+  },
+  {
+    "id": "symptom:Erythema (Redness)",
+    "system": "symptom",
+    "code": "Erythema (Redness)",
+    "title": "Erythema (Redness)",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L53.9\",\"score\":0.8,\"reason\":\"Erythema\"},{\"code\":\"L03.9\",\"score\":0.9,\"reason\":\"Cellulitis\"}]\nRed Flags: {\"en\":\"Spreading rapidly, hot to touch, fever\",\"es\":\"Extensión rápida, caliente al tacto, fiebre\"}",
+    "related": [
+      "enrojecimiento",
+      "piel roja"
+    ]
+  },
+  {
+    "id": "symptom:Vesicles (Blisters)",
+    "system": "symptom",
+    "code": "Vesicles (Blisters)",
+    "title": "Vesicles (Blisters)",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"R23.8\",\"score\":0.8,\"reason\":\"Blisters\"},{\"code\":\"B02.9\",\"score\":0.9,\"reason\":\"Shingles\"},{\"code\":\"L01.0\",\"score\":0.8,\"reason\":\"Impetigo\"}]\nRed Flags: {\"en\":\"Involvement of eyes, widespread skin peeling\",\"es\":\"Afectación de ojos, descamación generalizada\"}",
+    "related": [
+      "ampollas",
+      "vejigas"
+    ]
+  },
+  {
+    "id": "symptom:Urticaria (Hives)",
+    "system": "symptom",
+    "code": "Urticaria (Hives)",
+    "title": "Urticaria (Hives)",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L50.9\",\"score\":1,\"reason\":\"Hives\"},{\"code\":\"T78.4\",\"score\":0.8,\"reason\":\"Allergy\"}]\nRed Flags: {\"en\":\"Swelling of lips/tongue, difficulty breathing\",\"es\":\"Hinchazón de labios/lengua, falta de aire\"}",
+    "related": [
+      "urticaria",
+      "ronchas rojas"
+    ]
+  },
+  {
+    "id": "symptom:Skin lumps",
+    "system": "symptom",
+    "code": "Skin lumps",
+    "title": "Skin lumps",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"D17.9\",\"score\":0.8,\"reason\":\"Lipoma\"},{\"code\":\"D23.9\",\"score\":0.7,\"reason\":\"Benign skin neoplasm\"},{\"code\":\"I88.9\",\"score\":0.7,\"reason\":\"Swollen lymph node\"}]\nRed Flags: {\"en\":\"Hard, fixed, rapidly growing\",\"es\":\"Duro, fijo, crecimiento rápido\"}",
+    "related": [
+      "bultos en la piel",
+      "protuberancias"
+    ]
+  },
+  {
+    "id": "symptom:Mole changes",
+    "system": "symptom",
+    "code": "Mole changes",
+    "title": "Mole changes",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"D22.9\",\"score\":0.6,\"reason\":\"Nevi\"},{\"code\":\"C43.9\",\"score\":0.9,\"reason\":\"Melanoma\"}]\nRed Flags: {\"en\":\"ABCDE: Asymmetry, Border, Color, Diameter, Evolving\",\"es\":\"ABCDE: Asimetría, Bordes, Color, Diámetro, Evolución\"}",
+    "related": [
+      "cambio en lunar",
+      "lunar raro"
+    ]
+  },
+  {
+    "id": "symptom:Alopecia (Hair loss)",
+    "system": "symptom",
+    "code": "Alopecia (Hair loss)",
+    "title": "Alopecia (Hair loss)",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L65.9\",\"score\":0.9,\"reason\":\"Hair loss\"},{\"code\":\"L63.9\",\"score\":0.9,\"reason\":\"Alopecia areata\"},{\"code\":\"E03.9\",\"score\":0.7,\"reason\":\"Hypothyroidism\"}]\nRed Flags: {\"en\":\"Sudden total loss, scarring\",\"es\":\"Pérdida total súbita, cicatrización\"}",
+    "related": [
+      "caída del cabello",
+      "calvicie"
+    ]
+  },
+  {
+    "id": "symptom:Nail changes",
+    "system": "symptom",
+    "code": "Nail changes",
+    "title": "Nail changes",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"B35.1\",\"score\":0.9,\"reason\":\"Nail fungus\"},{\"code\":\"L40.9\",\"score\":0.7,\"reason\":\"Psoriasis\"}]\nRed Flags: {\"en\":\"Black line under nail (Subungual melanoma)\",\"es\":\"Línea negra bajo uña (Melanoma subungueal)\"}",
+    "related": [
+      "cambio en uñas",
+      "uñas feas"
+    ]
+  },
+  {
+    "id": "symptom:Easy bruising",
+    "system": "symptom",
+    "code": "Easy bruising",
+    "title": "Easy bruising",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"D69.6\",\"score\":0.8,\"reason\":\"Thrombocytopenia\"},{\"code\":\"D68.9\",\"score\":0.7,\"reason\":\"Coagulation disorder\"}]\nRed Flags: {\"en\":\"Spontaneous bleeding, tiny red dots (petechiae)\",\"es\":\"Sangrado espontáneo, puntos rojos (petequias)\"}",
+    "related": [
+      "moretones fáciles",
+      "hematomas"
+    ]
+  },
+  {
+    "id": "symptom:Hyperhidrosis",
+    "system": "symptom",
+    "code": "Hyperhidrosis",
+    "title": "Hyperhidrosis",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L74.5\",\"score\":1,\"reason\":\"Hyperhidrosis\"},{\"code\":\"E05.9\",\"score\":0.7,\"reason\":\"Hyperthyroidism\"},{\"code\":\"F41.1\",\"score\":0.7,\"reason\":\"Anxiety\"}]\nRed Flags: {\"en\":\"Night sweats with weight loss\",\"es\":\"Sudores nocturnos con pérdida de peso\"}",
+    "related": [
+      "sudor excesivo",
+      "hiperhidrosis"
+    ]
+  },
+  {
+    "id": "symptom:Pallor",
+    "system": "symptom",
+    "code": "Pallor",
+    "title": "Pallor",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"D64.9\",\"score\":0.9,\"reason\":\"Anemia\"},{\"code\":\"I95.9\",\"score\":0.7,\"reason\":\"Hypotension\"}]\nRed Flags: {\"en\":\"Sudden with weakness and fast pulse\",\"es\":\"Súbita con debilidad y pulso rápido\"}",
+    "related": [
+      "palidez",
+      "piel pálida"
+    ]
+  },
+  {
+    "id": "symptom:Peeling skin",
+    "system": "symptom",
+    "code": "Peeling skin",
+    "title": "Peeling skin",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L30.9\",\"score\":0.8,\"reason\":\"Dermatitis\"},{\"code\":\"B35.9\",\"score\":0.7,\"reason\":\"Tinea\"}]\nRed Flags: {\"en\":\"Widespread with fever (SSS or TEN)\",\"es\":\"Generalizada con fiebre (SSS o TEN)\"}",
+    "related": [
+      "descamación",
+      "piel que se pela"
+    ]
+  },
+  {
+    "id": "symptom:Skin sores",
+    "system": "symptom",
+    "code": "Skin sores",
+    "title": "Skin sores",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L98.4\",\"score\":0.9,\"reason\":\"Skin ulcer\"},{\"code\":\"I83.0\",\"score\":0.8,\"reason\":\"Varicose ulcer\"},{\"code\":\"E11\",\"score\":0.7,\"reason\":\"Diabetic ulcer\"}]\nRed Flags: {\"en\":\"Non-healing >4 weeks, signs of infection\",\"es\":\"No cura >4 semanas, signos de infección\"}",
+    "related": [
+      "llagas en piel",
+      "úlceras"
+    ]
+  },
+  {
+    "id": "symptom:Warts",
+    "system": "symptom",
+    "code": "Warts",
+    "title": "Warts",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"B07.9\",\"score\":1,\"reason\":\"Viral warts\"}]\nRed Flags: {\"en\":\"Genital warts (STI risk)\",\"es\":\"Verrugas genitales (riesgo ITS)\"}",
+    "related": [
+      "verrugas",
+      "mezquinos"
+    ]
+  },
+  {
+    "id": "symptom:Acne",
+    "system": "symptom",
+    "code": "Acne",
+    "title": "Acne",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L70.0\",\"score\":1,\"reason\":\"Acne vulgaris\"},{\"code\":\"E28.2\",\"score\":0.7,\"reason\":\"PCOS\"}]\nRed Flags: {\"en\":\"Severe scarring, painful cysts\",\"es\":\"Cicatrización severa, quistes dolorosos\"}",
+    "related": [
+      "acné",
+      "barros",
+      "espinillas"
+    ]
+  },
+  {
+    "id": "symptom:Scaly skin",
+    "system": "symptom",
+    "code": "Scaly skin",
+    "title": "Scaly skin",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L40.9\",\"score\":0.9,\"reason\":\"Psoriasis\"},{\"code\":\"L21.9\",\"score\":0.9,\"reason\":\"Seborrheic dermatitis\"}]\nRed Flags: {\"en\":\"Joint pain combined with scales\",\"es\":\"Dolor articular combinado con escamas\"}",
+    "related": [
+      "piel con escamas",
+      "caspa"
+    ]
+  },
+  {
+    "id": "symptom:Thickened skin",
+    "system": "symptom",
+    "code": "Thickened skin",
+    "title": "Thickened skin",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L85.9\",\"score\":0.8,\"reason\":\"Keratoderma\"},{\"code\":\"M34.9\",\"score\":0.7,\"reason\":\"Scleroderma\"}]\nRed Flags: {\"en\":\"Difficulty moving fingers or opening mouth\",\"es\":\"Dificultad para mover dedos o abrir boca\"}",
+    "related": [
+      "piel engrosada"
+    ]
+  },
+  {
+    "id": "symptom:Skin discoloration",
+    "system": "symptom",
+    "code": "Skin discoloration",
+    "title": "Skin discoloration",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L81.9\",\"score\":0.8,\"reason\":\"Pigmentation disorder\"},{\"code\":\"L80\",\"score\":0.9,\"reason\":\"Vitiligo\"},{\"code\":\"E11\",\"score\":0.7,\"reason\":\"Acanthosis nigricans\"}]\nRed Flags: {\"en\":\"Sudden change in large area\",\"es\":\"Cambio súbito en área grande\"}",
+    "related": [
+      "manchas en la piel",
+      "cambio de color"
+    ]
+  },
+  {
+    "id": "symptom:Burning skin",
+    "system": "symptom",
+    "code": "Burning skin",
+    "title": "Burning skin",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L29.9\",\"score\":0.7,\"reason\":\"Pruritus/Burning\"},{\"code\":\"B02.9\",\"score\":0.9,\"reason\":\"Early Shingles\"},{\"code\":\"G62.9\",\"score\":0.8,\"reason\":\"Neuropathy\"}]\nRed Flags: {\"en\":\"Followed by painful blisters on one side\",\"es\":\"Seguido de ampollas dolorosas en un lado\"}",
+    "related": [
+      "quemazón en piel",
+      "piel que arde"
+    ]
+  },
+  {
+    "id": "symptom:Sensitive skin",
+    "system": "symptom",
+    "code": "Sensitive skin",
+    "title": "Sensitive skin",
+    "body": "Category: dermatological\nMatches: [{\"code\":\"L23.9\",\"score\":0.8,\"reason\":\"Allergic contact dermatitis\"},{\"code\":\"L24.9\",\"score\":0.8,\"reason\":\"Irritant dermatitis\"}]\nRed Flags: {\"en\":\"Severe swelling of face\",\"es\":\"Hinchazón severa de cara\"}",
+    "related": [
+      "piel sensible",
+      "reacción fácil"
+    ]
+  },
+  {
+    "id": "symptom:Sadness",
+    "system": "symptom",
+    "code": "Sadness",
+    "title": "Sadness",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":0.9,\"reason\":\"Major depression\"},{\"code\":\"F34.1\",\"score\":0.7,\"reason\":\"Dysthymia\"},{\"code\":\"F43.2\",\"score\":0.6,\"reason\":\"Adjustment disorder\"}]\nRed Flags: {\"en\":\"Thoughts of self-harm, psychosis\",\"es\":\"Pensamientos de autolesión, psicosis\"}",
+    "related": [
+      "tristeza",
+      "desánimo",
+      "depressed"
+    ]
+  },
+  {
+    "id": "symptom:Anxiety",
+    "system": "symptom",
+    "code": "Anxiety",
+    "title": "Anxiety",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F41.1\",\"score\":1,\"reason\":\"GAD\"},{\"code\":\"F41.0\",\"score\":0.8,\"reason\":\"Panic disorder\"},{\"code\":\"F40.1\",\"score\":0.7,\"reason\":\"Social anxiety\"}]\nRed Flags: {\"en\":\"Chest pain mimicking heart attack\",\"es\":\"Dolor de pecho que imita infarto\"}",
+    "related": [
+      "ansiedad",
+      "nerviosismo",
+      "worry"
+    ]
+  },
+  {
+    "id": "symptom:Panic attacks",
+    "system": "symptom",
+    "code": "Panic attacks",
+    "title": "Panic attacks",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F41.0\",\"score\":1,\"reason\":\"Panic disorder\"},{\"code\":\"F41.1\",\"score\":0.8,\"reason\":\"Anxiety\"}]\nRed Flags: {\"en\":\"Severe physical symptoms, fear of dying\",\"es\":\"Síntomas físicos severos, miedo a morir\"}",
+    "related": [
+      "ataques de pánico",
+      "crisis de angustia"
+    ]
+  },
+  {
+    "id": "symptom:Irritability",
+    "system": "symptom",
+    "code": "Irritability",
+    "title": "Irritability",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":0.7,\"reason\":\"Depression (male)\"},{\"code\":\"F31.9\",\"score\":0.8,\"reason\":\"Bipolar (manic)\"},{\"code\":\"F90.9\",\"score\":0.7,\"reason\":\"ADHD\"}]\nRed Flags: {\"en\":\"Aggressive behavior, risk to others\",\"es\":\"Comportamiento agresivo, riesgo a terceros\"}",
+    "related": [
+      "irritabilidad",
+      "mal humor"
+    ]
+  },
+  {
+    "id": "symptom:Sleep disturbance",
+    "system": "symptom",
+    "code": "Sleep disturbance",
+    "title": "Sleep disturbance",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F51.0\",\"score\":0.9,\"reason\":\"Non-organic insomnia\"},{\"code\":\"F32.9\",\"score\":0.8,\"reason\":\"Depression related\"}]\nRed Flags: {\"en\":\"Chronic total lack of sleep\",\"es\":\"Falta total de sueño crónica\"}",
+    "related": [
+      "trastorno del sueño",
+      "no duermo bien"
+    ]
+  },
+  {
+    "id": "symptom:Appetite changes",
+    "system": "symptom",
+    "code": "Appetite changes",
+    "title": "Appetite changes",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":0.8,\"reason\":\"Depression\"},{\"code\":\"F50.0\",\"score\":0.7,\"reason\":\"Anorexia\"},{\"code\":\"F50.2\",\"score\":0.7,\"reason\":\"Bulimia\"}]\nRed Flags: {\"en\":\"Extreme weight loss or gain\",\"es\":\"Pérdida o ganancia de peso extrema\"}",
+    "related": [
+      "cambio de apetito",
+      "como mucho",
+      "no como nada"
+    ]
+  },
+  {
+    "id": "symptom:Anhedonia",
+    "system": "symptom",
+    "code": "Anhedonia",
+    "title": "Anhedonia",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":1,\"reason\":\"Major depression\"},{\"code\":\"F34.1\",\"score\":0.7,\"reason\":\"Dysthymia\"}]\nRed Flags: {\"en\":\"Severe withdrawal from all activities\",\"es\":\"Retiro severo de todas las actividades\"}",
+    "related": [
+      "anhedonia",
+      "no disfruto nada",
+      "loss of interest"
+    ]
+  },
+  {
+    "id": "symptom:Difficulty concentrating",
+    "system": "symptom",
+    "code": "Difficulty concentrating",
+    "title": "Difficulty concentrating",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F90.9\",\"score\":0.9,\"reason\":\"ADHD\"},{\"code\":\"F32.9\",\"score\":0.8,\"reason\":\"Depression\"},{\"code\":\"F41.1\",\"score\":0.8,\"reason\":\"Anxiety\"}]\nRed Flags: {\"en\":\"Inability to complete simple tasks\",\"es\":\"Incapacidad para completar tareas simples\"}",
+    "related": [
+      "dificultad para concentrarse",
+      "distraído"
+    ]
+  },
+  {
+    "id": "symptom:Racing thoughts",
+    "system": "symptom",
+    "code": "Racing thoughts",
+    "title": "Racing thoughts",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F31.9\",\"score\":0.9,\"reason\":\"Bipolar (mania)\"},{\"code\":\"F41.1\",\"score\":0.8,\"reason\":\"Anxiety\"}]\nRed Flags: {\"en\":\"Incoherent speech, no sleep needed\",\"es\":\"Habla incoherente, sin necesidad de dormir\"}",
+    "related": [
+      "pensamientos acelerados",
+      "mente a mil"
+    ]
+  },
+  {
+    "id": "symptom:Hallucinations",
+    "system": "symptom",
+    "code": "Hallucinations",
+    "title": "Hallucinations",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F20.9\",\"score\":1,\"reason\":\"Schizophrenia\"},{\"code\":\"F31.9\",\"score\":0.7,\"reason\":\"Bipolar with psychosis\"}]\nRed Flags: {\"en\":\"Command hallucinations (voices telling to act)\",\"es\":\"Alucinaciones de comando (voces que ordenan actuar)\"}",
+    "related": [
+      "alucinaciones",
+      "veo cosas",
+      "oigo voces"
+    ]
+  },
+  {
+    "id": "symptom:Delusions",
+    "system": "symptom",
+    "code": "Delusions",
+    "title": "Delusions",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F22.0\",\"score\":1,\"reason\":\"Delusional disorder\"},{\"code\":\"F20.9\",\"score\":0.9,\"reason\":\"Schizophrenia\"}]\nRed Flags: {\"en\":\"Refusal of food/water due to paranoia\",\"es\":\"Rechazo de comida/agua por paranoia\"}",
+    "related": [
+      "delirios",
+      "ideas raras",
+      "persecución"
+    ]
+  },
+  {
+    "id": "symptom:Mood Swings",
+    "system": "symptom",
+    "code": "Mood Swings",
+    "title": "Mood Swings",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F31.9\",\"score\":0.9,\"reason\":\"Bipolar disorder\"},{\"code\":\"F60.3\",\"score\":0.8,\"reason\":\"Borderline personality\"}]\nRed Flags: {\"en\":\"Extreme highs and dangerous lows\",\"es\":\"Altos extremos y bajos peligrosos\"}",
+    "related": [
+      "cambios de humor",
+      "bipolaridad"
+    ]
+  },
+  {
+    "id": "symptom:Social Withdrawal",
+    "system": "symptom",
+    "code": "Social Withdrawal",
+    "title": "Social Withdrawal",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":0.8,\"reason\":\"Depression\"},{\"code\":\"F40.1\",\"score\":0.8,\"reason\":\"Social phobia\"},{\"code\":\"F20.9\",\"score\":0.7,\"reason\":\"Schizophrenia\"}]\nRed Flags: {\"en\":\"Complete refusal to communicate\",\"es\":\"Rechazo total a comunicarse\"}",
+    "related": [
+      "aislamiento social",
+      "no quiero ver a nadie"
+    ]
+  },
+  {
+    "id": "symptom:Worthlessness",
+    "system": "symptom",
+    "code": "Worthlessness",
+    "title": "Worthlessness",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":1,\"reason\":\"Major depression\"}]\nRed Flags: {\"en\":\"Self-harm intent\",\"es\":\"Intención de autolesión\"}",
+    "related": [
+      "sentirse inútil",
+      "sin valor"
+    ]
+  },
+  {
+    "id": "symptom:Excessive Guilt",
+    "system": "symptom",
+    "code": "Excessive Guilt",
+    "title": "Excessive Guilt",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":0.9,\"reason\":\"Major depression\"},{\"code\":\"F43.1\",\"score\":0.7,\"reason\":\"PTSD\"}]\nRed Flags: {\"en\":\"Delusional guilt\",\"es\":\"Culpa delirante\"}",
+    "related": [
+      "culpa excesiva",
+      "todo es mi culpa"
+    ]
+  },
+  {
+    "id": "symptom:Psychiatric Fatigue",
+    "system": "symptom",
+    "code": "Psychiatric Fatigue",
+    "title": "Psychiatric Fatigue",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":0.9,\"reason\":\"Depression\"},{\"code\":\"F48.0\",\"score\":0.9,\"reason\":\"Neurasthenia\"}]\nRed Flags: {\"en\":\"Inability to get out of bed\",\"es\":\"Incapacidad para salir de la cama\"}",
+    "related": [
+      "fatiga mental",
+      "cansancio psicológico"
+    ]
+  },
+  {
+    "id": "symptom:Agitation",
+    "system": "symptom",
+    "code": "Agitation",
+    "title": "Agitation",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F41.1\",\"score\":0.8,\"reason\":\"Anxiety\"},{\"code\":\"F31.9\",\"score\":0.9,\"reason\":\"Bipolar (manic)\"},{\"code\":\"F90.9\",\"score\":0.8,\"reason\":\"ADHD\"}]\nRed Flags: {\"en\":\"Inability to stop moving, physical aggression\",\"es\":\"Incapacidad de parar, agresión física\"}",
+    "related": [
+      "agitación",
+      "no puedo estar quieto"
+    ]
+  },
+  {
+    "id": "symptom:Bradykinesia (Psych)",
+    "system": "symptom",
+    "code": "Bradykinesia (Psych)",
+    "title": "Bradykinesia (Psych)",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":0.8,\"reason\":\"Depression (melancholic)\"},{\"code\":\"F20.9\",\"score\":0.7,\"reason\":\"Schizophrenia\"}]\nRed Flags: {\"en\":\"Catatonia (no movement at all)\",\"es\":\"Catatonia (sin movimiento alguno)\"}",
+    "related": [
+      "lentitud de movimientos",
+      "habla lenta"
+    ]
+  },
+  {
+    "id": "symptom:Impulsivity",
+    "system": "symptom",
+    "code": "Impulsivity",
+    "title": "Impulsivity",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F90.9\",\"score\":0.9,\"reason\":\"ADHD\"},{\"code\":\"F60.3\",\"score\":0.9,\"reason\":\"Borderline\"},{\"code\":\"F31.9\",\"score\":0.8,\"reason\":\"Mania\"}]\nRed Flags: {\"en\":\"Spending all money, dangerous driving\",\"es\":\"Gastar todo el dinero, conducción peligrosa\"}",
+    "related": [
+      "impulsividad",
+      "actúo sin pensar"
+    ]
+  },
+  {
+    "id": "symptom:Obsessive Thoughts",
+    "system": "symptom",
+    "code": "Obsessive Thoughts",
+    "title": "Obsessive Thoughts",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F42.9\",\"score\":1,\"reason\":\"OCD\"}]\nRed Flags: {\"en\":\"Thoughts of harming others\",\"es\":\"Pensamientos de dañar a otros\"}",
+    "related": [
+      "pensamientos obsesivos",
+      "ideas fijas"
+    ]
+  },
+  {
+    "id": "symptom:Compulsive Behaviors",
+    "system": "symptom",
+    "code": "Compulsive Behaviors",
+    "title": "Compulsive Behaviors",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F42.9\",\"score\":1,\"reason\":\"OCD\"}]\nRed Flags: {\"en\":\"Rituals that prevent eating or sleeping\",\"es\":\"Rituales que impiden comer o dormir\"}",
+    "related": [
+      "compulsiones",
+      "rituales"
+    ]
+  },
+  {
+    "id": "symptom:Memory problems (Psych)",
+    "system": "symptom",
+    "code": "Memory problems (Psych)",
+    "title": "Memory problems (Psych)",
+    "body": "Category: psychiatric\nMatches: [{\"code\":\"F32.9\",\"score\":0.8,\"reason\":\"Depression\"},{\"code\":\"F41.1\",\"score\":0.7,\"reason\":\"Anxiety\"},{\"code\":\"F44.0\",\"score\":0.9,\"reason\":\"Dissociative amnesia\"}]\nRed Flags: {\"en\":\"Forgetting identity or major life events\",\"es\":\"Olvidar identidad o eventos mayores\"}",
+    "related": [
+      "problemas de memoria",
+      "olvidos por estrés"
+    ]
+  }
+]

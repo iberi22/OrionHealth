@@ -1,0 +1,963 @@
+[
+  {
+    "id": "snomed:73211009",
+    "system": "snomed",
+    "code": "73211009",
+    "title": "Diabetes mellitus",
+    "body": "category: Endocrine/Metabolic",
+    "related": [
+      "diabetes",
+      "diabetes mellitus",
+      "DM"
+    ]
+  },
+  {
+    "id": "snomed:44054006",
+    "system": "snomed",
+    "code": "44054006",
+    "title": "Diabetes mellitus type 2",
+    "body": "category: Endocrine/Metabolic",
+    "related": [
+      "diabetes tipo 2",
+      "DM2"
+    ]
+  },
+  {
+    "id": "snomed:46635009",
+    "system": "snomed",
+    "code": "46635009",
+    "title": "Diabetes mellitus type 1",
+    "body": "category: Endocrine/Metabolic",
+    "related": [
+      "diabetes tipo 1",
+      "DM1"
+    ]
+  },
+  {
+    "id": "snomed:59621000",
+    "system": "snomed",
+    "code": "59621000",
+    "title": "Essential hypertension",
+    "body": "category: Cardiovascular",
+    "related": [
+      "hipertensión arterial",
+      "presión alta",
+      "HTA"
+    ]
+  },
+  {
+    "id": "snomed:414545008",
+    "system": "snomed",
+    "code": "414545008",
+    "title": "Hypertensive disorder",
+    "body": "category: Cardiovascular",
+    "related": [
+      "hipertensión"
+    ]
+  },
+  {
+    "id": "snomed:53741008",
+    "system": "snomed",
+    "code": "53741008",
+    "title": "Coronary heart disease",
+    "body": "category: Cardiovascular",
+    "related": [
+      "enfermedad coronaria",
+      "cardiopatía isquémica"
+    ]
+  },
+  {
+    "id": "snomed:22298006",
+    "system": "snomed",
+    "code": "22298006",
+    "title": "Myocardial infarction",
+    "body": "category: Cardiovascular",
+    "related": [
+      "infarto miocardio",
+      "IAM",
+      "ataque cardíaco"
+    ]
+  },
+  {
+    "id": "snomed:194828000",
+    "system": "snomed",
+    "code": "194828000",
+    "title": "Angina pectoris",
+    "body": "category: Cardiovascular",
+    "related": [
+      "angina de pecho",
+      "angor"
+    ]
+  },
+  {
+    "id": "snomed:195080001",
+    "system": "snomed",
+    "code": "195080001",
+    "title": "Atrial fibrillation",
+    "body": "category: Cardiovascular",
+    "related": [
+      "fibrilación auricular",
+      "FA",
+      "arritmia"
+    ]
+  },
+  {
+    "id": "snomed:10273003",
+    "system": "snomed",
+    "code": "10273003",
+    "title": "Acute tonsillitis",
+    "body": "category: Infectious",
+    "related": [
+      "amigdalitis",
+      "anginas",
+      "faringoamigdalitis"
+    ]
+  },
+  {
+    "id": "snomed:195967001",
+    "system": "snomed",
+    "code": "195967001",
+    "title": "Asthma",
+    "body": "category: Respiratory",
+    "related": [
+      "asma",
+      "bronquitis asmática"
+    ]
+  },
+  {
+    "id": "snomed:13645005",
+    "system": "snomed",
+    "code": "13645005",
+    "title": "Chronic obstructive pulmonary disease",
+    "body": "category: Respiratory",
+    "related": [
+      "EPOC",
+      "enfermedad pulmonar obstructiva crónica"
+    ]
+  },
+  {
+    "id": "snomed:233604007",
+    "system": "snomed",
+    "code": "233604007",
+    "title": "Pneumonia",
+    "body": "category: Respiratory",
+    "related": [
+      "neumonía",
+      "pulmonía"
+    ]
+  },
+  {
+    "id": "snomed:49727002",
+    "system": "snomed",
+    "code": "49727002",
+    "title": "Acute upper respiratory infection",
+    "body": "category: Respiratory",
+    "related": [
+      "infección respiratoria alta",
+      "IRA",
+      "resfriado"
+    ]
+  },
+  {
+    "id": "snomed:36955009",
+    "system": "snomed",
+    "code": "36955009",
+    "title": "Bronchitis",
+    "body": "category: Respiratory",
+    "related": [
+      "bronquitis"
+    ]
+  },
+  {
+    "id": "snomed:91857003",
+    "system": "snomed",
+    "code": "91857003",
+    "title": "Acute lower respiratory infection",
+    "body": "category: Respiratory",
+    "related": [
+      "infección respiratoria baja"
+    ]
+  },
+  {
+    "id": "snomed:14760008",
+    "system": "snomed",
+    "code": "14760008",
+    "title": "Influenza",
+    "body": "category: Infectious",
+    "related": [
+      "influenza",
+      "gripe",
+      "flu"
+    ]
+  },
+  {
+    "id": "snomed:6142004",
+    "system": "snomed",
+    "code": "6142004",
+    "title": "Influenza A",
+    "body": "category: Infectious",
+    "related": [
+      "influenza A",
+      "H1N1"
+    ]
+  },
+  {
+    "id": "snomed:34014006",
+    "system": "snomed",
+    "code": "34014006",
+    "title": "Vitamin D deficiency",
+    "body": "category: Endocrine/Metabolic",
+    "related": [
+      "deficiencia vitamina D",
+      "insuficiencia vitamina D"
+    ]
+  },
+  {
+    "id": "snomed:15167005",
+    "system": "snomed",
+    "code": "15167005",
+    "title": "Iron deficiency anemia",
+    "body": "category: Hematology",
+    "related": [
+      "anemia ferropénica",
+      "deficiencia de hierro",
+      "anemia"
+    ]
+  },
+  {
+    "id": "snomed:271737000",
+    "system": "snomed",
+    "code": "271737000",
+    "title": "Anemia",
+    "body": "category: Hematology",
+    "related": [
+      "anemia"
+    ]
+  },
+  {
+    "id": "snomed:840539006",
+    "system": "snomed",
+    "code": "840539006",
+    "title": "COVID-19",
+    "body": "category: Infectious",
+    "related": [
+      "COVID-19",
+      "coronavirus",
+      "SARS-CoV-2"
+    ]
+  },
+  {
+    "id": "snomed:111930006",
+    "system": "snomed",
+    "code": "111930006",
+    "title": "Dengue fever",
+    "body": "category: Infectious",
+    "related": [
+      "dengue",
+      "fiebre del dengue"
+    ]
+  },
+  {
+    "id": "snomed:48340004",
+    "system": "snomed",
+    "code": "48340004",
+    "title": "Chikungunya",
+    "body": "category: Infectious",
+    "related": [
+      "Chikungunya"
+    ]
+  },
+  {
+    "id": "snomed:240532009",
+    "system": "snomed",
+    "code": "240532009",
+    "title": "Zika virus disease",
+    "body": "category: Infectious",
+    "related": [
+      "Zika"
+    ]
+  },
+  {
+    "id": "snomed:83028004",
+    "system": "snomed",
+    "code": "83028004",
+    "title": "Gastroenteritis",
+    "body": "category: GI",
+    "related": [
+      "gastroenteritis",
+      "diarrea infecciosa"
+    ]
+  },
+  {
+    "id": "snomed:47693006",
+    "system": "snomed",
+    "code": "47693006",
+    "title": "Gastroesophageal reflux disease",
+    "body": "category: GI",
+    "related": [
+      "reflujo gastroesofágico",
+      "ERGE",
+      "acidez"
+    ]
+  },
+  {
+    "id": "snomed:196604008",
+    "system": "snomed",
+    "code": "196604008",
+    "title": "Peptic ulcer",
+    "body": "category: GI",
+    "related": [
+      "úlcera péptica",
+      "úlcera gástrica",
+      "úlcera duodenal"
+    ]
+  },
+  {
+    "id": "snomed:266569009",
+    "system": "snomed",
+    "code": "266569009",
+    "title": "Irritable bowel syndrome",
+    "body": "category: GI",
+    "related": [
+      "colon irritable",
+      "SII",
+      "síndrome intestino irritable"
+    ]
+  },
+  {
+    "id": "snomed:396331005",
+    "system": "snomed",
+    "code": "396331005",
+    "title": "Dyslipidemia",
+    "body": "category: Cardiovascular",
+    "related": [
+      "dislipidemia",
+      "colesterol alto",
+      "hiperlipidemia"
+    ]
+  },
+  {
+    "id": "snomed:267432004",
+    "system": "snomed",
+    "code": "267432004",
+    "title": "Hypercholesterolemia",
+    "body": "category: Cardiovascular",
+    "related": [
+      "hipercolesterolemia",
+      "colesterol LDL alto"
+    ]
+  },
+  {
+    "id": "snomed:394801008",
+    "system": "snomed",
+    "code": "394801008",
+    "title": "Obesity",
+    "body": "category: Endocrine/Metabolic",
+    "related": [
+      "obesidad",
+      "sobrepeso",
+      "IMC alto"
+    ]
+  },
+  {
+    "id": "snomed:414916001",
+    "system": "snomed",
+    "code": "414916001",
+    "title": "Overweight",
+    "body": "category: Endocrine/Metabolic",
+    "related": [
+      "sobrepeso"
+    ]
+  },
+  {
+    "id": "snomed:73297009",
+    "system": "snomed",
+    "code": "73297009",
+    "title": "Urinary tract infection",
+    "body": "category: Renal/Urology",
+    "related": [
+      "infección urinaria",
+      "ITU",
+      "cistitis"
+    ]
+  },
+  {
+    "id": "snomed:197659008",
+    "system": "snomed",
+    "code": "197659008",
+    "title": "Chronic kidney disease",
+    "body": "category: Renal/Urology",
+    "related": [
+      "enfermedad renal crónica",
+      "ERC",
+      "insuficiencia renal"
+    ]
+  },
+  {
+    "id": "snomed:90688005",
+    "system": "snomed",
+    "code": "90688005",
+    "title": "Acute renal failure",
+    "body": "category: Renal/Urology",
+    "related": [
+      "insuficiencia renal aguda",
+      "IRA"
+    ]
+  },
+  {
+    "id": "snomed:394020004",
+    "system": "snomed",
+    "code": "394020004",
+    "title": "Arthritis",
+    "body": "category: Musculoskeletal",
+    "related": [
+      "artritis"
+    ]
+  },
+  {
+    "id": "snomed:201820007",
+    "system": "snomed",
+    "code": "201820007",
+    "title": "Osteoarthritis",
+    "body": "category: Musculoskeletal",
+    "related": [
+      "osteoartrosis",
+      "artrosis"
+    ]
+  },
+  {
+    "id": "snomed:3723001",
+    "system": "snomed",
+    "code": "3723001",
+    "title": "Rheumatoid arthritis",
+    "body": "category: Autoimmune",
+    "related": [
+      "artritis reumatoide"
+    ]
+  },
+  {
+    "id": "snomed:26929004",
+    "system": "snomed",
+    "code": "26929004",
+    "title": "Osteoporosis",
+    "body": "category: Musculoskeletal",
+    "related": [
+      "osteoporosis"
+    ]
+  },
+  {
+    "id": "snomed:161891005",
+    "system": "snomed",
+    "code": "161891005",
+    "title": "Back pain",
+    "body": "category: Musculoskeletal",
+    "related": [
+      "dolor lumbar",
+      "lumbalgia",
+      "dolor de espalda"
+    ]
+  },
+  {
+    "id": "snomed:95651005",
+    "system": "snomed",
+    "code": "95651005",
+    "title": "Low back pain",
+    "body": "category: Musculoskeletal",
+    "related": [
+      "lumbago",
+      "dolor lumbar bajo"
+    ]
+  },
+  {
+    "id": "snomed:24079001",
+    "system": "snomed",
+    "code": "24079001",
+    "title": "Hypothyroidism",
+    "body": "category: Endocrine/Metabolic",
+    "related": [
+      "hipotiroidismo",
+      "tiroides baja"
+    ]
+  },
+  {
+    "id": "snomed:190905008",
+    "system": "snomed",
+    "code": "190905008",
+    "title": "Hyperthyroidism",
+    "body": "category: Endocrine/Metabolic",
+    "related": [
+      "hipertiroidismo",
+      "tormenta tiroidea"
+    ]
+  },
+  {
+    "id": "snomed:254637007",
+    "system": "snomed",
+    "code": "254637007",
+    "title": "Hypokalemia",
+    "body": "category: Metabolic",
+    "related": [
+      "hipopotasemia",
+      "potasio bajo",
+      "hipokalemia"
+    ]
+  },
+  {
+    "id": "snomed:89627008",
+    "system": "snomed",
+    "code": "89627008",
+    "title": "Hyperkalemia",
+    "body": "category: Metabolic",
+    "related": [
+      "hiperpotasemia",
+      "potasio alto",
+      "hiperkalemia"
+    ]
+  },
+  {
+    "id": "snomed:190607003",
+    "system": "snomed",
+    "code": "190607003",
+    "title": "Hyponatremia",
+    "body": "category: Metabolic",
+    "related": [
+      "hiponatremia",
+      "sodio bajo"
+    ]
+  },
+  {
+    "id": "snomed:237841002",
+    "system": "snomed",
+    "code": "237841002",
+    "title": "Hypernatremia",
+    "body": "category: Metabolic",
+    "related": [
+      "hipernatremia",
+      "sodio alto"
+    ]
+  },
+  {
+    "id": "snomed:237835009",
+    "system": "snomed",
+    "code": "237835009",
+    "title": "Metabolic acidosis",
+    "body": "category: Metabolic",
+    "related": [
+      "acidosis metabólica"
+    ]
+  },
+  {
+    "id": "snomed:111388001",
+    "system": "snomed",
+    "code": "111388001",
+    "title": "Metabolic alkalosis",
+    "body": "category: Metabolic",
+    "related": [
+      "alcalosis metabólica"
+    ]
+  },
+  {
+    "id": "snomed:192127007",
+    "system": "snomed",
+    "code": "192127007",
+    "title": "Major depressive disorder",
+    "body": "category: Psychiatry",
+    "related": [
+      "depresión mayor",
+      "depresión clínica",
+      "trastorno depresivo"
+    ]
+  },
+  {
+    "id": "snomed:191736004",
+    "system": "snomed",
+    "code": "191736004",
+    "title": "Generalized anxiety disorder",
+    "body": "category: Psychiatry",
+    "related": [
+      "ansiedad generalizada",
+      "TAG",
+      "trastorno de ansiedad"
+    ]
+  },
+  {
+    "id": "snomed:193462001",
+    "system": "snomed",
+    "code": "193462001",
+    "title": "Dementia",
+    "body": "category: Psychiatry/Neurology",
+    "related": [
+      "demencia",
+      "Alzheimer"
+    ]
+  },
+  {
+    "id": "snomed:416287000",
+    "system": "snomed",
+    "code": "416287000",
+    "title": "Alzheimer disease",
+    "body": "category: Psychiatry/Neurology",
+    "related": [
+      "Alzheimer",
+      "EA"
+    ]
+  },
+  {
+    "id": "snomed:192949004",
+    "system": "snomed",
+    "code": "192949004",
+    "title": "Schizophrenia",
+    "body": "category: Psychiatry",
+    "related": [
+      "esquizofrenia"
+    ]
+  },
+  {
+    "id": "snomed:35489007",
+    "system": "snomed",
+    "code": "35489007",
+    "title": "Depressive disorder",
+    "body": "category: Psychiatry",
+    "related": [
+      "depresión",
+      "trastorno depresivo"
+    ]
+  },
+  {
+    "id": "snomed:26095005",
+    "system": "snomed",
+    "code": "26095005",
+    "title": "Panic disorder",
+    "body": "category: Psychiatry",
+    "related": [
+      "ataque de pánico",
+      "trastorno de pánico"
+    ]
+  },
+  {
+    "id": "snomed:731000119102",
+    "system": "snomed",
+    "code": "731000119102",
+    "title": "Post-traumatic stress disorder",
+    "body": "category: Psychiatry",
+    "related": [
+      "TEPT",
+      "estrés postraumático",
+      "PTSD"
+    ]
+  },
+  {
+    "id": "snomed:230220000",
+    "system": "snomed",
+    "code": "230220000",
+    "title": "Migraine",
+    "body": "category: Neurology",
+    "related": [
+      "migraña",
+      "jaqueca"
+    ]
+  },
+  {
+    "id": "snomed:25064002",
+    "system": "snomed",
+    "code": "25064002",
+    "title": "Headache",
+    "body": "category: Neurology",
+    "related": [
+      "cefalea",
+      "dolor de cabeza"
+    ]
+  },
+  {
+    "id": "snomed:188475003",
+    "system": "snomed",
+    "code": "188475003",
+    "title": "Tension headache",
+    "body": "category: Neurology",
+    "related": [
+      "cefalea tensional"
+    ]
+  },
+  {
+    "id": "snomed:230690007",
+    "system": "snomed",
+    "code": "230690007",
+    "title": "Cerebrovascular accident",
+    "body": "category: Cardiovascular",
+    "related": [
+      "ACV",
+      "derrame cerebral",
+      "stroke",
+      "infarto cerebral"
+    ]
+  },
+  {
+    "id": "snomed:194804000",
+    "system": "snomed",
+    "code": "194804000",
+    "title": "Transient ischemic attack",
+    "body": "category: Cardiovascular",
+    "related": [
+      "AIT",
+      "ataque isquémico transitorio"
+    ]
+  },
+  {
+    "id": "snomed:128613002",
+    "system": "snomed",
+    "code": "128613002",
+    "title": "Seizure disorder",
+    "body": "category: Neurology",
+    "related": [
+      "epilepsia",
+      "convulsiones",
+      "crisis epiléptica"
+    ]
+  },
+  {
+    "id": "snomed:230432002",
+    "system": "snomed",
+    "code": "230432002",
+    "title": "Parkinson disease",
+    "body": "category: Neurology",
+    "related": [
+      "Parkinson",
+      "enfermedad de Parkinson"
+    ]
+  },
+  {
+    "id": "snomed:398254007",
+    "system": "snomed",
+    "code": "398254007",
+    "title": "Multiple sclerosis",
+    "body": "category: Neurology",
+    "related": [
+      "esclerosis múltiple",
+      "EM"
+    ]
+  },
+  {
+    "id": "snomed:722892000",
+    "system": "snomed",
+    "code": "722892000",
+    "title": "Benign prostatic hyperplasia",
+    "body": "category: Urology",
+    "related": [
+      "HPB",
+      "hiperplasia prostática benigna",
+      "próstata"
+    ]
+  },
+  {
+    "id": "snomed:254845009",
+    "system": "snomed",
+    "code": "254845009",
+    "title": "Erectile dysfunction",
+    "body": "category: Urology",
+    "related": [
+      "disfunción eréctil",
+      "impotencia"
+    ]
+  },
+  {
+    "id": "snomed:432041000",
+    "system": "snomed",
+    "code": "432041000",
+    "title": "Bacterial infection",
+    "body": "category: Infectious",
+    "related": [
+      "infección bacteriana"
+    ]
+  },
+  {
+    "id": "snomed:33995002",
+    "system": "snomed",
+    "code": "33995002",
+    "title": "Viral infection",
+    "body": "category: Infectious",
+    "related": [
+      "infección viral"
+    ]
+  },
+  {
+    "id": "snomed:281789004",
+    "system": "snomed",
+    "code": "281789004",
+    "title": "Fungal infection",
+    "body": "category: Infectious",
+    "related": [
+      "infección micótica",
+      "hongos"
+    ]
+  },
+  {
+    "id": "snomed:4241000179105",
+    "system": "snomed",
+    "code": "4241000179105",
+    "title": "Parasitic infection",
+    "body": "category: Infectious",
+    "related": [
+      "parásitos",
+      "infección parasitaria"
+    ]
+  },
+  {
+    "id": "snomed:928000",
+    "system": "snomed",
+    "code": "928000",
+    "title": "Allergic rhinitis",
+    "body": "category: Allergy/Immunology",
+    "related": [
+      "rinitis alérgica",
+      "alergia",
+      "fiebre del heno"
+    ]
+  },
+  {
+    "id": "snomed:91930004",
+    "system": "snomed",
+    "code": "91930004",
+    "title": "Allergy to penicillin",
+    "body": "category: Allergy/Immunology",
+    "related": [
+      "alergia a penicilina"
+    ]
+  },
+  {
+    "id": "snomed:418471000",
+    "system": "snomed",
+    "code": "418471000",
+    "title": "Drug allergy",
+    "body": "category: Allergy/Immunology",
+    "related": [
+      "alergia a medicamentos",
+      "alergia farmacológica"
+    ]
+  },
+  {
+    "id": "snomed:91935004",
+    "system": "snomed",
+    "code": "91935004",
+    "title": "Food allergy",
+    "body": "category: Allergy/Immunology",
+    "related": [
+      "alergia alimentaria"
+    ]
+  },
+  {
+    "id": "snomed:43116000",
+    "system": "snomed",
+    "code": "43116000",
+    "title": "Atopic dermatitis",
+    "body": "category: Dermatology",
+    "related": [
+      "dermatitis atópica",
+      "eczema"
+    ]
+  },
+  {
+    "id": "snomed:402399000",
+    "system": "snomed",
+    "code": "402399000",
+    "title": "Contact dermatitis",
+    "body": "category: Dermatology",
+    "related": [
+      "dermatitis de contacto"
+    ]
+  },
+  {
+    "id": "snomed:394885002",
+    "system": "snomed",
+    "code": "394885002",
+    "title": "Eczema",
+    "body": "category: Dermatology",
+    "related": [
+      "eczema",
+      "eccema"
+    ]
+  },
+  {
+    "id": "snomed:247440004",
+    "system": "snomed",
+    "code": "247440004",
+    "title": "Acne vulgaris",
+    "body": "category: Dermatology",
+    "related": [
+      "acné",
+      "acné vulgar",
+      "barros"
+    ]
+  },
+  {
+    "id": "snomed:3744003",
+    "system": "snomed",
+    "code": "3744003",
+    "title": "Psoriasis",
+    "body": "category: Dermatology",
+    "related": [
+      "psoriasis"
+    ]
+  },
+  {
+    "id": "snomed:402762003",
+    "system": "snomed",
+    "code": "402762003",
+    "title": "Cellulitis",
+    "body": "category: Dermatology/Infectious",
+    "related": [
+      "celulitis infecciosa"
+    ]
+  },
+  {
+    "id": "snomed:77293002",
+    "system": "snomed",
+    "code": "77293002",
+    "title": "Fracture of bone",
+    "body": "category: Trauma",
+    "related": [
+      "fractura ósea",
+      "hueso roto"
+    ]
+  },
+  {
+    "id": "snomed:125605004",
+    "system": "snomed",
+    "code": "125605004",
+    "title": "Fracture of radius",
+    "body": "category: Trauma",
+    "related": [
+      "fractura de radio"
+    ]
+  },
+  {
+    "id": "snomed:71620000",
+    "system": "snomed",
+    "code": "71620000",
+    "title": "Fracture of femur",
+    "body": "category: Trauma",
+    "related": [
+      "fractura de fémur"
+    ]
+  },
+  {
+    "id": "snomed:43984008",
+    "system": "snomed",
+    "code": "43984008",
+    "title": "Sprain of ankle",
+    "body": "category: Trauma",
+    "related": [
+      "esguince de tobillo"
+    ]
+  },
+  {
+    "id": "snomed:76915007",
+    "system": "snomed",
+    "code": "76915007",
+    "title": "Headache/migraine",
+    "body": "category: Neurology",
+    "related": [
+      "dolor de cabeza",
+      "cefalea"
+    ]
+  }
+]

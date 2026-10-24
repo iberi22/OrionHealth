@@ -1,0 +1,1610 @@
+[
+  {
+    "id": "loinc:58410-2",
+    "system": "loinc",
+    "code": "58410-2",
+    "title": "Complete Blood Count panel",
+    "body": "category: Hematology",
+    "related": [
+      "hemograma completo",
+      "CBC",
+      "biometría hemática",
+      "cuadro hemático"
+    ]
+  },
+  {
+    "id": "loinc:718-7",
+    "system": "loinc",
+    "code": "718-7",
+    "title": "Hemoglobin",
+    "body": "category: Hematology\ndefinition: A protein in your red blood cells that carries oxygen from your lungs to the rest of your body.\nreferenceValues: {\"male\":\"13.8 - 17.2 g/dL\",\"female\":\"12.1 - 15.1 g/dL\",\"low_hint\":\"Anemia\",\"high_hint\":\"Polycythemia\"}",
+    "related": [
+      "hemoglobina",
+      "Hb"
+    ]
+  },
+  {
+    "id": "loinc:4544-3",
+    "system": "loinc",
+    "code": "4544-3",
+    "title": "Hematocrit",
+    "body": "category: Hematology",
+    "related": [
+      "hematocrito",
+      "Hct"
+    ]
+  },
+  {
+    "id": "loinc:6690-2",
+    "system": "loinc",
+    "code": "6690-2",
+    "title": "Leukocytes",
+    "body": "category: Hematology",
+    "related": [
+      "leucocitos",
+      "glóbulos blancos",
+      "WBC"
+    ]
+  },
+  {
+    "id": "loinc:789-8",
+    "system": "loinc",
+    "code": "789-8",
+    "title": "Erythrocytes",
+    "body": "category: Hematology",
+    "related": [
+      "eritrocitos",
+      "glóbulos rojos",
+      "RBC"
+    ]
+  },
+  {
+    "id": "loinc:777-3",
+    "system": "loinc",
+    "code": "777-3",
+    "title": "Platelets",
+    "body": "category: Hematology",
+    "related": [
+      "plaquetas",
+      "trombocitos",
+      "PLT"
+    ]
+  },
+  {
+    "id": "loinc:26464-8",
+    "system": "loinc",
+    "code": "26464-8",
+    "title": "Neutrophils/100 leukocytes",
+    "body": "category: Hematology",
+    "related": [
+      "neutrófilos",
+      "segmentados",
+      "PMN"
+    ]
+  },
+  {
+    "id": "loinc:26485-3",
+    "system": "loinc",
+    "code": "26485-3",
+    "title": "Lymphocytes/100 leukocytes",
+    "body": "category: Hematology",
+    "related": [
+      "linfocitos"
+    ]
+  },
+  {
+    "id": "loinc:26449-9",
+    "system": "loinc",
+    "code": "26449-9",
+    "title": "Monocytes/100 leukocytes",
+    "body": "category: Hematology",
+    "related": [
+      "monocitos"
+    ]
+  },
+  {
+    "id": "loinc:26444-0",
+    "system": "loinc",
+    "code": "26444-0",
+    "title": "Eosinophils/100 leukocytes",
+    "body": "category: Hematology",
+    "related": [
+      "eosinófilos"
+    ]
+  },
+  {
+    "id": "loinc:30180-4",
+    "system": "loinc",
+    "code": "30180-4",
+    "title": "Basophils/100 leukocytes",
+    "body": "category: Hematology",
+    "related": [
+      "basófilos"
+    ]
+  },
+  {
+    "id": "loinc:26499-4",
+    "system": "loinc",
+    "code": "26499-4",
+    "title": "Mean corpuscular volume",
+    "body": "category: Hematology",
+    "related": [
+      "VCM",
+      "volumen corpuscular medio"
+    ]
+  },
+  {
+    "id": "loinc:28539-5",
+    "system": "loinc",
+    "code": "28539-5",
+    "title": "Mean corpuscular hemoglobin",
+    "body": "category: Hematology",
+    "related": [
+      "HCM",
+      "hemoglobina corpuscular media"
+    ]
+  },
+  {
+    "id": "loinc:28540-3",
+    "system": "loinc",
+    "code": "28540-3",
+    "title": "Mean corpuscular hemoglobin concentration",
+    "body": "category: Hematology",
+    "related": [
+      "CHCM",
+      "concentración Hb corpuscular media"
+    ]
+  },
+  {
+    "id": "loinc:30451-9",
+    "system": "loinc",
+    "code": "30451-9",
+    "title": "Red cell distribution width",
+    "body": "category: Hematology",
+    "related": [
+      "RDW",
+      "ancho distribución eritrocitaria"
+    ]
+  },
+  {
+    "id": "loinc:2339-0",
+    "system": "loinc",
+    "code": "2339-0",
+    "title": "Glucose",
+    "body": "category: Chemistry",
+    "related": [
+      "glucosa",
+      "glicemia",
+      "azúcar en sangre"
+    ]
+  },
+  {
+    "id": "loinc:2345-7",
+    "system": "loinc",
+    "code": "2345-7",
+    "title": "Glucose, fasting",
+    "body": "category: Chemistry",
+    "related": [
+      "glucosa en ayunas",
+      "glicemia en ayunas"
+    ]
+  },
+  {
+    "id": "loinc:17861-6",
+    "system": "loinc",
+    "code": "17861-6",
+    "title": "Hemoglobin A1c",
+    "body": "category: Chemistry\ndefinition: Measures average blood sugar levels over the past 3 months by measuring the percentage of glycated hemoglobin.\nreferenceValues: {\"normal\":\"< 5.7%\",\"prediabetes\":\"5.7% - 6.4%\",\"diabetes\":\">= 6.5%\",\"target_diabetic\":\"< 7.0% (individualized)\"}",
+    "related": [
+      "hemoglobina A1c",
+      "HbA1c",
+      "hemoglobina glicosilada"
+    ]
+  },
+  {
+    "id": "loinc:2160-0",
+    "system": "loinc",
+    "code": "2160-0",
+    "title": "Creatinine",
+    "body": "category: Chemistry",
+    "related": [
+      "creatinina"
+    ]
+  },
+  {
+    "id": "loinc:3094-0",
+    "system": "loinc",
+    "code": "3094-0",
+    "title": "Urea nitrogen",
+    "body": "category: Chemistry",
+    "related": [
+      "BUN",
+      "nitrógeno ureico",
+      "urea"
+    ]
+  },
+  {
+    "id": "loinc:33914-3",
+    "system": "loinc",
+    "code": "33914-3",
+    "title": "Glomerular filtration rate",
+    "body": "category: Chemistry",
+    "related": [
+      "tasa filtración glomerular",
+      "TFG",
+      "eGFR"
+    ]
+  },
+  {
+    "id": "loinc:2075-0",
+    "system": "loinc",
+    "code": "2075-0",
+    "title": "Chloride",
+    "body": "category: Chemistry",
+    "related": [
+      "cloro",
+      "cloruro"
+    ]
+  },
+  {
+    "id": "loinc:2951-2",
+    "system": "loinc",
+    "code": "2951-2",
+    "title": "Sodium",
+    "body": "category: Chemistry",
+    "related": [
+      "sodio",
+      "Na",
+      "natremia"
+    ]
+  },
+  {
+    "id": "loinc:2823-3",
+    "system": "loinc",
+    "code": "2823-3",
+    "title": "Potassium",
+    "body": "category: Chemistry",
+    "related": [
+      "potasio",
+      "K",
+      "kalemia"
+    ]
+  },
+  {
+    "id": "loinc:1963-8",
+    "system": "loinc",
+    "code": "1963-8",
+    "title": "Bicarbonate",
+    "body": "category: Chemistry",
+    "related": [
+      "bicarbonato",
+      "CO2 total"
+    ]
+  },
+  {
+    "id": "loinc:14627-4",
+    "system": "loinc",
+    "code": "14627-4",
+    "title": "Uric acid",
+    "body": "category: Chemistry\ndefinition: A waste product found in blood. High levels can cause gout or kidney stones.\nreferenceValues: {\"male\":\"3.4 - 7.0 mg/dL\",\"female\":\"2.4 - 6.0 mg/dL\",\"high_hint\":\"Gout (Gota) / Hyperuricemia\"}",
+    "related": [
+      "ácido úrico",
+      "urato"
+    ]
+  },
+  {
+    "id": "loinc:1742-6",
+    "system": "loinc",
+    "code": "1742-6",
+    "title": "Alanine aminotransferase",
+    "body": "category: Chemistry",
+    "related": [
+      "ALT",
+      "TGP",
+      "alanina aminotransferasa"
+    ]
+  },
+  {
+    "id": "loinc:1920-8",
+    "system": "loinc",
+    "code": "1920-8",
+    "title": "Aspartate aminotransferase",
+    "body": "category: Chemistry",
+    "related": [
+      "AST",
+      "TGO",
+      "aspartato aminotransferasa"
+    ]
+  },
+  {
+    "id": "loinc:2324-2",
+    "system": "loinc",
+    "code": "2324-2",
+    "title": "Gamma glutamyl transferase",
+    "body": "category: Chemistry",
+    "related": [
+      "GGT",
+      "gamma glutamil transpeptidasa"
+    ]
+  },
+  {
+    "id": "loinc:6768-6",
+    "system": "loinc",
+    "code": "6768-6",
+    "title": "Alkaline phosphatase",
+    "body": "category: Chemistry",
+    "related": [
+      "fosfatasa alcalina",
+      "FA"
+    ]
+  },
+  {
+    "id": "loinc:1975-2",
+    "system": "loinc",
+    "code": "1975-2",
+    "title": "Bilirubin total",
+    "body": "category: Chemistry",
+    "related": [
+      "bilirrubina total",
+      "BT"
+    ]
+  },
+  {
+    "id": "loinc:14631-6",
+    "system": "loinc",
+    "code": "14631-6",
+    "title": "Bilirubin direct",
+    "body": "category: Chemistry",
+    "related": [
+      "bilirrubina directa",
+      "BD"
+    ]
+  },
+  {
+    "id": "loinc:14630-8",
+    "system": "loinc",
+    "code": "14630-8",
+    "title": "Bilirubin indirect",
+    "body": "category: Chemistry",
+    "related": [
+      "bilirrubina indirecta",
+      "BI"
+    ]
+  },
+  {
+    "id": "loinc:2276-4",
+    "system": "loinc",
+    "code": "2276-4",
+    "title": "Ferritin",
+    "body": "category: Chemistry",
+    "related": [
+      "ferritina"
+    ]
+  },
+  {
+    "id": "loinc:2498-4",
+    "system": "loinc",
+    "code": "2498-4",
+    "title": "Iron",
+    "body": "category: Chemistry",
+    "related": [
+      "hierro",
+      "ferremia"
+    ]
+  },
+  {
+    "id": "loinc:2501-5",
+    "system": "loinc",
+    "code": "2501-5",
+    "title": "Iron binding capacity",
+    "body": "category: Chemistry",
+    "related": [
+      "capacidad de fijación de hierro",
+      "TIBC"
+    ]
+  },
+  {
+    "id": "loinc:2274-9",
+    "system": "loinc",
+    "code": "2274-9",
+    "title": "Transferrin",
+    "body": "category: Chemistry",
+    "related": [
+      "transferrina"
+    ]
+  },
+  {
+    "id": "loinc:25361-1",
+    "system": "loinc",
+    "code": "25361-1",
+    "title": "C reactive protein",
+    "body": "category: Inflammation",
+    "related": [
+      "proteína C reactiva",
+      "PCR",
+      "CRP"
+    ]
+  },
+  {
+    "id": "loinc:30313-1",
+    "system": "loinc",
+    "code": "30313-1",
+    "title": "High sensitivity CRP",
+    "body": "category: Inflammation",
+    "related": [
+      "PCR alta sensibilidad",
+      "hs-CRP"
+    ]
+  },
+  {
+    "id": "loinc:11039-0",
+    "system": "loinc",
+    "code": "11039-0",
+    "title": "Erythrocyte sedimentation rate",
+    "body": "category: Inflammation",
+    "related": [
+      "VSG",
+      "velocidad de sedimentación",
+      "eritrosedimentación"
+    ]
+  },
+  {
+    "id": "loinc:42863-8",
+    "system": "loinc",
+    "code": "42863-8",
+    "title": "Procalcitonin",
+    "body": "category: Inflammation",
+    "related": [
+      "procalcitonina",
+      "PCT"
+    ]
+  },
+  {
+    "id": "loinc:14749-6",
+    "system": "loinc",
+    "code": "14749-6",
+    "title": "Lactate dehydrogenase",
+    "body": "category: Chemistry",
+    "related": [
+      "LDH",
+      "lactato deshidrogenasa"
+    ]
+  },
+  {
+    "id": "loinc:2157-6",
+    "system": "loinc",
+    "code": "2157-6",
+    "title": "Creatine kinase",
+    "body": "category: Chemistry",
+    "related": [
+      "creatina quinasa",
+      "CK",
+      "CPK"
+    ]
+  },
+  {
+    "id": "loinc:2158-4",
+    "system": "loinc",
+    "code": "2158-4",
+    "title": "Creatine kinase MB",
+    "body": "category: Cardiac",
+    "related": [
+      "CK-MB",
+      "creatina quinasa MB"
+    ]
+  },
+  {
+    "id": "loinc:10839-4",
+    "system": "loinc",
+    "code": "10839-4",
+    "title": "Troponin I.cardiac",
+    "body": "category: Cardiac",
+    "related": [
+      "troponina I",
+      "TnI",
+      "troponina cardíaca"
+    ]
+  },
+  {
+    "id": "loinc:6598-7",
+    "system": "loinc",
+    "code": "6598-7",
+    "title": "Troponin T.cardiac",
+    "body": "category: Cardiac",
+    "related": [
+      "troponina T",
+      "TnT"
+    ]
+  },
+  {
+    "id": "loinc:2085-9",
+    "system": "loinc",
+    "code": "2085-9",
+    "title": "Cholesterol total",
+    "body": "category: Lipids\ndefinition: The total amount of cholesterol in your blood, including LDL and HDL.\nreferenceValues: {\"desirable\":\"< 200 mg/dL\",\"borderline_high\":\"200 - 239 mg/dL\",\"high\":\">= 240 mg/dL\"}",
+    "related": [
+      "colesterol total"
+    ]
+  },
+  {
+    "id": "loinc:35184-1",
+    "system": "loinc",
+    "code": "35184-1",
+    "title": "LDL cholesterol",
+    "body": "category: Lipids",
+    "related": [
+      "LDL",
+      "colesterol malo",
+      "lipoproteína baja densidad"
+    ]
+  },
+  {
+    "id": "loinc:14646-4",
+    "system": "loinc",
+    "code": "14646-4",
+    "title": "HDL cholesterol",
+    "body": "category: Lipids",
+    "related": [
+      "HDL",
+      "colesterol bueno",
+      "lipoproteína alta densidad"
+    ]
+  },
+  {
+    "id": "loinc:14927-8",
+    "system": "loinc",
+    "code": "14927-8",
+    "title": "Triglycerides",
+    "body": "category: Lipids",
+    "related": [
+      "triglicéridos"
+    ]
+  },
+  {
+    "id": "loinc:LP38698-5",
+    "system": "loinc",
+    "code": "LP38698-5",
+    "title": "Lipoprotein (a)",
+    "body": "category: Lipids",
+    "related": [
+      "lipoproteína (a)",
+      "Lp(a)"
+    ]
+  },
+  {
+    "id": "loinc:6301-6",
+    "system": "loinc",
+    "code": "6301-6",
+    "title": "INR in Blood",
+    "body": "category: Coagulation",
+    "related": [
+      "INR",
+      "tiempo de protrombina",
+      "TP",
+      "PT"
+    ]
+  },
+  {
+    "id": "loinc:5964-2",
+    "system": "loinc",
+    "code": "5964-2",
+    "title": "Partial thromboplastin time",
+    "body": "category: Coagulation",
+    "related": [
+      "PTT",
+      "TTP",
+      "tiempo parcial de tromboplastina"
+    ]
+  },
+  {
+    "id": "loinc:3255-7",
+    "system": "loinc",
+    "code": "3255-7",
+    "title": "Fibrinogen",
+    "body": "category: Coagulation",
+    "related": [
+      "fibrinógeno"
+    ]
+  },
+  {
+    "id": "loinc:3182-3",
+    "system": "loinc",
+    "code": "3182-3",
+    "title": "D dimer",
+    "body": "category: Coagulation",
+    "related": [
+      "dímero D",
+      "D-dímero"
+    ]
+  },
+  {
+    "id": "loinc:5792-7",
+    "system": "loinc",
+    "code": "5792-7",
+    "title": "Prostate specific antigen",
+    "body": "category: Tumor Markers",
+    "related": [
+      "antígeno prostático específico",
+      "PSA",
+      "antígeno prostático"
+    ]
+  },
+  {
+    "id": "loinc:6728-0",
+    "system": "loinc",
+    "code": "6728-0",
+    "title": "Alpha fetoprotein",
+    "body": "category: Tumor Markers",
+    "related": [
+      "alfa fetoproteína",
+      "AFP"
+    ]
+  },
+  {
+    "id": "loinc:16798-1",
+    "system": "loinc",
+    "code": "16798-1",
+    "title": "CA-125",
+    "body": "category: Tumor Markers",
+    "related": [
+      "CA-125",
+      "antígeno canceroso 125"
+    ]
+  },
+  {
+    "id": "loinc:2039-6",
+    "system": "loinc",
+    "code": "2039-6",
+    "title": "CA 19-9",
+    "body": "category: Tumor Markers",
+    "related": [
+      "CA 19-9",
+      "antígeno carbohidrato 19-9"
+    ]
+  },
+  {
+    "id": "loinc:10404-2",
+    "system": "loinc",
+    "code": "10404-2",
+    "title": "CEA",
+    "body": "category: Tumor Markers",
+    "related": [
+      "CEA",
+      "antígeno carcinoembrionario",
+      "ACE"
+    ]
+  },
+  {
+    "id": "loinc:LP37857-8",
+    "system": "loinc",
+    "code": "LP37857-8",
+    "title": "CA 15-3",
+    "body": "category: Tumor Markers",
+    "related": [
+      "CA 15-3"
+    ]
+  },
+  {
+    "id": "loinc:33762-6",
+    "system": "loinc",
+    "code": "33762-6",
+    "title": "Thyroid stimulating hormone",
+    "body": "category: Hormones",
+    "related": [
+      "TSH",
+      "tirotropina",
+      "hormona estimulante tiroides"
+    ]
+  },
+  {
+    "id": "loinc:34565-0",
+    "system": "loinc",
+    "code": "34565-0",
+    "title": "Free T4",
+    "body": "category: Hormones",
+    "related": [
+      "T4 libre",
+      "tiroxina libre",
+      "FT4"
+    ]
+  },
+  {
+    "id": "loinc:30552-4",
+    "system": "loinc",
+    "code": "30552-4",
+    "title": "Free T3",
+    "body": "category: Hormones",
+    "related": [
+      "T3 libre",
+      "triyodotironina libre",
+      "FT3"
+    ]
+  },
+  {
+    "id": "loinc:LP16747-0",
+    "system": "loinc",
+    "code": "LP16747-0",
+    "title": "Vitamin D total",
+    "body": "category: Vitamins",
+    "related": [
+      "vitamina D",
+      "25-hidroxivitamina D",
+      "calcifediol"
+    ]
+  },
+  {
+    "id": "loinc:2132-9",
+    "system": "loinc",
+    "code": "2132-9",
+    "title": "Vitamin B12",
+    "body": "category: Vitamins",
+    "related": [
+      "vitamina B12",
+      "cobalamina"
+    ]
+  },
+  {
+    "id": "loinc:2284-8",
+    "system": "loinc",
+    "code": "2284-8",
+    "title": "Folate",
+    "body": "category: Vitamins",
+    "related": [
+      "folato",
+      "ácido fólico",
+      "folato sérico"
+    ]
+  },
+  {
+    "id": "loinc:2624-6",
+    "system": "loinc",
+    "code": "2624-6",
+    "title": "Folic acid",
+    "body": "category: Vitamins",
+    "related": [
+      "ácido fólico",
+      "folato RBC"
+    ]
+  },
+  {
+    "id": "loinc:5802-4",
+    "system": "loinc",
+    "code": "5802-4",
+    "title": "Cortisol",
+    "body": "category: Hormones",
+    "related": [
+      "cortisol"
+    ]
+  },
+  {
+    "id": "loinc:30063-2",
+    "system": "loinc",
+    "code": "30063-2",
+    "title": "Estradiol",
+    "body": "category: Hormones",
+    "related": [
+      "estradiol",
+      "E2"
+    ]
+  },
+  {
+    "id": "loinc:2839-9",
+    "system": "loinc",
+    "code": "2839-9",
+    "title": "Progesterone",
+    "body": "category: Hormones",
+    "related": [
+      "progesterona"
+    ]
+  },
+  {
+    "id": "loinc:2813-4",
+    "system": "loinc",
+    "code": "2813-4",
+    "title": "Testosterone",
+    "body": "category: Hormones",
+    "related": [
+      "testosterona"
+    ]
+  },
+  {
+    "id": "loinc:LP14531-7",
+    "system": "loinc",
+    "code": "LP14531-7",
+    "title": "Prolactin",
+    "body": "category: Hormones",
+    "related": [
+      "prolactina",
+      "PRL"
+    ]
+  },
+  {
+    "id": "loinc:30521-9",
+    "system": "loinc",
+    "code": "30521-9",
+    "title": "Luteinizing hormone",
+    "body": "category: Hormones",
+    "related": [
+      "LH",
+      "hormona luteinizante"
+    ]
+  },
+  {
+    "id": "loinc:29991-5",
+    "system": "loinc",
+    "code": "29991-5",
+    "title": "Follicle stimulating hormone",
+    "body": "category: Hormones",
+    "related": [
+      "FSH",
+      "hormona folículo estimulante"
+    ]
+  },
+  {
+    "id": "loinc:27133-2",
+    "system": "loinc",
+    "code": "27133-2",
+    "title": "Parathyroid hormone",
+    "body": "category: Hormones",
+    "related": [
+      "PTH",
+      "paratohormona",
+      "hormona paratiroidea"
+    ]
+  },
+  {
+    "id": "loinc:LP38535-9",
+    "system": "loinc",
+    "code": "LP38535-9",
+    "title": "Anti-CCP",
+    "body": "category: Autoimmunity",
+    "related": [
+      "anti-CCP",
+      "anticuerpo péptido citrulinado"
+    ]
+  },
+  {
+    "id": "loinc:LP38645-6",
+    "system": "loinc",
+    "code": "LP38645-6",
+    "title": "Rheumatoid factor",
+    "body": "category: Autoimmunity",
+    "related": [
+      "factor reumatoide",
+      "FR"
+    ]
+  },
+  {
+    "id": "loinc:17721-2",
+    "system": "loinc",
+    "code": "17721-2",
+    "title": "Antinuclear antibodies",
+    "body": "category: Autoimmunity",
+    "related": [
+      "ANA",
+      "anticuerpos antinucleares"
+    ]
+  },
+  {
+    "id": "loinc:LP32188-0",
+    "system": "loinc",
+    "code": "LP32188-0",
+    "title": "Anti-dsDNA",
+    "body": "category: Autoimmunity",
+    "related": [
+      "anti-DNA",
+      "anti-dsDNA"
+    ]
+  },
+  {
+    "id": "loinc:5408-3",
+    "system": "loinc",
+    "code": "5408-3",
+    "title": "Pregnancy test",
+    "body": "category: Hormones",
+    "related": [
+      "hCG",
+      "gonadotropina coriónica",
+      "prueba embarazo",
+      "beta hCG"
+    ]
+  },
+  {
+    "id": "loinc:33214-9",
+    "system": "loinc",
+    "code": "33214-9",
+    "title": "Interleukin 6",
+    "body": "category: Inflammation",
+    "related": [
+      "interleucina 6",
+      "IL-6"
+    ]
+  },
+  {
+    "id": "loinc:17429-7",
+    "system": "loinc",
+    "code": "17429-7",
+    "title": "Uric acid, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "ácido úrico en orina"
+    ]
+  },
+  {
+    "id": "loinc:5806-5",
+    "system": "loinc",
+    "code": "5806-5",
+    "title": "Microalbumin, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "microalbúmina urinaria"
+    ]
+  },
+  {
+    "id": "loinc:20471-8",
+    "system": "loinc",
+    "code": "20471-8",
+    "title": "Albumin, serum",
+    "body": "category: Chemistry",
+    "related": [
+      "albúmina sérica"
+    ]
+  },
+  {
+    "id": "loinc:1753-3",
+    "system": "loinc",
+    "code": "1753-3",
+    "title": "Albumin, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "albúmina en orina",
+      "proteinuria"
+    ]
+  },
+  {
+    "id": "loinc:5778-6",
+    "system": "loinc",
+    "code": "5778-6",
+    "title": "Protein total, serum",
+    "body": "category: Chemistry",
+    "related": [
+      "proteínas totales"
+    ]
+  },
+  {
+    "id": "loinc:29584-6",
+    "system": "loinc",
+    "code": "29584-6",
+    "title": "C-peptide",
+    "body": "category: Hormones",
+    "related": [
+      "péptido C",
+      "C-péptido"
+    ]
+  },
+  {
+    "id": "loinc:26960-9",
+    "system": "loinc",
+    "code": "26960-9",
+    "title": "Insulin",
+    "body": "category: Hormones",
+    "related": [
+      "insulina",
+      "insulinemia"
+    ]
+  },
+  {
+    "id": "loinc:55718-3",
+    "system": "loinc",
+    "code": "55718-3",
+    "title": "Homocysteine",
+    "body": "category: Chemistry",
+    "related": [
+      "homocisteína"
+    ]
+  },
+  {
+    "id": "loinc:LP38368-4",
+    "system": "loinc",
+    "code": "LP38368-4",
+    "title": "Lipase",
+    "body": "category: Chemistry",
+    "related": [
+      "lipasa"
+    ]
+  },
+  {
+    "id": "loinc:1798-8",
+    "system": "loinc",
+    "code": "1798-8",
+    "title": "Amylase",
+    "body": "category: Chemistry",
+    "related": [
+      "amilasa"
+    ]
+  },
+  {
+    "id": "loinc:LP38573-9",
+    "system": "loinc",
+    "code": "LP38573-9",
+    "title": "Magnesium",
+    "body": "category: Chemistry",
+    "related": [
+      "magnesio",
+      "Mg"
+    ]
+  },
+  {
+    "id": "loinc:2777-1",
+    "system": "loinc",
+    "code": "2777-1",
+    "title": "Phosphorus",
+    "body": "category: Chemistry",
+    "related": [
+      "fósforo",
+      "fosfato",
+      "P"
+    ]
+  },
+  {
+    "id": "loinc:2885-2",
+    "system": "loinc",
+    "code": "2885-2",
+    "title": "Calcium total",
+    "body": "category: Chemistry",
+    "related": [
+      "calcio total",
+      "Ca"
+    ]
+  },
+  {
+    "id": "loinc:17864-0",
+    "system": "loinc",
+    "code": "17864-0",
+    "title": "Calcium ionized",
+    "body": "category: Chemistry",
+    "related": [
+      "calcio iónico",
+      "Ca++"
+    ]
+  },
+  {
+    "id": "loinc:LP38599-4",
+    "system": "loinc",
+    "code": "LP38599-4",
+    "title": "Beta-2 microglobulin",
+    "body": "category: Tumor Markers",
+    "related": [
+      "beta-2 microglobulina"
+    ]
+  },
+  {
+    "id": "loinc:LP38596-0",
+    "system": "loinc",
+    "code": "LP38596-0",
+    "title": "Free light chains, kappa",
+    "body": "category: Tumor Markers",
+    "related": [
+      "cadenas ligeras libres kappa"
+    ]
+  },
+  {
+    "id": "loinc:LP38597-8",
+    "system": "loinc",
+    "code": "LP38597-8",
+    "title": "Free light chains, lambda",
+    "body": "category: Tumor Markers",
+    "related": [
+      "cadenas ligeras libres lambda"
+    ]
+  },
+  {
+    "id": "loinc:LP38402-1",
+    "system": "loinc",
+    "code": "LP38402-1",
+    "title": "Haptoglobin",
+    "body": "category: Chemistry",
+    "related": [
+      "haptoglobina"
+    ]
+  },
+  {
+    "id": "loinc:LP19930-3",
+    "system": "loinc",
+    "code": "LP19930-3",
+    "title": "Lactate",
+    "body": "category: Chemistry",
+    "related": [
+      "lactato",
+      "ácido láctico"
+    ]
+  },
+  {
+    "id": "loinc:2701-1",
+    "system": "loinc",
+    "code": "2701-1",
+    "title": "Oxygen saturation",
+    "body": "category: Blood Gas",
+    "related": [
+      "saturación de oxígeno",
+      "SpO2",
+      "SatO2"
+    ]
+  },
+  {
+    "id": "loinc:19222-8",
+    "system": "loinc",
+    "code": "19222-8",
+    "title": "pO2, blood",
+    "body": "category: Blood Gas",
+    "related": [
+      "presión parcial oxígeno",
+      "PaO2"
+    ]
+  },
+  {
+    "id": "loinc:2019-8",
+    "system": "loinc",
+    "code": "2019-8",
+    "title": "pCO2, blood",
+    "body": "category: Blood Gas",
+    "related": [
+      "presión parcial CO2",
+      "PaCO2"
+    ]
+  },
+  {
+    "id": "loinc:19213-7",
+    "system": "loinc",
+    "code": "19213-7",
+    "title": "pH, blood",
+    "body": "category: Blood Gas",
+    "related": [
+      "pH sanguíneo"
+    ]
+  },
+  {
+    "id": "loinc:LP40562-8",
+    "system": "loinc",
+    "code": "LP40562-8",
+    "title": "H. pylori stool antigen",
+    "body": "category: Microbiology",
+    "related": [
+      "antígeno H. pylori en heces"
+    ]
+  },
+  {
+    "id": "loinc:LP38264-4",
+    "system": "loinc",
+    "code": "LP38264-4",
+    "title": "Clostridium difficile toxin A+B",
+    "body": "category: Microbiology",
+    "related": [
+      "Clostridium difficile",
+      "C. diff",
+      "toxina A y B"
+    ]
+  },
+  {
+    "id": "loinc:LP39252-1",
+    "system": "loinc",
+    "code": "LP39252-1",
+    "title": "Stool culture",
+    "body": "category: Microbiology",
+    "related": [
+      "coprocultivo",
+      "cultivo de heces"
+    ]
+  },
+  {
+    "id": "loinc:LP39195-2",
+    "system": "loinc",
+    "code": "LP39195-2",
+    "title": "Urine culture",
+    "body": "category: Microbiology",
+    "related": [
+      "urocultivo",
+      "cultivo de orina"
+    ]
+  },
+  {
+    "id": "loinc:LP39052-5",
+    "system": "loinc",
+    "code": "LP39052-5",
+    "title": "Blood culture",
+    "body": "category: Microbiology",
+    "related": [
+      "hemocultivo",
+      "cultivo de sangre"
+    ]
+  },
+  {
+    "id": "loinc:LP38986-4",
+    "system": "loinc",
+    "code": "LP38986-4",
+    "title": "Cytomegalovirus IgG",
+    "body": "category: Serology",
+    "related": [
+      "CMV IgG",
+      "citomegalovirus IgG"
+    ]
+  },
+  {
+    "id": "loinc:LP38987-2",
+    "system": "loinc",
+    "code": "LP38987-2",
+    "title": "Cytomegalovirus IgM",
+    "body": "category: Serology",
+    "related": [
+      "CMV IgM",
+      "citomegalovirus IgM"
+    ]
+  },
+  {
+    "id": "loinc:LP38802-4",
+    "system": "loinc",
+    "code": "LP38802-4",
+    "title": "Epstein-Barr VCA IgG",
+    "body": "category: Serology",
+    "related": [
+      "EBV VCA IgG",
+      "Epstein-Barr IgG"
+    ]
+  },
+  {
+    "id": "loinc:LP38803-2",
+    "system": "loinc",
+    "code": "LP38803-2",
+    "title": "Epstein-Barr VCA IgM",
+    "body": "category: Serology",
+    "related": [
+      "EBV VCA IgM",
+      "Epstein-Barr IgM"
+    ]
+  },
+  {
+    "id": "loinc:LP38527-6",
+    "system": "loinc",
+    "code": "LP38527-6",
+    "title": "Hepatitis B surface antigen",
+    "body": "category: Serology",
+    "related": [
+      "HBsAg",
+      "antígeno hepatitis B"
+    ]
+  },
+  {
+    "id": "loinc:LP38529-2",
+    "system": "loinc",
+    "code": "LP38529-2",
+    "title": "Hepatitis B core antibody",
+    "body": "category: Serology",
+    "related": [
+      "anti-HBc",
+      "anticuerpo core hepatitis B"
+    ]
+  },
+  {
+    "id": "loinc:LP38530-0",
+    "system": "loinc",
+    "code": "LP38530-0",
+    "title": "Hepatitis B surface antibody",
+    "body": "category: Serology",
+    "related": [
+      "anti-HBs",
+      "anticuerpo superficie hepatitis B"
+    ]
+  },
+  {
+    "id": "loinc:LP38535-9",
+    "system": "loinc",
+    "code": "LP38535-9",
+    "title": "Hepatitis C antibody",
+    "body": "category: Serology",
+    "related": [
+      "anti-HCV",
+      "anticuerpo hepatitis C"
+    ]
+  },
+  {
+    "id": "loinc:LP38604-2",
+    "system": "loinc",
+    "code": "LP38604-2",
+    "title": "HIV 1+2 antibody",
+    "body": "category: Serology",
+    "related": [
+      "VIH",
+      "HIV",
+      "ELISA VIH",
+      "anticuerpos VIH"
+    ]
+  },
+  {
+    "id": "loinc:LP38605-9",
+    "system": "loinc",
+    "code": "LP38605-9",
+    "title": "HIV p24 antigen",
+    "body": "category: Serology",
+    "related": [
+      "antígeno p24",
+      "VIH p24"
+    ]
+  },
+  {
+    "id": "loinc:LP38576-2",
+    "system": "loinc",
+    "code": "LP38576-2",
+    "title": "Syphilis serology",
+    "body": "category: Serology",
+    "related": [
+      "sífilis",
+      "VDRL",
+      "RPR",
+      "FTA-ABS"
+    ]
+  },
+  {
+    "id": "loinc:LP39221-6",
+    "system": "loinc",
+    "code": "LP39221-6",
+    "title": "Toxoplasma IgG",
+    "body": "category: Serology",
+    "related": [
+      "Toxoplasma IgG",
+      "toxoplasmosis IgG"
+    ]
+  },
+  {
+    "id": "loinc:LP39222-4",
+    "system": "loinc",
+    "code": "LP39222-4",
+    "title": "Toxoplasma IgM",
+    "body": "category: Serology",
+    "related": [
+      "Toxoplasma IgM",
+      "toxoplasmosis IgM"
+    ]
+  },
+  {
+    "id": "loinc:LP38809-9",
+    "system": "loinc",
+    "code": "LP38809-9",
+    "title": "Rubella IgG",
+    "body": "category: Serology",
+    "related": [
+      "rubeola IgG",
+      "rubéola IgG"
+    ]
+  },
+  {
+    "id": "loinc:LP38810-7",
+    "system": "loinc",
+    "code": "LP38810-7",
+    "title": "Rubella IgM",
+    "body": "category: Serology",
+    "related": [
+      "rubeola IgM",
+      "rubéola IgM"
+    ]
+  },
+  {
+    "id": "loinc:LP39928-7",
+    "system": "loinc",
+    "code": "LP39928-7",
+    "title": "Chagas serology",
+    "body": "category: Serology",
+    "related": [
+      "Chagas",
+      "Trypanosoma cruzi",
+      "enfermedad de Chagas"
+    ]
+  },
+  {
+    "id": "loinc:LP39541-7",
+    "system": "loinc",
+    "code": "LP39541-7",
+    "title": "Dengue IgG",
+    "body": "category: Serology",
+    "related": [
+      "dengue IgG"
+    ]
+  },
+  {
+    "id": "loinc:LP39542-5",
+    "system": "loinc",
+    "code": "LP39542-5",
+    "title": "Dengue IgM",
+    "body": "category: Serology",
+    "related": [
+      "dengue IgM"
+    ]
+  },
+  {
+    "id": "loinc:LP39521-9",
+    "system": "loinc",
+    "code": "LP39521-9",
+    "title": "Dengue NS1 antigen",
+    "body": "category: Serology",
+    "related": [
+      "dengue NS1",
+      "antígeno NS1"
+    ]
+  },
+  {
+    "id": "loinc:LP38840-4",
+    "system": "loinc",
+    "code": "LP38840-4",
+    "title": "COVID-19 RNA PCR",
+    "body": "category: Microbiology",
+    "related": [
+      "COVID-19",
+      "SARS-CoV-2",
+      "PCR COVID",
+      "coronavirus"
+    ]
+  },
+  {
+    "id": "loinc:LP41803-5",
+    "system": "loinc",
+    "code": "LP41803-5",
+    "title": "COVID-19 IgG antibody",
+    "body": "category: Serology",
+    "related": [
+      "COVID IgG",
+      "SARS-CoV-2 IgG"
+    ]
+  },
+  {
+    "id": "loinc:LP41804-3",
+    "system": "loinc",
+    "code": "LP41804-3",
+    "title": "COVID-19 IgM antibody",
+    "body": "category: Serology",
+    "related": [
+      "COVID IgM",
+      "SARS-CoV-2 IgM"
+    ]
+  },
+  {
+    "id": "loinc:24336-0",
+    "system": "loinc",
+    "code": "24336-0",
+    "title": "Urinalysis complete panel",
+    "body": "category: Urinalysis",
+    "related": [
+      "uroanálisis",
+      "examen general de orina",
+      "EGO",
+      "orina completa"
+    ]
+  },
+  {
+    "id": "loinc:25428-8",
+    "system": "loinc",
+    "code": "25428-8",
+    "title": "Color, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "color de orina"
+    ]
+  },
+  {
+    "id": "loinc:32167-9",
+    "system": "loinc",
+    "code": "32167-9",
+    "title": "Clarity, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "aspecto de orina",
+      "claridad urinaria"
+    ]
+  },
+  {
+    "id": "loinc:5802-4",
+    "system": "loinc",
+    "code": "5802-4",
+    "title": "Specific gravity, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "densidad urinaria",
+      "gravedad específica"
+    ]
+  },
+  {
+    "id": "loinc:2758-1",
+    "system": "loinc",
+    "code": "2758-1",
+    "title": "pH, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "pH de orina"
+    ]
+  },
+  {
+    "id": "loinc:5767-9",
+    "system": "loinc",
+    "code": "5767-9",
+    "title": "Glucose, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "glucosuria",
+      "glucosa en orina"
+    ]
+  },
+  {
+    "id": "loinc:5792-7",
+    "system": "loinc",
+    "code": "5792-7",
+    "title": "Protein, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "proteinuria",
+      "proteína en orina"
+    ]
+  },
+  {
+    "id": "loinc:5794-3",
+    "system": "loinc",
+    "code": "5794-3",
+    "title": "Ketones, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "cetonuria",
+      "cetonas en orina",
+      "cuerpos cetónicos"
+    ]
+  },
+  {
+    "id": "loinc:5770-3",
+    "system": "loinc",
+    "code": "5770-3",
+    "title": "Bilirubin, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "bilirrubinuria",
+      "bilirrubina en orina"
+    ]
+  },
+  {
+    "id": "loinc:5801-6",
+    "system": "loinc",
+    "code": "5801-6",
+    "title": "Urobilinogen, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "urobilinógeno"
+    ]
+  },
+  {
+    "id": "loinc:5799-2",
+    "system": "loinc",
+    "code": "5799-2",
+    "title": "Nitrite, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "nitritos en orina"
+    ]
+  },
+  {
+    "id": "loinc:5788-5",
+    "system": "loinc",
+    "code": "5788-5",
+    "title": "Leukocyte esterase, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "esterasa leucocitaria",
+      "leucocitos en orina"
+    ]
+  },
+  {
+    "id": "loinc:13944-2",
+    "system": "loinc",
+    "code": "13944-2",
+    "title": "Blood, urine",
+    "body": "category: Urinalysis",
+    "related": [
+      "hematuria",
+      "sangre en orina"
+    ]
+  }
+]
