@@ -42,27 +42,45 @@ class EncryptionService {
     _sessionKey = 'orion_ble_session_static_key_v1';
 
     // Ensure a master secret exists for health data encryption
-    if (!await _secureStorage.containsKey('$_healthKeyNamespace:$_healthKeyName')) {
+    if (!await _secureStorage.containsKey(
+      '$_healthKeyNamespace:$_healthKeyName',
+    )) {
       final rand = Random.secure();
-      final secret = Uint8List.fromList(List<int>.generate(32, (i) => rand.nextInt(256)));
-      await _secureStorage.writeSecure(_healthKeyNamespace, _healthKeyName, HEX.encode(secret));
+      final secret = Uint8List.fromList(
+        List<int>.generate(32, (i) => rand.nextInt(256)),
+      );
+      await _secureStorage.writeSecure(
+        _healthKeyNamespace,
+        _healthKeyName,
+        HEX.encode(secret),
+      );
     }
   }
 
   String? _healthKeyCache;
+
+  void clearHealthKeyCache() {
+    _healthKeyCache = null;
+  }
 
   Future<String> _getHealthKey() async {
     // Argon2id (64 MiB, 3 passes) is deliberately slow: derive the key once.
     final cached = _healthKeyCache;
     if (cached != null) return cached;
 
-    var masterSecretHex = await _secureStorage.readSecure(_healthKeyNamespace, _healthKeyName);
+    var masterSecretHex = await _secureStorage.readSecure(
+      _healthKeyNamespace,
+      _healthKeyName,
+    );
     if (masterSecretHex == null) {
       // Nothing ever called initialize(), so the first encrypted write failed
       // with "master secret not found". Create the secret on first use; this
       // branch only runs when no secret exists, so it never replaces one.
       await initialize();
-      masterSecretHex = await _secureStorage.readSecure(_healthKeyNamespace, _healthKeyName);
+      masterSecretHex = await _secureStorage.readSecure(
+        _healthKeyNamespace,
+        _healthKeyName,
+      );
     }
     if (masterSecretHex == null) {
       throw Exception('Encryption master secret not found');
@@ -101,7 +119,9 @@ class EncryptionService {
 
   Future<Uint8List> encryptBytes(Uint8List plainBytes) async {
     final secretKey = await _algorithm.newSecretKeyFromBytes(
-      Uint8List.fromList(utf8.encode(_sessionKey.padRight(32).substring(0, 32))),
+      Uint8List.fromList(
+        utf8.encode(_sessionKey.padRight(32).substring(0, 32)),
+      ),
     );
     final nonce = _algorithm.newNonce();
     final secretBox = await _algorithm.encrypt(
@@ -110,10 +130,20 @@ class EncryptionService {
       nonce: nonce,
     );
 
-    final combined = Uint8List(nonce.length + secretBox.cipherText.length + secretBox.mac.bytes.length);
+    final combined = Uint8List(
+      nonce.length + secretBox.cipherText.length + secretBox.mac.bytes.length,
+    );
     combined.setRange(0, nonce.length, nonce);
-    combined.setRange(nonce.length, nonce.length + secretBox.cipherText.length, secretBox.cipherText);
-    combined.setRange(nonce.length + secretBox.cipherText.length, combined.length, secretBox.mac.bytes);
+    combined.setRange(
+      nonce.length,
+      nonce.length + secretBox.cipherText.length,
+      secretBox.cipherText,
+    );
+    combined.setRange(
+      nonce.length + secretBox.cipherText.length,
+      combined.length,
+      secretBox.mac.bytes,
+    );
 
     return combined;
   }
@@ -125,19 +155,14 @@ class EncryptionService {
     final cipherText = combined.sublist(12, combined.length - 16);
 
     final secretKey = await _algorithm.newSecretKeyFromBytes(
-      Uint8List.fromList(utf8.encode(_sessionKey.padRight(32).substring(0, 32))),
+      Uint8List.fromList(
+        utf8.encode(_sessionKey.padRight(32).substring(0, 32)),
+      ),
     );
 
-    final secretBox = SecretBox(
-      cipherText,
-      nonce: nonce,
-      mac: Mac(macBytes),
-    );
+    final secretBox = SecretBox(cipherText, nonce: nonce, mac: Mac(macBytes));
 
-    final clearText = await _algorithm.decrypt(
-      secretBox,
-      secretKey: secretKey,
-    );
+    final clearText = await _algorithm.decrypt(secretBox, secretKey: secretKey);
 
     return Uint8List.fromList(clearText);
   }
@@ -159,10 +184,20 @@ class EncryptionService {
       nonce: nonce,
     );
 
-    final combined = Uint8List(nonce.length + secretBox.cipherText.length + secretBox.mac.bytes.length);
+    final combined = Uint8List(
+      nonce.length + secretBox.cipherText.length + secretBox.mac.bytes.length,
+    );
     combined.setRange(0, nonce.length, nonce);
-    combined.setRange(nonce.length, nonce.length + secretBox.cipherText.length, secretBox.cipherText);
-    combined.setRange(nonce.length + secretBox.cipherText.length, combined.length, secretBox.mac.bytes);
+    combined.setRange(
+      nonce.length,
+      nonce.length + secretBox.cipherText.length,
+      secretBox.cipherText,
+    );
+    combined.setRange(
+      nonce.length + secretBox.cipherText.length,
+      combined.length,
+      secretBox.mac.bytes,
+    );
 
     return base64.encode(combined);
   }
@@ -178,16 +213,9 @@ class EncryptionService {
       Uint8List.fromList(utf8.encode(key.padRight(32).substring(0, 32))),
     );
 
-    final secretBox = SecretBox(
-      cipherText,
-      nonce: nonce,
-      mac: Mac(macBytes),
-    );
+    final secretBox = SecretBox(cipherText, nonce: nonce, mac: Mac(macBytes));
 
-    final clearText = await _algorithm.decrypt(
-      secretBox,
-      secretKey: secretKey,
-    );
+    final clearText = await _algorithm.decrypt(secretBox, secretKey: secretKey);
 
     return utf8.decode(clearText);
   }
@@ -195,7 +223,9 @@ class EncryptionService {
   /// Generate a random PIN salt as a hex string
   Future<String> generatePinSalt() async {
     final rand = Random.secure();
-    final bytes = Uint8List.fromList(List<int>.generate(16, (i) => rand.nextInt(256)));
+    final bytes = Uint8List.fromList(
+      List<int>.generate(16, (i) => rand.nextInt(256)),
+    );
     return HEX.encode(bytes);
   }
 
