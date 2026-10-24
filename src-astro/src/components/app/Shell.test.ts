@@ -76,4 +76,20 @@ describe('Shell', () => {
 
     expect(lockSpy).toHaveBeenCalled();
   });
+
+  it('shows demo banner when services are mock and demo is true', () => {
+    setServices({ ...createMockServices(0), demo: true } as any);
+
+    app = mount(DummyWrapper, {
+      target: document.body,
+      props: {
+        path: '/app/family'
+      }
+    });
+    flushSync();
+
+    const banner = document.querySelector('.demo-banner');
+    expect(banner).not.toBeNull();
+    expect(banner?.textContent).toContain('Modo demo: no se guarda ningún dato');
+  });
 });
