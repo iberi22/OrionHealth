@@ -10,7 +10,6 @@ class TestDatabaseModule extends DatabaseModule {
   @override
   Future<Isar> get isar async => MockIsar();
 }
-
 class MockIsar extends Mock implements Isar {}
 
 void main() {
@@ -26,21 +25,11 @@ void main() {
       final module = TestDatabaseModule();
 
       await gh.factoryAsync<Isar>(() => module.isar, preResolve: true);
-      gh.lazySingleton<wallet.EncryptionService>(
-        () => module.walletEncryptionService,
-      );
-      gh.lazySingleton<wallet.WalletService>(
-        () => module.walletService(
-          getIt<Isar>(),
-          getIt<wallet.EncryptionService>(),
-        ),
-      );
+      gh.lazySingleton<wallet.EncryptionService>(() => module.walletEncryptionService);
+      gh.lazySingleton<wallet.WalletService>(() => module.walletService(getIt<Isar>(), getIt<wallet.EncryptionService>()));
 
       expect(getIt<Isar>(), isA<Isar>());
-      expect(
-        getIt<wallet.EncryptionService>(),
-        isA<wallet.EncryptionService>(),
-      );
+      expect(getIt<wallet.EncryptionService>(), isA<wallet.EncryptionService>());
       expect(getIt<wallet.WalletService>(), isA<wallet.WalletService>());
     });
 
@@ -49,15 +38,8 @@ void main() {
       final module = TestDatabaseModule();
 
       await gh.factoryAsync<Isar>(() => module.isar, preResolve: true);
-      gh.lazySingleton<wallet.EncryptionService>(
-        () => module.walletEncryptionService,
-      );
-      gh.lazySingleton<wallet.WalletService>(
-        () => module.walletService(
-          getIt<Isar>(),
-          getIt<wallet.EncryptionService>(),
-        ),
-      );
+      gh.lazySingleton<wallet.EncryptionService>(() => module.walletEncryptionService);
+      gh.lazySingleton<wallet.WalletService>(() => module.walletService(getIt<Isar>(), getIt<wallet.EncryptionService>()));
 
       // Isar is factory in this registration, but usually it acts as a singleton if it's pre-resolved and held.
       // Wallet service is lazySingleton.
