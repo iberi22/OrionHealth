@@ -33,11 +33,24 @@ export interface KernelOptions {
   deviceId: string;
   /** Open the WebRTC replica when a circle key is known (default true; tests pass false). */
   connect?: boolean;
+  /** With connect, false keeps the replica's Y.Doc in memory without y-webrtc (tests sync docs by hand). */
+  transport?: boolean;
   now?: () => number;
 }
 
 /** Envelopes whose content is validated by its own protocol (membership reducer), not by grants. */
 const SELF_VALIDATED: readonly Category[] = ['membership'];
+
+/**
+ * Rejection reasons that can turn valid once more of the log arrives (spec §8: replicas deliver in any order):
+ * the author's approve or the owner's grant may still be on its way. Remote envelopes rejected for these
+ * reasons wait in a pending queue and are re-validated after every accepted membership or grant envelope.
+ */
+const RETRYABLE = new Set(['unknown-author', 'author-not-member', 'unknown-owner', 'unauthorized-write']);
+/** Bound of the pending queue (per unlocked session); when full, the oldest entry is dropped. */
+export const MAX_PENDING = 500;
+
+const retryable = (e: unknown) => e instanceof KernelError && e.code === 'INVALID' && RETRYABLE.has(e.message);
 
 interface Keystore {
   circle?: { id: string; genesis: { memberId: string; signPub: string } };
@@ -64,6 +77,9 @@ export class RealKernel implements Kernel {
   private revoked = new Set<string>();
   private circleInfo: Keystore['circle'];
   private replica: CircleReplica | null = null;
+  private pending = new Map<string, Envelope>();
+  private revalidating = false;
+  private revalidateAgain = false;
   private hlc: Hlc;
   private envSubs = new Set<(e: Envelope) => void>();
   private lockSubs = new Set<() => void>();
@@ -120,6 +136,7 @@ export class RealKernel implements Kernel {
     this.foreign.clear();
     this.circleKeys.clear();
     this.revoked.clear();
+    this.pending.clear();
     this.circleInfo = undefined;
     this.generation++;
     this.replica?.destroy();
@@ -151,14 +168,17 @@ export class RealKernel implements Kernel {
     const gen = this.generation;
     const ck0 = this.circleKeys.get(0);
     if (this.replica || !this.circleInfo || !ck0 || this.opts.connect === false) return;
+    const circleId = this.circleInfo.id;
     const replica = await createCircleReplica({
-      circleId: this.circleInfo.id,
+      circleId,
       ck0,
+      connect: this.opts.transport !== false,
       validate: async (env) => {
         try {
           await this.accept(env);
           return true;
-        } catch {
+        } catch (e) {
+          this.queuePending(env, e);
           return false;
         }
       },
@@ -170,7 +190,59 @@ export class RealKernel implements Kernel {
       replica.destroy();
       return;
     }
+    // Registered before reading the store: a publish racing with the seed either is in the listing or
+    // reaches the replica through publish().
     this.replica = replica;
+    // The Y.Doc is ephemeral (no y-indexeddb, spec §8): every stored envelope of the circle, and my own
+    // personal envelopes written before the circle existed, go back into it so peers that were offline get them.
+    const me = this.opts.session.bundle()?.memberId;
+    const stored = [
+      ...(await this.opts.store.listByCircle(circleId)),
+      ...(await this.opts.store.listByCircle('local')).filter((e) => e.owner === me && e.author === me),
+    ];
+    if (gen !== this.generation) return;
+    replica.seed(stored);
+  }
+
+  /** Room and doc of the open replica (tests and diagnostics). */
+  replicaInfo(): { room: string; doc: CircleReplica['doc'] } | null {
+    return this.replica ? { room: this.replica.room, doc: this.replica.doc } : null;
+  }
+
+  private queuePending(env: Envelope, e: unknown) {
+    if (!retryable(e) || this.pending.has(env.id)) return;
+    if (this.pending.size >= MAX_PENDING) this.pending.delete(this.pending.keys().next().value as string);
+    this.pending.set(env.id, env);
+  }
+
+  /** Re-validates the pending queue; re-entrant calls (an accepted pending membership envelope) loop once more. */
+  private async revalidatePending() {
+    if (!this.pending.size) return;
+    if (this.revalidating) {
+      this.revalidateAgain = true;
+      return;
+    }
+    this.revalidating = true;
+    const gen = this.generation;
+    try {
+      do {
+        this.revalidateAgain = false;
+        for (const [id, env] of [...this.pending]) {
+          if (gen !== this.generation) return;
+          if (!this.pending.has(id)) continue;
+          try {
+            const fresh = await this.accept(env);
+            this.pending.delete(id);
+            // Into the replica's valid set, so overwrites of this id are restored like any other.
+            if (fresh) await this.replica?.add(env).catch(() => undefined);
+          } catch (e) {
+            if (!retryable(e)) this.pending.delete(id);
+          }
+        }
+      } while (this.revalidateAgain && this.pending.size);
+    } finally {
+      this.revalidating = false;
+    }
   }
 
   // ---------- identity ----------
@@ -245,7 +317,10 @@ export class RealKernel implements Kernel {
   addCircleKey(epoch: number, raw: Uint8Array) {
     this.guard();
     this.circleKeys.set(epoch, raw.slice());
-    void this.persist().then(() => this.startReplica());
+    void this.persist()
+      .then(() => this.startReplica())
+      .then(() => this.revalidatePending())
+      .catch(() => undefined);
   }
 
   async wrapKeyFor(
@@ -384,7 +459,8 @@ export class RealKernel implements Kernel {
     }
     if (SELF_VALIDATED.includes(env.category)) {
       const pub = await this.signPubOf(env.author);
-      if (!pub || !(await verifyEnvelope(env, pub))) throw new KernelError('INVALID', 'invalid-signature');
+      if (!pub) throw new KernelError('INVALID', 'unknown-author');
+      if (!(await verifyEnvelope(env, pub))) throw new KernelError('INVALID', 'invalid-signature');
     } else {
       const { grants, revoked } = await this.grantState();
       const res = await validateEnvelope(env, {
@@ -399,6 +475,7 @@ export class RealKernel implements Kernel {
     await this.opts.store.put(env);
     this.hlc.receive(env.hlc);
     this.envSubs.forEach((cb) => cb(env));
+    if (env.category === 'membership' || env.category === 'grant') void this.revalidatePending();
     return true;
   }
 
