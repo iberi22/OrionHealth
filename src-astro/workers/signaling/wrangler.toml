@@ -16,3 +16,7 @@ bindings = [
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["SignalingRoom"]
+
+[vars]
+ENVIRONMENT = "production"
+ORIGIN_ALLOWLIST = "https://orionhealth.swal.network"
