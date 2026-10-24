@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:orionhealth_health/features/health_sharing/infrastructure/wifi_direct_service.dart';
@@ -256,7 +259,7 @@ class _FakeHttpClientRequest implements HttpClientRequest {
 
   @override
   Future<HttpClientResponse> close() async {
-    final responseController = StreamController<List<int>>();
+    final responseController = StreamController<Uint8List>();
     final request = _FakeHttpRequest(url, 'POST', _body, responseController);
 
     if (_fakeServerInstance != null) {
@@ -316,7 +319,7 @@ class _FakeHttpServer extends Stream<HttpRequest> implements HttpServer {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _FakeHttpRequest extends Stream<List<int>> implements HttpRequest {
+class _FakeHttpRequest extends Stream<Uint8List> implements HttpRequest {
   @override
   final Uri uri;
   @override
@@ -330,19 +333,19 @@ class _FakeHttpRequest extends Stream<List<int>> implements HttpRequest {
     this.uri,
     this.method,
     this._body,
-    StreamController<List<int>> responseController,
+    StreamController<Uint8List> responseController,
   ) : response = _FakeHttpResponse(responseController) {
     response._completer = responseCompleter;
   }
 
   @override
-  StreamSubscription<List<int>> listen(
-    void Function(List<int> event)? onData, {
+  StreamSubscription<Uint8List> listen(
+    void Function(Uint8List event)? onData, {
     Function? onError,
     void Function()? onDone,
     bool? cancelOnError,
   }) {
-    return Stream.value(_body).listen(
+    return Stream.value(Uint8List.fromList(_body)).listen(
       onData,
       onError: onError,
       onDone: onDone,
@@ -353,9 +356,9 @@ class _FakeHttpRequest extends Stream<List<int>> implements HttpRequest {
   @override
   Future<S> fold<S>(
     S initialValue,
-    S Function(S previous, List<int> element) combine,
+    S Function(S previous, Uint8List element) combine,
   ) async {
-    return combine(initialValue, _body);
+    return combine(initialValue, Uint8List.fromList(_body));
   }
 
   @override
@@ -366,7 +369,7 @@ class _FakeHttpResponse implements HttpResponse {
   @override
   int statusCode = 200;
   final List<int> body = [];
-  final StreamController<List<int>> _controller;
+  final StreamController<Uint8List> _controller;
   late Completer<_FakeHttpResponse> _completer;
 
   _FakeHttpResponse(this._controller);
@@ -378,7 +381,7 @@ class _FakeHttpResponse implements HttpResponse {
 
   @override
   Future<void> close() async {
-    _controller.add(body);
+    _controller.add(Uint8List.fromList(body));
     _controller.close();
     _completer.complete(this);
   }
@@ -387,40 +390,18 @@ class _FakeHttpResponse implements HttpResponse {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _FakeHttpClientResponse extends Stream<List<int>>
+class _FakeHttpClientResponse extends StreamView<Uint8List>
     implements HttpClientResponse {
   @override
   final int statusCode;
   final List<int> _body;
 
-  _FakeHttpClientResponse(this.statusCode, this._body);
+  _FakeHttpClientResponse(this.statusCode, this._body)
+    : super(Stream.value(Uint8List.fromList(_body)));
 
   @override
   Future<String> readAsString({Encoding encoding = utf8}) async {
     return encoding.decode(_body);
-  }
-
-  @override
-  StreamSubscription<List<int>> listen(
-    void Function(List<int> event)? onData, {
-    Function? onError,
-    void Function()? onDone,
-    bool? cancelOnError,
-  }) {
-    return Stream.value(_body).listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError,
-    );
-  }
-
-  @override
-  Future<S> fold<S>(
-    S initialValue,
-    S Function(S previous, List<int> element) combine,
-  ) async {
-    return combine(initialValue, _body);
   }
 
   @override
