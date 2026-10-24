@@ -5,7 +5,7 @@
 import { aesKey, b64u, canonical, fromB64u, fromUtf8, hkdf, openBlob, randomBytes, sealBlob, unwrapFrom, utf8, wrapTo } from '../../crypto/index';
 import type { VaultState } from '../../contracts/services';
 import type { CircleState, Category, Envelope, Grant, MembershipEvent, PersonalCategory } from '../../contracts/types';
-import { cekFor, currentEpoch, rotateCategory as rotateInBundle, type MemberBundle } from '../../vault/keyring';
+import { cekFor, currentEpoch, deriveCek, type MemberBundle } from '../../vault/keyring';
 import type { openEnvelopeStore } from '../../vault/store';
 import { openEnvelope, sealEnvelope, verifyEnvelope } from '../../family/envelope';
 import { createHlc, type Hlc } from '../../family/hlc';
@@ -369,10 +369,20 @@ export class RealKernel implements Kernel {
 
   // ---------- keys ----------
 
+  private async maxOwnEpochInStore(category: PersonalCategory): Promise<number> {
+    const envs = await this.opts.store.listByOwnerCategory(this.memberId(), category);
+    return envs.length > 0 ? Math.max(...envs.map(e => e.epoch)) : 0;
+  }
+
   private async ensureCategory(category: PersonalCategory) {
     const b = this.bundle();
-    if (!b.ceks[category]) {
-      rotateInBundle(b, category);
+    const hasAnyEpoch = b.ceks[category] && Object.keys(b.ceks[category]!).length > 0;
+    if (!hasAnyEpoch) {
+      const maxInStore = await this.maxOwnEpochInStore(category);
+      const epoch = Math.max(Date.now(), currentEpoch(b, category) + 1, maxInStore + 1);
+      const raw = await this.opts.session.withMrs(mrs => deriveCek(mrs, b.memberId, category, epoch));
+      if (!b.ceks[category]) b.ceks[category] = {};
+      b.ceks[category]![epoch] = b64u(raw);
       await this.saveAndPublishBundle(b);
     }
     return b;
@@ -394,17 +404,25 @@ export class RealKernel implements Kernel {
       let raw: string;
       try {
         raw = cekFor(b, category, epoch);
-      } catch {
-        throw new KernelError('NO_KEY', `no key for ${category} epoch ${epoch}`);
+      } catch (e: any) {
+        if (e.code === 'KEY_NOT_FOUND') {
+          const derived = await this.opts.session.withMrs(mrs => deriveCek(mrs, b.memberId, category, epoch));
+          raw = b64u(derived);
+          if (!b.ceks[category]) b.ceks[category] = {};
+          b.ceks[category][epoch] = raw;
+          await this.saveAndPublishBundle(b);
+        } else {
+          throw e;
+        }
       }
       return { key: await aesKey(fromB64u(raw)), epoch };
     }
     const prefix = `${owner}|${category}|`;
     const epochs = [...this.foreign.keys()].filter((k) => k.startsWith(prefix)).map((k) => Number(k.slice(prefix.length)));
     const epoch = opts.epoch ?? (epochs.length ? Math.max(...epochs) : -1);
-    const raw = this.foreign.get(`${prefix}${epoch}`);
-    if (!raw) throw new KernelError('NO_KEY', `no key for ${owner}/${category}`);
-    return { key: await aesKey(raw), epoch };
+    const rawLocal = this.foreign.get(`${prefix}${epoch}`);
+    if (!rawLocal) throw new KernelError('NO_KEY', `no key for ${owner}/${category}`);
+    return { key: await aesKey(rawLocal), epoch };
   }
 
   async circleKey(epoch?: number) {
@@ -459,9 +477,13 @@ export class RealKernel implements Kernel {
 
   async rotateCategory(category: PersonalCategory) {
     const b = await this.ensureCategory(category);
-    rotateInBundle(b, category);
+    const maxInStore = await this.maxOwnEpochInStore(category);
+    const epoch = Math.max(Date.now(), currentEpoch(b, category) + 1, maxInStore + 1);
+    const raw = await this.opts.session.withMrs(mrs => deriveCek(mrs, b.memberId, category, epoch));
+    if (!b.ceks[category]) b.ceks[category] = {};
+    b.ceks[category][epoch] = b64u(raw);
     await this.saveAndPublishBundle(b);
-    return currentEpoch(b, category);
+    return epoch;
   }
 
   // ---------- circle ----------
