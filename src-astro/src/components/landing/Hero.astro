@@ -1,0 +1,92 @@
+---
+import { HEADLINE, CTAS } from './content';
+import AppMockup from './AppMockup.astro';
+import { Button } from '@swal/ui';
+---
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>{HEADLINE}</h1>
+    <div class="ctas">
+      {CTAS.map((cta) => (
+        <a href={cta.href} class="cta-link">
+          <Button variant={cta.variant as "primary" | "secondary" | "ghost" | "danger" | "orange"}>{cta.label}</Button>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <AppMockup />
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 4rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: calc(100vh - 100px); /* Fit first viewport roughly */
+  }
+
+  .hero-content {
+    text-align: center;
+    max-width: 800px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--oh-text);
+    margin-bottom: 2rem;
+  }
+
+  .ctas {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-link {
+    text-decoration: none;
+  }
+
+  .hero-visual {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      flex-direction: row;
+      text-align: left;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hero-content {
+      text-align: left;
+      flex: 1;
+    }
+
+    .ctas {
+      justify-content: flex-start;
+    }
+
+    .hero-visual {
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+    }
+  }
+</style>
