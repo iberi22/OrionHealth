@@ -1,94 +1,55 @@
 import { test, expect } from '@playwright/test';
+import { addVirtualPasskey } from './helpers/webauthn';
+import { createVault, navigateInApp } from './helpers/vault';
+import { dumpIndexedDb } from './helpers/idb';
 
-// @ts-ignore - Helper is provided by orion2-b.05
-import * as webauthn from './helpers/webauthn';
-// @ts-ignore - Helper is provided by orion2-b.05
-import * as idb from './helpers/idb';
+const MARKERS = ['ZZ-MARKER-1', 'ZZ-MARKER-2'];
 
 test('vault data is encrypted at rest and contains no plain marker @real', async ({ page }) => {
-  // @ts-ignore
-  if (webauthn.addVirtualPasskey) await webauthn.addVirtualPasskey(page);
+  await addVirtualPasskey(page);
+  await createVault(page, 'Test Vault');
 
-  await page.goto('/app/onboarding');
-  await expect(page.locator('[data-testid="area-onboarding"]')).toBeVisible();
-
-  await page.getByPlaceholder('Tu nombre').fill('Test Vault');
-  await page.getByRole('button', { name: 'Crear passkey' }).click();
-
-  // Recovery code step
-  await expect(page.getByText('Tu código de recuperación')).toBeVisible();
-
-  const codeParagraph = page.getByText('Guarda este código en un lugar seguro.');
-  const codeDisplay = codeParagraph.locator('xpath=following-sibling::div[1]');
-  const codeText = await codeDisplay.textContent();
-  const parts = codeText!.trim().includes('-') ? codeText!.trim().split('-') : codeText!.trim().split(' ');
-
-  for (let i = 0; i < 3; i++) {
-    const input = page.locator('input').nth(i);
-    const id = await input.getAttribute('id');
-    const labelText = await page.locator(`label[for="${id}"]`).textContent();
-    const idx = parseInt(labelText!.replace('Parte ', '')) - 1;
-    await input.fill(parts[idx]);
-  }
-  await page.getByRole('button', { name: 'Confirmar' }).click();
-
-  // Basic profile step
-  await page.getByLabel('Nombre completo').fill('John Doe');
-  await page.getByRole('button', { name: 'Guardar perfil' }).click();
-
-  // Family step
-  await page.getByRole('button', { name: 'Omitir por ahora' }).click();
-
-  // Tour step
-  await page.getByRole('button', { name: 'Entrar a la app' }).click();
-
-  // App home
-  await expect(page.locator('[data-testid="area-home"]')).toBeVisible();
-  await page.goto('/app/records');
+  await navigateInApp(page, '/app/records');
   await expect(page.locator('[data-testid="area-records"]')).toBeVisible();
 
-  // Add condition
+  // Condition
   await page.getByRole('button', { name: 'Añadir' }).click();
-  await page.getByLabel('Nombre de la condición').fill('ZZ-MARKER-1');
+  await page.getByLabel('Nombre de la condición').fill(MARKERS[0]!);
   await page.getByRole('button', { name: 'Guardar' }).click();
+  await expect(page.getByText(MARKERS[0]!)).toBeVisible();
 
-  // Wait for it to appear
-  await expect(page.getByText('ZZ-MARKER-1')).toBeVisible();
+  // Allergy
+  await page.locator('button.tab-btn', { hasText: 'Alergias' }).click();
+  await page.getByRole('button', { name: 'Añadir' }).first().click();
+  await page.locator('input#al-substance').fill(MARKERS[1]!);
+  await page.locator('button[type="submit"]', { hasText: 'Guardar' }).click();
+  await expect(page.getByText(MARKERS[1]!)).toBeVisible();
 
-  // Dump storage and verify
-  // @ts-ignore
-  if (idb.dumpIndexedDb) {
-    // @ts-ignore
-    const idbDump = await idb.dumpIndexedDb(page);
-    expect(idbDump).not.toContain('ZZ-MARKER-1');
-  }
+  // IndexedDB: every database, every store, values and keys (guard: the dump is not vacuous).
+  const idbDump = await dumpIndexedDb(page);
+  expect(idbDump).toContain('orion-vault');
+  expect(idbDump).toContain('orion-meta');
+  for (const m of MARKERS) expect(idbDump).not.toContain(m);
 
   const ls = await page.evaluate(() => JSON.stringify(localStorage));
-  expect(ls).not.toContain('ZZ-MARKER-1');
-
   const ss = await page.evaluate(() => JSON.stringify(sessionStorage));
-  expect(ss).not.toContain('ZZ-MARKER-1');
-
-  // Verify Cache Storage
   const cacheStr = await page.evaluate(async () => {
-    const cacheKeys = await caches.keys();
-    const allCaches: string[] = [];
-    for (const key of cacheKeys) {
+    const out: string[] = [];
+    for (const key of await caches.keys()) {
       const cache = await caches.open(key);
-      const reqs = await cache.keys();
-      for (const req of reqs) {
+      for (const req of await cache.keys()) {
+        out.push(req.url);
         const res = await cache.match(req);
-        if (res) {
-          const text = await res.text();
-          allCaches.push(text);
-        }
+        if (res) out.push(await res.text());
       }
     }
-    return JSON.stringify(allCaches);
+    return JSON.stringify(out);
   });
-  expect(cacheStr).not.toContain('ZZ-MARKER-1');
-
-  // Get all visited URLs from page history/performance
-  const urls = await page.evaluate(() => JSON.stringify(performance.getEntriesByType('resource').map(e => e.name)));
-  expect(urls).not.toContain('ZZ-MARKER-1');
+  const urls = await page.evaluate(() => JSON.stringify(performance.getEntriesByType('resource').map((e) => e.name)));
+  for (const m of MARKERS) {
+    expect(ls).not.toContain(m);
+    expect(ss).not.toContain(m);
+    expect(cacheStr).not.toContain(m);
+    expect(urls).not.toContain(m);
+  }
 });
