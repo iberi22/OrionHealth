@@ -1,8 +1,8 @@
 name: OrionHealth Web PWA
 
+# superseded by deploy-astro
+
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
