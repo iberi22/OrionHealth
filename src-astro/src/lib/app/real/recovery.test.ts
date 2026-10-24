@@ -7,7 +7,7 @@ import type { VaultState } from '../../contracts/services';
 import { b64u, canonical, generateBoxPair, generateSigningPair, memberIdFromSpki, randomBytes, sign, unwrapFrom, utf8 } from '../../crypto/index';
 import type { InviteConnection, InviteHello, InviteTransport } from '../../family/inviteChannel';
 import { signEvent } from '../../family/membership';
-import { RecoveryError, combineShares } from '../../family/recovery';
+import { RecoveryError, combineShares, rewrapForRequest as rewrap } from '../../family/recovery';
 import { createMemberBundle, sealBundle, type MemberBundle } from '../../vault/keyring';
 import { formatCode, newRecoveryCode } from '../../vault/recoveryCode';
 import { createVaultSession } from '../../vault/session';
@@ -267,6 +267,73 @@ describe('RecoveryService (spec §9)', () => {
     expect(stolen).not.toBe(b64u(bea.mrs));
   });
 
+  it('an admin cannot vouch for their own recovery, and a vouch whose temp keys were swapped is refused', async () => {
+    const { ana, rosa, bruno, kernels } = await family();
+    await ana.rec.setPolicy({ threshold: 2, trustees: [rosa.b.memberId, bruno.b.memberId] });
+    const sp = await generateSigningPair();
+    const box = await generateBoxPair();
+    const temp = { id: await memberIdFromSpki(sp.publicSpki), signPub: sp.publicSpki, boxPub: box.publicSpki, deviceId: 'dev-t' };
+    const vouch = async (requestId: string, member: string, t: typeof temp) => {
+      const req = { v: 1, kind: 'recovery-request', circle: 'c1', member, requestId, tempSignPub: temp.signPub, tempBoxPub: temp.boxPub, deviceId: temp.deviceId };
+      await ana.k.publish(
+        await ana.k.seal({
+          category: 'recovery',
+          plaintext: { kind: 'device-add-pending', requestId, member, temp: t, requestSig: await sign(sp.privatePkcs8, canonical(req)), sas: '111 222', expiresAt: Date.now() + 3_600_000 },
+        }),
+      );
+    };
+    await vouch('self', ana.b.memberId, temp); // the admin vouches for herself
+    await sync(kernels);
+    expect(await rosa.rec.pendingRequests()).toEqual([]);
+    await expect(rosa.rec.approve('self', true)).rejects.toThrow(/UNBOUND/);
+  });
+
+  it('a vouched request whose box key does not match the signed request is refused', async () => {
+    const { ana, bea, rosa, kernels, policy } = await family();
+    await bea.rec.setPolicy(policy);
+    const sp = await generateSigningPair();
+    const box = await generateBoxPair();
+    const other = await generateBoxPair();
+    const temp = { id: await memberIdFromSpki(sp.publicSpki), signPub: sp.publicSpki, boxPub: box.publicSpki, deviceId: 'dev-t' };
+    const req = { v: 1, kind: 'recovery-request', circle: 'c1', member: bea.b.memberId, requestId: 'swap', tempSignPub: temp.signPub, tempBoxPub: temp.boxPub, deviceId: temp.deviceId };
+    await ana.k.publish(
+      await ana.k.seal({
+        category: 'recovery',
+        plaintext: { kind: 'device-add-pending', requestId: 'swap', member: bea.b.memberId, temp: { ...temp, boxPub: other.publicSpki }, requestSig: await sign(sp.privatePkcs8, canonical(req)), sas: '111 222', expiresAt: Date.now() + 3_600_000 },
+      }),
+    );
+    await sync(kernels);
+    expect(await rosa.rec.pendingRequests()).toEqual([]);
+    await expect(rosa.rec.approve('swap', true)).rejects.toThrow(/UNBOUND/);
+  });
+
+  it('approvals from members outside the policy do not count toward the threshold', async () => {
+    const { transport, ana, bea, rosa, mallory, kernels, policy } = await family();
+    await bea.rec.setPolicy(policy);
+    await sync(kernels);
+    const dev = await newDevice(transport);
+    await inviteNewDevice(ana, bea.b.memberId, dev);
+    const all = [...kernels, dev.k];
+    await sync(all);
+    const [p] = await rosa.rec.pendingRequests();
+    await rosa.rec.approve(p!.requestId, true);
+    // Mallory (not a trustee of Bea) adds an "approval" with junk wrapped to the request's temp key
+    let tempBoxPub = '';
+    for (const env of await mallory.k.envelopes({ category: 'recovery' })) {
+      const x = (await mallory.k.open(env)) as { kind?: string; requestId?: string; temp?: { boxPub: string } };
+      if (x.kind === 'device-add-pending' && x.requestId === p!.requestId) tempBoxPub = x.temp!.boxPub;
+    }
+    const junk = await rewrap(randomBytes(33), tempBoxPub, bea.b.memberId, p!.requestId);
+    await mallory.k.publish(
+      await mallory.k.seal({ category: 'recovery', plaintext: { kind: 'approval', requestId: p!.requestId, member: bea.b.memberId, trusteeId: mallory.b.memberId, threshold: 2, ...junk } }),
+    );
+    await sync(all);
+    await vi.waitFor(() => expect(dev.rec.progress()).toMatchObject({ step: 'awaiting-approvals', approvals: 1, threshold: 2 }));
+    await new Promise((r) => setTimeout(r, 50));
+    expect(dev.rec.progress().step).toBe('awaiting-approvals');
+    expect(dev.session.state()).toBe('empty');
+  });
+
   it('a share published by someone other than the member is ignored (no request, approve refuses)', async () => {
     const { transport, ana, rosa, mallory, carla, kernels } = await family();
     // Mallory fabricates a "share" of Carla addressed to Rosa; Carla never set a policy.
@@ -396,5 +463,23 @@ describe('Recovery code (spec §9.1, decision D4)', () => {
     const blobs = [];
     for (const env of await bea.k.envelopes({ category: 'recovery' })) if (((await bea.k.open(env)) as { kind?: string }).kind === 'code-blob') blobs.push(env);
     expect(blobs).toHaveLength(1);
+  });
+});
+
+describe('Kernel guest mode (spec §9.3)', () => {
+  it('unlocking keeps the circle of the invitation even when an older keystore has none', async () => {
+    const session = createVaultSession({ passkey, dbName: `guest-${++n}` });
+    await session.ready();
+    await session.create('Bea');
+    const k = await createKernel({ session, store: await openEnvelopeStore(`guest-store-${n}`), deviceId: 'g', connect: false });
+    await k.revokeGrant('g-0'); // persists a keystore without any circle
+    session.lock();
+    const admin = await createMemberBundle();
+    await k.enterGuest('c9', { memberId: admin.memberId, signPub: admin.signPub }, [{ epoch: 0, raw: randomBytes(32) }]);
+    expect(await k.signPubOf(admin.memberId)).toBe(admin.signPub);
+    await session.unlock();
+    await k.load();
+    expect(await k.signPubOf(admin.memberId)).toBe(admin.signPub);
+    expect((await k.circleKey()).epoch).toBe(0);
   });
 });
