@@ -69,8 +69,8 @@ export function createHealthService(kernel: Kernel, records: RecordsService): He
         try {
           const rec = await kernel.open(env) as CircleRecord;
           if (rec.kind === kind) results.push(rec);
-        } catch (e) {
-          // ignore unopenable envelopes
+        } catch (e: any) {
+          console.warn(e.code);
         }
       }
       return results as Extract<CircleRecord, { kind: K }>[];
@@ -94,8 +94,8 @@ export function createHealthService(kernel: Kernel, records: RecordsService): He
           if (!subject || rule.subject === subject) {
             byId.set(rule.recordId, rule);
           }
-        } catch (e) {
-          // ignore unopenable envelopes
+        } catch (e: any) {
+          console.warn(e.code);
         }
       }
       return [...byId.values()];

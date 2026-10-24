@@ -21,10 +21,7 @@ export function createRecordsService(kernel: Kernel): RecordsService {
             }
           }
         } catch (e: any) {
-          if (e.code === 'NO_KEY') {
-            continue;
-          }
-          throw e;
+          console.warn(e.code);
         }
       }
 
@@ -64,8 +61,7 @@ export function createRecordsService(kernel: Kernel): RecordsService {
             break;
           }
         } catch (e: any) {
-          if (e.code === 'NO_KEY') continue;
-          throw e;
+          console.warn(e.code);
         }
       }
 

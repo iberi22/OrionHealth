@@ -171,4 +171,53 @@ describe('RecordsService', () => {
     await svc.put({ ...vital, recordId: 'v-2' });
     expect(cb).toHaveBeenCalledTimes(1); // not called after unsubscribe
   });
+  it('skips corrupt envelopes and logs warning without throwing, returning valid ones', async () => {
+    const kernel = await FakeKernel.create();
+    const svc = createRecordsService(kernel);
+
+    const vital1: VitalReading = {
+      kind: 'vital',
+      recordId: 'v-1',
+      owner: kernel.memberId(),
+      type: 'bp',
+      value: 120,
+      unit: 'mmHg',
+      updatedAt: Date.now(),
+      at: Date.now(),
+    };
+
+    const vital2: VitalReading = {
+      kind: 'vital',
+      recordId: 'v-2',
+      owner: kernel.memberId(),
+      type: 'bp',
+      value: 130,
+      unit: 'mmHg',
+      updatedAt: Date.now(),
+      at: Date.now(),
+    };
+
+    const env1 = await kernel.seal({ category: 'vitals', owner: kernel.memberId(), plaintext: vital1 });
+    const env2 = await kernel.seal({ category: 'vitals', owner: kernel.memberId(), plaintext: vital2 });
+
+    await kernel.publish(env1);
+    await kernel.publish(env2);
+
+    const originalOpen = kernel.open.bind(kernel);
+    const openSpy = vi.spyOn(kernel, 'open').mockImplementation(async (e) => {
+      if (e.id === env1.id) throw { code: 'CORRUPT' };
+      return originalOpen(e);
+    });
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const records = await svc.list('vital');
+    expect(openSpy).toHaveBeenCalled();
+    expect(records).toHaveLength(1);
+    expect(records[0]!.value).toBe(130);
+    expect(warnSpy).toHaveBeenCalledWith('CORRUPT');
+
+    warnSpy.mockRestore();
+    openSpy.mockRestore();
+  });
 });
