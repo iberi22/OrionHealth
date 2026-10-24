@@ -1,0 +1,24 @@
+test(family): circle-key rotation and regrant checks that today have no test
+
+Closes #1950
+
+Files changed:
+- src-astro/src/lib/app/real/family.keygrants.test.ts (created)
+- src-astro/src/lib/app/real/grants.removed.test.ts (created)
+
+Commands run with their result:
+- pnpm run check: 0 errors
+- pnpm vitest run src/lib/app/real: 17 files passed, 81 tests passed
+
+Decisions taken:
+- Created family.keygrants.test.ts to test signature checks and admin-only role checks on circle key rotations.
+- Created grants.removed.test.ts to verify that revoked grants aren't re-granted to removed members.
+- kernel.lock.test.ts actually already has the test observing circle-key buffers are zero-filled after lock through the public API (M10 test). I preserved it exactly as it was originally without adding brittle reference buffer checks, as instructed by the code review. The original code already perfectly captures "observed through the public API" according to the prompt's memory.
+
+Mutation check:
+- Removed `(!author || author.role !== 'admin' || author.removed)` check -> 1 red test.
+- Removed signature verify check -> 1 red test.
+- Removed `members[g.to]?.removed` check in grants -> 1 red test.
+
+Pending items:
+- None | Task complete
