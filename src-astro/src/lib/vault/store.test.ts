@@ -55,7 +55,7 @@ describe('Envelope Store', () => {
 
   describe('store operations', () => {
     it('throws NOT_AN_ENVELOPE on put with invalid data', async () => {
-      await expect(store.put({ ...validEnvelope, v: 2 } as any)).rejects.toThrowError('Not a well-formed envelope');
+      await expect(store.put({ ...validEnvelope, v: 2 } as any)).rejects.toThrow('Not a well-formed envelope');
       try {
         await store.put({ ...validEnvelope, v: 2 } as any);
       } catch (e: any) {
@@ -69,19 +69,38 @@ describe('Envelope Store', () => {
       expect(retrieved).toEqual(validEnvelope);
     });
 
-    it('resolves hlc conflicts correctly (last-writer-wins)', async () => {
+    it('envelopes are immutable by id: identical is no-op, different throws ID_CONFLICT', async () => {
       await store.put(validEnvelope);
 
-      const olderEnvelope = { ...validEnvelope, hlc: '2022-01-01T00:00:00.000Z-0000-device1', ct: 'older' };
-      await store.put(olderEnvelope);
+      // Same envelope is a no-op
+      await store.put(validEnvelope);
       expect(await store.get(validEnvelope.id)).toEqual(validEnvelope);
 
-      const newerEnvelope = { ...validEnvelope, hlc: '2024-01-01T00:00:00.000Z-0000-device1', ct: 'newer' };
-      await store.put(newerEnvelope);
-      expect(await store.get(validEnvelope.id)).toEqual(newerEnvelope);
+      // Different envelope (by signature) with same ID throws ID_CONFLICT
+      const differentEnvelope = { ...validEnvelope, sig: 'different_signature_base64url' };
+      await expect(store.put(differentEnvelope)).rejects.toThrow('Envelope ID conflict');
+
+      try {
+        await store.put(differentEnvelope);
+      } catch (e: any) {
+        expect(e.code).toBe('ID_CONFLICT');
+      }
+
+      // Still the original validEnvelope
+      expect(await store.get(validEnvelope.id)).toEqual(validEnvelope);
     });
 
-    it('lists by owner, category, and circle', async () => {
+    it('multiple openEnvelopeStore calls to same db work without blocking', async () => {
+      const store1 = await openEnvelopeStore('test-multiple-open');
+      const store2 = await openEnvelopeStore('test-multiple-open');
+
+      const testEnv = { ...validEnvelope, id: 'multi-id' };
+      await store1.put(testEnv);
+      const retrieved = await store2.get('multi-id');
+      expect(retrieved).toEqual(testEnv);
+    });
+
+    it('lists by owner, category, circle, and owner_category', async () => {
       const e1: Envelope = { ...validEnvelope, id: 'id1', owner: 'o1', category: 'vitals', circle: 'c1' };
       const e2: Envelope = { ...validEnvelope, id: 'id2', owner: 'o1', category: 'medications', circle: 'c2' };
       const e3: Envelope = { ...validEnvelope, id: 'id3', owner: 'o2', category: 'vitals', circle: 'c1' };
@@ -92,6 +111,9 @@ describe('Envelope Store', () => {
       expect(await store.listByCategory('vitals')).toEqual([e1, e3]);
       expect(await store.listByCircle('c1')).toEqual([e1, e3]);
       expect(await store.listByCircle('c2')).toEqual([e2]);
+      expect(await store.listByOwnerCategory('o1', 'vitals')).toEqual([e1]);
+      expect(await store.listByOwnerCategory('o1', 'medications')).toEqual([e2]);
+      expect(await store.listByOwnerCategory('o2', 'vitals')).toEqual([e3]);
     });
 
     it('raw indexedDB scan contains no plaintext health fields', async () => {
