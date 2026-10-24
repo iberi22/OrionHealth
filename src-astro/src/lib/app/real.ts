@@ -1,10 +1,7 @@
 // Composition of the real services (spec: docs/architecture/web-vault-family-health.md). Everything
 // persists encrypted: vault session (passkey PRF) + envelope store + kernel. Used by loadServices().
-//
-// PENDING: recovery on a brand-new device. RecoveryService.startRecovery needs the member id of the
-// account being recovered before the vault exists, but the contract gives no way to obtain it (the
-// session is empty, kernel.memberId() throws LOCKED). No protocol is invented here; the UI/ spec must
-// define how the new device learns the member id (e.g. carried by the recovery invite).
+// Recovery on a brand-new device (spec §9.3): the recovery invitation carries the member id, and the kernel
+// runs in guest mode until the recovered MRS unlocks the session.
 import type { PasskeyPrfProvider } from '@swal/vault/web';
 import type { FamilyService, Services } from '../contracts/services';
 import type { InviteTransport } from '../family/inviteChannel';
@@ -48,12 +45,14 @@ export async function createRealServices(opts: RealServicesOptions = {}): Promis
   const records = createRecordsService(kernel);
   const health = createHealthService(kernel, records);
   const { kb, rag } = createAssist(records);
-  const recovery = createRecoveryService(kernel, session);
+  const transport = opts.transport ?? createWebrtcInviteTransport();
+  const origin = typeof location !== 'undefined' ? location.origin : undefined;
+  const recovery = createRecoveryService(kernel, session, { transport, origin });
   const grants = createGrantsService(kernel, { records, health });
   const circle = createFamilyCircleService(kernel, {
-    transport: opts.transport ?? createWebrtcInviteTransport(),
+    transport,
     // Invite links point at the origin serving the app (preview, staging, production)
-    origin: typeof location !== 'undefined' ? location.origin : undefined,
+    origin,
     displayName: () => session.displayName() ?? '',
   });
 
@@ -62,6 +61,8 @@ export async function createRealServices(opts: RealServicesOptions = {}): Promis
   const grantSubs = new Set<() => void>();
   const notifyGrants = () => grantSubs.forEach((cb) => cb());
   kernel.onEnvelope((env) => {
+    // Spec §9.1: the code blob goes to the replica as soon as this member belongs to a circle.
+    if (env.category === 'membership') void recovery.ensureCodeBlobPublished();
     if (env.category !== 'grant') return;
     // Received keys first, so a view refreshed by this notification can already read the data.
     void grants.syncReceivedKeys().catch(() => 0).then(notifyGrants);
@@ -93,7 +94,10 @@ export async function createRealServices(opts: RealServicesOptions = {}): Promis
 
   // Keys received through grants become usable once unlocked (grants.ts re-syncs on each grant envelope).
   session.onState((s) => {
-    if (s === 'unlocked') void grants.syncReceivedKeys().catch(() => undefined);
+    if (s === 'unlocked') {
+      void grants.syncReceivedKeys().catch(() => undefined);
+      void recovery.ensureCodeBlobPublished();
+    }
   });
 
   return { vault: session, records, family, health, recovery, kb, rag, demo: false };
