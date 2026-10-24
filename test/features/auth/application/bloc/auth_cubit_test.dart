@@ -63,41 +63,55 @@ void main() {
       expect(authCubit.state, equals(AuthInitial()));
     });
 
-    test('checkStatus should emit AuthNotSetup when no credentials exist', () async {
-      when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => false);
-      when(mockValidateSessionUseCase()).thenAnswer((_) async => null);
-      when(mockRepository.getCredentials()).thenAnswer((_) async => null);
+    test(
+      'checkStatus should emit AuthNotSetup when no credentials exist',
+      () async {
+        when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => false);
+        when(mockValidateSessionUseCase()).thenAnswer((_) async => null);
+        when(mockRepository.getCredentials()).thenAnswer((_) async => null);
 
-      await authCubit.checkStatus();
+        await authCubit.checkStatus();
 
-      expect(authCubit.state, equals(AuthNotSetup()));
-    });
+        expect(authCubit.state, equals(AuthNotSetup()));
+      },
+    );
 
-    test('checkStatus should emit AuthNotSetup when there is no session and no PIN', () async {
-      when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => true);
-      when(mockLogoutUseCase()).thenAnswer((_) async {});
-      when(mockRepository.getCredentials()).thenAnswer((_) async => null);
+    test(
+      'checkStatus should emit AuthNotSetup when there is no session and no PIN',
+      () async {
+        when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => true);
+        when(mockLogoutUseCase()).thenAnswer((_) async {});
+        when(mockRepository.getCredentials()).thenAnswer((_) async => null);
 
-      await authCubit.checkStatus();
+        await authCubit.checkStatus();
 
-      expect(authCubit.state, equals(AuthNotSetup()));
-    });
+        expect(authCubit.state, equals(AuthNotSetup()));
+      },
+    );
 
-    test('checkStatus should emit AuthUnauthenticated when the session expired and a PIN exists', () async {
-      final credentials = AuthCredentials()
-        ..hashedPin = 'hashed'
-        ..salt = 'salt';
-      when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => true);
-      when(mockLogoutUseCase()).thenAnswer((_) async {});
-      when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
+    test(
+      'checkStatus should emit AuthUnauthenticated when the session expired and a PIN exists',
+      () async {
+        final credentials = AuthCredentials()
+          ..hashedPin = 'hashed'
+          ..salt = 'salt';
+        when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => true);
+        when(mockLogoutUseCase()).thenAnswer((_) async {});
+        when(
+          mockRepository.getCredentials(),
+        ).thenAnswer((_) async => credentials);
 
-      await authCubit.checkStatus();
+        await authCubit.checkStatus();
 
-      expect(authCubit.state, isA<AuthUnauthenticated>());
-    });
+        expect(authCubit.state, isA<AuthUnauthenticated>());
+      },
+    );
 
     test('loginWithPin should emit AuthAuthenticated on success', () async {
-      final session = AuthSession(token: 'token', expiresAt: DateTime.now().add(const Duration(minutes: 15)));
+      final session = AuthSession(
+        token: 'token',
+        expiresAt: DateTime.now().add(const Duration(minutes: 15)),
+      );
 
       when(mockLoginUseCase(any)).thenAnswer((_) async => session);
 
@@ -107,12 +121,14 @@ void main() {
     });
 
     test('loginWithPin should emit AuthUnauthenticated on failure', () async {
-       final credentials = AuthCredentials()
+      final credentials = AuthCredentials()
         ..hashedPin = 'hashed'
         ..salt = 'salt';
 
       when(mockLoginUseCase(any)).thenAnswer((_) async => null);
-      when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
+      when(
+        mockRepository.getCredentials(),
+      ).thenAnswer((_) async => credentials);
 
       await authCubit.loginWithPin('1111');
 
@@ -130,39 +146,60 @@ void main() {
           ..lastLockoutTime = DateTime.now();
 
         when(mockLoginUseCase(any)).thenAnswer((_) async => null);
-        when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
+        when(
+          mockRepository.getCredentials(),
+        ).thenAnswer((_) async => credentials);
+        when(mockLogoutUseCase()).thenAnswer((_) async {});
 
         await authCubit.loginWithPin('1111');
 
+        verify(mockLogoutUseCase()).called(1);
         expect(authCubit.state, isA<AuthLocked>());
       });
     });
 
-    test('setupPin should call setPinUseCase and emit AuthAuthenticated on success', () async {
-      final session = AuthSession(token: 'token', expiresAt: DateTime.now().add(const Duration(minutes: 15)));
-      when(mockSetPinUseCase(any)).thenAnswer((_) async => true);
-      when(mockLoginUseCase(any)).thenAnswer((_) async => session);
+    test(
+      'setupPin should call setPinUseCase and emit AuthAuthenticated on success',
+      () async {
+        final session = AuthSession(
+          token: 'token',
+          expiresAt: DateTime.now().add(const Duration(minutes: 15)),
+        );
+        when(mockSetPinUseCase(any)).thenAnswer((_) async => true);
+        when(mockLoginUseCase(any)).thenAnswer((_) async => session);
 
-      await authCubit.setupPin('1234');
+        await authCubit.setupPin('1234');
 
-      verify(mockSetPinUseCase('1234')).called(1);
-      expect(authCubit.state, isA<AuthAuthenticated>());
-    });
+        verify(mockSetPinUseCase('1234')).called(1);
+        expect(authCubit.state, isA<AuthAuthenticated>());
+      },
+    );
 
-    test('loginWithBiometrics should authenticate and emit AuthAuthenticated', () async {
-      final session = AuthSession(token: 'token', expiresAt: DateTime.now().add(const Duration(minutes: 15)));
-      when(mockLoginUseCase(any)).thenAnswer((_) async => session);
+    test(
+      'loginWithBiometrics should authenticate and emit AuthAuthenticated',
+      () async {
+        final session = AuthSession(
+          token: 'token',
+          expiresAt: DateTime.now().add(const Duration(minutes: 15)),
+        );
+        when(mockLoginUseCase(any)).thenAnswer((_) async => session);
 
-      await authCubit.loginWithBiometrics();
+        await authCubit.loginWithBiometrics();
 
-      expect(authCubit.state, isA<AuthAuthenticated>());
-    });
+        expect(authCubit.state, isA<AuthAuthenticated>());
+      },
+    );
 
     test('toggleBiometrics should update repository', () async {
       final credentials = AuthCredentials()..biometricEnabled = false;
-      when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
-      when(mockBiometric.authenticate(localizedReason: anyNamed('localizedReason')))
-          .thenAnswer((_) async => true);
+      when(
+        mockRepository.getCredentials(),
+      ).thenAnswer((_) async => credentials);
+      when(
+        mockBiometric.authenticate(
+          localizedReason: anyNamed('localizedReason'),
+        ),
+      ).thenAnswer((_) async => true);
       when(mockRepository.saveCredentials(any)).thenAnswer((_) async {});
 
       await authCubit.toggleBiometrics(true);
@@ -171,13 +208,16 @@ void main() {
       verify(mockRepository.saveCredentials(credentials)).called(1);
     });
 
-    test('logout should call logoutUseCase and emit AuthUnauthenticated', () async {
-      when(mockLogoutUseCase()).thenAnswer((_) async {});
+    test(
+      'logout should call logoutUseCase and emit AuthUnauthenticated',
+      () async {
+        when(mockLogoutUseCase()).thenAnswer((_) async {});
 
-      await authCubit.logout();
+        await authCubit.logout();
 
-      verify(mockLogoutUseCase()).called(1);
-      expect(authCubit.state, equals(const AuthUnauthenticated()));
-    });
+        verify(mockLogoutUseCase()).called(1);
+        expect(authCubit.state, equals(const AuthUnauthenticated()));
+      },
+    );
   });
 }
