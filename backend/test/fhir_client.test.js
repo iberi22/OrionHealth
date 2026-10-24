@@ -7,7 +7,7 @@ const { encrypt } = require('../src/auth/ihce-oauth');
 // Set a dummy encryption key for tests
 process.env.ENCRYPTION_KEY = '12345678901234567890123456789012';
 
-test('FhirClient Tests', async (t) => {
+test('FhirClient Tests', { timeout: 10000 }, async (t) => {
   // Read fixtures
   const patientFixture = require('./fixtures/patient.json');
   const bundleFixture = require('./fixtures/bundle.json');
@@ -61,8 +61,9 @@ test('FhirClient Tests', async (t) => {
   const client = new FhirClient(baseUrl);
   const mockToken = encrypt('mock-token');
 
-  t.after(() => {
-    server.close();
+  t.after(async () => {
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
   });
 
   await t.test('getPatient successful fetch', async () => {
