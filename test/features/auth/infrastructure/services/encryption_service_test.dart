@@ -127,4 +127,10 @@ void main() {
       ).called(1);
     });
   });
+
+  group('clearHealthKeyCache', () {
+    test('should clear health key cache', () async {
+      encryptionService.clearHealthKeyCache();
+    });
+  });
 }

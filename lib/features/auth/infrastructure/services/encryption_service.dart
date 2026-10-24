@@ -62,6 +62,10 @@ class EncryptionService {
 
   String? _healthKeyCache;
 
+  void clearHealthKeyCache() {
+    _healthKeyCache = null;
+  }
+
   Future<String> _getHealthKey() async {
     // Argon2id (64 MiB, 3 passes) is deliberately slow: derive the key once.
     final cached = _healthKeyCache;
