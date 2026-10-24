@@ -24,7 +24,9 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
   Future<List<WorkoutSession>> _load() =>
       (widget.repository ?? getIt<WorkoutRepository>()).getAllSessions();
   Future<void> _refresh() async {
-    setState(() => _sessions = _load());
+    setState(() {
+      _sessions = _load();
+    });
     await _sessions;
   }
 

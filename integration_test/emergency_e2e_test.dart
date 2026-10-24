@@ -113,7 +113,7 @@ void main() {
       await fill('Teléfono', '555-1234');
 
       final saveButton = find.byIcon(Icons.save);
-      await tester.scrollUntilVisible(saveButton, 100);
+      await tester.scrollUntilVisible(saveButton, 100, scrollable: editList);
       await tester.tap(saveButton);
 
       await tester.pumpAndSettle();

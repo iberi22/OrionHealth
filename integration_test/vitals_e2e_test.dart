@@ -10,6 +10,7 @@ import 'package:isar/isar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
+import 'utils/pump_until.dart';
 import 'utils/video_recorder.dart';
 
 void main() {
@@ -65,7 +66,7 @@ void main() {
 
         // 1. DASHBOARD VIEW
         await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
+        await pumpUntilFound(tester, find.text('72.0'));
         await VideoRecorder.recordStep(tester, 'vitals', '01_dashboard');
 
         expect(find.text('72.0'), findsOneWidget);
@@ -79,7 +80,7 @@ void main() {
 
         await tester.enterText(find.widgetWithText(TextField, 'Valor'), '75');
         await tester.tap(find.text('Guardar'));
-        await tester.pumpAndSettle();
+        await pumpUntilFound(tester, find.text('75.0'));
         await VideoRecorder.recordStep(
           tester,
           'vitals',
@@ -92,7 +93,7 @@ void main() {
         // 3. RESTART WIDGET TREE & VERIFY PERSISTENCE
         await tester.pumpWidget(Container()); // unmount
         await tester.pumpWidget(buildApp());
-        await tester.pumpAndSettle();
+        await pumpUntilFound(tester, find.text('75.0'));
         await VideoRecorder.recordStep(
           tester,
           'vitals',
