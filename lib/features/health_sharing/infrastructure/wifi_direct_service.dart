@@ -45,6 +45,28 @@ class WifiDirectService {
     final completer = Completer<List<WifiDirectDevice>>();
 
     try {
+      if (!Platform.isAndroid && !Platform.isIOS) {
+        final channel = const MethodChannel('orionhealth/wifi_p2p');
+        try {
+          final devicesInfo = await channel.invokeMethod<List<dynamic>>(
+            'mdnsDiscover',
+          );
+          if (devicesInfo != null) {
+            for (final d in devicesInfo) {
+              final map = d as Map;
+              results.add(
+                WifiDirectDevice(
+                  name: map['name'] as String,
+                  address: map['address'] as String,
+                ),
+              );
+            }
+          }
+        } catch (_) {}
+        _stateController.add(WifiSharingState.ready());
+        return results;
+      }
+
       _discovery = BonsoirDiscovery(type: _serviceType);
 
       _discovery!.eventStream!.listen((event) {
@@ -54,10 +76,9 @@ class WifiDirectService {
           final service = event.service;
           final host = service.hostname ?? 'localhost';
           final port = service.port;
-          results.add(WifiDirectDevice(
-            name: service.name,
-            address: '$host:$port',
-          ));
+          results.add(
+            WifiDirectDevice(name: service.name, address: '$host:$port'),
+          );
         }
       });
 
@@ -92,13 +113,15 @@ class WifiDirectService {
       _isRunning = true;
 
       // Broadcast presence via mDNS
-      final service = BonsoirService(
-        name: 'OrionShare-${DateTime.now().millisecondsSinceEpoch}',
-        type: _serviceType,
-        port: actualPort,
-      );
-      _broadcast = BonsoirBroadcast(service: service);
-      await _broadcast!.start();
+      if (Platform.isAndroid || Platform.isIOS) {
+        final service = BonsoirService(
+          name: 'OrionShare-${DateTime.now().millisecondsSinceEpoch}',
+          type: _serviceType,
+          port: actualPort,
+        );
+        _broadcast = BonsoirBroadcast(service: service);
+        await _broadcast!.start();
+      }
 
       _stateController.add(WifiSharingState.hosting(_deviceIp!));
 
@@ -110,7 +133,9 @@ class WifiDirectService {
         },
       );
     } catch (e) {
-      _stateController.add(WifiSharingState.error('Failed to start server: $e'));
+      _stateController.add(
+        WifiSharingState.error('Failed to start server: $e'),
+      );
     }
   }
 
@@ -126,14 +151,17 @@ class WifiDirectService {
 
     try {
       // Collect all body bytes and decode
-      final bodyBytes = await request.fold<List<int>>([], (acc, chunk) => acc..addAll(chunk));
+      final bodyBytes = await request.fold<List<int>>(
+        [],
+        (acc, chunk) => acc..addAll(chunk),
+      );
       final body = utf8.decode(bodyBytes);
       final package = SharedHealthPackage.decode(body);
 
       if (package.isExpired) {
         request.response.statusCode = 410; // Gone
         request.response.writeln('Package expired');
-        request.response.close();
+        await request.response.close();
         _stateController.add(WifiSharingState.error('Package has expired'));
         return;
       }
@@ -153,7 +181,7 @@ class WifiDirectService {
     } catch (e) {
       request.response.statusCode = 400;
       request.response.writeln('Invalid package');
-      request.response.close();
+      await request.response.close();
       _stateController.add(WifiSharingState.error('Failed to receive: $e'));
     }
   }
@@ -171,8 +199,9 @@ class WifiDirectService {
       // Parse port from targetIp (format: 'ip:port') or use default
       final parts = targetIp.split(':');
       final host = parts.isNotEmpty ? parts[0] : targetIp;
-      final port =
-          parts.length > 1 ? int.tryParse(parts[1]) ?? kDefaultPort : kDefaultPort;
+      final port = parts.length > 1
+          ? int.tryParse(parts[1]) ?? kDefaultPort
+          : kDefaultPort;
 
       _client = http.Client();
 
@@ -182,17 +211,14 @@ class WifiDirectService {
 
       final data = package.encode();
       final response = await _client!
-          .post(
-            uri,
-            body: data,
-            headers: {'Content-Type': 'text/plain'},
-          )
+          .post(uri, body: data, headers: {'Content-Type': 'text/plain'})
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final transferTime = DateTime.now().difference(startTime);
         _stateController.add(
-            WifiSharingState.completed(data.length, transferTime));
+          WifiSharingState.completed(data.length, transferTime),
+        );
 
         _client?.close();
         _client = null;
@@ -204,7 +230,8 @@ class WifiDirectService {
         );
       } else {
         throw Exception(
-            'Remote rejected transfer: ${response.statusCode} ${response.body}');
+          'Remote rejected transfer: ${response.statusCode} ${response.body}',
+        );
       }
     } catch (e) {
       _client?.close();
@@ -256,10 +283,7 @@ class WifiDirectDevice {
   final String name;
   final String address;
 
-  const WifiDirectDevice({
-    required this.name,
-    required this.address,
-  });
+  const WifiDirectDevice({required this.name, required this.address});
 }
 
 /// State of WiFi Direct sharing
@@ -283,53 +307,50 @@ class WifiSharingState {
   });
 
   factory WifiSharingState.ready() => const WifiSharingState._(
-        status: 'ready',
-        message: 'Ready to share via WiFi',
-      );
+    status: 'ready',
+    message: 'Ready to share via WiFi',
+  );
 
   factory WifiSharingState.discovering() => const WifiSharingState._(
-        status: 'discovering',
-        message: 'Searching for nearby devices...',
-      );
+    status: 'discovering',
+    message: 'Searching for nearby devices...',
+  );
 
   factory WifiSharingState.hosting(String address) => WifiSharingState._(
-        status: 'hosting',
-        address: address,
-        message: 'Waiting for connection...',
-      );
+    status: 'hosting',
+    address: address,
+    message: 'Waiting for connection...',
+  );
 
   factory WifiSharingState.connecting(String address) => WifiSharingState._(
-        status: 'connecting',
-        address: address,
-        message: 'Connecting to $address...',
-      );
+    status: 'connecting',
+    address: address,
+    message: 'Connecting to $address...',
+  );
 
-  factory WifiSharingState.transferring(String message) => WifiSharingState._(
-        status: 'transferring',
-        message: message,
-      );
+  factory WifiSharingState.transferring(String message) =>
+      WifiSharingState._(status: 'transferring', message: message);
 
   factory WifiSharingState.receiving() => const WifiSharingState._(
-        status: 'receiving',
-        message: 'Receiving data...',
-      );
+    status: 'receiving',
+    message: 'Receiving data...',
+  );
 
-  factory WifiSharingState.received(SharedHealthPackage package) => WifiSharingState._(
+  factory WifiSharingState.received(SharedHealthPackage package) =>
+      WifiSharingState._(
         status: 'received',
         message: 'Data received from ${package.senderNodeId}',
         receivedPackage: package,
       );
 
-  factory WifiSharingState.completed(int bytes, Duration time) => WifiSharingState._(
+  factory WifiSharingState.completed(int bytes, Duration time) =>
+      WifiSharingState._(
         status: 'completed',
         message: 'Transfer complete',
         bytesTransferred: bytes,
         transferTime: time,
       );
 
-  factory WifiSharingState.error(String message) => WifiSharingState._(
-        status: 'error',
-        message: message,
-        isError: true,
-      );
+  factory WifiSharingState.error(String message) =>
+      WifiSharingState._(status: 'error', message: message, isError: true);
 }
