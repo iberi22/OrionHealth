@@ -229,3 +229,42 @@ describe('RealKernel keystore', () => {
     expect((await k2.seal({ category: 'circle', plaintext: 1 })).circle).toBe('c1');
   });
 });
+
+
+describe('Deterministic CEK and max epoch tests', () => {
+  it('creates a vault, writes, recovers on stale bundle, writes, both records readable and epoch is greater', async () => {
+    const { session: s1, kernel: k1 } = await newDevice({ connect: true });
+
+    // Write "Gripe"
+    const write1 = await k1.seal({ category: 'conditions', plaintext: { kind: 'condition', name: 'Gripe' } });
+    await k1.publish(write1);
+
+    const epoch1 = write1.epoch;
+
+    const b1 = s1.bundle();
+    const mrs = await s1.withMrs(m => m.slice());
+
+    // Recover on a fresh session with STALE bundle (without epoch1)
+    // Pretend the onboarding file had an empty bundle for this category
+    const staleBundle = JSON.parse(JSON.stringify(b1)); staleBundle.ceks.conditions = {};
+
+    const s2 = memSession(staleBundle, mrs);
+    // Pretend the store has the record
+    const store2 = await openEnvelopeStore('kernel-test-recover-' + ++dbN);
+    await store2.put(write1);
+
+    const k2 = await createKernel({ session: s2, store: store2, deviceId: 'd2', connect: false });
+
+    // Write "Nueva"
+    const write2 = await k2.seal({ category: 'conditions', plaintext: { kind: 'condition', name: 'Nueva' } });
+    await k2.publish(write2);
+
+    const epoch2 = write2.epoch;
+
+    expect(epoch2).toBeGreaterThan(epoch1);
+
+    // Both readable
+    expect((await k2.open(write1)) as any).toMatchObject({ name: 'Gripe' });
+    expect((await k2.open(write2)) as any).toMatchObject({ name: 'Nueva' });
+  });
+});
