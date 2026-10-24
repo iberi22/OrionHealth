@@ -1,9 +1,22 @@
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/local_agent/domain/repositories/medical_knowledge_repository.dart';
 import 'package:orionhealth_health/features/local_agent/infrastructure/repositories/asset_medical_knowledge_repository.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late AssetMedicalKnowledgeRepository repo;
+
+  setUpAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMessageHandler('flutter/assets', (ByteData? message) async {
+          final String emptyJson = '{"data": []}';
+          return ByteData.view(
+            Uint8List.fromList(utf8.encode(emptyJson)).buffer,
+          );
+        });
+  });
 
   setUp(() {
     repo = AssetMedicalKnowledgeRepository();
@@ -19,26 +32,20 @@ void main() {
     });
 
     test('throws StateError when queried before initialize', () {
-      expect(
-        () => repo.searchByCode('E11'),
-        throwsA(isA<StateError>()),
-      );
-      expect(
-        () => repo.searchByTerm('diabetes'),
-        throwsA(isA<StateError>()),
-      );
-      expect(
-        () => repo.getAllCodes(),
-        throwsA(isA<StateError>()),
-      );
+      expect(() => repo.searchByCode('E11'), throwsA(isA<StateError>()));
+      expect(() => repo.searchByTerm('diabetes'), throwsA(isA<StateError>()));
+      expect(() => repo.getAllCodes(), throwsA(isA<StateError>()));
     });
 
-    test('initialize completes despite asset not found (throws in test)', () async {
-      // In test environment, rootBundle.loadString will throw
-      // but the implementation catches and logs errors, continuing gracefully
-      await repo.initialize();
-      expect(repo.isInitialized, isTrue);
-    });
+    test(
+      'initialize completes despite asset not found (throws in test)',
+      () async {
+        // In test environment, rootBundle.loadString will throw
+        // but the implementation catches and logs errors, continuing gracefully
+        await repo.initialize();
+        expect(repo.isInitialized, isTrue);
+      },
+    );
 
     test('getStats returns proper structure after init', () async {
       await repo.initialize();
@@ -73,7 +80,10 @@ void main() {
 
     test('searchByTermInStandard returns empty when no match', () async {
       await repo.initialize();
-      final results = await repo.searchByTermInStandard('xyznonexistent', 'ICD-10');
+      final results = await repo.searchByTermInStandard(
+        'xyznonexistent',
+        'ICD-10',
+      );
       expect(results, isEmpty);
     });
 
@@ -89,11 +99,14 @@ void main() {
       expect(codes, isEmpty);
     });
 
-    test('getAllCodes with standard filter returns empty on no files', () async {
-      await repo.initialize();
-      final codes = await repo.getAllCodes(standard: 'ICD-10');
-      expect(codes, isEmpty);
-    });
+    test(
+      'getAllCodes with standard filter returns empty on no files',
+      () async {
+        await repo.initialize();
+        final codes = await repo.getAllCodes(standard: 'ICD-10');
+        expect(codes, isEmpty);
+      },
+    );
 
     test('checkInteractions returns empty list', () async {
       await repo.initialize();

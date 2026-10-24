@@ -1,9 +1,9 @@
 const { Client } = require('@microsoft/microsoft-graph-client');
-require('isomorphic-fetch');
+try { require('isomorphic-fetch'); } catch (e) {}
 const { parseMedicalEmail } = require('./medical-parser');
 
-async function fetchOutlookAppointments(accessToken) {
-  const client = Client.init({
+async function fetchOutlookAppointments(accessToken, graphClient = null) {
+  const client = graphClient || Client.init({
     authProvider: (done) => {
       done(null, accessToken);
     },
