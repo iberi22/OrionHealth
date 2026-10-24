@@ -1,10 +1,31 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { SECURITY_HEADERS, withSecurityHeaders } from './securityHeaders';
 import { onRequest } from '../middleware';
 
 describe('Security Headers', () => {
+  it('CSP Report-Only uses the correct inline script hash', () => {
+    // Read the SiteLayout.astro file to extract the script content
+    const layoutPath = fs.existsSync(path.resolve(process.cwd(), 'src/layouts/SiteLayout.astro'))
+      ? path.resolve(process.cwd(), 'src/layouts/SiteLayout.astro')
+      : path.resolve(process.cwd(), 'src-astro/src/layouts/SiteLayout.astro');
+
+    const layoutContent = fs.readFileSync(layoutPath, 'utf-8');
+    const match = layoutContent.match(/<script is:inline>([\s\S]*?)<\/script>/);
+
+    expect(match).not.toBeNull();
+    const scriptContent = match![1];
+
+    const hash = crypto.createHash('sha256').update(scriptContent).digest('base64');
+    const expectedHash = `sha256-${hash}`;
+
+    const csp = SECURITY_HEADERS['Content-Security-Policy-Report-Only'];
+    expect(csp).toBeDefined();
+    expect(csp).toContain(`'${expectedHash}'`);
+  });
+
   it('middleware adds every security header to response', async () => {
     const rawResponse = new Response('Hello world', {
       status: 200,

@@ -6,5 +6,6 @@ export const onRequest = defineMiddleware(async (_context, next) => {
   if (response.status === 101) {
     return response;
   }
+  // Applies all security headers including Content-Security-Policy-Report-Only
   return withSecurityHeaders(response);
 });
