@@ -31,6 +31,8 @@ import '../../features/network/domain/entities/network_message.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_revocation_entry.dart';
 import '../../features/clinical_assessments/domain/entities/clinical_assessment_record.dart';
+import '../../features/auth/domain/entities/auth_credentials.dart';
+import '../../features/emergency/infrastructure/repositories/isar_medical_id_repository.dart';
 import 'package:health_wallet/health_wallet.dart' as wallet;
 
 @module
@@ -38,54 +40,56 @@ abstract class DatabaseModule {
   @preResolve
   Future<Isar> get isar async {
     final dir = await getApplicationDocumentsDirectory();
-    return Isar.open(
-      [
-        UserProfileSchema,
-        WorkoutSessionSchema,
-        MealLogSchema,
-        EcosystemDietaryProfileSchema,
-        ApiAuditLogSchema,
-        ChatMessageSchema,
-        MedicalRecordSchema,
+    return Isar.open([
+      UserProfileSchema,
+      WorkoutSessionSchema,
+      MealLogSchema,
+      EcosystemDietaryProfileSchema,
+      ApiAuditLogSchema,
+      ChatMessageSchema,
+      MedicalRecordSchema,
 
-
-        ReportSchema,
-        MedicationSchema,
-        AppointmentSchema,
-        AllergySchema,
-        DoctorProfileSchema,
-        DoctorRatingSchema,
-        VouchSchema,
-        ReputationBadgeSchema,
-        SecondOpinionRequestSchema,
-        SecondOpinionResponseSchema,
-        LicenseRegistryLocalSchema,
-        AppSettingsSchema,
-        LlmConfigSchema,
-        DashboardPreferenceSchema,
-        MedicalResearchResultSchema,
-        ClinicalAssessmentRecordSchema,
-        NetworkPeerSchema,
-        NetworkMessageSchema,
-        wallet.HealthRecordSchema,
-        wallet.LabResultSchema,
-        wallet.VitalSignSchema,
-        wallet.MedicationEntrySchema,
-        wallet.MedicalDocumentSchema,
-        wallet.MedicalEventSchema,
-        // IsarDidSchema, // removed in #548
-        // IsarCredentialSchema, // removed in #548
-        // IsarRevocationEntrySchema, // removed in #548
-      ],
-      directory: dir.path,
-    );
+      ReportSchema,
+      MedicationSchema,
+      AppointmentSchema,
+      AllergySchema,
+      DoctorProfileSchema,
+      DoctorRatingSchema,
+      VouchSchema,
+      ReputationBadgeSchema,
+      SecondOpinionRequestSchema,
+      SecondOpinionResponseSchema,
+      LicenseRegistryLocalSchema,
+      AppSettingsSchema,
+      LlmConfigSchema,
+      DashboardPreferenceSchema,
+      MedicalResearchResultSchema,
+      ClinicalAssessmentRecordSchema,
+      NetworkPeerSchema,
+      NetworkMessageSchema,
+      wallet.HealthRecordSchema,
+      wallet.LabResultSchema,
+      // Auth PIN/biometric credentials and the emergency Medical ID were missing:
+      // every read threw "Missing TypeSchema in Isar.open".
+      AuthCredentialsSchema,
+      MedicalIdRecordSchema,
+      wallet.VitalSignSchema,
+      wallet.MedicationEntrySchema,
+      wallet.MedicalDocumentSchema,
+      wallet.MedicalEventSchema,
+      // IsarDidSchema, // removed in #548
+      // IsarCredentialSchema, // removed in #548
+      // IsarRevocationEntrySchema, // removed in #548
+    ], directory: dir.path);
   }
 
   @lazySingleton
-  wallet.EncryptionService get walletEncryptionService => wallet.EncryptionService();
+  wallet.EncryptionService get walletEncryptionService =>
+      wallet.EncryptionService();
 
   @lazySingleton
-  wallet.WalletService walletService(Isar isar, wallet.EncryptionService encryption) =>
-      wallet.WalletService(isar, encryption);
+  wallet.WalletService walletService(
+    Isar isar,
+    wallet.EncryptionService encryption,
+  ) => wallet.WalletService(isar, encryption);
 }
-
