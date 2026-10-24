@@ -10,7 +10,7 @@ env:
   # Pinned instead of "latest stable" so an SDK bump cannot silently change the
   # gate; same pin as coverage.yml, and the version the committed code
   # generation was produced with.
-  FLUTTER_VERSION: '3.44.0'
+  FLUTTER_VERSION: '3.47.8'
   # Native Isar library consumed by the Isar tests. It must match the Isar Core
   # version the `isar` dependency expects (isar 3.1.0+1 -> release tag 3.1.0+1),
   # otherwise initializeIsarCore rejects it with "Incorrect Isar Core version".

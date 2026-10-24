@@ -36,6 +36,11 @@ analyzer:
     # `uri_does_not_exist` errors for package:test. It is analyzed separately
     # with its own config (see the Flutter Analyze step in ci.yml).
     - "packages/health_contract/**"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

@@ -8,7 +8,7 @@ permissions:
   pull-requests: write
 
 env:
-  FLUTTER_VERSION: '3.44.0'
+  FLUTTER_VERSION: '3.47.8'
   ISAR_VERSION: '3.1.0+1'
 
 jobs:
@@ -74,4 +74,4 @@ jobs:
           title: 'Regenerate Goldens'
           branch: 'chore/regen-goldens'
           body: |
-            This PR regenerates the golden test images for Flutter 3.44.0 and updates the known failures list.
+            This PR regenerates the golden test images for Flutter 3.47.8 and updates the known failures list.
