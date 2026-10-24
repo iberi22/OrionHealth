@@ -1,9 +1,11 @@
 /// FEAT-022: Use case for updating the Medical ID
 library;
 
+import 'package:injectable/injectable.dart';
 import '../entities/medical_id.dart';
 import '../repositories/medical_id_repository.dart';
 
+@injectable
 class UpdateMedicalIdUseCase {
   final MedicalIdRepository _repo;
   UpdateMedicalIdUseCase(this._repo);
