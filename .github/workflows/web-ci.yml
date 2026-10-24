@@ -24,7 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      E2E_REAL: '0'
+      # Real services in every Playwright run (vault, kernel, circle over local signaling).
+      E2E_REAL: '1'
+      PUBLIC_SIGNALING_URL: ws://localhost:4444
       # Build and preview without remote Cloudflare bindings (no API token in CI).
       CLOUDFLARE_VITE_FORCE_LOCAL: 'true'
     defaults:
