@@ -64,21 +64,25 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         onDestinationSelected: (i) => setState(() => _currentIndex = i),
         destinations: [
           NavigationDestination(
+            key: const Key('nav_dashboard'),
             icon: const Icon(Icons.dashboard_outlined),
             selectedIcon: const Icon(Icons.dashboard),
             label: 'Dashboard',
           ),
           NavigationDestination(
+            key: const Key('nav_reports'),
             icon: const Icon(Icons.description_outlined),
             selectedIcon: const Icon(Icons.description),
             label: l10n.reports,
           ),
           NavigationDestination(
+            key: const Key('nav_health_records'),
             icon: const Icon(Icons.medical_services_outlined),
             selectedIcon: const Icon(Icons.medical_services),
             label: l10n.healthRecords,
           ),
           NavigationDestination(
+            key: const Key('nav_profile'),
             icon: const Icon(Icons.person_outline),
             selectedIcon: const Icon(Icons.person),
             label: l10n.profile,
