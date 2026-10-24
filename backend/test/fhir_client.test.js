@@ -1,11 +1,11 @@
+// Set a dummy encryption key for tests before requiring any module that reads it
+process.env.ENCRYPTION_KEY = '12345678901234567890123456789012';
+
 const test = require('node:test');
 const assert = require('node:assert');
 const http = require('node:http');
 const { FhirClient } = require('../src/fhir/fhir-client');
 const { encrypt } = require('../src/auth/ihce-oauth');
-
-// Set a dummy encryption key for tests
-process.env.ENCRYPTION_KEY = '12345678901234567890123456789012';
 
 test('FhirClient Tests', { timeout: 10000 }, async (t) => {
   // Read fixtures
@@ -55,16 +55,17 @@ test('FhirClient Tests', { timeout: 10000 }, async (t) => {
   });
 
   await new Promise((resolve) => server.listen(0, resolve));
-  const address = server.address();
-  const baseUrl = `http://127.0.0.1:${address.port}`;
-
-  const client = new FhirClient(baseUrl);
-  const mockToken = encrypt('mock-token');
 
   t.after(async () => {
     server.closeAllConnections();
     await new Promise((resolve) => server.close(resolve));
   });
+
+  const address = server.address();
+  const baseUrl = `http://127.0.0.1:${address.port}`;
+
+  const client = new FhirClient(baseUrl);
+  const mockToken = encrypt('mock-token');
 
   await t.test('getPatient successful fetch', async () => {
     const patient = await client.getPatient('p123', mockToken);
