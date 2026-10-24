@@ -15,15 +15,15 @@ void main() {
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      log.add(methodCall);
-      if (methodCall.method == 'startAdvertising') {
-        return null;
-      }
-      if (methodCall.method == 'stopAdvertising') {
-        return null;
-      }
-      return null;
-    });
+          log.add(methodCall);
+          if (methodCall.method == 'startAdvertising') {
+            return null;
+          }
+          if (methodCall.method == 'stopAdvertising') {
+            return null;
+          }
+          return null;
+        });
   });
 
   tearDown(() {
@@ -36,21 +36,19 @@ void main() {
     test('startAdvertise updates state', () async {
       expect(bleWrapper.isAdvertising, isFalse);
 
-      await bleWrapper.startAdvertise(
-        serviceUuid: 'test-uuid',
-        localName: 'test-node',
+      expect(
+        () => bleWrapper.startAdvertise(
+          serviceUuid: 'test-uuid',
+          localName: 'test-node',
+        ),
+        throwsUnsupportedError,
       );
 
-      expect(bleWrapper.isAdvertising, isTrue);
-      // On non-mobile platforms in CI, it might not invoke the method channel but still sets _isAdvertising = true.
+      expect(bleWrapper.isAdvertising, isFalse);
     });
 
     test('stopAdvertise updates state', () async {
-      // Start first
-      await bleWrapper.startAdvertise(
-        serviceUuid: 'test-uuid',
-        localName: 'test-node',
-      );
+      expect(bleWrapper.isAdvertising, isFalse);
 
       await bleWrapper.stopAdvertise();
 
@@ -61,23 +59,29 @@ void main() {
       final states = <bool>[];
       final sub = bleWrapper.advertisementState.listen(states.add);
 
-      await bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n');
+      expect(
+        () => bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n'),
+        throwsUnsupportedError,
+      );
       await bleWrapper.stopAdvertise();
 
       await Future.delayed(Duration.zero);
-      expect(states, [true, false]);
+      expect(states, isEmpty);
       await sub.cancel();
     });
 
     test('startAdvertise handles MissingPluginException gracefully', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-        throw MissingPluginException();
-      });
+            throw MissingPluginException();
+          });
 
-      await bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n');
+      expect(
+        () => bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n'),
+        throwsUnsupportedError,
+      );
 
-      expect(bleWrapper.isAdvertising, isTrue); // Fallback logic in BleWrapper
+      expect(bleWrapper.isAdvertising, isFalse);
     });
   });
 }
