@@ -23,7 +23,9 @@ class VitalSign {
   late VitalSignType type;
 
   @ignore
-  late double value;
+  double get value =>
+      encryptedValue != null ? double.parse(encryptedValue!) : 0.0;
+  set value(double val) => encryptedValue = val.toString();
 
   String? encryptedValue;
 
@@ -33,18 +35,22 @@ class VitalSign {
   String? source;
 
   @ignore
-  String? notes;
+  String? get notes => encryptedNotes;
+  set notes(String? val) => encryptedNotes = val;
 
   String? encryptedNotes;
 
   VitalSign({
     required this.type,
     required this.dateTime,
-    this.value = 0.0,
+    double value = 0.0,
     this.unit,
     this.source,
-    this.notes,
-  });
+    String? notes,
+  }) {
+    this.value = value;
+    this.notes = notes;
+  }
 
   /// Formatted value string for display purposes.
   String get formattedValue {
