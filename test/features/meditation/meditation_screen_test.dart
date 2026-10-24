@@ -5,13 +5,16 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orionhealth_health/features/meditation/application/meditation_cubit.dart';
 import 'package:orionhealth_health/features/meditation/application/meditation_state.dart';
+import 'package:orionhealth_health/features/meditation/domain/entities/meditation_progress.dart';
 import 'package:orionhealth_health/features/meditation/presentation/meditation_page.dart';
 import 'package:orionhealth_health/features/meditation/domain/entities/meditation_script.dart';
 import 'package:orionhealth_health/features/meditation/domain/entities/meditation_category.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 
 class MockMeditationCubit extends Mock implements MeditationCubit {}
+
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
 class FakeRoute extends Fake implements Route<dynamic> {}
 
 void main() {
@@ -23,7 +26,9 @@ void main() {
 
   setUp(() {
     mockCubit = MockMeditationCubit();
-    when(() => mockCubit.state).thenReturn(const MeditationState());
+    when(
+      () => mockCubit.state,
+    ).thenReturn(const MeditationState(status: MeditationStatus.initial));
     when(() => mockCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockCubit.initialize()).thenAnswer((_) async {});
     when(() => mockCubit.close()).thenAnswer((_) async {});
@@ -31,6 +36,7 @@ void main() {
 
   Widget createWidgetUnderTest({List<NavigatorObserver>? observers}) {
     return MaterialApp(
+      key: UniqueKey(),
       home: BlocProvider<MeditationCubit>.value(
         value: mockCubit,
         child: const MeditationView(),
@@ -41,13 +47,23 @@ void main() {
 
   testWidgets('MeditationView basic rendering and states', (tester) async {
     // Loading
-    when(() => mockCubit.state).thenReturn(const MeditationState(status: MeditationStatus.loading));
+    when(
+      () => mockCubit.state,
+    ).thenReturn(const MeditationState(status: MeditationStatus.loading));
     await tester.pumpWidget(createWidgetUnderTest());
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
     // Idle
-    const script = MeditationScript(id: '1', title: 'Test', category: MeditationCategory.calm, durationMinutes: 5, steps: ['Step 1']);
-    when(() => mockCubit.state).thenReturn(const MeditationState(status: MeditationStatus.idle, script: script));
+    const script = MeditationScript(
+      id: '1',
+      title: 'Test',
+      category: MeditationCategory.calm,
+      durationMinutes: 5,
+      steps: ['Step 1'],
+    );
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(status: MeditationStatus.idle, script: script),
+    );
     await tester.pumpWidget(createWidgetUnderTest());
     expect(find.text('Test'), findsOneWidget);
 
@@ -57,23 +73,32 @@ void main() {
     verify(() => mockCubit.startMeditation()).called(1);
 
     // Error
-    when(() => mockCubit.state).thenReturn(const MeditationState(status: MeditationStatus.error, error: 'Error!'));
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(status: MeditationStatus.error, error: 'Error!'),
+    );
     await tester.pumpWidget(createWidgetUnderTest());
     expect(find.text('Error!'), findsOneWidget);
 
     // Completed
-    when(() => mockCubit.state).thenReturn(const MeditationState(status: MeditationStatus.completed, elapsedSeconds: 60));
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(
+        status: MeditationStatus.completed,
+        elapsedSeconds: 60,
+      ),
+    );
     await tester.pumpWidget(createWidgetUnderTest());
     expect(find.text('Sesión Completada'), findsOneWidget);
   });
 
   testWidgets('MeditationView active states and controls', (tester) async {
     // Playing
-    when(() => mockCubit.state).thenReturn(const MeditationState(
-      status: MeditationStatus.playing,
-      steps: ['Step 1'],
-      currentStep: 0,
-    ));
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(
+        status: MeditationStatus.playing,
+        steps: ['Step 1'],
+        currentStep: 0,
+      ),
+    );
     await tester.pumpWidget(createWidgetUnderTest());
     expect(find.text('Inhala / Exhala'), findsOneWidget);
 
@@ -91,11 +116,13 @@ void main() {
     verify(() => mockCubit.togglePause()).called(1);
 
     // Paused
-    when(() => mockCubit.state).thenReturn(const MeditationState(
-      status: MeditationStatus.paused,
-      steps: ['Step 1'],
-      currentStep: 0,
-    ));
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(
+        status: MeditationStatus.paused,
+        steps: ['Step 1'],
+        currentStep: 0,
+      ),
+    );
     await tester.pumpWidget(createWidgetUnderTest());
     expect(find.text('Pausado'), findsOneWidget);
     expect(find.byIcon(Icons.play_arrow), findsOneWidget);
@@ -105,14 +132,18 @@ void main() {
     final observer = MockNavigatorObserver();
 
     // Close button
-    when(() => mockCubit.state).thenReturn(const MeditationState(status: MeditationStatus.idle));
+    when(
+      () => mockCubit.state,
+    ).thenReturn(const MeditationState(status: MeditationStatus.idle));
     await tester.pumpWidget(createWidgetUnderTest(observers: [observer]));
     await tester.tap(find.byIcon(Icons.close));
     await tester.pump();
     verify(() => observer.didPop(any(), any())).called(1);
 
     // Back to start button
-    when(() => mockCubit.state).thenReturn(const MeditationState(status: MeditationStatus.completed));
+    when(
+      () => mockCubit.state,
+    ).thenReturn(const MeditationState(status: MeditationStatus.completed));
     await tester.pumpWidget(createWidgetUnderTest(observers: [observer]));
     await tester.tap(find.text('Volver al inicio'));
     await tester.pump();
@@ -131,7 +162,9 @@ void main() {
   testWidgets('MeditationView listener coverage', (tester) async {
     final controller = StreamController<MeditationState>.broadcast();
     when(() => mockCubit.stream).thenAnswer((_) => controller.stream);
-    when(() => mockCubit.state).thenReturn(const MeditationState(status: MeditationStatus.idle));
+    when(
+      () => mockCubit.state,
+    ).thenReturn(const MeditationState(status: MeditationStatus.idle));
 
     await tester.pumpWidget(createWidgetUnderTest());
 
