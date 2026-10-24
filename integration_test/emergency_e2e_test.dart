@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
+import 'package:orionhealth_health/features/emergency/domain/entities/medical_id.dart';
 import 'package:orionhealth_health/features/emergency/domain/repositories/medical_id_repository.dart';
 import 'package:orionhealth_health/features/emergency/presentation/cubit/emergency_cubit.dart';
 import 'package:orionhealth_health/features/emergency/presentation/pages/emergency_id_page.dart';
@@ -83,28 +84,48 @@ void main() {
 
       expect(find.byType(EmergencyEditPage), findsOneWidget);
 
-      await tester.enterText(find.byType(TextFormField).at(0), 'John Doe');
-      await tester.enterText(find.byType(TextFormField).at(1), '1990-01-01');
-      await tester.pumpAndSettle();
+      // The form is a lazy ListView: scroll each field into view first.
+      final editList = find
+          .descendant(
+            of: find.byType(EmergencyEditPage),
+            matching: find.byType(Scrollable),
+          )
+          .first;
+      Future<void> fill(String label, String value) async {
+        final field = find.widgetWithText(TextFormField, label);
+        await tester.scrollUntilVisible(field, 100, scrollable: editList);
+        await tester.pumpAndSettle();
+        await tester.enterText(field, value);
+        await tester.pumpAndSettle();
+      }
 
-      await tester.tap(find.byType(DropdownButtonFormField).first);
+      await fill('Nombre completo', 'John Doe');
+      await fill('Fecha de nacimiento (YYYY-MM-DD)', '1990-01-01');
+
+      final bloodType = find.byType(DropdownButtonFormField<BloodType>);
+      await tester.scrollUntilVisible(bloodType, 100, scrollable: editList);
+      await tester.pumpAndSettle();
+      await tester.tap(bloodType);
       await tester.pumpAndSettle();
       await tester.tap(find.text('O Positivo').last);
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextFormField).at(2), 'Penicilina');
-      await tester.enterText(find.byType(TextFormField).at(4), 'Jane Doe');
-      await tester.enterText(find.byType(TextFormField).at(5), '555-1234');
+      await fill('Alergias (separadas por coma)', 'Penicilina');
+      await fill('Nombre', 'Jane Doe');
+      await fill('Teléfono', '555-1234');
 
       final saveButton = find.byIcon(Icons.save);
-      await tester.scrollUntilVisible(saveButton, 100);
+      await tester.scrollUntilVisible(saveButton, 100, scrollable: editList);
+      await tester
+          .pumpAndSettle(); // let the scroll fling finish before tapping
       await tester.tap(saveButton);
 
       await tester.pumpAndSettle();
 
       expect(find.text('John Doe'), findsOneWidget);
       expect(find.textContaining('O Positivo'), findsOneWidget);
-      expect(find.textContaining('Penicilina'), findsOneWidget);
+      // The QR payload (read-only text) also contains the allergy; match the card's own Text.
+      expect(find.text('Penicilina'), findsOneWidget);
 
       expect(find.text('QR Médico'), findsOneWidget);
       expect(find.byType(MedicalIdQrView), findsOneWidget);

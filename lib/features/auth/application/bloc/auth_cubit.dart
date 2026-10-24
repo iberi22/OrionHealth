@@ -40,6 +40,13 @@ class AuthCubit extends Cubit<AuthState> {
     final isExpired = await _checkSessionTimeoutUseCase();
     if (isExpired) {
       await _logoutUseCase();
+      // No session also means "first launch": without a PIN there is nothing
+      // to log in with, so route to PIN setup instead of an unusable login.
+      final credentials = await _repository.getCredentials();
+      if (credentials == null || credentials.hashedPin == null) {
+        emit(AuthNotSetup());
+        return;
+      }
       emit(const AuthUnauthenticated());
       return;
     }

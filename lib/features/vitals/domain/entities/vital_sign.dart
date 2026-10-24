@@ -15,6 +15,9 @@ enum VitalSignType {
   activeEnergy,
 }
 
+// Renamed: the health_wallet package already registers a collection named
+// "VitalSign", and Isar rejects duplicate collection names.
+@Name('VitalSignReading')
 @collection
 class VitalSign {
   Id id = Isar.autoIncrement;

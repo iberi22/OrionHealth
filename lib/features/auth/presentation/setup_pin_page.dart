@@ -30,48 +30,51 @@ class _SetupPinPageState extends State<SetupPinPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Configurar PIN')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Establece un PIN de seguridad para proteger tus datos médicos.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 32),
-            TextField(
-              controller: _pinController,
-              decoration: const InputDecoration(
-                labelText: 'Nuevo PIN',
-                border: OutlineInputBorder(),
+      // Scrollable: with the keyboard open the form is taller than the viewport.
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Establece un PIN de seguridad para proteger tus datos médicos.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
               ),
-              keyboardType: TextInputType.number,
-              obscureText: true,
-              maxLength: 6,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _confirmController,
-              decoration: const InputDecoration(
-                labelText: 'Confirmar PIN',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 32),
+              TextField(
+                controller: _pinController,
+                decoration: const InputDecoration(
+                  labelText: 'Nuevo PIN',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                obscureText: true,
+                maxLength: 6,
               ),
-              keyboardType: TextInputType.number,
-              obscureText: true,
-              maxLength: 6,
-            ),
-            if (_error != null) ...[
               const SizedBox(height: 16),
-              Text(_error!, style: const TextStyle(color: Colors.red)),
+              TextField(
+                controller: _confirmController,
+                decoration: const InputDecoration(
+                  labelText: 'Confirmar PIN',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                obscureText: true,
+                maxLength: 6,
+              ),
+              if (_error != null) ...[
+                const SizedBox(height: 16),
+                Text(_error!, style: const TextStyle(color: Colors.red)),
+              ],
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: _submit,
+                child: const Text('Guardar PIN'),
+              ),
             ],
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _submit,
-              child: const Text('Guardar PIN'),
-            ),
-          ],
+          ),
         ),
       ),
     );

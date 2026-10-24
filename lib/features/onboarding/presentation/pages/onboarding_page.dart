@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/onboarding_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_boundary.dart';
-import '../../../home/presentation/pages/main_navigation_page.dart';
 import 'welcome_step.dart';
 import 'basic_info_step.dart';
 import 'conditions_step.dart';
@@ -22,6 +21,7 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   static const int _totalSteps = 7;
+  bool _completed = false;
 
   @override
   void initState() {
@@ -51,9 +51,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
           _animateToPage(state.currentStep);
           setState(() {});
         } else if (state is OnboardingCompleted) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const MainNavigationPage()),
-          );
+          // Show the final "welcome" step; its Continuar button opens the app.
+          setState(() => _completed = true);
+          _animateToPage(_totalSteps - 1);
         } else if (state is OnboardingError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -91,7 +91,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _buildProgressIndicator() {
     final cubit = context.read<OnboardingCubit>();
-    final currentStep = cubit.currentStep;
+    final currentStep = _completed ? _totalSteps - 1 : cubit.currentStep;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -100,7 +100,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (currentStep > 0)
+              if (currentStep > 0 && !_completed)
                 IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white70),
                   onPressed: () => cubit.previousStep(),

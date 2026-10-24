@@ -140,7 +140,8 @@ class _VitalsPageState extends State<VitalsPage> {
       crossAxisCount: isCompact ? 2 : 3,
       crossAxisSpacing: SWALSpacing.md,
       mainAxisSpacing: SWALSpacing.md,
-      childAspectRatio: isCompact ? 1.3 : 1.4,
+      // Cards hold a label, value and unit; 1.3/1.4 overflowed by up to 18px.
+      childAspectRatio: isCompact ? 1.0 : 1.2,
       children: [
         _buildVitalCard(VitalSignType.heartRate, 'BPM', Icons.favorite),
         _buildVitalCard(VitalSignType.temperature, '°C', Icons.thermostat),
@@ -351,109 +352,114 @@ class _AddVitalBottomSheetState extends State<_AddVitalBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 20,
-        right: 20,
-        top: 20,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Agregar Signo Vital',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20),
-          DropdownButtonFormField<VitalSignType>(
-            initialValue: _selectedType,
-            items: VitalSignType.values.map((type) {
-              return DropdownMenuItem(
-                value: type,
-                child: Text(_getVitalLabel(type)),
-              );
-            }).toList(),
-            onChanged: (value) {
-              if (value != null) setState(() => _selectedType = value);
-            },
-            decoration: const InputDecoration(labelText: 'Tipo'),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _valueController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              labelText: 'Valor',
-              suffixText: _getVitalUnit(_selectedType),
+    return Material(
+      type: MaterialType.transparency,
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 20,
+          right: 20,
+          top: 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'Agregar Signo Vital',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 12),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(
-              'Fecha y Hora: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime)}',
-            ),
-            trailing: const Icon(Icons.calendar_today),
-            onTap: () async {
-              final date = await showDatePicker(
-                context: context,
-                initialDate: _selectedDateTime,
-                firstDate: DateTime(2000),
-                lastDate: DateTime.now().add(const Duration(days: 1)),
-              );
-              if (date != null) {
-                if (!context.mounted) return;
-                final time = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
+            const SizedBox(height: 20),
+            DropdownButtonFormField<VitalSignType>(
+              initialValue: _selectedType,
+              items: VitalSignType.values.map((type) {
+                return DropdownMenuItem(
+                  value: type,
+                  child: Text(_getVitalLabel(type)),
                 );
-                if (time != null && mounted) {
-                  setState(() {
-                    _selectedDateTime = DateTime(
-                      date.year,
-                      date.month,
-                      date.day,
-                      time.hour,
-                      time.minute,
-                    );
-                  });
-                }
-              }
-            },
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _notesController,
-            decoration: const InputDecoration(labelText: 'Notas (Opcional)'),
-            maxLines: 2,
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CyberTheme.primary,
-              foregroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) setState(() => _selectedType = value);
+              },
+              decoration: const InputDecoration(labelText: 'Tipo'),
             ),
-            onPressed: () {
-              final value = double.tryParse(_valueController.text);
-              if (value == null) return;
+            const SizedBox(height: 12),
+            TextField(
+              controller: _valueController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: InputDecoration(
+                labelText: 'Valor',
+                suffixText: _getVitalUnit(_selectedType),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                'Fecha y Hora: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime)}',
+              ),
+              trailing: const Icon(Icons.calendar_today),
+              onTap: () async {
+                final date = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedDateTime,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime.now().add(const Duration(days: 1)),
+                );
+                if (date != null) {
+                  if (!context.mounted) return;
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
+                  );
+                  if (time != null && mounted) {
+                    setState(() {
+                      _selectedDateTime = DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                        time.hour,
+                        time.minute,
+                      );
+                    });
+                  }
+                }
+              },
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _notesController,
+              decoration: const InputDecoration(labelText: 'Notas (Opcional)'),
+              maxLines: 2,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CyberTheme.primary,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              onPressed: () {
+                final value = double.tryParse(_valueController.text);
+                if (value == null) return;
 
-              final vital = VitalSign(
-                type: _selectedType,
-                value: value,
-                dateTime: _selectedDateTime,
-                notes: _notesController.text,
-              );
-              widget.onSave(vital);
-              Navigator.pop(context);
-            },
-            child: const Text('Guardar'),
-          ),
-          const SizedBox(height: 20),
-        ],
+                final vital = VitalSign(
+                  type: _selectedType,
+                  value: value,
+                  dateTime: _selectedDateTime,
+                  notes: _notesController.text,
+                );
+                widget.onSave(vital);
+                Navigator.pop(context);
+              },
+              child: const Text('Guardar'),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

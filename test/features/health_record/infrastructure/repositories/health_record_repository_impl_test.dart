@@ -3,6 +3,7 @@ import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/health_record/domain/entities/medical_record.dart';
 import 'package:orionhealth_health/features/health_record/infrastructure/repositories/health_record_repository_impl.dart';
+import '../../../../helpers/mock_encryption_service.dart';
 
 class MockIsar extends Mock implements Isar {
   @override
@@ -28,7 +29,7 @@ void main() {
   setUp(() {
     mockIsar = MockIsar();
     mockCollection = MockIsarCollection();
-    repository = HealthRecordRepositoryImpl(mockIsar);
+    repository = HealthRecordRepositoryImpl(mockIsar, FakeEncryptionService());
 
     when(() => mockIsar.medicalRecords).thenReturn(mockCollection);
   });
