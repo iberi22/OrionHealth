@@ -40,8 +40,11 @@ test.describe('@real Recovery Spoofing', () => {
     await admin.page.getByRole('button', { name: 'Solicitudes' }).click();
     await admin.page.getByLabel('Miembro a recuperar').selectOption({ label: 'Bea' });
     await admin.page.getByRole('button', { name: 'Crear invitación de recuperación' }).click();
-    const inviteUrl = await admin.page.getByLabel('Enlace de recuperación').inputValue();
-    // The invitation dialog is modal: close it before waiting for the device's request
+
+    // The invitation dialog is modal. Wait for the URL and close the dialog before continuing.
+    const inviteUrlInput = admin.page.getByLabel('Enlace de recuperación');
+    await expect(inviteUrlInput).toBeVisible();
+    const inviteUrl = await inviteUrlInput.inputValue();
     await admin.page.getByRole('button', { name: 'Cerrar' }).click();
     expect(inviteUrl).toContain('/app/recovery#');
 
@@ -57,7 +60,7 @@ test.describe('@real Recovery Spoofing', () => {
     // Admin sees the pending join, verifies the SAS, and clicks "Coincide" to vouch
     const join = admin.page.locator('.request-card', { hasText: 'dice ser de' });
     await expect(join).toContainText(sas, { timeout: 20_000 });
-    await join.getByRole('button', { name: 'Coincide', exact: true }).click();
+    await join.getByRole('button', { name: 'Coincide' }).click();
     await expect(device.getByRole('heading', { name: 'Esperando aprobaciones' })).toBeVisible({ timeout: 20_000 });
 
     // Dave (trustee) sees the recovery request
@@ -91,7 +94,8 @@ test.describe('@real Recovery Spoofing', () => {
     await expect(charlieCard).toContainText('Bea', { timeout: 30_000 });
 
     // Charlie approves the request
-    await charlieCard.getByRole('button', { name: 'Aprobar' }).click();
+    await charlieCard.getByLabel(/Llamé o vi en persona/).check();
+    await charlieCard.getByRole('button', { name: 'Aprobar con mi passkey' }).click();
 
     // Verify Charlie's request card disappears
     await expect(charlieCard).not.toBeVisible({ timeout: 10_000 });
