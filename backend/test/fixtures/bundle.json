@@ -1,0 +1,34 @@
+{
+  "resourceType": "Bundle",
+  "type": "document",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:c123",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "c123",
+        "date": "2023-01-01",
+        "title": "RDA Summary",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/p123"
+        }
+      }
+    },
+    {
+      "fullUrl": "Patient/p123",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p123",
+        "name": [
+          {
+            "given": [
+              "John"
+            ],
+            "family": "Doe"
+          }
+        ]
+      }
+    }
+  ]
+}

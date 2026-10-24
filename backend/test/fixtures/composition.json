@@ -1,0 +1,10 @@
+{
+  "resourceType": "Composition",
+  "id": "c123",
+  "date": "2023-01-01",
+  "title": "RDA Summary",
+  "status": "final",
+  "subject": {
+    "reference": "Patient/p123"
+  }
+}
