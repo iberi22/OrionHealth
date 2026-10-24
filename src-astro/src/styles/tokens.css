@@ -1,0 +1,21 @@
+/* Orion site tokens (from docs/ BaseLayout + tailwind.config). Task "site layout" refines; names are the contract. */
+:root {
+  --oh-accent: #10b981;
+  --oh-accent-light: #34d399;
+  --oh-accent-dark: #059669;
+  --oh-secondary: #06b6d4;
+  --oh-danger: #f87171;
+  --oh-font-mono: 'Fira Code', ui-monospace, monospace;
+  --oh-font-sans: Inter, system-ui, sans-serif;
+  --oh-radius: 14px;
+  --oh-bg: #f5f5dc;
+  --oh-surface: #e8e8c0;
+  --oh-text: #121212;
+  --oh-muted: #4b5563;
+}
+:root[data-theme='dark'] {
+  --oh-bg: #121212;
+  --oh-surface: #1e1e1e;
+  --oh-text: #f5f5dc;
+  --oh-muted: #a3a3a3;
+}
