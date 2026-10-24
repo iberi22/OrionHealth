@@ -790,10 +790,7 @@ extension GetItInjectableX on _i1.GetIt {
               gh<_i76.MedicalKnowledgeRepository>(),
             ));
     gh.lazySingleton<_i138.VitalSignRepository>(
-        () => _i139.VitalSignRepositoryImpl(
-          gh<_i65.Isar>(),
-          gh<_i172.EncryptionService>(),
-        ));
+        () => _i139.VitalSignRepositoryImpl(gh<_i65.Isar>()));
     gh.factory<_i140.VitalsCubit>(
         () => _i140.VitalsCubit(gh<_i138.VitalSignRepository>()));
     gh.lazySingleton<_i141.VoiceChatRepository>(
@@ -975,7 +972,6 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i208.IsarMedicationRepository(
               gh<_i65.Isar>(),
               gh<_i106.PharmacyApiService>(),
-              gh<_i172.EncryptionService>(),
             ));
     gh.factory<_i209.MedicationsCubit>(
         () => _i209.MedicationsCubit(gh<_i207.MedicationRepository>()));

@@ -115,20 +115,16 @@ class _MedicationsPageState extends State<MedicationsPage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) => StatefulBuilder(
-        builder: (bottomSheetContext, setModalState) => Container(
-          decoration: const BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom,
-            top: 20,
-            left: 20,
-            right: 20,
-          ),
-          child: Material(
-            // ListTile paints on the nearest Material; the sheet only has a DecoratedBox.
-            type: MaterialType.transparency,
+        builder: (bottomSheetContext, setModalState) => Material(
+          color: AppColors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom,
+              top: 20,
+              left: 20,
+              right: 20,
+            ),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -184,51 +180,57 @@ class _MedicationsPageState extends State<MedicationsPage> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: const Icon(
-                      Icons.calendar_today,
-                      color: AppColors.secondary,
-                    ),
-                    title: const Text('Fecha de inicio'),
-                    subtitle: Text(
-                      DateFormat('dd MMM yyyy').format(selectedDate),
-                    ),
-                    onTap: () async {
-                      final date = await showDatePicker(
-                        context: bottomSheetContext,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                        builder: (context, child) {
-                          return Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme: const ColorScheme.dark(
-                                primary: AppColors.primary,
-                                onPrimary: Colors.black,
-                                surface: AppColors.surface,
-                                onSurface: Colors.white,
+                  Material(
+                    color: Colors.transparent,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(
+                        Icons.calendar_today,
+                        color: AppColors.secondary,
+                      ),
+                      title: const Text('Fecha de inicio'),
+                      subtitle: Text(
+                        DateFormat('dd MMM yyyy').format(selectedDate),
+                      ),
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: bottomSheetContext,
+                          initialDate: selectedDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: const ColorScheme.dark(
+                                  primary: AppColors.primary,
+                                  onPrimary: Colors.black,
+                                  surface: AppColors.surface,
+                                  onSurface: Colors.white,
+                                ),
                               ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-                      if (date != null) {
-                        setModalState(() => selectedDate = date);
-                      }
-                    },
-                  ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Activo'),
-                    secondary: Icon(
-                      isActive ? Icons.check_circle : Icons.pause_circle,
-                      color: isActive ? AppColors.primary : Colors.grey,
+                              child: child!,
+                            );
+                          },
+                        );
+                        if (date != null) {
+                          setModalState(() => selectedDate = date);
+                        }
+                      },
                     ),
-                    value: isActive,
-                    activeThumbColor: AppColors.primary,
-                    onChanged: (val) => setModalState(() => isActive = val),
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Activo'),
+                      secondary: Icon(
+                        isActive ? Icons.check_circle : Icons.pause_circle,
+                        color: isActive ? AppColors.primary : Colors.grey,
+                      ),
+                      value: isActive,
+                      activeThumbColor: AppColors.primary,
+                      onChanged: (val) => setModalState(() => isActive = val),
+                    ),
                   ),
                   _buildTextField(
                     notesController,
