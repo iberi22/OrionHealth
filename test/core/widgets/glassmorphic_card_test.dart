@@ -10,11 +10,7 @@ void main() {
     testWidgets('renders child correctly', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: GlassmorphicCard(
-              child: Text('Card Content'),
-            ),
-          ),
+          home: Scaffold(body: GlassmorphicCard(child: Text('Card Content'))),
         ),
       );
 
@@ -53,6 +49,25 @@ void main() {
 
       final container = tester.widget<Container>(find.byType(Container));
       expect(container.padding, equals(customPadding));
+    });
+
+    testWidgets('renders without exceptions when containing a ListTile', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: GlassmorphicCard(
+              child: ListTile(title: const Text('Test ListTile'), onTap: () {}),
+            ),
+          ),
+        ),
+      );
+
+      // Verify that no exception was thrown and the ListTile is found
+      expect(find.byType(GlassmorphicCard), findsOneWidget);
+      expect(find.byType(ListTile), findsOneWidget);
+      expect(find.text('Test ListTile'), findsOneWidget);
     });
   });
 }
