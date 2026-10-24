@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:isar/isar.dart';
 import 'package:path/path.dart' as p;
 import 'package:mocktail/mocktail.dart';
@@ -18,18 +18,15 @@ void main() {
     await Directory(testDir).create(recursive: true);
 
     await Isar.initializeIsarCore(download: true);
-    isar = await Isar.open(
-      [
-        HealthRecordSchema,
-        LabResultSchema,
-        VitalSignSchema,
-        MedicationEntrySchema,
-        MedicalDocumentSchema,
-        MedicalEventSchema,
-        MedicalConceptSchema,
-      ],
-      directory: testDir,
-    );
+    isar = await Isar.open([
+      HealthRecordSchema,
+      LabResultSchema,
+      VitalSignSchema,
+      MedicationEntrySchema,
+      MedicalDocumentSchema,
+      MedicalEventSchema,
+      MedicalConceptSchema,
+    ], directory: testDir);
   });
 
   tearDownAll(() async {
@@ -132,7 +129,7 @@ void main() {
     });
 
     test('getPendingSyncLabs', () async {
-       final lab = LabResult(
+      final lab = LabResult(
         remoteId: 'lab1',
         loincCode: '1',
         testName: 'T',
@@ -279,7 +276,9 @@ void main() {
 
       await walletService.addMedicalEvent(event);
 
-      final results = await walletService.getEventsByType(EventType.appointment);
+      final results = await walletService.getEventsByType(
+        EventType.appointment,
+      );
       expect(results.length, 1);
       expect(results.first.description, 'Checkup');
     });
@@ -317,7 +316,9 @@ void main() {
 
       await walletService.addDocument(doc);
 
-      final results = await walletService.getDocumentsByType(DocumentType.prescription);
+      final results = await walletService.getDocumentsByType(
+        DocumentType.prescription,
+      );
       expect(results.length, 1);
       expect(results.first.title, 'Report');
     });
@@ -345,11 +346,20 @@ void main() {
 
   group('WalletService - Auxiliary', () {
     test('getDataStatistics', () async {
-      await walletService.addLabResult(LabResult(
-        remoteId: 'l1', loincCode: '1', testName: 'T', resultValue: '0', unit: 'u',
-        referenceRangeLow: 0, referenceRangeHigh: 1, collectedAt: DateTime.now(),
-        createdAt: DateTime.now(), updatedAt: DateTime.now(),
-      ));
+      await walletService.addLabResult(
+        LabResult(
+          remoteId: 'l1',
+          loincCode: '1',
+          testName: 'T',
+          resultValue: '0',
+          unit: 'u',
+          referenceRangeLow: 0,
+          referenceRangeHigh: 1,
+          collectedAt: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       final stats = await walletService.getDataStatistics();
       expect(stats['labs'], 1);
@@ -357,11 +367,20 @@ void main() {
     });
 
     test('exportAllData', () async {
-      await walletService.addLabResult(LabResult(
-        remoteId: 'l1', loincCode: '1', testName: 'T', resultValue: '0', unit: 'u',
-        referenceRangeLow: 0, referenceRangeHigh: 1, collectedAt: DateTime.now(),
-        createdAt: DateTime.now(), updatedAt: DateTime.now(),
-      ));
+      await walletService.addLabResult(
+        LabResult(
+          remoteId: 'l1',
+          loincCode: '1',
+          testName: 'T',
+          resultValue: '0',
+          unit: 'u',
+          referenceRangeLow: 0,
+          referenceRangeHigh: 1,
+          collectedAt: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       final export = await walletService.exportAllData();
       expect(export['labs'], isA<List>());
@@ -370,10 +389,17 @@ void main() {
     });
 
     test('exportToFhir returns a valid-looking bundle', () async {
-      await walletService.saveHealthRecord(HealthRecord(
-        remoteId: 'hr1', patientId: 'p1', firstName: 'J', lastName: 'D', dateOfBirth: '1990-01-01',
-        createdAt: DateTime.now(), updatedAt: DateTime.now(),
-      ));
+      await walletService.saveHealthRecord(
+        HealthRecord(
+          remoteId: 'hr1',
+          patientId: 'p1',
+          firstName: 'J',
+          lastName: 'D',
+          dateOfBirth: '1990-01-01',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       final fhir = await walletService.exportToFhir();
       expect(fhir, contains('"resourceType": "Bundle"'));
@@ -382,12 +408,20 @@ void main() {
 
     test('cleanup methods', () async {
       final now = DateTime.now();
-      await walletService.addLabResult(LabResult(
-        remoteId: 'old', loincCode: '1', testName: 'T', resultValue: '0', unit: 'u',
-        referenceRangeLow: 0, referenceRangeHigh: 1,
-        collectedAt: now.subtract(const Duration(days: 10)),
-        createdAt: now, updatedAt: now,
-      ));
+      await walletService.addLabResult(
+        LabResult(
+          remoteId: 'old',
+          loincCode: '1',
+          testName: 'T',
+          resultValue: '0',
+          unit: 'u',
+          referenceRangeLow: 0,
+          referenceRangeHigh: 1,
+          collectedAt: now.subtract(const Duration(days: 10)),
+          createdAt: now,
+          updatedAt: now,
+        ),
+      );
 
       final deleted = await walletService.deleteLabsOlderThan(5);
       expect(deleted, 1);

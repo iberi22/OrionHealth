@@ -12,11 +12,19 @@ void main() {
 
   setUp(() {
     mockRepository = MockOnboardingRepository();
-    registerFallbackValue(UserProfile(createdAt: DateTime.now(), updatedAt: DateTime.now()));
+    registerFallbackValue(
+      UserProfile(createdAt: DateTime.now(), updatedAt: DateTime.now()),
+    );
 
-    when(() => mockRepository.getOnboardingProfile()).thenAnswer((_) async => null);
-    when(() => mockRepository.saveOnboardingProfile(any())).thenAnswer((_) async {});
-    when(() => mockRepository.completeOnboarding(any())).thenAnswer((_) async {});
+    when(
+      () => mockRepository.getOnboardingProfile(),
+    ).thenAnswer((_) async => null);
+    when(
+      () => mockRepository.saveOnboardingProfile(any()),
+    ).thenAnswer((_) async {});
+    when(
+      () => mockRepository.completeOnboarding(any()),
+    ).thenAnswer((_) async {});
     when(() => mockRepository.resetOnboarding()).thenAnswer((_) async {});
 
     cubit = OnboardingCubit(mockRepository);
@@ -31,19 +39,26 @@ void main() {
       expect(cubit.state, isA<OnboardingInitial>());
     });
 
-    test('startOnboarding emits Loading then InProgress at step 0 when no saved profile', () async {
-      final expectation = expectLater(
-        cubit.stream,
-        emitsInOrder([
-          isA<OnboardingLoading>(),
-          isA<OnboardingInProgress>().having((s) => s.currentStep, 'currentStep', 0),
-        ]),
-      );
+    test(
+      'startOnboarding emits Loading then InProgress at step 0 when no saved profile',
+      () async {
+        final expectation = expectLater(
+          cubit.stream,
+          emitsInOrder([
+            isA<OnboardingLoading>(),
+            isA<OnboardingInProgress>().having(
+              (s) => s.currentStep,
+              'currentStep',
+              0,
+            ),
+          ]),
+        );
 
-      await cubit.startOnboarding();
-      await expectation;
-      verify(() => mockRepository.saveOnboardingProfile(any())).called(1);
-    });
+        await cubit.startOnboarding();
+        await expectation;
+        verify(() => mockRepository.saveOnboardingProfile(any())).called(1);
+      },
+    );
 
     test('startOnboarding resumes from saved profile if exists', () async {
       final savedProfile = UserProfile(
@@ -51,13 +66,19 @@ void main() {
         updatedAt: DateTime.now(),
         onboardingStep: 2,
       );
-      when(() => mockRepository.getOnboardingProfile()).thenAnswer((_) async => savedProfile);
+      when(
+        () => mockRepository.getOnboardingProfile(),
+      ).thenAnswer((_) async => savedProfile);
 
       final expectation = expectLater(
         cubit.stream,
         emitsInOrder([
           isA<OnboardingLoading>(),
-          isA<OnboardingInProgress>().having((s) => s.currentStep, 'currentStep', 2),
+          isA<OnboardingInProgress>().having(
+            (s) => s.currentStep,
+            'currentStep',
+            2,
+          ),
         ]),
       );
 
@@ -65,95 +86,141 @@ void main() {
       await expectation;
     });
 
-    test('resumeOnboarding emits Loading then InProgress at saved step', () async {
-      final savedProfile = UserProfile(
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        onboardingStep: 2,
-      );
+    test(
+      'resumeOnboarding emits Loading then InProgress at saved step',
+      () async {
+        final savedProfile = UserProfile(
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          onboardingStep: 2,
+        );
 
-      final expectation = expectLater(
-        cubit.stream,
-        emitsInOrder([
-          isA<OnboardingLoading>(),
-          isA<OnboardingInProgress>().having((s) => s.currentStep, 'currentStep', 2),
-        ]),
-      );
-
-      await cubit.resumeOnboarding(savedProfile);
-      await expectation;
-    });
-
-    test('nextStep from welcome (step 0) to basicInfo (step 1) works without validation', () async {
-      await cubit.startOnboarding();
-
-      final expectation = expectLater(
-        cubit.stream,
-        emits(isA<OnboardingInProgress>().having((s) => s.currentStep, 'currentStep', 1)),
-      );
-
-      await cubit.nextStep();
-      await expectation;
-      verify(() => mockRepository.saveOnboardingProfile(any())).called(greaterThan(0));
-    });
-
-    group('Validation Logic', () {
-      test('nextStep from basicInfo fails if required fields are missing', () async {
-        await cubit.startOnboarding();
-        await cubit.nextStep(); // Move to basicInfo
-        expect((cubit.state as OnboardingInProgress).currentStep, 1);
-
-        // Name is missing
         final expectation = expectLater(
           cubit.stream,
           emitsInOrder([
-            isA<OnboardingError>().having((e) => e.message, 'message', contains('nombre')),
-            isA<OnboardingInProgress>(), // Emitted back to restore state
+            isA<OnboardingLoading>(),
+            isA<OnboardingInProgress>().having(
+              (s) => s.currentStep,
+              'currentStep',
+              2,
+            ),
           ]),
         );
 
-        await cubit.nextStep();
+        await cubit.resumeOnboarding(savedProfile);
         await expectation;
-        expect((cubit.state as OnboardingInProgress).currentStep, 1); // Still at step 1
-      });
+      },
+    );
 
-      test('nextStep from basicInfo succeeds if required fields are present', () async {
+    test(
+      'nextStep from welcome (step 0) to basicInfo (step 1) works without validation',
+      () async {
         await cubit.startOnboarding();
-        await cubit.nextStep(); // Move to basicInfo
-
-        await cubit.updateName('John Doe');
-        await cubit.updateBirthDate(DateTime(1990, 1, 1));
-        await cubit.updateSex('M');
 
         final expectation = expectLater(
           cubit.stream,
-          emits(isA<OnboardingInProgress>().having((s) => s.currentStep, 'currentStep', 2)),
+          emits(
+            isA<OnboardingInProgress>().having(
+              (s) => s.currentStep,
+              'currentStep',
+              1,
+            ),
+          ),
         );
 
         await cubit.nextStep();
         await expectation;
-      });
-    });
+        verify(
+          () => mockRepository.saveOnboardingProfile(any()),
+        ).called(greaterThan(0));
+      },
+    );
 
-    test('completeOnboarding emits syncing states then Completed and calls repository', () async {
-      await cubit.startOnboarding();
+    group('Validation Logic', () {
+      test(
+        'nextStep from basicInfo fails if required fields are missing',
+        () async {
+          await cubit.startOnboarding();
+          await cubit.nextStep(); // Move to basicInfo
+          expect((cubit.state as OnboardingInProgress).currentStep, 1);
 
-      final expectation = expectLater(
-        cubit.stream,
-        emitsThrough(isA<OnboardingCompleted>()),
+          // Name is missing
+          final expectation = expectLater(
+            cubit.stream,
+            emitsInOrder([
+              isA<OnboardingError>().having(
+                (e) => e.message,
+                'message',
+                contains('nombre'),
+              ),
+              isA<OnboardingInProgress>(), // Emitted back to restore state
+            ]),
+          );
+
+          await cubit.nextStep();
+          await expectation;
+          expect(
+            (cubit.state as OnboardingInProgress).currentStep,
+            1,
+          ); // Still at step 1
+        },
       );
 
-      await cubit.completeOnboarding();
-      await expectation;
+      test(
+        'nextStep from basicInfo succeeds if required fields are present',
+        () async {
+          await cubit.startOnboarding();
+          await cubit.nextStep(); // Move to basicInfo
 
-      expect(cubit.state, isA<OnboardingCompleted>());
-      expect((cubit.state as OnboardingCompleted).profile.onboardingCompleted, true);
-      verify(() => mockRepository.completeOnboarding(any())).called(1);
+          await cubit.updateName('John Doe');
+          await cubit.updateBirthDate(DateTime(1990, 1, 1));
+          await cubit.updateSex('M');
+
+          final expectation = expectLater(
+            cubit.stream,
+            emits(
+              isA<OnboardingInProgress>().having(
+                (s) => s.currentStep,
+                'currentStep',
+                2,
+              ),
+            ),
+          );
+
+          await cubit.nextStep();
+          await expectation;
+        },
+      );
     });
+
+    test(
+      'completeOnboarding emits syncing states then Completed and calls repository',
+      () async {
+        await cubit.startOnboarding();
+
+        final expectation = expectLater(
+          cubit.stream,
+          emitsThrough(isA<OnboardingCompleted>()),
+        );
+
+        await cubit.completeOnboarding();
+        await expectation;
+
+        expect(cubit.state, isA<OnboardingCompleted>());
+        expect(
+          (cubit.state as OnboardingCompleted).profile.onboardingCompleted,
+          true,
+        );
+        verify(() => mockRepository.completeOnboarding(any())).called(1);
+      },
+    );
 
     test('reset calls repository reset and emits OnboardingInitial', () async {
       await cubit.startOnboarding();
       cubit.reset();
+      // Use expectLater on the stream instead if necessary, or wait for event loop, actually reset is async.
+      // Wait for reset to complete
+      await Future.delayed(Duration.zero);
       expect(cubit.state, isA<OnboardingInitial>());
       verify(() => mockRepository.resetOnboarding()).called(1);
     });

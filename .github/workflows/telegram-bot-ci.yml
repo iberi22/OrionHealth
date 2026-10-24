@@ -1,0 +1,25 @@
+name: Telegram Bot CI
+
+on:
+  pull_request:
+    paths:
+      - 'functions/telegram-bot/**'
+      - '.github/workflows/telegram-bot-ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: functions/telegram-bot/package-lock.json
+      - name: Install dependencies
+        working-directory: functions/telegram-bot
+        run: npm ci
+      - name: Run tests
+        working-directory: functions/telegram-bot
+        run: npm run test -- --run
