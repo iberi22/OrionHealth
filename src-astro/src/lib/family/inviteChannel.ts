@@ -17,6 +17,9 @@ export interface InviteTransport {
   join(roomId: string): Promise<InviteConnection>;
 }
 
+/** How long a side keeps the invite room open after the peer's hello arrived. */
+export const CLOSE_GRACE_MS = 10_000;
+
 export interface InviteResult {
   sas: string;
   peer: InviteHello;
@@ -40,10 +43,13 @@ export class InviteChannel {
       let timeoutId: ReturnType<typeof setTimeout>;
       let unsub: () => void;
 
-      const cleanup = () => {
+      // After receiving the peer's hello we keep the connection open for a moment: the peer may not have
+      // received ours yet, and closing at once can cut the sync that delivers it (both sides do this).
+      const cleanup = (linger = false) => {
         clearTimeout(timeoutId);
         unsub?.();
-        conn.close();
+        if (linger) setTimeout(() => conn.close(), CLOSE_GRACE_MS);
+        else conn.close();
       };
 
       const remainingTime = invite.e - now;
@@ -53,7 +59,7 @@ export class InviteChannel {
       }, remainingTime);
 
       unsub = conn.onMessage(async (peerHello) => {
-        cleanup();
+        cleanup(true);
         try {
           const sas = await computeSas(invite.s, this.myHello.signPub, peerHello.signPub);
           resolve({ sas, peer: peerHello });
