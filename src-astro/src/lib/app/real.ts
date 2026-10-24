@@ -52,18 +52,42 @@ export async function createRealServices(opts: RealServicesOptions = {}): Promis
   const grants = createGrantsService(kernel, { records, health });
   const circle = createFamilyCircleService(kernel, {
     transport: opts.transport ?? createWebrtcInviteTransport(),
+    // Invite links point at the origin serving the app (preview, staging, production)
+    origin: typeof location !== 'undefined' ? location.origin : undefined,
     displayName: () => session.displayName() ?? '',
+  });
+
+  // The circle service only notifies on membership changes; grants and revocations (local or arriving
+  // from the replica) must refresh the permission and guardian views as well.
+  const grantSubs = new Set<() => void>();
+  const notifyGrants = () => grantSubs.forEach((cb) => cb());
+  kernel.onEnvelope((env) => {
+    if (env.category !== 'grant') return;
+    // Received keys first, so a view refreshed by this notification can already read the data.
+    void grants.syncReceivedKeys().catch(() => 0).then(notifyGrants);
   });
 
   const family: FamilyService = {
     ...circle,
+    onChange(cb) {
+      const off = circle.onChange(cb);
+      grantSubs.add(cb);
+      return () => {
+        off();
+        grantSubs.delete(cb);
+      };
+    },
     grantsGiven: grants.grantsGiven,
     grantsReceived: grants.grantsReceived,
-    grant: grants.grant,
+    async grant(to, preset, custom, expiresAt) {
+      await grants.grant(to, preset, custom, expiresAt);
+      notifyGrants();
+    },
     guardedSummaries: grants.guardedSummaries,
     async revoke(grantId) {
       await grants.revoke(grantId);
       await kernel.revokeGrant(grantId);
+      notifyGrants();
     },
   };
 

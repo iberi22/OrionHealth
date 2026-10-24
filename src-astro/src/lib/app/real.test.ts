@@ -68,6 +68,29 @@ describe('loadServices', () => {
 });
 
 describe('createRealServices', () => {
+  it('notifies family listeners when a grant is given or revoked', async () => {
+    const svc = await createRealServices(opts());
+    await svc.vault.create('Ana');
+    await svc.family.createCircle('Casa');
+    const dep = await svc.family.addDependent('Bebe');
+    const onChange = vi.fn();
+    svc.family.onChange(onChange);
+    await svc.family.grant(dep.memberId, 'caregiver');
+    const afterGrant = onChange.mock.calls.length;
+    expect(afterGrant).toBeGreaterThan(0);
+    const [g] = await svc.family.grantsGiven();
+    await svc.family.revoke(g!.id);
+    expect(onChange.mock.calls.length).toBeGreaterThan(afterGrant);
+  });
+
+  it('builds invite links on the origin serving the app', async () => {
+    const svc = await createRealServices(opts());
+    await svc.vault.create('Ana');
+    await svc.family.createCircle('Casa');
+    const { url } = await svc.family.createInvite();
+    expect(url.startsWith(`${location.origin}/app/join#`)).toBe(true);
+  });
+
   const vital = (owner: string): VitalReading => ({
     kind: 'vital',
     recordId: 'v-1',
