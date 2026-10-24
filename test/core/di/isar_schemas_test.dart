@@ -17,7 +17,9 @@ void main() {
     for (final f in Directory(
       'lib',
     ).listSync(recursive: true).whereType<File>()) {
-      if (!f.path.endsWith('.dart') || f.path.endsWith('.g.dart')) continue;
+      if (!f.path.endsWith('.dart') || f.path.endsWith('.g.dart')) {
+        continue;
+      }
       for (final m in collection.allMatches(f.readAsStringSync())) {
         final schema = '${m.group(1)}Schema';
         if (!RegExp('\\b$schema\\b').hasMatch(module))
