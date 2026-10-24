@@ -1,6 +1,6 @@
 # orionhealth-signal
 
-A standalone Cloudflare Worker that implements the y-webrtc signaling protocol on a SQLite-backed Durable Object. It is used to bootstrap WebRTC mesh connections between peer devices in a circle. Each room topic prefix maps to its own Durable Object instance.
+A standalone Cloudflare Worker that implements the y-webrtc signaling protocol on a SQLite-backed Durable Object. It is used to bootstrap WebRTC mesh connections between peer devices in a circle. The real layout currently uses a single `global` Durable Object (see src/index.ts:28-31) that multiplexes all connections.
 
 ## Protocol
 

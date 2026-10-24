@@ -43,7 +43,7 @@ No other crypto dependency is allowed.
 | MBK (member bundle key) | AES-256 | memory | `HKDF(ikm=MRS, salt=memberId, info="orion/v1/bundle")` |
 | Member signing key | ECDSA P-256 | PKCS8 inside the member bundle | generated once per person |
 | Member box key | ECDH P-256 | PKCS8 inside the member bundle | generated once per person |
-| CEK[category, epoch] | 32 B random | inside the member bundle | one per category per epoch |
+| CEK[category, epoch] | 32 B random | inside the member bundle | HKDF(mrs, memberId, "orion/v1/cek|<cat>|<epoch>") and time-based epochs |
 | Circle key CK[epoch] | 32 B random | wrapped per member (grant to each member) | created by the circle admin |
 
 **Member bundle**: JSON `{ v:1, memberId, signPkcs8, boxPkcs8, ceks:{[category]:{[epoch]:b64}} }`, sealed with MBK
@@ -86,7 +86,7 @@ interface Envelope {
 - AAD = UTF-8 of `orion/v1|${circle}|${owner}|${author}|${category}|${epoch}|${id}`.
 - Canonical bytes = UTF-8 of `JSON.stringify` with keys sorted, `sig` removed.
 - A receiver **rejects** (and never stores) an envelope whose signature fails, whose author is not a member at
-  `hlc`, or whose author ≠ owner without a valid, unexpired write grant for that category at `hlc`.
+  `hlc`, or whose author ≠ owner without a valid, unexpired write grant for that category at `hlc` (expiry with a 72 h grace measured on the receiver clock, EXPIRY_GRACE).
 - Edits are new envelopes with the same logical `recordId` inside the plaintext; last-writer-wins by `hlc`.
   Deletion is a tombstone plaintext `{recordId, deleted:true}`.
 
@@ -130,11 +130,12 @@ interface Grant {
   `memberIdFromSpki(signPub)`. A verifier that does not see the state is not acceptable.
 - Roles: `admin` (approve, remove, rotate CK), `member`. Relations: `guardianOf` (set by the guarded member, or by the
   owner of a dependent profile).
+- **Dependents contract**: `Keystore.dependents` holds the sealed dMRS. The creator uses `createDependent` and signs requests via `seal({...req, as})`. Custody is transferred via a `custody` grant (`{kind:"custody", dependent, to, ephPub, wrapped, sig}`, info `"orion/v1/custody"`), accepted only from an admin or current guardian to a current member.
 - The current state is a pure reducer over the log (`lib/family/membership.ts`): invalid events are ignored, not
   thrown, and a test proves that reordering valid events yields the same state.
 - **Removing a member.** The admin publishes `remove`, generates CK[epoch+1] and hands it to every remaining
   (non-dependent) member as a signed `circle-key` handover wrapped to the member's box key, sealed with the
-  previous CK. When a device accepts a membership envelope and the reduced log shows a removed member, that device
+  previous CK (multi-epoch handover allows sending multiple epochs if needed). A removed member can re-join as an existing member later. When a device accepts a membership envelope and the reduced log shows a removed member, that device
   (every remaining member, the admin included) applies §6 revoke to each personal category it had granted to a
   removed member, expired grants included: revoke markers, CEK epoch+1, re-grant of the new epoch to the remaining
   grantees that are still members. The kernel awaits this rotation before the `publish` of the membership envelope
@@ -197,7 +198,7 @@ bound to it; anything else is ignored, never thrown:
 |---|---|
 | `policy`, `share`, `code-blob` | `env.author === env.owner === payload.member` (a member speaks only for themself) |
 | `device-add-pending` | `env.author` is a current, non-removed **admin**, `env.author !== payload.member`, the temporary identity's signature over the request verifies, and it has not expired |
-| `approval` | `env.author === payload.trusteeId`, the trustee is in the member's own `policy`, and the request id matches |
+| `approval` | `env.author === payload.trusteeId`, the trustee is in the member's own `policy`, and the request id matches (supports persistent decline and code while waiting) |
 
 Bundles used to restore are the newest `bundle` envelope with `env.author === env.owner === memberId`.
 The member publishes the current sealed bundle when it sets a trustee policy or publishes its code blob, so a
@@ -308,9 +309,6 @@ device when it syncs, so an alert still fires if the elder's phone goes offline 
 - Removal is only as fast as each grantor's device: a member offline during the removal keeps its current CEK
   epochs readable by the removed member until the `remove` reaches it and it rotates (§7). Old rooms stay
   reachable by the removed member, who sees the metadata (§8) of the circle-keyed envelopes sealed with the old CK.
-- A member admitted after a rotation receives only the newest CK, so it cannot open membership or grant envelopes
-  sealed with older epochs (pre-existing; the admin's handover carries one epoch).
-
 - Metadata in §8 is visible to every circle device.
 - WebRTC without TURN fails on some NATs; two devices on the same Wi-Fi always sync.
 - PRF support varies by browser; read-only fallback is the answer, not a password.
