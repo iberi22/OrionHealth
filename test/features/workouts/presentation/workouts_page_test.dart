@@ -31,7 +31,7 @@ void main() {
   testWidgets('shows error state when load fails', (WidgetTester tester) async {
     when(
       () => mockRepository.getAllSessions(),
-    ).thenThrow(Exception('Failed to load'));
+    ).thenAnswer((_) => Future.error(Exception('Failed to load')));
 
     await tester.pumpWidget(createTestWidget());
     await tester.pumpAndSettle();
