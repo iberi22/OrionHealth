@@ -123,3 +123,7 @@ export function rotateCategory(bundle: MemberBundle, category: Category): void {
 
   bundle.ceks[category]![nextEpoch] = newCek;
 }
+
+export async function deriveCek(mrs: Uint8Array, memberId: string, category: Category, epoch: number): Promise<Uint8Array> {
+  return hkdf(mrs, utf8(memberId), `orion/v1/cek|${category}|${epoch}`, 32);
+}
