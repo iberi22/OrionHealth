@@ -6,7 +6,7 @@ export interface Hlc {
 
 function formatHlc(ms: number, counter: number, deviceId: string): string {
   const msStr = ms.toString().padStart(13, '0');
-  const counterStr = counter.toString().padStart(4, '0');
+  const counterStr = counter.toString().padStart(8, '0');
   return `${msStr}-${counterStr}-${deviceId}`;
 }
 
@@ -59,5 +59,23 @@ export function createHlc(deviceId: string, nowFn: () => number = Date.now): Hlc
 
 export function compareHlc(a: string, b: string): number {
   if (a === b) return 0;
+
+  const matchA = /^(\d+)-(\d+)-(.+)$/.exec(a);
+  const matchB = /^(\d+)-(\d+)-(.+)$/.exec(b);
+
+  if (matchA && matchB) {
+    const msA = parseInt(matchA[1]!, 10);
+    const msB = parseInt(matchB[1]!, 10);
+    if (msA !== msB) return msA < msB ? -1 : 1;
+
+    const countA = parseInt(matchA[2]!, 10);
+    const countB = parseInt(matchB[2]!, 10);
+    if (countA !== countB) return countA < countB ? -1 : 1;
+
+    const devA = matchA[3]!;
+    const devB = matchB[3]!;
+    if (devA !== devB) return devA < devB ? -1 : 1;
+  }
+
   return a < b ? -1 : 1;
 }
