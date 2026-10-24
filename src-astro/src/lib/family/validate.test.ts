@@ -206,4 +206,18 @@ describe('validateEnvelope', () => {
     const res = await validateEnvelope(env, ctx);
     expect(res).toEqual({ ok: true });
   });
+
+  test('accepts owner-written local envelopes and rejects local writes by others', async () => {
+    const pair = await generateSigningPair();
+    const base: Omit<Envelope, 'sig'> = {
+      v: 1, id: '1', circle: 'local', owner: 'a', author: 'a', device: 'd',
+      category: 'vitals', epoch: 1, hlc: '0-0-d', nonce: 'n', ct: 'c'
+    };
+    const ctx: ValidateContext = { state: null, grants: [], revoked: new Set(), signPubOf: async () => pair.publicSpki, now: 0 };
+    const own = { ...base, sig: await sign(pair.privatePkcs8, canonical(base, ['sig'])) };
+    expect(await validateEnvelope(own, ctx)).toEqual({ ok: true });
+    const otherBase = { ...base, owner: 'b' };
+    const other = { ...otherBase, sig: await sign(pair.privatePkcs8, canonical(otherBase, ['sig'])) };
+    expect(await validateEnvelope(other, ctx)).toEqual({ ok: false, reason: 'unauthorized-write' });
+  });
 });

@@ -48,6 +48,11 @@ export async function validateEnvelope(
     return { ok: false, reason: 'invalid-signature' };
   }
 
+  // Personal data before (or without) a circle: only the owner can write it.
+  if (env.circle === 'local') {
+    return env.author === env.owner ? { ok: true } : { ok: false, reason: 'unauthorized-write' };
+  }
+
   const member = ctx.state?.members[env.author];
   if (!member || member.removed) {
     return { ok: false, reason: 'author-not-member' };
