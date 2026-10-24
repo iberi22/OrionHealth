@@ -78,7 +78,7 @@ test.describe('@real Recovery Spoofing', () => {
     await expect(card).not.toBeVisible({ timeout: 10_000 });
 
     // Dave reloads and unlocks
-    await reloadAndUnlock(dave.page, '/app/recovery');
+    await reloadAndUnlock(dave.page, '/app');
     await visit(dave.page, '/app/recovery');
     await expect(dave.page.getByRole('button', { name: 'Solicitudes' })).toBeVisible({ timeout: 30_000 });
     await dave.page.getByRole('button', { name: 'Solicitudes' }).click({ timeout: 30_000 });
