@@ -1,0 +1,21 @@
+---
+// Common layout of the unified site. Props are the contract; markup and styles are owned by the "site layout" task.
+import Layout from './Layout.astro';
+import Header from '../components/site/Header.astro';
+import Footer from '../components/site/Footer.astro';
+import '../styles/tokens.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** "site" = landing/docs/kb with header and footer; "app" = SPA, no footer. */
+  variant?: 'site' | 'app';
+}
+const { title = 'OrionHealth', variant = 'site' } = Astro.props;
+---
+
+<Layout title={title}>
+  <Header />
+  <main data-variant={variant}><slot /></main>
+  {variant === 'site' && <Footer />}
+</Layout>

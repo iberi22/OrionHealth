@@ -1,0 +1,10 @@
+---
+// Every /app/* URL serves the same SPA shell; routing happens on the client (components/app/routes.ts).
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import App from '../../components/app/App.svelte';
+export const prerender = false;
+---
+
+<SiteLayout title="OrionHealth — App" variant="app">
+  <App client:only="svelte" />
+</SiteLayout>
