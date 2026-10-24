@@ -140,6 +140,7 @@ jobs:
   backend:
     name: backend (node --test)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: backend
@@ -148,4 +149,4 @@ jobs:
       - uses: actions/setup-node@v7
         with: { node-version: 22, cache: npm, cache-dependency-path: backend/package-lock.json }
       - run: npm ci --no-audit --no-fund
-      - run: npm test
+      - run: npm test -- --test-timeout=60000 --test-force-exit
