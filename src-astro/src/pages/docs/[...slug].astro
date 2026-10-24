@@ -1,0 +1,58 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import DocsNav from '../../components/docs/DocsNav.astro';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  return docs.map((entry: CollectionEntry<'docs'>) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+type Props = {
+  entry: CollectionEntry<'docs'>;
+};
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<SiteLayout title={`OrionHealth — ${entry.data.title}`} variant="site">
+  <div class="docs-container" data-testid={`docs-${entry.slug}`}>
+    <aside class="sidebar">
+      <DocsNav />
+    </aside>
+    <main class="content">
+      <Content />
+    </main>
+  </div>
+</SiteLayout>
+
+<style>
+  .docs-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    gap: 2rem;
+  }
+  .sidebar {
+    width: 250px;
+    flex-shrink: 0;
+  }
+  .content {
+    flex-grow: 1;
+    min-width: 0;
+  }
+  @media (max-width: 768px) {
+    .docs-container {
+      flex-direction: column;
+    }
+    .sidebar {
+      width: 100%;
+    }
+  }
+</style>
