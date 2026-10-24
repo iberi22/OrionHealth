@@ -4,11 +4,8 @@ import 'package:orionhealth_health/features/onboarding/presentation/pages/hipaa_
 
 void main() {
   group('HipaaConsentPage', () {
-    testWidgets('renders the consent page with all sections',
-        (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: HipaaConsentPage()),
-      );
+    testWidgets('renders the consent page with all sections', (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: HipaaConsentPage()));
 
       // Check header
       expect(find.text('Tu privacidad es primero'), findsOneWidget);
@@ -28,26 +25,26 @@ void main() {
       expect(find.text('Rechazar'), findsOneWidget);
     });
 
-    testWidgets('accept button is disabled when consent checkbox is unchecked',
-        (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: HipaaConsentPage()),
-      );
+    testWidgets(
+      'accept button is disabled when consent checkbox is unchecked',
+      (tester) async {
+        await tester.pumpWidget(const MaterialApp(home: HipaaConsentPage()));
 
-      // Find the accept button - should be disabled initially
-      final acceptButton = tester.widget<ElevatedButton>(
-        find.widgetWithText(ElevatedButton, 'Aceptar y continuar'),
-      );
-      expect(acceptButton.onPressed, isNull);
-    });
+        // Find the accept button - should be disabled initially
+        final acceptButton = tester.widget<ElevatedButton>(
+          find.widgetWithText(ElevatedButton, 'Aceptar y continuar'),
+        );
+        expect(acceptButton.onPressed, isNull);
+      },
+    );
 
-    testWidgets('accept button becomes enabled after checking consent',
-        (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: HipaaConsentPage()),
-      );
+    testWidgets('accept button becomes enabled after checking consent', (
+      tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: HipaaConsentPage()));
 
       // Tap the consent checkbox
+      await tester.ensureVisible(find.byType(Checkbox));
       await tester.tap(find.byType(Checkbox));
       await tester.pumpAndSettle();
 
@@ -66,9 +63,7 @@ void main() {
             builder: (context) => ElevatedButton(
               onPressed: () async {
                 result = await Navigator.of(context).push<bool>(
-                  MaterialPageRoute(
-                    builder: (_) => const HipaaConsentPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const HipaaConsentPage()),
                 );
               },
               child: const Text('Open'),
@@ -82,20 +77,22 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap Reject
+      await tester.ensureVisible(find.text('Rechazar'));
       await tester.tap(find.text('Rechazar'));
       await tester.pumpAndSettle();
 
       expect(result, false);
     });
 
-    testWidgets('privacy policy dialog opens and displays content',
-        (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: HipaaConsentPage()),
-      );
+    testWidgets('privacy policy dialog opens and displays content', (
+      tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: HipaaConsentPage()));
 
       // Tap the privacy policy row
-      await tester.tap(find.text('Leer política de privacidad'));
+      final textFinder = find.text('Leer política de privacidad');
+      await tester.ensureVisible(textFinder);
+      await tester.tap(textFinder);
       await tester.pumpAndSettle();
 
       // Check dialog is shown
