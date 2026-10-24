@@ -20,7 +20,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.0'
+          flutter-version: '3.47.8'
           channel: 'stable'
 
       - name: Cache pub dependencies
@@ -45,7 +45,7 @@ jobs:
 
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: '3.10.0'
+          sdk: '3.13.7'
 
       - name: Cache pub dependencies
         uses: actions/cache@v4
@@ -69,7 +69,7 @@ jobs:
 
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: '3.10.0'
+          sdk: '3.13.7'
 
       - name: Cache pub dependencies
         uses: actions/cache@v4
