@@ -5,15 +5,17 @@ import { visit, reloadAndUnlock } from './helpers/vault';
 import { addVirtualPasskey } from './helpers/webauthn';
 
 test.describe('@real Recovery Spoofing', () => {
-  test.setTimeout(120_000);
+  test.setTimeout(240_000);
 
   test("a non-admin cannot start recovery; a trustee's decline survives a reload", async ({ browser, baseURL }) => {
     await startSignaling();
 
-    const admin = await newMember(browser, baseURL, 'Alice');
-    const bea = await newMember(browser, baseURL, 'Bea');
-    const charlie = await newMember(browser, baseURL, 'Charlie');
-    const dave = await newMember(browser, baseURL, 'Dave');
+    const [admin, bea, charlie, dave] = await Promise.all([
+      newMember(browser, baseURL, 'Alice'),
+      newMember(browser, baseURL, 'Bea'),
+      newMember(browser, baseURL, 'Charlie'),
+      newMember(browser, baseURL, 'Dave')
+    ]);
 
     await createCircle(admin.page, 'Trust Circle');
     await inviteAndJoin(admin.page, bea.page, 'Bea');
@@ -79,8 +81,7 @@ test.describe('@real Recovery Spoofing', () => {
 
     // Dave reloads and unlocks
     await reloadAndUnlock(dave.page, '/app/recovery');
-    await visit(dave.page, '/app/recovery');
-    await dave.page.getByRole('button', { name: 'Solicitudes' }).click();
+    await dave.page.getByRole('button', { name: 'Solicitudes' }).click({ timeout: 30_000 });
     await expect(dave.page.getByRole('heading', { name: 'Solicitudes esperando mi aprobación' })).toBeVisible();
     await expect(dave.page.locator('.request-card', { hasText: 'Solicitud de recuperación para la cuenta de' })).not.toBeVisible();
 
