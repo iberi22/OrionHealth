@@ -23,19 +23,23 @@ test.describe('Member Removal', () => {
     // Admin A grants Guardian access to B and C
     await visit(adminA.page, '/app/family/permissions');
 
+    // From here on (the SAS dialogs of the joins are handled by inviteAndJoin), every confirmation
+    // (guardian preset, removal) is accepted by one handler.
+    adminA.page.on('dialog', (dialog) => dialog.accept());
+
     // Grant B
     await adminA.page.getByLabel('Miembro familiar').selectOption({ label: 'Member B' });
     await adminA.page.getByLabel('Nivel de acceso').selectOption('guardian');
-    adminA.page.once('dialog', async (dialog) => { await dialog.accept(); });
     await adminA.page.getByRole('button', { name: 'Otorgar acceso' }).click();
-    await expect(adminA.page.getByText('Member B', { exact: true })).toBeVisible();
+    // one granted-permission row per category; the select also shows the name
+    await expect(adminA.page.getByRole('listitem').filter({ hasText: 'Member B' }).first()).toBeVisible();
 
     // Grant C
     await adminA.page.getByLabel('Miembro familiar').selectOption({ label: 'Member C' });
     await adminA.page.getByLabel('Nivel de acceso').selectOption('guardian');
-    adminA.page.once('dialog', async (dialog) => { await dialog.accept(); });
     await adminA.page.getByRole('button', { name: 'Otorgar acceso' }).click();
-    await expect(adminA.page.getByText('Member C', { exact: true })).toBeVisible();
+    // one granted-permission row per category; the select also shows the name
+    await expect(adminA.page.getByRole('listitem').filter({ hasText: 'Member C' }).first()).toBeVisible();
 
     // Write a vital record before removal to verify they could read it
     await visit(adminA.page, '/app/records');
@@ -62,8 +66,6 @@ test.describe('Member Removal', () => {
     // Find member B in the list and click its remove button
     // (Ensure we use semantic queries)
     const memberBCard = adminA.page.getByRole('heading', { name: 'Member B' }).locator('..').locator('..');
-
-    adminA.page.once('dialog', async (dialog) => { await dialog.accept(); });
     await memberBCard.getByRole('button', { name: 'Eliminar' }).click();
 
     // B should not be in the list anymore
@@ -114,12 +116,10 @@ test.describe('Member Removal', () => {
     await visit(memberB.page, '/app/family/health');
     await expect(memberB.page.getByText('Admin A: Secret note')).not.toBeVisible();
 
-    // B cannot rejoin the new room
-    // The requirement says "and B cannot rejoin the new room".
-    // When B visits /app/family it should probably not see the circle anymore, or at least be kicked out
+    // B is out of the circle: its family screen says so and offers no circle actions
     await visit(memberB.page, '/app/family');
-    await expect(memberB.page.getByRole('heading', { name: 'Mi familia' })).toBeVisible(); // The empty state heading
-    await expect(memberB.page.getByText('Crea un círculo familiar para compartir tu información de salud')).toBeVisible();
+    await expect(memberB.page.getByTestId('circle-removed')).toBeVisible();
+    await expect(memberB.page.getByRole('button', { name: 'Invitar' })).toHaveCount(0);
 
     await adminA.context.close();
     await memberB.context.close();
