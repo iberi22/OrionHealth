@@ -30,12 +30,12 @@ test('site navigation and offline capabilities', async ({ page }) => {
   await expect(page.locator('h1').first()).toBeVisible();
 
   // 3. Visit a specific docs page
-  res = await page.goto('/docs/architecture/web-vault-family-health');
+  res = await page.goto('/docs/architecture/');
   expect(res?.status()).toBe(200);
   await expect(page.locator('h1').first()).toBeVisible();
 
-  // 4. Visit blog index/entry (assuming /blog/ exists and returns 200)
-  res = await page.goto('/blog/');
+  // 4. Visit a blog entry
+  res = await page.goto('/blog/privacy-in-the-age-of-ai/');
   expect(res?.status()).toBe(200);
   await expect(page.locator('h1').first()).toBeVisible();
 
