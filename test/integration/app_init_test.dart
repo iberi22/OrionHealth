@@ -5,30 +5,20 @@
 /// Run: flutter test integration_test/app_init_test.dart --flavor prod
 
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
 import 'package:orionhealth_health/main.dart' as app;
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:orionhealth_health/features/onboarding/presentation/pages/onboarding_page.dart';
 
-class MockPathProviderPlatform extends Fake
-    with MockPlatformInterfaceMixin
-    implements PathProviderPlatform {
-  @override
-  Future<String?> getApplicationDocumentsPath() async {
-    return Directory.systemTemp.createTempSync().path;
-  }
-}
+import '../helpers/test_platform.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  PathProviderPlatform.instance = MockPathProviderPlatform();
-
   group('App Initialization', () {
     setUpAll(() async {
-      await Isar.initializeIsarCore(download: true);
+      await setUpTestPlatform();
+      await getIt.reset();
+      await configureDependencies();
     });
 
     testWidgets(
@@ -48,11 +38,11 @@ void main() {
           reason: 'App showed initialization error screen',
         );
 
-        // Verify some normal widget is present
+        // Verify some normal widget is present. OnboardingPage is the first real screen.
         expect(
-          find.byType(MaterialApp),
+          find.byType(OnboardingPage),
           findsOneWidget,
-          reason: 'App should have a MaterialApp widget',
+          reason: 'App should have rendered the OnboardingPage',
         );
       },
       timeout: const Timeout(Duration(seconds: 30)),
