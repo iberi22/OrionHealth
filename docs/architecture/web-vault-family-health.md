@@ -139,8 +139,9 @@ interface Grant {
 - Y.Map `env` keyed by envelope id. Every device stores **all** envelopes of the circle (`y-indexeddb`), including
   categories it cannot read. That is the blind replica.
 - Visible to circle devices without keys: owner, author, category, epoch, size, timestamps. Not visible: content.
-- Signaling: own endpoint `wss://orionhealth.swal.network/signal` (Durable Object implementing the y-webrtc
-  signaling protocol, topics opaque). It never sees envelopes. Deploy is a separate owner-approved step.
+- Signaling: own Worker `orionhealth-signal` at `wss://signal.orionhealth.swal.network` (`src-astro/workers/signaling/`,
+  Durable Object implementing the y-webrtc signaling protocol, topics opaque, `PUBLIC_SIGNALING_URL` overrides).
+  It never sees envelopes. Deploy is a separate owner-approved step.
 - Without peers online the app keeps working locally; sync resumes when two circle devices meet.
 
 ## 9. Recovery (losing a phone)
