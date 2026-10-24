@@ -1,5 +1,5 @@
 // Recovery over the REAL kernel (validation, guest mode) and, for the new device, the REAL vault session on an
-// empty IndexedDB. Spec §9. The "harvest" test is the judge's repro (02-JUEZ-OPUS-ORION.md R1) ported here.
+// empty IndexedDB. Spec §9.
 import 'fake-indexeddb/auto';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { Envelope, MembershipEvent } from '../../contracts/types';
@@ -224,7 +224,7 @@ describe('RecoveryService (spec §9)', () => {
     expect(circle?.members[bea.b.memberId]?.devices).toEqual([dev.k.deviceId()]);
   });
 
-  it('harvest (judge R1): requests not vouched by an admin are never approved and leak no share', async () => {
+  it('requests not vouched by an admin are never approved and leak no share', async () => {
     const { bea, rosa, bruno, mallory, kernels, policy } = await family();
     await bea.rec.setPolicy(policy);
     await sync(kernels);
