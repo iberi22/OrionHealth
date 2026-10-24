@@ -23,8 +23,8 @@ export default defineConfig({
       includeAssets: ['icon-192.png', 'icon-512.png'],
       manifest: false,
       workbox: {
-        globPatterns: ['**/*.{js,css,svg,png,ico}'],
-        navigateFallback: null,
+        globPatterns: ['**/*.{js,css,svg,png,ico,json}'],
+        navigateFallback: '/app',
         runtimeCaching: [
           {
             // SSR: cachear navegaciones visitadas para reload offline
