@@ -197,4 +197,107 @@ describe('VaultSession', () => {
 
     await expect(session.create('Second User')).rejects.toThrow('Vault already exists');
   });
+
+  it('importMrs registers a NEW passkey even when a stale passkeyCredId is stored (same browser, lost passkey)', async () => {
+    const { openDB } = await import('idb');
+    const session = createVaultSession({ passkey: provider, dbName: 'test-stale' });
+    await session.ready();
+    const { memberId } = await session.create('Rosa');
+    const mrs = await session.withMrs((m) => m.slice());
+    const internal = await openDB('test-stale-internal', 1);
+    await internal.put('kv', new Uint8Array([1, 2, 3]), 'passkeyCredId');
+    session.lock();
+
+    // the lost passkey no longer answers; the new one gives another PRF output
+    provider.getPrfOutput = async () => new Uint8Array(32).fill(77);
+    await session.importMrs(mrs, 'Rosa');
+    expect(session.state()).toBe('unlocked');
+    expect(session.memberId()).toBe(memberId);
+    expect(await internal.get('kv', 'passkeyCredId')).toBeUndefined();
+
+    // the MRS is now wrapped by the new passkey's KEK
+    session.lock();
+    await session.unlock();
+    expect(session.bundle()?.memberId).toBe(memberId);
+    provider.getPrfOutput = async () => new Uint8Array(32).fill(42);
+    session.lock();
+    await expect(session.unlock()).rejects.toThrow();
+    internal.close();
+  });
+
+  it('importMrs puts the old passkey binding back when the new passkey fails, and checks the secret first', async () => {
+    const { openDB } = await import('idb');
+    const session = createVaultSession({ passkey: provider, dbName: 'test-stale-fail' });
+    await session.ready();
+    await session.create('Rosa');
+    const mrs = await session.withMrs((m) => m.slice());
+    const internal = await openDB('test-stale-fail-internal', 1);
+    await internal.put('kv', new Uint8Array([4, 5, 6]), 'passkeyCredId');
+    session.lock();
+
+    await expect(session.importMrs(new Uint8Array(32).fill(1), 'Rosa')).rejects.toThrow();
+    expect(provider.getPrfOutput).toHaveBeenCalledTimes(1); // only create(): a wrong secret never reaches the passkey
+    expect(Array.from((await internal.get('kv', 'passkeyCredId')) as Uint8Array)).toEqual([4, 5, 6]);
+
+    provider.failPrf = true;
+    await expect(session.importMrs(mrs, 'Rosa')).rejects.toThrow('Authenticator does not support PRF');
+    expect(Array.from((await internal.get('kv', 'passkeyCredId')) as Uint8Array)).toEqual([4, 5, 6]);
+    expect(session.state()).toBe('locked');
+    internal.close();
+  });
+
+  describe('reauth()', () => {
+    const authData = (flags: number) => {
+      const a = new Uint8Array(37);
+      a[32] = flags;
+      return a.buffer;
+    };
+    const withCredentials = (get: (o: unknown) => Promise<unknown>) =>
+      Object.defineProperty(globalThis.navigator, 'credentials', { value: { get }, configurable: true });
+    afterEach(() => {
+      delete (globalThis.navigator as { credentials?: unknown }).credentials;
+    });
+
+    async function unlockedWithCredential(dbName: string) {
+      const { openDB } = await import('idb');
+      const session = createVaultSession({ passkey: provider, dbName });
+      await session.ready();
+      await session.create('Ana');
+      const internal = await openDB(`${dbName}-internal`, 1);
+      await internal.put('kv', new Uint8Array([9, 9]), 'passkeyCredId');
+      internal.close();
+      return session;
+    }
+
+    it('asks the stored passkey with user verification required and accepts the UV flag', async () => {
+      const session = await unlockedWithCredential('test-reauth-ok');
+      const get = vi.fn(async () => ({ response: { authenticatorData: authData(0x05) } }));
+      withCredentials(get);
+      await session.reauth();
+      const pk = (get.mock.calls[0] as unknown as [{ publicKey: { userVerification: string; allowCredentials: { id: Uint8Array }[] } }])[0].publicKey;
+      expect(pk.userVerification).toBe('required');
+      expect(Array.from(pk.allowCredentials[0]!.id)).toEqual([9, 9]);
+    });
+
+    it('rejects without the UV flag, on cancel, and while locked', async () => {
+      const session = await unlockedWithCredential('test-reauth-no');
+      withCredentials(async () => ({ response: { authenticatorData: authData(0x01) } }));
+      await expect(session.reauth()).rejects.toMatchObject({ code: 'NO_UV' });
+      withCredentials(async () => {
+        throw Object.assign(new Error('denied'), { name: 'NotAllowedError' });
+      });
+      await expect(session.reauth()).rejects.toMatchObject({ code: 'CANCELLED' });
+      session.lock();
+      await expect(session.reauth()).rejects.toMatchObject({ code: 'LOCKED' });
+    });
+
+    it('uses the injected authenticator when given', async () => {
+      const reauth = vi.fn(async () => {});
+      const session = createVaultSession({ passkey: provider, dbName: 'test-reauth-inj', reauth });
+      await session.ready();
+      await session.create('Ana');
+      await session.reauth();
+      expect(reauth).toHaveBeenCalledTimes(1);
+    });
+  });
 });

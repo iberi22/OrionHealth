@@ -18,9 +18,33 @@ export interface VaultSessionOptions {
   passkey?: PasskeyPrfProvider;
   dbName?: string;
   window?: Window; // for mocking in tests
+  /** Replaces the WebAuthn assertion of reauth() (tests, or a host with its own authenticator). */
+  reauth?: () => Promise<void>;
 }
 
-export function createVaultSession(opts: VaultSessionOptions): VaultService & { withMrs: <T>(fn: (mrs: Uint8Array) => T | Promise<T>) => Promise<T>, ready: () => Promise<void>, bundle: () => MemberBundle | null, importMrs: (mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }) => Promise<void>, saveBundle: (bundle: MemberBundle) => Promise<string>, putMeta: (key: string, value: string) => Promise<void>, getMeta: (key: string) => Promise<string | undefined> } {
+export type VaultSession = VaultService & {
+  withMrs: <T>(fn: (mrs: Uint8Array) => T | Promise<T>) => Promise<T>;
+  ready: () => Promise<void>;
+  bundle: () => MemberBundle | null;
+  importMrs: (mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }) => Promise<void>;
+  saveBundle: (bundle: MemberBundle) => Promise<string>;
+  putMeta: (key: string, value: string) => Promise<void>;
+  getMeta: (key: string) => Promise<string | undefined>;
+  /** Fresh user-verified passkey assertion (no PRF); required before a trustee releases a share (spec §9.3). */
+  reauth: () => Promise<void>;
+  /** memberId stored on this device, readable while locked (same-browser recovery). */
+  storedMemberId: () => Promise<string | null>;
+  /** The MRS wrapped with the recovery code (spec §9.1), if this device has it. */
+  recoveryBlob: () => Promise<string | undefined>;
+  putRecoveryBlob: (blob: string) => Promise<void>;
+  /** The MBK-sealed member bundle stored on this device. */
+  sealedBundle: () => Promise<string | undefined>;
+};
+
+/** Keys of the @swal/vault internal store that bind the vault to one passkey. */
+const PASSKEY_BINDING = ['passkeyCredId', 'kekSalt', 'meshKeyWrapped'];
+
+export function createVaultSession(opts: VaultSessionOptions): VaultSession {
   const dbName = opts.dbName ?? 'orion-meta';
   const dbPromise = openDB(dbName, 1, {
     upgrade(db) {
@@ -30,11 +54,25 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
     },
   });
 
+  const internalDbName = `${dbName}-internal`;
   const vault = createVaultClient({
     storage: 'idb',
     passkey: opts.passkey,
-    dbName: `${dbName}-internal`,
+    dbName: internalDbName,
   });
+  /** The @swal/vault store (same name, version and object store as vault-client.js). */
+  const internal = async <T>(fn: (db: Awaited<ReturnType<typeof openDB>>) => Promise<T>): Promise<T> => {
+    const db = await openDB(internalDbName, 1, {
+      upgrade(d) {
+        if (!d.objectStoreNames.contains('kv')) d.createObjectStore('kv');
+      },
+    });
+    try {
+      return await fn(db);
+    } finally {
+      db.close();
+    }
+  };
 
   let currentState: VaultState = 'unsupported';
   let _memberId: string | null = null;
@@ -145,23 +183,40 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
      * from the circle replica (`restore`); on the same device they are read locally.
      */
     async importMrs(mrs: Uint8Array, displayName: string, restore?: { memberId: string; sealedBundle: string }): Promise<void> {
+      const memberId = restore?.memberId ?? (await get<string>('orion/meta/memberId'));
+      const sealedBundle = restore?.sealedBundle ?? (await get<string>('orion/bundle'));
+      if (!memberId || !sealedBundle) {
+        throw new VaultSessionError('NO_BUNDLE', 'Recovered secret has no member bundle to open');
+      }
+      // Fails (and changes nothing, passkey binding included) if the secret does not open this member's bundle.
+      const bundle = await openBundle(mrs, memberId, sealedBundle);
+
+      // The passkey that wrapped the old MRS is lost, and @swal/vault only creates a credential when none is stored,
+      // so the stale binding is set aside and a NEW passkey is registered (spec §9.3). It is put back if that fails.
+      vault.lock();
+      const stale = await internal(async (db) => {
+        const old: [string, unknown][] = [];
+        for (const k of PASSKEY_BINDING) {
+          const v = await db.get('kv', k);
+          if (v !== undefined) old.push([k, v]);
+          await db.delete('kv', k);
+        }
+        return old;
+      });
       try {
         await vault.unlock({ passkey: true });
         prfSupported = true;
       } catch (e: any) {
+        await internal(async (db) => {
+          for (const [k, v] of stale) await db.put('kv', v, k);
+        });
+        if (currentState === 'unlocked') self.lock();
         if (e.code === 'NO_PASSKEY') {
           prfSupported = false;
           throw new VaultSessionError('PRF_UNSUPPORTED', 'Authenticator does not support PRF');
         }
         throw e;
       }
-      const memberId = restore?.memberId ?? (await get<string>('orion/meta/memberId'));
-      const sealedBundle = restore?.sealedBundle ?? (await get<string>('orion/bundle'));
-      if (!memberId || !sealedBundle) {
-        throw new VaultSessionError('NO_BUNDLE', 'Recovered secret has no member bundle to open');
-      }
-      // Fails (and stores nothing) if the secret does not open this member's bundle.
-      const bundle = await openBundle(mrs, memberId, sealedBundle);
       await put('orion/bundle', sealedBundle);
       await put('orion/meta/memberId', memberId);
       await put('orion/mrs', await vault.wrapKey(mrs));
@@ -186,6 +241,39 @@ export function createVaultSession(opts: VaultSessionOptions): VaultService & { 
     async getMeta(key: string): Promise<string | undefined> {
       return get<string>(`orion/kv/${key}`);
     },
+    async reauth(): Promise<void> {
+      if (currentState !== 'unlocked') throw new VaultSessionError('LOCKED', 'Vault is locked');
+      if (opts.reauth) return opts.reauth();
+      const credentials = (win?.navigator ?? globalThis.navigator)?.credentials;
+      if (typeof PublicKeyCredential === 'undefined' || !credentials) {
+        throw new VaultSessionError('UNSUPPORTED', 'WebAuthn not available');
+      }
+      const id = await internal((db) => db.get('kv', 'passkeyCredId') as Promise<Uint8Array | undefined>);
+      if (!id) throw new VaultSessionError('NO_PASSKEY', 'No passkey registered on this device');
+      let assertion: PublicKeyCredential | null;
+      try {
+        assertion = (await credentials.get({
+          publicKey: {
+            challenge: randomBytes(32),
+            allowCredentials: [{ type: 'public-key', id: new Uint8Array(id) }],
+            userVerification: 'required',
+          },
+        })) as PublicKeyCredential | null;
+      } catch (e: any) {
+        if (e?.name === 'NotAllowedError' || e?.name === 'AbortError') throw new VaultSessionError('CANCELLED', 'User cancelled the passkey check');
+        throw e;
+      }
+      if (!assertion) throw new VaultSessionError('CANCELLED', 'User cancelled the passkey check');
+      const data = new Uint8Array((assertion.response as AuthenticatorAssertionResponse).authenticatorData);
+      // authenticatorData flags byte (offset 32): bit 2 = user verified
+      if (data.length < 33 || !(data[32]! & 0x04)) throw new VaultSessionError('NO_UV', 'The authenticator did not verify the user');
+    },
+    storedMemberId: async () => (await get<string>('orion/meta/memberId')) ?? null,
+    recoveryBlob: () => get<string>('orion/recovery-blob'),
+    putRecoveryBlob: async (blob: string) => {
+      await put('orion/recovery-blob', blob);
+    },
+    sealedBundle: () => get<string>('orion/bundle'),
     async capabilities(): Promise<VaultCapabilities> {
       const indexedDb = typeof indexedDB !== 'undefined';
       const webauthn = typeof PublicKeyCredential !== 'undefined';
