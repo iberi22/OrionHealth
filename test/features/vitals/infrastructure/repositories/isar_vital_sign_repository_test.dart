@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:orionhealth_health/features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart';
 import 'package:path/path.dart' as p;
+import '../../../../helpers/mock_encryption_service.dart';
 
 void main() {
   late Isar isar;
@@ -19,7 +20,7 @@ void main() {
       [VitalSignSchema],
       directory: testDir,
     );
-    repository = VitalSignRepositoryImpl(isar);
+    repository = VitalSignRepositoryImpl(isar, FakeEncryptionService());
   });
 
   tearDownAll(() async {

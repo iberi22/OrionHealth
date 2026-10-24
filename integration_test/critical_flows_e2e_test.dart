@@ -132,13 +132,36 @@ Future<void> _reveal(WidgetTester tester, Finder finder) async {
       if (ancestors.evaluate().isNotEmpty) target = ancestors.first;
     }
     if (target == null && vertical.evaluate().isNotEmpty) {
-      target = vertical.last;
+      target = vertical.first;
     }
     if (target == null) return; // nothing scrollable on this screen
     final up = y == null || y > h / 2;
     await tester.drag(target, Offset(0, up ? -200 : 200), warnIfMissed: false);
     await tester.pump(const Duration(milliseconds: 100));
   }
+}
+
+/// Scrolls the screen's main list until a lazily built [finder] exists.
+/// Also covers content that appears only after an async load.
+Future<void> _scrollTo(
+  WidgetTester tester,
+  Finder finder, {
+  int maxSteps = 80,
+}) async {
+  final vertical = find.byWidgetPredicate(
+    (w) => w is Scrollable && w.axis == Axis.vertical,
+  );
+  for (var i = 0; i < maxSteps && finder.evaluate().isEmpty; i++) {
+    if (vertical.evaluate().isNotEmpty) {
+      await tester.drag(
+        vertical.first,
+        const Offset(0, -250),
+        warnIfMissed: false,
+      );
+    }
+    await tester.pump(const Duration(milliseconds: 250));
+  }
+  if (finder.evaluate().isEmpty) _dump(tester, 'could not find $finder');
 }
 
 Future<void> _tap(WidgetTester tester, Finder finder) async {
@@ -154,7 +177,8 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
 
 Future<void> _setupPin(WidgetTester tester) async {
   await _pumpUntil(tester, find.text('Configurar PIN'));
-  if (find.text('Configurar PIN').evaluate().isEmpty) _dump(tester, 'no PIN page');
+  if (find.text('Configurar PIN').evaluate().isEmpty)
+    _dump(tester, 'no PIN page');
   expect(find.text('Configurar PIN'), findsOneWidget);
   await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '1234');
   await tester.enterText(
@@ -272,7 +296,7 @@ void main() {
       await _enterApp(tester);
 
       // Home module grid
-      await _pumpUntil(tester, find.text('Citas'));
+      await _scrollTo(tester, find.text('Citas'));
       await _tap(tester, find.text('Citas'));
       expect(find.widgetWithText(AppBar, 'Citas'), findsOneWidget);
 
@@ -337,7 +361,12 @@ void main() {
       await _tap(tester, find.text('Guardar'));
 
       // View: the saved record is listed in the timeline
-      await _pumpUntil(tester, find.text('Checkup'));
+      // The first encrypted write derives the Argon2id key (slow on CI).
+      await _pumpUntil(
+        tester,
+        find.text('Checkup'),
+        timeout: const Duration(seconds: 120),
+      );
       await _reveal(tester, find.text('Checkup'));
       expect(find.text('Historial Médico'), findsOneWidget);
       expect(find.text('Checkup'), findsOneWidget);
@@ -355,7 +384,7 @@ void main() {
       await _enterApp(tester);
 
       // Open the assistant from the Home module grid
-      await _pumpUntil(tester, find.text('AI Assistant'));
+      await _scrollTo(tester, find.text('AI Assistant'));
       await _tap(tester, find.text('AI Assistant'));
       expect(find.text('Orion AI Assistant'), findsOneWidget);
 
@@ -389,17 +418,26 @@ void main() {
 
       // Perform Sync
       await tester.tap(find.text('SINCRONIZAR AHORA'));
-      await tester.pump(); // Trigger the sync
 
-      // Check for loading state
-      expect(find.byType(CircularProgressIndicator), findsWidgets);
+      // The loading state must be shown while the sync runs.
+      var sawLoading = false;
+      final result = find.byWidgetPredicate(
+        (w) =>
+            w is Text &&
+            ((w.data ?? '').startsWith('Sincronización completada') ||
+                (w.data ?? '').startsWith('Error:')),
+      );
+      final end = DateTime.now().add(const Duration(seconds: 120));
+      while (DateTime.now().isBefore(end) && result.evaluate().isEmpty) {
+        await tester.pump(const Duration(milliseconds: 50));
+        if (find.byType(CircularProgressIndicator).evaluate().isNotEmpty) {
+          sawLoading = true;
+        }
+      }
+      _dump(tester, 'sync finished (sawLoading=$sawLoading)');
+      expect(sawLoading, isTrue, reason: 'no loading state during sync');
 
       // Verify success snackbar
-      await _pumpUntil(
-        tester,
-        find.text('Sincronización completada con éxito'),
-        timeout: const Duration(seconds: 120),
-      );
       expect(find.text('Sincronización completada con éxito'), findsWidgets);
     });
   });
