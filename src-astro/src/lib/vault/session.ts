@@ -207,10 +207,14 @@ export function createVaultSession(opts: VaultSessionOptions): VaultSession {
         await vault.unlock({ passkey: true });
         prfSupported = true;
       } catch (e: any) {
+        vault.lock();
         await internal(async (db) => {
           for (const [k, v] of stale) await db.put('kv', v, k);
         });
         if (currentState === 'unlocked') self.lock();
+        if (e?.name === 'NotAllowedError') {
+          throw new VaultSessionError('CANCELLED', 'User cancelled passkey operation');
+        }
         if (e.code === 'NO_PASSKEY') {
           prfSupported = false;
           throw new VaultSessionError('PRF_UNSUPPORTED', 'Authenticator does not support PRF');
@@ -302,11 +306,12 @@ export function createVaultSession(opts: VaultSessionOptions): VaultSession {
         await vault.unlock({ passkey: true });
         prfSupported = true;
       } catch (e: any) {
+        vault.lock();
+        if (e?.name === 'NotAllowedError') {
+          throw new VaultSessionError('CANCELLED', 'User cancelled passkey creation');
+        }
         if (e.code === 'NO_PASSKEY') {
           prfSupported = false;
-          if (e.name === 'NotAllowedError' || (e.message && e.message.includes('cancelada'))) {
-            throw new VaultSessionError('CANCELLED', 'User cancelled passkey creation');
-          }
           throw new VaultSessionError('PRF_UNSUPPORTED', 'Authenticator does not support PRF');
         }
         throw e;
@@ -345,6 +350,10 @@ export function createVaultSession(opts: VaultSessionOptions): VaultSession {
         await vault.unlock({ passkey: true });
         prfSupported = true;
       } catch (e: any) {
+        vault.lock();
+        if (e?.name === 'NotAllowedError') {
+          throw new VaultSessionError('CANCELLED', 'User cancelled passkey operation');
+        }
         if (e.code === 'NO_PASSKEY') {
           prfSupported = false;
           throw new VaultSessionError('PRF_UNSUPPORTED', 'Authenticator does not support PRF');
