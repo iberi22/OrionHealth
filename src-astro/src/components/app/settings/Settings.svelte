@@ -9,6 +9,7 @@
   let autoLockMinutes = $state(5);
   let theme = $state('system');
   let lang = $state('es');
+  const myMemberId = services.vault.memberId();
 
   // init from localStorage where possible
   try {
@@ -126,6 +127,13 @@
         <option value="en">English</option>
       </select>
     </div>
+  </div>
+
+  <div class="settings-group">
+    <h2>Tu ID de miembro</h2>
+    {#if myMemberId}
+      <div class="setting-item" data-testid="member-id">{myMemberId}</div>
+    {/if}
   </div>
 
   <div class="settings-group">
