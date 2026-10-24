@@ -1,17 +1,15 @@
 import type { CircleState, MembershipEvent, MembershipEventKind } from '../contracts/types';
-import { canonical, sign } from '../crypto/index';
+import { canonical, sign, verify, memberIdFromSpki } from '../crypto/index';
 
 export async function signEvent(ev: Omit<MembershipEvent, 'sig'>, signPkcs8: string): Promise<MembershipEvent> {
   const sig = await sign(signPkcs8, canonical(ev, ['sig']));
   return { ...ev, sig };
 }
 
-export type VerifyFn = (ev: MembershipEvent) => Promise<boolean>;
-
 export async function reduceMembership(
   circleId: string,
   events: MembershipEvent[],
-  verifyFn: VerifyFn
+  genesisActor: string
 ): Promise<{ state: CircleState | null; rejected: { id: string; reason: string }[] }> {
   // Sort events by HLC then ID for compareHlc-compatible order
   const sorted = [...events].sort((a, b) => {
@@ -24,6 +22,7 @@ export async function reduceMembership(
 
   const rejected: { id: string; reason: string }[] = [];
   let state: CircleState | null = null;
+  const dependentOwners = new Map<string, string>();
 
   for (const ev of sorted) {
     if (ev.circle !== circleId) {
@@ -31,9 +30,39 @@ export async function reduceMembership(
       continue;
     }
 
-    if (!(await verifyFn(ev))) {
+    if (ev.kind === 'create' && ev.actor !== genesisActor) {
+      rejected.push({ id: ev.id, reason: 'wrong-genesis-actor' });
+      continue;
+    }
+
+    let pubKey: string | undefined;
+    if (ev.kind === 'create' || ev.kind === 'join-request') {
+      pubKey = ev.signPub;
+    } else {
+      pubKey = state?.members[ev.actor]?.signPub;
+    }
+
+    if (!pubKey) {
+      rejected.push({ id: ev.id, reason: 'unknown-actor' });
+      continue;
+    }
+
+    const isValid = await verify(pubKey, canonical(ev, ['sig']), ev.sig);
+    if (!isValid) {
       rejected.push({ id: ev.id, reason: 'invalid-signature' });
       continue;
+    }
+
+    if (ev.kind === 'create' || ev.kind === 'join-request') {
+      if (!ev.signPub || ev.actor !== await memberIdFromSpki(ev.signPub)) {
+        rejected.push({ id: ev.id, reason: 'id-mismatch' });
+        continue;
+      }
+    } else if (ev.kind === 'approve') {
+      if (!ev.signPub || ev.subject !== await memberIdFromSpki(ev.signPub)) {
+        rejected.push({ id: ev.id, reason: 'id-mismatch' });
+        continue;
+      }
     }
 
     if (ev.kind === 'create') {
@@ -48,7 +77,7 @@ export async function reduceMembership(
 
       state = {
         circleId,
-        name: 'Family Health', // Default name, or from somewhere?
+        name: 'Family Health', // Default name
         epoch: 1,
         members: {
           [ev.actor]: {
@@ -118,6 +147,10 @@ export async function reduceMembership(
         dependent: isDependent,
         removed: false
       };
+
+      if (isDependent) {
+        dependentOwners.set(ev.subject, ev.actor);
+      }
     } else if (ev.kind === 'role') {
        if (!actor || actor.role !== 'admin') {
          rejected.push({ id: ev.id, reason: 'not-admin' });
@@ -134,7 +167,12 @@ export async function reduceMembership(
         continue;
       }
       const subjectMember = state.members[ev.subject];
-      if (ev.actor !== ev.subject && (!subjectMember.dependent || actor.role !== 'admin')) {
+      if (subjectMember.dependent) {
+        if (ev.actor !== dependentOwners.get(ev.subject)) {
+          rejected.push({ id: ev.id, reason: 'not-owner' });
+          continue;
+        }
+      } else if (ev.actor !== ev.subject && actor.role !== 'admin') {
          rejected.push({ id: ev.id, reason: 'not-authorized' });
          continue;
       }
@@ -184,6 +222,10 @@ export async function reduceMembership(
          continue;
       }
       state.members[ev.subject].devices = state.members[ev.subject].devices.filter(d => d !== ev.deviceId);
+    } else if (ev.kind === 'revoke') {
+       // A revoke event does not mutate the `CircleState`, just validates it.
+       // It's a valid event in the log and doesn't hit unhandled paths.
+       continue;
     }
   }
 
