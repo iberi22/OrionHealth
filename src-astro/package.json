@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "OrionHealth Web PWA \u2014 Astro 7 + Svelte 5 + @swal/ui + vite-pwa + edge-mesh + Xavier (demo publica mesh-only, stack SWAL canonico)",
+  "description": "OrionHealth Web PWA — Astro 7 + Svelte 5 + @swal/ui + vite-pwa + edge-mesh + Xavier (demo publica mesh-only, stack SWAL canonico)",
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
@@ -34,7 +34,7 @@
     "@astrojs/check": "^0.9.10",
     "@astrojs/cloudflare": "^14.3.4",
     "@astrojs/svelte": "^9.0.1",
-    "@cloudflare/workers-types": "5.20261024.1",
+    "@cloudflare/workers-types": "5.20261008.1",
     "@e2e-dev/web": "0.14.0",
     "@playwright/test": "1.64.0",
     "@sveltejs/vite-plugin-svelte": "7.3.1",
