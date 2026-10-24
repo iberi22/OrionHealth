@@ -74,8 +74,9 @@ void main() {
         expect(find.textContaining('RITMO CARDÍACO'), findsOneWidget);
 
         // 2. MANUAL ENTRY
-        await tester.tap(find.text('Agregar Signo Vital'));
+        await tester.tap(find.byType(FloatingActionButton));
         await tester.pumpAndSettle();
+        expect(find.text('Agregar Signo Vital'), findsOneWidget);
         await VideoRecorder.recordStep(tester, 'vitals', '02_add_bottom_sheet');
 
         await tester.enterText(find.widgetWithText(TextField, 'Valor'), '75');
