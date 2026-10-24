@@ -3,7 +3,6 @@ import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:orionhealth_health/features/vitals/domain/entities/vital_sign.dart';
 import 'package:orionhealth_health/features/vitals/infrastructure/repositories/vital_sign_repository_impl.dart';
-import '../../../../helpers/mock_encryption_service.dart';
 
 class MockIsar extends Mock implements Isar {
   @override
@@ -30,7 +29,7 @@ void main() {
   setUp(() {
     mockIsar = MockIsar();
     mockCollection = MockIsarCollection();
-    repository = VitalSignRepositoryImpl(mockIsar, FakeEncryptionService());
+    repository = VitalSignRepositoryImpl(mockIsar);
 
     when(() => mockIsar.vitalSigns).thenReturn(mockCollection);
   });

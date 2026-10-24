@@ -6,7 +6,6 @@ import 'package:orionhealth_health/features/medications/infrastructure/repositor
 import 'package:orionhealth_health/features/medications/infrastructure/services/pharmacy_api_service.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
-import '../../../../helpers/mock_encryption_service.dart';
 
 class MockPharmacyApiService extends Mock implements PharmacyApiService {}
 
@@ -27,7 +26,7 @@ void main() {
       directory: testDir,
     );
     mockApiService = MockPharmacyApiService();
-    repository = IsarMedicationRepository(isar, mockApiService, FakeEncryptionService());
+    repository = IsarMedicationRepository(isar, mockApiService);
   });
 
   tearDownAll(() async {
