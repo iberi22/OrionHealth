@@ -32,9 +32,13 @@ void main() {
       const pin = '5678';
       const salt = 'isolate-salt';
       final hash = await encryptionService.hashPin(pin, salt);
-      // Hardcoded expected value to ensure the migration to isolate doesn't change the algorithm output
-      expect(hash.length, 64);
-      expect(hash, isNotEmpty);
+      // Expected value computed with the pre-change Argon2id implementation
+      expect(
+        hash,
+        equals(
+          '796a32d1645e5d3fc39c824c88506820ff569ee73be74c3d823438e833f4a958',
+        ),
+      );
     });
 
     test('hashPin should produce different hash for different pin', () async {

@@ -17,24 +17,7 @@ class EncryptionService {
 
   /// Hashes a PIN using Argon2id
   Future<String> hashPin(String pin, String salt) async {
-    return await Isolate.run(() {
-      final parameters = Argon2Parameters(
-        Argon2Parameters.ARGON2_id,
-        Uint8List.fromList(utf8.encode(salt)),
-        version: Argon2Parameters.ARGON2_VERSION_13,
-        iterations: 3,
-        memory: 65536,
-        lanes: 4,
-      );
-
-      final generator = Argon2BytesGenerator();
-      generator.init(parameters);
-
-      final result = Uint8List(32);
-      generator.generateBytesFromString(pin, result);
-
-      return HEX.encode(result);
-    });
+    return _deriveArgon2id(pin, salt);
   }
 
   late String _sessionKey;
@@ -66,34 +49,57 @@ class EncryptionService {
     _healthKeyCache = null;
   }
 
+  Future<String>? _healthKeyFuture;
+
   Future<String> _getHealthKey() async {
     // Argon2id (64 MiB, 3 passes) is deliberately slow: derive the key once.
     final cached = _healthKeyCache;
     if (cached != null) return cached;
 
-    var masterSecretHex = await _secureStorage.readSecure(
-      _healthKeyNamespace,
-      _healthKeyName,
-    );
-    if (masterSecretHex == null) {
-      // Nothing ever called initialize(), so the first encrypted write failed
-      // with "master secret not found". Create the secret on first use; this
-      // branch only runs when no secret exists, so it never replaces one.
-      await initialize();
-      masterSecretHex = await _secureStorage.readSecure(
+    if (_healthKeyFuture != null) {
+      return await _healthKeyFuture!;
+    }
+
+    _healthKeyFuture = () async {
+      var masterSecretHex = await _secureStorage.readSecure(
         _healthKeyNamespace,
         _healthKeyName,
       );
-    }
-    if (masterSecretHex == null) {
-      throw Exception('Encryption master secret not found');
-    }
+      if (masterSecretHex == null) {
+        // Nothing ever called initialize(), so the first encrypted write failed
+        // with "master secret not found". Create the secret on first use; this
+        // branch only runs when no secret exists, so it never replaces one.
+        await initialize();
+        masterSecretHex = await _secureStorage.readSecure(
+          _healthKeyNamespace,
+          _healthKeyName,
+        );
+      }
+      if (masterSecretHex == null) {
+        throw Exception('Encryption master secret not found');
+      }
 
-    // Derive a 256-bit key using Argon2id in an isolate
-    final resultHex = await Isolate.run(() {
+      // Derive a 256-bit key using Argon2id
+      final derivedKey = await _deriveArgon2id(
+        masterSecretHex,
+        'orion_health_salt_v1',
+      );
+      _healthKeyCache = derivedKey;
+      return derivedKey;
+    }();
+
+    try {
+      return await _healthKeyFuture!;
+    } finally {
+      _healthKeyFuture = null;
+    }
+  }
+
+  static Future<String> _deriveArgon2id(String secret, String salt) async {
+    return Isolate.run(() {
       final parameters = Argon2Parameters(
         Argon2Parameters.ARGON2_id,
-        Uint8List.fromList(utf8.encode('orion_health_salt_v1')),
+        Uint8List.fromList(utf8.encode(salt)),
         version: Argon2Parameters.ARGON2_VERSION_13,
         iterations: 3,
         memory: 65536,
@@ -104,12 +110,10 @@ class EncryptionService {
       generator.init(parameters);
 
       final result = Uint8List(32);
-      generator.generateBytesFromString(masterSecretHex!, result);
+      generator.generateBytesFromString(secret, result);
 
       return HEX.encode(result);
     });
-
-    return _healthKeyCache = resultHex;
   }
 
   /// Encrypts health data using AES-256-GCM and a derived key.
