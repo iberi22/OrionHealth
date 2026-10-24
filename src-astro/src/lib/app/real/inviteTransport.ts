@@ -9,12 +9,17 @@ interface WebrtcTransportOpts {
 
 export function createWebrtcInviteTransport(opts: WebrtcTransportOpts = {}): InviteTransport {
   return {
-    async join(roomId: string): Promise<InviteConnection> {
+    async join(roomId: string, joinOpts?: { secret?: Uint8Array }): Promise<InviteConnection> {
       const doc = new Y.Doc();
       const arr = doc.getArray<{ from: string; hello: InviteHello }>('hellos');
       const connId = b64u(globalThis.crypto.getRandomValues(new Uint8Array(12)));
 
-      const passwordBytes = await hkdf(utf8(roomId), new Uint8Array(0), 'orion/v1/invite-transport');
+      let passwordBytes: Uint8Array;
+      if (joinOpts?.secret) {
+        passwordBytes = await hkdf(joinOpts.secret, new Uint8Array(0), 'orion/v1/invite-transport');
+      } else {
+        passwordBytes = await hkdf(utf8(roomId), new Uint8Array(0), 'orion/v1/invite-transport');
+      }
       const password = b64u(passwordBytes);
       const signalingUrl = opts.signalingUrl || import.meta.env?.PUBLIC_SIGNALING_URL || 'wss://signal.orionhealth.swal.network';
 
@@ -77,7 +82,7 @@ export function createWebrtcInviteTransport(opts: WebrtcTransportOpts = {}): Inv
 
 export function createBroadcastInviteTransport(name: string): InviteTransport {
   return {
-    async join(roomId: string): Promise<InviteConnection> {
+    async join(roomId: string, joinOpts?: { secret?: Uint8Array }): Promise<InviteConnection> {
       const channel = new BroadcastChannel(`${name}-${roomId}`);
       const connId = b64u(globalThis.crypto.getRandomValues(new Uint8Array(12)));
       const listeners = new Set<(msg: InviteHello) => void>();
