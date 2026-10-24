@@ -90,12 +90,9 @@ void main() {
       await tester.pumpWidget(const MaterialApp(home: HipaaConsentPage()));
 
       // Tap the privacy policy row
-      final cardFinder = find.ancestor(
-        of: find.text('Leer política de privacidad'),
-        matching: find.byType(InkWell),
-      );
-      await tester.ensureVisible(cardFinder);
-      await tester.tap(cardFinder);
+      final textFinder = find.text('Leer política de privacidad');
+      await tester.ensureVisible(textFinder);
+      await tester.tap(textFinder);
       await tester.pumpAndSettle();
 
       // Check dialog is shown
