@@ -10,22 +10,34 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
 
   setUp(() {
+    const bonsoirChannel = MethodChannel('fr.skyost.bonsoir');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(bonsoirChannel, (
+          MethodCall methodCall,
+        ) async {
+          return null;
+        });
     service = WifiDirectService();
     log.clear();
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      log.add(methodCall);
-      if (methodCall.method == 'mdnsDiscover') {
-        return [
-          {'name': 'Device 1', 'address': '192.168.1.10:9124'},
-        ];
-      }
-      return null;
-    });
+          log.add(methodCall);
+          if (methodCall.method == 'mdnsDiscover') {
+            return [
+              {'name': 'Device 1', 'address': '192.168.1.10:9124'},
+            ];
+          }
+          return null;
+        });
   });
 
   tearDown(() async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('fr.skyost.bonsoir'),
+          null,
+        );
     await service.stop();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
