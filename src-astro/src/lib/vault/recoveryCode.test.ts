@@ -39,8 +39,16 @@ describe('recoveryCode', () => {
   });
 
   it('parseCode should reject bad characters', async () => {
-    await expect(parseCode('invalid-chars-*')).rejects.toThrow(
+    // 54 characters, but invalid (with hyphen, which is stripped, so length is 54 before but < 54 after? Actually it padEnd to 54, but hyphens are removed, so it becomes 52. Let's make it 54 invalid chars exactly without hyphens)
+    const invalidChars = 'invalid*chars'.padEnd(54, 'A');
+    await expect(parseCode(invalidChars)).rejects.toThrow(
       new RecoveryCodeError('Invalid characters in code', 'BAD_CHARACTERS')
+    );
+  });
+
+  it('parseCode should reject if code is not exactly 54 characters', async () => {
+    await expect(parseCode('123')).rejects.toThrow(
+      new RecoveryCodeError('Code must be exactly 54 characters', 'INVALID_LENGTH')
     );
   });
 
