@@ -8,6 +8,7 @@
   let owner = services.vault.memberId();
 
   let showForm = $state(false);
+  let editingId = $state<string | undefined>(undefined);
   let type = $state<VitalType>('bp');
   let value = $state<number | ''>('');
   let value2 = $state<number | ''>('');
@@ -91,8 +92,9 @@
     }
 
     try {
+      const existing = vitals.find(v => v.recordId === editingId);
       await services.records.put({
-        recordId: crypto.randomUUID(),
+        recordId: editingId || crypto.randomUUID(),
         owner,
         updatedAt: Date.now(),
         kind: 'vital',
@@ -100,12 +102,30 @@
         value: v1,
         value2: v2,
         unit,
-        at: Date.now()
+        at: existing ? existing.at : Date.now()
       });
 
       showForm = false;
+      editingId = undefined;
       value = '';
       value2 = '';
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function editRecord(vt: VitalReading) {
+    editingId = vt.recordId;
+    type = vt.type;
+    value = vt.value;
+    value2 = vt.value2 ?? '';
+    showForm = true;
+  }
+
+  async function deleteRecord(vt: VitalReading) {
+    if (!owner) return;
+    try {
+      await services.records.remove('vital', vt.recordId);
     } catch (err) {
       console.error(err);
     }
@@ -202,6 +222,10 @@
           <div class="latest-reading">
             <span class="value">{readings[0].value}{vt === 'bp' && readings[0].value2 ? `/${readings[0].value2}` : ''}</span>
             <span class="date">{new Date(readings[0].at).toLocaleDateString()}</span>
+          </div>
+          <div class="record-actions">
+            <button data-testid="edit-vital-{readings[0].recordId}" onclick={() => editRecord(readings[0])}>Editar</button>
+            <button data-testid="delete-vital-{readings[0].recordId}" onclick={() => deleteRecord(readings[0])}>Eliminar</button>
           </div>
 
           {#if readings.length > 1}
@@ -372,5 +396,21 @@
     justify-content: space-between;
     font-size: 0.75rem;
     color: var(--oh-muted);
+  }
+
+  .record-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .record-actions button {
+    background: none;
+    border: 1px solid var(--oh-muted);
+    border-radius: var(--oh-radius);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--oh-text);
   }
 </style>

@@ -9,6 +9,7 @@
 
   // Form state
   let showForm = $state(false);
+  let editingId = $state<string | undefined>(undefined);
   let name = $state('');
   let since = $state('');
   let notes = $state('');
@@ -54,7 +55,7 @@
 
     try {
       await services.records.put({
-        recordId: crypto.randomUUID(),
+        recordId: editingId || crypto.randomUUID(),
         owner,
         updatedAt: Date.now(),
         kind: 'condition',
@@ -65,12 +66,31 @@
       });
 
       showForm = false;
+      editingId = undefined;
       name = '';
       since = '';
       notes = '';
       selectedIcd10 = undefined;
       query = '';
       hits = [];
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function editRecord(cond: Condition) {
+    editingId = cond.recordId;
+    name = cond.name;
+    selectedIcd10 = cond.icd10;
+    since = cond.since || '';
+    notes = cond.notes || '';
+    showForm = true;
+  }
+
+  async function deleteRecord(cond: Condition) {
+    if (!owner) return;
+    try {
+      await services.records.remove('condition', cond.recordId);
     } catch (err) {
       console.error(err);
     }
@@ -148,6 +168,10 @@
               {#if cond.notes}<span>{cond.notes}</span>{/if}
             </div>
           {/if}
+          <div class="record-actions">
+            <button data-testid="edit-condition-{cond.recordId}" onclick={() => editRecord(cond)}>Editar</button>
+            <button data-testid="delete-condition-{cond.recordId}" onclick={() => deleteRecord(cond)}>Eliminar</button>
+          </div>
         </li>
       {/each}
     </ul>
@@ -283,5 +307,21 @@
     flex-direction: column;
     font-size: 0.875rem;
     color: var(--oh-muted);
+  }
+
+  .record-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .record-actions button {
+    background: none;
+    border: 1px solid var(--oh-muted);
+    border-radius: var(--oh-radius);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--oh-text);
   }
 </style>

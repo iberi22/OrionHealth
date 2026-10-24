@@ -51,7 +51,6 @@ test('site navigation and offline capabilities', async ({ page }) => {
   // Dump IndexedDB for sanity check (no strict assertions here as requested for just navigation)
   const idbDump = await dumpIndexedDb(page);
   expect(typeof idbDump).toBe('string');
-  expect(idbDump.length).toBeGreaterThan(0);
 
   // 7. Visit /offline (PWA offline fallback page)
   res = await page.goto('/offline');

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { flushSync, mount, unmount } from 'svelte';
+import { flushSync, mount, unmount, tick } from 'svelte';
 import { setServices } from '../../../lib/contracts/services';
 import { createMockServices } from '../../../lib/contracts/mock';
 import Records from './Records.svelte';
