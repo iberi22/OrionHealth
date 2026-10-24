@@ -47,6 +47,22 @@ export interface Kernel {
   /** Registers a circle key epoch (creation, approval, rotation). */
   addCircleKey(epoch: number, raw: Uint8Array): void;
 
+  /**
+   * Wraps a raw key that never leaves the kernel to a recipient box key with crypto.wrapTo(info, aad):
+   * my personal CEK (`category`, default newest epoch) or the circle key (`circleEpoch`). Used to grant a
+   * category (spec §6) and to hand CK to an approved member (spec §7).
+   */
+  wrapKeyFor(
+    target: { category: PersonalCategory; epoch?: number } | { circleEpoch: number },
+    recipientBoxPub: string,
+    info: string,
+    aad: Uint8Array,
+  ): Promise<{ ephPub: string; wrapped: string; epoch: number }>;
+  /** Unwraps with my box key (crypto.unwrapFrom) — e.g. a received grant or circle key. */
+  unwrapForMe(ephPub: string, wrapped: string, info: string, aad: Uint8Array): Promise<Uint8Array>;
+  /** Adds epoch+1 for one of my personal categories (revocation, spec §6) and re-publishes the bundle. */
+  rotateCategory(category: PersonalCategory): Promise<number>;
+
   circle(): Promise<CircleState | null>;
   /** Signing SPKI of a circle member (or me); null if unknown. */
   signPubOf(memberId: string): Promise<string | null>;
