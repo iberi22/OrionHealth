@@ -1,8 +1,13 @@
 import 'dart:typed_data';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
+import 'package:isar/isar.dart';
 import 'package:health_wallet/services/encryption_service.dart';
 
 void main() {
+  setUpAll(() async {
+    await Isar.initializeIsarCore(download: true);
+  });
+
   late EncryptionService encryptionService;
 
   setUp(() {
@@ -84,24 +89,33 @@ void main() {
 
       // Note: Current implementation of verifySignature uses a random key,
       // so it will likely fail. This test documents that behavior.
-      test('verifySignature (currently expected to fail due to random key bug)', () async {
-        final signature = await encryptionService.signPackage(testData);
-        final isValid = await encryptionService.verifySignature(testData, signature);
-        // If the implementation is fixed, this should be expect(isValid, isTrue);
-        // For now we just check it doesn't throw.
-        expect(isValid, isA<bool>());
-      });
+      test(
+        'verifySignature (currently expected to fail due to random key bug)',
+        () async {
+          final signature = await encryptionService.signPackage(testData);
+          final isValid = await encryptionService.verifySignature(
+            testData,
+            signature,
+          );
+          // If the implementation is fixed, this should be expect(isValid, isTrue);
+          // For now we just check it doesn't throw.
+          expect(isValid, isA<bool>());
+        },
+      );
     });
 
     test('encryptFieldsMap and decryptFieldsMap', () async {
       final masterKey = await encryptionService.generateMasterKey();
-      final fields = {
-        'firstName': 'John',
-        'lastName': 'Doe',
-      };
+      final fields = {'firstName': 'John', 'lastName': 'Doe'};
 
-      final encrypted = await encryptionService.encryptFieldsMap(fields, masterKey);
-      final decrypted = await encryptionService.decryptFieldsMap(encrypted, masterKey);
+      final encrypted = await encryptionService.encryptFieldsMap(
+        fields,
+        masterKey,
+      );
+      final decrypted = await encryptionService.decryptFieldsMap(
+        encrypted,
+        masterKey,
+      );
 
       expect(decrypted, equals(fields));
     });
@@ -110,8 +124,14 @@ void main() {
       final masterKey = await encryptionService.generateMasterKey();
       final bytes = Uint8List.fromList([0, 1, 2, 3, 4, 5, 255]);
 
-      final encrypted = await encryptionService.encryptDocumentBytes(bytes, masterKey);
-      final decrypted = await encryptionService.decryptDocumentBytes(encrypted, masterKey);
+      final encrypted = await encryptionService.encryptDocumentBytes(
+        bytes,
+        masterKey,
+      );
+      final decrypted = await encryptionService.decryptDocumentBytes(
+        encrypted,
+        masterKey,
+      );
 
       expect(decrypted, equals(bytes));
     });

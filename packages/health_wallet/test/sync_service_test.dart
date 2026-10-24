@@ -1,14 +1,21 @@
 import 'dart:convert';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
+import 'package:isar/isar.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:dio/dio.dart';
 import 'package:health_wallet/health_wallet.dart';
 
 class MockEncryptionService extends Mock implements EncryptionService {}
+
 class MockDio extends Mock implements Dio {}
+
 class MockResponse extends Mock implements Response {}
 
 void main() {
+  setUpAll(() async {
+    await Isar.initializeIsarCore(download: true);
+  });
+
   late SyncService syncService;
   late MockEncryptionService mockEncryption;
   late MockDio mockDio;
@@ -23,8 +30,9 @@ void main() {
     final testData = {'labs': []};
 
     test('pushToNode success (simulated)', () async {
-      when(() => mockEncryption.encryptPayload(any(), any()))
-          .thenAnswer((_) async => {'pinProtected': false, 'data': testData});
+      when(
+        () => mockEncryption.encryptPayload(any(), any()),
+      ).thenAnswer((_) async => {'pinProtected': false, 'data': testData});
 
       final result = await syncService.pushToNode(
         targetNodeId: 'target',
@@ -37,8 +45,9 @@ void main() {
     });
 
     test('pushToNode encryption failure', () async {
-      when(() => mockEncryption.encryptPayload(any(), any()))
-          .thenThrow(Exception('Encryption failed'));
+      when(
+        () => mockEncryption.encryptPayload(any(), any()),
+      ).thenThrow(Exception('Encryption failed'));
 
       final result = await syncService.pushToNode(
         targetNodeId: 'target',
@@ -57,8 +66,9 @@ void main() {
       };
       final packageJson = jsonEncode(package);
 
-      when(() => mockEncryption.decryptPayload(any(), any()))
-          .thenAnswer((_) async => testData);
+      when(
+        () => mockEncryption.decryptPayload(any(), any()),
+      ).thenAnswer((_) async => testData);
 
       final result = await syncService.pullFromNode(
         packageJson: packageJson,
@@ -69,10 +79,7 @@ void main() {
     });
 
     test('pullFromNode version mismatch', () async {
-      final package = {
-        'version': '2.0',
-        'payload': {},
-      };
+      final package = {'version': '2.0', 'payload': {}};
       final packageJson = jsonEncode(package);
 
       final result = await syncService.pullFromNode(
@@ -84,10 +91,12 @@ void main() {
     });
 
     test('createTransferPackage returns valid JSON', () async {
-      when(() => mockEncryption.encryptPayload(any(), any()))
-          .thenAnswer((_) async => {'pinProtected': true, 'encryptedData': 'abc'});
-      when(() => mockEncryption.signPackage(any()))
-          .thenAnswer((_) async => 'sig123');
+      when(
+        () => mockEncryption.encryptPayload(any(), any()),
+      ).thenAnswer((_) async => {'pinProtected': true, 'encryptedData': 'abc'});
+      when(
+        () => mockEncryption.signPackage(any()),
+      ).thenAnswer((_) async => 'sig123');
 
       final packageJson = await syncService.createTransferPackage(
         healthData: testData,
@@ -105,12 +114,16 @@ void main() {
 
     test('syncMedicalStandards calls onProgress', () async {
       double lastProgress = 0;
-      await syncService.syncMedicalStandards(onProgress: (p) => lastProgress = p);
+      await syncService.syncMedicalStandards(
+        onProgress: (p) => lastProgress = p,
+      );
       expect(lastProgress, 1.0);
     });
 
     test('discoverPeerNodes success', () async {
-      final nodes = [{'id': 'node1'}];
+      final nodes = [
+        {'id': 'node1'},
+      ];
       final response = MockResponse();
       when(() => response.statusCode).thenReturn(200);
       when(() => response.data).thenReturn({'nodes': nodes});
@@ -122,10 +135,12 @@ void main() {
     });
 
     test('discoverPeerNodes network failure (offline mode)', () async {
-      when(() => mockDio.get(any())).thenThrow(DioException(
-        requestOptions: RequestOptions(path: ''),
-        type: DioExceptionType.connectionTimeout,
-      ));
+      when(() => mockDio.get(any())).thenThrow(
+        DioException(
+          requestOptions: RequestOptions(path: ''),
+          type: DioExceptionType.connectionTimeout,
+        ),
+      );
 
       final result = await syncService.discoverPeerNodes();
       expect(result, isEmpty);
