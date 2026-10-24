@@ -264,6 +264,17 @@ export function createMockServices(now: number = Date.now()): Services {
         return [];
       },
       async approve() {},
+      async createRecoveryInvite(memberId) {
+        const expiresAt = Date.now() + DAY;
+        return { url: `https://orionhealth.swal.network/app/recovery#demo-${memberId}`, expiresAt };
+      },
+      async pendingRecoveryJoins() {
+        return [];
+      },
+      async approveRecoveryJoin() {},
+      async recoveryFile() {
+        return { filename: 'orion-recovery.json', content: JSON.stringify({ v: 1, kind: 'orion-recovery', demo: true }) };
+      },
       async startRecovery() {
         progress = { step: 'awaiting-approvals', approvals: 0, threshold: policy?.threshold ?? 2 };
         progSubs.forEach((cb) => cb(progress));

@@ -12,6 +12,8 @@
   let progress = $state<RecoveryProgress>({ step: 'idle', approvals: 0, threshold: 0 });
   let sas = $state<string | null>(null);
   let codeError = $state<string | null>(null);
+  let recoveryFileText = $state<string | undefined>(undefined);
+  let familyError = $state<string | null>(null);
 
   $effect(() => {
     const unsub = services.recovery.onProgress((p) => {
@@ -22,15 +24,27 @@
 
   onMount(() => {
     progress = services.recovery.progress();
+    // Opened from a recovery invitation link (/app/recovery#…): the fragment is the invitation.
+    if (location.pathname.startsWith('/app/recovery') && location.hash.length > 1) {
+      inviteLink = location.href;
+      method = 'family';
+    }
   });
 
   async function startWithFamily() {
+    familyError = null;
     try {
       const res = await services.recovery.startRecovery(inviteLink);
       sas = res.sas;
     } catch (e: any) {
       console.error(e);
+      familyError = 'El enlace no es una invitación de recuperación válida o ha caducado.';
     }
+  }
+
+  async function onFile(ev: Event) {
+    const file = (ev.currentTarget as HTMLInputElement).files?.[0];
+    recoveryFileText = file ? await file.text() : undefined;
   }
 
   async function startWithCode() {
@@ -38,7 +52,7 @@
     try {
       // Normalize code: remove spaces and dashes
       const normalized = recoveryCode.replace(/[\s-]/g, '');
-      await services.recovery.recoverWithCode(normalized);
+      await services.recovery.recoverWithCode(normalized, recoveryFileText);
     } catch (e: any) {
       if (e.message && e.message.includes('checksum')) {
         codeError = 'El código es incorrecto. Por favor, revisa que esté bien escrito.';
@@ -65,14 +79,21 @@
 
     {#if method === 'family'}
       <div class="method-content">
-        <p>Pide a un administrador de tu círculo que te invite. Pega el enlace de invitación aquí:</p>
-        <input type="text" bind:value={inviteLink} placeholder="https://orionhealth.swal.network/app/join#..." />
+        <p>Pide a un administrador de tu círculo una invitación de recuperación. Pega el enlace aquí:</p>
+        <input type="text" bind:value={inviteLink} placeholder="https://orionhealth.swal.network/app/recovery#..." />
+        {#if familyError}
+          <div class="error">{familyError}</div>
+        {/if}
         <button disabled={!inviteLink} onclick={startWithFamily} class="primary">Continuar</button>
       </div>
     {:else if method === 'code'}
       <div class="method-content">
         <p>Ingresa tu código de recuperación de 24 palabras o los caracteres alfanuméricos:</p>
         <textarea bind:value={recoveryCode} placeholder="Escribe tu código aquí..." rows="3"></textarea>
+        <label class="file">
+          Archivo de recuperación (orion-recovery.json), necesario en un dispositivo nuevo:
+          <input type="file" accept=".json,application/json" onchange={onFile} />
+        </label>
         {#if codeError}
           <div class="error">{codeError}</div>
         {/if}
@@ -82,13 +103,18 @@
   {:else if progress.step === 'awaiting-invite'}
     <div class="progress-view">
       <h3>Conectando con tu familia...</h3>
-      <p>Espera mientras se establece la conexión.</p>
+      {#if sas}
+        <p>Muestra este número al administrador que te invitó. Debe coincidir con su pantalla:</p>
+        <div class="sas">{sas}</div>
+      {:else}
+        <p>Espera mientras se establece la conexión.</p>
+      {/if}
     </div>
   {:else if progress.step === 'awaiting-approvals'}
     <div class="progress-view">
       <h3>Esperando aprobaciones</h3>
       {#if sas}
-        <p>Para mayor seguridad, verifica que este número coincida con la pantalla de quien te invitó:</p>
+        <p>Tus custodios te llamarán y te pedirán este número antes de aprobar:</p>
         <div class="sas">{sas}</div>
       {/if}
       <p>Tus custodios deben aprobar tu solicitud en sus dispositivos.</p>
@@ -170,6 +196,12 @@
   button.primary:disabled {
     background: var(--oh-muted);
     cursor: not-allowed;
+  }
+  .file {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9em;
   }
   .error {
     color: var(--oh-danger);
