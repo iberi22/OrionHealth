@@ -97,6 +97,21 @@ jobs:
           flutter pub get
           flutter test --reporter expanded
 
+      - name: Dart Test (health_contract)
+        run: |
+          cd packages/health_contract
+          dart pub get
+          dart test --reporter expanded
+
+      # Measured only until the package is green on the pinned SDK (orion goal, wave 3):
+      # locally 19 pass / 13 fail on Flutter 3.32 without the Isar native library.
+      - name: Flutter Test (isar_agent_memory, measuring)
+        continue-on-error: true
+        run: |
+          cd packages/isar_agent_memory
+          flutter pub get
+          flutter test --reporter expanded
+
       # health_wallet's three test files import package:flutter_test, which is
       # not in its dev_dependencies, so they cannot compile on any SDK; adding
       # the dependency cannot resolve against isar_generator 3.1.0+1
@@ -121,3 +136,16 @@ jobs:
             test_output.json
             test_output_health_wallet.txt
             test_output_health_wallet.json
+
+  backend:
+    name: backend (node --test)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 22, cache: npm, cache-dependency-path: backend/package-lock.json }
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
