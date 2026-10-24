@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { createInvite, InviteError } from './invite';
-import { InviteChannel, type InviteHello, type InviteConnection, type InviteTransport } from './inviteChannel';
+import { CLOSE_GRACE_MS, InviteChannel, type InviteHello, type InviteConnection, type InviteTransport } from './inviteChannel';
 
 class BroadcastTransport implements InviteTransport {
   private rooms = new Map<string, Set<(msg: InviteHello, senderId: string) => void>>();
@@ -190,5 +190,30 @@ describe('InviteChannel', () => {
     await expect(aliceChannel.connect(invite, nearExpirationNow)).rejects.toThrow(
       new InviteError('Invite has expired', 'INVITE_EXPIRED')
     );
+  });
+
+  it('keeps the room open for a grace period after the peer hello, so its own hello can still be delivered', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      const inner = new BroadcastTransport();
+      const closed: string[] = [];
+      let n = 0;
+      const transport: InviteTransport = {
+        async join(roomId) {
+          const id = `c${++n}`;
+          const conn = await inner.join(roomId);
+          return { ...conn, close: () => (closed.push(id), conn.close()) };
+        },
+      };
+      const invite = createInvite('circle-1');
+      const alice = new InviteChannel(transport, aliceHello).connect(invite);
+      const bob = new InviteChannel(transport, bobHello).connect(invite);
+      await Promise.all([alice, bob]);
+      expect(closed).toEqual([]);
+      vi.advanceTimersByTime(CLOSE_GRACE_MS);
+      expect(closed.sort()).toEqual(['c1', 'c2']);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

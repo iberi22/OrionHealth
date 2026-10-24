@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { addVirtualPasskey } from './helpers/webauthn';
+import { createVault } from './helpers/vault';
 
 // Personal data we want to make sure NEVER leaves the device.
 const PERSONAL_DATA = [
@@ -35,42 +36,38 @@ test.describe('Knowledge Base and Assistant', () => {
       await searchInput.fill('I10');
 
       // Wait for search results
-      await expect(page.getByRole('option')).toHaveCount(1);
+      // The KB also returns prefix/fuzzy matches (E10, F10...), so the exact code must rank first.
+      await expect(page.getByRole('option').first()).toBeVisible();
 
-      // Check that the entry is found
-      const codeMatch = page.getByRole('option', { name: /I10/i });
-      await expect(codeMatch).toBeVisible();
+      // Check that the entry is found: the first option is the ICD-10 I10 entry
+      const codeMatch = page.getByRole('option').first();
+      await expect(codeMatch).toContainText('ICD10');
+      await expect(codeMatch).toContainText('I10');
+      await expect(codeMatch).toContainText('Essential (primary) hypertension');
 
       // Search by text
-      await searchInput.fill('Hipertensión');
+      // The KB corpus is in English
+      await searchInput.fill('Essential hypertension');
       // Wait for search results again
-      const textMatch = page.getByRole('option', { name: /Hipertensión/i }).first();
+      const textMatch = page.getByRole('option', { name: /Essential hypertension|Essential \(primary\) hypertension/i }).first();
       await expect(textMatch).toBeVisible();
 
       // Click to view entry
-      await page.getByRole('link', { name: /I10.*Hipertensión/i }).click();
+      await page.getByRole('link', { name: /I10.*Essential \(primary\) hypertension/i }).first().click();
 
       // Verify entry view
       const entryView = page.getByTestId('kb-entry-view');
       await expect(entryView).toBeVisible();
-      await expect(entryView.getByRole('heading', { level: 2 })).toBeVisible();
+      await expect(entryView.getByRole('heading', { level: 2, name: 'Essential (primary) hypertension' })).toBeVisible();
     });
 
     test(`Assistant answer with citations and request interception ${suffix}`, async ({ page }) => {
       // Setup vault and authenticate to unlock personal data (for the toggle)
-      await page.goto('/app/onboarding');
       await addVirtualPasskey(page);
+      await createVault(page, 'Ana');
 
-      // Navigate to assistant; the vault gate sends a locked session to /app/lock first
-      await page.goto('/app/assistant');
-      const lock = page.getByTestId('area-lock');
-      await expect(lock.or(page.getByTestId('area-assistant'))).toBeVisible();
-      if (await lock.isVisible()) {
-        await page.getByRole('button', { name: 'Desbloquear' }).click();
-        await page.waitForURL(/\/app(\/)?$/);
-        // Client-side navigation: a full reload would start a new (locked) session
-        await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Asistente' }).click();
-      }
+      // Client-side navigation: a full reload would start a new (locked) session
+      await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Asistente' }).click();
       const assistantArea = page.getByTestId('area-assistant');
       await expect(assistantArea).toBeVisible();
 

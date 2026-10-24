@@ -36,7 +36,12 @@ export async function dumpIndexedDb(page: Page): Promise<string> {
             req.onsuccess = () => resolve(req.result);
             req.onerror = () => reject(req.error);
           });
-          result[dbName][storeName] = records;
+          const keys = await new Promise<any[]>((resolve, reject) => {
+            const req = store.getAllKeys();
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => reject(req.error);
+          });
+          result[dbName][storeName] = [{ __keys: keys }, ...records];
         }
 
         await new Promise<void>((resolve, reject) => {
