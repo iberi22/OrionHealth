@@ -87,12 +87,6 @@ test.describe('@real Recovery on a new device', () => {
     const charlie = await newMember(browser, baseURL, 'Charlie');
     const charlieCode = charlie.recoveryCode;
 
-    const charlieDbStr = await dumpIndexedDb(charlie.page);
-    const charlieDb = JSON.parse(charlieDbStr);
-    const charlieMemberIdRow = charlieDb['orion-meta']?.kv?.find((r: any) => r.key === 'memberId');
-    const charlieId = charlieMemberIdRow?.value;
-    expect(charlieId).toBeTruthy();
-
     await visit(charlie.page, '/app/settings');
     const downloadPromise = charlie.page.waitForEvent('download');
     await charlie.page.getByRole('button', { name: 'Descargar archivo de recuperación' }).click();
@@ -111,11 +105,8 @@ test.describe('@real Recovery on a new device', () => {
 
     await expect(device2.getByRole('heading', { name: '¡Recuperación completada!' })).toBeVisible({ timeout: 30_000 });
 
-    const device2DbStr = await dumpIndexedDb(device2);
-    const device2Db = JSON.parse(device2DbStr);
-    const device2MemberIdRow = device2Db['orion-meta']?.kv?.find((r: any) => r.key === 'memberId');
-    expect(device2MemberIdRow?.value).toBe(charlieId);
-
+    await reloadAndUnlock(device2, '/app/family');
+    await expect(device2.getByTestId('member-self')).toContainText('Charlie');
     await reloadAndUnlock(device2, '/app/records');
     await expect(device2.getByTestId('area-records')).toContainText('No hay condiciones registradas.');
 

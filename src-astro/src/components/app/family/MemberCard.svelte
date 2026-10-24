@@ -11,7 +11,7 @@
 
 </script>
 
-<div class="card">
+<div class="card" {...(isMe ? { 'data-testid': 'member-self' } : {})}>
   <div class="info">
     <h3>
       {member.displayName}
