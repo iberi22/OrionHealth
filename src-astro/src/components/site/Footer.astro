@@ -35,11 +35,10 @@ const getLocalizedUrl = (path: string) => {
       <div class="footer-links">
         <h3 class="links-title">{t(lang, 'footer.links')}</h3>
         <ul class="links-list">
-          <li><a href={getLocalizedUrl('/vision')} class="link-item">{t(lang, 'footer.vision')}</a></li>
-          <li><a href={getLocalizedUrl('/#mission')} class="link-item">{t(lang, 'footer.mission')}</a></li>
-          <li><a href={getLocalizedUrl('/#features')} class="link-item">{t(lang, 'footer.features')}</a></li>
-          <li><a href={getLocalizedUrl('/blog')} class="link-item">{t(lang, 'footer.blog')}</a></li>
-          <li><a href={getLocalizedUrl('/#support')} class="link-item">{t(lang, 'footer.support')}</a></li>
+          <li><a href={getLocalizedUrl('/')} class="link-item">{t(lang, 'nav.home')}</a></li>
+          <li><a href={getLocalizedUrl('/app')} class="link-item">{t(lang, 'nav.app')}</a></li>
+          <li><a href={getLocalizedUrl('/docs')} class="link-item">{t(lang, 'nav.docs')}</a></li>
+          <li><a href={getLocalizedUrl('/kb')} class="link-item">{t(lang, 'nav.kb')}</a></li>
         </ul>
       </div>
 
@@ -47,7 +46,6 @@ const getLocalizedUrl = (path: string) => {
         <h3 class="links-title">{t(lang, 'footer.legal')}</h3>
         <ul class="links-list">
           <li><a href="https://github.com/iberi22/OrionHealth" class="link-item" target="_blank" rel="noopener noreferrer">{t(lang, 'footer.githubRepo')}</a></li>
-          <li><a href={getLocalizedUrl('/contribute')} class="link-item">{t(lang, 'footer.contribute')}</a></li>
           <li><a href="https://www.gnu.org/licenses/agpl-3.0" class="link-item" target="_blank" rel="noopener noreferrer">{t(lang, 'footer.license')}</a></li>
         </ul>
       </div>
