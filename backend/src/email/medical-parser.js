@@ -3,7 +3,8 @@
  */
 function parseMedicalEmail(text) {
   const result = {
-    dateTime: null,
+    dateStr: null,
+    timeStr: null,
     specialty: null,
     doctorName: null,
     location: null,
@@ -35,7 +36,7 @@ function parseMedicalEmail(text) {
   }
 
   // Doctor extraction (e.g., "Dr. Juan Perez")
-  const doctorMatch = text.match(/Dr\.\s+([A-Za-zÀ-ÿ\s]+)/i);
+  const doctorMatch = text.match(/Dr\.\s+([A-Za-zÀ-ÿ\s]+?)(?=\s+en\s+|\.|\n|$)/i);
   if (doctorMatch) {
     result.doctorName = doctorMatch[1].trim();
   }
