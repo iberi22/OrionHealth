@@ -246,4 +246,82 @@ describe('HealthCircleService', () => {
     alerts = await health.alerts();
     expect(alerts[0].acknowledgedBy).toBe(kernel.memberId());
   });
+  it('skips corrupt envelopes and logs warning in list and alertRules, returning valid ones', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const envList1 = await kernel.seal({
+      category: 'circle',
+      plaintext: { kind: 'initiative', recordId: 'init-1', owner: kernel.memberId(), title: 'test', participants: [], createdBy: kernel.memberId(), metric: 'test', description: 'test', startsAt: Date.now(), endsAt: Date.now(), target: 10, updatedAt: Date.now() }
+    });
+    const envList2 = await kernel.seal({
+      category: 'circle',
+      plaintext: { kind: 'initiative', recordId: 'init-2', owner: kernel.memberId(), title: 'valid', participants: [], createdBy: kernel.memberId(), metric: 'test', description: 'test', startsAt: Date.now(), endsAt: Date.now(), target: 20, updatedAt: Date.now() }
+    });
+    await kernel.publish(envList1);
+    await kernel.publish(envList2);
+
+    const originalOpen = kernel.open.bind(kernel);
+    let openSpy = vi.spyOn(kernel, 'open').mockImplementation(async (e) => {
+      if (e.id === envList1.id) throw { code: 'CORRUPT' };
+      return originalOpen(e);
+    });
+
+    const records = await health.list('initiative');
+    expect(records).toHaveLength(1);
+    expect(records[0].recordId).toBe('init-2');
+    expect(warnSpy).toHaveBeenCalledWith('CORRUPT');
+    openSpy.mockRestore();
+
+    // Create alert rules
+    const envRule1 = await kernel.seal({
+      category: 'alert',
+      plaintext: { kind: 'alert-rule', recordId: 'rule-corrupt', owner: kernel.memberId(), vital: 'bp', comparator: '>', threshold: 120, subject: kernel.memberId(), updatedAt: Date.now(), notify: [], enabled: true }
+    });
+    const envRule2 = await kernel.seal({
+      category: 'alert',
+      plaintext: { kind: 'alert-rule', recordId: 'rule-valid', owner: kernel.memberId(), vital: 'hr', comparator: '>', threshold: 100, subject: kernel.memberId(), updatedAt: Date.now(), notify: [], enabled: true }
+    });
+    await kernel.publish(envRule1);
+    await kernel.publish(envRule2);
+
+    openSpy = vi.spyOn(kernel, 'open').mockImplementation(async (e) => {
+      if (e.id === envRule1.id) throw { code: 'CORRUPT' };
+      return originalOpen(e);
+    });
+
+    const rules = await health.alertRules();
+    expect(rules).toHaveLength(1);
+    expect(rules[0].recordId).toBe('rule-valid');
+    expect(warnSpy).toHaveBeenCalledWith('CORRUPT');
+
+    warnSpy.mockRestore();
+    openSpy.mockRestore();
+  });
+  it('re-throws if the vault is LOCKED', async () => {
+    const envList = await kernel.seal({
+      category: 'circle',
+      plaintext: { kind: 'initiative', recordId: 'init-1', owner: kernel.memberId(), title: 'test', participants: [], createdBy: kernel.memberId(), metric: 'test', description: 'test', startsAt: Date.now(), endsAt: Date.now(), target: 10, updatedAt: Date.now() }
+    });
+    await kernel.publish(envList);
+
+    let openSpy = vi.spyOn(kernel, 'open').mockImplementation(async () => {
+      throw { code: 'LOCKED' };
+    });
+
+    await expect(health.list('initiative')).rejects.toMatchObject({ code: 'LOCKED' });
+    openSpy.mockRestore();
+
+    const envRule = await kernel.seal({
+      category: 'alert',
+      plaintext: { kind: 'alert-rule', recordId: 'rule-1', owner: kernel.memberId(), vital: 'bp', comparator: '>', threshold: 120, subject: kernel.memberId(), updatedAt: Date.now(), notify: [], enabled: true }
+    });
+    await kernel.publish(envRule);
+
+    openSpy = vi.spyOn(kernel, 'open').mockImplementation(async () => {
+      throw { code: 'LOCKED' };
+    });
+
+    await expect(health.alertRules()).rejects.toMatchObject({ code: 'LOCKED' });
+    openSpy.mockRestore();
+  });
 });
