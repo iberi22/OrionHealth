@@ -37,9 +37,10 @@ export async function splitToTrustees(
   mrs: Uint8Array,
   policy: TrusteePolicy,
   trusteeBoxPubs: Record<string, string>,
-  memberId: string
+  memberId: string,
+  allowSingle = false
 ): Promise<WrappedRecoveryShare[]> {
-  validatePolicy(policy, false);
+  validatePolicy(policy, allowSingle);
 
   const k = policy.threshold;
   const n = policy.trustees.length;
@@ -80,9 +81,10 @@ export async function openShare(
 export async function rewrapForRequest(
   share: Uint8Array,
   tempBoxPub: string,
-  memberId: string
+  memberId: string,
+  requestId: string
 ): Promise<{ ephPub: string; wrapped: string }> {
-  const aad = utf8(`orion/v1/recovery|${memberId}|temp`);
+  const aad = utf8(`orion/v1/recovery-request|${memberId}|${requestId}|${tempBoxPub}`);
   return wrapTo(tempBoxPub, share, 'orion/v1/recovery-share', aad);
 }
 

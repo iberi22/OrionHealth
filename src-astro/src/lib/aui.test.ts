@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { validateAui, AUI_LOCKED_KEYS } from './aui';
+import { validateAui, AUI_LOCKED_KEYS, generateAui } from './aui';
 
 describe('AUI validate', () => {
+  it('generateAui rechaza con PHI_BLOCKED si personal es true', async () => {
+    await expect(generateAui('crea dashboard', false, true)).rejects.toThrow(
+      expect.objectContaining({ code: 'PHI_BLOCKED' })
+    );
+  });
+
   it('acepta spec valida whitelisteada', () => {
     const spec = {
       version: 1 as const,

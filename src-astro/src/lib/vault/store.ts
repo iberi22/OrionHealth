@@ -77,9 +77,10 @@ export async function openEnvelopeStore(dbName = 'orion-vault') {
       const existing = await store.get(envelope.id);
 
       if (existing) {
-        if (envelope.hlc > existing.hlc) {
-          await store.put(envelope);
+        if (envelope.sig !== existing.sig) {
+          throw new EnvelopeStoreError('Envelope ID conflict', 'ID_CONFLICT');
         }
+        // identical envelope -> no-op
       } else {
         await store.put(envelope);
       }
@@ -99,9 +100,11 @@ export async function openEnvelopeStore(dbName = 'orion-vault') {
       for (const env of envelopes) {
         const existing = await store.get(env.id);
         if (existing) {
-          if (env.hlc > existing.hlc) {
-            await store.put(env);
+          if (env.sig !== existing.sig) {
+            tx.abort();
+            throw new EnvelopeStoreError('Envelope ID conflict', 'ID_CONFLICT');
           }
+          // identical envelope -> no-op
         } else {
           await store.put(env);
         }
@@ -124,6 +127,10 @@ export async function openEnvelopeStore(dbName = 'orion-vault') {
 
     async listByCircle(circle: string): Promise<Envelope[]> {
       return db.getAllFromIndex('envelopes', 'circle', circle);
+    },
+
+    async listByOwnerCategory(owner: string, category: string): Promise<Envelope[]> {
+      return db.getAllFromIndex('envelopes', 'owner_category', [owner, category]);
     },
 
     async delete(id: string): Promise<void> {

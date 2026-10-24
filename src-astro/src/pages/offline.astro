@@ -2,9 +2,15 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 ---
 <SiteLayout title="OrionHealth — Offline" variant="site">
-  <div style="max-width: 600px; margin: 2rem auto; padding: 1rem; text-align: center;">
-    <h2>Estás offline</h2>
-    <p>Parece que no tienes conexión a internet.</p>
-    <a href="/app" style="display: inline-block; padding: 0.5rem 1rem; background: #10B981; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Ir a la aplicación offline</a>
-  </div>
+  <section class="offline">
+    <h1>Estás sin conexión</h1>
+    <p>Lo que ya abriste sigue disponible: tu bóveda y la base médica funcionan sin internet.</p>
+    <a href="/app">Abrir la app</a>
+  </section>
 </SiteLayout>
+
+<style>
+  .offline { max-width: 600px; margin: 2rem auto; padding: 1rem; text-align: center; }
+  h1 { font-family: var(--oh-font-mono); }
+  a { display: inline-block; padding: 0.5rem 1rem; background: var(--oh-accent); color: #fff; text-decoration: none; border-radius: var(--oh-radius); font-weight: 600; }
+</style>
