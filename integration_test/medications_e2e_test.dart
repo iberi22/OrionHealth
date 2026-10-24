@@ -9,6 +9,7 @@ import 'package:isar/isar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
+import 'utils/pump_until.dart';
 import 'utils/video_recorder.dart';
 
 void main() {
@@ -56,7 +57,7 @@ void main() {
       }
 
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await pumpUntilFound(tester, find.text('Aspirina'));
       await VideoRecorder.recordStep(tester, 'medications', '01_list');
 
       expect(find.text('Aspirina'), findsOneWidget);
@@ -71,9 +72,7 @@ void main() {
       await tester.enterText(find.widgetWithText(TextField, 'Dosis'), '500mg');
 
       await tester.tap(find.text('GUARDAR'));
-      await tester.pumpAndSettle();
-      await tester
-          .pumpAndSettle(); // additional pump might be needed for list update
+      await pumpUntilFound(tester, find.text('Metformina'));
 
       expect(find.text('Metformina'), findsOneWidget);
       await VideoRecorder.recordStep(tester, 'medications', '02_added');
@@ -81,7 +80,7 @@ void main() {
       // Restart Widget Tree & Verify Persistence
       await tester.pumpWidget(Container()); // unmount
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await pumpUntilFound(tester, find.text('Metformina'));
       await VideoRecorder.recordStep(
         tester,
         'medications',

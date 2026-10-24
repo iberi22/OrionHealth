@@ -4,7 +4,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/features/workouts/presentation/pages/workouts_page.dart';
 import 'package:orionhealth_health/features/workouts/domain/repositories/workout_repository.dart';
 import 'package:orionhealth_health/core/di/injection.dart' as di;
-import 'package:orionhealth_health/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -16,12 +15,9 @@ void main() {
   testWidgets('Workouts E2E: start, track and save a workout session', (
     WidgetTester tester,
   ) async {
-    // 1. Start the app. Wait for everything to settle.
-    app.main();
-    await tester.pumpAndSettle();
-
-    // The app starts at authentication or onboarding. For this E2E, we'll mount the WorkoutsPage directly
-    // wrapped in MaterialApp to specifically test the workouts flow with real Isar DI.
+    // Mount the WorkoutsPage directly wrapped in MaterialApp to test the
+    // workouts flow with real Isar DI. app.main() is not started: it opens a
+    // second DI/Workmanager stack and never settles, which hung the job.
     final repo = di.getIt<WorkoutRepository>();
 
     await tester.pumpWidget(MaterialApp(home: WorkoutsPage(repository: repo)));

@@ -56,7 +56,8 @@ jobs:
           arch: x86_64
           disable-animations: true
           # app_test.dart uses matchesGoldenFile (host-only, needs a writable fs) -> not runnable on-device.
-          script: flutter test integration_test/critical_flows_e2e_test.dart --flavor prod
+          # Every smoke file runs even if an earlier one fails, so one run reports them all.
+          script: rc=0; for f in critical_flows emergency vitals medications workouts; do flutter test integration_test/${f}_e2e_test.dart --flavor prod || rc=1; done; exit $rc
 
   full:
     name: "🌙 E2E nightly completa"

@@ -58,7 +58,28 @@ void main() {
       expect(decrypted, equals(data));
       expect(encrypted, isNot(equals(data)));
 
-      verify(() => mockSecureStorage.readSecure('health_encryption', 'master_secret')).called(2);
+      // The Argon2id-derived key is cached: the secret is read once, not per call.
+      verify(() => mockSecureStorage.readSecure('health_encryption', 'master_secret')).called(1);
+    });
+
+    test('health encryption creates the master secret on first use', () async {
+      const data = 'patient-sensitive-data';
+      String? stored;
+      when(() => mockSecureStorage.readSecure(any(), any()))
+          .thenAnswer((_) async => stored);
+      when(() => mockSecureStorage.containsKey(any()))
+          .thenAnswer((_) async => false);
+      when(() => mockSecureStorage.writeSecure(any(), any(), any()))
+          .thenAnswer((invocation) async {
+        stored = invocation.positionalArguments[2] as String;
+      });
+
+      final encrypted = await encryptionService.encryptHealthData(data);
+      final decrypted = await encryptionService.decryptHealthData(encrypted);
+
+      expect(decrypted, equals(data));
+      expect(stored, isNotNull);
+      verify(() => mockSecureStorage.writeSecure('health_encryption', 'master_secret', any())).called(1);
     });
 
     test('initialize should create master secret if not exists', () async {

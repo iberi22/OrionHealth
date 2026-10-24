@@ -916,7 +916,10 @@ extension GetItInjectableX on _i1.GetIt {
               gh<_i122.FileHealthDataSource>(),
             ));
     gh.lazySingleton<_i193.HealthRecordRepository>(
-        () => _i194.HealthRecordRepositoryImpl(gh<_i65.Isar>()));
+        () => _i194.HealthRecordRepositoryImpl(
+          gh<_i65.Isar>(),
+          gh<_i172.EncryptionService>(),
+        ));
     gh.lazySingleton<_i195.IAssessmentRepository>(
         () => _i196.AssessmentRepositoryImpl(gh<_i65.Isar>()));
     gh.factory<_i197.ImportCalendarUseCase>(() => _i197.ImportCalendarUseCase(

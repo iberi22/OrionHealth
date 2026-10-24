@@ -5,6 +5,7 @@ import 'package:orionhealth_health/features/health_record/domain/entities/medica
 import 'package:orionhealth_health/features/health_record/infrastructure/repositories/health_record_repository_impl.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
+import '../../../helpers/mock_encryption_service.dart';
 
 void main() {
   late Isar isar;
@@ -20,7 +21,7 @@ void main() {
       [MedicalRecordSchema],
       directory: testDir,
     );
-    repository = HealthRecordRepositoryImpl(isar);
+    repository = HealthRecordRepositoryImpl(isar, FakeEncryptionService());
   });
 
   tearDownAll(() async {

@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
 import '../../application/bloc/health_record_cubit.dart';
 import '../../domain/entities/medical_record.dart';
+import '../../../auth/presentation/pages/share_medical_data_page.dart';
 
 class HealthRecordStagingPage extends StatelessWidget {
   const HealthRecordStagingPage({super.key});
@@ -56,9 +57,13 @@ class _RecordHistoryView extends StatelessWidget {
         title: const Text('Historial Médico'),
         actions: [
           IconButton(
-                    tooltip: 'Compartir',
+            key: const Key('health_record_share_button'),
+            tooltip: 'Compartir',
             icon: const Icon(Icons.ios_share, color: AppColors.secondary),
-            onPressed: () {},
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ShareMedicalDataPage()),
+            ),
           ),
         ],
       ),

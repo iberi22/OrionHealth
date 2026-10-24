@@ -49,8 +49,21 @@ class EncryptionService {
     }
   }
 
+  String? _healthKeyCache;
+
   Future<String> _getHealthKey() async {
-    final masterSecretHex = await _secureStorage.readSecure(_healthKeyNamespace, _healthKeyName);
+    // Argon2id (64 MiB, 3 passes) is deliberately slow: derive the key once.
+    final cached = _healthKeyCache;
+    if (cached != null) return cached;
+
+    var masterSecretHex = await _secureStorage.readSecure(_healthKeyNamespace, _healthKeyName);
+    if (masterSecretHex == null) {
+      // Nothing ever called initialize(), so the first encrypted write failed
+      // with "master secret not found". Create the secret on first use; this
+      // branch only runs when no secret exists, so it never replaces one.
+      await initialize();
+      masterSecretHex = await _secureStorage.readSecure(_healthKeyNamespace, _healthKeyName);
+    }
     if (masterSecretHex == null) {
       throw Exception('Encryption master secret not found');
     }
@@ -71,7 +84,7 @@ class EncryptionService {
     final result = Uint8List(32);
     generator.generateBytesFromString(masterSecretHex, result);
 
-    return HEX.encode(result);
+    return _healthKeyCache = HEX.encode(result);
   }
 
   /// Encrypts health data using AES-256-GCM and a derived key.
