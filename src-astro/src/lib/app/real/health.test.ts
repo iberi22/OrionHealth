@@ -297,4 +297,31 @@ describe('HealthCircleService', () => {
     warnSpy.mockRestore();
     openSpy.mockRestore();
   });
+  it('re-throws if the vault is LOCKED', async () => {
+    const envList = await kernel.seal({
+      category: 'circle',
+      plaintext: { kind: 'initiative', recordId: 'init-1', owner: kernel.memberId(), title: 'test', participants: [], createdBy: kernel.memberId(), metric: 'test', description: 'test', startsAt: Date.now(), endsAt: Date.now(), target: 10, updatedAt: Date.now() }
+    });
+    await kernel.publish(envList);
+
+    let openSpy = vi.spyOn(kernel, 'open').mockImplementation(async () => {
+      throw { code: 'LOCKED' };
+    });
+
+    await expect(health.list('initiative')).rejects.toMatchObject({ code: 'LOCKED' });
+    openSpy.mockRestore();
+
+    const envRule = await kernel.seal({
+      category: 'alert',
+      plaintext: { kind: 'alert-rule', recordId: 'rule-1', owner: kernel.memberId(), vital: 'bp', comparator: '>', threshold: 120, subject: kernel.memberId(), updatedAt: Date.now(), notify: [], enabled: true }
+    });
+    await kernel.publish(envRule);
+
+    openSpy = vi.spyOn(kernel, 'open').mockImplementation(async () => {
+      throw { code: 'LOCKED' };
+    });
+
+    await expect(health.alertRules()).rejects.toMatchObject({ code: 'LOCKED' });
+    openSpy.mockRestore();
+  });
 });

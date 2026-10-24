@@ -220,4 +220,31 @@ describe('RecordsService', () => {
     warnSpy.mockRestore();
     openSpy.mockRestore();
   });
+  it('re-throws if the vault is LOCKED', async () => {
+    const kernel = await FakeKernel.create();
+    const svc = createRecordsService(kernel);
+
+    const vital: VitalReading = {
+      kind: 'vital',
+      recordId: 'v-1',
+      owner: kernel.memberId(),
+      type: 'bp',
+      value: 120,
+      unit: 'mmHg',
+      updatedAt: Date.now(),
+      at: Date.now(),
+    };
+
+    const env = await kernel.seal({ category: 'vitals', owner: kernel.memberId(), plaintext: vital });
+    await kernel.publish(env);
+
+    const originalOpen = kernel.open.bind(kernel);
+    const openSpy = vi.spyOn(kernel, 'open').mockImplementation(async (e) => {
+      throw { code: 'LOCKED' };
+    });
+
+    await expect(svc.list('vital')).rejects.toMatchObject({ code: 'LOCKED' });
+
+    openSpy.mockRestore();
+  });
 });

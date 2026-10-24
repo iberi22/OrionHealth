@@ -70,6 +70,7 @@ export function createHealthService(kernel: Kernel, records: RecordsService): He
           const rec = await kernel.open(env) as CircleRecord;
           if (rec.kind === kind) results.push(rec);
         } catch (e: any) {
+          if (e.code === 'LOCKED') throw e;
           console.warn(e.code);
         }
       }
@@ -95,6 +96,7 @@ export function createHealthService(kernel: Kernel, records: RecordsService): He
             byId.set(rule.recordId, rule);
           }
         } catch (e: any) {
+          if (e.code === 'LOCKED') throw e;
           console.warn(e.code);
         }
       }
