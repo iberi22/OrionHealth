@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/health_sharing/infrastructure/ble_wrapper.dart';
@@ -11,7 +10,6 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
 
   setUp(() {
-    debugDefaultTargetPlatformOverride = TargetPlatform.android;
     bleWrapper = BleWrapper();
     log.clear();
 
@@ -32,28 +30,25 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
     bleWrapper.dispose();
-    debugDefaultTargetPlatformOverride = null;
   });
 
   group('BleWrapper', () {
     test('startAdvertise updates state', () async {
       expect(bleWrapper.isAdvertising, isFalse);
 
-      await bleWrapper.startAdvertise(
-        serviceUuid: 'test-uuid',
-        localName: 'test-node',
+      expect(
+        () => bleWrapper.startAdvertise(
+          serviceUuid: 'test-uuid',
+          localName: 'test-node',
+        ),
+        throwsUnsupportedError,
       );
 
-      expect(bleWrapper.isAdvertising, isTrue);
-      // On non-mobile platforms in CI, it might not invoke the method channel but still sets _isAdvertising = true.
+      expect(bleWrapper.isAdvertising, isFalse);
     });
 
     test('stopAdvertise updates state', () async {
-      // Start first
-      await bleWrapper.startAdvertise(
-        serviceUuid: 'test-uuid',
-        localName: 'test-node',
-      );
+      expect(bleWrapper.isAdvertising, isFalse);
 
       await bleWrapper.stopAdvertise();
 
@@ -64,11 +59,14 @@ void main() {
       final states = <bool>[];
       final sub = bleWrapper.advertisementState.listen(states.add);
 
-      await bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n');
+      expect(
+        () => bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n'),
+        throwsUnsupportedError,
+      );
       await bleWrapper.stopAdvertise();
 
       await Future.delayed(Duration.zero);
-      expect(states, [true, false]);
+      expect(states, isEmpty);
       await sub.cancel();
     });
 
@@ -78,9 +76,12 @@ void main() {
             throw MissingPluginException();
           });
 
-      await bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n');
+      expect(
+        () => bleWrapper.startAdvertise(serviceUuid: 'u', localName: 'n'),
+        throwsUnsupportedError,
+      );
 
-      expect(bleWrapper.isAdvertising, isTrue); // Fallback logic in BleWrapper
+      expect(bleWrapper.isAdvertising, isFalse);
     });
   });
 }
