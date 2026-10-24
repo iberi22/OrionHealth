@@ -13,7 +13,10 @@ class WifiDirectService {
   final BonsoirDiscovery Function(String type)? discoveryFactory;
   final BonsoirBroadcast Function(BonsoirService service)? broadcastFactory;
 
-  WifiDirectService({this.discoveryFactory, this.broadcastFactory});
+  WifiDirectService({
+    @ignoreParam this.discoveryFactory,
+    @ignoreParam this.broadcastFactory,
+  });
 
   static const int kDefaultPort = 9124;
   static const String _serviceType = '_orion-health._tcp';
