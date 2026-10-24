@@ -1,6 +1,8 @@
 import * as Y from 'yjs';
 import type { Envelope } from '../contracts/types';
-import { b64u, hmac, hkdf, utf8 } from '../crypto/index';
+import { b64u, canonical, fromUtf8, hmac, hkdf, utf8 } from '../crypto/index';
+
+const same = (a: Envelope, b: Envelope) => fromUtf8(canonical(a)) === fromUtf8(canonical(b));
 
 export async function circleRoom(ck0: Uint8Array): Promise<string> {
   const hash = await hmac(ck0, utf8('orion/v1/room'));
@@ -62,41 +64,50 @@ export async function createCircleReplica(opts: CircleReplicaOptions): Promise<C
 
     pendingProcessing = pendingProcessing.then(async () => {
       for (const change of changesToProcess) {
-        if (change.action === 'delete') {
-          const lastValid = validCache.get(change.key);
-          if (lastValid) {
-            doc.transact(() => {
-              envMap.set(change.key, lastValid);
-            });
-          }
-        } else if (change.env) {
-          const isValid = await opts.validate(change.env);
-          if (isValid) {
-            validCache.set(change.key, change.env);
-            await opts.sink(change.env);
-          } else {
-            const lastValid = validCache.get(change.key);
-            if (lastValid) {
-              doc.transact(() => {
-                envMap.set(change.key, lastValid);
-              });
-            }
-          }
+        // One bad change must never stop the replica from processing later ones.
+        try {
+          await processRemote(change);
+        } catch {
+          /* rejected change: the last valid envelope stays in place */
         }
       }
     });
   });
 
+  const restore = (key: string) => {
+    const lastValid = validCache.get(key);
+    if (lastValid) doc.transact(() => envMap.set(key, lastValid));
+  };
+
+  async function processRemote(change: { key: string; action: string; env?: Envelope }) {
+    const lastValid = validCache.get(change.key);
+    if (change.action === 'delete' || !change.env) {
+      restore(change.key);
+      return;
+    }
+    // Envelopes are immutable by id (spec §5, §8): any different envelope under a known id is an overwrite.
+    if (lastValid) {
+      if (!same(lastValid, change.env)) restore(change.key);
+      return;
+    }
+    if (!(await opts.validate(change.env))) return;
+    await opts.sink(change.env);
+    validCache.set(change.key, change.env);
+  }
+
   return {
     async add(env: Envelope) {
-      const isValid = await opts.validate(env);
-      if (isValid) {
-        validCache.set(env.id, env);
-        doc.transact(() => {
-          envMap.set(env.id, env);
-        });
-        await opts.sink(env);
+      const known = validCache.get(env.id);
+      if (known) {
+        if (!same(known, env)) throw new Error('ID_CONFLICT');
+        return;
       }
+      if (!(await opts.validate(env))) return;
+      await opts.sink(env);
+      validCache.set(env.id, env);
+      doc.transact(() => {
+        envMap.set(env.id, env);
+      });
     },
     destroy() {
       if (provider) {

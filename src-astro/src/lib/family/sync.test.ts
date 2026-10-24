@@ -147,4 +147,43 @@ describe('sync module', () => {
     replicaA.destroy();
     replicaB.destroy();
   });
+
+  it('keeps the first valid envelope when a validly signed one reuses its id', async () => {
+    const ck0 = utf8('test-ck0-key-12345678901234567890');
+    const storeA: Envelope[] = [];
+    const replicaA = await createCircleReplica({ circleId: 'c1', ck0, validate: () => true, sink: (e) => { storeA.push(e); }, connect: false });
+    const replicaB = await createCircleReplica({ circleId: 'c1', ck0, validate: () => true, sink: () => {}, connect: false });
+    await replicaA.add(createDummyEnvelope('e1'));
+    Y.applyUpdate(replicaB.doc, Y.encodeStateAsUpdate(replicaA.doc));
+    await new Promise((r) => setTimeout(r, 20));
+    const forged = { ...createDummyEnvelope('e1', 'member2'), sig: 'other-valid-sig' };
+    replicaB.doc.getMap('env').set('e1', forged);
+    Y.applyUpdate(replicaA.doc, Y.encodeStateAsUpdate(replicaB.doc, Y.encodeStateVector(replicaA.doc)));
+    await new Promise((r) => setTimeout(r, 20));
+    expect((replicaA.doc.getMap('env').get('e1') as Envelope).sig).toBe('sig');
+    expect(storeA).toHaveLength(1);
+    await expect(replicaA.add(forged)).rejects.toThrow('ID_CONFLICT');
+    replicaA.destroy();
+    replicaB.destroy();
+  });
+
+  it('keeps processing after a sink or validator error', async () => {
+    const ck0 = utf8('test-ck0-key-12345678901234567890');
+    const storeA: Envelope[] = [];
+    const replicaA = await createCircleReplica({
+      circleId: 'c1', ck0, connect: false,
+      validate: (e) => { if (e.id === 'boom') throw new Error('validator crashed'); return true; },
+      sink: (e) => { storeA.push(e); },
+    });
+    const replicaB = await createCircleReplica({ circleId: 'c1', ck0, validate: () => true, sink: () => {}, connect: false });
+    replicaB.doc.getMap('env').set('boom', createDummyEnvelope('boom'));
+    Y.applyUpdate(replicaA.doc, Y.encodeStateAsUpdate(replicaB.doc));
+    await new Promise((r) => setTimeout(r, 20));
+    replicaB.doc.getMap('env').set('e2', createDummyEnvelope('e2'));
+    Y.applyUpdate(replicaA.doc, Y.encodeStateAsUpdate(replicaB.doc, Y.encodeStateVector(replicaA.doc)));
+    await new Promise((r) => setTimeout(r, 20));
+    expect(storeA.map((e) => e.id)).toEqual(['e2']);
+    replicaA.destroy();
+    replicaB.destroy();
+  });
 });
