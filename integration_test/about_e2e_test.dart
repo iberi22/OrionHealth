@@ -42,6 +42,7 @@ void main() {
 
         // Start from User Profile to test navigation
         await tester.pumpWidget(buildApp());
+        await pumpUntilFound(tester, find.byType(UserProfilePage));
 
         final l10n = await AppLocalizations.delegate.load(const Locale('es'));
 
@@ -51,7 +52,16 @@ void main() {
           ProfileInfoTile,
           l10n.aboutOrionHealth,
         );
-        await tester.ensureVisible(tile);
+        await tester.scrollUntilVisible(
+          tile,
+          200,
+          scrollable: find
+              .descendant(
+                of: find.byType(UserProfilePage),
+                matching: find.byType(Scrollable),
+              )
+              .first,
+        );
         await tester.pumpAndSettle();
         await VideoRecorder.recordStep(tester, 'about', '01_user_profile');
 
