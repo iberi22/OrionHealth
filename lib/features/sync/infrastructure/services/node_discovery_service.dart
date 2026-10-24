@@ -12,11 +12,22 @@ class NodeDiscoveryService implements domain.NodeDiscoveryService {
   BonsoirBroadcast? _broadcast;
   BonsoirDiscovery? _discovery;
 
-  final _discoveredNodesController = StreamController<List<SyncNode>>.broadcast();
+  final BonsoirBroadcast Function(BonsoirService)? _broadcastFactory;
+  final BonsoirDiscovery Function(String type)? _discoveryFactory;
+
+  NodeDiscoveryService({
+    BonsoirBroadcast Function(BonsoirService)? broadcastFactory,
+    BonsoirDiscovery Function(String type)? discoveryFactory,
+  }) : _broadcastFactory = broadcastFactory,
+       _discoveryFactory = discoveryFactory;
+
+  final _discoveredNodesController =
+      StreamController<List<SyncNode>>.broadcast();
   final Map<String, SyncNode> _nodes = {};
 
   @override
-  Stream<List<SyncNode>> get discoveredNodes => _discoveredNodesController.stream;
+  Stream<List<SyncNode>> get discoveredNodes =>
+      _discoveredNodesController.stream;
 
   @override
   List<SyncNode> get currentNodes => _nodes.values.toList();
@@ -32,11 +43,17 @@ class NodeDiscoveryService implements domain.NodeDiscoveryService {
       attributes: {'nodeId': nodeId},
     );
 
-    _broadcast = BonsoirBroadcast(service: service);
+    _broadcast = _broadcastFactory != null
+        ? _broadcastFactory(service)
+        : BonsoirBroadcast(service: service);
+    await _broadcast!.initialize();
     await _broadcast!.start();
 
     // 2. Discover others
-    _discovery = BonsoirDiscovery(type: _serviceType);
+    _discovery = _discoveryFactory != null
+        ? _discoveryFactory(_serviceType)
+        : BonsoirDiscovery(type: _serviceType);
+    await _discovery!.initialize();
 
     _discovery?.eventStream?.listen((event) {
       if (event is BonsoirDiscoveryServiceFoundEvent) {
