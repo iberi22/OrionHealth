@@ -1,11 +1,8 @@
 name: Deploy Astro Site to Cloudflare Pages
 
+# superseded by deploy-astro
+
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'docs/**'
-      - '.github/workflows/deploy-docs.yml'
   workflow_dispatch:
 
 permissions:

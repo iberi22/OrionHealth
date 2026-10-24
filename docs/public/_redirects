@@ -1,0 +1,5 @@
+/ https://orionhealth.swal.network/ 301
+/docs/* https://orionhealth.swal.network/docs/:splat 301
+/medical-standards/* https://orionhealth.swal.network/kb 301
+/blog/* https://orionhealth.swal.network/blog/:splat 301
+/* https://orionhealth.swal.network/:splat 301
