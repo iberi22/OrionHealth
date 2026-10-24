@@ -47,16 +47,27 @@ void main() {
 
       // Basic Info Step
       expect(find.text('Información Personal'), findsOneWidget);
-      await tester.enterText(find.widgetWithText(TextField, 'Nombre completo'), 'Test User');
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Nombre completo'),
+        'Test User',
+      );
       await tester.enterText(find.widgetWithText(TextField, 'Peso (kg)'), '70');
-      await tester.enterText(find.widgetWithText(TextField, 'Altura (cm)'), '175');
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Altura (cm)'),
+        '175',
+      );
       // nextStep() requires birth date and sex (OnboardingCubit validation).
       await tester.ensureVisible(find.text('Fecha de nacimiento'));
       await tester.tap(find.text('Fecha de nacimiento'));
       await tester.pumpAndSettle();
       // Date picker opens preselected on 1990-01-01; confirm with the last dialog button (OK).
       await tester.tap(
-        find.descendant(of: find.byType(Dialog), matching: find.byType(TextButton)).last,
+        find
+            .descendant(
+              of: find.byType(Dialog),
+              matching: find.byType(TextButton),
+            )
+            .last,
       );
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Masculino'));
@@ -78,10 +89,12 @@ void main() {
 
       // Privacy Step
       expect(find.text('Privacidad y Seguridad'), findsOneWidget);
-      await tester.tap(find.text('Acepto el procesamiento de mis datos'));
-      await tester.tap(find.text('Acepto la política de privacidad'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Completar'));
+      await _tapInView(
+        tester,
+        find.text('Acepto el procesamiento de mis datos'),
+      );
+      await _tapInView(tester, find.text('Acepto la política de privacidad'));
+      await _tapInView(tester, find.text('Completar'));
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
 
@@ -98,10 +111,11 @@ void main() {
 
     testWidgets('2. Auth Flow: PIN Setup', (tester) async {
       await _resetDi();
+      // Preferences must be seeded before DI resolves SharedPreferences.
+      SharedPreferences.setMockInitialValues({'onboarding_completed': true});
       await di.configureDependencies();
 
       // Simulate that onboarding was completed but PIN is not yet set
-      SharedPreferences.setMockInitialValues({'onboarding_completed': true});
 
       await tester.pumpWidget(const app.MyApp());
       await tester.pump(const Duration(seconds: 2));
@@ -110,8 +124,14 @@ void main() {
       // Should be at SetupPinPage (which is pushed by AuthGate if no PIN is set)
       expect(find.text('Configurar PIN'), findsOneWidget);
 
-      await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '1234');
-      await tester.enterText(find.widgetWithText(TextField, 'Confirmar PIN'), '1234');
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Nuevo PIN'),
+        '1234',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Confirmar PIN'),
+        '1234',
+      );
       await tester.tap(find.text('Guardar PIN'));
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
@@ -122,8 +142,9 @@ void main() {
 
     testWidgets('3. Home -> Appointments -> Create -> Delete', (tester) async {
       await _resetDi();
-      await di.configureDependencies();
+      // Preferences must be seeded before DI resolves SharedPreferences.
       SharedPreferences.setMockInitialValues({'onboarding_completed': true});
+      await di.configureDependencies();
 
       await tester.pumpWidget(const app.MyApp());
       await tester.pump(const Duration(seconds: 2));
@@ -148,8 +169,14 @@ void main() {
       await tester.tap(find.byIcon(Icons.add).first);
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.widgetWithText(TextField, 'Nombre del Doctor'), 'Dr. Orion');
-      await tester.enterText(find.widgetWithText(TextField, 'Especialidad'), 'General');
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Nombre del Doctor'),
+        'Dr. Orion',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Especialidad'),
+        'General',
+      );
       await tester.tap(find.text('GUARDAR'));
       await tester.pumpAndSettle();
 
@@ -166,8 +193,9 @@ void main() {
 
     testWidgets('4. Health Record: Upload -> View -> Share', (tester) async {
       await _resetDi();
-      await di.configureDependencies();
+      // Preferences must be seeded before DI resolves SharedPreferences.
       SharedPreferences.setMockInitialValues({'onboarding_completed': true});
+      await di.configureDependencies();
 
       await tester.pumpWidget(const app.MyApp());
       await tester.pump(const Duration(seconds: 2));
@@ -195,9 +223,9 @@ void main() {
       // but here we try to find the form fields from _UploadDetailsStep
       final summaryField = find.widgetWithText(TextField, 'Resumen o Título');
       if (summaryField.evaluate().isNotEmpty) {
-         await tester.enterText(summaryField, 'Checkup');
-         await tester.tap(find.text('GUARDAR REGISTRO'));
-         await tester.pumpAndSettle();
+        await tester.enterText(summaryField, 'Checkup');
+        await tester.tap(find.text('GUARDAR REGISTRO'));
+        await tester.pumpAndSettle();
       }
 
       // Verify it appears in timeline or list
@@ -214,10 +242,13 @@ void main() {
       }
     });
 
-    testWidgets('5. Local Agent: Ask question -> Receive response', (tester) async {
+    testWidgets('5. Local Agent: Ask question -> Receive response', (
+      tester,
+    ) async {
       await _resetDi();
-      await di.configureDependencies();
+      // Preferences must be seeded before DI resolves SharedPreferences.
       SharedPreferences.setMockInitialValues({'onboarding_completed': true});
+      await di.configureDependencies();
 
       await tester.pumpWidget(const app.MyApp());
       await tester.pump(const Duration(seconds: 2));
@@ -261,8 +292,9 @@ void main() {
 
     testWidgets('6. Sync: Trigger sync and verify', (tester) async {
       await _resetDi();
-      await di.configureDependencies();
+      // Preferences must be seeded before DI resolves SharedPreferences.
       SharedPreferences.setMockInitialValues({'onboarding_completed': true});
+      await di.configureDependencies();
 
       await tester.pumpWidget(const app.MyApp());
       await tester.pump(const Duration(seconds: 2));
