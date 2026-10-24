@@ -77,7 +77,7 @@ export async function visit(page: Page, path: string): Promise<void> {
 
 /** Full reload followed by unlocking (what a user does after closing/reopening the tab). */
 export async function reloadAndUnlock(page: Page, path: string): Promise<void> {
-  await page.goto(path);
+  await page.goto('/app');
   await unlockIfLocked(page);
   await navigateInApp(page, path);
 }
