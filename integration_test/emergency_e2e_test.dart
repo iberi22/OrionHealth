@@ -124,7 +124,8 @@ void main() {
 
       expect(find.text('John Doe'), findsOneWidget);
       expect(find.textContaining('O Positivo'), findsOneWidget);
-      expect(find.textContaining('Penicilina'), findsOneWidget);
+      // The QR payload (read-only text) also contains the allergy; match the card's own Text.
+      expect(find.text('Penicilina'), findsOneWidget);
 
       expect(find.text('QR Médico'), findsOneWidget);
       expect(find.byType(MedicalIdQrView), findsOneWidget);
