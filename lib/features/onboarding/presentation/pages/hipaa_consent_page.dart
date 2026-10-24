@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/glassmorphic_card.dart';
+import 'package:orionhealth_health/core/theme/app_colors.dart';
+import 'package:orionhealth_health/features/ui/widgets/glassmorphic_card.dart';
 
-/// HIPAA-style consent/privacy screen.
-///
-/// Explains what data is collected and why, requires explicit checkbox
-/// acceptance before proceeding, provides a privacy policy dialog, and
-/// persists consent to [FlutterSecureStorage].
 class HipaaConsentPage extends StatefulWidget {
   const HipaaConsentPage({super.key});
 
@@ -16,126 +11,88 @@ class HipaaConsentPage extends StatefulWidget {
 }
 
 class _HipaaConsentPageState extends State<HipaaConsentPage> {
+  final _storage = const FlutterSecureStorage();
   bool _consentGiven = false;
   bool _isLoading = false;
-  final _storage = const FlutterSecureStorage();
 
-  static const _consentKey = 'hipaa_consent_granted';
-  static const _consentDateKey = 'hipaa_consent_date';
+  static const String _consentKey = 'privacy_consent_accepted';
+  static const String _consentDateKey = 'privacy_consent_date';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Privacidad y Consentimiento',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: AppColors.backgroundDark,
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
           children: [
             // --- Header ---
-            const Center(
-              child: Column(
-                children: [
-                  Icon(Icons.shield_outlined, color: AppColors.primary, size: 56),
-                  SizedBox(height: 12),
-                  Text(
-                    'Tu privacidad es primero',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'OrionHealth está diseñado para proteger tu información médica.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ],
+            const Icon(Icons.security, size: 64, color: AppColors.primary),
+            const SizedBox(height: 16),
+            const Text(
+              'Tu privacidad es primero',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            Text(
+              'Privacidad y Consentimiento',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white.withAlpha(180),
+              ),
+            ),
+            const SizedBox(height: 32),
 
-            // --- Data Collection Explanation ---
+            // --- Body Content ---
             GlassmorphicCard(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.info_outline, color: AppColors.primary, size: 22),
+                      const Icon(Icons.info_outline, color: Colors.blueAccent),
                       const SizedBox(width: 10),
-                      const Text(
-                        '¿Qué datos recogemos y por qué?',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                      const Expanded(
+                        child: Text(
+                          '¿Qué datos recogemos y por qué?',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 16),
                   _buildDataPoint(
-                    Icons.person,
+                    Icons.person_outline,
                     'Datos de perfil',
-                    'Nombre, edad, género y datos demográficos para personalizar tu experiencia.',
+                    'Nombre, edad, género para personalizar la experiencia.',
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   _buildDataPoint(
-                    Icons.monitor_heart_outlined,
+                    Icons.favorite_border,
                     'Datos de salud',
-                    'Signos vitales, condiciones, medicamentos y alergias que ingreses voluntariamente.',
+                    'Condiciones, signos vitales, medicamentos para generar recomendaciones locales.',
                   ),
-                  const SizedBox(height: 10),
-                  _buildDataPoint(
-                    Icons.calendar_month,
-                    'Historial médico',
-                    'Citas, recordatorios y seguimientos generados localmente en tu dispositivo.',
-                  ),
-                  const SizedBox(height: 10),
-                  _buildDataPoint(
-                    Icons.security,
-                    'Almacenamiento 100% local',
-                    'Todos tus datos se almacenan exclusivamente en tu dispositivo.',
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // --- HIPAA / Privacy Commitment ---
-            GlassmorphicCard(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                  const SizedBox(height: 24),
                   Row(
                     children: [
-                      const Icon(Icons.verified_user_outlined, color: AppColors.secondary, size: 22),
+                      const Icon(Icons.shield_outlined, color: Colors.greenAccent),
                       const SizedBox(width: 10),
                       const Text(
                         'Nuestro compromiso',
                         style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),

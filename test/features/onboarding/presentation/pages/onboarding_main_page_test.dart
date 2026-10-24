@@ -20,15 +20,20 @@ void main() {
   });
 
   testWidgets('OnboardingMainPage navigates through steps', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: OnboardingMainPage(onFinish: () {}),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(home: OnboardingMainPage(onFinish: () {})),
+    );
 
     // Step 0: Welcome
-    expect(find.text('Privacy First'), findsOneWidget);
-    await tester.tap(find.text('Next')); await tester.pumpAndSettle();
-    await tester.tap(find.text('Next')); await tester.pumpAndSettle();
-    await tester.tap(find.text('Get Started')); await tester.pumpAndSettle();
+    expect(find.text('Tu Salud, Tu Control'), findsOneWidget);
+    await tester.tap(find.text('Siguiente'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tu Red Médica Local'), findsOneWidget);
+    await tester.tap(find.text('Siguiente'));
+    await tester.pumpAndSettle();
+    expect(find.text('El Puente de Confianza'), findsOneWidget);
+    await tester.tap(find.text('Continuar sin EPS'));
+    await tester.pumpAndSettle();
 
     // Step 1: Profile
     expect(find.text('Step 2 of 5'), findsOneWidget);
@@ -36,7 +41,6 @@ void main() {
     // Test back button
     await tester.tap(find.byIcon(Icons.arrow_back));
     await tester.pumpAndSettle();
-    expect(find.text('Privacy First'), findsOneWidget); // It should go back to first slide of welcome or first page?
-    // OnboardingWelcomePage is step 0.
+    expect(find.text('El Puente de Confianza'), findsOneWidget);
   });
 }

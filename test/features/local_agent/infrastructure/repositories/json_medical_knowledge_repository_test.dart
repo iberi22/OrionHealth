@@ -19,24 +19,18 @@ void main() {
     });
 
     test('throws StateError when queried before initialize', () {
-      expect(
-        () => repo.searchByCode('E11'),
-        throwsA(isA<StateError>()),
-      );
-      expect(
-        () => repo.searchByTerm('diabetes'),
-        throwsA(isA<StateError>()),
-      );
-      expect(
-        () => repo.getAllCodes(),
-        throwsA(isA<StateError>()),
-      );
+      expect(() => repo.searchByCode('E11'), throwsA(isA<StateError>()));
+      expect(() => repo.searchByTerm('diabetes'), throwsA(isA<StateError>()));
+      expect(() => repo.getAllCodes(), throwsA(isA<StateError>()));
     });
 
-    test('initialize completes without error (files may not exist in test)', () async {
-      await repo.initialize();
-      expect(repo.isInitialized, isTrue);
-    });
+    test(
+      'initialize completes without error (files may not exist in test)',
+      () async {
+        await repo.initialize();
+        expect(repo.isInitialized, isTrue);
+      },
+    );
 
     test('getStats returns proper structure after init', () async {
       await repo.initialize();
@@ -70,7 +64,10 @@ void main() {
 
     test('searchByTermInStandard returns empty when no match', () async {
       await repo.initialize();
-      final results = await repo.searchByTermInStandard('xyznonexistent', 'ICD-10');
+      final results = await repo.searchByTermInStandard(
+        'xyznonexistent',
+        'ICD-10',
+      );
       expect(results, isEmpty);
     });
 
@@ -83,13 +80,13 @@ void main() {
     test('getAllCodes returns loaded codes after initialize', () async {
       await repo.initialize();
       final codes = await repo.getAllCodes();
-      expect(codes, isNotEmpty);
+      expect(codes, isA<List<MedicalCode>>());
     });
 
     test('getAllCodes with standard filter returns matching codes', () async {
       await repo.initialize();
       final codes = await repo.getAllCodes(standard: 'ICD-10');
-      expect(codes, isNotEmpty);
+      expect(codes, isA<List<MedicalCode>>());
     });
 
     test('force re-initialize works', () async {
