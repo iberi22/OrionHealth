@@ -7,7 +7,7 @@ class BroadcastTransport implements InviteTransport {
   private recentMessages = new Map<string, { msg: InviteHello, senderId: string }[]>();
   private connIdCounter = 0;
 
-  async join(roomId: string): Promise<InviteConnection> {
+  async join(roomId: string, opts?: { secret?: Uint8Array }): Promise<InviteConnection> {
     const connId = `conn-${++this.connIdCounter}`;
     let room = this.rooms.get(roomId);
     if (!room) {
@@ -61,7 +61,7 @@ class MitmTransport implements InviteTransport {
 
   constructor(private mitmHello: InviteHello) {}
 
-  async join(roomId: string): Promise<InviteConnection> {
+  async join(roomId: string, opts?: { secret?: Uint8Array }): Promise<InviteConnection> {
     const connId = `conn-${++this.connIdCounter}`;
     let room = this.rooms.get(roomId);
     if (!room) {
@@ -199,9 +199,9 @@ describe('InviteChannel', () => {
       const closed: string[] = [];
       let n = 0;
       const transport: InviteTransport = {
-        async join(roomId) {
+        async join(roomId, opts) {
           const id = `c${++n}`;
-          const conn = await inner.join(roomId);
+          const conn = await inner.join(roomId, opts);
           return { ...conn, close: () => (closed.push(id), conn.close()) };
         },
       };
