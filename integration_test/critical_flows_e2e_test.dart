@@ -86,7 +86,25 @@ Future<void> _pumpUntil(
     if (finder.evaluate().isNotEmpty) break;
     await tester.pump(const Duration(milliseconds: 250));
   }
+  if (finder.evaluate().isEmpty) {
+    _dump(tester, 'timed out waiting for $finder');
+  }
   await tester.pump(const Duration(milliseconds: 300));
+}
+
+/// Prints what is on screen so a failed CI run shows where the flow got stuck.
+void _dump(WidgetTester tester, String why) {
+  final texts = tester
+      .widgetList<Text>(find.byType(Text))
+      .map((w) => w.data ?? w.textSpan?.toPlainText())
+      .whereType<String>()
+      .take(60)
+      .toList();
+  // ignore: avoid_print
+  print(
+    '[E2E-DUMP] $why :: spinners='
+    '${find.byType(CircularProgressIndicator).evaluate().length} texts=$texts',
+  );
 }
 
 double _viewHeight(WidgetTester tester) =>
@@ -108,12 +126,15 @@ Future<void> _reveal(WidgetTester tester, Finder finder) async {
       if (y == lastY) return; // cannot scroll any further
     }
     lastY = y;
-    Finder target = vertical.last;
+    Finder? target;
     if (built) {
       final ancestors = find.ancestor(of: finder.first, matching: vertical);
       if (ancestors.evaluate().isNotEmpty) target = ancestors.first;
     }
-    if (target.evaluate().isEmpty) return;
+    if (target == null && vertical.evaluate().isNotEmpty) {
+      target = vertical.last;
+    }
+    if (target == null) return; // nothing scrollable on this screen
     final up = y == null || y > h / 2;
     await tester.drag(target, Offset(0, up ? -200 : 200), warnIfMissed: false);
     await tester.pump(const Duration(milliseconds: 100));
@@ -121,6 +142,10 @@ Future<void> _reveal(WidgetTester tester, Finder finder) async {
 }
 
 Future<void> _tap(WidgetTester tester, Finder finder) async {
+  // Close the keyboard left open by a previous enterText so it does not
+  // shrink the viewport and push the target out of view.
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tester.pump(const Duration(milliseconds: 200));
   await _reveal(tester, finder);
   await tester.ensureVisible(finder);
   await tester.tap(finder);
@@ -129,6 +154,7 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
 
 Future<void> _setupPin(WidgetTester tester) async {
   await _pumpUntil(tester, find.text('Configurar PIN'));
+  if (find.text('Configurar PIN').evaluate().isEmpty) _dump(tester, 'no PIN page');
   expect(find.text('Configurar PIN'), findsOneWidget);
   await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '1234');
   await tester.enterText(

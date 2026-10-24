@@ -30,6 +30,7 @@ import '../../features/network/domain/entities/network_message.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_did.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_credential.dart';
 // import '../../features/ssi/infrastructure/persistence/isar_revocation_entry.dart';
+import '../../features/vitals/domain/entities/vital_sign.dart';
 import '../../features/clinical_assessments/domain/entities/clinical_assessment_record.dart';
 import '../../features/auth/domain/entities/auth_credentials.dart';
 import '../../features/emergency/infrastructure/repositories/isar_medical_id_repository.dart';
@@ -73,6 +74,7 @@ abstract class DatabaseModule {
       // every read threw "Missing TypeSchema in Isar.open".
       AuthCredentialsSchema,
       MedicalIdRecordSchema,
+      VitalSignSchema,
       wallet.VitalSignSchema,
       wallet.MedicationEntrySchema,
       wallet.MedicalDocumentSchema,
