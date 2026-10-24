@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import '../../../../core/di/injection.dart';
 import '../../domain/entities/workout_session.dart';
 import '../../domain/repositories/workout_repository.dart';
@@ -29,6 +31,18 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('Entrenamientos')),
+    floatingActionButton: FloatingActionButton(
+      onPressed: () async {
+        await Navigator.push<void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (_) => WorkoutTrackingPage(repository: widget.repository),
+          ),
+        );
+        _refresh();
+      },
+      child: const Icon(Icons.play_arrow),
+    ),
     body: FutureBuilder<List<WorkoutSession>>(
       future: _sessions,
       builder: (context, snapshot) {
@@ -83,6 +97,105 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
       },
     ),
   );
+}
+
+class WorkoutTrackingPage extends StatefulWidget {
+  final WorkoutRepository? repository;
+  const WorkoutTrackingPage({super.key, this.repository});
+
+  @override
+  State<WorkoutTrackingPage> createState() => _WorkoutTrackingPageState();
+}
+
+class _WorkoutTrackingPageState extends State<WorkoutTrackingPage> {
+  final DateTime _startedAt = DateTime.now();
+  final List<WorkoutExercise> _exercises = [];
+
+  void _addExercise() {
+    setState(() {
+      _exercises.add(
+        WorkoutExercise()
+          ..ref = 'wg:custom-exercise'
+          ..sets = [
+            WorkoutSet()
+              ..reps = 10
+              ..weightKg = 20,
+          ],
+      );
+    });
+  }
+
+  Future<void> _saveSession() async {
+    final endedAt = DateTime.now();
+    final recordId = const Uuid().v4();
+    final data = {
+      'startedAt': _startedAt.toUtc().toIso8601String(),
+      'endedAt': endedAt.toUtc().toIso8601String(),
+      'exercises': _exercises
+          .map(
+            (e) => {
+              'ref': e.ref,
+              'sets': e.sets
+                  .map(
+                    (s) => {
+                      if (s.reps != null) 'reps': s.reps,
+                      if (s.weightKg != null) 'weightKg': s.weightKg,
+                    },
+                  )
+                  .toList(),
+            },
+          )
+          .toList(),
+    };
+    final envelope = {
+      'id': recordId,
+      'schema': 'swal.health/v1/workout-session',
+      'subject': 'local-user',
+      'data': data,
+    };
+
+    final session = WorkoutSession.fromRecord(envelope);
+    final repo = widget.repository ?? getIt<WorkoutRepository>();
+    await repo.saveSessions([session]);
+    if (mounted) {
+      Navigator.pop(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('En progreso')),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('Iniciado: ${DateFormat.Hm().format(_startedAt)}'),
+          ),
+          for (final ex in _exercises)
+            ListTile(
+              title: Text(ex.ref),
+              subtitle: Text('${ex.sets.length} series'),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: _addExercise,
+              child: const Text('Añadir Ejercicio'),
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          onPressed: _saveSession,
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+          child: const Text('Terminar y Guardar'),
+        ),
+      ),
+    );
+  }
 }
 
 class WorkoutDetailPage extends StatelessWidget {
