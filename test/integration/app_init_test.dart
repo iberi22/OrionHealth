@@ -5,8 +5,10 @@
 /// Run: flutter test integration_test/app_init_test.dart --flavor prod
 
 import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
+import 'package:isar/isar.dart';
 import 'package:orionhealth_health/main.dart' as app;
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -16,15 +18,19 @@ class MockPathProviderPlatform extends Fake
     implements PathProviderPlatform {
   @override
   Future<String?> getApplicationDocumentsPath() async {
-    return 'test_docs';
+    return Directory.systemTemp.createTempSync().path;
   }
 }
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
   PathProviderPlatform.instance = MockPathProviderPlatform();
 
   group('App Initialization', () {
+    setUpAll(() async {
+      await Isar.initializeIsarCore(download: true);
+    });
+
     testWidgets(
       'app starts without "Error de Inicializacion"',
       (tester) async {
