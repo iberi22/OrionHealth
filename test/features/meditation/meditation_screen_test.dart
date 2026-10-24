@@ -129,25 +129,54 @@ void main() {
   });
 
   testWidgets('MeditationView navigation pops', (tester) async {
-    final observer = MockNavigatorObserver();
+    // Helper to launch MeditationView
+    Future<void> pumpAndPushMeditationView() async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider<MeditationCubit>.value(
+                        value: mockCubit,
+                        child: const MeditationView(),
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Push'),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.tap(find.text('Push'));
+      await tester.pumpAndSettle();
+      expect(find.byType(MeditationView), findsOneWidget);
+    }
 
     // Close button
     when(
       () => mockCubit.state,
     ).thenReturn(const MeditationState(status: MeditationStatus.idle));
-    await tester.pumpWidget(createWidgetUnderTest(observers: [observer]));
+    await pumpAndPushMeditationView();
     await tester.tap(find.byIcon(Icons.close));
-    await tester.pump();
-    verify(() => observer.didPop(any(), any())).called(1);
+    await tester.pumpAndSettle();
+    expect(find.byType(MeditationView), findsNothing);
 
     // Back to start button
-    when(
-      () => mockCubit.state,
-    ).thenReturn(const MeditationState(status: MeditationStatus.completed));
-    await tester.pumpWidget(createWidgetUnderTest(observers: [observer]));
+    when(() => mockCubit.state).thenReturn(
+      const MeditationState(
+        status: MeditationStatus.completed,
+        elapsedSeconds: 60,
+      ),
+    );
+    await pumpAndPushMeditationView();
     await tester.tap(find.text('Volver al inicio'));
-    await tester.pump();
-    verify(() => observer.didPop(any(), any())).called(2);
+    await tester.pumpAndSettle();
+    expect(find.byType(MeditationView), findsNothing);
   });
 
   testWidgets('MeditationPage coverage', (tester) async {
