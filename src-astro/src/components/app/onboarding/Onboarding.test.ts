@@ -106,4 +106,66 @@ describe('Onboarding', () => {
 
     expect(routes.navigate).toHaveBeenCalledWith('/app');
   });
+
+  it('cancelled passkey prompt offers a retry instead of read-only', async () => {
+    app = mount(Onboarding, { target: document.body });
+    flushSync();
+
+    for (let i = 0; i < 3; i++) {
+      const btn = document.querySelector('button') as HTMLButtonElement;
+      btn.click();
+      await flushSync();
+      await new Promise(r => setTimeout(r, 0));
+    }
+
+    const nameInput = document.querySelector('input#vault-name') as HTMLInputElement;
+    nameInput.value = 'Test User';
+    nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+    await flushSync();
+
+    services.vault.create = async () => {
+      const e = new Error('cancelled');
+      (e as any).code = 'NO_PASSKEY';
+      throw e;
+    };
+
+    const createBtn = document.querySelector('button') as HTMLButtonElement;
+    createBtn.click();
+
+    await new Promise(r => setTimeout(r, 10)); // wait for async vault.create
+    await flushSync();
+
+    // Step should still be create-vault, not capability-check
+    expect(document.body.textContent).toContain('Crear tu bóveda segura');
+    expect(document.body.textContent).toContain('Creación cancelada. Inténtalo de nuevo.');
+  });
+
+  it('other error in passkey creation goes to read-only mode', async () => {
+    app = mount(Onboarding, { target: document.body });
+    flushSync();
+
+    for (let i = 0; i < 3; i++) {
+      const btn = document.querySelector('button') as HTMLButtonElement;
+      btn.click();
+      await flushSync();
+      await new Promise(r => setTimeout(r, 0));
+    }
+
+    const nameInput = document.querySelector('input#vault-name') as HTMLInputElement;
+    nameInput.value = 'Test User';
+    nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+    await flushSync();
+
+    services.vault.create = async () => {
+      throw new Error('Some generic error');
+    };
+
+    const createBtn = document.querySelector('button') as HTMLButtonElement;
+    createBtn.click();
+
+    await new Promise(r => setTimeout(r, 10)); // wait for async vault.create
+    await flushSync();
+
+    expect(document.body.textContent).toContain('Modo de solo lectura');
+  });
 });

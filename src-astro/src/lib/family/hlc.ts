@@ -28,12 +28,13 @@ export function createHlc(deviceId: string, nowFn: () => number = Date.now): Hlc
       return formatHlc(ms, counter, deviceId);
     },
     receive: (remote: string) => {
-      const parts = remote.split('-');
-      if (parts.length !== 3) {
+      // "<ms>-<counter>-<deviceId>"; the device id may itself contain dashes.
+      const m = /^(\d+)-(\d+)-(.+)$/.exec(remote);
+      if (!m) {
         throw new Error('Invalid HLC format');
       }
-      const remoteMs = parseInt(parts[0], 10);
-      const remoteCounter = parseInt(parts[1], 10);
+      const remoteMs = parseInt(m[1]!, 10);
+      const remoteCounter = parseInt(m[2]!, 10);
 
       const now = nowFn();
 

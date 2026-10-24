@@ -34,11 +34,7 @@ export interface PublishMessage {
   [key: string]: any;
 }
 
-export interface PingMessage {
-  type: 'ping';
-}
-
-export type SignalingMessage = SubscribeMessage | UnsubscribeMessage | PublishMessage | PingMessage;
+export type SignalingMessage = SubscribeMessage | UnsubscribeMessage | PublishMessage;
 
 export function handleMessage(state: SignalingState, conn: WebSocket, msgStr: string) {
   if (msgStr.length > MAX_PAYLOAD_SIZE) {
@@ -136,14 +132,6 @@ export function handleMessage(state: SignalingState, conn: WebSocket, msgStr: st
             // Error sending, will be cleaned up on close
           }
         }
-      }
-      break;
-    }
-    case 'ping': {
-      try {
-        conn.send(JSON.stringify({ type: 'pong' }));
-      } catch (e) {
-        // Ignore
       }
       break;
     }

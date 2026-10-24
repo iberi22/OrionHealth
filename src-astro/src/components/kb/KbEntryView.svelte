@@ -61,7 +61,7 @@
           <span class="system-badge system-{entry.system}">{entry.system.toUpperCase()}</span>
           <span class="code">{entry.code}</span>
         </div>
-        <h1 class="title">{entry.title}</h1>
+        <h2 class="title">{entry.title}</h2>
       </header>
 
       <div class="body">
