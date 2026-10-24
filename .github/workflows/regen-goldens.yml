@@ -1,0 +1,77 @@
+name: Regenerate Goldens
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+  ISAR_VERSION: '3.1.0+1'
+
+jobs:
+  regen-goldens:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Download IsarCore native library
+        run: |
+          curl -fsSL -o libisar.so \
+            "https://github.com/isar/isar/releases/download/${ISAR_VERSION}/libisar_linux_x64.so"
+          cp libisar.so /tmp/libisar.so
+
+      - name: Save before artifacts
+        run: |
+          mkdir -p artifacts/before
+          cp -r test artifacts/before/test
+
+      - name: Extract target tests and update registry
+        id: extract_tests
+        run: |
+          TEST_FILES=$(dart run scripts/ci/golden_rows.dart)
+          echo "TEST_FILES=$TEST_FILES" >> $GITHUB_ENV
+
+      - name: Update Goldens
+        run: |
+          if [ -n "$TEST_FILES" ]; then
+            flutter test --update-goldens $TEST_FILES
+          else
+            echo "No tests to regenerate."
+          fi
+
+      - name: Save after artifacts
+        run: |
+          mkdir -p artifacts/after
+          cp -r test artifacts/after/test
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: goldens-before-after
+          path: artifacts/
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'test(goldens): regenerate golden files'
+          title: 'Regenerate Goldens'
+          branch: 'chore/regen-goldens'
+          body: |
+            This PR regenerates the golden test images for Flutter 3.44.0 and updates the known failures list.
