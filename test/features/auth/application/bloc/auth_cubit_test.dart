@@ -73,6 +73,29 @@ void main() {
       expect(authCubit.state, equals(AuthNotSetup()));
     });
 
+    test('checkStatus should emit AuthNotSetup when there is no session and no PIN', () async {
+      when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => true);
+      when(mockLogoutUseCase()).thenAnswer((_) async {});
+      when(mockRepository.getCredentials()).thenAnswer((_) async => null);
+
+      await authCubit.checkStatus();
+
+      expect(authCubit.state, equals(AuthNotSetup()));
+    });
+
+    test('checkStatus should emit AuthUnauthenticated when the session expired and a PIN exists', () async {
+      final credentials = AuthCredentials()
+        ..hashedPin = 'hashed'
+        ..salt = 'salt';
+      when(mockCheckSessionTimeoutUseCase()).thenAnswer((_) async => true);
+      when(mockLogoutUseCase()).thenAnswer((_) async {});
+      when(mockRepository.getCredentials()).thenAnswer((_) async => credentials);
+
+      await authCubit.checkStatus();
+
+      expect(authCubit.state, isA<AuthUnauthenticated>());
+    });
+
     test('loginWithPin should emit AuthAuthenticated on success', () async {
       final session = AuthSession(token: 'token', expiresAt: DateTime.now().add(const Duration(minutes: 15)));
 

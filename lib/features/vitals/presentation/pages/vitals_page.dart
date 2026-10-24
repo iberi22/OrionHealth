@@ -140,7 +140,8 @@ class _VitalsPageState extends State<VitalsPage> {
       crossAxisCount: isCompact ? 2 : 3,
       crossAxisSpacing: SWALSpacing.md,
       mainAxisSpacing: SWALSpacing.md,
-      childAspectRatio: isCompact ? 1.3 : 1.4,
+      // Cards hold a label, value and unit; 1.3/1.4 overflowed by up to 18px.
+      childAspectRatio: isCompact ? 1.0 : 1.2,
       children: [
         _buildVitalCard(VitalSignType.heartRate, 'BPM', Icons.favorite),
         _buildVitalCard(VitalSignType.temperature, '°C', Icons.thermostat),
