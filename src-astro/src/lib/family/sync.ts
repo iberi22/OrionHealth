@@ -16,16 +16,12 @@ export interface CircleReplicaOptions {
   circleId: string;
   ck0: Uint8Array;
   validate: (env: Envelope) => Promise<boolean> | boolean;
-  onRejected?: (env: Envelope) => void;
-  persist?: boolean;
+  sink: (env: Envelope) => void | Promise<void>;
   connect?: boolean;
 }
 
 export interface CircleReplica {
-  add(env: Envelope): void;
-  all(): Envelope[];
-  byOwner(): Record<string, Envelope[]>;
-  onEnvelope(cb: (env: Envelope) => void): () => void;
+  add(env: Envelope): Promise<void>;
   destroy(): void;
   // internal use, e.g. tests that manually sync
   doc: Y.Doc;
@@ -34,21 +30,15 @@ export interface CircleReplica {
 export async function createCircleReplica(opts: CircleReplicaOptions): Promise<CircleReplica> {
   const doc = new Y.Doc();
   const envMap = doc.getMap<Envelope>('env');
+  const validCache = new Map<string, Envelope>();
 
   let provider: any = null;
-  let persistence: any = null;
-
-  if (opts.persist) {
-    const { IndexeddbPersistence } = await import('y-indexeddb');
-    persistence = new IndexeddbPersistence(`orion-circle-${opts.circleId}`, doc);
-  }
 
   if (opts.connect !== false) {
     const room = await circleRoom(opts.ck0);
     const password = await transportPassword(opts.ck0);
     const signalingUrl = import.meta.env?.PUBLIC_SIGNALING_URL || 'wss://signal.orionhealth.swal.network';
 
-    // dynamically import y-webrtc so it's lazy
     const { WebrtcProvider } = await import('y-webrtc');
     provider = new WebrtcProvider(room, doc, {
       password,
@@ -56,39 +46,41 @@ export async function createCircleReplica(opts: CircleReplicaOptions): Promise<C
     });
   }
 
-  const listeners = new Set<(env: Envelope) => void>();
-
-  // Async validation queue
-  let pendingValidations = Promise.resolve();
+  let pendingProcessing = Promise.resolve();
 
   envMap.observe((event, transaction) => {
-    // We only validate remote inserts
     if (transaction.local) return;
 
-    const changes = event.changes.keys;
-    const addedEnvs: Envelope[] = [];
-
-    changes.forEach((change, key) => {
-      if (change.action === 'add' || change.action === 'update') {
-        const env = envMap.get(key);
-        if (env) addedEnvs.push(env);
-      }
+    const changesToProcess: { key: string, action: string, env?: Envelope }[] = [];
+    event.changes.keys.forEach((change, key) => {
+      changesToProcess.push({
+        key,
+        action: change.action,
+        env: change.action !== 'delete' ? envMap.get(key) : undefined
+      });
     });
 
-    if (addedEnvs.length === 0) return;
-
-    pendingValidations = pendingValidations.then(async () => {
-      for (const env of addedEnvs) {
-        const isValid = await opts.validate(env);
-        if (isValid) {
-          listeners.forEach(cb => cb(env));
-        } else {
-          // Drop invalid envelope from the map
-          doc.transact(() => {
-            envMap.delete(env.id);
-          });
-          if (opts.onRejected) {
-            opts.onRejected(env);
+    pendingProcessing = pendingProcessing.then(async () => {
+      for (const change of changesToProcess) {
+        if (change.action === 'delete') {
+          const lastValid = validCache.get(change.key);
+          if (lastValid) {
+            doc.transact(() => {
+              envMap.set(change.key, lastValid);
+            });
+          }
+        } else if (change.env) {
+          const isValid = await opts.validate(change.env);
+          if (isValid) {
+            validCache.set(change.key, change.env);
+            await opts.sink(change.env);
+          } else {
+            const lastValid = validCache.get(change.key);
+            if (lastValid) {
+              doc.transact(() => {
+                envMap.set(change.key, lastValid);
+              });
+            }
           }
         }
       }
@@ -96,38 +88,19 @@ export async function createCircleReplica(opts: CircleReplicaOptions): Promise<C
   });
 
   return {
-    add(env: Envelope) {
-      doc.transact(() => {
-        envMap.set(env.id, env);
-      });
-      // Also notify listeners for local additions to keep consistent
-      listeners.forEach(cb => cb(env));
-    },
-    all() {
-      return Array.from(envMap.values());
-    },
-    byOwner() {
-      const result: Record<string, Envelope[]> = {};
-      for (const env of envMap.values()) {
-        if (!result[env.owner]) {
-          result[env.owner] = [];
-        }
-        result[env.owner].push(env);
+    async add(env: Envelope) {
+      const isValid = await opts.validate(env);
+      if (isValid) {
+        validCache.set(env.id, env);
+        doc.transact(() => {
+          envMap.set(env.id, env);
+        });
+        await opts.sink(env);
       }
-      return result;
-    },
-    onEnvelope(cb: (env: Envelope) => void) {
-      listeners.add(cb);
-      return () => {
-        listeners.delete(cb);
-      };
     },
     destroy() {
       if (provider) {
         provider.destroy();
-      }
-      if (persistence) {
-        persistence.destroy();
       }
       doc.destroy();
     },

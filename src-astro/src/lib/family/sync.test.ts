@@ -1,17 +1,16 @@
-import 'fake-indexeddb/auto';
 import { describe, it, expect } from 'vitest';
 import * as Y from 'yjs';
 import { circleRoom, transportPassword, createCircleReplica } from './sync';
 import type { Envelope } from '../contracts/types';
 import { utf8 } from '../crypto/index';
 
-function createDummyEnvelope(id: string, owner: string): Envelope {
+function createDummyEnvelope(id: string, author: string = 'owner1'): Envelope {
   return {
     v: 1,
     id,
     circle: 'c1',
-    owner,
-    author: owner,
+    owner: 'owner1',
+    author,
     device: 'd1',
     category: 'vitals',
     epoch: 1,
@@ -28,7 +27,6 @@ describe('sync module', () => {
     const room = await circleRoom(ck0);
     expect(room).toBeTypeOf('string');
     expect(room.length).toBeLessThanOrEqual(22);
-    // Ensure deterministic
     const room2 = await circleRoom(ck0);
     expect(room).toBe(room2);
   });
@@ -41,114 +39,112 @@ describe('sync module', () => {
     expect(pwd).toBe(pwd2);
   });
 
-  it('createCircleReplica manages envelopes locally', async () => {
+  it('handles remote delete correctly', async () => {
     const ck0 = utf8('test-ck0-key-12345678901234567890');
-    const replica = await createCircleReplica({
+    const storeA: Envelope[] = [];
+    const storeB: Envelope[] = [];
+
+    const replicaA = await createCircleReplica({
       circleId: 'c1',
       ck0,
       validate: () => true,
+      sink: (env) => { storeA.push(env); },
       connect: false
     });
 
-    const env = createDummyEnvelope('e1', 'owner1');
+    const replicaB = await createCircleReplica({
+      circleId: 'c1',
+      ck0,
+      validate: () => true,
+      sink: (env) => { storeB.push(env); },
+      connect: false
+    });
 
-    let notified: Envelope | null = null;
-    replica.onEnvelope((e) => { notified = e; });
+    const env = createDummyEnvelope('e1');
+    await replicaA.add(env);
 
-    replica.add(env);
+    // Sync A to B
+    let sv = Y.encodeStateVector(replicaB.doc);
+    let update = Y.encodeStateAsUpdate(replicaA.doc, sv);
+    Y.applyUpdate(replicaB.doc, update);
 
-    expect(replica.all().length).toBe(1);
-    expect(replica.all()[0].id).toBe('e1');
-    expect(notified).toBe(env);
+    await new Promise(r => setTimeout(r, 20)); // wait for processing
 
-    const env2 = createDummyEnvelope('e2', 'owner2');
-    replica.add(env2);
+    expect(storeB.length).toBe(1);
+    expect(replicaB.doc.getMap('env').get('e1')).toBeDefined();
 
-    const byOwner = replica.byOwner();
-    expect(byOwner['owner1'].length).toBe(1);
-    expect(byOwner['owner2'].length).toBe(1);
+    // Attacker B deletes 'e1' remotely without validation mechanism
+    replicaB.doc.getMap('env').delete('e1');
 
-    replica.destroy();
+    // Sync B to A (malicious delete)
+    sv = Y.encodeStateVector(replicaA.doc);
+    update = Y.encodeStateAsUpdate(replicaB.doc, sv);
+    Y.applyUpdate(replicaA.doc, update);
+
+    await new Promise(r => setTimeout(r, 20)); // wait for processing
+
+    // A should have restored 'e1' to Y.Map
+    expect(replicaA.doc.getMap('env').get('e1')).toBeDefined();
+
+    // Sync back A to B to restore 'e1' in B's view
+    sv = Y.encodeStateVector(replicaB.doc);
+    update = Y.encodeStateAsUpdate(replicaA.doc, sv);
+    Y.applyUpdate(replicaB.doc, update);
+
+    await new Promise(r => setTimeout(r, 20));
+
+    expect(replicaB.doc.getMap('env').get('e1')).toBeDefined();
+
+    replicaA.destroy();
+    replicaB.destroy();
   });
 
-  it('syncs manually and applies validation', async () => {
+  it('handles remote overwrite correctly', async () => {
     const ck0 = utf8('test-ck0-key-12345678901234567890');
-    const rejected: Envelope[] = [];
+    const storeA: Envelope[] = [];
 
-    const replica1 = await createCircleReplica({
+    const replicaA = await createCircleReplica({
       circleId: 'c1',
       ck0,
-      validate: () => true,
+      validate: (env) => env.author !== 'attacker',
+      sink: (env) => { storeA.push(env); },
       connect: false
     });
 
-    const replica2 = await createCircleReplica({
+    const replicaB = await createCircleReplica({
       circleId: 'c1',
       ck0,
-      validate: (env) => env.id !== 'bad', // reject env with id 'bad'
-      onRejected: (env) => rejected.push(env),
+      validate: () => true, // Attacker doesn't care
+      sink: () => {},
       connect: false
     });
 
-    const goodEnv = createDummyEnvelope('good', 'owner1');
-    const badEnv = createDummyEnvelope('bad', 'owner1');
+    const env = createDummyEnvelope('e1');
+    await replicaA.add(env);
 
-    replica1.add(goodEnv);
-    replica1.add(badEnv);
+    let sv = Y.encodeStateVector(replicaB.doc);
+    let update = Y.encodeStateAsUpdate(replicaA.doc, sv);
+    Y.applyUpdate(replicaB.doc, update);
 
-    // Sync replica1 to replica2
-    const stateVector = Y.encodeStateVector(replica2.doc);
-    const update = Y.encodeStateAsUpdate(replica1.doc, stateVector);
-    Y.applyUpdate(replica2.doc, update);
+    await new Promise(r => setTimeout(r, 20));
 
-    // Give asynchronous validation a tick to complete
-    await new Promise(resolve => setTimeout(resolve, 10));
+    // B overwrites with invalid envelope
+    const badEnv = createDummyEnvelope('e1', 'attacker');
+    replicaB.doc.getMap('env').set('e1', badEnv);
 
-    const r2all = replica2.all();
-    expect(r2all.length).toBe(1);
-    expect(r2all[0].id).toBe('good');
+    // Sync B to A
+    sv = Y.encodeStateVector(replicaA.doc);
+    update = Y.encodeStateAsUpdate(replicaB.doc, sv);
+    Y.applyUpdate(replicaA.doc, update);
 
-    expect(rejected.length).toBe(1);
-    expect(rejected[0].id).toBe('bad');
+    await new Promise(r => setTimeout(r, 20));
 
-    replica1.destroy();
-    replica2.destroy();
-  });
+    // A should have restored the original env
+    const current = replicaA.doc.getMap('env').get('e1') as Envelope;
+    expect(current).toBeDefined();
+    expect(current.author).toBe('owner1');
 
-  it('handles indexeddb persistence', async () => {
-    const ck0 = utf8('test-ck0-key-12345678901234567890');
-
-    const replica1 = await createCircleReplica({
-      circleId: 'c2',
-      ck0,
-      validate: () => true,
-      persist: true,
-      connect: false
-    });
-
-    const env = createDummyEnvelope('e1', 'owner1');
-    replica1.add(env);
-
-    // Give IndexedDB persistence a tick to write
-    await new Promise(resolve => setTimeout(resolve, 50));
-
-    replica1.destroy();
-
-    // Reopen replica with persistence
-    const replica2 = await createCircleReplica({
-      circleId: 'c2',
-      ck0,
-      validate: () => true,
-      persist: true,
-      connect: false
-    });
-
-    // Give IndexedDB persistence a tick to load
-    await new Promise(resolve => setTimeout(resolve, 50));
-
-    expect(replica2.all().length).toBe(1);
-    expect(replica2.all()[0].id).toBe('e1');
-
-    replica2.destroy();
+    replicaA.destroy();
+    replicaB.destroy();
   });
 });
