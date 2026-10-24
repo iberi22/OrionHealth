@@ -84,6 +84,40 @@ describe('createWebrtcInviteTransport', () => {
     conn2.close();
   });
 
+  it('a peer with only the room id cannot read the hello if secret was provided', async () => {
+    const providers: { doc: Y.Doc, password: string }[] = [];
+    const createFakeProvider = (room: string, doc: Y.Doc, opts: any) => {
+      providers.push({ doc, password: opts.password });
+      doc.on('update', (update) => {
+        providers.forEach(p => {
+          if (p.doc !== doc && p.password === opts.password) {
+            Y.applyUpdate(p.doc, update);
+          }
+        });
+      });
+      return { destroy: () => {} };
+    };
+
+    const transport1 = createWebrtcInviteTransport({ createProvider: createFakeProvider });
+    const transport2 = createWebrtcInviteTransport({ createProvider: createFakeProvider });
+
+    const secret = new Uint8Array([1, 2, 3, 4, 5]);
+    const conn1 = await transport1.join('room-sec', { secret });
+    const conn2 = await transport2.join('room-sec');
+
+    const msgs2: InviteHello[] = [];
+    conn2.onMessage(m => msgs2.push(m));
+
+    await conn1.send(dummyHello1);
+
+    await new Promise(r => setTimeout(r, 10));
+
+    expect(msgs2).toHaveLength(0); // Should not receive the message because passwords differ
+
+    conn1.close();
+    conn2.close();
+  });
+
   it('delivers messages to late subscribers', async () => {
     const docs: Y.Doc[] = [];
     const transport1 = createWebrtcInviteTransport({
