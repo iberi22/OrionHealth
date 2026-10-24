@@ -36,6 +36,7 @@ export function createHealthService(kernel: Kernel, records: RecordsService): He
 
   // Listen to remote envelopes for vitals
   kernel.onEnvelope(async (env) => {
+    if (env.category === 'alert') notify(); // rule written by another member or device
     if (env.category === 'vitals') {
       try {
         const record = await kernel.open(env) as any;
@@ -84,19 +85,20 @@ export function createHealthService(kernel: Kernel, records: RecordsService): He
     },
 
     async alertRules(subject?: string): Promise<AlertRule[]> {
-      const envs = await kernel.envelopes({ category: 'alert' });
-      const rules: AlertRule[] = [];
+      const envs = (await kernel.envelopes({ category: 'alert' })).sort((a, b) => (a.hlc < b.hlc ? -1 : a.hlc > b.hlc ? 1 : 0));
+      // A rule is rewritten as a new envelope on every edit: the newest one per recordId wins.
+      const byId = new Map<string, AlertRule>();
       for (const env of envs) {
         try {
           const rule = await kernel.open(env) as AlertRule;
           if (!subject || rule.subject === subject) {
-            rules.push(rule);
+            byId.set(rule.recordId, rule);
           }
         } catch (e) {
           // ignore unopenable envelopes
         }
       }
-      return rules;
+      return [...byId.values()];
     },
 
     async putAlertRule(rule: AlertRule): Promise<void> {
@@ -105,6 +107,7 @@ export function createHealthService(kernel: Kernel, records: RecordsService): He
         plaintext: rule,
       });
       await kernel.publish(env);
+      notify();
     },
 
     async alerts(): Promise<Alert[]> {
