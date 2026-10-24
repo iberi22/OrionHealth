@@ -68,4 +68,10 @@ describe('hlc', () => {
     expect(compareHlc('1696200000000-0000-devA', '1696200000000-0000-devB')).toBe(-1);
     expect(compareHlc('1696200000000-0000-devB', '1696200000000-0000-devA')).toBe(1);
   });
+
+  it('receives HLCs whose device id contains dashes', () => {
+    const h = createHlc('dev-a', () => 1000);
+    expect(() => h.receive('0000000002000-0003-dev-b-1')).not.toThrow();
+    expect(h.now().startsWith('0000000002000-0004-')).toBe(true);
+  });
 });

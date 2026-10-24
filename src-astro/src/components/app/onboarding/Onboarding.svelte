@@ -23,6 +23,7 @@
   let prfSupported = $state<boolean>(true);
   let readOnly = $state<boolean>(false);
   let recoveryCode = $state<string>('');
+  let createError = $state<string | null>(null);
 
   let name = $state('');
 
@@ -51,12 +52,18 @@
 
   async function createVault() {
     if (!name.trim()) return;
+    createError = null;
     try {
       const res = await services.vault.create(name);
       recoveryCode = res.recoveryCode;
       currentStep = 'recovery';
     } catch (e) {
-      console.error(e);
+      if (e && typeof e === 'object' && 'code' in e && e.code === 'NO_PASSKEY') {
+        createError = 'Creación cancelada. Inténtalo de nuevo.';
+      } else {
+        readOnly = true;
+        currentStep = 'capability-check';
+      }
     }
   }
 
@@ -131,6 +138,10 @@
         <label for="vault-name">¿Cómo te llamas?</label>
         <input id="vault-name" type="text" bind:value={name} placeholder="Tu nombre" />
       </div>
+
+      {#if createError}
+        <p class="error">{createError}</p>
+      {/if}
 
       <button onclick={createVault} disabled={!name.trim()}>
         Crear passkey
@@ -248,6 +259,12 @@
     font-family: inherit;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  .error {
+    color: var(--oh-color-danger, #d32f2f);
+    font-size: 0.875rem;
+    margin: 0;
   }
 
   button {

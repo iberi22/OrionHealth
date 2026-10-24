@@ -8,6 +8,9 @@
   let isPublic = $derived(matchRoute(path).public === true);
   let navRoutes = routes.filter((r) => r.nav);
 
+  const services = getServices();
+  const isDemo = 'demo' in services && (services as any).demo === true;
+
   function lockVault() {
     getServices().vault.lock();
     navigate('/app/lock');
@@ -20,6 +23,10 @@
 </script>
 
 <div class="shell-container" data-testid="area-shell" data-path={path}>
+  {#if isDemo}
+    <div class="demo-banner">Modo demo: no se guarda ningún dato</div>
+  {/if}
+
   {#if !isPublic}
     <nav class="shell-nav" aria-label="Navegación principal">
       <ul class="nav-list">
@@ -61,6 +68,15 @@
     background-color: var(--oh-bg);
     color: var(--oh-text);
     font-family: var(--oh-font-sans);
+  }
+
+  .demo-banner {
+    background-color: var(--oh-warning, #f57c00);
+    color: white;
+    text-align: center;
+    padding: 0.5rem;
+    font-weight: bold;
+    font-size: 0.875rem;
   }
 
   .shell-content {

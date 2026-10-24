@@ -13,9 +13,9 @@ const otherLang = lang === 'en' ? 'es' : 'en';
 
 // Helper to keep current path but change language
 const getLangSwitchUrl = () => {
-  const url = new URL(currentUrl);
-  url.searchParams.set('lang', otherLang);
-  return url.toString();
+  const searchParams = new URLSearchParams(currentUrl.search);
+  searchParams.set('lang', otherLang);
+  return `${currentUrl.pathname}?${searchParams.toString()}`;
 };
 
 const getLocalizedUrl = (path: string) => {

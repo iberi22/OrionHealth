@@ -6,10 +6,23 @@ import { xavierSearch } from './xavier';
 import { domainConfig } from './domain.config';
 import { canAffordInference, creditStatus } from './billing';
 
-export type LLMRequest = { prompt: string; system?: string; model?: string; useMemory?: boolean; tierId?: 'free'|'socio'|'socio-managed'; estimatedTokens?: number };
+export type LLMRequest = { prompt: string; system?: string; model?: string; useMemory?: boolean; tierId?: 'free'|'socio'|'socio-managed'; estimatedTokens?: number; personal?: boolean };
 export type LLMResponse = { text: string; model: string; fromCache?: boolean; via?: 'local'|'cf' };
 
+class PHIBlockedError extends Error {
+  code = 'PHI_BLOCKED';
+  constructor() {
+    super('PHI_BLOCKED');
+    this.name = 'PHIBlockedError';
+  }
+}
+
+// Contract: llm.ts is never an LlmProvider of createRag with includePersonal.
 export async function llmComplete(req: LLMRequest): Promise<LLMResponse> {
+  if (req.personal) {
+    throw new PHIBlockedError();
+  }
+
   // 1. Billing: verifica credito socio antes de inferencia (100% agentico no gasta si no puede pagar)
   const tierId = (req.tierId ?? (domainConfig as any).billing?.tier ?? 'socio') as any;
   const estimated = req.estimatedTokens ?? Math.ceil(req.prompt.length / 4);
@@ -46,6 +59,5 @@ export async function llmComplete(req: LLMRequest): Promise<LLMResponse> {
   }
   const system = req.system ? req.system + '\n' : '';
   const ctx = context ? `Context:\n${context}\n\n` : '';
-  console.log('[llm] complete', { model: req.model ?? 'auto', via: 'local', prompt: req.prompt.slice(0, 80) });
   return { text: `${system}${ctx}LLM local stub (sin CF): implementa ProviderRouter en src/lib/llm.ts (ver swal-agent-runner llm-provider-manager.ts)`, model: req.model ?? 'stub', via: 'local' };
 }

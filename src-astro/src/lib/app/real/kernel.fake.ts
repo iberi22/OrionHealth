@@ -1,7 +1,7 @@
 // In-memory Kernel for service tests. Real crypto (seal/sign/open), no IndexedDB, no network.
 // Several fakes can share one FakeNetwork to simulate circle peers.
 
-import { aesKey, b64u, fromB64u, randomBytes } from '../../crypto/index';
+import { aesKey, b64u, fromB64u, randomBytes, unwrapFrom, wrapTo } from '../../crypto/index';
 import type { CircleState, Category, Envelope, PersonalCategory } from '../../contracts/types';
 import { createMemberBundle, cekFor, currentEpoch, rotateCategory, type MemberBundle } from '../../vault/keyring';
 import { openEnvelope, sealEnvelope, verifyEnvelope } from '../../family/envelope';
@@ -106,6 +106,46 @@ export class FakeKernel implements Kernel {
   addCircleKey(epoch: number, raw: Uint8Array) {
     this.guard();
     this.circleKeys.set(epoch, raw);
+  }
+
+  async wrapKeyFor(
+    target: { category: PersonalCategory; epoch?: number } | { circleEpoch: number },
+    recipientBoxPub: string,
+    info: string,
+    aad: Uint8Array,
+  ) {
+    this.guard();
+    let raw: Uint8Array;
+    let epoch: number;
+    if ('circleEpoch' in target) {
+      epoch = target.circleEpoch;
+      const ck = this.circleKeys.get(epoch);
+      if (!ck) throw new KernelError('NO_KEY', `no circle key epoch ${epoch}`);
+      raw = ck;
+    } else {
+      if (!this.b.ceks[target.category]) rotateCategory(this.b, target.category);
+      epoch = target.epoch ?? currentEpoch(this.b, target.category);
+      raw = fromB64u(cekFor(this.b, target.category, epoch));
+    }
+    return { ...(await wrapTo(recipientBoxPub, raw, info, aad)), epoch };
+  }
+
+  async unwrapForMe(ephPub: string, wrapped: string, info: string, aad: Uint8Array) {
+    this.guard();
+    return unwrapFrom(this.b.boxPkcs8, ephPub, wrapped, info, aad);
+  }
+
+  async rotateCategory(category: PersonalCategory) {
+    this.guard();
+    if (!this.b.ceks[category]) rotateCategory(this.b, category);
+    rotateCategory(this.b, category);
+    return currentEpoch(this.b, category);
+  }
+
+  async setCircle(circleId: string, genesis: { memberId: string; signPub: string }) {
+    this.guard();
+    this.directory.set(genesis.memberId, { signPub: genesis.signPub, boxPub: this.directory.get(genesis.memberId)?.boxPub ?? '' });
+    if (!this.circleState) this.circleState = { circleId, name: '', epoch: 0, members: {} };
   }
 
   async circle() {

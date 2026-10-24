@@ -69,23 +69,19 @@ describe('recovery', () => {
       await expect(openShare(wrappedShares[0], trusteeBoxPkcs8['t2'], memberId)).rejects.toThrow();
 
       // 3. k-1 shares do not reproduce MRS
-      // shamir-secret-sharing combine might throw on k-1, or might produce junk.
-      try {
-        const kMinus1 = await combineShares([openedShare1, openedShare2]);
-        expect(kMinus1).not.toEqual(mrs);
-      } catch (err) {
-        // if it throws, it's also acceptable that k-1 fails
-        expect(err).toBeDefined();
-      }
+      // the k-1 test is deterministic (assert inequality, no ambiguous try/catch)
+      const kMinus1 = await combineShares([openedShare1, openedShare2]);
+      expect(kMinus1).not.toEqual(mrs);
 
       // 4. rewrap for request
       const tempKeys = await generateBoxPair();
-      const rewrapped1 = await rewrapForRequest(openedShare1, tempKeys.publicSpki, memberId);
-      const rewrapped2 = await rewrapForRequest(openedShare2, tempKeys.publicSpki, memberId);
-      const rewrapped3 = await rewrapForRequest(openedShare3, tempKeys.publicSpki, memberId);
+      const requestId = 'req-123';
+      const rewrapped1 = await rewrapForRequest(openedShare1, tempKeys.publicSpki, memberId, requestId);
+      const rewrapped2 = await rewrapForRequest(openedShare2, tempKeys.publicSpki, memberId, requestId);
+      const rewrapped3 = await rewrapForRequest(openedShare3, tempKeys.publicSpki, memberId, requestId);
 
       // new device unwraps them
-      const aad = utf8(`orion/v1/recovery|${memberId}|temp`);
+      const aad = utf8(`orion/v1/recovery-request|${memberId}|${requestId}|${tempKeys.publicSpki}`);
       const unwrapped1 = await unwrapFrom(tempKeys.privatePkcs8, rewrapped1.ephPub, rewrapped1.wrapped, 'orion/v1/recovery-share', aad);
       const unwrapped2 = await unwrapFrom(tempKeys.privatePkcs8, rewrapped2.ephPub, rewrapped2.wrapped, 'orion/v1/recovery-share', aad);
       const unwrapped3 = await unwrapFrom(tempKeys.privatePkcs8, rewrapped3.ephPub, rewrapped3.wrapped, 'orion/v1/recovery-share', aad);
