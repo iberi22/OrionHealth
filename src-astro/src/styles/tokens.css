@@ -12,10 +12,29 @@
   --oh-surface: #e8e8c0;
   --oh-text: #121212;
   --oh-muted: #4b5563;
+
+  --oh-grid-color: rgba(16, 185, 129, 0.04);
+  --oh-noise-opacity: 0.03;
+  --oh-glass-bg: rgba(255, 255, 255, 0.7);
+  --oh-glass-border: rgba(0, 0, 0, 0.05);
+
+  --oh-nav-text: #121212;
+  --oh-nav-text-hover: #10b981;
+  --oh-border-color: rgba(16, 185, 129, 0.3);
 }
+
 :root[data-theme='dark'] {
   --oh-bg: #121212;
   --oh-surface: #1e1e1e;
   --oh-text: #f5f5dc;
   --oh-muted: #a3a3a3;
+
+  --oh-grid-color: rgba(16, 185, 129, 0.02);
+  --oh-noise-opacity: 0.05;
+  --oh-glass-bg: rgba(30, 30, 30, 0.6);
+  --oh-glass-border: rgba(255, 255, 255, 0.05);
+
+  --oh-nav-text: #f5f5dc;
+  --oh-nav-text-hover: #10b981;
+  --oh-border-color: rgba(16, 185, 129, 0.2);
 }

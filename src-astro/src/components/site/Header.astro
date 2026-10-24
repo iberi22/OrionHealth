@@ -1,4 +1,247 @@
 ---
-// Placeholder (task "site layout"): logo, nav (Inicio, App, Docs, Base de conocimiento, GitHub), theme + language toggles.
+import { t } from '../../i18n/ui';
+import ThemeToggle from './ThemeToggle.svelte';
+
+interface Props {
+  variant?: 'site' | 'app';
+}
+
+const { variant = 'site' } = Astro.props;
+const currentUrl = Astro.url;
+const lang = currentUrl.searchParams.get('lang') === 'en' ? 'en' : 'es';
+const otherLang = lang === 'en' ? 'es' : 'en';
+
+// Helper to keep current path but change language
+const getLangSwitchUrl = () => {
+  const url = new URL(currentUrl);
+  url.searchParams.set('lang', otherLang);
+  return url.toString();
+};
+
+const getLocalizedUrl = (path: string) => {
+  return `${path}?lang=${lang}`;
+};
 ---
-<header data-testid="site-header"><a href="/">OrionHealth</a> · <a href="/app">App</a> · <a href="/docs">Docs</a> · <a href="/kb">Base médica</a></header>
+
+<header class="header" data-testid="site-header">
+  <div class="header-content">
+    <a href={getLocalizedUrl('/')} class="logo">
+      <span class="logo-text">ORION<span class="logo-accent">HEALTH</span></span>
+    </a>
+
+    {variant === 'site' && (
+      <nav class="nav">
+        <a href={getLocalizedUrl('/')} class="nav-link">{t(lang, 'nav.home')}</a>
+        <a href={getLocalizedUrl('/app')} class="nav-link">{t(lang, 'nav.app')}</a>
+        <a href={getLocalizedUrl('/docs')} class="nav-link">{t(lang, 'nav.docs')}</a>
+        <a href={getLocalizedUrl('/kb')} class="nav-link">{t(lang, 'nav.kb')}</a>
+        <a href="https://github.com/iberi22/OrionHealth" class="nav-link" target="_blank" rel="noopener noreferrer">{t(lang, 'nav.github')}</a>
+      </nav>
+    )}
+
+    <div class="actions">
+      {variant === 'site' && (
+        <a href={getLangSwitchUrl()} class="lang-toggle" aria-label="Toggle language">
+          {lang.toUpperCase()}
+        </a>
+      )}
+      <ThemeToggle client:load />
+      {variant === 'app' && <slot name="lock" />}
+      {variant === 'site' && (
+        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Open menu">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      )}
+    </div>
+  </div>
+
+  {variant === 'site' && (
+    <div id="mobile-menu" class="mobile-menu hidden">
+      <nav class="mobile-nav">
+        <a href={getLocalizedUrl('/')} class="mobile-nav-link">{t(lang, 'nav.home')}</a>
+        <a href={getLocalizedUrl('/app')} class="mobile-nav-link mobile-nav-accent">{t(lang, 'nav.app')}</a>
+        <a href={getLocalizedUrl('/docs')} class="mobile-nav-link">{t(lang, 'nav.docs')}</a>
+        <a href={getLocalizedUrl('/kb')} class="mobile-nav-link">{t(lang, 'nav.kb')}</a>
+        <a href="https://github.com/iberi22/OrionHealth" class="mobile-nav-link" target="_blank" rel="noopener noreferrer">{t(lang, 'nav.github')}</a>
+      </nav>
+    </div>
+  )}
+</header>
+
+<script>
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.add('hidden');
+    });
+  });
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--oh-glass-border);
+    padding: 0.75rem 1rem;
+    background: var(--oh-glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .logo {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+  }
+
+  .logo-text {
+    color: var(--oh-nav-text);
+  }
+
+  .logo-accent {
+    color: var(--oh-accent);
+  }
+
+  .nav {
+    display: none;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .nav {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: var(--oh-nav-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: opacity 0.3s ease, color 0.3s ease;
+  }
+
+  .nav-link:hover {
+    opacity: 1;
+    color: var(--oh-nav-text-hover);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .actions {
+      gap: 1rem;
+    }
+  }
+
+  .lang-toggle {
+    text-decoration: none;
+    color: var(--oh-nav-text);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--oh-border-color);
+    border-radius: var(--oh-radius);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .lang-toggle:hover {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: var(--oh-accent);
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--oh-nav-text);
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .mobile-menu-btn:hover {
+    background-color: rgba(16, 185, 129, 0.1);
+  }
+
+  @media (min-width: 768px) {
+    .mobile-menu-btn {
+      display: none;
+    }
+  }
+
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .mobile-menu {
+    border-top: 1px solid var(--oh-glass-border);
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .mobile-menu {
+      display: none;
+    }
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mobile-nav-link {
+    text-decoration: none;
+    color: var(--oh-nav-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 0;
+    transition: color 0.3s ease;
+  }
+
+  .mobile-nav-link:hover {
+    color: var(--oh-nav-text-hover);
+  }
+
+  .mobile-nav-accent {
+    color: var(--oh-accent);
+  }
+</style>
