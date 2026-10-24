@@ -49,4 +49,23 @@ describe('FakeKernel', () => {
     expect(() => k.memberId()).toThrow(KernelError);
     await expect(k.circleKey()).rejects.toMatchObject({ code: 'LOCKED' });
   });
+
+  it('wraps keys to a recipient without exposing them and rotates categories', async () => {
+    const net = new FakeNetwork();
+    const ana = await FakeKernel.create({ network: net });
+    const rosa = await FakeKernel.create({ network: net });
+    FakeKernel.introduce(ana, rosa);
+    const aad = new TextEncoder().encode('g');
+    const w = await rosa.wrapKeyFor({ category: 'vitals' }, ana.bundle().boxPub, 'orion/v1/grant', aad);
+    const raw = await ana.unwrapForMe(w.ephPub, w.wrapped, 'orion/v1/grant', aad);
+    ana.addForeignKey(rosa.memberId(), 'vitals', w.epoch, raw);
+    const env = await rosa.seal({ category: 'vitals', plaintext: { v: 1 } });
+    await rosa.publish(env);
+    expect(await ana.open((await ana.envelopes({ owner: rosa.memberId() }))[0]!)).toEqual({ v: 1 });
+    const next = await rosa.rotateCategory('vitals');
+    expect(next).toBe(w.epoch + 1);
+    const env2 = await rosa.seal({ category: 'vitals', plaintext: { v: 2 } });
+    await rosa.publish(env2);
+    await expect(ana.open(env2)).rejects.toMatchObject({ code: 'NO_KEY' });
+  });
 });
