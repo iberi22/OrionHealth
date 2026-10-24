@@ -6,28 +6,38 @@ import { SECURITY_HEADERS, withSecurityHeaders } from './securityHeaders';
 import { onRequest } from '../middleware';
 
 describe('Security Headers', () => {
-  it('CSP Report-Only uses the correct inline script hash', () => {
-    // Read the SiteLayout.astro file to extract the script content
-    const layoutPath = fs.existsSync(path.resolve(process.cwd(), 'src/layouts/SiteLayout.astro'))
-      ? path.resolve(process.cwd(), 'src/layouts/SiteLayout.astro')
-      : path.resolve(process.cwd(), 'src-astro/src/layouts/SiteLayout.astro');
+  it('middleware intercepts Astro CSP and converts it to Report-Only', async () => {
+    const rawResponse = new Response('Hello world', {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html',
+        'Content-Security-Policy': "default-src 'self'; script-src 'self' 'sha256-abc';"
+      },
+    });
 
-    const layoutContent = fs.readFileSync(layoutPath, 'utf-8');
-    const match = layoutContent.match(/<script is:inline>([\s\S]*?)<\/script>/);
+    const response = withSecurityHeaders(rawResponse);
+    expect(response.headers.has('Content-Security-Policy')).toBe(false);
 
-    expect(match).not.toBeNull();
-    const scriptContent = match![1];
-
-    const hash = crypto.createHash('sha256').update(scriptContent).digest('base64');
-    const expectedHash = `sha256-${hash}`;
-
-    const csp = SECURITY_HEADERS['Content-Security-Policy-Report-Only'];
+    const csp = response.headers.get('Content-Security-Policy-Report-Only');
     expect(csp).toBeDefined();
-    expect(csp).toContain(`'${expectedHash}'`);
+    expect(csp).toContain("script-src 'self' 'sha256-abc';");
     expect(csp).toContain('report-uri /api/csp-report');
   });
 
-  it('middleware adds every security header to response', async () => {
+  it('middleware adds fallback CSP if Astro does not inject one', async () => {
+    const rawResponse = new Response('Hello world', {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const response = withSecurityHeaders(rawResponse);
+
+    const csp = response.headers.get('Content-Security-Policy-Report-Only');
+    expect(csp).toBeDefined();
+    expect(csp).toContain('report-uri /api/csp-report');
+  });
+
+  it('middleware adds every static security header to response', async () => {
     const rawResponse = new Response('Hello world', {
       status: 200,
       headers: { 'Content-Type': 'text/plain' },
