@@ -1,6 +1,8 @@
 ---
-// Placeholder (task "knowledge base pages"): search + ICD-10 / LOINC / RxNorm / SNOMED entries.
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import KbSearch from '../../components/kb/KbSearch.svelte';
 export const prerender = true;
 ---
-<SiteLayout title="OrionHealth — Base de conocimiento médica"><h1 data-testid="kb-index">Base de conocimiento médica</h1></SiteLayout>
+<SiteLayout title="OrionHealth — Base de conocimiento médica">
+  <KbSearch client:load />
+</SiteLayout>
