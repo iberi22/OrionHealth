@@ -26,7 +26,10 @@ const grantAad = (g: Pick<Grant, 'circle' | 'from' | 'to' | 'category' | 'epoch'
 export function createGrantsService(
   kernel: Kernel,
   deps: { records?: RecordsService; health?: HealthCircleService } = {},
-): Pick<FamilyService, 'grantsGiven' | 'grantsReceived' | 'grant' | 'revoke' | 'guardedSummaries'> & { syncReceivedKeys(): Promise<number> } {
+): Pick<FamilyService, 'grantsGiven' | 'grantsReceived' | 'grant' | 'revoke' | 'guardedSummaries'> & {
+  syncReceivedKeys(): Promise<number>;
+  dropRemovedMembers(): Promise<number>;
+} {
   const synced = new Set<string>();
 
   /** Valid (author + signature checked), non-revoked grants from the 'grant' envelopes; expiry is not applied. */
@@ -108,20 +111,27 @@ export function createGrantsService(
     return added;
   };
 
-  kernel.onEnvelope((env) => {
-    if (env.category === 'grant') void syncReceivedKeys().catch(() => undefined);
-  });
+  // Rotations (revoke, removal) run one at a time: each reads the grants the previous one left.
+  let rotations: Promise<unknown> = Promise.resolve();
+  const serial = <T>(fn: () => Promise<T>): Promise<T> => {
+    const run = rotations.then(fn);
+    rotations = run.catch(() => undefined);
+    return run;
+  };
 
-  const revoke: FamilyService['revoke'] = async (grantId) => {
-    const given = await grantsGiven();
-    const target = given.find((g) => g.id === grantId);
-    if (!target || !isPersonal(target.category)) throw new Error(`grant ${grantId} not found or not mine`);
-    const category = target.category;
-    // Every active grant of that grantee for the category goes away (older epochs included).
-    const dropped = given.filter((g) => g.to === target.to && g.category === category);
+  /**
+   * Spec §6: one revoke marker per dropped grant of mine for `category`, epoch+1 for the category, and the new
+   * epoch re-granted to every other live grantee that is still a circle member.
+   */
+  const rotateWithout = async (category: PersonalCategory, drop: (g: Grant) => boolean) => {
+    const me = kernel.memberId();
+    const mine = (await readGrants()).filter((g) => g.from === me && g.category === category);
+    const dropped = mine.filter(drop);
+    if (!dropped.length) return false;
+    const members = (await kernel.circle())?.members ?? {};
     const remaining = new Map<string, Grant>();
-    for (const g of given) {
-      if (g.category !== category || g.to === target.to) continue;
+    for (const g of activeGrants(mine, Date.now())) {
+      if (drop(g) || members[g.to]?.removed) continue;
       const prev = remaining.get(g.to);
       if (!prev || g.epoch > prev.epoch) remaining.set(g.to, g);
     }
@@ -131,6 +141,40 @@ export function createGrantsService(
     }
     await kernel.rotateCategory(category);
     for (const g of remaining.values()) await publishGrant(g.to, category, g.access, g.expiresAt);
+    return true;
+  };
+
+  /**
+   * Spec §7: once a `remove` is in the membership log, every personal category I granted to a removed member
+   * (expired grants included: the CEK was unwrapped while they were valid) is rotated and re-granted to the
+   * remaining grantees. Idempotent: the revoke markers make a second run find nothing. Returns the number of
+   * categories rotated.
+   */
+  const dropRemovedMembers = () =>
+    serial(async () => {
+      const circle = await kernel.circle();
+      const me = kernel.memberId();
+      if (!circle || !circle.members[me] || circle.members[me]!.removed) return 0;
+      const removed = new Set(Object.values(circle.members).filter((m) => m.removed).map((m) => m.memberId));
+      if (!removed.size) return 0;
+      const categories = new Set<PersonalCategory>();
+      for (const g of await readGrants()) if (g.from === me && removed.has(g.to) && isPersonal(g.category)) categories.add(g.category);
+      let rotated = 0;
+      for (const category of categories) if (await rotateWithout(category, (g) => removed.has(g.to))) rotated++;
+      return rotated;
+    });
+
+  kernel.onEnvelope((env) => {
+    if (env.category === 'grant') void syncReceivedKeys().catch(() => undefined);
+    // Returned to the kernel, which awaits it: removeMember() resolves only after my categories rotated.
+    if (env.category === 'membership') return dropRemovedMembers().then(() => undefined, () => undefined);
+  });
+
+  const revoke: FamilyService['revoke'] = async (grantId) => {
+    const target = (await grantsGiven()).find((g) => g.id === grantId);
+    if (!target || !isPersonal(target.category)) throw new Error(`grant ${grantId} not found or not mine`);
+    // Every grant of that grantee for the category goes away (older epochs included).
+    await serial(() => rotateWithout(target.category as PersonalCategory, (g) => g.to === target.to));
   };
 
   const guardedSummaries = async (): Promise<GuardedSummary[]> => {
@@ -166,5 +210,5 @@ export function createGrantsService(
     return out;
   };
 
-  return { grantsGiven, grantsReceived, grant, revoke, guardedSummaries, syncReceivedKeys };
+  return { grantsGiven, grantsReceived, grant, revoke, guardedSummaries, syncReceivedKeys, dropRemovedMembers };
 }

@@ -1,16 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { addVirtualPasskey } from './helpers/webauthn';
 import { createVault } from './helpers/vault';
+import { seedPersonalData } from './helpers/seed';
 
 // Personal data we want to make sure NEVER leaves the device.
 const PERSONAL_DATA = [
-  'Ana Demo', 'Luis Demo', 'med-rosa-1', 'cond-rosa-1', 'mid-ana', 'al-1'
+  'Ana Demo', 'Luis Demo', 'med-rosa-1', 'cond-rosa-1', 'mid-ana', 'al-1', 'ZZ-PHI-1', 'ZZ-PHI-2'
 ];
 
 test.describe('Knowledge Base and Assistant', () => {
-  // Common test logic to run for both mock and real services
-  const runTests = (suffix: string) => {
-    test(`KB search by code and text, view entry ${suffix}`, async ({ page }) => {
+  test(`KB search by code and text, view entry @real`, async ({ page }) => {
       // Intercept all network requests to ensure no personal data is sent
       await page.route('**/*', (route) => {
         const request = route.request();
@@ -61,10 +60,13 @@ test.describe('Knowledge Base and Assistant', () => {
       await expect(entryView.getByRole('heading', { level: 2, name: 'Essential (primary) hypertension' })).toBeVisible();
     });
 
-    test(`Assistant answer with citations and request interception ${suffix}`, async ({ page }) => {
+    test(`Assistant answer with citations and request interception @real`, async ({ page }) => {
       // Setup vault and authenticate to unlock personal data (for the toggle)
       await addVirtualPasskey(page);
       await createVault(page, 'Ana');
+
+      // Seed personal data
+      await seedPersonalData(page);
 
       // Client-side navigation: a full reload would start a new (locked) session
       await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Asistente' }).click();
@@ -93,16 +95,15 @@ test.describe('Knowledge Base and Assistant', () => {
 
       // Ask a question
       const questionInput = page.getByRole('textbox', { name: /Pregunta/i });
-      await questionInput.fill('¿Qué medicación tomo para la hipertensión?');
+      await questionInput.fill('¿Qué medicación tomo?');
 
       const submitButton = page.getByRole('button', { name: /Preguntar/i });
       await submitButton.click();
 
       // Wait for answer card to appear
       await expect(page.getByText('Se utilizaron tus datos personales para esta respuesta.')).toBeVisible();
-    });
-  };
 
-  runTests('');
-  runTests('@real');
+      // Verify citation
+      await expect(page.getByText('Fuentes:')).toBeVisible();
+    });
 });

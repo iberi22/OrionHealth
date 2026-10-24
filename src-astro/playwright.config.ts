@@ -30,12 +30,23 @@ export default defineConfig({
     },
   ],
   // Started only for app-local runs; `pnpm run build` must run before.
+  // Started only for app-local runs; `pnpm run build` must run before. The y-webrtc signaling server
+  // lives for the whole run (a per-worker server died with its worker and broke long circle specs).
   webServer: process.argv.includes('--project=live')
     ? undefined
-    : {
-        command: `pnpm astro preview --ignore-lock --host 127.0.0.1 --port ${PORT}`,
-        url: `http://127.0.0.1:${PORT}/`,
-        reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
-      },
+    : [
+        {
+          command: `pnpm astro preview --ignore-lock --host 127.0.0.1 --port ${PORT}`,
+          url: `http://127.0.0.1:${PORT}/`,
+          reuseExistingServer: !process.env.CI,
+          timeout: 120_000,
+        },
+        {
+          command: 'node node_modules/y-webrtc/bin/server.js',
+          env: { PORT: '4444' },
+          port: 4444,
+          reuseExistingServer: true,
+          timeout: 30_000,
+        },
+      ],
 });
