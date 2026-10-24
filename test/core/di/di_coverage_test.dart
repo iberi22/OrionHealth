@@ -37,4 +37,19 @@ void main() {
       reason: 'resolved from GetIt but never registered',
     );
   });
+
+  test('every dependency inside the generated graph has a registration', () {
+    final config = File('lib/core/di/injection.config.dart').readAsStringSync();
+    final registered = RegExp(
+      r'gh\.\w+\s*<\s*_i\d+\.(\w+)',
+    ).allMatches(config).map((m) => m.group(1)!).toSet();
+    final deps = RegExp(
+      r'gh<\s*_i\d+\.(\w+)\s*>',
+    ).allMatches(config).map((m) => m.group(1)!).toSet();
+    expect(
+      deps.difference(registered),
+      isEmpty,
+      reason: 'a generated factory needs a type nobody registers',
+    );
+  });
 }
