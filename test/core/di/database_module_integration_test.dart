@@ -7,7 +7,9 @@ import 'package:orionhealth_health/features/health_data_import/infrastructure/mo
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockPathProviderPlatform extends Fake with MockPlatformInterfaceMixin implements PathProviderPlatform {
+class MockPathProviderPlatform extends Fake
+    with MockPlatformInterfaceMixin
+    implements PathProviderPlatform {
   @override
   Future<String?> getApplicationDocumentsPath() async {
     return Directory.systemTemp.createTempSync('isar_test').path;
@@ -26,20 +28,23 @@ void main() {
     PathProviderPlatform.instance = MockPathProviderPlatform();
   });
 
-  test('DatabaseModule opens Isar with MealLog and WorkoutSession schemas', () async {
-    final module = TestModule();
-    final isar = await module.isar;
+  test(
+    'DatabaseModule opens Isar with MealLog and WorkoutSession schemas',
+    () async {
+      final module = TestModule();
+      final isar = await module.isar;
 
-    expect(isar.isOpen, isTrue);
-    expect(isar.name, 'default');
+      expect(isar.isOpen, isTrue);
+      expect(isar.name, 'default');
 
-    // Check schemas are registered (this throws if they are not)
-    final workoutCollection = isar.collection<WorkoutSession>();
-    final mealLogCollection = isar.collection<MealLog>();
+      // Check schemas are registered (this throws if they are not)
+      final workoutCollection = isar.collection<WorkoutSession>();
+      final mealLogCollection = isar.collection<MealLog>();
 
-    expect(workoutCollection, isNotNull);
-    expect(mealLogCollection, isNotNull);
+      expect(workoutCollection, isNotNull);
+      expect(mealLogCollection, isNotNull);
 
-    await isar.close();
-  });
+      await isar.close();
+    },
+  );
 }
