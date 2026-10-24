@@ -88,6 +88,8 @@ async function peer(transport: InviteTransport, name: string): Promise<Peer> {
       blob = x;
     },
     sealedBundle: async () => sealBundle(mrs, b),
+    putMeta: ks.putMeta,
+    getMeta: ks.getMeta,
   };
   return { name, k, b, mrs, reauth, session: rs, rec: createRecoveryService(k, rs, { transport, origin: 'https://test.local' }) };
 }
