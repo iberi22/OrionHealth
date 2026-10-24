@@ -1,0 +1,11 @@
+--- src-astro/src/components/app/family/Circle.test.ts
++++ src-astro/src/components/app/family/Circle.test.ts
+@@ -6,7 +6,7 @@
+ import Circle from './Circle.svelte';
+ import Join from '../join/Join.svelte';
+
+-let app: Record<string, any> | null = null;
++let app: ReturnType<typeof mount> | null = null;
+ afterEach(() => {
+   if (app) unmount(app);
+   app = null;

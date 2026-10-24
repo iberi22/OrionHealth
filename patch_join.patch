@@ -1,0 +1,13 @@
+--- src-astro/src/components/app/join/Join.svelte
++++ src-astro/src/components/app/join/Join.svelte
+@@ -12,8 +12,8 @@
+     try {
+       const result = await services.family.join(location.href, displayName);
+       sas = result.sas;
+-    } catch (err: any) {
+-      error = err.message || 'Error al unirse al círculo';
++    } catch (err) {
++      error = err instanceof Error ? err.message : 'Error al unirse al círculo';
+     } finally {
+       loading = false;
+     }
