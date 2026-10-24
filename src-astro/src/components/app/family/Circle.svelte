@@ -89,6 +89,11 @@
       </div>
       <button onclick={createCircle} disabled={!newCircleName}>Crear círculo</button>
     </div>
+  {:else if currentMemberId && (!circle.members[currentMemberId] || circle.members[currentMemberId].removed)}
+    <div class="empty-state" data-testid="circle-removed">
+      <h1>{circle.name}</h1>
+      <p>Ya no formas parte de este círculo familiar. Tus datos siguen en tu dispositivo; la familia ya no recibe nada nuevo tuyo ni tú de ella.</p>
+    </div>
   {:else}
     <div class="header">
       <h1>{circle.name}</h1>
