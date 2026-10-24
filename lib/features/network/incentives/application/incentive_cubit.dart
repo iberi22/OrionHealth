@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/entities/contribution.dart';
@@ -43,9 +44,17 @@ class IncentiveState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [contributions, rewards, leaderboard, totalPoints, status, errorMessage];
+  List<Object?> get props => [
+    contributions,
+    rewards,
+    leaderboard,
+    totalPoints,
+    status,
+    errorMessage,
+  ];
 }
 
+@injectable
 class IncentiveCubit extends Cubit<IncentiveState> {
   final IncentiveRepository _repository;
   final _uuid = const Uuid();
@@ -60,19 +69,30 @@ class IncentiveCubit extends Cubit<IncentiveState> {
       final totalPoints = await _repository.getTotalPoints(userId);
       final leaderboard = await _repository.getLeaderboard();
 
-      emit(state.copyWith(
-        status: IncentiveStatus.loaded,
-        contributions: contributions,
-        rewards: rewards,
-        totalPoints: totalPoints,
-        leaderboard: leaderboard,
-      ));
+      emit(
+        state.copyWith(
+          status: IncentiveStatus.loaded,
+          contributions: contributions,
+          rewards: rewards,
+          totalPoints: totalPoints,
+          leaderboard: leaderboard,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(status: IncentiveStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(
+          status: IncentiveStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
-  Future<void> contribute(String userId, ContributionType type, int points) async {
+  Future<void> contribute(
+    String userId,
+    ContributionType type,
+    int points,
+  ) async {
     final contribution = Contribution(
       id: _uuid.v4(),
       userId: userId,
@@ -85,7 +105,12 @@ class IncentiveCubit extends Cubit<IncentiveState> {
       await _repository.addContribution(contribution);
       await loadIncentiveData(userId);
     } catch (e) {
-      emit(state.copyWith(status: IncentiveStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(
+          status: IncentiveStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -94,7 +119,12 @@ class IncentiveCubit extends Cubit<IncentiveState> {
       await _repository.claimReward(rewardId);
       await loadIncentiveData(userId);
     } catch (e) {
-      emit(state.copyWith(status: IncentiveStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(
+          status: IncentiveStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -103,7 +133,12 @@ class IncentiveCubit extends Cubit<IncentiveState> {
       final leaderboard = await _repository.getLeaderboard();
       emit(state.copyWith(leaderboard: leaderboard));
     } catch (e) {
-      emit(state.copyWith(status: IncentiveStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(
+          status: IncentiveStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 }
