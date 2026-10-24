@@ -1,0 +1,21 @@
+Files changed:
+- `src-astro/src/lib/app/real/family.handover.test.ts` (created)
+
+Commands run with their result:
+- `pnpm vitest run src/lib/app/real/family.handover.test.ts`: Passed.
+- `pnpm run check`: Passed (0 errors).
+
+Decisions taken:
+- Created a `family.handover.test.ts` to test handover validation, isolating the transport by mocking `transport.join` to mutate packets for testing verification failures (forgery and destination).
+- Implemented test `ignores handover with forged signature` that mutates the signature of the handover envelope.
+- Implemented test `ignores handover carrying a circle key not wrapped to the joiner` that redirects the envelope to another user.
+
+Pending items:
+- None
+
+Mutation check:
+- Removed `if (h.circleId !== invite.c || h.to !== myId) return;` condition from `src-astro/src/lib/app/real/family.ts`, and the test "ignores handover carrying a circle key not wrapped to the joiner" failed. (1 red test).
+- Removed `if (!(await verify(peer.signPub, handoverBytes(h), p.sig))) return;` condition from `src-astro/src/lib/app/real/family.ts`, and the test "ignores handover with forged signature" failed. (1 red test).
+- Reverted mutations.
+
+Closes #1914
