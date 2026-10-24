@@ -88,6 +88,9 @@ test.describe('@real Recovery on a new device', () => {
     const charlieCode = charlie.recoveryCode;
 
     await visit(charlie.page, '/app/settings');
+    const charlieId = await charlie.page.getByTestId('member-id').textContent();
+
+    await visit(charlie.page, '/app/settings');
     const downloadPromise = charlie.page.waitForEvent('download');
     await charlie.page.getByRole('button', { name: 'Descargar archivo de recuperación' }).click();
     const download = await downloadPromise;
@@ -105,8 +108,8 @@ test.describe('@real Recovery on a new device', () => {
 
     await expect(device2.getByRole('heading', { name: '¡Recuperación completada!' })).toBeVisible({ timeout: 30_000 });
 
-    await reloadAndUnlock(device2, '/app/family');
-    await expect(device2.getByTestId('member-self')).toContainText('Charlie');
+    await reloadAndUnlock(device2, '/app/settings');
+    await expect(device2.getByTestId('member-id')).toContainText(charlieId!);
     await reloadAndUnlock(device2, '/app/records');
     await expect(device2.getByTestId('area-records')).toContainText('No hay condiciones registradas.');
 
