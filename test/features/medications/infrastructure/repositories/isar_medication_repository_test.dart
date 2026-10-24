@@ -6,6 +6,7 @@ import 'package:orionhealth_health/features/medications/infrastructure/repositor
 import 'package:orionhealth_health/features/medications/infrastructure/services/pharmacy_api_service.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
+import '../../../../helpers/mock_encryption_service.dart';
 
 class MockPharmacyApiService extends Mock implements PharmacyApiService {}
 
@@ -14,6 +15,7 @@ void main() {
   late IsarMedicationRepository repository;
   late String testDir;
   late MockPharmacyApiService mockApiService;
+  late FakeEncryptionService fakeEncryptionService;
 
   setUpAll(() async {
     testDir = p.join(Directory.current.path, 'test_db_medications');
@@ -21,12 +23,14 @@ void main() {
 
     // Initialize Isar with the Medication schema
     await Isar.initializeIsarCore(download: true);
-    isar = await Isar.open(
-      [MedicationSchema],
-      directory: testDir,
-    );
+    isar = await Isar.open([MedicationSchema], directory: testDir);
     mockApiService = MockPharmacyApiService();
-    repository = IsarMedicationRepository(isar, mockApiService);
+    fakeEncryptionService = FakeEncryptionService();
+    repository = IsarMedicationRepository(
+      isar,
+      mockApiService,
+      fakeEncryptionService,
+    );
   });
 
   tearDownAll(() async {
@@ -40,7 +44,7 @@ void main() {
     await isar.writeTxn(() => isar.medications.clear());
   });
 
-  test('Should save and retrieve a medication', () async {
+  test('Should save and retrieve a medication with encryption', () async {
     final medication = Medication(
       name: 'Ibuprofeno',
       dosage: '400mg',
@@ -51,9 +55,19 @@ void main() {
 
     await repository.saveMedication(medication);
 
+    // Verify raw data in Isar is encrypted
+    final rawMedication = await isar.medications.where().findFirst();
+    expect(rawMedication, isNotNull);
+    expect(rawMedication!.encryptedName, 'enc:Ibuprofeno');
+    expect(rawMedication.encryptedDosage, 'enc:400mg');
+    expect(rawMedication.encryptedFrequency, 'enc:Cada 8 horas');
+
+    // Verify repository returns decrypted data
     final medications = await repository.getAllMedications();
     expect(medications.length, 1);
     expect(medications.first.name, 'Ibuprofeno');
+    expect(medications.first.dosage, '400mg');
+    expect(medications.first.frequency, 'Cada 8 horas');
   });
 
   test('Should delete a medication', () async {

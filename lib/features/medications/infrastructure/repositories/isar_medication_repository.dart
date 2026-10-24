@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:medical_standards/medical_standards.dart' as standards;
+import '../../../auth/infrastructure/services/encryption_service.dart';
 import '../../domain/entities/medication.dart';
 import '../../domain/repositories/medication_repository.dart';
 import '../services/pharmacy_api_service.dart';
@@ -9,16 +10,74 @@ import '../services/pharmacy_api_service.dart';
 class IsarMedicationRepository implements MedicationRepository {
   final Isar _isar;
   final PharmacyApiService _apiService;
+  final EncryptionService _encryptionService;
 
-  IsarMedicationRepository(this._isar, this._apiService);
+  IsarMedicationRepository(
+    this._isar,
+    this._apiService,
+    this._encryptionService,
+  );
+
+  Future<Medication> _decryptMedication(Medication medication) async {
+    if (medication.encryptedName != null)
+      medication.name = await _encryptionService.decryptHealthData(
+        medication.encryptedName!,
+      );
+    if (medication.encryptedDosage != null)
+      medication.dosage = await _encryptionService.decryptHealthData(
+        medication.encryptedDosage!,
+      );
+    if (medication.encryptedFrequency != null)
+      medication.frequency = await _encryptionService.decryptHealthData(
+        medication.encryptedFrequency!,
+      );
+    if (medication.encryptedNotes != null)
+      medication.notes = await _encryptionService.decryptHealthData(
+        medication.encryptedNotes!,
+      );
+    if (medication.encryptedGenericName != null)
+      medication.genericName = await _encryptionService.decryptHealthData(
+        medication.encryptedGenericName!,
+      );
+    return medication;
+  }
+
+  Future<Medication> _encryptMedication(Medication medication) async {
+    final plainName = medication.encryptedName ?? 'Unknown';
+    medication.encryptedName = await _encryptionService.encryptHealthData(
+      plainName,
+    );
+
+    if (medication.encryptedDosage != null) {
+      medication.encryptedDosage = await _encryptionService.encryptHealthData(
+        medication.encryptedDosage!,
+      );
+    }
+    if (medication.encryptedFrequency != null) {
+      medication.encryptedFrequency = await _encryptionService
+          .encryptHealthData(medication.encryptedFrequency!);
+    }
+    if (medication.encryptedNotes != null) {
+      medication.encryptedNotes = await _encryptionService.encryptHealthData(
+        medication.encryptedNotes!,
+      );
+    }
+    if (medication.encryptedGenericName != null) {
+      medication.encryptedGenericName = await _encryptionService
+          .encryptHealthData(medication.encryptedGenericName!);
+    }
+    return medication;
+  }
 
   @override
   Future<List<Medication>> getAllMedications() async {
-    return await _isar.medications.where().findAll();
+    final medications = await _isar.medications.where().findAll();
+    return await Future.wait(medications.map((m) => _decryptMedication(m)));
   }
 
   @override
   Future<void> saveMedication(Medication medication) async {
+    await _encryptMedication(medication);
     await _isar.writeTxn(() async {
       await _isar.medications.put(medication);
     });
@@ -37,16 +96,21 @@ class IsarMedicationRepository implements MedicationRepository {
 
     // 1. Search locally in medical_standards catalog
     final localResults = standards.MedicationCatalog.all
-        .where((m) =>
-            m.displayName.toLowerCase().contains(query.toLowerCase()) ||
-            (m.genericName?.toLowerCase().contains(query.toLowerCase()) ?? false))
-        .map((m) => Medication(
-              name: m.displayName,
-              rxNormCode: m.code,
-              drugClass: m.drugClass,
-              genericName: m.genericName,
-              startDate: DateTime.now(),
-            ));
+        .where(
+          (m) =>
+              m.displayName.toLowerCase().contains(query.toLowerCase()) ||
+              (m.genericName?.toLowerCase().contains(query.toLowerCase()) ??
+                  false),
+        )
+        .map(
+          (m) => Medication(
+            name: m.displayName,
+            rxNormCode: m.code,
+            drugClass: m.drugClass,
+            genericName: m.genericName,
+            startDate: DateTime.now(),
+          ),
+        );
 
     for (var m in localResults) {
       if (m.rxNormCode != null) mergedResults[m.rxNormCode!] = m;
@@ -57,11 +121,15 @@ class IsarMedicationRepository implements MedicationRepository {
     }
 
     // 2. Search in Isar cache (previously searched medications)
-    final allCached = await _isar.medications.where().findAll();
-    final cachedResults = allCached.where((m) =>
-      m.name.toLowerCase().contains(query.toLowerCase()) ||
-      (m.genericName?.toLowerCase().contains(query.toLowerCase()) ?? false)
-    ).toList();
+    final allCached = await getAllMedications();
+    final cachedResults = allCached
+        .where(
+          (m) =>
+              m.name.toLowerCase().contains(query.toLowerCase()) ||
+              (m.genericName?.toLowerCase().contains(query.toLowerCase()) ??
+                  false),
+        )
+        .toList();
 
     for (var m in cachedResults) {
       if (m.rxNormCode != null) mergedResults[m.rxNormCode!] = m;
@@ -95,9 +163,12 @@ class IsarMedicationRepository implements MedicationRepository {
     }
 
     // 2. Check Isar cache
-    final cachedMed = await _isar.medications.filter().rxNormCodeEqualTo(code).findFirst();
+    final cachedMed = await _isar.medications
+        .filter()
+        .rxNormCodeEqualTo(code)
+        .findFirst();
     if (cachedMed != null) {
-      return cachedMed;
+      return await _decryptMedication(cachedMed);
     }
 
     // 3. Fetch from API
