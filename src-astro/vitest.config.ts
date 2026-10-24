@@ -11,6 +11,8 @@ export default defineConfig({
     conditions: ['browser'],
   },
   test: {
+    // Hermetic: never reach a real Xavier (on the owner's machine localhost:8006 is production).
+    env: { PUBLIC_XAVIER_URL: 'http://127.0.0.1:9' },
     globals: true,
     environment: 'jsdom',
     include: ['src/**/*.test.ts', 'workers/**/*.test.ts'],
