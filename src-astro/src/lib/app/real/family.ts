@@ -23,12 +23,21 @@ interface Genesis {
   signPub: string;
 }
 
+interface KeyHandover {
+  circleId: string;
+  to: string;
+  epoch: number;
+  ephPub: string;
+  wrapped: string;
+}
+export type SignedHandover = KeyHandover & { sig: string };
+
 interface Handover {
   circleId: string;
   to: string;
   keys: { epoch: number; ephPub: string; wrapped: string }[];
 }
-type SignedJoinHandover = Handover & { sig: string };
+export type SignedJoinHandover = Handover & { sig: string };
 
 interface Request {
   requestId: string;
@@ -82,6 +91,7 @@ export function createFamilyCircleService(
     await kernel.publish(await kernel.seal({ category: 'membership', circle: ev.circle, plaintext: signed }));
   };
 
+  const handoverBytes = (h: KeyHandover) => canonical(h, ['sig']);
   const joinHandoverBytes = (h: Handover) => canonical(h, ['sig']);
 
   /** Reduces the membership log (and reads the circle name) without applying any key. */
