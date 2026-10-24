@@ -11,6 +11,7 @@
   let owner = services.vault.memberId();
 
   let showForm = $state(false);
+  let editingId = $state<string | undefined>(undefined);
 
   // Allergy form state
   let substance = $state('');
@@ -58,7 +59,7 @@
     if (!substance.trim() || !owner) return;
     try {
       await services.records.put({
-        recordId: crypto.randomUUID(),
+        recordId: editingId || crypto.randomUUID(),
         owner,
         updatedAt: Date.now(),
         kind: 'allergy',
@@ -67,6 +68,7 @@
         reaction: reaction.trim() || undefined
       });
       showForm = false;
+      editingId = undefined;
       substance = '';
       severity = 'mild';
       reaction = '';
@@ -87,7 +89,7 @@
 
     try {
       await services.records.put({
-        recordId: crypto.randomUUID(),
+        recordId: editingId || crypto.randomUUID(),
         owner,
         updatedAt: Date.now(),
         kind: 'appointment',
@@ -97,10 +99,49 @@
         notes: appNotes.trim() || undefined
       });
       showForm = false;
+      editingId = undefined;
       title = '';
       atStr = '';
       place = '';
       appNotes = '';
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function editAllergy(al: Allergy) {
+    editingId = al.recordId;
+    substance = al.substance;
+    severity = al.severity;
+    reaction = al.reaction || '';
+    showForm = true;
+  }
+
+  async function deleteAllergy(al: Allergy) {
+    if (!owner) return;
+    try {
+      await services.records.remove('allergy', al.recordId);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function editAppointment(app: Appointment) {
+    editingId = app.recordId;
+    title = app.title;
+    // Format timestamp for datetime-local input
+    const d = new Date(app.at);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    atStr = d.toISOString().slice(0, 16);
+    place = app.place || '';
+    appNotes = app.notes || '';
+    showForm = true;
+  }
+
+  async function deleteAppointment(app: Appointment) {
+    if (!owner) return;
+    try {
+      await services.records.remove('appointment', app.recordId);
     } catch (err) {
       console.error(err);
     }
@@ -161,6 +202,10 @@
             {#if al.reaction}
               <div class="record-details">Reacción: {al.reaction}</div>
             {/if}
+            <div class="record-actions">
+              <button data-testid="edit-allergy-{al.recordId}" onclick={() => editAllergy(al)}>Editar</button>
+              <button data-testid="delete-allergy-{al.recordId}" onclick={() => deleteAllergy(al)}>Eliminar</button>
+            </div>
           </li>
         {/each}
       </ul>
@@ -206,6 +251,10 @@
                 {#if app.notes}<span>{app.notes}</span>{/if}
               </div>
             {/if}
+            <div class="record-actions">
+              <button data-testid="edit-appointment-{app.recordId}" onclick={() => editAppointment(app)}>Editar</button>
+              <button data-testid="delete-appointment-{app.recordId}" onclick={() => deleteAppointment(app)}>Eliminar</button>
+            </div>
           </li>
         {/each}
       </ul>
@@ -333,5 +382,22 @@
     flex-direction: column;
     font-size: 0.875rem;
     color: var(--oh-muted);
+  }
+
+  .record-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
+  .record-actions button {
+    background: none;
+    border: 1px solid var(--oh-muted);
+    border-radius: var(--oh-radius);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--oh-text);
   }
 </style>

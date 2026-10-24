@@ -28,10 +28,9 @@ test('full onboarding flow', async ({ page }) => {
     const label = page.locator(`label[for="part-${i}"]`);
     const labelText = await label.textContent();
     const match = labelText!.match(/Parte (\d+)/);
-    if (match) {
-      const idx = parseInt(match[1], 10) - 1;
-      await page.locator(`input#part-${i}`).fill(parts[idx]);
-    }
+    expect(match).not.toBeNull();
+    const idx = parseInt(match![1], 10) - 1;
+    await page.locator(`input#part-${i}`).fill(parts[idx]!);
   }
 
   await page.locator('button', { hasText: 'Confirmar' }).click();
@@ -46,5 +45,8 @@ test('full onboarding flow', async ({ page }) => {
   await expect(page.locator('h2', { hasText: '¡Todo listo!' })).toBeVisible();
   await page.locator('button', { hasText: 'Entrar a la app' }).click();
 
-  await expect(page).toHaveURL(/\/app(?:\/.*)?$/);
+  await expect(page.locator('[data-testid="area-home"]')).toBeVisible();
+
+  await page.reload();
+  await expect(page.locator('[data-testid="area-lock"]')).toBeVisible();
 });
