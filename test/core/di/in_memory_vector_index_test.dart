@@ -19,9 +19,21 @@ void main() {
     });
 
     test('addDocument and search should return correct results', () async {
-      await index.addDocument('1', 'content 1', Float32List.fromList([1.0, 0.0, 0.0]));
-      await index.addDocument('2', 'content 2', Float32List.fromList([0.0, 1.0, 0.0]));
-      await index.addDocument('3', 'content 3', Float32List.fromList([1.0, 1.0, 0.0]));
+      await index.addDocument(
+        '1',
+        'content 1',
+        Float32List.fromList([1.0, 0.0, 0.0]),
+      );
+      await index.addDocument(
+        '2',
+        'content 2',
+        Float32List.fromList([0.0, 1.0, 0.0]),
+      );
+      await index.addDocument(
+        '3',
+        'content 3',
+        Float32List.fromList([1.0, 1.0, 0.0]),
+      );
 
       final query = Float32List.fromList([1.0, 0.1, 0.0]);
       final results = await index.search(query, topK: 2);
@@ -32,7 +44,11 @@ void main() {
     });
 
     test('removeDocument should remove the document from index', () async {
-      await index.addDocument('1', 'content 1', Float32List.fromList([1.0, 0.0, 0.0]));
+      await index.addDocument(
+        '1',
+        'content 1',
+        Float32List.fromList([1.0, 0.0, 0.0]),
+      );
 
       var results = await index.search(Float32List.fromList([1.0, 0.0, 0.0]));
       expect(results.length, 1);
@@ -43,8 +59,16 @@ void main() {
     });
 
     test('clear should remove all documents', () async {
-      await index.addDocument('1', 'content 1', Float32List.fromList([1.0, 0.0, 0.0]));
-      await index.addDocument('2', 'content 2', Float32List.fromList([0.0, 1.0, 0.0]));
+      await index.addDocument(
+        '1',
+        'content 1',
+        Float32List.fromList([1.0, 0.0, 0.0]),
+      );
+      await index.addDocument(
+        '2',
+        'content 2',
+        Float32List.fromList([0.0, 1.0, 0.0]),
+      );
 
       await index.clear();
       final results = await index.search(Float32List.fromList([1.0, 0.0, 0.0]));
@@ -56,9 +80,13 @@ void main() {
     });
 
     test('cosine similarity with zero vector should return 0', () async {
-       await index.addDocument('1', 'content 1', Float32List.fromList([0.0, 0.0, 0.0]));
-       final results = await index.search(Float32List.fromList([1.0, 1.0, 1.0]));
-       expect(results.first.score, 0.0);
+      await index.addDocument(
+        '1',
+        'content 1',
+        Float32List.fromList([0.0, 0.0, 0.0]),
+      );
+      final results = await index.search(Float32List.fromList([1.0, 1.0, 1.0]));
+      expect(results.first.score, 0.0);
     });
   });
 }

@@ -20,7 +20,9 @@ void main() {
       final module = TestNetworkModule();
 
       gh.lazySingleton<Dio>(() => module.dio);
-      gh.lazySingleton<MedicalContextProvider>(() => module.medicalContextProvider);
+      gh.lazySingleton<MedicalContextProvider>(
+        () => module.medicalContextProvider,
+      );
       gh.lazySingleton<SyncService>(() => module.syncService);
 
       expect(getIt<Dio>(), isA<Dio>());
