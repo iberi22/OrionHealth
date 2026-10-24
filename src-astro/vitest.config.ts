@@ -13,7 +13,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'workers/**/*.test.ts'],
     exclude: ['node_modules', 'dist', '.astro', 'tests/e2e/**', 'playwright.config.*'],
   },
 });

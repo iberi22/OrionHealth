@@ -50,7 +50,13 @@ No other crypto dependency is allowed.
 (AAD `orion/v1/bundle|<memberId>`) and published to the circle as an envelope of category `bundle`. Because the
 bundle is replicated as ciphertext, recovering the 32-byte MRS recovers everything.
 
-`memberId` = base64url(SHA-256(SPKI of the signing public key))[0..22].
+`memberId` = base64url(SHA-256(SPKI of the **member** signing public key, from the bundle))[0..22]. It never depends
+on the device: `deviceId` comes from the `@swal/vault` device identity, `memberId` from the bundle, so a member
+recovered on a new phone keeps the same `memberId`. Personal CEKs are created on first use (`rotateCategory`, first
+epoch = 1) and the re-sealed bundle is re-published.
+
+Storage: the vault session uses its own IndexedDB database `orion-meta` (MRS, bundle blob, recovery blob, metadata);
+the envelope store uses `orion-vault`. Two modules never open the same database with different schemas.
 
 ## 4. Categories
 
@@ -114,6 +120,11 @@ interface Grant {
 
 - `circleId` = 16 random bytes. Membership is an append-only log of signed events:
   `create`, `invite`, `join-request`, `approve`, `role`, `guardian`, `remove`, `device-add`, `device-revoke`.
+- **Authentication of the log.** The genesis is pinned: the `create` event must be signed by the admin whose
+  `signPub` the joiner obtained through the SAS channel (§7 invite) — the reducer receives that `genesisActor` and
+  ignores any other `create`, whatever its `hlc`. Every event is verified against the `signPub` registered for its
+  actor in the state reduced so far; `create`, `approve` and `join-request` require `actor`/`subject` ==
+  `memberIdFromSpki(signPub)`. A verifier that does not see the state is not acceptable.
 - Roles: `admin` (approve, remove, rotate CK), `member`. Relations: `guardianOf` (set by the guarded member, or by the
   owner of a dependent profile).
 - The current state is a pure reducer over the log (`lib/family/membership.ts`): invalid events are ignored, not
@@ -136,8 +147,12 @@ interface Grant {
   b64url(HKDF(CK₀, info="orion/v1/transport")). CK₀ (the first epoch) stays the room secret so removed members
   keep no access to future keys, only to an unreadable room; on removal the admin migrates the circle to a new
   room derived from the new CK and the old room is abandoned.
-- Y.Map `env` keyed by envelope id. Every device stores **all** envelopes of the circle (`y-indexeddb`), including
-  categories it cannot read. That is the blind replica.
+- Y.Map `env` keyed by envelope id is **transport only**. The replica is the validated envelope store: a remote
+  envelope is validated (§5) and only then written to the store; nothing is ever deleted from the `Y.Map` by a peer
+  reaction, remote deletes and overwrites are ignored, and the device re-publishes the last valid envelope for that
+  id. Envelopes are immutable by id (an edit is a new envelope); the store rejects a different envelope under an
+  existing id (`ID_CONFLICT`). No `y-indexeddb`: persistence is the store. Every device keeps **all** valid envelopes
+  of the circle, including categories it cannot read. That is the blind replica.
 - Visible to circle devices without keys: owner, author, category, epoch, size, timestamps. Not visible: content.
 - Signaling: own Worker `orionhealth-signal` at `wss://signal.orionhealth.swal.network` (`src-astro/workers/signaling/`,
   Durable Object implementing the y-webrtc signaling protocol, topics opaque, `PUBLIC_SIGNALING_URL` overrides).
@@ -146,9 +161,10 @@ interface Grant {
 
 ## 9. Recovery (losing a phone)
 
-- On onboarding the member gets a **recovery code**: 24 words or 48-char base32 from 32 random bytes RC; it wraps
-  MRS (`AES-GCM(HKDF(RC, info="orion/v1/recovery-code"), MRS)`) and the wrapped blob is published as a `recovery`
-  envelope. Code + any replica = recovery without family.
+- On onboarding the member gets a **recovery code**: 32 random bytes RC as 54 Crockford base32 characters (52 + 2
+  checksum) in 14 groups of 4 (the last one of 2), see `vault/recoveryCode.ts`. It wraps MRS
+  (`AES-GCM(HKDF(RC, salt=memberId, info="orion/v1/recovery-code"), MRS)`, AAD `orion/v1/recovery|<memberId>`); the
+  wrapped blob is stored locally (`orion/recovery-blob`) and published as a `recovery` envelope. Code + any replica = recovery without family.
 - In a circle the member picks **trustees** and a threshold k (default 2 of 3, minimum 2; a single guardian may be
   1-of-1 only with an explicit warning). MRS is split with `shamir-secret-sharing`; share *i* is wrapped to trustee
   *i*'s box key like a grant and published as a `recovery` envelope addressed to that trustee.
@@ -197,6 +213,10 @@ device when it syncs, so an alert still fires if the elder's phone goes offline 
 - Lock: after `lock()` or tab hidden for the timeout, no CEK or MRS reachable from the services.
 
 ## 13. Open risks
+
+- Membership backdating: `hlc` is chosen by the author, so a removed member could sign events dated before their
+  removal. v1 accepts this risk (removal also rotates CK and migrates the room, so such events reach nobody new);
+  a causal DAG (`prev` hashes) is the planned fix.
 
 - Metadata in §8 is visible to every circle device.
 - WebRTC without TURN fails on some NATs; two devices on the same Wi-Fi always sync.

@@ -1,0 +1,48 @@
+name: web-ci
+
+# Gate of the unified web (src-astro): types, unit tests, build and Playwright on the local build.
+# E2E_REAL turns on the @real specs once lib/app/real.ts is wired (wave 2, task A12).
+on:
+  pull_request:
+    branches: [main, feat/orion-web]
+    paths: ['src-astro/**', '.github/workflows/web-ci.yml']
+  push:
+    branches: [main, feat/orion-web]
+    paths: ['src-astro/**', '.github/workflows/web-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: web-ci / check-test-build-e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      E2E_REAL: '0'
+    defaults:
+      run:
+        working-directory: src-astro
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with: { version: 11 }
+      - uses: actions/setup-node@v7
+        with: { node-version: 24, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run check
+      - run: pnpm test
+      - run: pnpm run build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright test --project=app-local
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: web-ci-traces
+          path: src-astro/test-results/
+          retention-days: 7

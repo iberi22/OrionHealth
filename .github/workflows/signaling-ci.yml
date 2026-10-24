@@ -1,0 +1,32 @@
+name: signaling-ci
+
+# Types and tests of the signaling Worker (src-astro/workers/signaling). No deploy here.
+on:
+  pull_request:
+    branches: [main, feat/orion-web]
+    paths: ['src-astro/workers/signaling/**', '.github/workflows/signaling-ci.yml']
+  push:
+    branches: [main, feat/orion-web]
+    paths: ['src-astro/workers/signaling/**', '.github/workflows/signaling-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  signaling:
+    name: signaling-ci / types-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: src-astro
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with: { version: 11 }
+      - uses: actions/setup-node@v7
+        with: { node-version: 24, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run check:workers
+      - run: pnpm vitest run workers/signaling

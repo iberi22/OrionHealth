@@ -4,5 +4,15 @@ import KbSearch from '../../components/kb/KbSearch.svelte';
 export const prerender = true;
 ---
 <SiteLayout title="OrionHealth — Base de conocimiento médica">
-  <KbSearch client:load />
+  <section class="kb-page">
+    <h1>Base de conocimiento médica</h1>
+    <p>ICD-10, LOINC, RxNorm, SNOMED, guías clínicas, interacciones y síntomas. La búsqueda ocurre en tu dispositivo.</p>
+    <KbSearch client:load />
+  </section>
 </SiteLayout>
+
+<style>
+  .kb-page { max-width: 960px; margin: 0 auto; padding: 2rem 1rem; }
+  h1 { font-family: var(--oh-font-mono); margin: 0 0 0.5rem; }
+  p { color: var(--oh-muted); margin: 0 0 1.5rem; }
+</style>

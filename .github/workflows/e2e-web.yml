@@ -38,7 +38,7 @@ jobs:
         with: { node-version: 22, cache: pnpm, cache-dependency-path: src-astro/pnpm-lock.yaml }
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm exec playwright test tests/e2e/pwa-live.spec.ts --reporter=github
+      - run: pnpm exec playwright test --project=live --reporter=github
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
