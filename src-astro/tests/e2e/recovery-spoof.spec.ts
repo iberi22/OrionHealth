@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { startSignaling } from './helpers/signaling';
 import { newMember, createCircle, inviteAndJoin } from './helpers/circle';
-import { visit } from './helpers/vault';
+import { visit, reloadAndUnlock } from './helpers/vault';
 import { addVirtualPasskey } from './helpers/webauthn';
 
 test.describe('@real Recovery Spoofing', () => {
   test.setTimeout(120_000);
 
-  test('a non-admin cannot start recovery; trustees see vouching admin and can reject', async ({ browser, baseURL }) => {
+  test("a non-admin cannot start recovery; a trustee's decline survives a reload", async ({ browser, baseURL }) => {
     await startSignaling();
 
     const admin = await newMember(browser, baseURL, 'Alice');
@@ -74,8 +74,30 @@ test.describe('@real Recovery Spoofing', () => {
     // Verify the request card disappears for Dave
     await expect(card).not.toBeVisible({ timeout: 10_000 });
 
+    // Dave reloads and unlocks
+    await reloadAndUnlock(dave.page);
+    await visit(dave.page, '/app/recovery');
+    await dave.page.getByRole('button', { name: 'Solicitudes' }).click();
+    await expect(dave.page.getByRole('heading', { name: 'Solicitudes esperando mi aprobación' })).toBeVisible();
+    await expect(dave.page.locator('.request-card', { hasText: 'Solicitud de recuperación para la cuenta de' })).not.toBeVisible();
+
     // The new device is still stuck on the "Esperando aprobaciones" screen (no share was released)
     await expect(device.getByRole('heading', { name: 'Esperando aprobaciones' })).toBeVisible();
+
+    // Charlie (trustee) sees the recovery request
+    await visit(charlie.page, '/app/recovery');
+    await charlie.page.getByRole('button', { name: 'Solicitudes' }).click();
+    const charlieCard = charlie.page.locator('.request-card', { hasText: 'Solicitud de recuperación para la cuenta de' });
+    await expect(charlieCard).toContainText('Bea', { timeout: 30_000 });
+
+    // Charlie approves the request
+    await charlieCard.getByRole('button', { name: 'Aprobar' }).click();
+
+    // Verify Charlie's request card disappears
+    await expect(charlieCard).not.toBeVisible({ timeout: 10_000 });
+
+    // The device shows 1 of 2 approvals
+    await expect(device.getByText('1 de 2 aprobaciones')).toBeVisible({ timeout: 30_000 });
 
     for (const ctx of [admin.context, bea.context, charlie.context, dave.context, fresh]) {
       await ctx.close();

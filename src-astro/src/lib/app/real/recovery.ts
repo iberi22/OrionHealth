@@ -26,6 +26,8 @@ export interface RecoverySession {
   recoveryBlob(): Promise<string | undefined>;
   putRecoveryBlob(blob: string): Promise<void>;
   sealedBundle(): Promise<string | undefined>;
+  putMeta(key: string, value: string): Promise<void>;
+  getMeta(key: string): Promise<string | undefined>;
 }
 
 /** Guest mode of the real kernel (kernel.impl.ts): read/relay the circle on a device that is not unlocked yet. */
@@ -289,6 +291,20 @@ export function createRecoveryService(
 
   // ---- trustee side ----
   const declined = new Set<string>();
+  let declinedLoaded = false;
+  async function loadDeclined() {
+    if (declinedLoaded) return;
+    try {
+      const stored = await session.getMeta('recovery/declined');
+      if (stored) {
+        const arr = JSON.parse(stored);
+        if (Array.isArray(arr)) arr.forEach((id: string) => declined.add(id));
+      }
+    } catch {
+      /* ignore */
+    }
+    declinedLoaded = true;
+  }
 
   // ---- new-device side ----
   interface Attempt {
@@ -451,6 +467,7 @@ export function createRecoveryService(
     },
 
     async pendingRequests(): Promise<PendingRecovery[]> {
+      await loadDeclined();
       const mine = kernel.memberId();
       const circle = await kernel.circle();
       if (!circle) return [];
@@ -479,7 +496,9 @@ export function createRecoveryService(
 
     async approve(requestId, sasMatches) {
       if (!sasMatches) {
+        await loadDeclined();
         declined.add(requestId);
+        await session.putMeta('recovery/declined', JSON.stringify(Array.from(declined)));
         return;
       }
       const mine = kernel.memberId();
