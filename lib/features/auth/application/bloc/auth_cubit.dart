@@ -77,8 +77,8 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     final success = await _setPinUseCase(pin);
     if (!success) {
-       emit(const AuthUnauthenticated(errorMessage: 'PIN inválido'));
-       return;
+      emit(const AuthUnauthenticated(errorMessage: 'PIN inválido'));
+      return;
     }
 
     final session = await _loginUseCase(PinCredential(pin));
@@ -102,12 +102,15 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       final credentials = await _repository.getCredentials();
       if (credentials != null && credentials.isLocked) {
+        await _logoutUseCase();
         emit(AuthLocked(credentials.lockoutUntil!));
       } else {
-        emit(AuthUnauthenticated(
-          failedAttempts: credentials?.failedAttempts ?? 0,
-          errorMessage: 'PIN incorrecto',
-        ));
+        emit(
+          AuthUnauthenticated(
+            failedAttempts: credentials?.failedAttempts ?? 0,
+            errorMessage: 'PIN incorrecto',
+          ),
+        );
       }
     }
   }
@@ -158,10 +161,9 @@ class AuthCubit extends Cubit<AuthState> {
 
       final currentSession = await _repository.getSession();
       if (currentSession != null) {
-        await _repository.saveSession(AuthSession(
-          token: currentSession.token,
-          expiresAt: newExpiry,
-        ));
+        await _repository.saveSession(
+          AuthSession(token: currentSession.token, expiresAt: newExpiry),
+        );
       }
     }
   }
