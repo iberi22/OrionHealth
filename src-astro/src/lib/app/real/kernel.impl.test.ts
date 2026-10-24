@@ -10,7 +10,7 @@ import { createGrant } from '../../family/grants';
 import { createKernel, type KernelSession } from './kernel.impl';
 import { KernelError } from './kernel';
 import { createGrantsService } from './grants';
-import { circleOf, copyAll, newDevice } from './kernel.testkit';
+import { circleOf, copyAll, memSession, newDevice } from './kernel.testkit';
 
 let dbN = 0;
 
@@ -201,5 +201,31 @@ describe('RealKernel revocation (spec §5, §6)', () => {
     await carlos.kernel.publish(marker);
     const write = await rosa.kernel.seal({ category: 'vitals', owner: a.memberId, plaintext: { value: 2 } });
     await expect(carlos.kernel.publish(write)).resolves.toBeUndefined();
+  });
+});
+
+describe('RealKernel keystore', () => {
+  it('keeps the circle after a restart when addCircleKey and setCircle persist back to back', async () => {
+    const mrs = randomBytes(32);
+    const base = memSession(await createMemberBundle(mrs), mrs);
+    // The first keystore write (from addCircleKey, without the circle yet) lands last.
+    let writes = 0;
+    const session: KernelSession = {
+      ...base,
+      putMeta: async (k, v) => {
+        const delay = ++writes === 1 ? 30 : 0;
+        await new Promise((r) => setTimeout(r, delay));
+        await base.putMeta(k, v);
+      },
+    };
+    const store = await openEnvelopeStore(`kernel-test-${++dbN}`);
+    const k1 = await createKernel({ session, store, deviceId: 'dk', connect: false });
+    k1.addCircleKey(0, randomBytes(32));
+    await k1.setCircle('c1', { memberId: k1.memberId(), signPub: k1.bundle().signPub });
+    await new Promise((r) => setTimeout(r, 60));
+    const k2 = await createKernel({ session: base, store, deviceId: 'dk', connect: false });
+    await expect(k2.circleKey()).resolves.toMatchObject({ epoch: 0 });
+    expect(await k2.signPubOf(k1.memberId())).toBe(k1.bundle().signPub);
+    expect((await k2.seal({ category: 'circle', plaintext: 1 })).circle).toBe('c1');
   });
 });
