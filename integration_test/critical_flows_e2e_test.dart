@@ -8,12 +8,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:orionhealth_health/features/auth/domain/repositories/auth_repository.dart';
 import 'package:orionhealth_health/features/health_record/infrastructure/services/file_picker_service.dart';
 import 'package:orionhealth_health/features/health_record/infrastructure/services/ocr_service.dart';
+import 'package:orionhealth_health/features/sync/domain/services/sync_service.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
 
 class _FakeFilePicker implements FilePickerService {
   @override
   Future<String?> pickPdf() async => '/data/local/tmp/orion_e2e_checkup.pdf';
+}
+
+/// Stands in for the FHIR/GitHub backend, whose reachability and latency on a
+/// CI emulator are not deterministic. Runs long enough for the loading state
+/// to be observable; the page, cubit and snackbar are the real ones.
+class _FakeSyncService implements SyncService {
+  DateTime? _last;
+
+  @override
+  Future<void> performFullSync() async {
+    await Future<void>.delayed(const Duration(milliseconds: 1500));
+    _last = DateTime.now();
+  }
+
+  @override
+  Future<DateTime?> getLastSyncTime() async => _last;
 }
 
 class _FakeOcr implements OcrService {
@@ -177,6 +194,8 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
 
 Future<void> _setupPin(WidgetTester tester) async {
   await _pumpUntil(tester, find.text('Configurar PIN'));
+  // Let the route transition finish: during it the page ignores pointers.
+  await _settle(tester);
   if (find.text('Configurar PIN').evaluate().isEmpty)
     _dump(tester, 'no PIN page');
   expect(find.text('Configurar PIN'), findsOneWidget);
@@ -185,6 +204,8 @@ Future<void> _setupPin(WidgetTester tester) async {
     find.widgetWithText(TextField, 'Confirmar PIN'),
     '1234',
   );
+  FocusManager.instance.primaryFocus?.unfocus();
+  await _settle(tester);
   await tester.tap(find.text('Guardar PIN'));
   await _pumpUntil(tester, find.byType(NavigationBar));
   await _settle(tester);
@@ -406,7 +427,13 @@ void main() {
     });
 
     testWidgets('6. Sync: Trigger sync and verify', (tester) async {
-      await _enterApp(tester);
+      await _enterApp(
+        tester,
+        overrides: () {
+          di.getIt.unregister<SyncService>();
+          di.getIt.registerLazySingleton<SyncService>(() => _FakeSyncService());
+        },
+      );
 
       // Navigate to Sync page: Perfil tab -> Sincronización tile
       await tester.tap(find.byKey(const Key('nav_profile')));
@@ -417,28 +444,21 @@ void main() {
       expect(find.text('Sincronización General'), findsOneWidget);
 
       // Perform Sync
+      expect(find.textContaining('Nunca'), findsOneWidget);
       await tester.tap(find.text('SINCRONIZAR AHORA'));
+      await tester.pump(); // Trigger the sync
 
-      // The loading state must be shown while the sync runs.
-      var sawLoading = false;
-      final result = find.byWidgetPredicate(
-        (w) =>
-            w is Text &&
-            ((w.data ?? '').startsWith('Sincronización completada') ||
-                (w.data ?? '').startsWith('Error:')),
+      // Check for loading state
+      expect(find.byType(CircularProgressIndicator), findsWidgets);
+
+      // Verify success snackbar and the updated last-sync time
+      await _pumpUntil(
+        tester,
+        find.text('Sincronización completada con éxito'),
+        timeout: const Duration(seconds: 30),
       );
-      final end = DateTime.now().add(const Duration(seconds: 120));
-      while (DateTime.now().isBefore(end) && result.evaluate().isEmpty) {
-        await tester.pump(const Duration(milliseconds: 50));
-        if (find.byType(CircularProgressIndicator).evaluate().isNotEmpty) {
-          sawLoading = true;
-        }
-      }
-      _dump(tester, 'sync finished (sawLoading=$sawLoading)');
-      expect(sawLoading, isTrue, reason: 'no loading state during sync');
-
-      // Verify success snackbar
       expect(find.text('Sincronización completada con éxito'), findsWidgets);
+      expect(find.textContaining('Nunca'), findsNothing);
     });
   });
 }
