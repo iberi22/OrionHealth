@@ -15,11 +15,24 @@ class SimpleEmbeddingsAdapter implements EmbeddingsAdapter {
 
   @override
   Future<List<double>> embed(String text) async {
-    final seed = text.hashCode;
-    return List.generate(dimension, (i) {
-      final rng = ((seed + i * 31) % 0x7FFFFFFF) / 0x7FFFFFFF;
-      return rng;
-    });
+    final vector = List<double>.filled(dimension, 0.0);
+    final words = text.toLowerCase().split(RegExp(r'\W+'));
+    for (final word in words) {
+      if (word.isEmpty || word.length < 3) continue;
+      final idx = word.hashCode.abs() % dimension;
+      vector[idx] += 1.0;
+    }
+    double mag = 0.0;
+    for (final v in vector) {
+      mag += v * v;
+    }
+    mag = sqrt(mag);
+    if (mag > 0) {
+      for (int i = 0; i < dimension; i++) {
+        vector[i] /= mag;
+      }
+    }
+    return vector;
   }
 }
 
