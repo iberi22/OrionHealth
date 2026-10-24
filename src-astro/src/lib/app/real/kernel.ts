@@ -80,8 +80,9 @@ export interface Kernel {
   /** Validates (spec §5), stores immutably by id and replicates to the circle. */
   publish(env: Envelope): Promise<void>;
   envelopes(filter?: { owner?: string; category?: Category }): Promise<Envelope[]>;
-  /** Fires for every accepted envelope, local or remote. */
-  onEnvelope(cb: (env: Envelope) => void): () => void;
+  /** Fires for every accepted envelope, local or remote. A returned promise is awaited (errors ignored)
+   *  before publish() resolves. */
+  onEnvelope(cb: (env: Envelope) => void | Promise<void>): () => void;
   /** Fires after lock; by then no CEK, CK, MRS or bundle is referenced by the kernel. */
   onLock(cb: () => void): () => void;
 }

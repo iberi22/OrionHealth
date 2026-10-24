@@ -132,7 +132,15 @@ interface Grant {
   owner of a dependent profile).
 - The current state is a pure reducer over the log (`lib/family/membership.ts`): invalid events are ignored, not
   thrown, and a test proves that reordering valid events yields the same state.
-- Removing a member rotates CK and every member re-grants personal categories without the removed member.
+- **Removing a member.** The admin publishes `remove`, generates CK[epoch+1] and hands it to every remaining
+  (non-dependent) member as a signed `circle-key` handover wrapped to the member's box key, sealed with the
+  previous CK. When a device accepts a membership envelope and the reduced log shows a removed member, that device
+  (every remaining member, the admin included) applies §6 revoke to each personal category it had granted to a
+  removed member, expired grants included: revoke markers, CEK epoch+1, re-grant of the new epoch to the remaining
+  grantees that are still members. The kernel awaits this rotation before the `publish` of the membership envelope
+  resolves, so on the admin's device `removeMember` returns with the categories already rotated. A member whose
+  device was offline rotates when the `remove` reaches it; until then its newest CEKs stay readable by the removed
+  member. The removed member keeps what it already decrypted.
 
 ### Invite with short authentication string (SAS)
 
@@ -146,10 +154,17 @@ interface Grant {
 
 ## 8. Replication (mesh)
 
-- One Yjs doc per circle. Room = b64url(HMAC-SHA-256(CK₀, "orion/v1/room"))[0..22]; `y-webrtc` `password` =
-  b64url(HKDF(CK₀, info="orion/v1/transport")). CK₀ (the first epoch) stays the room secret so removed members
-  keep no access to future keys, only to an unreadable room; on removal the admin migrates the circle to a new
-  room derived from the new CK and the old room is abandoned.
+- One Yjs doc per room. Room(CK) = b64url(HMAC-SHA-256(CK, "orion/v1/room"))[0..22]; `y-webrtc` `password` =
+  b64url(HKDF(CK, info="orion/v1/transport")). The full replica of a device lives in Room(newest CK it holds) and
+  carries every envelope of the circle. When a device registers a newer CK (after a removal) it closes the full
+  replica of the old room and opens the room of the new CK, seeded from the store, so a removed member, who never
+  receives the new CK, cannot derive the room where new envelopes travel.
+- For every older CK epoch it holds, a device keeps a **handover room** Room(CK[e]) that carries only circle-keyed
+  envelopes sealed with CK[e] (the `remove`, the `circle-key` handovers, revoke markers and re-grants published
+  before the rotation). Nothing sealed with a newer CK or a personal CEK is ever pushed into it. A member that was
+  offline during the removal meets the others there, unwraps the new CK and moves to the new room. Remote
+  envelopes in a handover room are accepted only from current, non-removed members. Handover rooms stay open while
+  the vault is unlocked; there is one per older epoch.
 - Y.Map `env` keyed by envelope id is **transport only**. The replica is the validated envelope store: a remote
   envelope is validated (§5) and only then written to the store; nothing is ever deleted from the `Y.Map` by a peer
   reaction, remote deletes and overwrites are ignored, and the device re-publishes the last valid envelope for that
@@ -229,8 +244,14 @@ device when it syncs, so an alert still fires if the elder's phone goes offline 
 ## 13. Open risks
 
 - Membership backdating: `hlc` is chosen by the author, so a removed member could sign events dated before their
-  removal. v1 accepts this risk (removal also rotates CK and migrates the room, so such events reach nobody new);
-  a causal DAG (`prev` hashes) is the planned fix.
+  removal. v1 accepts this risk. Removal rotates CK and moves the circle to the new room, and handover rooms ignore
+  removed authors, so such events reach only a device that has not yet seen the `remove` (it then replicates them
+  into the new room once it migrates); a causal DAG (`prev` hashes) is the planned fix.
+- Removal is only as fast as each grantor's device: a member offline during the removal keeps its current CEK
+  epochs readable by the removed member until the `remove` reaches it and it rotates (§7). Old rooms stay
+  reachable by the removed member, who sees the metadata (§8) of the circle-keyed envelopes sealed with the old CK.
+- A member admitted after a rotation receives only the newest CK, so it cannot open membership or grant envelopes
+  sealed with older epochs (pre-existing; the admin's handover carries one epoch).
 
 - Metadata in §8 is visible to every circle device.
 - WebRTC without TURN fails on some NATs; two devices on the same Wi-Fi always sync.

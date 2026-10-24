@@ -61,6 +61,18 @@ interface Keystore {
 
 const same = (a: Envelope, b: Envelope) => fromUtf8(canonical(a)) === fromUtf8(canonical(b));
 
+/**
+ * An open circle replica (spec §8). The full one lives in the room of the newest circle key and carries every
+ * envelope. Each older epoch this device holds keeps a handover room that carries only circle-keyed envelopes
+ * sealed with that epoch, so a member offline during a removal still gets the rotated key; nothing sealed with a
+ * newer key or a personal CEK is ever pushed into a room a removed member can derive.
+ */
+interface OpenReplica {
+  epoch: number;
+  full: boolean;
+  replica: CircleReplica;
+}
+
 export async function createKernel(opts: KernelOptions): Promise<RealKernel> {
   const k = new RealKernel(opts);
   opts.session.onState((s) => {
@@ -76,12 +88,12 @@ export class RealKernel implements Kernel {
   private circleKeys = new Map<number, Uint8Array>();
   private revoked = new Set<string>();
   private circleInfo: Keystore['circle'];
-  private replica: CircleReplica | null = null;
+  private replicas = new Map<number, OpenReplica>();
   private pending = new Map<string, Envelope>();
   private revalidating = false;
   private revalidateAgain = false;
   private hlc: Hlc;
-  private envSubs = new Set<(e: Envelope) => void>();
+  private envSubs = new Set<(e: Envelope) => void | Promise<void>>();
   private lockSubs = new Set<() => void>();
   private loaded = false;
   private now: () => number;
@@ -148,8 +160,8 @@ export class RealKernel implements Kernel {
     this.pending.clear();
     this.circleInfo = undefined;
     this.generation++;
-    this.replica?.destroy();
-    this.replica = null;
+    for (const r of this.replicas.values()) r.replica.destroy();
+    this.replicas.clear();
     this.loaded = false;
     this.lockSubs.forEach((cb) => cb());
   }
@@ -160,62 +172,108 @@ export class RealKernel implements Kernel {
     }
   }
 
-  private starting: Promise<void> | null = null;
+  private replicaChain: Promise<void> = Promise.resolve();
   /** Bumped on every lock so a replica that finishes opening after lock() is discarded. */
   private generation = 0;
 
-  /** Idempotent and serialized: load(), setCircle() and addCircleKey() can race, and y-webrtc throws
-   *  when a second provider is opened for a room that already has one. */
+  /** Serialized: load(), setCircle() and addCircleKey() can race, and y-webrtc throws when a second provider
+   *  is opened for a room that already has one. Each call re-checks the rooms once the previous one is done. */
   private startReplica(): Promise<void> {
-    this.starting ??= this.openReplica().finally(() => {
-      this.starting = null;
-    });
-    return this.starting;
+    const run = this.replicaChain.then(() => this.syncReplicas());
+    this.replicaChain = run.catch(() => undefined);
+    return run;
   }
 
-  private async openReplica() {
-    const gen = this.generation;
-    const ck0 = this.circleKeys.get(0);
-    if (this.replica || !this.circleInfo || !ck0 || this.opts.connect === false) return;
-    const circleId = this.circleInfo.id;
-    const replica = await createCircleReplica({
-      circleId,
-      ck0,
-      connect: this.opts.transport !== false,
-      validate: async (env) => {
-        try {
-          await this.accept(env);
-          return true;
-        } catch (e) {
-          this.queuePending(env, e);
-          return false;
-        }
-      },
-      // accept() already stored it
-      sink: () => {},
-    });
-    if (gen !== this.generation) {
-      // locked while the replica was opening: do not keep it around
-      replica.destroy();
-      return;
+  /** Does replica `r` carry `env`? Decided against the newest key held now, so a full replica whose room is
+   *  about to be abandoned (a rotated CK was just registered) already behaves as a handover room. */
+  private carries(r: OpenReplica, env: Envelope) {
+    const circleId = this.circleInfo?.id;
+    if (r.full && this.circleKeys.size && r.epoch === Math.max(...this.circleKeys.keys())) {
+      if (env.circle === circleId) return true;
+      // my personal envelopes written before the circle existed
+      const me = this.opts.session.bundle()?.memberId;
+      return env.circle === 'local' && env.owner === me && env.author === me;
     }
-    // Registered before reading the store: a publish racing with the seed either is in the listing or
-    // reaches the replica through publish().
-    this.replica = replica;
-    // The Y.Doc is ephemeral (no y-indexeddb, spec §8): every stored envelope of the circle, and my own
-    // personal envelopes written before the circle existed, go back into it so peers that were offline get them.
-    const me = this.opts.session.bundle()?.memberId;
-    const stored = [
-      ...(await this.opts.store.listByCircle(circleId)),
-      ...(await this.opts.store.listByCircle('local')).filter((e) => e.owner === me && e.author === me),
-    ];
-    if (gen !== this.generation) return;
-    replica.seed(stored);
+    return env.circle === circleId && CIRCLE_KEYED.includes(env.category) && env.epoch === r.epoch;
   }
 
-  /** Room and doc of the open replica (tests and diagnostics). */
+  /**
+   * Brings the open replicas in line with the circle keys (spec §8): the full replica moves to the room of the
+   * newest CK (after a removal the old room is abandoned by the remaining members), and every older epoch keeps
+   * a handover room. Every replica is seeded from the store when it opens, because its Y.Doc is ephemeral.
+   */
+  private async syncReplicas() {
+    const gen = this.generation;
+    const info = this.circleInfo;
+    if (!info || !this.circleKeys.size || this.opts.connect === false) return;
+    const newest = Math.max(...this.circleKeys.keys());
+    for (const [epoch, r] of [...this.replicas]) {
+      if (r.full && epoch !== newest) {
+        r.replica.destroy();
+        this.replicas.delete(epoch);
+      }
+    }
+    for (const epoch of [...this.circleKeys.keys()].sort((a, b) => b - a)) {
+      if (this.replicas.has(epoch)) continue;
+      const key = this.circleKeys.get(epoch);
+      if (!key) continue;
+      const replica = await createCircleReplica({
+        circleId: info.id,
+        ck0: key,
+        connect: this.opts.transport !== false,
+        validate: (env) => this.acceptRemote(env, epoch),
+        // acceptRemote() already stored it
+        sink: () => {},
+      });
+      if (gen !== this.generation) {
+        // locked while the replica was opening: do not keep it around
+        replica.destroy();
+        return;
+      }
+      // Registered before reading the store: a publish racing with the seed either is in the listing or
+      // reaches the replica through publish().
+      const r: OpenReplica = { epoch, full: epoch === newest, replica };
+      this.replicas.set(epoch, r);
+      const stored = [...(await this.opts.store.listByCircle(info.id)), ...(await this.opts.store.listByCircle('local'))];
+      if (gen !== this.generation) return;
+      replica.seed(stored.filter((e) => this.carries(r, e)));
+    }
+  }
+
+  /** Validation hook of the replica of `source`: a newly accepted envelope is relayed to the other rooms. */
+  private async acceptRemote(env: Envelope, source: number): Promise<boolean> {
+    try {
+      // A handover room is shared with removed members: only current members are heard there, so a removed
+      // member cannot push (backdated) events through it. Final, not retried through the pending queue.
+      if (this.circleKeys.size && source !== Math.max(...this.circleKeys.keys())) {
+        const m = (await this.circle())?.members[env.author];
+        if (!m || m.removed) throw new KernelError('INVALID', 'not-a-current-member');
+      }
+      if (await this.accept(env)) await this.replicate(env, source).catch(() => undefined);
+      return true;
+    } catch (e) {
+      this.queuePending(env, e);
+      return false;
+    }
+  }
+
+  private async replicate(env: Envelope, skip?: number) {
+    for (const r of [...this.replicas.values()]) {
+      if (r.epoch !== skip && this.carries(r, env)) await r.replica.add(env);
+    }
+  }
+
+  /** Room and doc of the full replica (tests and diagnostics). */
   replicaInfo(): { room: string; doc: CircleReplica['doc'] } | null {
-    return this.replica ? { room: this.replica.room, doc: this.replica.doc } : null;
+    const r = [...this.replicas.values()].find((x) => x.full);
+    return r ? { room: r.replica.room, doc: r.replica.doc } : null;
+  }
+
+  /** Every open replica, newest epoch first (tests and diagnostics). */
+  replicaRooms(): { epoch: number; full: boolean; room: string; doc: CircleReplica['doc'] }[] {
+    return [...this.replicas.values()]
+      .sort((a, b) => b.epoch - a.epoch)
+      .map((r) => ({ epoch: r.epoch, full: r.full, room: r.replica.room, doc: r.replica.doc }));
   }
 
   private queuePending(env: Envelope, e: unknown) {
@@ -243,7 +301,7 @@ export class RealKernel implements Kernel {
             const fresh = await this.accept(env);
             this.pending.delete(id);
             // Into the replica's valid set, so overwrites of this id are restored like any other.
-            if (fresh) await this.replica?.add(env).catch(() => undefined);
+            if (fresh) await this.replicate(env).catch(() => undefined);
           } catch (e) {
             if (!retryable(e)) this.pending.delete(id);
           }
@@ -483,7 +541,8 @@ export class RealKernel implements Kernel {
     }
     await this.opts.store.put(env);
     this.hlc.receive(env.hlc);
-    this.envSubs.forEach((cb) => cb(env));
+    // Listeners may return a promise (e.g. the rotation after a removal, spec §7); publish() waits for it.
+    await Promise.allSettled([...this.envSubs].map(async (cb) => cb(env)));
     if (env.category === 'membership' || env.category === 'grant') void this.revalidatePending();
     return true;
   }
@@ -491,7 +550,7 @@ export class RealKernel implements Kernel {
   async publish(env: Envelope) {
     this.guard();
     await this.accept(env);
-    await this.replica?.add(env);
+    await this.replicate(env);
   }
 
   async envelopes(filter: { owner?: string; category?: Category } = {}) {
@@ -504,7 +563,7 @@ export class RealKernel implements Kernel {
     return all;
   }
 
-  onEnvelope(cb: (env: Envelope) => void) {
+  onEnvelope(cb: (env: Envelope) => void | Promise<void>) {
     this.envSubs.add(cb);
     return () => this.envSubs.delete(cb);
   }
