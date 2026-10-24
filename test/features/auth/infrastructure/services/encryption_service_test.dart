@@ -121,7 +121,24 @@ void main() {
 
   group('clearHealthKeyCache', () {
     test('should clear health key cache', () async {
+      const data = 'patient-sensitive-data';
+      const masterSecret =
+          '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
+      when(
+        () => mockSecureStorage.readSecure(any(), any()),
+      ).thenAnswer((_) async => masterSecret);
+
+      final encrypted1 = await encryptionService.encryptHealthData(data);
       encryptionService.clearHealthKeyCache();
+      final encrypted2 = await encryptionService.encryptHealthData(data);
+      expect(encrypted1, isNot(equals(data)));
+      expect(encrypted2, isNot(equals(data)));
+
+      verify(
+        () =>
+            mockSecureStorage.readSecure('health_encryption', 'master_secret'),
+      ).called(2);
     });
   });
 }
