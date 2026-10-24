@@ -10,6 +10,7 @@ import '../../../../features/health_data_import/presentation/pages/health_import
 import '../../../../features/medications/presentation/pages/medications_page.dart';
 import '../../../../features/allergies/presentation/pages/allergies_page.dart';
 import '../../../../features/appointments/presentation/pages/appointments_page.dart';
+import '../../../../features/sync/presentation/pages/sync_page.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../application/bloc/user_profile_cubit.dart';
@@ -139,6 +140,19 @@ class _UserProfileView extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => const NetworkHealthPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    ProfileInfoTile(
+                      key: const Key('profile_sync_tile'),
+                      icon: Icons.sync,
+                      title: 'Sincronización',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SyncPage(),
                           ),
                         );
                       },
