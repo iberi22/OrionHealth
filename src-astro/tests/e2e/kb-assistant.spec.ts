@@ -53,7 +53,7 @@ test.describe('Knowledge Base and Assistant', () => {
       // Verify entry view
       const entryView = page.getByTestId('kb-entry-view');
       await expect(entryView).toBeVisible();
-      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      await expect(entryView.getByRole('heading', { level: 2 })).toBeVisible();
     });
 
     test(`Assistant answer with citations and request interception ${suffix}`, async ({ page }) => {
@@ -61,8 +61,16 @@ test.describe('Knowledge Base and Assistant', () => {
       await page.goto('/app/onboarding');
       await addVirtualPasskey(page);
 
-      // Navigate to assistant
+      // Navigate to assistant; the vault gate sends a locked session to /app/lock first
       await page.goto('/app/assistant');
+      const lock = page.getByTestId('area-lock');
+      await expect(lock.or(page.getByTestId('area-assistant'))).toBeVisible();
+      if (await lock.isVisible()) {
+        await page.getByRole('button', { name: 'Desbloquear' }).click();
+        await page.waitForURL(/\/app(\/)?$/);
+        // Client-side navigation: a full reload would start a new (locked) session
+        await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Asistente' }).click();
+      }
       const assistantArea = page.getByTestId('area-assistant');
       await expect(assistantArea).toBeVisible();
 
