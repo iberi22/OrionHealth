@@ -11,6 +11,8 @@ import 'package:orionhealth_health/features/health_record/infrastructure/service
 import 'package:orionhealth_health/features/sync/domain/services/sync_service.dart';
 import 'package:orionhealth_health/features/user_profile/domain/entities/user_profile.dart';
 import 'package:orionhealth_health/features/user_profile/domain/repositories/user_profile_repository.dart';
+import 'package:orionhealth_health/features/local_agent/infrastructure/llm_service.dart';
+import 'package:orionhealth_health/features/local_agent/infrastructure/mock_llm_service.dart';
 
 class _FakeFilePicker implements FilePickerService {
   @override
@@ -402,7 +404,13 @@ void main() {
     testWidgets('5. Local Agent: Ask question -> Receive response', (
       tester,
     ) async {
-      await _enterApp(tester);
+      await _enterApp(
+        tester,
+        overrides: () {
+          di.getIt.unregister<LlmService>();
+          di.getIt.registerLazySingleton<LlmService>(() => MockLlmService());
+        },
+      );
 
       // Open the assistant from the Home module grid
       await _scrollTo(tester, find.text('AI Assistant'));
@@ -421,9 +429,13 @@ void main() {
 
       // Wait for AI response (real or fallback error message)
       await tester.pump(const Duration(seconds: 2));
+      await _pumpUntil(tester, find.textContaining('mock response'));
       await _settle(tester);
+
+      // Ensure the LLM response is shown, not just the user's sent message or error.
+      // MockLlmService generates: "This is a mock response to: ... Orion AI is working in mock mode."
       expect(find.byType(ListView), findsWidgets);
-      expect(find.textContaining('OrionHealth'), findsWidgets);
+      expect(find.textContaining('mock response'), findsOneWidget);
     });
 
     testWidgets('6. Sync: Trigger sync and verify', (tester) async {
