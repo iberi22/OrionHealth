@@ -2,7 +2,7 @@
   "name": "OrionHealth",
   "short_name": "OrionHealth",
   "description": "Santuario de salud personal, soberano y offline-first — stack SWAL (Astro + Svelte 5 + Cloudflare).",
-  "start_url": "/",
+  "start_url": "/app",
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#10B981",
@@ -26,5 +26,23 @@
     "health",
     "medical",
     "lifestyle"
+  ],
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Emergencia",
+      "url": "/app/emergency",
+      "description": "Acceso rápido a datos de emergencia"
+    },
+    {
+      "name": "Familia",
+      "url": "/app/family",
+      "description": "Ver círculo familiar"
+    },
+    {
+      "name": "Asistente",
+      "url": "/app/assistant",
+      "description": "Chat asistente médico"
+    }
   ]
 }
