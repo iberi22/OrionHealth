@@ -1,0 +1,70 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+const allDocs = await getCollection('docs');
+// Sort by order or title
+const docs = allDocs.sort((a: CollectionEntry<'docs'>, b: CollectionEntry<'docs'>) => {
+  const orderA = a.data.order ?? 999;
+  const orderB = b.data.order ?? 999;
+  if (orderA !== orderB) return orderA - orderB;
+  return a.data.title.localeCompare(b.data.title);
+});
+
+const currentPath = Astro.url.pathname;
+---
+<nav class="docs-nav" aria-label="Navegación de documentación">
+  <ul>
+    <li>
+      <a
+        href="/docs"
+        class={currentPath === '/docs' || currentPath === '/docs/' ? 'active' : ''}
+        aria-current={currentPath === '/docs' || currentPath === '/docs/' ? 'page' : undefined}
+      >
+        Índice
+      </a>
+    </li>
+    {docs.map((doc: CollectionEntry<'docs'>) => (
+      <li>
+        <a
+          href={`/docs/${doc.id}`}
+          class={currentPath === `/docs/${doc.id}` || currentPath === `/docs/${doc.id}/` ? 'active' : ''}
+          aria-current={currentPath === `/docs/${doc.id}` || currentPath === `/docs/${doc.id}/` ? 'page' : undefined}
+        >
+          {doc.data.title}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .docs-nav {
+    padding: 1rem;
+    border-right: 1px solid var(--oh-border);
+    min-width: 200px;
+  }
+  .docs-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .docs-nav a {
+    display: block;
+    padding: 0.5rem;
+    color: var(--oh-text-dim);
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+  .docs-nav a:hover,
+  .docs-nav a.active {
+    background: var(--oh-bg-dim);
+    color: var(--oh-text);
+  }
+  .docs-nav a.active {
+    font-weight: bold;
+    border-left: 2px solid var(--oh-accent);
+  }
+</style>
