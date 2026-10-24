@@ -1,5 +1,26 @@
 <script lang="ts">
+  import { getServices } from '../../../lib/contracts/services';
+
   const { code, onconfirm } = $props<{ code: string; onconfirm: () => void }>();
+
+  // Spec §9.1 (D4): the code opens orion-recovery.json; on a brand-new device the code needs that file
+  // (or the family circle). The file is ciphertext: without the code it reveals nothing.
+  let fileError = $state(false);
+  async function downloadFile() {
+    fileError = false;
+    try {
+      const { filename, content } = await getServices().recovery.recoveryFile();
+      const url = URL.createObjectURL(new Blob([content], { type: 'application/json' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {
+      console.error(e);
+      fileError = true;
+    }
+  }
 
   // Use a predictable pseudo-random selection so it doesn't flicker, based on code length or just Math.random initialized once
   const parts = $derived(code.includes('-') ? code.split('-') : code.split(' '));
@@ -40,6 +61,12 @@
   <div class="code-display">
     {code}
   </div>
+
+  <p>Descarga también el archivo de recuperación cifrado. En un dispositivo nuevo necesitarás el código y este archivo (o a tu familia).</p>
+  <button type="button" class="secondary" onclick={downloadFile}>Descargar archivo de recuperación</button>
+  {#if fileError}
+    <p class="error">No se pudo generar el archivo. Inténtalo de nuevo.</p>
+  {/if}
 
   {#if indices.length === 3}
     <div class="verification">
@@ -129,5 +156,12 @@
     border-radius: var(--oh-radius, 8px);
     cursor: pointer;
     font-weight: 500;
+  }
+
+  button.secondary {
+    background: transparent;
+    color: var(--oh-color-primary, #1976d2);
+    border: 1px solid currentColor;
+    align-self: flex-start;
   }
 </style>

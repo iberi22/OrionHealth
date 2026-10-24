@@ -81,20 +81,33 @@ export class RealKernel implements Kernel {
     return hkdf(mrs, utf8(memberId), 'orion/v1/keystore').then(aesKey);
   }
 
-  /** Restores persisted keys after unlock. */
-  async load() {
-    const b = this.opts.session.bundle();
-    if (!b) return;
+  private loading: Promise<void> | null = null;
+  /** Restores persisted keys after unlock. Memoized until the next lock, so callers can await the same run. */
+  load(): Promise<void> {
+    if (!this.opts.session.bundle()) return Promise.resolve();
+    this.loading ??= this.doLoad().catch((e) => {
+      this.loading = null;
+      throw e;
+    });
+    return this.loading;
+  }
+
+  private async doLoad() {
+    const b = this.opts.session.bundle()!;
+    // Leaving recovery guest mode (spec §9.3): the circle and keys of the invitation are kept and persisted.
+    const guestCircle = this.guest ? this.circleInfo : undefined;
+    this.guest = false;
     const blob = await this.opts.session.getMeta('keystore');
     if (blob) {
       const ks: Keystore = await this.opts.session.withMrs(async (mrs) =>
         JSON.parse(fromUtf8(await openBlob(await this.keystoreKey(mrs, b.memberId), blob, utf8(`orion/v1/keystore|${b.memberId}`)))),
       );
-      this.circleInfo = ks.circle;
+      this.circleInfo = guestCircle ?? ks.circle;
       for (const [e, raw] of Object.entries(ks.circleKeys)) this.circleKeys.set(Number(e), fromB64u(raw));
       for (const [k, raw] of Object.entries(ks.foreign)) this.foreign.set(k, fromB64u(raw));
       this.revoked = new Set(ks.revoked);
     }
+    if (guestCircle) await this.persist();
     this.loaded = true;
     await this.startReplica();
   }
@@ -121,6 +134,8 @@ export class RealKernel implements Kernel {
     this.circleKeys.clear();
     this.revoked.clear();
     this.circleInfo = undefined;
+    this.guest = false;
+    this.loading = null;
     this.generation++;
     this.replica?.destroy();
     this.replica = null;
@@ -132,6 +147,31 @@ export class RealKernel implements Kernel {
     if (this.opts.session.state() !== 'unlocked' || !this.opts.session.bundle()) {
       throw new KernelError('LOCKED', 'vault is locked');
     }
+  }
+
+  // ---------- recovery guest mode (spec §9.3) ----------
+  // A brand-new device recovering a member has no bundle yet. The recovery invitation gives it the circle and its
+  // keys; in guest mode the kernel validates, stores, relays and opens circle envelopes, but it never seals or signs
+  // (seal/bundle/memberId keep the strict guard). Unlocking with the recovered MRS leaves guest mode (doLoad).
+  private guest = false;
+
+  async enterGuest(circleId: string, genesis: { memberId: string; signPub: string }, keys: { epoch: number; raw: Uint8Array }[]) {
+    if (this.opts.session.state() === 'unlocked') throw new KernelError('INVALID', 'guest mode is only for a vault that is not unlocked');
+    this.guest = true;
+    this.circleInfo = { id: circleId, genesis };
+    for (const k of keys) this.circleKeys.set(k.epoch, k.raw.slice());
+    await this.startReplica();
+  }
+
+  /** Abandons guest mode without unlocking (failed or cancelled recovery): nothing stays referenced. */
+  leaveGuest() {
+    if (this.guest && this.opts.session.state() !== 'unlocked') this.drop();
+  }
+
+  /** Reading and relaying circle envelopes is also allowed in guest mode. */
+  private guardRead() {
+    if (this.guest && this.circleInfo) return;
+    this.guard();
   }
 
   private starting: Promise<void> | null = null;
@@ -228,7 +268,7 @@ export class RealKernel implements Kernel {
   }
 
   async circleKey(epoch?: number) {
-    this.guard();
+    this.guardRead();
     if (!this.circleKeys.size) throw new KernelError('NO_CIRCLE', 'no circle key');
     const e = epoch ?? Math.max(...this.circleKeys.keys());
     const raw = this.circleKeys.get(e);
@@ -344,7 +384,7 @@ export class RealKernel implements Kernel {
   }
 
   async open(env: Envelope): Promise<unknown> {
-    this.guard();
+    this.guardRead();
     const { key } = await this.keyFor(env.category, env.owner, env.epoch);
     return openEnvelope(env, key);
   }
@@ -390,7 +430,7 @@ export class RealKernel implements Kernel {
   }
 
   async publish(env: Envelope) {
-    this.guard();
+    this.guardRead();
     await this.accept(env);
     await this.replica?.add(env);
   }
