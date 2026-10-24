@@ -94,15 +94,51 @@ export interface HealthCircleService {
   onChange(cb: () => void): () => void;
 }
 
+/** Trustee side: a recovery request with its real provenance (spec §9.3). */
+export interface PendingRecovery {
+  requestId: string;
+  /** Member whose access is CLAIMED. The trustee must confirm it out of band (call / in person) with the SAS. */
+  member: Member;
+  /** Temporary identity of the requesting device (hash of its temporary signing key) and its device id. */
+  requester: { id: string; deviceId: string };
+  /** Admin who verified the requesting device with a SAS and vouched for the request. */
+  vouchedBy: Member;
+  /** SAS shown on the requesting device; read it back with the member before approving. */
+  sas: string;
+  at: number;
+  expiresAt: number;
+}
+
+/** Admin side: a device that opened a recovery invitation and waits for the SAS comparison. */
+export interface PendingRecoveryJoin {
+  requestId: string;
+  member: Member;
+  sas: string;
+  at: number;
+}
+
 export interface RecoveryService {
   policy(): Promise<TrusteePolicy | null>;
   setPolicy(policy: TrusteePolicy): Promise<void>;
-  /** Trustee side: requests waiting for my approval. */
-  pendingRequests(): Promise<{ requestId: string; member: Member; at: number }[]>;
-  approve(requestId: string): Promise<void>;
-  /** New-device side. */
+  /** Trustee side: requests vouched by an admin for a member whose share I hold, not yet answered by me. */
+  pendingRequests(): Promise<PendingRecovery[]>;
+  /**
+   * Trustee side. With sasMatches=false the request is declined (hidden on this device). With true, the request must be
+   * bound to an admin-vouched recovery invitation and the trustee re-authenticates with their passkey before the
+   * share is re-wrapped to the requesting device.
+   */
+  approve(requestId: string, sasMatches: boolean): Promise<void>;
+  /** Admin side: invitation link for a brand-new device of `memberId` (not me). */
+  createRecoveryInvite(memberId: string): Promise<InviteTicket>;
+  pendingRecoveryJoins(): Promise<PendingRecoveryJoin[]>;
+  /** Admin side: after comparing the SAS, vouches for the device (pending device-add) and hands it the circle key. */
+  approveRecoveryJoin(requestId: string, sasMatches: boolean): Promise<void>;
+  /** New-device side; works on an EMPTY vault. Returns the SAS to compare with the admin. */
   startRecovery(inviteUrl: string): Promise<{ sas: string }>;
-  recoverWithCode(code: string): Promise<void>;
+  /** `file` is the content of orion-recovery.json; needed on an empty device that did not join through an invitation. */
+  recoverWithCode(code: string, file?: string): Promise<void>;
+  /** The encrypted orion-recovery.json for the unlocked member (code-wrapped MRS + sealed bundle). */
+  recoveryFile(): Promise<{ filename: string; content: string }>;
   progress(): RecoveryProgress;
   onProgress(cb: (p: RecoveryProgress) => void): () => void;
 }

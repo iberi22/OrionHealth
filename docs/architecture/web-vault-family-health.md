@@ -190,19 +190,76 @@ interface Grant {
 
 ## 9. Recovery (losing a phone)
 
+Every recovery payload is a `recovery` envelope sealed with CK. A receiver uses a payload only when its author is
+bound to it; anything else is ignored, never thrown:
+
+| `kind` | Accepted only when |
+|---|---|
+| `policy`, `share`, `code-blob` | `env.author === env.owner === payload.member` (a member speaks only for themself) |
+| `device-add-pending` | `env.author` is a current, non-removed **admin**, `env.author !== payload.member`, the temporary identity's signature over the request verifies, and it has not expired |
+| `approval` | `env.author === payload.trusteeId`, the trustee is in the member's own `policy`, and the request id matches |
+
+Bundles used to restore are the newest `bundle` envelope with `env.author === env.owner === memberId`.
+The member publishes the current sealed bundle when it sets a trustee policy or publishes its code blob, so a
+bundle created before the circle existed is still in the replica.
+
+### 9.1 Recovery code
+
 - On onboarding the member gets a **recovery code**: 32 random bytes RC as 54 Crockford base32 characters (52 + 2
   checksum) in 14 groups of 4 (the last one of 2), see `vault/recoveryCode.ts`. It wraps MRS
   (`AES-GCM(HKDF(RC, salt=memberId, info="orion/v1/recovery-code"), MRS)`, AAD `orion/v1/recovery|<memberId>`); the
-  wrapped blob is stored locally (`orion/recovery-blob`) and published as a `recovery` envelope. Code + any replica = recovery without family.
+  wrapped blob is stored locally (`orion/recovery-blob`).
+- Next to the code the user is always offered an encrypted file `orion-recovery.json`
+  (`{v:1, kind:"orion-recovery", memberId, blob, bundle}`: the code-wrapped MRS and the MBK-sealed bundle; nothing in
+  it is readable without the code). `RecoveryService.recoveryFile()` regenerates it with the current bundle, so the
+  app can offer it again later (planned in Settings).
+- As soon as the member belongs to a circle the device publishes a `code-blob` envelope with the same blob (and the
+  current bundle). Decision D4 (2026-10-24): the blob lives **in the circle replica and in the user's file**; there
+  is no server copy.
+- Recovery by code: code + file on an empty device recovers the identity and keys (same `memberId`); code alone works
+  on the same browser (local blob) or on a new device that joined the circle through a recovery invitation (§9.3),
+  which gives it the replica. A bundle from the replica is preferred over the one in the file (it is newer).
+
+### 9.2 Trustees
+
 - In a circle the member picks **trustees** and a threshold k (default 2 of 3, minimum 2; a single guardian may be
   1-of-1 only with an explicit warning). MRS is split with `shamir-secret-sharing`; share *i* is wrapped to trustee
-  *i*'s box key like a grant and published as a `recovery` envelope addressed to that trustee.
-- New device flow: install → "recover" → creates a temporary keypair → joins via an invite from any admin (SAS) →
-  publishes `recovery-request{member, tempBoxPub}` → each trustee sees a prompt, verifies by call/in person, approves
-  with **their own passkey**, re-wraps their share to `tempBoxPub` → the new device combines k shares → MRS →
-  registers a new passkey → reads the bundle replica → everything decrypts → publishes `device-add` and
-  `device-revoke` for the lost phone.
+  *i*'s box key like a grant and published as a `share` payload addressed to that trustee.
 - k−1 shares reveal nothing; a test proves k−1 shares fail and k succeed.
+
+### 9.3 Recovery invitation and new-device flow
+
+A brand-new device has no bundle, no CK and no replica, so it cannot sign as the member or read the circle. An admin
+lets it in with a **recovery invitation** for one named member:
+
+1. Admin (≠ the member being recovered) runs `createRecoveryInvite(memberId)` and shares the link
+   `…/app/recovery#<b64url({c, s, e, m})>` (`m` = memberId; the fragment never reaches a server).
+2. The new device creates a **temporary identity** (ECDSA sign pair + ECDH box pair; `tempId =
+   memberIdFromSpki(tempSignPub)`) and signs the request
+   `canonical({v:1, kind:"recovery-request", circle, member, requestId, tempSignPub, tempBoxPub, deviceId})`.
+   It joins the invite room (§7) with its temporary keys as the hello and the signed request in the hello payload.
+3. Both screens show the SAS of §7 (bound to the temporary signing key). The admin taps "match" only if equal.
+4. The admin publishes `device-add-pending{requestId, member, temp:{id, signPub, boxPub, deviceId}, requestSig, sas,
+   expiresAt}`: the pending `device-add` of that temporary identity for the claimed member, vouched by the admin
+   (= `env.author`). It then hands over, signed by the admin and wrapped to `tempBoxPub`
+   (info `orion/v1/circle-key`, AAD `orion/v1|<circle>|recovery-key|<tempId>|<epoch>`), every CK epoch and the pinned
+   genesis, on `<inviteRoom>.recovery`.
+5. The new device runs the kernel in **guest mode**: with the CK it can receive, validate, store, relay and open circle
+   envelopes, but it has no identity, so it can never seal or sign. The temporary identity signs only the request.
+6. Each trustee sees the request with its real provenance: the claimed member, the temporary identity, the admin who
+   vouched and the SAS. The trustee verifies the SAS with the member by call or in person, then approves; approval
+   requires a fresh passkey re-authentication (`VaultSession.reauth()`, WebAuthn assertion with user verification)
+   and re-wraps the share to `tempBoxPub` (AAD `orion/v1/recovery-request|<member>|<requestId>|<tempBoxPub>`).
+   A request that is not bound to a valid `device-add-pending` is rejected.
+7. The new device combines k approvals (from trustees of the member's own policy) → MRS → opens the member's bundle
+   from the replica → registers a **new** passkey (a stale `passkeyCredId` on the device is discarded first) →
+   leaves guest mode keeping the circle and CK → publishes `device-add` for itself and `device-revoke` for the
+   member's other devices.
+
+Residual risks: an admin and k trustees who all skip the out-of-band SAS check can hand a member's MRS to an
+impostor; several pending requests for the same member must be treated as suspicious by the UI. The device only
+trusts the admin whose key it saw in the SAS channel; before combining it checks that this admin is an admin of
+the reduced circle.
 
 ## 10. Family health area
 
@@ -237,7 +294,8 @@ device when it syncs, so an alert still fires if the elder's phone goes offline 
 - Tampered envelope (any field) → rejected. Wrong AAD → decrypt fails.
 - Write by a non-grantee or with an expired grant → rejected by the receiver.
 - Membership reducer: invalid events ignored; permutation of valid events → same state.
-- Recovery: k−1 shares fail, k shares succeed; recovery code round-trip.
+- Recovery: k−1 shares fail, k shares succeed; recovery code round-trip; an approval for a request not vouched by an
+  admin is refused (the "harvest" attack); a fresh empty device recovers with 2 of 3 and with code + file.
 - Revocation: revoked member cannot decrypt epoch+1 envelopes.
 - Lock: after `lock()` or tab hidden for the timeout, no CEK or MRS reachable from the services.
 
