@@ -24,6 +24,7 @@ describe('Security Headers', () => {
     const csp = SECURITY_HEADERS['Content-Security-Policy-Report-Only'];
     expect(csp).toBeDefined();
     expect(csp).toContain(`'${expectedHash}'`);
+    expect(csp).toContain('report-uri /api/csp-report');
   });
 
   it('middleware adds every security header to response', async () => {

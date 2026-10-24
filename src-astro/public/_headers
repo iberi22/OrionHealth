@@ -4,4 +4,4 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'sha256-PNAwJTMZOMfBPo998A5J1uvDHcxeWqSfS+uoiBt8eIU='; connect-src 'self' wss://signal.orionhealth.swal.network; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'sha256-PNAwJTMZOMfBPo998A5J1uvDHcxeWqSfS+uoiBt8eIU='; connect-src 'self' wss://signal.orionhealth.swal.network; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'; report-uri /api/csp-report
