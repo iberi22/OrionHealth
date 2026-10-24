@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
@@ -13,6 +15,8 @@ class MockMedicalKnowledgeRepository extends Mock
 
 class MockIsar extends Mock implements Isar {}
 
+class MockEmbeddingsAdapter extends Mock implements EmbeddingsAdapter {}
+
 class MockMemoryNodeCollection extends Mock
     implements IsarCollection<MemoryNode> {}
 
@@ -24,9 +28,10 @@ void main() {
   late MockMedicalKnowledgeRepository mockMedicalRepo;
   late IsarVectorStoreService service;
 
-  setUpAll(() {
+  setUpAll(() async {
     registerFallbackValue('test-query');
     registerFallbackValue(<String, dynamic>{});
+    await Isar.initializeIsarCore(download: true);
   });
 
   setUp(() {
@@ -161,22 +166,41 @@ void main() {
     });
 
     group('createSummaryNode', () {
+      late Isar realIsar;
+      late Directory tempDir;
+      late MemoryGraph realMemoryGraph;
+      late IsarVectorStoreService realService;
+
+      setUp(() async {
+        tempDir = Directory.systemTemp.createTempSync('orion');
+        realIsar = await Isar.open([
+          MemoryNodeSchema,
+          MemoryEdgeSchema,
+          PatientPackageSchema,
+          BackendOperationLogSchema,
+        ], directory: tempDir.path);
+
+        final mockEmbeddingsAdapter = MockEmbeddingsAdapter();
+        when(() => mockEmbeddingsAdapter.dimension).thenReturn(1536);
+
+        realMemoryGraph = MemoryGraph(
+          realIsar,
+          embeddingsAdapter: mockEmbeddingsAdapter,
+        );
+
+        realService = IsarVectorStoreService(realMemoryGraph, mockMedicalRepo);
+      });
+
+      tearDown(() async {
+        await realIsar.close(deleteFromDisk: true);
+        if (tempDir.existsSync()) {
+          tempDir.deleteSync(recursive: true);
+        }
+      });
+
       test('throws when no child nodes found', () async {
-        final mockIsar = MockIsar();
-        final mockCollection = MockMemoryNodeCollection();
-
-        when(() => mockMemoryGraph.isar).thenReturn(mockIsar);
-        when(
-          () => mockIsar.collection<MemoryNode>(),
-        ).thenReturn(mockCollection);
-        final mockQueryBuilder = MockQueryBuilder();
-        when(() => mockCollection.where()).thenReturn(mockQueryBuilder);
-        when(
-          () => mockQueryBuilder.findAll(),
-        ).thenAnswer((_) async => <MemoryNode>[]);
-
         await expectLater(
-          () => service.createSummaryNode('Summary', ['nonexistent']),
+          () => realService.createSummaryNode('Summary', ['nonexistent']),
           throwsA(isA<Exception>()),
         );
       });
