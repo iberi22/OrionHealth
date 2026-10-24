@@ -8,6 +8,7 @@
   let owner = services.vault.memberId();
 
   let showForm = $state(false);
+  let editingId = $state<string | undefined>(undefined);
   let name = $state('');
   let dose = $state('');
   let schedule = $state('');
@@ -34,22 +35,41 @@
     if (!name.trim() || !dose.trim() || !schedule.trim() || !owner) return;
 
     try {
+      const existing = medications.find(m => m.recordId === editingId);
       await services.records.put({
-        recordId: crypto.randomUUID(),
+        recordId: editingId || crypto.randomUUID(),
         owner,
         updatedAt: Date.now(),
         kind: 'medication',
         name: name.trim(),
         dose: dose.trim(),
         schedule: schedule.trim(),
-        active: true,
-        takenLog: []
+        active: existing ? existing.active : true,
+        takenLog: existing ? existing.takenLog : []
       });
 
       showForm = false;
+      editingId = undefined;
       name = '';
       dose = '';
       schedule = '';
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function editRecord(med: Medication) {
+    editingId = med.recordId;
+    name = med.name;
+    dose = med.dose;
+    schedule = med.schedule;
+    showForm = true;
+  }
+
+  async function deleteRecord(med: Medication) {
+    if (!owner) return;
+    try {
+      await services.records.remove('medication', med.recordId);
     } catch (err) {
       console.error(err);
     }
@@ -131,6 +151,10 @@
             >
               {isTakenRecently(med.takenLog) ? 'Tomado hoy' : 'Marcar como tomado'}
             </button>
+            <div class="record-actions">
+              <button data-testid="edit-medication-{med.recordId}" onclick={() => editRecord(med)}>Editar</button>
+              <button data-testid="delete-medication-{med.recordId}" onclick={() => deleteRecord(med)}>Eliminar</button>
+            </div>
           </div>
         </li>
       {/each}
@@ -273,5 +297,21 @@
   .med-actions {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
+  }
+
+  .record-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .record-actions button {
+    background: none;
+    border: 1px solid var(--oh-muted);
+    border-radius: var(--oh-radius);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--oh-text);
   }
 </style>
