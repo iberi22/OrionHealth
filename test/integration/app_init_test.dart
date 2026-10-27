@@ -5,32 +5,47 @@
 /// Run: flutter test integration_test/app_init_test.dart --flavor prod
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:orionhealth_health/main.dart' as app;
+import 'package:orionhealth_health/core/di/injection.dart';
+import 'package:orionhealth_health/features/onboarding/presentation/pages/onboarding_page.dart';
+
+import '../helpers/test_platform.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
   group('App Initialization', () {
-    testWidgets('app starts without "Error de Inicializacion"', (tester) async {
-      // Launch the app
-      app.main();
-      await tester.pumpAndSettle(const Duration(seconds: 15));
+    setUpAll(() async {
+      await setUpTestPlatform();
+      await getIt.reset();
+      await configureDependencies();
+    });
 
-      // Verify the error screen is NOT showing
-      expect(
-        find.text('Error de Inicializaci' '\u00f3n'),
-        findsNothing,
-        reason: 'App showed initialization error screen',
-      );
+    testWidgets(
+      'app starts without "Error de Inicializacion"',
+      (tester) async {
+        // Launch the app
+        app.main();
+        await tester.pumpAndSettle(const Duration(seconds: 15));
 
-      // Verify some normal widget is present
-      expect(
-        find.byType(MaterialApp),
-        findsOneWidget,
-        reason: 'App should have a MaterialApp widget',
-      );
-    }, timeout: const Timeout(Duration(seconds: 30)));
+        // Verify the error screen is NOT showing
+        expect(
+          find.text(
+            'Error de Inicializaci'
+            '\u00f3n',
+          ),
+          findsNothing,
+          reason: 'App showed initialization error screen',
+        );
+
+        // Verify some normal widget is present. OnboardingPage is the first real screen.
+        expect(
+          find.byType(OnboardingPage),
+          findsOneWidget,
+          reason: 'App should have rendered the OnboardingPage',
+        );
+      },
+      timeout: const Timeout(Duration(seconds: 30)),
+    );
   });
 }

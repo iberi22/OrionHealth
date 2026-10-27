@@ -7,12 +7,25 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/core/di/injection.dart';
 
-void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+import 'helpers/test_platform.dart';
 
-  test('dependency injection initializes without error', () async {
+void main() {
+  setUpAll(() async {
+    await setUpTestPlatform();
+    await getIt.reset();
     await configureDependencies();
-    // If we get here without exception, DI succeeded
-    expect(true, isTrue, reason: 'configureDependencies completed without error');
-  }, timeout: const Timeout(Duration(seconds: 60)));
+  });
+
+  test(
+    'dependency injection initializes without error',
+    () async {
+      // If we get here without exception, DI succeeded
+      expect(
+        true,
+        isTrue,
+        reason: 'configureDependencies completed without error',
+      );
+    },
+    timeout: const Timeout(Duration(seconds: 60)),
+  );
 }
