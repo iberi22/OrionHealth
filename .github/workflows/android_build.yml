@@ -26,8 +26,10 @@ jobs:
       is-agent-branch: ${{ steps.check.outputs.is-agent }}
     steps:
       - id: check
+        env:
+          HEAD_REF_IN: ${{ github.head_ref || github.ref_name }}
         run: |
-          HEAD_REF="${{ github.head_ref || github.ref_name }}"
+          HEAD_REF="${HEAD_REF_IN}"
           # Patrón: branch termina con ID numérico de 15+ dígitos
           if echo "$HEAD_REF" | grep -qE '\-[0-9]{15,}$'; then
             echo "is-agent=true" >> $GITHUB_OUTPUT
