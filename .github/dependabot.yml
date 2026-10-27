@@ -122,7 +122,7 @@ updates:
     # needs carp_serializable ^3.0.0 which health 13.3.1 rejects. Do NOT bump
     # one of them alone (CI proved solving fails); do a single migration PR.
     ignore:
-      # intl 0.20.3: flutter_localizations is part of the pinned Flutter 3.44.0
+      # intl 0.20.3: flutter_localizations is part of the pinned Flutter 3.47.8
       # SDK and still requires intl 0.20.2, so `intl: ^0.20.3` fails version
       # solving outright (PR #1757: "Because orionhealth_health depends on
       # flutter_localizations from sdk which depends on intl 0.20.2, intl
