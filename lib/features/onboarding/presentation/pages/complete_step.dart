@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glassmorphic_card.dart';
-import '../../../home/presentation/pages/main_navigation_page.dart';
+import '../../../auth/presentation/setup_pin_page.dart';
 
 class CompleteStep extends StatelessWidget {
   const CompleteStep({super.key});
@@ -13,7 +13,9 @@ class CompleteStep extends StatelessWidget {
       builder: (context, constraints) => SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: (constraints.maxHeight - 48).clamp(0.0, double.infinity)),
+          constraints: BoxConstraints(
+            minHeight: (constraints.maxHeight - 48).clamp(0.0, double.infinity),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -101,7 +103,7 @@ class CompleteStep extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (_) => const MainNavigationPage(),
+                        builder: (_) => const SetupPinPage(),
                       ),
                     );
                   },

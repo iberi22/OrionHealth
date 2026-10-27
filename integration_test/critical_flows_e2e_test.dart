@@ -201,10 +201,10 @@ Future<void> _setupPin(WidgetTester tester) async {
   if (find.text('Configurar PIN').evaluate().isEmpty)
     _dump(tester, 'no PIN page');
   expect(find.text('Configurar PIN'), findsOneWidget);
-  await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '1234');
+  await tester.enterText(find.widgetWithText(TextField, 'Nuevo PIN'), '123456');
   await tester.enterText(
     find.widgetWithText(TextField, 'Confirmar PIN'),
-    '1234',
+    '123456',
   );
   FocusManager.instance.primaryFocus?.unfocus();
   await _settle(tester);
@@ -295,6 +295,7 @@ void main() {
       // Complete Step
       expect(find.text('¡Bienvenido a OrionHealth!'), findsOneWidget);
       await _tap(tester, find.text('Continuar'));
+      await _setupPin(tester);
       await _pumpUntil(tester, find.byType(NavigationBar));
 
       // Verify Main Navigation
