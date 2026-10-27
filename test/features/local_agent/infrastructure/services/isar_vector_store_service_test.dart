@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:isar_agent_memory/isar_agent_memory.dart';
@@ -7,21 +9,29 @@ import 'package:orionhealth_health/features/local_agent/domain/services/vector_s
 import 'package:orionhealth_health/features/local_agent/infrastructure/services/isar_vector_store_service.dart';
 
 class MockMemoryGraph extends Mock implements MemoryGraph {}
+
 class MockMedicalKnowledgeRepository extends Mock
     implements MedicalKnowledgeRepository {}
 
 class MockIsar extends Mock implements Isar {}
+
+class MockEmbeddingsAdapter extends Mock implements EmbeddingsAdapter {}
+
 class MockMemoryNodeCollection extends Mock
     implements IsarCollection<MemoryNode> {}
+
+class MockQueryBuilder extends Mock
+    implements QueryBuilder<MemoryNode, MemoryNode, QWhere> {}
 
 void main() {
   late MockMemoryGraph mockMemoryGraph;
   late MockMedicalKnowledgeRepository mockMedicalRepo;
   late IsarVectorStoreService service;
 
-  setUpAll(() {
+  setUpAll(() async {
     registerFallbackValue('test-query');
     registerFallbackValue(<String, dynamic>{});
+    await Isar.initializeIsarCore(download: true);
   });
 
   setUp(() {
@@ -38,32 +48,36 @@ void main() {
 
     group('search', () {
       test('returns results from hybrid search', () async {
-        when(() => mockMemoryGraph.hybridSearch(
-              any(),
-              topK: any(named: 'topK'),
-              alpha: any(named: 'alpha'),
-            )).thenAnswer((_) async => [
-              _createRecord('Diabetes treatment', DateTime.now()),
-              _createRecord('Blood pressure monitor', DateTime.now()),
-            ]);
+        when(
+          () => mockMemoryGraph.hybridSearch(
+            any(),
+            topK: any(named: 'topK'),
+            alpha: any(named: 'alpha'),
+          ),
+        ).thenAnswer(
+          (_) async => [
+            _createRecord('Diabetes treatment', DateTime.now()),
+            _createRecord('Blood pressure monitor', DateTime.now()),
+          ],
+        );
 
         final results = await service.search('diabetes', limit: 3);
 
         expect(results, hasLength(2));
         expect(results.first, 'Diabetes treatment');
-        verify(() => mockMemoryGraph.hybridSearch(
-              'diabetes',
-              topK: 3,
-              alpha: 0.5,
-            )).called(1);
+        verify(
+          () => mockMemoryGraph.hybridSearch('diabetes', topK: 3, alpha: 0.5),
+        ).called(1);
       });
 
       test('returns empty list when no results', () async {
-        when(() => mockMemoryGraph.hybridSearch(
-              any(),
-              topK: any(named: 'topK'),
-              alpha: any(named: 'alpha'),
-            )).thenAnswer((_) async => []);
+        when(
+          () => mockMemoryGraph.hybridSearch(
+            any(),
+            topK: any(named: 'topK'),
+            alpha: any(named: 'alpha'),
+          ),
+        ).thenAnswer((_) async => []);
 
         final results = await service.search('nonexistent');
 
@@ -73,11 +87,13 @@ void main() {
 
     group('addDocument', () {
       test('stores node with embedding via MemoryGraph', () async {
-        when(() => mockMemoryGraph.storeNodeWithEmbedding(
-              content: any(named: 'content'),
-              metadata: any(named: 'metadata'),
-              deduplicate: any(named: 'deduplicate'),
-            )).thenAnswer((_) async => 1);
+        when(
+          () => mockMemoryGraph.storeNodeWithEmbedding(
+            content: any(named: 'content'),
+            metadata: any(named: 'metadata'),
+            deduplicate: any(named: 'deduplicate'),
+          ),
+        ).thenAnswer((_) async => 1);
 
         await service.addDocument(
           'med:ICD-10:E11',
@@ -85,28 +101,34 @@ void main() {
           {'standard': 'ICD-10', 'code': 'E11'},
         );
 
-        verify(() => mockMemoryGraph.storeNodeWithEmbedding(
-              content: 'Type 2 diabetes [ICD-10] - Endocrine',
-              metadata: {
-                'externalId': 'med:ICD-10:E11',
-                'standard': 'ICD-10',
-                'code': 'E11',
-              },
-              deduplicate: true,
-            )).called(1);
+        verify(
+          () => mockMemoryGraph.storeNodeWithEmbedding(
+            content: 'Type 2 diabetes [ICD-10] - Endocrine',
+            metadata: {
+              'externalId': 'med:ICD-10:E11',
+              'standard': 'ICD-10',
+              'code': 'E11',
+            },
+            deduplicate: true,
+          ),
+        ).called(1);
       });
     });
 
     group('searchWithReRanking', () {
       test('returns first results by default (no re-ranking)', () async {
-        when(() => mockMemoryGraph.hybridSearch(
-              any(),
-              topK: any(named: 'topK'),
-              alpha: any(named: 'alpha'),
-            )).thenAnswer((_) async => [
-              _createRecord('Result 1', DateTime(2026, 1, 1)),
-              _createRecord('Result 2', DateTime(2026, 1, 2)),
-            ]);
+        when(
+          () => mockMemoryGraph.hybridSearch(
+            any(),
+            topK: any(named: 'topK'),
+            alpha: any(named: 'alpha'),
+          ),
+        ).thenAnswer(
+          (_) async => [
+            _createRecord('Result 1', DateTime(2026, 1, 1)),
+            _createRecord('Result 2', DateTime(2026, 1, 2)),
+          ],
+        );
 
         final results = await service.searchWithReRanking(
           'test',
@@ -119,11 +141,13 @@ void main() {
       });
 
       test('returns empty list for empty candidates', () async {
-        when(() => mockMemoryGraph.hybridSearch(
-              any(),
-              topK: any(named: 'topK'),
-              alpha: any(named: 'alpha'),
-            )).thenAnswer((_) async => []);
+        when(
+          () => mockMemoryGraph.hybridSearch(
+            any(),
+            topK: any(named: 'topK'),
+            alpha: any(named: 'alpha'),
+          ),
+        ).thenAnswer((_) async => []);
 
         final results = await service.searchWithReRanking(
           'test',
@@ -142,16 +166,41 @@ void main() {
     });
 
     group('createSummaryNode', () {
+      late Isar realIsar;
+      late Directory tempDir;
+      late MemoryGraph realMemoryGraph;
+      late IsarVectorStoreService realService;
+
+      setUp(() async {
+        tempDir = Directory.systemTemp.createTempSync('orion');
+        realIsar = await Isar.open([
+          MemoryNodeSchema,
+          MemoryEdgeSchema,
+          PatientPackageSchema,
+          BackendOperationLogSchema,
+        ], directory: tempDir.path);
+
+        final mockEmbeddingsAdapter = MockEmbeddingsAdapter();
+        when(() => mockEmbeddingsAdapter.dimension).thenReturn(1536);
+
+        realMemoryGraph = MemoryGraph(
+          realIsar,
+          embeddingsAdapter: mockEmbeddingsAdapter,
+        );
+
+        realService = IsarVectorStoreService(realMemoryGraph, mockMedicalRepo);
+      });
+
+      tearDown(() async {
+        await realIsar.close(deleteFromDisk: true);
+        if (tempDir.existsSync()) {
+          tempDir.deleteSync(recursive: true);
+        }
+      });
+
       test('throws when no child nodes found', () async {
-        final mockIsar = MockIsar();
-        final mockCollection = MockMemoryNodeCollection();
-
-        when(() => mockMemoryGraph.isar).thenReturn(mockIsar);
-        when(() => mockIsar.collection<MemoryNode>()).thenReturn(mockCollection);
-        when(() => mockCollection.count()).thenAnswer((_) async => 0);
-
         await expectLater(
-          () => service.createSummaryNode('Summary', ['nonexistent']),
+          () => realService.createSummaryNode('Summary', ['nonexistent']),
           throwsA(isA<Exception>()),
         );
       });
@@ -164,13 +213,12 @@ void main() {
 }
 
 /// Helper to create a SearchRecord for tests.
-({MemoryNode node, double score}) _createRecord(String content, DateTime createdAt) {
+({MemoryNode node, double score}) _createRecord(
+  String content,
+  DateTime createdAt,
+) {
   return (
-    node: MemoryNode(
-      content: content,
-      createdAt: createdAt,
-      type: 'test',
-    ),
+    node: MemoryNode(content: content, createdAt: createdAt, type: 'test'),
     score: 1.0,
   );
 }
