@@ -9,20 +9,30 @@ import 'package:orionhealth_health/features/reports/presentation/pages/reports_p
 import 'package:orionhealth_health/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:orionhealth_health/l10n/app_localizations.dart';
 import 'package:health_wallet/health_wallet.dart';
+import 'package:orionhealth_health/features/workouts/application/workout_fhir_export_service.dart';
 
 class MockReportBloc extends Mock implements ReportBloc {}
+
 class MockWalletService extends Mock implements WalletService {}
+
+class MockWorkoutFhirExportService extends Mock
+    implements WorkoutFhirExportService {}
 
 void main() {
   late MockReportBloc mockBloc;
   late MockWalletService mockWalletService;
+  late MockWorkoutFhirExportService mockWorkoutFhirService;
   final getIt = GetIt.instance;
 
   setUpAll(() {
     mockBloc = MockReportBloc();
     mockWalletService = MockWalletService();
+    mockWorkoutFhirService = MockWorkoutFhirExportService();
     getIt.registerFactory<ReportBloc>(() => mockBloc);
     getIt.registerLazySingleton<WalletService>(() => mockWalletService);
+    getIt.registerLazySingleton<WorkoutFhirExportService>(
+      () => mockWorkoutFhirService,
+    );
 
     registerFallbackValue(LoadReports());
     registerFallbackValue(GenerateReportEvent(prompt: '', contextData: []));
@@ -44,7 +54,9 @@ void main() {
   }
 
   group('ReportsPage', () {
-    testWidgets('shows loading indicator when state is ReportLoading', (tester) async {
+    testWidgets('shows loading indicator when state is ReportLoading', (
+      tester,
+    ) async {
       when(() => mockBloc.state).thenReturn(const ReportLoading());
 
       await tester.pumpWidget(createWidgetUnderTest());
@@ -52,7 +64,9 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('shows error message when state is ReportError', (tester) async {
+    testWidgets('shows error message when state is ReportError', (
+      tester,
+    ) async {
       when(() => mockBloc.state).thenReturn(ReportError('Failed to load'));
 
       await tester.pumpWidget(createWidgetUnderTest());
@@ -141,7 +155,9 @@ void main() {
       expect(find.text('Finalized Report'), findsOneWidget);
     });
 
-    testWidgets('shows empty filtered state when no reports match filter', (tester) async {
+    testWidgets('shows empty filtered state when no reports match filter', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 1600);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
@@ -172,19 +188,30 @@ void main() {
       expect(find.text('Finalized Report'), findsOneWidget);
     });
 
-    testWidgets('calls GenerateReportEvent when "Generar Ahora" is pressed', (tester) async {
+    testWidgets('calls GenerateReportEvent when "Generar Ahora" is pressed', (
+      tester,
+    ) async {
       when(() => mockBloc.state).thenReturn(ReportLoaded([]));
 
       await tester.pumpWidget(createWidgetUnderTest());
 
       await tester.tap(find.text('Generar Ahora'));
 
-      verify(() => mockBloc.add(any(that: isA<GenerateReportEvent>()))).called(1);
+      verify(
+        () => mockBloc.add(any(that: isA<GenerateReportEvent>())),
+      ).called(1);
     });
 
-    testWidgets('shows FHIR export dialog when "Exportar FHIR" is pressed', (tester) async {
+    testWidgets('shows FHIR export dialog when "Exportar FHIR" is pressed', (
+      tester,
+    ) async {
       when(() => mockBloc.state).thenReturn(ReportLoaded([]));
-      when(() => mockWalletService.exportToFhir()).thenAnswer((_) async => '{"resourceType": "Bundle"}');
+      when(
+        () => mockWalletService.exportToFhir(),
+      ).thenAnswer((_) async => '{}');
+      when(
+        () => mockWorkoutFhirService.appendToBundle(any()),
+      ).thenAnswer((_) async => '{"resourceType": "Bundle"}');
 
       await tester.pumpWidget(createWidgetUnderTest());
 
@@ -205,13 +232,21 @@ void main() {
 
       await tester.pumpWidget(createWidgetUnderTest());
 
-      await tester.fling(find.byType(CustomScrollView), const Offset(0.0, 300.0), 1000.0);
+      await tester.fling(
+        find.byType(CustomScrollView),
+        const Offset(0.0, 300.0),
+        1000.0,
+      );
       await tester.pumpAndSettle();
 
-      verify(() => mockBloc.add(any(that: isA<LoadReports>()))).called(greaterThanOrEqualTo(1));
+      verify(
+        () => mockBloc.add(any(that: isA<LoadReports>())),
+      ).called(greaterThanOrEqualTo(1));
     });
 
-    testWidgets('navigates to ReportDetailPage when a report is tapped', (tester) async {
+    testWidgets('navigates to ReportDetailPage when a report is tapped', (
+      tester,
+    ) async {
       final report = Report(
         title: 'Report to Tap',
         generatedAt: DateTime.now(),
@@ -228,38 +263,57 @@ void main() {
       expect(find.byType(ReportDetailPage), findsOneWidget);
       // Depending on whether the list is still in the tree (it might be in a different route),
       // we might find 1 or 2 occurrences. Let's just check that it's in the AppBar at least.
-      expect(find.descendant(of: find.byType(AppBar), matching: find.text('Report to Tap')), findsOneWidget);
-    });
-
-    testWidgets('FHIR dialog "Copiar" button sets clipboard data and closes dialog', (tester) async {
-      const fhirContent = '{"resourceType": "Bundle"}';
-      when(() => mockBloc.state).thenReturn(ReportLoaded([]));
-      when(() => mockWalletService.exportToFhir()).thenAnswer((_) async => fhirContent);
-
-      // Mock Clipboard
-      final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        SystemChannels.platform,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'Clipboard.setData') {
-            log.add(methodCall.arguments as Map<String, dynamic>);
-          }
-          return null;
-        },
+      expect(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('Report to Tap'),
+        ),
+        findsOneWidget,
       );
-
-      await tester.pumpWidget(createWidgetUnderTest());
-
-      await tester.tap(find.text('Exportar FHIR'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Exportación FHIR R4'), findsOneWidget);
-
-      await tester.tap(find.text('Copiar'));
-      await tester.pumpAndSettle();
-
-      expect(log, contains(predicate((Map<String, dynamic> m) => m['text'] == fhirContent)));
-      expect(find.text('Exportación FHIR R4'), findsNothing);
     });
+
+    testWidgets(
+      'FHIR dialog "Copiar" button sets clipboard data and closes dialog',
+      (tester) async {
+        const fhirContent = '{"resourceType": "Bundle"}';
+        when(() => mockBloc.state).thenReturn(ReportLoaded([]));
+        when(
+          () => mockWalletService.exportToFhir(),
+        ).thenAnswer((_) async => '{}');
+        when(
+          () => mockWorkoutFhirService.appendToBundle(any()),
+        ).thenAnswer((_) async => fhirContent);
+
+        // Mock Clipboard
+        final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          (MethodCall methodCall) async {
+            if (methodCall.method == 'Clipboard.setData') {
+              log.add(methodCall.arguments as Map<String, dynamic>);
+            }
+            return null;
+          },
+        );
+
+        await tester.pumpWidget(createWidgetUnderTest());
+
+        await tester.tap(find.text('Exportar FHIR'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Exportación FHIR R4'), findsOneWidget);
+
+        await tester.tap(find.text('Copiar'));
+        await tester.pumpAndSettle();
+
+        expect(
+          log,
+          contains(
+            predicate((Map<String, dynamic> m) => m['text'] == fhirContent),
+          ),
+        );
+        expect(find.text('Exportación FHIR R4'), findsNothing);
+      },
+    );
   });
 }

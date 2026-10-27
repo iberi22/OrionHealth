@@ -13,22 +13,18 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: AppointmentForm(
-            onSave: (_) {},
-            onDelete: (_) {},
-          ),
+          body: AppointmentForm(onSave: (_) {}, onDelete: (_) {}),
         ),
       ),
     );
-
-    await tester.tap(find.text('GUARDAR'));
-    await tester.pumpAndSettle();
 
     // The form has 3 text fields: Doctor, Specialty, Notes
     expect(find.byType(TextField), findsNWidgets(3));
   });
 
-  testWidgets('AppointmentForm triggers onSave with correct data', (tester) async {
+  testWidgets('AppointmentForm triggers onSave with correct data', (
+    tester,
+  ) async {
     Appointment? savedAppointment;
 
     await tester.pumpWidget(
