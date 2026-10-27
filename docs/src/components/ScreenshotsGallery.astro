@@ -1,13 +1,9 @@
 ---
-const base = import.meta.env.BASE_URL || '/';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Only real captures of the app; each file appears once.
 const screenshots = [
-  { src: `${base}/screenshots/landing.png`, title: 'Secure Login', description: 'PIN & biometric authentication with AES-256 encryption' },
-  { src: `${base}/screenshots/05_dashboard_large.png`, title: 'Health Profile', description: 'Personal health profile with medical history management' },
+  { src: `${base}/screenshots/05_dashboard_large.png`, title: 'Health Dashboard', description: 'Personal health overview with vitals and medical history' },
   { src: `${base}/screenshots/03_records_page.png`, title: 'Medications & Records', description: 'Track medications, dosages, and health records (FHIR-compatible)' },
-  { src: `${base}/screenshots/landing.png`, title: 'Voice AI Assistant', description: 'On-device AI voice chat — all processing stays local' },
-  { src: `${base}/screenshots/05_dashboard_large.png`, title: 'Health Reports', description: 'AI-generated reports analyzing your health trends' },
-  { src: `${base}/screenshots/03_records_page.png`, title: 'Medical Research', description: 'Search ICD-10, LOINC, SNOMED & clinical guidelines' },
-  { src: `${base}/screenshots/landing.png`, title: 'PIN Security', description: '6-digit PIN setup for secure local access' },
 ];
 ---
 
@@ -29,7 +25,7 @@ const screenshots = [
         {screenshots.map((screenshot, index) => (
           <div class="flex-shrink-0 w-48 snap-center">
             <div class="flashlight-card glass rounded-xl overflow-hidden group">
-              <div class="aspect-[9/16] bg-charcoal overflow-hidden">
+              <div class="aspect-video bg-charcoal overflow-hidden">
                 <img
                   src={screenshot.src}
                   alt={screenshot.title}
@@ -53,7 +49,7 @@ const screenshots = [
             data-animate
             style={`animation-delay: ${index * 100}ms`}
           >
-            <div class="aspect-[9/16] bg-charcoal overflow-hidden">
+            <div class="aspect-video bg-charcoal overflow-hidden">
               <img
                 src={screenshot.src}
                 alt={screenshot.title}
