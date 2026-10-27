@@ -1,7 +1,70 @@
 import 'package:flutter/services.dart';
 import 'package:fake_async/fake_async.dart';
+import 'dart:async';
+import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:orionhealth_health/features/health_sharing/infrastructure/wifi_direct_service.dart';
+
+class FakeBonsoirDiscovery extends BonsoirDiscovery {
+  final _eventController = StreamController<BonsoirDiscoveryEvent>.broadcast();
+  bool initializeCalled = false;
+  bool startCalled = false;
+  bool stopCalled = false;
+
+  FakeBonsoirDiscovery({required super.type});
+
+  @override
+  Stream<BonsoirDiscoveryEvent>? get eventStream => _eventController.stream;
+
+  @override
+  Future<void> initialize() async {
+    initializeCalled = true;
+  }
+
+  @override
+  Future<void> start() async {
+    startCalled = true;
+    _eventController.add(
+      BonsoirDiscoveryServiceResolvedEvent(
+        service: BonsoirService(
+          name: 'Device 1',
+          type: type,
+          port: 9124,
+          attributes: {'hostname': '192.168.1.10'},
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<void> stop() async {
+    stopCalled = true;
+    _eventController.close();
+  }
+}
+
+class FakeBonsoirBroadcast extends BonsoirBroadcast {
+  bool initializeCalled = false;
+  bool startCalled = false;
+  bool stopCalled = false;
+
+  FakeBonsoirBroadcast({required super.service});
+
+  @override
+  Future<void> initialize() async {
+    initializeCalled = true;
+  }
+
+  @override
+  Future<void> start() async {
+    startCalled = true;
+  }
+
+  @override
+  Future<void> stop() async {
+    stopCalled = true;
+  }
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -9,10 +72,21 @@ void main() {
   late WifiDirectService service;
   const MethodChannel channel = MethodChannel('orionhealth/wifi_p2p');
   final List<MethodCall> log = <MethodCall>[];
+  late FakeBonsoirDiscovery fakeDiscovery;
+  late FakeBonsoirBroadcast fakeBroadcast;
 
   setUp(() {
     const bonsoirChannel = MethodChannel('fr.skyost.bonsoir');
-    service = WifiDirectService();
+    service = WifiDirectService(
+      discoveryFactory: (type) {
+        fakeDiscovery = FakeBonsoirDiscovery(type: type);
+        return fakeDiscovery;
+      },
+      broadcastFactory: (s) {
+        fakeBroadcast = FakeBonsoirBroadcast(service: s);
+        return fakeBroadcast;
+      },
+    );
     log.clear();
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -85,19 +159,20 @@ void main() {
         expect(devices, isNotNull);
         expect(devices, isNotEmpty);
         expect(devices!.first.name, 'Device 1');
-        expect(
-          log.any((call) => call.method == 'BonsoirDiscoveryAction.start'),
-          isTrue,
-        );
+        expect(fakeDiscovery.initializeCalled, isTrue);
+        expect(fakeDiscovery.startCalled, isTrue);
       });
     });
 
     test('startServer and stop lifecycle', () async {
       await service.startServer(port: 0);
       expect(service.serverAddress, isNotNull);
+      expect(fakeBroadcast.initializeCalled, isTrue);
+      expect(fakeBroadcast.startCalled, isTrue);
 
       await service.stop();
       expect(service.serverAddress, isNull);
+      expect(fakeBroadcast.stopCalled, isTrue);
     });
 
     test('initialize emits ready state', () async {
